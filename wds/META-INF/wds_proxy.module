@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="proxy">
+  <public>
+    <component name="nc.itf.wds.W8004040210Ejb" priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.wds.w80020202.Iw80020202</interface>
+      <interface>nc.itf.wds.w80020206.Iw80020206</interface>
+      <interface>nc.itf.wds.w8004040204.Iw8004040204</interface>
+      <interface>nc.itf.wds.w8004040210.Iw8004040210</interface>
+      <interface>nc.itf.wds.w80060202.Iw80060202</interface>
+      <interface>nc.itf.wds.w80060204.Iw80060204</interface>
+      <interface>nc.itf.wds.w80060208.Iw80060208</interface>
+      <interface>nc.itf.wds.w80060210.Iw80060210</interface>
+      <interface>nc.itf.wds.w80060401.Iw80060401</interface>
+      <interface>nc.itf.wds.w80060406.Iw80060406</interface>
+      <interface>nc.itf.wds.w80060408.Iw80060408</interface>
+      <interface>nc.itf.wds.w80060604.Iw80060604</interface>
+      <implementation>nc.impl.wds.W8004040210Ejb</implementation>
+      <property name="iw80060202">
+        <ref>Iw80060202</ref>
+      </property>
+      <property name="iw80060604">
+        <ref>Iw80060604</ref>
+      </property>
+      <property name="iw80060401">
+        <ref>Iw80060401</ref>
+      </property>
+      <property name="iw80060408">
+        <ref>Iw80060408</ref>
+      </property>
+      <property name="iw80060210">
+        <ref>Iw80060210</ref>
+      </property>
+      <property name="iw80060204">
+        <ref>Iw80060204</ref>
+      </property>
+      <property name="iw80060406">
+        <ref>Iw80060406</ref>
+      </property>
+      <property name="iw8004040210">
+        <ref>Iw8004040210</ref>
+      </property>
+      <property name="iw80020206">
+        <ref>Iw80020206</ref>
+      </property>
+      <property name="iw80060208">
+        <ref>Iw80060208</ref>
+      </property>
+      <property name="iw8004040204">
+        <ref>Iw8004040204</ref>
+      </property>
+      <property name="iw80020202">
+        <ref>Iw80020202</ref>
+      </property>
+    </component>
+  </public>
+  <private />
+</module>
+
