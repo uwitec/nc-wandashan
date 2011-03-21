@@ -24,6 +24,7 @@ import nc.vo.wds.w8004040210.TbGeneralBVO;
 import nc.vo.wds.w8004040210.TbGeneralHVO;
 
 public class W80020202Impl implements Iw80020202 {
+	
 
 	public AggregatedValueObject saveBD80020202(AggregatedValueObject billVO,
 			Object userObj) throws Exception {
