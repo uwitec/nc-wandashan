@@ -1,0 +1,17 @@
+/-------- 功能节点，以及对应的UI类-----------/
+一、发运管理
+1.发运录入   nc.ui.wds.w80060401.MyClientUI  
+2.发运拆分   nc.ui.wds.w80060406.MyClientUI
+3.拆分审批   nc.ui.wds.w80060408.MyClientUI
+4.发运计划调度  nc.ui.wds.w80060202.MyClientUI
+5.销售订单调度 nc.ui.wds.w80060604.MyClientUI
+二、仓储管理
+1.销售出库 nc.ui.wds.w8004040204.MyClientUI
+2.其他出库 nc.ui.wds.w8004040208.MyClientUI
+3.调拨入库 nc.ui.wds.w8004040210.MyClientUI
+4.其他入库 nc.ui.wds.w8004040214.MyClientUI
+5.退货入库 nc.ui.wds.w8004040218.MyClientUI
+6.托盘移动 nc.ui.wds.w8004040212.MyClientUI
+7.托盘移动情况 nc.ui.wds.w8004040220.MyClientUI--没有实现类
+
+三、 信息管理

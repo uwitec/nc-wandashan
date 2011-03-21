@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="gb2312"?>
+<module name="wds">
+    <public>
+    
+    </public>
+    <private>
+    <component name="Iw8004040210" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w8004040210.W8004040210Impl</implementation>
+	</component>
+    <component name="Iw80060401" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060401.W80060401Impl</implementation>
+	</component>
+    <component name="Iw80060406" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060406.W80060406Impl</implementation>
+	</component>
+    <component name="Iw80060408" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060408.W80060408Impl</implementation>
+	</component>
+    <component name="Iw8004040204" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w8004040204.W8004040204Impl</implementation>
+	</component>
+    <component name="Iw80060604" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060604.W80060604Impl</implementation>
+	</component>
+    <component name="Iw80060204" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060204.W80060204Impl</implementation>
+	</component>
+    <component name="Iw80060202" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060202.W80060202Impl</implementation>
+	</component>
+	<component name="Iw80060208" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060208.W80060208Impl</implementation>
+	</component>
+	<component name="Iw80060210" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80060210.W80060210Impl</implementation>
+	</component>
+	<component name="Iw80020206" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80020206.W80020206Impl</implementation>
+	</component>
+	<component name="Iw80020202" priority="0" singleton="false">
+	    <implementation>nc.bs.wds.w80020202.W80020202Impl</implementation>
+	</component>
+    </private>
+    
+</module>
