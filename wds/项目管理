@@ -1,12 +1,16 @@
-/-------- 功能节点，以及对应的UI类-----------/
+/-------- 功能节点，以及对应的UI类   库表-----------/
 一、发运管理
-1.发运录入   nc.ui.wds.w80060401.MyClientUI  
-2.发运拆分   nc.ui.wds.w80060406.MyClientUI
-3.拆分审批   nc.ui.wds.w80060408.MyClientUI
-4.发运计划调度  nc.ui.wds.w80060202.MyClientUI
-5.销售订单调度 nc.ui.wds.w80060604.MyClientUI
+1.发运录入   nc.ui.wds.w80060401.MyClientUI  主表tb_shipentry 子表tb_shipentry_b
+2.发运拆分   nc.ui.wds.w80060406.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+3.拆分审批   nc.ui.wds.w80060408.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+4.发运计划调度  nc.ui.wds.w80060202.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+5.销售订单调度 nc.ui.wds.w80060604.MyClientUI  erp系统 so_sale 
+6.销售订单合并 nc.ui.wds.w80060204.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+7.销售订单拆分 nc.ui.wds.w80060208.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+8.运单确认管理 nc.ui.wds.w80060210.MyClientUI  主表tb_fydnew  子表tb_fydmxnew
+9.发运跟踪管理 nc.ui.wds.w80060212.MyClientUI  单个表tb_carmanager
 二、仓储管理
-1.销售出库 nc.ui.wds.w8004040204.MyClientUI
+1.销售出库 nc.ui.wds.w8004040204.MyClientUI 
 2.其他出库 nc.ui.wds.w8004040208.MyClientUI
 3.调拨入库 nc.ui.wds.w8004040210.MyClientUI
 4.其他入库 nc.ui.wds.w8004040214.MyClientUI
