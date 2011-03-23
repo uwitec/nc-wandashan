@@ -1,12 +1,8 @@
 package nc.ui.dm;
 
-import java.awt.Button;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillListPanel;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -17,7 +13,7 @@ public class PlanDealClientUI extends ToftPanel{
 	private ButtonObject m_btnDeal = new ButtonObject(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,2,WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL);
 	private ButtonObject m_btnSelAll = new ButtonObject(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL,WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL,2,WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL);
 	private ButtonObject m_btnSelno = new ButtonObject(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,2,WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
-	private ClientEnvironment m_ce = null;
+	protected ClientEnvironment m_ce = null;
 	private PlanDealEventHandler m_handler = null;
 	
 	//定义界面模板

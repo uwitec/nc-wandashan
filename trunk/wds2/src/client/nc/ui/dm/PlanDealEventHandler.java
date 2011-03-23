@@ -6,11 +6,15 @@ import java.util.List;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.IBillRelaSortListener2;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-public class PlanDealEventHandler implements BillEditListener{
+public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListener2{
 
 
 	private PlanDealClientUI ui = null;
@@ -31,7 +35,7 @@ public class PlanDealEventHandler implements BillEditListener{
 	public PlanDealEventHandler(PlanDealClientUI parent){
 		super();
 		ui = parent;
-		
+		getDataPane().addSortRelaObjectListener2(this);
 		
 	}
 
@@ -51,40 +55,41 @@ public class PlanDealEventHandler implements BillEditListener{
 		}
 	}
 	
+	private PlanDealVO[] getDataBuffer(){
+		return m_billdatas;
+	}
+	
 	public void onNoSel(){
-//		int rowcount = getDataPanelSel().getRowCount();
-//		if(rowcount <= 0)
-//			return;
-//		for(int i=0;i<rowcount;i++){
-//			getDataPanelSel().setValueAt(UFBoolean.FALSE, i, "bsel");
-//		}
-//		clearCache();
+		int rowcount = getDataPane().getRowCount();
+		if(rowcount <= 0)
+			return;
+		for(int i=0;i<rowcount;i++){
+			getDataPane().setValueAt(UFBoolean.FALSE, i, "bsel");
+		}
+		clearCache();
+	}
+	
+	private void clearCache(){
+		lseldata.clear();
+//		tsInfor.clear();
 	}
 
 	public void onAllSel(){
-//		if(getDataBuffer() == null||getDataBuffer().length == 0)
-//			return;
-//		PlanDealVO[] datas = getDataBuffer();
-//		clearCache();
-//		for(PlanDealVO data:datas){
-//			lseldata.add(data);
+		if(getDataBuffer() == null||getDataBuffer().length == 0)
+			return;
+		PlanDealVO[] datas = getDataBuffer();
+		clearCache();
+		for(PlanDealVO data:datas){
+			lseldata.add(data);
 //			tsInfor.put(data.getPk_plan_b(),data.getTs());
-//		}
-//		
-//		int rowcount = getDataPanelSel().getRowCount();
-//		for(int i=0;i<rowcount;i++){
-//			getDataPanelSel().setValueAt(UFBoolean.TRUE, i, "bsel");
-//		}
-//	}
-//	public void onNoSel(){
-//		int rowcount = getDataPanelSel().getRowCount();
-//		if(rowcount <= 0)
-//			return;
-//		for(int i=0;i<rowcount;i++){
-//			getDataPanelSel().setValueAt(UFBoolean.FALSE, i, "bsel");
-//		}
-//		clearCache();
+		}
+		
+		int rowcount = getDataPane().getRowCount();
+		for(int i=0;i<rowcount;i++){
+			getDataPane().setValueAt(UFBoolean.TRUE, i, "bsel");
+		}
 	}
+	
 	
 	private PlanDealQryDlg getQryDlg(){
 		if(m_qrypanel == null){
@@ -104,10 +109,36 @@ public class PlanDealEventHandler implements BillEditListener{
 		getDataPane().clearBodyData();
 	}
 	public void onQuery(){
+		
+		
+		//查询计划进行处理
+		
+		/**
+		 * 满足什么条件的计划呢？人员和仓库已经绑定了   登陆人只能查询他的权限仓库  总仓的人可以安排分仓的
+		 * 校验登录人是否为总仓库德人 如果是可以安排任何仓库的  转分仓  计划 
+		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
+		 * 
+		 */
+		
+		
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
 		String whereSql = getQryDlg().getWhereSQL();
+		
+		//追加默认条件
+		String cwhid = null;
+		try{
+			cwhid = LoginInforHelper.getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
+		}catch(Exception ee){
+			ee.printStackTrace();
+			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(ee.getMessage()));
+			return;
+		}
+		
+		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
+			whereSql = whereSql+" and pk_outwhouse = '"+cwhid+"' ";
+		}
 		
 		
 		PlanDealVO[] billdatas = null; 
@@ -142,7 +173,23 @@ public class PlanDealEventHandler implements BillEditListener{
 
 	public void afterEdit(BillEditEvent e) {
 		// TODO Auto-generated method stub
-		
+		int row = e.getRow();
+		if(row < 0)
+			return;
+		if(e.getKey().equalsIgnoreCase("bsel")){
+			UFBoolean bsel = PuPubVO.getUFBoolean_NullAs(getDataPane().getValueAt(row, "bsel"), UFBoolean.FALSE);
+			if(bsel.booleanValue()){
+			     lseldata.add(getDataBuffer()[row]);
+//			     tsInfor.put(getDataBuffer()[row].getPk_plan_b(), getDataBuffer()[row].getTs());
+			}else{
+				lseldata.remove(getDataBuffer()[row]);
+//				tsInfor.remove(getDataBuffer()[row].getPk_plan_b());
+			}   
+		}
+//		else if(e.getKey().equalsIgnoreCase("dreqdate")){//zhf  到货日期编辑后
+//			UFDate udate = (UFDate)getDataPanelSel().getValueAt(row, "dreqdate");
+//			getDataBuffer()[row].setCsupplydate(udate);
+//		}
 	}
 
 	public void bodyRowChange(BillEditEvent e) {
@@ -158,6 +205,11 @@ public class PlanDealEventHandler implements BillEditListener{
 	}
 	private void showHintMessage(String msg){
 		ui.showHintMessage(msg);
+	}
+	
+	public Object[] getRelaSortObjectArray() {
+		// TODO Auto-generated method stub
+		return getDataBuffer();
 	}
 
 }
