@@ -13,7 +13,6 @@ public class WdsWlPubConst {
 	
 	/**lyf-------------------发运计划录入------------------------------------end */
 	
-	
 	/**zhf-----------------------发运计划安排---------------------------*/
 	//发运计划安排功能节点号
 	public static String DM_PLAN_DEAL_NODECODE = "80060410";
@@ -23,5 +22,12 @@ public class WdsWlPubConst {
 	public static String DM_PLANDEAL_BTNTAG_DEAL = "安排";
 	public static String DM_PLANDEAL_BTNTAG_SELALL = "全选";
 	public static String DM_PLANDEAL_BTNTAG_SELNO = "全消";
+
+	//zhf end
+	
+	public static String WDS_WL_MODULENAME = "wds2";
+	public static String WDS_WL_ZC = "";
+
+
 	/**zhf-----------------------发运计划安排---------------------------*/
 }
