@@ -1,6 +1,15 @@
 package nc.vo.wl.pub;
 
+import java.awt.Component;
+import java.util.ArrayList;
+
+import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.bill.BillData;
+import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.bill.BillModel;
+import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
 public class WdsWlPubTool {
@@ -25,6 +34,8 @@ public class WdsWlPubTool {
 	}
 
 	public static final Integer INTEGER_ZERO_VALUE = new Integer(0); // 整数零
+	
+	public static final UFDouble DOUBLE_ZERO = new UFDouble(0.0);
 
 	private static nc.bs.pub.formulaparse.FormulaParse fp = new nc.bs.pub.formulaparse.FormulaParse();
 
@@ -92,6 +103,51 @@ public class WdsWlPubTool {
 		}
 		return value.toString().trim();
 	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 停止编辑公共方法
+	 * @时间：2011-3-23下午08:12:29
+	 * @param bm
+	 */
+	public static void stopEditing(BillModel bm){
+	        BillItem[] items =bm.getBodyItems();
+	        if (items != null) {
+	            for (int i = 0; i < items.length; i++) {
+	                Component comp = items[i].getComponent();
+	                if (comp instanceof UIRefPane) {
+	                    if (!((UIRefPane) comp).isProcessFocusLost()) {
+	                        // System.out.println("处理:" + items[i].getName());
+	                        ((UIRefPane) comp).processFocusLost();
+	                    }
+	                }
+	            }
+	        }
+	       
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 发运计划安排时过滤安排数量为0的行
+	 * @时间：2011-3-23下午08:33:49
+	 * @param ldata
+	 * @return
+	 */
+	public static java.util.List<PlanDealVO> filterVOsZeroNum(java.util.List<PlanDealVO> ldata){
+		if(ldata == null||ldata.size()==0)
+			return null;
+		java.util.List<PlanDealVO> lnewData = new ArrayList<PlanDealVO>();
+		for(PlanDealVO vo:ldata){
+			if(PuPubVO.getUFDouble_NullAsZero(vo.getNnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+				continue;
+			}
+			lnewData.add(vo);
+		}
+		return lnewData;
+	}
+	
 
 	/**
 	 * 
