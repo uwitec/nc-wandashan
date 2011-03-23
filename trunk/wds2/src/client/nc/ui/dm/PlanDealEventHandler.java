@@ -9,6 +9,7 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -168,6 +169,45 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		this.m_billdatas = billdatas;
 	}
 	private void onDeal(){
+		//安排  安排前   数据校验
+		/**
+		 * 数据校验
+		 * 调出仓库不能为空   调入仓库不能为空 两个仓库不能相同  过滤掉本次安排数量为0的行  本次安排数量不能大于 计划数量-累计安排数量
+		 * 
+		 * 将满足的数据传入后台   数据转换   保存    
+		 * 
+		 * 分单规则：计划号  发货站 收货站  存货   单据日期   安排日期
+		 * 
+		 */
+		WdsWlPubTool.stopEditing(getDataPane());
+		if(lseldata==null||lseldata.size()==0){
+			showHintMessage("请选中要处理的数据");
+			return;
+		}
+		List<PlanDealVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata);
+		if(ldata == null||ldata.size() == 0){
+			showErrorMessage("选中数据没有安排");
+			return;
+		}
+		try{
+			for(PlanDealVO vo:ldata){
+				vo.validataOnDeal();
+			}
+			
+			//将数据转入后台处理
+			PlanDealHealper.doDeal(ldata, ui);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(e instanceof ValidationException){
+				showErrorMessage(e.getMessage());
+				return;
+			}
+			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+			return;
+		}
+	
+		
 
 	}
 
