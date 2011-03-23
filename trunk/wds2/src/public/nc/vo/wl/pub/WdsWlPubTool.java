@@ -4,8 +4,25 @@ import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 
 public class WdsWlPubTool {
+	
+	
 
 
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 判断仓库是否总仓
+	 * @时间：2011-3-23下午05:53:02
+	 * @param cwhid
+	 * @return
+	 */
+	public static boolean isZc(String cwhid){
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)==null)
+			return false;
+		if(cwhid.equalsIgnoreCase(WdsWlPubConst.WDS_WL_ZC))
+			return true;
+		return false;
+	}
 
 	public static final Integer INTEGER_ZERO_VALUE = new Integer(0); // 整数零
 
