@@ -4,11 +4,12 @@ import java.awt.Component;
 import java.util.ArrayList;
 
 import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
@@ -171,4 +172,18 @@ public class WdsWlPubTool {
 		}
 		// return null;
 	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-3-24上午11:31:59
+	 * @return  当前的时间
+	 */
+	public static UFDate getCurDate() {
+		UFDate date = new UFDate(System.currentTimeMillis());
+		return date;
+	}
+
+
 }
