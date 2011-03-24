@@ -28,7 +28,7 @@ public class N_WDS3_SAVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 		    setParameter ( "INCURVO",vo.m_preValueVo);
-		    setParameter ( "BillType", WdsWlPubConst.DM_ORDER_BILLTYPE); //销售返还政策
+		    setParameter ( "BillType", WdsWlPubConst.WDS3); 
 		    setParameter ( "BillDate",getUserDate ().toString ());
 		    setParameter ( "ActionName", "WRITE");
 		    setParameter ( "P3",null);

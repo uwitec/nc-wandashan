@@ -1,4 +1,5 @@
-package nc.ui.dm.order;
+package nc.ui.dm.so.order;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
@@ -12,7 +13,7 @@ import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- * 发运订单
+ * 销售运单
  * @author Administrator
  * 
  */
@@ -66,7 +67,7 @@ public class ClientUI extends BillManageUI {
 		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
-		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS3);
+		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS5);
 		getBillCardPanel().setTailItem("dmakedate", _getDate());	
 	}
 

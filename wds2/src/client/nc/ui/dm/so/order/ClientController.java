@@ -1,9 +1,9 @@
-package nc.ui.dm.plan;
+package nc.ui.dm.so.order;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
-import nc.vo.dm.SendplaninBVO;
-import nc.vo.dm.SendplaninVO;
+import nc.vo.dm.order.SendorderBVO;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -47,14 +47,14 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public String getBillType() {
-		return WdsWlPubConst.WDS1;
+		return WdsWlPubConst.WDS5;
 	}
 
 	public String[] getBillVoName() {
 		return new String[] {
 				HYBillVO.class.getName(),
-				SendplaninVO.class.getName(),
-				SendplaninBVO.class.getName()
+				SendorderVO.class.getName(),
+				SendorderBVO.class.getName()
 				};
 	}
 
