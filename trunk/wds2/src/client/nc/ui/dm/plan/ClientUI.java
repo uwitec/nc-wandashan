@@ -67,7 +67,7 @@ public class ClientUI extends BillManageUI {
 		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
-		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.DM_PLAN_LURU_BILLTYPE);
+		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS1);
 		getBillCardPanel().setTailItem("dmakedate", _getDate());
 //		getBillCardPanel().setHeadItem("pk_outwhouse", //调出仓库默认当前登录人关联的仓库
 //				LoginInforHelper.getLogInfor(_getOperator()).getWhid());

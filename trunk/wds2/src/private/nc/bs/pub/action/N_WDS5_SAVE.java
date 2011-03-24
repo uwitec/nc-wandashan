@@ -9,17 +9,17 @@ import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- * 发运计划录入保存提交
+ * 销售运单
  * @author Administrator
  *
  */
-public class N_WDS1_SAVE extends AbstractCompiler2 {
+public class N_WDS5_SAVE extends AbstractCompiler2 {
 	
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 
 	private Hashtable m_keyHas = null;
 
-	public N_WDS1_SAVE() {
+	public N_WDS5_SAVE() {
 		super();
 	}
 
@@ -28,7 +28,7 @@ public class N_WDS1_SAVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 		    setParameter ( "INCURVO",vo.m_preValueVo);
-		    setParameter ( "BillType", WdsWlPubConst.WDS1);
+		    setParameter ( "BillType", WdsWlPubConst.WDS5); 
 		    setParameter ( "BillDate",getUserDate ().toString ());
 		    setParameter ( "ActionName", "WRITE");
 		    setParameter ( "P3",null);

@@ -47,7 +47,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public String getBillType() {
-		return WdsWlPubConst.DM_ORDER_BILLTYPE;
+		return WdsWlPubConst.WDS3;
 	}
 
 	public String[] getBillVoName() {
