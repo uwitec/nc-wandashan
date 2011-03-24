@@ -5,6 +5,10 @@ import nc.vo.pub.lang.UFBoolean;
 
 public class LoginInforVO extends SuperVO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6543845002980232493L;
 	private String loguser;//登录人
 	private String whid;//人员所属分仓
 	private String spaceid;//人员所属货位  只有仓储人员该字段才有意义
@@ -63,12 +67,12 @@ public class LoginInforVO extends SuperVO {
 	}
 	@Override
 	public String getParentPKFieldName() {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 	@Override
 	public String getTableName() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }
