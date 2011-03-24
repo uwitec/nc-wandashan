@@ -60,12 +60,12 @@ public class PlanDealBO {
 		PfParameterVO paraVo = new PfParameterVO();
 		// 参量上 设置 日期 操作人
 		HYBillVO[] orderVos = (HYBillVO[]) PfUtilTools.runChangeDataAry(
-				WdsWlPubConst.DM_PLAN_LURU_BILLTYPE,
-				WdsWlPubConst.DM_ORDER_BILLTYPE, planBillVos, paraVo);
+				WdsWlPubConst.WDS1,
+				WdsWlPubConst.WDS3, planBillVos, paraVo);
 		// 分单---》保存订单
 		new PfUtilBO()
 				.processBatch(WdsWlPubConst.DM_PLAN_TO_ORDER_PUSHSAVE,
-						WdsWlPubConst.DM_ORDER_BILLTYPE, uLogDate, orderVos,
+						WdsWlPubConst.WDS3, uLogDate, orderVos,
 						null, null);
 	}
 //	private SendplaninBVO[] getPlanBodyVOs(PlanDealVO[] dealVos){
