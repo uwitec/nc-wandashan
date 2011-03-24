@@ -43,7 +43,10 @@ public class WdsWlPubConst {
 	
 	public static String WDS_WL_MODULENAME = "wds2";
 	public static String WDS_WL_ZC = "";
+	
+	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};
 
+	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 
 	/**zhf-----------------------发运计划安排---------------------------*/
 }
