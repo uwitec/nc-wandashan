@@ -1,6 +1,7 @@
 package nc.bs.wl.pub;
 
 import nc.bs.dao.BaseDAO;
+import nc.jdbc.framework.processor.BeanProcessor;
 import nc.vo.wl.pub.LoginInforVO;
 
 public class WdsWlPubBO {
@@ -24,8 +25,11 @@ public class WdsWlPubBO {
 	 */
 	public  LoginInforVO getLogInfor(String userid)
 			throws Exception {
-		
-		return null;
+	   String sql ="select cuserid loguser,pk_stordoc whid,pk_cargdoc spaceid,istepi bistp,st_type type  from tb_stockstaff where cuserid='"+userid+"'";
+	
+	   LoginInforVO lif=(LoginInforVO)getDao().executeQuery(sql,new BeanProcessor(LoginInforVO.class));
+	   
+		return lif;
 	}
 	
 	
@@ -55,7 +59,11 @@ public class WdsWlPubBO {
      * @throws Exception
      */
 	public  String[] getCustomManIDByWhid(String cwhid) throws Exception{
-		return null;
+		//仓库和客商是一对多的关系
+	
+		String sql="select pk_cubsdoc  from   bd_stordoc join  tb_storcubasdoc on bd_stordoc.pk_stordoc=tb_storcubasdoc.pk_stordoc and  bd_stordoc.pk_stordoc='"+cwhid+"';  ";
+		Object o=getDao().executeQuery(sql, WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+		return (String[])o;
 	}
 	
 	/**
@@ -68,6 +76,25 @@ public class WdsWlPubBO {
 	 * @throws Exception
 	 */
 	public  String[] getSpaceByLogUser(String userid) throws Exception{
+		
+	    String sql="select  st_type  from   tb_stockstaff   where cuserid='"+userid+"' ";
+	    Object o=getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR);
+	    if(o !=null){
+	    	Integer i=(Integer)o;
+	    	if(i.intValue()==0){
+	    		String sql1="select pk_cargdoc from tb_stockstaff where cuserid='"+userid+"'";
+	    		Object o1=getDao().executeQuery(sql1, WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+	    		return (String[])o1;
+	    	}else{
+	    		String sql2="select bd.pk_cargdoc  from  tb_stockstaff tb join bd_cargdoc bd  on tb.pk_stordoc=bd.pk_stordoc and tb.cuserid='"+userid+"'";
+	    		Object o2=getDao().executeQuery(sql2, WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+	    		
+	    		return (String[])o2;
+	    		
+	    	}
+	    	
+	    }
+	    
 		return null;
 	}
 	
