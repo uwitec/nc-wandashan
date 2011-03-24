@@ -2,8 +2,8 @@ package nc.ui.dm.so.order;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
-import nc.vo.dm.order.SendorderBVO;
-import nc.vo.dm.order.SendorderVO;
+import nc.vo.dm.so.order.SoorderBVO;
+import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -53,8 +53,8 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[] {
 				HYBillVO.class.getName(),
-				SendorderVO.class.getName(),
-				SendorderBVO.class.getName()
+				SoorderVO.class.getName(),
+				SoorderBVO.class.getName()
 				};
 	}
 
