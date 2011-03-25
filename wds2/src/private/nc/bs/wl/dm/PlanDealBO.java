@@ -1,13 +1,20 @@
 package nc.bs.wl.dm;
 
 import java.util.List;
+import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -26,7 +33,37 @@ public class PlanDealBO {
 		PlanDealVO[] datas = null;
 		//实现查询发运计划的逻辑   
 		
+		StringBuffer strb = new StringBuffer();
+		strb.append("select 'aaa' ");
+		SendplaninVO head = new SendplaninVO();
+		String[] hnames = head.getAttributeNames();
+		for(String name:hnames){
+			strb.append(" ,h."+name);
+		}
+		SendplaninBVO  body = new SendplaninBVO();
+		hnames = body.getAttributeNames();
+		strb.append(",'bbb' ");
+		for(String name:hnames){
+			strb.append(" ,b."+name);
+		}
+		strb.append(" from wds_sendplanin h inner join wds_sendplanin_b b on h.pk_sendplanin = b.pk_sendplanin ");
+		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0  ");
+		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null)
+			strb.append(" and "+whereSql);
+		
+		List ldata = (List)getDao().executeQuery(strb.toString(), new BeanListProcessor(PlanDealVO.class));
+		if(ldata == null||ldata.size()==0)
+			return null;
+		datas = (PlanDealVO[])ldata.toArray(new PlanDealVO[0]);
+		
 		return datas;
+	}
+	
+	private void reWriteDealNumForPlan(Map<String,UFDouble> dealnumInfor) throws BusinessException{
+		if(dealnumInfor == null || dealnumInfor.size()==0)
+			return;
+		String sql = "update wds_sendplanin_b set ndealnum = ";
+			
 	}
 	
 	public void doDeal(List ldata, String uLogDate, String sLogUser)
@@ -37,7 +74,14 @@ public class PlanDealBO {
 		 * 安排：生成发运订单 发运计划安排生成发运订单
 		 * 
 		 * 计划单号 计划行号 不合并计划行 计划和订单为1对多关系 分单规则： 发货站 收货站不同 不考虑计划类型
+		 * 
+		 * 
+		 * 
 		 */
+		
+		
+		//回写计划累计安排数量
+		
 
 		// 发运安排vo---》发运计划vo
 		// 按 计划号 发货站 收货站 分单
