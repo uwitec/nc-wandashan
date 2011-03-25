@@ -31,13 +31,12 @@ import nc.vo.pub.lang.UFDouble;
              //公司主键
              public String pk_corp;
              public UFDateTime ts;
-             //
-             public String csourcebillhid;
+           
              public String vdef4;
              //源头单据号
-             public String vfirstbillcode;
+            
              // 来源单据类型
-             public String csourcetype;
+            
              //制单人
              public String voperatorid;
              //审批批语
@@ -60,18 +59,18 @@ import nc.vo.pub.lang.UFDouble;
              public String reserve1;
              public UFBoolean reserve16;
              public UFBoolean reserve15;
-             public String vsourcerowno;
+            
              //开始时间
              public UFDate dbegindate;
              public String reserve2;
              public String vdef10;
-             public String cfirstbillbid;
+          
              public String vdef5;
-             public String cfirstbillhid;
+           
              public String reserve4;
              //制单日期
              public UFDate dmakedate;
-             public String vfirstrowno;
+           
              public String vdef7;
              //单据类型
              public String pk_billtype;
@@ -83,13 +82,12 @@ import nc.vo.pub.lang.UFDouble;
              public String vmemo;
              //业务类型
              public String pk_busitype;
-             public String vsourcebillcode;
+            
              public String vdef1;
              //联系人
              public String pk_receiveperson;
              public String reserve3;
-             //
-             public String csourcebillbid;
+            
              //订单号
              public String vbillno;
              //单据日期
@@ -99,12 +97,12 @@ import nc.vo.pub.lang.UFDouble;
              public UFDate reserve13;
              public UFDouble reserve8;
              public UFDouble reserve9;
-             public UFDate dfirstbilldate;
+            
              public String vdef9;
              public String vdef8;
              //
              public UFDate dapprovedate;
-             public String cfirsttype;
+           
              //联系电话
              public String vtelphone;
              public String vapproveid;
@@ -241,20 +239,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getCsourcebillhid() {
-		 return csourcebillhid;
-	  }   
-	  
-     /**
-	   * 属性csourcebillhid的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newCsourcebillhid String
-	   */
-	public void setCsourcebillhid(String newCsourcebillhid) {
-		
-		csourcebillhid = newCsourcebillhid;
-	 } 	  
+
        
         /**
 	   * 属性vdef4的Getter方法.
@@ -283,42 +268,14 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getVfirstbillcode() {
-		 return vfirstbillcode;
-	  }   
-	  
-     /**
-	   * 属性vfirstbillcode的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newVfirstbillcode String
-	   */
-	public void setVfirstbillcode(String newVfirstbillcode) {
-		
-		vfirstbillcode = newVfirstbillcode;
-	 } 	  
-       
-        /**
-	   * 属性csourcetype的Getter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @return String
-	   */
-	 public String getCsourcetype() {
-		 return csourcetype;
-	  }   
-	  
+	
      /**
 	   * 属性csourcetype的Setter方法.
 	   *
 	   * 创建日期:2011-3-24
 	   * @param newCsourcetype String
 	   */
-	public void setCsourcetype(String newCsourcetype) {
-		
-		csourcetype = newCsourcetype;
-	 } 	  
-       
+
         /**
 	   * 属性voperatorid的Getter方法.
 	   *
@@ -661,21 +618,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getVsourcerowno() {
-		 return vsourcerowno;
-	  }   
-	  
-     /**
-	   * 属性vsourcerowno的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newVsourcerowno String
-	   */
-	public void setVsourcerowno(String newVsourcerowno) {
-		
-		vsourcerowno = newVsourcerowno;
-	 } 	  
-       
+	
         /**
 	   * 属性dbegindate的Getter方法.
 	   *
@@ -745,21 +688,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getCfirstbillbid() {
-		 return cfirstbillbid;
-	  }   
-	  
-     /**
-	   * 属性cfirstbillbid的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newCfirstbillbid String
-	   */
-	public void setCfirstbillbid(String newCfirstbillbid) {
-		
-		cfirstbillbid = newCfirstbillbid;
-	 } 	  
-       
+
         /**
 	   * 属性vdef5的Getter方法.
 	   *
@@ -787,21 +716,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getCfirstbillhid() {
-		 return cfirstbillhid;
-	  }   
-	  
-     /**
-	   * 属性cfirstbillhid的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newCfirstbillhid String
-	   */
-	public void setCfirstbillhid(String newCfirstbillhid) {
-		
-		cfirstbillhid = newCfirstbillhid;
-	 } 	  
-       
+
         /**
 	   * 属性reserve4的Getter方法.
 	   *
@@ -849,22 +764,7 @@ import nc.vo.pub.lang.UFDouble;
 	   *
 	   * 创建日期:2011-3-24
 	   * @return String
-	   */
-	 public String getVfirstrowno() {
-		 return vfirstrowno;
-	  }   
-	  
-     /**
-	   * 属性vfirstrowno的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newVfirstrowno String
-	   */
-	public void setVfirstrowno(String newVfirstrowno) {
-		
-		vfirstrowno = newVfirstrowno;
-	 } 	  
-       
+
         /**
 	   * 属性vdef7的Getter方法.
 	   *
@@ -1039,20 +939,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getVsourcebillcode() {
-		 return vsourcebillcode;
-	  }   
-	  
-     /**
-	   * 属性vsourcebillcode的Setter方法.
-	   *
-	   * 创建日期:2011-3-24
-	   * @param newVsourcebillcode String
-	   */
-	public void setVsourcebillcode(String newVsourcebillcode) {
-		
-		vsourcebillcode = newVsourcebillcode;
-	 } 	  
+	
        
         /**
 	   * 属性vdef1的Getter方法.
@@ -1123,20 +1010,14 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getCsourcebillbid() {
-		 return csourcebillbid;
-	  }   
-	  
+		  
      /**
 	   * 属性csourcebillbid的Setter方法.
 	   *
 	   * 创建日期:2011-3-24
 	   * @param newCsourcebillbid String
 	   */
-	public void setCsourcebillbid(String newCsourcebillbid) {
-		
-		csourcebillbid = newCsourcebillbid;
-	 } 	  
+	
        
         /**
 	   * 属性vbillno的Getter方法.
@@ -1270,9 +1151,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return UFDate
 	   */
-	 public UFDate getDfirstbilldate() {
-		 return dfirstbilldate;
-	  }   
+
 	  
      /**
 	   * 属性dfirstbilldate的Setter方法.
@@ -1280,11 +1159,7 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @param newDfirstbilldate UFDate
 	   */
-	public void setDfirstbilldate(UFDate newDfirstbilldate) {
-		
-		dfirstbilldate = newDfirstbilldate;
-	 } 	  
-       
+
         /**
 	   * 属性vdef9的Getter方法.
 	   *
@@ -1354,21 +1229,14 @@ import nc.vo.pub.lang.UFDouble;
 	   * 创建日期:2011-3-24
 	   * @return String
 	   */
-	 public String getCfirsttype() {
-		 return cfirsttype;
-	  }   
-	  
+	
      /**
 	   * 属性cfirsttype的Setter方法.
 	   *
 	   * 创建日期:2011-3-24
 	   * @param newCfirsttype String
 	   */
-	public void setCfirsttype(String newCfirsttype) {
-		
-		cfirsttype = newCfirsttype;
-	 } 	  
-       
+	
         /**
 	   * 属性vtelphone的Getter方法.
 	   *

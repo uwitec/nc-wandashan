@@ -6,7 +6,7 @@
    	
 	import java.util.ArrayList;
 	import nc.vo.pub.*;
-	import nc.vo.pub.lang.*;
+import nc.vo.pub.lang.*;
 	
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -61,6 +61,28 @@
              public UFDouble ninacceptnum;
              public String vdef10;
              public String vdef5;
+             //move1
+             public String cfirstbillbid;
+             //move2
+             public String vsourcerowno;
+             //move3
+             public String cfirstbillhid;
+             //move4
+             public String vfirstrowno;
+             //move5
+             public String vsourcebillcode;
+             //move6
+             public UFDate dfirstbilldate;
+             //move7
+             public String csourcebillbid;  
+             //move8
+             public String cfirsttype;
+             //move9
+             public String csourcebillhid;
+             //move10
+             public String vfirstbillcode;
+             //move11
+             public String csourcetype;
             
              public static final String  RESERVE5="reserve5";   
              public static final String  TS="ts";   
@@ -104,7 +126,95 @@
              public static final String  VDEF5="vdef5";   
       
     
-        /**
+        public String getCfirstbillbid() {
+				return cfirstbillbid;
+			}
+
+			public void setCfirstbillbid(String cfirstbillbid) {
+				this.cfirstbillbid = cfirstbillbid;
+			}
+
+			public String getVsourcerowno() {
+				return vsourcerowno;
+			}
+
+			public void setVsourcerowno(String vsourcerowno) {
+				this.vsourcerowno = vsourcerowno;
+			}
+
+			public String getCfirstbillhid() {
+				return cfirstbillhid;
+			}
+
+			public void setCfirstbillhid(String cfirstbillhid) {
+				this.cfirstbillhid = cfirstbillhid;
+			}
+
+			public String getVfirstrowno() {
+				return vfirstrowno;
+			}
+
+			public void setVfirstrowno(String vfirstrowno) {
+				this.vfirstrowno = vfirstrowno;
+			}
+
+			public String getVsourcebillcode() {
+				return vsourcebillcode;
+			}
+
+			public void setVsourcebillcode(String vsourcebillcode) {
+				this.vsourcebillcode = vsourcebillcode;
+			}
+
+			public UFDate getDfirstbilldate() {
+				return dfirstbilldate;
+			}
+
+			public void setDfirstbilldate(UFDate dfirstbilldate) {
+				this.dfirstbilldate = dfirstbilldate;
+			}
+
+			public String getCsourcebillbid() {
+				return csourcebillbid;
+			}
+
+			public void setCsourcebillbid(String csourcebillbid) {
+				this.csourcebillbid = csourcebillbid;
+			}
+
+			public String getCfirsttype() {
+				return cfirsttype;
+			}
+
+			public void setCfirsttype(String cfirsttype) {
+				this.cfirsttype = cfirsttype;
+			}
+
+			public String getCsourcebillhid() {
+				return csourcebillhid;
+			}
+
+			public void setCsourcebillhid(String csourcebillhid) {
+				this.csourcebillhid = csourcebillhid;
+			}
+
+			public String getVfirstbillcode() {
+				return vfirstbillcode;
+			}
+
+			public void setVfirstbillcode(String vfirstbillcode) {
+				this.vfirstbillcode = vfirstbillcode;
+			}
+
+			public String getCsourcetype() {
+				return csourcetype;
+			}
+
+			public void setCsourcetype(String csourcetype) {
+				this.csourcetype = csourcetype;
+			}
+
+		/**
 	   * 属性reserve5的Getter方法.
 	   *
 	   * 创建日期:2011-3-24
