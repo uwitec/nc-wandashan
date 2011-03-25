@@ -25,10 +25,16 @@ public class WdsWlPubBO {
 	 */
 	public  LoginInforVO getLogInfor(String userid)
 			throws Exception {
-	   String sql ="select cuserid loguser,pk_stordoc whid,pk_cargdoc spaceid,istepi bistp,st_type type  from tb_stockstaff where cuserid='"+userid+"'";
-	
-	   LoginInforVO lif=(LoginInforVO)getDao().executeQuery(sql,new BeanProcessor(LoginInforVO.class));
-	   
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select cuserid loguser,"); //人员id
+		sql.append(" pk_stordoc whid,");// 仓库id
+		sql.append(" pk_cargdoc spaceid,");//货位信息
+		sql.append(" istepi bistp,");//是否特批
+		sql.append(" st_type type ");//人员类型
+		sql.append(" from tb_stockstaff");
+		sql.append(" where isnull(dr,0)=0 ");
+		sql.append(" and  cuserid='" + userid +"'");
+	    LoginInforVO lif=(LoginInforVO)getDao().executeQuery(sql.toString(),new BeanProcessor(LoginInforVO.class));
 		return lif;
 	}
 	
