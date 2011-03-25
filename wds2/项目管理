@@ -1,0 +1,20 @@
+1.发运计划录入 
+nc.ui.dm.plan.ClientUI   80060405   WDS1
+
+3.发运订单
+nc.ui.dm.order.ClientUI      80060415    WDS3
+
+5.销售运单
+nc.ui.dm.so.order.ClientUI    80060425   WDS5  
+
+
+1.发运计划录入 --Lyf 完成
+2.发运计划安排
+
+3.发运订单
+
+4.销售安排
+5.销售运单
+  库表设计--lyf 完成
+  单据模板,查询模板,功能注册,前台类-mlr完成
+  
