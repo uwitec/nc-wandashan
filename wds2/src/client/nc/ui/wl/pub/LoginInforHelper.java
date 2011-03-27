@@ -1,6 +1,7 @@
 package nc.ui.wl.pub;
 
 import nc.ui.wl.pub.LongTimeTask;
+import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -29,7 +30,9 @@ public class LoginInforHelper {
 			Class[] ParameterTypes = new Class[]{String.class};
 			Object[] ParameterValues = new Object[]{userid};
 			Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getLogInfor", ParameterTypes, ParameterValues, 2);
-			
+      if ( os == null){
+				throw new BusinessException("当前登录人员没有绑定仓库");
+			}
 			m_loginInfor = (LoginInforVO)os;
 		}
 		return m_loginInfor;
