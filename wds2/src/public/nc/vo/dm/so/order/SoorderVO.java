@@ -21,7 +21,11 @@
  */
      public class SoorderVO extends SuperVO {
            
-             public String reserve5;
+             /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8299919978628715989L;
+			public String reserve5;
              public String pk_corp;
              public UFDateTime ts;
              public String vdef4;
