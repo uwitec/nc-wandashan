@@ -1,8 +1,10 @@
 package nc.bs.wl.dm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
@@ -14,6 +16,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -105,32 +108,57 @@ public class PlanDealBO {
 //		
 		return datas;
 	}
-	
-	private void reWriteDealNumForPlan(Map<String,UFDouble> dealnumInfor) throws BusinessException{
-		if(dealnumInfor == null || dealnumInfor.size()==0)
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * 将本次安排数量，回写到发运计划安排累计发运数量
+	 * @时间：2011-3-25下午04:44:08
+	 * @param dealnumInfor
+	 * @throws BusinessException
+	 */
+	private void reWriteDealNumForPlan(Map<String,UFDouble> map) throws BusinessException{
+		if(map == null || map.size()==0)
 			return;
-		String sql = "update wds_sendplanin_b set ndealnum = ";
-			
+		for(Entry<String, UFDouble> entry:map.entrySet()){
+			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
+				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
+			getDao().executeUpdate(sql);
+		}
 	}
-	
-	public void doDeal(List ldata, String uLogDate, String sLogUser)
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-3-25下午03:58:14
+	 * @param ldata
+	 * @param infor :登录人，登录公司，登录日期
+	 * @throws Exception
+	 */
+	public void doDeal(List<PlanDealVO> ldata, List<String> infor)
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;
 		/**
 		 * 安排：生成发运订单 发运计划安排生成发运订单
 		 * 
-		 * 计划单号 计划行号 不合并计划行 计划和订单为1对多关系 分单规则： 发货站 收货站不同 不考虑计划类型
-		 * 
-		 * 
-		 * 
-		 */
-		
-		
+		 * 计划单号 计划行号 不合并计划行 
+		 * 计划和订单为1对多关系 
+		 * 分单规则： 发货站 收货站不同 不考虑计划类型
+		 * 		 */
 		//回写计划累计安排数量
-		
-
 		// 发运安排vo---》发运计划vo
+		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
+		for(int i=0;i<ldata.size();i++){
+			String key = ldata.get(i).getPk_sendplanin_b();
+			UFDouble num= PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNnum());
+			if(map.containsKey(key)){
+				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key));
+				map.put(key, oldValue.add(num));
+			}
+			map.put(key, num);
+		}
+		reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 收货站 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
@@ -152,12 +180,15 @@ public class PlanDealBO {
 		// 参量上 设置 日期 操作人
 		HYBillVO[] orderVos = (HYBillVO[]) PfUtilTools.runChangeDataAry(
 				WdsWlPubConst.WDS1,
-				WdsWlPubConst.WDS3, planBillVos, paraVo);
+				WdsWlPubConst.WDS3, planBillVos, null);
 		// 分单---》保存订单
-		new PfUtilBO()
-				.processBatch(WdsWlPubConst.DM_PLAN_TO_ORDER_PUSHSAVE,
-						WdsWlPubConst.WDS3, uLogDate, orderVos,
-						null, null);
+		if(orderVos ==null || orderVos.length==0){
+			return;
+		}
+		PfUtilBO pfbo = new PfUtilBO();
+		for(HYBillVO bill: orderVos){
+			pfbo.processAction(WdsWlPubConst.DM_PLAN_TO_ORDER_SAVE, WdsWlPubConst.WDS3, infor.get(2), null, bill, null);
+		}
 	}
 //	private SendplaninBVO[] getPlanBodyVOs(PlanDealVO[] dealVos){
 //		if(dealVos == null||dealVos.length==0){

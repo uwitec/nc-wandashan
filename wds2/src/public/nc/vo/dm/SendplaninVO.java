@@ -21,7 +21,7 @@
  */
      public class SendplaninVO extends SuperVO {
            
-             /**
+     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
