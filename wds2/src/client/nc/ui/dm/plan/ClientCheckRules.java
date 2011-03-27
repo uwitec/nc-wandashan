@@ -50,7 +50,7 @@ public class ClientCheckRules implements ICheckRules, ICheckRules2, IUniqueRules
 	}
 
 	public boolean isAllowEmptyBody(String tablecode) {
-		return true;
+		return false;
 	}
 
 	public IUniqueRule[] getHeadUniqueRules() {
