@@ -86,6 +86,11 @@ public String[] getField() {
 			"B_csourcebillhid->B_pk_sendplanin",
 			"B_csourcebillbid->B_pk_sendplanin_b",
 			"B_vsourcebillcode->B_vbillno",
+			
+			"B_cfirstbillhid->B_pk_sendplanin",
+			"B_cfirstbillbid->B_pk_sendplanin_b",
+			"B_vfirstbillcode->B_vbillno",
+			
 			"B_pk_invmandoc->B_pk_invmandoc",
 			"B_pk_invbasdoc->B_pk_invbasdoc",
 			"B_unit->B_unit",
