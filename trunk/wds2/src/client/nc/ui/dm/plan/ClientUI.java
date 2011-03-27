@@ -1,5 +1,8 @@
 package nc.ui.dm.plan;
+import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.bill.AbstractManageController;
@@ -99,6 +102,7 @@ public class ClientUI extends BillManageUI {
 	}
 		@Override
 	public void afterEdit(BillEditEvent e) {
+			super.afterEdit(e);
 			String key = e.getKey();
 			Object value =e.getValue();
 			Object oldValue = e.getOldValue();
@@ -117,7 +121,6 @@ public class ClientUI extends BillManageUI {
 			}else{
 				
 			}
-		super.afterEdit(e);
 	}
 
 	/**

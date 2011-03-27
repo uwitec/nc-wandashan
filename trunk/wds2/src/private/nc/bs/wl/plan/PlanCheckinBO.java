@@ -42,9 +42,10 @@ public class PlanCheckinBO {
 		sql.append(" where dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"' ");
+		sql.append(" and isnull(dr,0)=0");
 		int i = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
 		if( i>0){
-			throw new BusinessException("调入仓库，当前会计月已经有月计划,只可以做追加计划");
+			throw new BusinessException("该调入仓库，当前会计月已经有月计划,只可以做追加计划");
 		}
 	}
 	/**

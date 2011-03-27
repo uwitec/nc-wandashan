@@ -1,7 +1,5 @@
 package nc.ui.dm.plan;
 
-import java.util.ArrayList;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.WdsPubEnventHandler;
