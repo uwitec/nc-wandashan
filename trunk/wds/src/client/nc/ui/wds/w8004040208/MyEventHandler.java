@@ -31,6 +31,8 @@ import nc.ui.wds.w8000.W8004040204Action;
 import nc.ui.wds.w8004040204.TrayDisposeDetailDlg;
 import nc.ui.wds.w8004040204.TrayDisposeDlg;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.vo.dm.order.SendorderBVO;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -46,6 +48,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
+import nc.vo.wds.pub.WdsWlPubConsts;
 import nc.vo.wds.w80021030.TbQycgjh2VO;
 import nc.vo.wds.w80021030.TbQycgjhVO;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
@@ -374,16 +377,20 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (isControl == 2 || isControl == 3) {
 			isAdd = true;
 
-			fydnewdlg = new FydnewDlg(myClientUI, pkList, isStock, pk_stock);
+			fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
+							.getCorporation().getPrimaryKey(),
+							ClientEnvironment.getInstance().getUser()
+							.getPrimaryKey(), WdsWlPubConsts.SEND_ORDER_FUNCODE, "1=1", 
+							WdsWlPubConsts.WDS3, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
 
 			// 调用方法 获取查询后的聚合VO
 			AggregatedValueObject[] vos = fydnewdlg
 					.getReturnVOs(ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
-									.getPrimaryKey(), "4208",
-							ConstVO.m_sBillDRSQ, "8004040208", "8004040298",
-							myClientUI);
+									.getPrimaryKey(), WdsWlPubConsts.WDS3,
+							ConstVO.m_sBillDRSQ,WdsWlPubConsts.OTHER_OUT_FUNCODE, 
+							WdsWlPubConsts.OTHER_OUT_REFWDS3_NODECODE,fydnewdlg);
 			// 判断是否对查询模板有进行操作
 			if (null == vos || vos.length == 0) {
 				return;
@@ -1553,28 +1560,28 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		// 子表信息数组集合
 		List<TbOutgeneralBVO> generalBList = new ArrayList<TbOutgeneralBVO>();
 
-		TbFydnewVO fydnew = (TbFydnewVO) vos[0].getParentVO();
-		if (null != fydnew.getSrl_pk() && !"".equals(fydnew.getSrl_pk())) {
-			generalHVO.setSrl_pk(fydnew.getSrl_pk()); // 出库仓库
+		SendorderVO fydnew = (SendorderVO) vos[0].getParentVO();
+		if (null != fydnew.getPk_outwhouse() && !"".equals(fydnew.getPk_outwhouse())) {
+			generalHVO.setSrl_pk(fydnew.getPk_outwhouse()); // 出库仓库
 		}
-		if (null != fydnew.getSrl_pkr() && !"".equals(fydnew.getSrl_pkr())) {
-			generalHVO.setSrl_pkr(fydnew.getSrl_pkr()); // 入库仓库
+		if (null != fydnew.getPk_inwhouse() && !"".equals(fydnew.getPk_inwhouse())) {
+			generalHVO.setSrl_pkr(fydnew.getPk_inwhouse()); // 入库仓库
 		}
-		if (null != fydnew.getFyd_shdz() && !"".equals(fydnew.getFyd_shdz())) {
-			generalHVO.setVdiliveraddress(fydnew.getFyd_shdz()); // 收货地址
+		if (null != fydnew.getVinaddress() && !"".equals(fydnew.getVinaddress())) {
+			generalHVO.setVdiliveraddress(fydnew.getVinaddress()); // 收货地址
 		}
-		if (null != fydnew.getFyd_bz() && !"".equals(fydnew.getFyd_bz())) {
-			generalHVO.setVnote(fydnew.getFyd_bz()); // 备注
+		if (null != fydnew.getVmemo() && !"".equals(fydnew.getVmemo())) {
+			generalHVO.setVnote(fydnew.getVmemo()); // 备注
 		}
 		if (null != fydnew.getDapprovedate()
 				&& !"".equals(fydnew.getDapprovedate())) {
 			generalHVO.setDauditdate(fydnew.getDapprovedate()); // 审核日期
 		}
-		if (null != fydnew.getFyd_ddh() && !"".equals(fydnew.getFyd_ddh())) {
-			generalHVO.setVsourcebillcode(fydnew.getFyd_ddh()); // 来源单据号
+		if (null != fydnew.getVbillno() && !"".equals(fydnew.getVbillno())) {
+			generalHVO.setVsourcebillcode(fydnew.getVbillno()); // 来源单据号
 		}
-		if (null != fydnew.getFyd_pk() && !"".equals(fydnew.getFyd_pk())) {
-			generalHVO.setCsourcebillhid(fydnew.getFyd_pk()); // 来源单据表头主键
+		if (null != fydnew.getPk_sendorder() && !"".equals(fydnew.getPk_sendorder())) {
+			generalHVO.setCsourcebillhid(fydnew.getPk_sendorder()); // 来源单据表头主键
 		}
 
 		myBillVO.setParentVO(generalHVO);
@@ -1585,39 +1592,39 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			for (int i = 0; i < fydnewdlg.getFydmxVO().length; i++) {
 				String invpk = null;
 				if (null != pkList && pkList.size() > 0) {
-					TbFydmxnewVO fydmxnewvo = fydnewdlg.getFydmxVO()[i];
-					if (fydnew.getFyd_pk().equals(fydmxnewvo.getFyd_pk())) {
+					SendorderBVO fydmxnewvo = fydnewdlg.getFydmxVO()[i];
+					if (fydnew.getPk_sendorder().equals(fydmxnewvo.getPk_sendorder())) {
 
 						TbOutgeneralBVO generalBVO = new TbOutgeneralBVO();
-						if (null != fydnew.getFyd_pk()
-								&& !"".equals(fydnew.getFyd_pk())) {
-							generalBVO.setCsourcebillhid(fydnew.getFyd_pk()); // 来源单据表头主键
-							generalBVO.setCfirstbillhid(fydmxnewvo.getFyd_pk()); // 源头单据表头主键
+						if (null != fydnew.getPk_sendorder()
+								&& !"".equals(fydnew.getPk_sendorder())) {
+							generalBVO.setCsourcebillhid(fydnew.getPk_sendorder()); // 来源单据表头主键
+							generalBVO.setCfirstbillhid(fydmxnewvo.getPk_sendorder()); // 源头单据表头主键
 						}
-						if (null != fydnew.getFyd_ddh()
-								&& !"".equals(fydnew.getFyd_ddh())) {
-							generalBVO.setVsourcebillcode(fydnew.getFyd_ddh()); // 来源单据号
+						if (null != fydnew.getVbillno()
+								&& !"".equals(fydnew.getVbillno())) {
+							generalBVO.setVsourcebillcode(fydnew.getVbillno()); // 来源单据号
 						}
-						if (null != fydnew.getBilltype()
-								&& !"".equals(fydnew.getBilltype())) {
-							generalBVO.setCsourcetype(fydnew.getBilltype()
+						if (null != fydnew.getPk_billtype()
+								&& !"".equals(fydnew.getPk_billtype())) {
+							generalBVO.setCsourcetype(fydnew.getPk_billtype()
 									.toString()); // 来源单据类型
 						}
-						if (null != fydmxnewvo.getCfd_pk()
-								&& !"".equals(fydmxnewvo.getCfd_pk())) {
+						if (null != fydmxnewvo.getPk_sendorder_b()
+								&& !"".equals(fydmxnewvo.getPk_sendorder_b())) {
 							generalBVO
-									.setCsourcebillbid(fydmxnewvo.getCfd_pk()); // 来源单据表体主键
-							generalBVO.setCfirstbillbid(fydmxnewvo.getCfd_pk()); // 源头单据表体主键
+									.setCsourcebillbid(fydmxnewvo.getPk_sendorder_b()); // 来源单据表体主键
+							generalBVO.setCfirstbillbid(fydmxnewvo.getPk_sendorder_b()); // 源头单据表体主键
 						}
-						if (null != fydmxnewvo.getCfd_yfsl()
-								&& !"".equals(fydmxnewvo.getCfd_yfsl())) {
+						if (null != fydmxnewvo.getNplannum()
+								&& !"".equals(fydmxnewvo.getNplannum())) {
 							generalBVO.setNshouldoutnum(fydmxnewvo
-									.getCfd_yfsl()); // 应发数量
+									.getNplannum()); // 应发数量
 						}
-						if (null != fydmxnewvo.getCfd_xs()
-								&& !"".equals(fydmxnewvo.getCfd_xs())) {
+						if (null != fydmxnewvo.getNassplannum()
+								&& !"".equals(fydmxnewvo.getNassplannum())) {
 							generalBVO.setNshouldoutassistnum(fydmxnewvo
-									.getCfd_xs()); // 应发辅数量
+									.getNassplannum()); // 应发辅数量
 						}
 						if (null != fydmxnewvo.getPk_invbasdoc()
 								&& !"".equals(fydmxnewvo.getPk_invbasdoc())) {
@@ -1625,7 +1632,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 									.getPk_invbasdoc()); // 存货主键
 						}
 						generalBVO.setIsoper(new UFBoolean("Y"));
-						generalBVO.setCrowno(fydmxnewvo.getCrowno());// 行号
+//						generalBVO.setCrowno(fydmxnewvo.getCrowno());
 						// 行号
 						// generalBVO.setCrowno(getRowNo() + "");
 						generalBList.add(generalBVO);

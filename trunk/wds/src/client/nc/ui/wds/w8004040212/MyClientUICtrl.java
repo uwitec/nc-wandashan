@@ -1,13 +1,11 @@
 package nc.ui.wds.w8004040212;
 
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.bill.ISingleController;
-
+import nc.ui.trade.businessaction.IBusinessActionType;
+import nc.ui.trade.button.IBillButton;
 import nc.vo.wds.w8004040212.MyBillVO;
 import nc.vo.wds.w8004040212.TbWarehousestockVO;
-import nc.vo.wds.w8004040212.TbWarehousestockVO;
-import nc.ui.trade.button.IBillButton;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
