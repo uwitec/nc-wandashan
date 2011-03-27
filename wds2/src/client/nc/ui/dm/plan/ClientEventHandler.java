@@ -34,7 +34,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		try{
 			String cwhid = LoginInforHelper.getLogInfor(_getOperator()).getWhid();
 			if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-				whereSql=" and wds_sendplanin.pk_outwhouse = '"+cwhid+"'";
+				whereSql=" wds_sendplanin.pk_outwhouse = '"+cwhid+"'";
 			};
 		}catch(Exception e){
 			e.printStackTrace();
