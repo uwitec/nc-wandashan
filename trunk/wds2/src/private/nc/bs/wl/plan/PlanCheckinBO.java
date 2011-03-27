@@ -47,5 +47,16 @@ public class PlanCheckinBO {
 		if( i>0){
 			throw new BusinessException("调入仓库，当前会计月已经有月计划,只可以做追加计划");
 		}
-	};
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 *   弃审前校验 是否已经安排生产下游发运订单
+	 * @时间：2011-3-27上午09:44:46
+	 * @param 要弃审的 发运计划单据
+	 */
+	public void beforeUnApprove(AggregatedValueObject obj){
+		
+	}
 }
