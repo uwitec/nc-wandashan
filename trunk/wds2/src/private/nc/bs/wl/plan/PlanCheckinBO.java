@@ -1,8 +1,14 @@
 package nc.bs.wl.plan;
 
+import org.apache.tools.ant.taskdefs.Execute;
+
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.vo.dm.SendplaninVO;
+import nc.vo.dm.order.SendorderBVO;
+import nc.vo.hbbb.meetaccount.GetDataCondVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
@@ -55,8 +61,25 @@ public class PlanCheckinBO {
 	 *   弃审前校验 是否已经安排生产下游发运订单
 	 * @时间：2011-3-27上午09:44:46
 	 * @param 要弃审的 发运计划单据
+	 * @throws BusinessException 
 	 */
-	public void beforeUnApprove(AggregatedValueObject obj){
+	public void beforeUnApprove(AggregatedValueObject obj) throws BusinessException{
+		if(obj ==null){
+			return;
+		}
+		SendplaninVO parent =(SendplaninVO) obj.getParentVO();
+		String pk_sendplanin = parent.getPk_sendplanin();
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select count(*) ");
+		sql.append(" from wds_sendorder ");
+		sql.append(" jion wds_sendorder_b ");
+		sql.append(" on wds_sendorder.pk_sendorder= wds_sendorder_b.pk_sendorder");
+		sql.append(" where isnull(wds_sendorder.dr,0)=0 and isnull(wds_sendorder_b.dr,0)=0 ");
+		sql.append(" wds_sendorder_b.csourcebillhid ='"+pk_sendplanin+"'");
+		int i = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+		if( i>0){
+			throw new BusinessException("已有下游发运订单，请先删除发运订单再做此操作");
+		}
 		
 	}
 }
