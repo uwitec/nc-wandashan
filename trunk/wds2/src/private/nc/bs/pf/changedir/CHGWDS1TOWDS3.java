@@ -154,6 +154,7 @@ public String[] getFormulas() {
 			"H_pk_billtype->\""+WdsWlPubConst.WDS3+"\"",
 			"H_vbillstatus->int(8)",
 		    "B_csourcetype->\""+WdsWlPubConst.WDS1+"\"",
+		    "H_fisbigglour->\"N\""
 	};
 }
 /**
