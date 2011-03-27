@@ -132,13 +132,15 @@ public class PlanDealBO {
 		for(Entry<String, UFDouble> entry:map.entrySet()){
 			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
 				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
-			getDao().executeUpdate(sql);
+			if(getDao().executeUpdate(sql)==0){
+				throw new BusinessException("该发运计划已被删除，请重新查询数据");
+			};
 			
 			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
 			
 			//如果累计安排数量大于计划数量将抛出异常
 			
-			String sql1="select count(*) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'+and (nplannum-ndealnum)>=0";
+			String sql1="select count(*) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (nplannum-ndealnum)>=0";
 			
 			Object o=getDao().executeQuery(sql1,new ColumnProcessor());
 			if(o==null){
