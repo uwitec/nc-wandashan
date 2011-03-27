@@ -7,12 +7,13 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- *  发运加护录入 
+ *  发运计划录入 
  * @author Administrator
  * 
  */
@@ -68,9 +69,9 @@ public class ClientUI extends BillManageUI {
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS1);
-		getBillCardPanel().setTailItem("dmakedate", _getDate());
-//		getBillCardPanel().setHeadItem("pk_outwhouse", //调出仓库默认当前登录人关联的仓库
-//				LoginInforHelper.getLogInfor(_getOperator()).getWhid());
+		getBillCardPanel().setTailItem("dmakedate", _getDate());		
+		getBillCardPanel().setHeadItem("pk_outwhouse", //调出仓库默认当前登录人关联的仓库				
+				LoginInforHelper.getLogInfor(_getOperator()).getWhid());
 		
 		
 		
