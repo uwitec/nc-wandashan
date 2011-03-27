@@ -61,27 +61,16 @@ import nc.vo.pub.lang.*;
              public UFDouble ninacceptnum;
              public String vdef10;
              public String vdef5;
-             //move1
              public String cfirstbillbid;
-             //move2
              public String vsourcerowno;
-             //move3
              public String cfirstbillhid;
-             //move4
              public String vfirstrowno;
-             //move5
              public String vsourcebillcode;
-             //move6
              public UFDate dfirstbilldate;
-             //move7
-             public String csourcebillbid;  
-             //move8
+             public String csourcebillbid; 
              public String cfirsttype;
-             //move9
              public String csourcebillhid;
-             //move10
              public String vfirstbillcode;
-             //move11
              public String csourcetype;
             
              public static final String  RESERVE5="reserve5";   
