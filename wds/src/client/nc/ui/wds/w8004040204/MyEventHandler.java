@@ -290,10 +290,10 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-
 		// 获取当前页面中VO
 		AggregatedValueObject myBillVO = getBillUI().getVOFromUI();
 		setTSFormBufferToVO(myBillVO);
+		TbOutgeneralHVO generalh = (TbOutgeneralHVO) myBillVO.getParentVO();
 		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[]) myBillVO
 				.getChildrenVO();
 		// 验证表体是否有数据
@@ -301,9 +301,15 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			myClientUI.showErrorMessage("操作失败,您无权操作");
 			return;
 		}
-
+		// 运单的Object,里面共三个值，[0]true or false false为生成运单失败
+		// [1]运单主表对象集合List [2]运单子表对象集合List
+		Object[] obj = null;
+		if (!validate(generalb)){
+				return;
+		}
+		//生成运单
+		obj = insertFyd(generalh, generalb);
 		TbOutgeneralHVO tmpgeneralh = null;
-		TbOutgeneralHVO generalh = (TbOutgeneralHVO) myBillVO.getParentVO();
 		// 根据来源单据号查询是否有做过出库
 		String strWhere = " dr = 0 and vsourcebillcode = '"
 				+ generalh.getVsourcebillcode() + "' and csourcebillhid = '"
@@ -370,20 +376,22 @@ public class MyEventHandler extends AbstractMyEventHandler {
 						.getChildrenVO().length == 0)) {
 			isSave = false;
 		} else {
-			if (getBillUI().isSaveAndCommitTogether())
+			if (getBillUI().isSaveAndCommitTogether()){
 				myBillVO = getBusinessAction().saveAndCommit(myBillVO,
 						getUIController().getBillType(), _getDate().toString(),
 						getBillUI().getUserObject(), myBillVO);
-			else {
-				List objUser = new ArrayList();
+			}else {
+				List<Object> objUser = new ArrayList<Object>();
 				objUser.add(getBillUI().getUserObject());
 				objUser.add(generalb);
-				if (isAdd)
+				if (isAdd){
 					objUser.add(true);
-				else
+				}else{
 					objUser.add(false);
+				}
 				objUser.add(false);
 				objUser.add(isStock);
+				objUser.add(obj);
 				// write to database
 				myBillVO = getBusinessAction().save(myBillVO,
 						getUIController().getBillType(), _getDate().toString(),
@@ -426,6 +434,133 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			getBufferData().setCurrentRow(nCurrentRow);
 		}
 
+	}
+	
+	/**
+	 * 验证单据日期，表体是否有空数据
+	 * 
+	 * @param generalb
+	 * @return
+	 */
+	private boolean validate(TbOutgeneralBVO[] generalb) {
+		String billdate = (String) getBillCardPanelWrapper().getBillCardPanel()
+				.getHeadItem("dbilldate").getValue();
+		if (null == billdate || "".equals(billdate)) {
+			myClientUI.showErrorMessage("请选择单据日期");
+			return false;
+		}
+		for (int i = 0; i < generalb.length; i++) {
+			TbOutgeneralBVO genb = generalb[i];
+			if (null == genb.getCinventoryid()
+					|| "".equals(genb.getCinventoryid())) {
+				myClientUI.showErrorMessage("请填写表体数据");
+				return false;
+			}
+			for (int j = 0; j < generalb.length; j++) {
+				if (j == i)
+					continue;
+				if ((genb.getCinventoryid() + "1").equals(generalb[j]
+						.getCinventoryid()
+						+ "1")) {
+					myClientUI.showErrorMessage("表体中包含相同单品,请去除");
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 生成发运单
+	 * 
+	 * @throws Exception
+	 */
+	private Object[] insertFyd(TbOutgeneralHVO generalh,
+			TbOutgeneralBVO[] generalb) throws Exception {
+		Object[] o = new Object[3];
+		o[0] = false;
+		List<TbFydnewVO> fydList = new ArrayList<TbFydnewVO>();
+		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
+
+		// 进行VO转换/////////////////////////////////////////////
+
+		// ------------转换表头对象-----------------//
+		TbFydnewVO fydvo = new TbFydnewVO();
+		if (null != generalh && null != generalb && generalb.length > 0) {
+			if (null != generalh.getVdiliveraddress()
+					&& !"".equals(generalh.getVdiliveraddress())) {
+				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
+			}
+			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
+				fydvo.setFyd_bz(generalh.getVnote()); // 备注
+			}
+			if (null != generalh.getCdptid()
+					&& !"".equals(generalh.getCdptid())) {
+				fydvo.setCdeptid(generalh.getCdptid()); // 部门
+			}
+			// 设置运货方式
+			fydvo.setFyd_yhfs("汽运");
+			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
+			fydvo.setBilltype(8);
+			fydvo.setVbillstatus(1);
+			// 单据号
+			fydvo.setVbillno(generalh.getVbillcode());
+			// 制单日期
+			fydvo.setDmakedate(generalh.getDbilldate());
+			fydvo.setVoperatorid(ClientEnvironment.getInstance().getUser()
+					.getPrimaryKey()); // 设置制单人
+			// 设置发货站
+			fydvo.setSrl_pk(generalh.getSrl_pk());
+			// 到货站
+			fydvo.setSrl_pkr(generalh.getSrl_pkr());
+			fydList.add(fydvo);
+			// --------------转换表头结束---------------//
+			// --------------转换表体----------------//
+			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
+			for (int j = 0; j < generalb.length; j++) {
+				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
+				TbOutgeneralBVO genb = generalb[j];
+				if (null != genb.getCinventoryid()
+						&& !"".equals(genb.getCinventoryid())) {
+					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
+				}
+				if (null != genb.getNshouldoutnum()
+						&& !"".equals(genb.getNshouldoutnum())) {
+					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
+				}
+				if (null != genb.getNshouldoutassistnum()
+						&& !"".equals(genb.getNshouldoutassistnum())) {
+					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
+				}
+				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
+					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
+				}
+				if (null != genb.getNoutassistnum()
+						&& !"".equals(genb.getNoutassistnum())) {
+					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
+				}
+				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
+					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
+				}
+				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
+					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
+				}
+				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次
+				tbfydmxList.add(fydmxnewvo);
+			}
+			// ----------------转换表体结束---------------------//
+			if (tbfydmxList.size() > 0) {
+				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
+				tbfydmxList.toArray(fydmxVO);
+				fydmxList.add(fydmxVO);
+				o[0] = true;
+			} else {
+				fydmxList.add(null);
+			}
+		}
+		o[1] = fydList;
+		o[2] = fydmxList;
+		return o;
 	}
 
 	// 验证方法
