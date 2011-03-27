@@ -1,6 +1,7 @@
 package nc.ui.dm.plan;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -9,6 +10,7 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -97,6 +99,24 @@ public class ClientUI extends BillManageUI {
 	}
 		@Override
 	public void afterEdit(BillEditEvent e) {
+			String key = e.getKey();
+			Object value =e.getValue();
+			Object oldValue = e.getOldValue();
+			if(e.getPos() == BillItem.HEAD){
+				if("pk_inwhouse".equalsIgnoreCase(key)){
+					Object pk_inwhouse = getBillCardPanel().getHeadItem("pk_inwhouse").getValueObject();
+					Object pk_outwhouse=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("pk_outwhouse").getValueObject());
+					if(pk_outwhouse == null){
+						showErrorMessage("当前登录人没有绑定仓库");
+					}
+					if(pk_outwhouse.equals(pk_inwhouse)){
+						showWarningMessage("调入仓库不能和调出仓库相同");
+						getBillCardPanel().setHeadItem("pk_inwhouse", null);
+					}
+				}
+			}else{
+				
+			}
 		super.afterEdit(e);
 	}
 

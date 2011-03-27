@@ -1,11 +1,14 @@
 package nc.ui.dm.plan;
 
+import java.util.ArrayList;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
-import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.pub.BusinessException;
 import nc.vo.querytemplate.TemplateInfo;
 
-public class ClientEventHandler extends ManageEventHandler {
+public class ClientEventHandler extends WdsPubEnventHandler {
 
 	public ClientUIQueryDlg queryDialog = null;
 
@@ -44,7 +47,14 @@ public class ClientEventHandler extends ManageEventHandler {
 	 * @throws Exception
 	 */
 	protected void beforeSaveCheck() throws Exception{
-		
+		if(getBillUI().getVOFromUI()!=null){
+			if(getBillUI().getVOFromUI().getChildrenVO()==null||
+					getBillUI().getVOFromUI().getChildrenVO().length==0	){
+				throw new BusinessException("表体不允许为空");
+			}else{
+				super.beforeSaveBodyUnique(new String[]{"pk_invbasdoc"});
+			}
+		};
 	}
 	@Override
 	protected void onBoLineAdd() throws Exception {
