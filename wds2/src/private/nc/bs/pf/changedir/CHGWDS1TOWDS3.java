@@ -21,7 +21,7 @@ public CHGWDS1TOWDS3() {
 * @return java.lang.String[]
 */
 public String getAfterClassName() {
-	return null;
+	return "";
 }
 /**
 * 获得另一个后续类的全录径名称。
@@ -97,10 +97,6 @@ public String[] getField() {
 			"B_assunit->B_assunit",
 			"B_nassplannum->B_nassplannum",
 			"B_nplannum->B_nplannum",
-			
-			
-			
-			
 			"B_reserve2->B_reserve2",
 			"B_reserve1->B_reserve1", 
 			"B_pk_fdsyzc_h->B_reserve1", 

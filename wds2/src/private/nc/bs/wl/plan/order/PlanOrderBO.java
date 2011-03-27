@@ -2,7 +2,6 @@ package nc.bs.wl.plan.order;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
-import nc.vo.dm.SendplaninVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -28,7 +27,7 @@ public class PlanOrderBO {
 	 * 
 	 * @作者：lyf
 	 * @说明：完达山物流项目 
-	 *   弃审前校验 是否已经安排生产下游发运订单
+	 *   弃审前校验 是否已经安排生产下游其他出库单
 	 * @时间：2011-3-27上午09:44:46
 	 * @param 要弃审的 发运计划单据
 	 * @throws BusinessException 
