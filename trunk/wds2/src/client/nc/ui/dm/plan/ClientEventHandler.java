@@ -2,9 +2,11 @@ package nc.ui.dm.plan;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.BusinessException;
 import nc.vo.querytemplate.TemplateInfo;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -28,7 +30,17 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected String getHeadCondition() {
-		return null;
+		String whereSql = null;
+		try{
+			String cwhid = LoginInforHelper.getLogInfor(_getOperator()).getWhid();
+			if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
+				whereSql=" and wds_sendplanin.pk_outwhouse = '"+cwhid+"'";
+			};
+		}catch(Exception e){
+			e.printStackTrace();
+			getBillUI().showErrorMessage(e.getMessage());
+		}
+		return whereSql;
 	}
 	
 	@Override
