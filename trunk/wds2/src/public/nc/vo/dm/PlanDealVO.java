@@ -1,6 +1,5 @@
 package nc.vo.dm;
 
-import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
@@ -8,32 +7,75 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class PlanDealVO extends SendplaninBVO {
-	private UFDouble nnum = null;//本次安排数量
-	private String pk_corp;
-    private UFDate dmakedate;
-    private String voperatorid;
-    private String vapprovenote;
-    private String pk_billtype;
-    private Integer vbillstatus;
+	/**
+	 * 
+	 */
+	public static final long serialVersionUID = 5274835182681933810L;
+	public UFDouble nnum = null;//本次安排数量
+	public String pk_corp;
+    public UFDate dmakedate;
+    public String voperatorid;
+    public String vapprovenote;
+    public String pk_billtype;
+    public Integer vbillstatus;
     /**计划类型  */
-    private Integer iplantype;
-    private String vemployeeid;
-    private String pk_busitype;
+    public Integer iplantype;
+    public String vemployeeid;
+    public String pk_busitype;
     /**主键 */
-    private String pk_sendplanin;
-    private UFDate dbilldate;
-    private String vbillno;
+    public String pk_sendplanin;
+    public UFDate dbilldate;
+    public String vbillno;
     /**调入仓库 */
-    private String pk_inwhouse;
-    private String pk_deptdoc;
+    public String pk_inwhouse;
+    public String pk_deptdoc;
     /**调出仓库 */
-    private String pk_outwhouse;
-    private UFDate dapprovedate;
-    private String vapproveid;
+    public String pk_outwhouse;
+    public UFDate dapprovedate;
+    public String vapproveid; 
+   
     
-    
-
-
+    @Override
+    public Object getAttributeValue(String arg) {
+    	if("nnum".equalsIgnoreCase(arg)){
+    		return this.getNnum();
+    	}else if("pk_corp".equalsIgnoreCase(arg)){
+    		return this.getPk_corp();
+    	}else if("dmakedate".equalsIgnoreCase(arg)){
+    		return this.getDmakedate();
+    	}else if("voperatorid".equalsIgnoreCase(arg)){
+    		return this.getVoperatorid();
+    	}else if("vapprovenote".equalsIgnoreCase(arg)){
+    		return this.getVapprovenote();
+    	}else if("pk_billtype".equalsIgnoreCase(arg)){
+    		return this.getPk_billtype();
+    	}else if("iplantype".equalsIgnoreCase(arg)){
+    		return this.getIplantype();
+    	}else if("vbillstatus".equalsIgnoreCase(arg)){
+    		return this.getVbillstatus();
+    	}else if("vemployeeid".equalsIgnoreCase(arg)){
+    		return this.getVemployeeid();
+    	}else if("pk_busitype".equalsIgnoreCase(arg)){
+    		return this.getPk_busitype();
+    	}else if("pk_sendplanin".equalsIgnoreCase(arg)){
+    		return this.getPk_sendplanin();
+    	}else if("dbilldate".equalsIgnoreCase(arg)){
+    		return this.getDbilldate();
+    	}else if("vbillno".equalsIgnoreCase(arg)){
+    		return this.getVbillno();
+    	}else if("pk_inwhouse".equalsIgnoreCase(arg)){
+    		return this.getPk_inwhouse();
+    	}else if("pk_deptdoc".equalsIgnoreCase(arg)){
+    		return this.getPk_deptdoc();
+    	}else if("pk_outwhouse".equalsIgnoreCase(arg)){
+    		return this.getPk_outwhouse();
+    	}else if("dapprovedate".equalsIgnoreCase(arg)){
+    		return this.getDapprovedate();
+    	}else if("vapproveid".equalsIgnoreCase(arg)){
+    		return this.getVapproveid();
+    	}
+    	return super.getAttributeValue(arg);
+    }
 	public UFDouble getNnum() {
 		return nnum;
 	}

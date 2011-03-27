@@ -1,6 +1,7 @@
 package nc.bs.pf.changedir;
 
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 用于发运计划  安排时 生成 发运订单 数据转换  
  *  注意  该处发运计划的表体使用的是 plandealvo  计划安排的vo  zhf
@@ -84,7 +85,7 @@ public String[] getField() {
 			
 			"B_csourcebillhid->B_pk_sendplanin",
 			"B_csourcebillbid->B_pk_sendplanin_b",
-			"B_vsourcebillcode->H_vbillno",
+			"B_vsourcebillcode->B_vbillno",
 			"B_pk_invmandoc->B_pk_invmandoc",
 			"B_pk_invbasdoc->B_pk_invbasdoc",
 			"B_unit->B_unit",
@@ -143,26 +144,11 @@ public String[] getField() {
 */
 public String[] getFormulas() {
 	return new String[] {
-		"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
-		"H_forderstatus->int(0)",
-		"H_dr->int(0)",
-		"H_bislatest->\"Y\"",
-		"H_bisreplenish->\"N\"",
-		"H_nversion->int(1)",
-		"H_cdeptid->getColValue(bd_psndoc,pk_deptdoc,pk_psndoc,H_cemployeeid)",
-		"H_breturn->\"N\"",
-		"H_bdeliver->\"N\"",
-		"B_cupsourcebilltype->\"20\"",
-		"B_iisactive->int(0)",
-		"B_forderrowstatus->int(0)",
-		"B_idiscounttaxtype->int(1)",
-		"B_iisreplenish->int(0)",
-		"B_ndiscountrate->int(100)",
-		"B_dr->int(0)",
-		"B_status->int(2)",
-		"B_vreceiveaddress->getColValue(bd_stordoc,storaddr,pk_stordoc,B_cwarehouseid)",
-		"B_breceiveplan->\"N\"",
-		"B_blargess->\"N\""
+//		"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
+//		"H_forderstatus->int(0)",
+			"H_pk_billtype->\""+WdsWlPubConst.WDS3+"\"",
+			"H_vbillstatus->int(8)",
+		    "B_csourcetype->\""+WdsWlPubConst.WDS1+"\"",
 	};
 }
 /**
