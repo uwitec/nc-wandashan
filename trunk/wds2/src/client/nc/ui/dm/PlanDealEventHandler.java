@@ -47,14 +47,12 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 	public void onButtonClicked(String btnTag){
 		if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
 			onDeal();
-			ui.updateButtonStatus(btnTag,false);
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
 			onNoSel();
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
 			onAllSel();
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
 			onQuery();
-			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 		}
 	}
 	
@@ -148,6 +146,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		getDataPane().execLoadFormula();
 		setDataBuffer(billdatas);		
 		showHintMessage("查询完成");
+		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 	}
 	/**
 	 * 
@@ -215,7 +214,8 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 				vo.validataOnDeal();
 			}
 			PlanDealHealper.doDeal(ldata, ui);
-			
+			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
+			clearData();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
@@ -225,9 +225,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
-	
-		
-
+		ui.showHintMessage("安排已经完成...");
 	}
 
 	public void afterEdit(BillEditEvent e) {
