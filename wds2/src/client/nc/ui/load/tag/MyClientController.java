@@ -29,7 +29,15 @@ public class MyClientController extends AbstractManageController {
 	}
 
 	public int[] getListButtonAry() {
-		return null;
+		return new int[]{
+				IBillButton.Add,
+				IBillButton.Delete,
+				IBillButton.Edit,
+				IBillButton.Query,
+				IBillButton.Save,
+				IBillButton.Refresh,
+				IBillButton.Card
+		};
 	}
 
 	public boolean isShowCardRowNo() {
