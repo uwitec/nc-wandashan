@@ -74,7 +74,8 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.unit,");
 		sql.append(" wds_sendplanin_b.assunit,");
 		sql.append(" wds_sendplanin_b.nplannum,");
-		sql.append(" wds_sendplanin_b.nassplannum");
+		sql.append(" wds_sendplanin_b.nassplannum,");
+		sql.append("wds_sendplanin_b.ndealnum");
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
 		sql.append(" on wds_sendplanin.pk_sendplanin = wds_sendplanin_b.pk_sendplanin ");
