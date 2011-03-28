@@ -45,8 +45,10 @@ import nc.vo.pub.lang.UFDouble;
              /**存货基本id */
              public String pk_invbasdoc;
              public String vdef2;
-             /**安排数量 */
+             /**累计安排数量 */
              public UFDouble ndealnum;
+             /**累计安排辅数量 */
+         	public UFDouble nassdealnum;
              public UFDate reserve11;
              public UFDate reserve12;
              /**主键 */
@@ -1017,5 +1019,13 @@ import nc.vo.pub.lang.UFDouble;
 
 	public void setDr(Integer dr) {
 		this.dr = dr;
+	}
+
+	public UFDouble getNassdealnum() {
+		return nassdealnum;
+	}
+
+	public void setNassdealnum(UFDouble nassdealnum) {
+		this.nassdealnum = nassdealnum;
 	} 
 } 
