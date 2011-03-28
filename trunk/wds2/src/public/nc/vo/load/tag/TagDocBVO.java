@@ -23,7 +23,6 @@ import nc.vo.pub.lang.UFDateTime;
 public class TagDocBVO extends SuperVO {
 	
 	public UFBoolean fistag;
-	public String vemployeeid;
 	public String vemployeename;
 	public String pk_taghid;
 	public String pk_tagbid;
@@ -416,14 +415,6 @@ public class TagDocBVO extends SuperVO {
 
 		return "wds_tagdoc_b";
 
-	}
-
-	public String getVemployeeid() {
-		return vemployeeid;
-	}
-
-	public void setVemployeeid(String vemployeeid) {
-		this.vemployeeid = vemployeeid;
 	}
 
 	public String getVemployeename() {
