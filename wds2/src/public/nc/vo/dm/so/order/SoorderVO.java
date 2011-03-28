@@ -9,7 +9,7 @@
 	import nc.vo.pub.lang.*;
 	
 /**
- * <b> 在此处简要描述此类的功能 </b>
+ * <b> 销售运单 </b>
  *
  * <p>
  *     在此处添加此类的描述信息
@@ -26,59 +26,89 @@
 	 */
 	private static final long serialVersionUID = -8299919978628715989L;
 			public String reserve5;
+			 //公司主键
              public String pk_corp;
              public UFDateTime ts;
              public String vdef4;
+             //制单人
              public String voperatorid;
+             //审批批语
              public String vapprovenote;
+             //业务员
              public String vemployeeid;
              public UFDate reserve12;
+             //主键
              public String pk_soorder;
              public String reserve6;
              public UFBoolean reserve14;
+             //需货时间
              public UFDate denddate;
              public UFDouble reserve10;
+             //调拨员
              public String pk_transer;
+             //部门
              public String pk_deptdoc;
+             //客商基本id
              public String pk_cubasdoc;
              public String vdef3;
+             //发货站
              public String pk_outwhouse;
              public String reserve1;
              public UFBoolean reserve16;
              public UFBoolean reserve15;
+             //运输方式
              public Integer itranstype;
+             //装车时间
              public UFDate dbegindate;
              public String reserve2;
              public String vdef10;
              public String vdef5;
              public String reserve4;
+             //制单日期
              public UFDate dmakedate;
              public String vdef7;
+             //业务代表电话
              public String vyedbtel;
+             //单据类型
              public String pk_billtype;
+             //单据状态
              public Integer vbillstatus;
+             //本次共运（件）
              public UFDouble ntotalnum;
+             //本次共运（件）
              public String vinaddress;
              public String vdef2;
              public UFDate reserve11;
+             //备注
              public String vmemo;
+             //业务类型
              public String pk_busitype;
+             //监管员
              public String pk_manageperson;
              public String vdef1;
+             //联系人id
              public String pk_receiveperson;
              public String reserve3;
+             //单据编号
              public String vbillno;
+             //	单据日期
              public UFDate dbilldate;
+             //收货站
              public String pk_inwhouse;
              public UFDate reserve13;
              public UFDouble reserve8;
              public UFDouble reserve9;
              public String vdef9;
+             //业务代表
              public String pk_yedb;
+             //客商管理id
              public String pk_cumandoc;
+             //客商管理id
              public UFDate dapprovedate;
              public String vdef8;
+             //客商管理id
              public String vtelphone;
+             //客商管理id
              public String vapproveid;
              public String reserve7;
              public String vdef6;

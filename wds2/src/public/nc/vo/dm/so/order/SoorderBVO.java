@@ -9,7 +9,7 @@
 	import nc.vo.pub.lang.*;
 	
 /**
- * <b> 在此处简要描述此类的功能 </b>
+ * <b> 销售订单子表 </b>
  *
  * <p>
  *     在此处添加此类的描述信息
@@ -26,56 +26,82 @@
 	 */
 	private static final long serialVersionUID = -7505846428875000774L;
 			public String reserve5;
+			 //辅计量id
              public String assunit;
+             //来源单据表头序列号
              public String csourcebillhid;
              public String vdef4;
+             //源头单据号
              public String vfirstbillcode;
+             //来源单据类型
              public String csourcetype;
+             //主计量id
              public String uint;
              public Integer dr;
+             //子表主键
              public String pk_soorder_b;
              public UFDate reserve12;
              public UFDateTime ts;
+             //主表主键
              public String pk_soorder;
              public UFDouble reserve6;
              public UFBoolean reserve14;
              public UFDouble reserve10;
              public String vdef3;
+             //是否赠品
              public UFBoolean fisgift;
              public String reserve1;
              public UFBoolean reserve16;
              public UFBoolean reserve15;
+             //来源单据行号
              public String vsourcerowno;
+             //存货管理id
              public String pk_invmandoc;
              public String reserve2;
              public String vdef10;
+             //源头单据表体id
              public String cfirstbillbid;
              public String vdef5;
+             //原始订单辅数量
              public UFDouble nassoldnum;
+             //原始订单数量
              public UFDouble noldnum;
+             //安排后辅数量
              public UFDouble nassarrangnum;
+             //批次
              public String picicode;
+             //源头单据表头id
              public String cfirstbillhid;
              public String reserve4;
              public String vdef7;
+             //源头单据行号
              public String vfirstrowno;
+             //安排后数量
              public UFDouble narrangnmu;
+             //助记码
              public String helpcode;
+             //存货基本id
              public String pk_invbasdoc;
              public String vdef2;
              public UFDate reserve11;
+             //备注
              public String vmemo;
+             //来源单据号
              public String vsourcebillcode;
              public String vdef1;
              public String reserve3;
+             //源头单据表体id
              public String csourcebillbid;
+             //换算率 
              public UFDouble nhgrate;
              public UFDate reserve13;
              public UFDouble reserve8;
              public UFDouble reserve9;
+             //源头单据制单日期
              public UFDate dfirstbilldate;
              public String vdef9;
              public String vdef8;
+             //源头单据类型
              public String cfirsttype;
              public UFDouble reserve7;
              public String vdef6;
