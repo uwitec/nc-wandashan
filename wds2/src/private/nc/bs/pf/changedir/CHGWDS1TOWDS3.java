@@ -94,10 +94,11 @@ public String[] getField() {
 			
 			"B_pk_invmandoc->B_pk_invmandoc",
 			"B_pk_invbasdoc->B_pk_invbasdoc",
-			"B_unit->B_unit",
-			"B_assunit->B_assunit",
-			"B_nassplannum->B_nassplannum",
-			"B_nplannum->B_nplannum",
+			"B_unit->B_unit",//主 计量单位
+			"B_assunit->B_assunit",//辅计量单位
+			"B_nassplannum->B_nassplannum",//安排辅数量
+			"B_nplannum->B_nplannum",//安排数量
+			"B_ndealnum->B_nnum",//安排数量
 			"B_reserve2->B_reserve2",
 			"B_reserve1->B_reserve1", 
 			"B_pk_fdsyzc_h->B_reserve1", 

@@ -66,7 +66,7 @@ public class PlanOrderBO {
 		}
 		SendorderBVO[] bodys= (SendorderBVO[])obj.getChildrenVO();
 		StringBuffer sql = new StringBuffer();
-		sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)+");
+		sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
 		for(SendorderBVO body:bodys){
 			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum()));
 			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
