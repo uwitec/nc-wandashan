@@ -6,7 +6,7 @@ import nc.vo.load.tag.TagDocBVO;
 import nc.vo.load.tag.TagDocVO;
 import nc.vo.trade.pub.HYBillVO;
 
-public class MyClientController extends AbstractManageController {
+public class MyClientController extends AbstractManageController{
 
 	public String[] getCardBodyHideCol() {
 		// TODO Auto-generated method stub
@@ -28,21 +28,9 @@ public class MyClientController extends AbstractManageController {
 			};
 	}
 
-	public int[] getListButtonAry() {
-		return new int[]{
-				IBillButton.Add,
-				IBillButton.Delete,
-				IBillButton.Edit,
-				IBillButton.Query,
-				IBillButton.Save,
-				IBillButton.Refresh,
-				IBillButton.Card
-		};
-	}
-
 	public boolean isShowCardRowNo() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public boolean isShowCardTotal() {
@@ -58,8 +46,8 @@ public class MyClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-			TagDocVO.class.getName(),
-			TagDocBVO.class.getName()
+				TagDocVO.class.getName(),
+				TagDocBVO.class.getName()
 		};
 	}
 
@@ -74,7 +62,8 @@ public class MyClientController extends AbstractManageController {
 	}
 
 	public int getBusinessActionType() {
-		return nc.ui.trade.businessaction.IBusinessActionType.BD;
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	public String getChildPkField() {
@@ -94,17 +83,17 @@ public class MyClientController extends AbstractManageController {
 
 	public Boolean isEditInGoing() throws Exception {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	public boolean isExistBillStatus() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public boolean isLoadCardFormula() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public String[] getListBodyHideCol() {
@@ -112,6 +101,17 @@ public class MyClientController extends AbstractManageController {
 		return null;
 	}
 
+	public int[] getListButtonAry() {
+		return new int[]{
+				IBillButton.Add,
+				IBillButton.Delete,
+				IBillButton.Edit,
+				IBillButton.Query,
+				IBillButton.Save,
+				IBillButton.Refresh,
+				IBillButton.Card
+		};
+	}
 
 	public String[] getListHeadHideCol() {
 		// TODO Auto-generated method stub
@@ -120,7 +120,7 @@ public class MyClientController extends AbstractManageController {
 
 	public boolean isShowListRowNo() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public boolean isShowListTotal() {
