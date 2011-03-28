@@ -37,7 +37,7 @@ public class MyClientUI extends BillManageUI {
 
 	@Override
 	protected void initSelfData() {
-		// TODO Auto-generated method stub
+		//++++++++++
 
 	}
 

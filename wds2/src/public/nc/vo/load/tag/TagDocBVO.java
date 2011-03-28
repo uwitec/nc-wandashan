@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 
 /**
@@ -21,10 +22,12 @@ import nc.vo.pub.lang.UFDateTime;
 
 public class TagDocBVO extends SuperVO {
 	
+	public UFBoolean fistag;
+	public String vemployeeid;
+	public String vemployeename;
 	public String pk_taghid;
 	public String pk_tagbid;
-	public Integer fistag;
-	public Integer pk_employeeid;
+	public String pk_employeeid;
 	public String vaddress;
 	public String vcontact1;
 	public String vcontact2;
@@ -90,19 +93,19 @@ public class TagDocBVO extends SuperVO {
 		this.pk_tagbid = pk_tagbid;
 	}
 
-	public Integer isFistag() {
+	public UFBoolean isFistag() {
 		return fistag;
 	}
 
-	public void setFistag(Integer fistag) {
+	public void setFistag(UFBoolean fistag) {
 		this.fistag = fistag;
 	}
 
-	public Integer getPk_employeeid() {
+	public String getPk_employeeid() {
 		return pk_employeeid;
 	}
 
-	public void setPk_employeeid(Integer pk_employeeid) {
+	public void setPk_employeeid(String pk_employeeid) {
 		this.pk_employeeid = pk_employeeid;
 	}
 
@@ -413,6 +416,26 @@ public class TagDocBVO extends SuperVO {
 
 		return "wds_tagdoc_b";
 
+	}
+
+	public String getVemployeeid() {
+		return vemployeeid;
+	}
+
+	public void setVemployeeid(String vemployeeid) {
+		this.vemployeeid = vemployeeid;
+	}
+
+	public String getVemployeename() {
+		return vemployeename;
+	}
+
+	public void setVemployeename(String vemployeename) {
+		this.vemployeename = vemployeename;
+	}
+
+	public UFBoolean getFistag() {
+		return fistag;
 	}
 
 
