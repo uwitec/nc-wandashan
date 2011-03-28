@@ -3,23 +3,21 @@ package nc.ui.wds.w8004040208;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.trade.button.IBillButton;
+import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wds.w8000.CommonUnit;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.ui.pub.ClientEnvironment;
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BDBusinessDelegator;
-import nc.ui.trade.button.IBillButton;
-import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wds.w8000.CommonUnit;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
  * 
  * <p>
- * 在此处添加此类的描述信息
+ * 其他出库
  * </p>
  * 
  * 

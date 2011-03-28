@@ -17,8 +17,8 @@ import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wds.pub.WdsWlPubConsts;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 /**
  * 其他出库--转库处理类
@@ -140,7 +140,9 @@ public class FydnewDlg extends BillSourceDLG {
 		// 得到调用节点的查询对话框
 		// funnode 40092010 申请单
 		// qrynodekey 40099906 参照单据查询
-		m_dlgQry = getQueryDlg(pkCorp, funNode, operator, qrynodekey);
+		if(m_dlgQry ==null){
+		  m_dlgQry = getQueryDlg(pkCorp, funNode, operator, qrynodekey);
+		}
 
 		if (m_dlgQry.showModal() == nc.ui.pub.beans.MessageDialog.ID_OK) {
 
@@ -208,9 +210,9 @@ public class FydnewDlg extends BillSourceDLG {
 			StringBuffer strWhere = new StringBuffer();
 			strWhere.append(" isnull(wds_sendorder.dr,0)=0 ");
 			strWhere.append(" and wds_sendorder.vbillstatus =1");
-			
-			if (null != pk_stock && !"".equals(pk_stock)) {
-				strWhere.append(" and wds_sendorder.pk_outwhouse = '" + pk_stock + "' ");
+			strWhere.append(" and (wds_sendorder.denddate>='"+ new UFDate(System.currentTimeMillis()).toString()+"' or wds_sendorder.denddate is null )");
+			if (!isStock) {//不是总仓人员的只能看到调出仓库是本仓库的
+				strWhere.append(" and wds_sendorder.pk_outwhouse = '" + pk_stock + "'");
 			}
 			String initWhereSql = m_dlgQry.getWhereSQL();
 			if(initWhereSql != null && !"".equals(initWhereSql)){
@@ -243,6 +245,7 @@ public class FydnewDlg extends BillSourceDLG {
 							for (int i = 0; i < mxlist.size(); i++) {
 								SendorderBVO body = (SendorderBVO) mxlist
 										.get(i);
+								//判断发运单存货是否当前登录人绑定货位下的存货
 								if (pkList.contains(body.getPk_invbasdoc())) {
 										isPkEqer = true;
 
