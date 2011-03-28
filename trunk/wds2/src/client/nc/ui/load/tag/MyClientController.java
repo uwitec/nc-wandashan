@@ -68,7 +68,7 @@ public class MyClientController extends AbstractManageController{
 
 	public String getChildPkField() {
 		// TODO Auto-generated method stub
-		return "pk_tagbid";
+		return "";
 	}
 
 	public String getHeadZYXKey() {
@@ -78,7 +78,7 @@ public class MyClientController extends AbstractManageController{
 
 	public String getPkField() {
 		// TODO Auto-generated method stub
-		return "pk_taghid";
+		return "";
 	}
 
 	public Boolean isEditInGoing() throws Exception {
