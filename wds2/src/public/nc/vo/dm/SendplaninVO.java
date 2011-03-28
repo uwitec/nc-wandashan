@@ -25,24 +25,33 @@
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+			//公司主键
 			public String pk_corp;
              public String reserve5;
              public UFDateTime ts;
              public String reserve4;
              public String vdef4;
+             //制单日期
              public UFDate dmakedate;
              public String vdef7;
+             //制单人
              public String voperatorid;
+             //审批批语
              public String vapprovenote;
+             //单据类型
              public String pk_billtype;
+             //单据状态
              public Integer vbillstatus;
              /**计划类型  */
              public Integer iplantype;
+             //业务员
              public String vemployeeid;
              public String vdef2;
              public UFDate reserve12;
              public UFDate reserve11;
+             //备注
              public String vmemo;
+             //业务类型
              public String pk_busitype;
              /**主键 */
              public String pk_sendplanin;
@@ -50,12 +59,15 @@
              public String vdef1;
              public String reserve3;
              public UFBoolean reserve14;
+             //单据日期
              public UFDate dbilldate;
+             //单据编号
              public String vbillno;
              /**调入仓库 */
              public String pk_inwhouse;
              public UFDate reserve13;
              public UFDouble reserve10;
+             //部门
              public String pk_deptdoc;
              public UFDouble reserve9;
              public UFDouble reserve8;
@@ -63,11 +75,13 @@
              /**调出仓库 */
              public String pk_outwhouse;
              public String vdef9;
+             //审批日期
              public UFDate dapprovedate;
              public String vdef8;
              public String reserve1;
              public UFBoolean reserve16;
              public String reserve7;
+             //
              public String vapproveid;
              public UFBoolean reserve15;
              public String reserve2;

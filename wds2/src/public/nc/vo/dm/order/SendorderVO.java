@@ -15,7 +15,7 @@ import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 	
 /**
- * <b> 在此处简要描述此类的功能 </b>
+ * <b>发运订单 </b>
  *
  * <p>
  *     在此处添加此类的描述信息
@@ -43,6 +43,7 @@ import nc.vo.pub.lang.UFDouble;
              public String vapprovenote;
              //是否大包粉
              public UFBoolean fisbigflour;
+             //业务员
              public String vemployeeid;
              public UFDate reserve12;
              public String reserve6;
@@ -50,7 +51,7 @@ import nc.vo.pub.lang.UFDouble;
              //结束时间
              public UFDate denddate;
              public UFDouble reserve10;
-             
+             //部门
              public String pk_deptdoc;
              public String vdef3;
              public String pk_sendorder;
@@ -79,6 +80,7 @@ import nc.vo.pub.lang.UFDouble;
              public String vdef2;
              public String vinaddress;
              public UFDate reserve11;
+             //备注
              public String vmemo;
              //业务类型
              public String pk_busitype;
@@ -100,7 +102,7 @@ import nc.vo.pub.lang.UFDouble;
             
              public String vdef9;
              public String vdef8;
-             //
+             //审批日期
              public UFDate dapprovedate;
            
              //联系电话
