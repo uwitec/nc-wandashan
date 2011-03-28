@@ -21,7 +21,6 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Delete,
 				IBillButton.Cancel,
 				IBillButton.Edit,
-				IBillButton.Query,
 				IBillButton.Refresh,
 				IBillButton.Return
 				
@@ -106,7 +105,6 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Add,
 				IBillButton.Delete,
 				IBillButton.Edit,
-				IBillButton.Query,
 				IBillButton.Save,
 				IBillButton.Refresh,
 				IBillButton.Card
