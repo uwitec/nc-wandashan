@@ -2,6 +2,7 @@ package nc.bs.wl.plan.order;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -50,6 +51,30 @@ public class PlanOrderBO {
 			throw new BusinessException("已有下游其他出库单，请先删除发运订单再做此操作");
 		}
 		
+	}
+	/**
+	 * 
+	 * @throws BusinessException 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * 发运订单作废的时候，需要回减 发运计划累计安排数量
+	 * @时间：2011-3-28上午11:35:11
+	 */
+	public void reWriteSendPlan(AggregatedValueObject obj) throws BusinessException{
+		if(obj == null ||obj.getChildrenVO()==null ||obj.getChildrenVO().length==0 ){
+			return ;
+		}
+		SendorderBVO[] bodys= (SendorderBVO[])obj.getChildrenVO();
+		StringBuffer sql = new StringBuffer();
+		sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)+");
+		for(SendorderBVO body:bodys){
+			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum()));
+			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
+			sql.append(" and pk_sendplanin='"+body.getCsourcebillhid()+"'");
+			if(getBaseDAO().executeUpdate(sql.toString())==0){
+				throw new BusinessException("数据异常：该发运计划可能已作废");
+			};
+		}
 	}
 
 }
