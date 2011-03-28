@@ -6,20 +6,12 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 
 public class MyClientUI extends BillManageUI {
 	
-
-	public MyClientUI() {
-		super();
-	}
-
-	public MyClientUI(Boolean useBillSource) {
-		super(useBillSource);
-	}
 	
 	@Override
 	protected AbstractManageController createController() {
 		// TODO Auto-generated method stub
 		
-		return new ClientController();
+		return new MyClientController();
 	}
 
 	@Override

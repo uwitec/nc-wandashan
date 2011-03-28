@@ -5,7 +5,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.vo.load.tag.TagDocBVO;
 import nc.vo.load.tag.TagDocVO;
 
-public class ClientController extends AbstractManageController {
+public class MyClientController extends AbstractManageController {
 
 	public String[] getCardBodyHideCol() {
 		// TODO Auto-generated method stub
@@ -13,33 +13,30 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public int[] getCardButtonAry() {
-		int[] buttonArray = new int[] {
-				IBillButton.Del,
-				IBillButton.Edit,
+		return new int[]{
+				IBillButton.Add,
+				IBillButton.Line,
 				IBillButton.Save,
+				IBillButton.Delete,
 				IBillButton.Cancel,
-				IBillButton.Query, 				 
-				IBillButton.Return,
-				IBillButton.Brow,
+				IBillButton.Edit,
+				IBillButton.Query,
 				IBillButton.Refresh,
-				IBillButton.Audit,
-				IBillButton.CancelAudit};
-		return buttonArray;
+				IBillButton.Return
+				
+			};
 	}
 
 	public int[] getListButtonAry() {
-		int[] buttonArray = new int[] {
-				IBillButton.Del,
+		return new int[]{
+				IBillButton.Add,
+				IBillButton.Delete,
 				IBillButton.Edit,
-				IBillButton.Query, 				 
-				IBillButton.Card,
-				IBillButton.Brow,
+				IBillButton.Query,
+				IBillButton.Save,
 				IBillButton.Refresh,
-				IBillButton.Audit,
-				IBillButton.CancelAudit
-		}
-				;
-		return buttonArray;
+				IBillButton.Card
+		};
 	}
 
 	public boolean isShowCardRowNo() {
