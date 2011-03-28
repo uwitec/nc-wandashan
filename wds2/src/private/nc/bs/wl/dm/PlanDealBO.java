@@ -21,7 +21,11 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
+/**
+ * 发运计划处理后台类
+ * @author Administrator
+ *
+ */
 public class PlanDealBO {
 
 	private BaseDAO m_dao = null;
@@ -127,7 +131,7 @@ public class PlanDealBO {
 			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
 				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
 			if(getDao().executeUpdate(sql)==0){
-				throw new BusinessException("该发运计划已被删除，请重新查询数据");
+				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
 			};
 			
 			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
