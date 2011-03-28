@@ -1,10 +1,13 @@
 package nc.ui.dm.order;
 
+import java.util.Date;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.querytemplate.TemplateInfo;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -46,6 +49,22 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	 * @throws Exception
 	 */
 	protected void beforeSaveCheck() throws Exception{
+		//mlr
+		//对发货开始和结束日期检验，发货日期不能大于结束日期
+		Object start=getBillCardPanelWrapper().getBillCardPanel().getHeadItem("dbegindate").getValueObject();
+		Object end=getBillCardPanelWrapper().getBillCardPanel().getHeadItem("denddate").getValueObject();
+       if(start ==null || end==null
+    		   ||"".equals(start)||"".equals(end)){
+    	   throw new BusinessException("开始和结束日期不能为空");
+    	   
+       }else if(start.toString().compareTo(end.toString())>0){
+    	   
+    	   throw new BusinessException("开始日期不能大于结束日期");
+       }
+    		  
+		
+		
+		//表体非空校验
 		if(getBillUI().getVOFromUI()!=null){
 			if(getBillUI().getVOFromUI().getChildrenVO()==null||
 					getBillUI().getVOFromUI().getChildrenVO().length==0	){
