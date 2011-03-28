@@ -18,7 +18,7 @@ import nc.vo.pub.lang.UFDouble;
  * <b> 在此处简要描述此类的功能 </b>
  * 
  * <p>
- * 在此处添加此类的描述信息
+ * 发运订单子表
  * </p>
  * 
  * 创建日期:2011-3-24
@@ -30,56 +30,80 @@ public class SendorderBVO extends SuperVO {
 	private static final long serialVersionUID = 4752008406168776524L;
 	public String reserve5;
 	public UFDateTime ts;
+	//辅计量单位id
 	public String assunit;
 	public String reserve4;
+	//计划主数量
 	public UFDouble nplannum;
 
 	public String vdef4;
 	public String vdef7;
+	//收货站待接收数量
 	public UFDouble nonlinenum;
+	//计划辅数量
 	public UFDouble nassplannum;
+	//存货基本档案
 	public String pk_invbasdoc;
 	public String vdef2;
 	public UFDate reserve11;
 	public UFDate reserve12;
+	//备注
 	public String vmemo;
 	public UFDouble reserve6;
 	public String vdef1;
 	public String reserve3;
+	//子表主键
 	public String pk_sendorder_b;
 	public UFBoolean reserve14;
 	public UFDouble reserve10;
 	public UFDate reserve13;
+	//发货站已发运数量
 	public UFDouble noutsendnum;
+	//主计量单位id
 	public String unit;
 	public UFDouble reserve8;
 	public UFDouble reserve9;
 	public String vdef3;
 	public String vdef9;
+	//主表主键
 	public String pk_sendorder;
 	public String vdef8;
 	public String reserve1;
+	//发货站待发运数量
 	public UFDouble noutkeepnum;
 	public UFBoolean reserve16;
 	public UFDouble reserve7;
 	public UFBoolean reserve15;
+	//存货管理档案
 	public String pk_invmandoc;
 	public String vdef6;
 	public String reserve2;
 	public Integer dr;
+	//收货站接受数量
 	public UFDouble ninacceptnum;
 	public String vdef10;
 	public String vdef5;
+	//源头单据表体id
 	public String cfirstbillbid;
+	//来源单据行号
 	public String vsourcerowno;
+	//源头单据表头id
 	public String cfirstbillhid;
+	//源头单据行号
 	public String vfirstrowno;
+	//来源单据号
 	public String vsourcebillcode;
+	//源头单据制单日期
 	public UFDate dfirstbilldate;
+	//来源单据表体序列号	
 	public String csourcebillbid;
+	//源头单据类型
 	public String cfirsttype;
+	//来源单据表头序列号
 	public String csourcebillhid;
+	//源头单据号
 	public String vfirstbillcode;
+	//来源单据类型
 	public String csourcetype;
 
 	public static final String RESERVE5 = "reserve5";

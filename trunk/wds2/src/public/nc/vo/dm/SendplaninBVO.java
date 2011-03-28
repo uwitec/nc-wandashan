@@ -51,6 +51,7 @@ import nc.vo.pub.lang.UFDouble;
              public UFDate reserve12;
              /**Ö÷¼ü */
              public String pk_sendplanin_b;
+             /**±¸×¢ */
              public String vmemo;
              /**¸¸¼ü */
              public String pk_sendplanin;
