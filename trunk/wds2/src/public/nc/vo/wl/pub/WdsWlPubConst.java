@@ -32,7 +32,7 @@ public class WdsWlPubConst {
 	/**zhf-----------------------发运计划安排---------------------------*/
 	//发运计划安排功能节点号
 	public static String DM_PLAN_DEAL_NODECODE = "80060410";
-	
+	public static String DM_PLAN_DEAL_BILLTYPE="WDS2";
 	// 按钮tag
 	public static String DM_PLANDEAL_BTNTAG_QRY = "查询";
 	public static String DM_PLANDEAL_BTNTAG_DEAL = "安排";

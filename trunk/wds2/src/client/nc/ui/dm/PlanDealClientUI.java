@@ -43,7 +43,7 @@ public class PlanDealClientUI extends ToftPanel{
 	protected BillListPanel getPanel(){
 		if(m_panel == null){
 			m_panel = new BillListPanel();
-			m_panel.loadTemplet(WdsWlPubConst.DM_PLAN_DEAL_NODECODE, null, m_ce.getUser().getPrimaryKey(), m_ce.getCorporation().getPrimaryKey()
+			m_panel.loadTemplet(WdsWlPubConst.DM_PLAN_DEAL_BILLTYPE, null, m_ce.getUser().getPrimaryKey(), m_ce.getCorporation().getPrimaryKey()
 					);
 			m_panel.setEnabled(true);
 		}
