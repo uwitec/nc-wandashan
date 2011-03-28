@@ -84,5 +84,17 @@ public class PlanDealClientUI extends ToftPanel{
 
 		m_handler.onButtonClicked(btn.getCode());
 	}
+	public void updateButtonStatus(String btnTag,boolean flag){
+		if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
+			m_btnDeal.setEnabled(flag);
+		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
+			m_btnSelno.setEnabled(flag);
+		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
+			m_btnSelAll.setEnabled(flag);
+		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
+			m_btnQry.setEnabled(flag);
+		}
+		updateButtons();
+	}
 
 }

@@ -47,12 +47,14 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 	public void onButtonClicked(String btnTag){
 		if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
 			onDeal();
+			ui.updateButtonStatus(btnTag,false);
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
 			onNoSel();
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
 			onAllSel();
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
 			onQuery();
+			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 		}
 	}
 	
@@ -168,6 +170,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
 		whereSql.append(" and wds_sendplanin.pk_corp='"+ui.cl.getCorp()+"'");
 		whereSql.append(" and wds_sendplanin.vbillstatus=1");
+		whereSql.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
 		String cwhid  = LoginInforHelper.getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
 		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
 			whereSql.append(" and wds_sendplanin.pk_outwhouse = '"+cwhid+"' ");
