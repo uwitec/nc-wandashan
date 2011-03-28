@@ -376,13 +376,13 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		lineNo = -1;
 		if (isControl == 2 || isControl == 3) {
 			isAdd = true;
-
-			fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
+			if(fydnewdlg == null){
+				fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
 							.getPrimaryKey(), WdsWlPubConsts.SEND_ORDER_FUNCODE, "1=1", 
 							WdsWlPubConsts.WDS3, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
-
+			}
 			// 调用方法 获取查询后的聚合VO
 			AggregatedValueObject[] vos = fydnewdlg
 					.getReturnVOs(ClientEnvironment.getInstance()
@@ -1616,15 +1616,15 @@ public class MyEventHandler extends AbstractMyEventHandler {
 									.setCsourcebillbid(fydmxnewvo.getPk_sendorder_b()); // 来源单据表体主键
 							generalBVO.setCfirstbillbid(fydmxnewvo.getPk_sendorder_b()); // 源头单据表体主键
 						}
-						if (null != fydmxnewvo.getNplannum()
-								&& !"".equals(fydmxnewvo.getNplannum())) {
+						if (null != fydmxnewvo.getNdealnum()
+								&& !"".equals(fydmxnewvo.getNdealnum())) {
 							generalBVO.setNshouldoutnum(fydmxnewvo
-									.getNplannum()); // 应发数量
+									.getNdealnum()); // 安排数量
 						}
-						if (null != fydmxnewvo.getNassplannum()
-								&& !"".equals(fydmxnewvo.getNassplannum())) {
+						if (null != fydmxnewvo.getNassdealnum()
+								&& !"".equals(fydmxnewvo.getNassdealnum())) {
 							generalBVO.setNshouldoutassistnum(fydmxnewvo
-									.getNassplannum()); // 应发辅数量
+									.getNassdealnum()); // 安排辅数量
 						}
 						if (null != fydmxnewvo.getPk_invbasdoc()
 								&& !"".equals(fydmxnewvo.getPk_invbasdoc())) {
@@ -1632,7 +1632,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 									.getPk_invbasdoc()); // 存货主键
 						}
 						generalBVO.setIsoper(new UFBoolean("Y"));
-//						generalBVO.setCrowno(fydmxnewvo.getCrowno());
+						generalBVO.setCrowno(""+(i+1)*10);
 						// 行号
 						// generalBVO.setCrowno(getRowNo() + "");
 						generalBList.add(generalBVO);

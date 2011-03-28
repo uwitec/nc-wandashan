@@ -12,4 +12,6 @@ public class WdsWlPubConsts {
 	public static String  OTHER_OUT_FUNCODE="8004040208";
 	/**参照发运订单的节点标示 */
 	public static String  OTHER_OUT_REFWDS3_NODECODE="8004040210";
+	/**总仓的id */
+	public static String WDS_WL_ZC = "1021A91000000004YZ0P";//总仓是双城
 }
