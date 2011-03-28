@@ -29,15 +29,7 @@ public class MyClientController extends AbstractManageController {
 	}
 
 	public int[] getListButtonAry() {
-		return new int[]{
-				IBillButton.Add,
-				IBillButton.Delete,
-				IBillButton.Edit,
-				IBillButton.Query,
-				IBillButton.Save,
-				IBillButton.Refresh,
-				IBillButton.Card
-		};
+		return null;
 	}
 
 	public boolean isShowCardRowNo() {
@@ -74,7 +66,7 @@ public class MyClientController extends AbstractManageController {
 	}
 
 	public int getBusinessActionType() {
-		return nc.ui.trade.businessaction.IBusinessActionType.PLATFORM;
+		return nc.ui.trade.businessaction.IBusinessActionType.BD;
 	}
 
 	public String getChildPkField() {
