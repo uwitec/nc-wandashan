@@ -105,6 +105,10 @@ public class SendorderBVO extends SuperVO {
 	public String vfirstbillcode;
 	//来源单据类型
 	public String csourcetype;
+	//安排数量
+	public UFDouble ndealnum;
+	//安排辅数量
+	public UFDouble nassdealnum;
 
 	public static final String RESERVE5 = "reserve5";
 	public static final String TS = "ts";
@@ -1305,5 +1309,21 @@ public class SendorderBVO extends SuperVO {
 
 		return "wds_sendorder_b";
 
+	}
+
+	public UFDouble getNdealnum() {
+		return ndealnum;
+	}
+
+	public void setNdealnum(UFDouble ndealnum) {
+		this.ndealnum = ndealnum;
+	}
+
+	public UFDouble getNassdealnum() {
+		return nassdealnum;
+	}
+
+	public void setNassdealnum(UFDouble nassdealnum) {
+		this.nassdealnum = nassdealnum;
 	}
 }
