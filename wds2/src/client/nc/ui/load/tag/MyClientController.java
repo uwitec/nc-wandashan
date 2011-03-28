@@ -44,7 +44,7 @@ public class MyClientController extends AbstractManageController {
 
 	public String getBillType() {
 		// TODO Auto-generated method stub
-		return null;
+		return "wds_tagdoc";
 	}
 
 	public String[] getBillVoName() {
