@@ -25,8 +25,15 @@ public class AfterWDS1TOWDS3 implements IchangeVO {
 	public AggregatedValueObject[] retChangeBusiVOs(
 			AggregatedValueObject[] preVos, AggregatedValueObject[] nowVos)
 			throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		if(nowVos ==null || nowVos.length==0){
+			return null;
+		}
+		for(AggregatedValueObject nowVo:nowVos){
+			SendorderVO head = (SendorderVO)nowVo.getParentVO();
+			head.setVbillno(new HYPubBO().getBillNo(head.getPk_billtype(), head.getPk_corp(), null, null));
+
+		}
+		return nowVos;
 	}
 
 }

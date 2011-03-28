@@ -6,7 +6,11 @@ import nc.ui.pub.ToftPanel;
 import nc.ui.pub.bill.BillListPanel;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.WdsWlPubConst;
-
+/**
+ * 发运计划安排
+ * @author Administrator
+ *
+ */
 public class PlanDealClientUI extends ToftPanel{
 	
 	/**

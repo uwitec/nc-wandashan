@@ -66,10 +66,10 @@ public class PlanCheckinBO {
 		StringBuffer sql = new StringBuffer();	
 		sql.append(" select count(*) ");
 		sql.append(" from wds_sendorder ");
-		sql.append(" jion wds_sendorder_b ");
+		sql.append(" join wds_sendorder_b ");
 		sql.append(" on wds_sendorder.pk_sendorder= wds_sendorder_b.pk_sendorder");
 		sql.append(" where isnull(wds_sendorder.dr,0)=0 and isnull(wds_sendorder_b.dr,0)=0 ");
-		sql.append(" wds_sendorder_b.csourcebillhid ='"+pk_sendplanin+"'");
+		sql.append(" and wds_sendorder_b.csourcebillhid ='"+pk_sendplanin+"'");
 		int i = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
 		if( i>0){
 			throw new BusinessException("已有下游发运订单，请先删除发运订单再做此操作");
