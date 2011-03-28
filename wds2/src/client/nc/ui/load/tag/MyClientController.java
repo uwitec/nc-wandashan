@@ -4,6 +4,7 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.load.tag.TagDocBVO;
 import nc.vo.load.tag.TagDocVO;
+import nc.vo.trade.pub.HYBillVO;
 
 public class MyClientController extends AbstractManageController {
 
@@ -56,6 +57,7 @@ public class MyClientController extends AbstractManageController {
 
 	public String[] getBillVoName() {
 		return new String[]{
+				HYBillVO.class.getName(),
 			TagDocVO.class.getName(),
 			TagDocBVO.class.getName()
 		};
