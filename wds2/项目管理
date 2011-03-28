@@ -12,6 +12,7 @@ nc.ui.dm.order.ClientUI      80060415    WDS3
 nc.ui.dm.so.order.ClientUI    80060425   WDS5  
 
 装卸费价格设置
-nc.ui.load.invprice.ClientUI   
+nc.ui.load.invprice.ClientUI
+
 
   
