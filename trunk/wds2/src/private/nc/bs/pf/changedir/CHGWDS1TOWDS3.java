@@ -1,6 +1,7 @@
 package nc.bs.pf.changedir;
 
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 用于发运计划  安排时 生成 发运订单 数据转换  
@@ -21,7 +22,7 @@ public CHGWDS1TOWDS3() {
 * @return java.lang.String[]
 */
 public String getAfterClassName() {
-	return "";
+	return "nc.bs.wds2.conversion.AfterWDS1TOWDS3";
 }
 /**
 * 获得另一个后续类的全录径名称。
@@ -144,13 +145,18 @@ public String[] getField() {
 * @return java.lang.String[]
 */
 public String[] getFormulas() {
+	new UFDate(System.currentTimeMillis());
+	super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
 	return new String[] {
 //		"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
 //		"H_forderstatus->int(0)",
 			"H_pk_billtype->\""+WdsWlPubConst.WDS3+"\"",
 			"H_vbillstatus->int(8)",
 		    "B_csourcetype->\""+WdsWlPubConst.WDS1+"\"",
-		    "H_fisbigglour->\"N\""
+		    "H_fisbigglour->\"N\"",
+		    "H_dmakedate->\""+m_strDate+"\"",
+		    "H_dbilldate->\""+m_strDate+"\"",
+		    "H_dbegindate->\""+m_strDate+"\""
 	};
 }
 /**

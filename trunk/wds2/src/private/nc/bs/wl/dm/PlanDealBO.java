@@ -120,17 +120,10 @@ public class PlanDealBO {
 	 * @throws BusinessException
 	 */
 	private void reWriteDealNumForPlan(Map<String,UFDouble> map) throws BusinessException{
-		
-		
-		
-		
+	
 		if(map == null || map.size()==0)
 			return;
-		
-		
-		
-		
-		for(Entry<String, UFDouble> entry:map.entrySet()){
+			for(Entry<String, UFDouble> entry:map.entrySet()){
 			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
 				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
 			if(getDao().executeUpdate(sql)==0){
@@ -141,16 +134,11 @@ public class PlanDealBO {
 			
 			//如果累计安排数量大于计划数量将抛出异常
 			
-			String sql1="select count(*) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (nplannum-ndealnum)>=0";
-			
+			String sql1="select count(*) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
 			Object o=getDao().executeQuery(sql1,new ColumnProcessor());
 			if(o==null){
-				
 				throw new BusinessException("累计安排数量不能大于计划数量！");
 			}
-			
-			
-			
 		}
 	}
 	/**
