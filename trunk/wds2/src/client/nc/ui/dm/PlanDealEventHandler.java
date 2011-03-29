@@ -98,6 +98,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 			m_qrypanel = new PlanDealQryDlg();
 			m_qrypanel.setTempletID(ui.cl.getCorp(), WdsWlPubConst.DM_PLAN_LURU_NODECODE, ui.cl.getUser(), null);
 			m_qrypanel.hideUnitButton();
+			m_qrypanel.hideNormal();
 			//			m_qrypanel.setConditionEditable("h.pk_corp",true);
 			//			m_qrypanel.setValueRef("h.pk_corp", new UIRefPane("公司目录"));
 			//			m_qrypanel.changeValueRef("h.pk_corp", new UIRefPane("公司目录"));
