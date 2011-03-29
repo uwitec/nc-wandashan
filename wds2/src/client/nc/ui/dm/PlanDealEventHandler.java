@@ -9,6 +9,7 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
@@ -204,14 +205,14 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 			showHintMessage("请选中要处理的数据");
 			return;
 		}
-		List<PlanDealVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata);
+		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata,"nnum");
 		if(ldata == null||ldata.size() == 0){
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
 		try{
-			for(PlanDealVO vo:ldata){
-				vo.validataOnDeal();
+			for(SuperVO vo:ldata){
+				((PlanDealVO)vo).validataOnDeal();
 			}
 			PlanDealHealper.doDeal(ldata, ui);
 			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
