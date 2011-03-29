@@ -14,7 +14,7 @@ public class MyClientController extends AbstractManageController{
 	}
 
 	public int[] getCardButtonAry() {
-		return new int[]{
+		int[] buttonArray =new int[]{
 				IBillButton.Add,
 				IBillButton.Line,
 				IBillButton.Save,
@@ -26,11 +26,12 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Return
 				
 			};
+		return buttonArray;
 	}
 
 	public boolean isShowCardRowNo() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isShowCardTotal() {
@@ -63,7 +64,7 @@ public class MyClientController extends AbstractManageController{
 
 	public int getBusinessActionType() {
 		// TODO Auto-generated method stub
-		return nc.ui.trade.businessaction.IBusinessActionType.BD;
+		return nc.ui.trade.businessaction.IBusinessActionType.PLATFORM;
 	}
 
 	public String getChildPkField() {
@@ -88,12 +89,12 @@ public class MyClientController extends AbstractManageController{
 
 	public boolean isExistBillStatus() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isLoadCardFormula() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public String[] getListBodyHideCol() {
@@ -102,7 +103,7 @@ public class MyClientController extends AbstractManageController{
 	}
 
 	public int[] getListButtonAry() {
-		return new int[]{
+		int[] buttonArray =new int[]{
 				IBillButton.Add,
 				IBillButton.Delete,
 				IBillButton.Query,
@@ -111,6 +112,7 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Refresh,
 				IBillButton.Card
 		};
+		return buttonArray;
 	}
 
 	public String[] getListHeadHideCol() {
@@ -120,7 +122,7 @@ public class MyClientController extends AbstractManageController{
 
 	public boolean isShowListRowNo() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isShowListTotal() {
