@@ -44,17 +44,11 @@ public class MyClientEventHandler extends ManageEventHandler {
 	
 	
 	protected void onBoCancel() throws Exception {
-		String billcode = null;
-		String pk_billtype = null;
-		String pk_corp = null;
-		if (isAdding()) {
-			billcode = (String)getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vbillno").getValueObject();
-			pk_corp = _getCorp().getPrimaryKey();
+		if(getBufferData().getCurrentVO() ==null){
+			getBillUI().showWarningMessage("请先选择一条数据");
+			return;
 		}
-		super.onBoCancel();
-		if(billcode!=null && !"".equals(billcode)){
-			returnBillNo(billcode,pk_billtype,pk_corp);
-		}
+		super.onBoCancelAudit();
 	}
 	
 	protected void returnBillNo(String billcode,String pk_billtype,String pk_corp) {
