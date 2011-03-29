@@ -2,12 +2,15 @@ package nc.vo.wl.pub;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.List;
 
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
@@ -136,12 +139,13 @@ public class WdsWlPubTool {
 	 * @param ldata
 	 * @return
 	 */
-	public static java.util.List<PlanDealVO> filterVOsZeroNum(java.util.List<PlanDealVO> ldata){
+	public static List<SuperVO> filterVOsZeroNum(List ldata,String numfield){
 		if(ldata == null||ldata.size()==0)
 			return null;
-		java.util.List<PlanDealVO> lnewData = new ArrayList<PlanDealVO>();
-		for(PlanDealVO vo:ldata){
-			if(PuPubVO.getUFDouble_NullAsZero(vo.getNnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+		List<SuperVO> lnewData = new ArrayList<SuperVO>();
+		List<SuperVO> ldata2 = (List<SuperVO>)ldata;
+		for(SuperVO vo:ldata2){
+			if(PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue(numfield)).equals(WdsWlPubTool.DOUBLE_ZERO)){
 				continue;
 			}
 			lnewData.add(vo);

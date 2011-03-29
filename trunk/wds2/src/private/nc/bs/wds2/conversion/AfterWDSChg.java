@@ -5,20 +5,21 @@ import nc.vo.dm.order.SendorderVO;
 import nc.vo.pf.change.IchangeVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 
 /**
  * WD1TOWDS3交换的类后续处理类
  * @author Administrator
  *
  */
-public class AfterWDS1TOWDS3 implements IchangeVO {
+public class AfterWDSChg implements IchangeVO {
 
 	public AggregatedValueObject retChangeBusiVO(AggregatedValueObject preVo,
 			AggregatedValueObject nowVo) throws BusinessException {
 		if(nowVo == null)
 			return nowVo;
-		SendorderVO head = (SendorderVO)nowVo.getParentVO();
-		head.setVbillno(new HYPubBO().getBillNo(head.getPk_billtype(), head.getPk_corp(), null, null));
+		SuperVO head = (SuperVO)nowVo.getParentVO();
+		head.setAttributeValue("vbillno",new HYPubBO().getBillNo(head.getAttributeValue("pk_billtype").toString(), head.getAttributeValue("pk_corp").toString(), null, null));
 		return nowVo;
 	}
 
@@ -28,9 +29,10 @@ public class AfterWDS1TOWDS3 implements IchangeVO {
 		if(nowVos ==null || nowVos.length==0){
 			return null;
 		}
+		HYPubBO bo = new HYPubBO();
 		for(AggregatedValueObject nowVo:nowVos){
-			SendorderVO head = (SendorderVO)nowVo.getParentVO();
-			head.setVbillno(new HYPubBO().getBillNo(head.getPk_billtype(), head.getPk_corp(), null, null));
+			SuperVO head = (SuperVO)nowVo.getParentVO();
+			head.setAttributeValue("vbillno", bo.getBillNo(head.getAttributeValue("pk_billtype").toString(), head.getAttributeValue("pk_corp").toString(), null, null));
 
 		}
 		return nowVos;

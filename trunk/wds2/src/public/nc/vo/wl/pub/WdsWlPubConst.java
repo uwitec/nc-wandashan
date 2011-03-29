@@ -24,6 +24,8 @@ public class WdsWlPubConst {
 	/**lyf begin--------------------销售运单-----------------------------------------begin*/
 	 //1 功能节点
 	public static String DM_SO_ORDER_NODECODE="80060425";
+	public static String WDS4 = "WDS4";
+	public static String DM_SO_DEAL_NODECODE = "80060201";
 	// 2. 单据类型
 	public static String WDS5="WDS5";
 	
@@ -46,8 +48,12 @@ public class WdsWlPubConst {
 	
 	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};//"vbillno",
 
+	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vreceiptcode","cbodywarehouseid","ccustomerid"};//"vbillno",
+	
 	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 	public static String DM_PLAN_TO_ORDER_SAVE="SAVE";
+	
+	public static String DM_SO_DEALNUM_FIELD_NAME = "ntaldcnum";//利用系统销售订单  已参与价保数量 作为  累计发运数量
 
 	/**zhf-----------------------发运计划安排---------------------------*/
 }
