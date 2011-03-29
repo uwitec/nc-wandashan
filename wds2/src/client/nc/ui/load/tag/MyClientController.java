@@ -64,7 +64,7 @@ public class MyClientController extends AbstractManageController{
 
 	public int getBusinessActionType() {
 		// TODO Auto-generated method stub
-		return nc.ui.trade.businessaction.IBusinessActionType.PLATFORM;
+		return nc.ui.trade.businessaction.IBusinessActionType.BD;
 	}
 
 	public String getChildPkField() {
