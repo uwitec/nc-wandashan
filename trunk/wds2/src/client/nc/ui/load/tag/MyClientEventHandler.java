@@ -44,10 +44,7 @@ public class MyClientEventHandler extends ManageEventHandler {
 	
 	
 	protected void onBoCancel() throws Exception {
-		if(getBufferData().getCurrentVO() ==null){
-			getBillUI().showWarningMessage("请先选择一条数据");
-			return;
-		}
+		
 		super.onBoCancelAudit();
 	}
 	
