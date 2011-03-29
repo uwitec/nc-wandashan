@@ -88,7 +88,7 @@ public class MyClientController extends AbstractManageController{
 
 	public boolean isExistBillStatus() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public boolean isLoadCardFormula() {
