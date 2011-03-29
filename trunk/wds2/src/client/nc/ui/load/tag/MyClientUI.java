@@ -1,9 +1,11 @@
 package nc.ui.load.tag;
 
+import nc.ui.dm.plan.ClientEventHandler;
 import nc.ui.pub.ButtonObject;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 
 public class MyClientUI extends BillManageUI {
@@ -15,7 +17,11 @@ public class MyClientUI extends BillManageUI {
 		
 		return new MyClientController();
 	}
-
+	
+	protected ManageEventHandler createEventHandler() {
+		return new MyClientEventHandler(this, getUIControl());
+	}
+	
 	@Override
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {

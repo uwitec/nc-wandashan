@@ -14,9 +14,9 @@ import nc.vo.pub.NullFieldException;
 import nc.vo.pub.ValidationException;
 
 
-public class MyClentEventHandler extends ManageEventHandler {
+public class MyClientEventHandler extends ManageEventHandler {
 
-	public MyClentEventHandler(BillManageUI billUI, IControllerBase control) {
+	public MyClientEventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
 		// TODO Auto-generated constructor stub
 	}
