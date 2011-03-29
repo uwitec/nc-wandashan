@@ -14,7 +14,7 @@ public class MyClientController extends AbstractManageController{
 	}
 
 	public int[] getCardButtonAry() {
-		int[] buttonArray =new int[]{
+		return new int[]{
 				IBillButton.Add,
 				IBillButton.Line,
 				IBillButton.Save,
@@ -26,7 +26,6 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Return
 				
 			};
-		return buttonArray;
 	}
 
 	public boolean isShowCardRowNo() {
@@ -103,7 +102,7 @@ public class MyClientController extends AbstractManageController{
 	}
 
 	public int[] getListButtonAry() {
-		int[] buttonArray =new int[]{
+		return new int[]{
 				IBillButton.Add,
 				IBillButton.Delete,
 				IBillButton.Query,
@@ -112,7 +111,6 @@ public class MyClientController extends AbstractManageController{
 				IBillButton.Refresh,
 				IBillButton.Card
 		};
-		return buttonArray;
 	}
 
 	public String[] getListHeadHideCol() {
