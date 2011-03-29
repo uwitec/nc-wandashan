@@ -41,17 +41,6 @@ public class MyClientEventHandler extends ManageEventHandler {
 		super.onBoSave();
 	}
 	
-	protected void returnBillNo(String billcode,String pk_billtype,String pk_corp) {
-		if (billcode != null && billcode.trim().length() > 0) {// 单据号不为空，才进行回退
-			try {
-				nc.vo.pub.billcodemanage.BillCodeObjValueVO bcoVO = new nc.vo.pub.billcodemanage.BillCodeObjValueVO();
-				bcoVO.setAttributeValue("公司", pk_corp);
-				nc.ui.pub.billcodemanage.BillcodeRuleBO_Client.returnBillCodeOnDelete(pk_corp, pk_billtype, billcode, bcoVO);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	
 	protected void dataNotNullValidate() throws ValidationException {
 		StringBuffer message = null;

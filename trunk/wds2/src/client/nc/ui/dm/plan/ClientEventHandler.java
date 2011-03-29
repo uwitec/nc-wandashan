@@ -87,7 +87,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	}
 	@Override
 	public void onBoCancelAudit()throws Exception{
-		if(getBufferData().getCurrentVO() ==null){
+			if(getBufferData().getCurrentVO() ==null){
 			getBillUI().showWarningMessage("请先选择一条数据");
 			return;
 		}

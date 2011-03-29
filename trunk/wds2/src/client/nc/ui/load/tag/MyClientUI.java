@@ -1,6 +1,5 @@
 package nc.ui.load.tag;
 
-import nc.ui.dm.plan.ClientEventHandler;
 import nc.ui.pub.ButtonObject;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
