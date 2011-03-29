@@ -3,7 +3,6 @@ package nc.ui.load.tag;
 import java.util.ArrayList;
 
 import nc.ui.pub.beans.MessageDialog;
-import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.controller.IControllerBase;
@@ -40,12 +39,6 @@ public class MyClientEventHandler extends ManageEventHandler {
 			return;
 		}
 		super.onBoSave();
-	}
-	
-	
-	protected void onBoCancel() throws Exception {
-		
-		super.onBoCancelAudit();
 	}
 	
 	protected void returnBillNo(String billcode,String pk_billtype,String pk_corp) {
