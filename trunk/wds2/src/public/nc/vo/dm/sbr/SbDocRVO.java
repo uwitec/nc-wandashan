@@ -30,7 +30,7 @@ public class SbDocRVO extends SuperVO{
 	@Override
 	public String getParentPKFieldName() {
 		// TODO Auto-generated method stub
-		return null;
+		return "pk_sbdocr";
 	}
 
 	@Override
