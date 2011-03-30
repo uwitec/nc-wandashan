@@ -11,6 +11,8 @@ import nc.ui.wds.w8000.CommonUnit;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 
 /**
@@ -62,48 +64,49 @@ public class MyClientUI extends AbstractMyClientUI implements
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getKey().equals("nshouldoutassistnum")) {
-			// 换算率
-			Object a = getBillCardPanel().getBodyValueAt(
-					getBillCardPanel().getBillTable().getSelectedRow(), "hsl");
-			// 应发辅数量
-			Object b = getBillCardPanel().getBodyValueAt(
-					getBillCardPanel().getBillTable().getSelectedRow(),
-					"nshouldoutassistnum");
-			if (null != a && !"".equals(a) && null != b && !"".equals(b)) {
-				double num = Double.parseDouble(a.toString());
-				double num1 = Double.parseDouble(b.toString());
-				// 根据应发辅数量和换算率算出应发主数量
-				if (num != 0 && num1 != 0)
-					getBillCardPanel().setBodyValueAt(num * num1,
-							getBillCardPanel().getBillTable().getSelectedRow(),
-							"nshouldoutnum");
-			}
-		}
-		if (e.getKey().equals("srl_pkr")) {
-			// getBillCardPanel().getHeadItem("").getValueObject();
-			// getBillCardPanel().setHeadItem("vdiliveraddress", "123");
-			getBillCardPanel().execHeadEditFormulas();
-		}
+		int row = e.getRow();
+//		if (e.getKey().equals("nshouldoutassistnum")) {
+//			// 换算率
+//			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(
+//					row, "hsl"));
+//			// 应发辅数量
+//			Object nassnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(
+//					row,
+//					"nshouldoutassistnum"));
+////			if (null != a && !"".equals(a) && null != b && !"".equals(b)) {
+//				double num = Double.parseDouble(a.toString());
+//				double num1 = Double.parseDouble(b.toString());
+//				// 根据应发辅数量和换算率算出应发主数量
+//				if (num != 0 && num1 != 0)
+//					getBillCardPanel().setBodyValueAt(num * num1,
+//							getBillCardPanel().getBillTable().getSelectedRow(),
+//							"nshouldoutnum");
+////			}
+//		}
+//		if (e.getKey().equals("srl_pkr")) {
+//			// getBillCardPanel().getHeadItem("").getValueObject();
+//			// getBillCardPanel().setHeadItem("vdiliveraddress", "123");
+//			getBillCardPanel().execHeadEditFormulas();
+//		}
 		if (e.getKey().equals("ccunhuobianma")) {
-			String code = (String) getBillCardPanel().getBodyValueAt(
-					getBillCardPanel().getBillTable().getSelectedRow(),
-					"ccunhuobianma");
+			String code = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(
+					row,
+					"ccunhuobianma"));
 			if (null == code) {
 				getBillCardPanel().setBodyValueAt(null,
-						getBillCardPanel().getBillTable().getSelectedRow(),
+						row,
 						"vbatchcode");
 				getBillCardPanel().setBodyValueAt(null,
-						getBillCardPanel().getBillTable().getSelectedRow(),
+						row,
 						"nshouldoutassistnum");
 				getBillCardPanel().setBodyValueAt(null,
-						getBillCardPanel().getBillTable().getSelectedRow(),
+						row,
 						"nshouldoutnum");
 				getBillCardPanel().setBodyValueAt(null,
-						getBillCardPanel().getBillTable().getSelectedRow(),
+						row,
 						"noutnum");
 				getBillCardPanel().setBodyValueAt(null,
-						getBillCardPanel().getBillTable().getSelectedRow(),
+						row,
 						"noutassistnum");
 			}
 
