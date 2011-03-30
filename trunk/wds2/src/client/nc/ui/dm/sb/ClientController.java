@@ -19,7 +19,6 @@ public class ClientController extends AbstractManageController {
 	public int[] getCardButtonAry() {
 		return new int[]{
 				IBillButton.Add,
-				IBillButton.Line,
 				IBillButton.Save,
 				IBillButton.Query,
 				IBillButton.Delete,
