@@ -17,6 +17,7 @@ public class ClientController extends AbstractManageController {
 		return new int[]{
 				IBillButton.Add,
 				IBillButton.Save,
+				IBillButton.Line,
 				IBillButton.Query,
 				IBillButton.Delete,
 				IBillButton.Cancel,
@@ -45,8 +46,9 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-				SbDocRVO.class.getName(),
-				SuperVO.class.getName()
+				SuperVO.class.getName(),
+				SbDocRVO.class.getName()
+			
 		};
 	}
 
