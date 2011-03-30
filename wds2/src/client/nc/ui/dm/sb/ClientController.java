@@ -7,7 +7,6 @@ package nc.ui.dm.sb;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.dm.sb.SbDocVO;
-import nc.vo.pub.SuperVO;
 import nc.vo.trade.pub.HYBillVO;
 
 public class ClientController extends AbstractManageController {
@@ -50,14 +49,14 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-				SuperVO.class.getName(),
+				SbDocVO.class.getName(),
 				SbDocVO.class.getName()
 		};
 	}
 
 	public String getBodyCondition() {
 		// TODO Auto-generated method stub
-		return null;
+		return "1=1";
 	}
 
 	public String getBodyZYXKey() {
@@ -72,7 +71,7 @@ public class ClientController extends AbstractManageController {
 
 	public String getChildPkField() {
 		// TODO Auto-generated method stub
-		return "";
+		return "pk_sbdocid";
 	}
 
 	public String getHeadZYXKey() {
@@ -82,7 +81,7 @@ public class ClientController extends AbstractManageController {
 
 	public String getPkField() {
 		// TODO Auto-generated method stub
-		return "";
+		return "pk_sbdocid";
 	}
 
 	public Boolean isEditInGoing() throws Exception {
@@ -121,6 +120,8 @@ public class ClientController extends AbstractManageController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 
 	public boolean isShowListRowNo() {
 		// TODO Auto-generated method stub
@@ -131,6 +132,4 @@ public class ClientController extends AbstractManageController {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
 }
