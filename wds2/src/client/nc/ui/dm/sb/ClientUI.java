@@ -1,7 +1,7 @@
 package nc.ui.dm.sb;
 
 import javax.swing.ListSelectionModel;
-
+	
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.card.BillCardUI;
 import nc.ui.trade.card.CardEventHandler;
@@ -54,6 +54,8 @@ public class ClientUI extends BillCardUI{
 		getBillCardPanel().getBillTable().setRowSelectionAllowed(true);
 	    getBillCardPanel().getBillTable().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 	}
+
+	
 	
 	@Override
 	public void setDefaultData() throws Exception {
@@ -66,21 +68,21 @@ public class ClientUI extends BillCardUI{
 //		String key= e.getKey();
 //		int row = e.getRow();
 //		if(e.getPos()==IBillItem.BODY){
-//		if("invcode".equalsIgnoreCase(key)){
-//			String invclass = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(e.getRow(),"invclname"));
-//			if(invclass==null){
-//				String[] formulas =
-//				    new String[] {
-//						"pk_invcl->getColValue(bd_invbasdoc,pk_invcl,pk_invbasdoc,pk_invbasdoc)",
-//						"invclname->getColValue(bd_invcl,invclassname,pk_invcl,pk_invcl)"};
-//				getBillCardPanel().getBillModel().execFormulas(row,formulas);
-//			}	
-//		}else if("invclname".equalsIgnoreCase(key)){
-//			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invmandoc");
-//			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invbasdoc");
-//			getBillCardPanel().getBillModel().setValueAt(null,row,"invcode");
-//			getBillCardPanel().getBillModel().setValueAt(null,row,"invname");
-//		}
+////		if("invcode".equalsIgnoreCase(key)){
+////			String invclass = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(e.getRow(),"invclname"));
+////			if(invclass==null){
+////				String[] formulas =
+////				    new String[] {
+////						"pk_invcl->getColValue(bd_invbasdoc,pk_invcl,pk_invbasdoc,pk_invbasdoc)",
+////						"invclname->getColValue(bd_invcl,invclassname,pk_invcl,pk_invcl)"};
+////				getBillCardPanel().getBillModel().execFormulas(row,formulas);
+////			}	
+////		}else if("invclname".equalsIgnoreCase(key)){
+////			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invmandoc");
+////			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invbasdoc");
+////			getBillCardPanel().getBillModel().setValueAt(null,row,"invcode");
+////			getBillCardPanel().getBillModel().setValueAt(null,row,"invname");
+////		}
 //		}
 	}
 

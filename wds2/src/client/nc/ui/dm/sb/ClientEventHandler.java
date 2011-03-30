@@ -9,6 +9,10 @@ import nc.ui.trade.card.CardEventHandler;
 
 public class ClientEventHandler extends CardEventHandler {
 
+	public ClientEventHandler(BillCardUI billUI, ICardController control) {
+		super(billUI, control);
+		// TODO Auto-generated constructor stub
+	}
 //	@Override
 //	protected UIDialog createQueryUI() {
 //		return new ClientQueryDLG(getBillUI(), null,
@@ -26,11 +30,6 @@ public class ClientEventHandler extends CardEventHandler {
 //	}
 	
 //	@Override
-	public ClientEventHandler(BillCardUI billUI, ICardController control) {
-		super(billUI, control);
-		// TODO Auto-generated constructor stub
-	}
-	
 	public void onBoAdd(ButtonObject bo) throws Exception {
 		getBillUI().setBillOperate(IBillOperate.OP_EDIT);
 		onBoLineAdd();

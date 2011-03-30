@@ -86,7 +86,7 @@ public class ClientController implements ICardController, ISingleController{
 
 	public String getPkField() {
 		// TODO Auto-generated method stub
-		return "pk_sbdocid";
+		return "pk_sbdoc";
 	}
 
 	public Boolean isEditInGoing() throws Exception {
