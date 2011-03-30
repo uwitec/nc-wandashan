@@ -67,7 +67,7 @@ public class ClientUI extends BillManageUI {
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
-		return "ËïÅô·É";
+		return super.getTitle();
 	}
 	
 
