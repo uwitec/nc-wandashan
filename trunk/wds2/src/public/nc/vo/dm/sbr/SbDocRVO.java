@@ -1,4 +1,4 @@
-package nc.ui.dm.sbr;
+package nc.vo.dm.sbr;
 
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDateTime;
