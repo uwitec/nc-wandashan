@@ -21,6 +21,7 @@ public class CommonAction extends BdBusinessAction {
 	}
 	
 	 /**
+	  * lyf 注解
      * save 方法注解。
      */
 	public AggregatedValueObject save(AggregatedValueObject billVO,
