@@ -9,4 +9,9 @@ public class ClientEventHandler extends ManageEventHandler{
 		super(billUI, control);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
+	protected void onBoSave() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoSave();
+	}
 }
