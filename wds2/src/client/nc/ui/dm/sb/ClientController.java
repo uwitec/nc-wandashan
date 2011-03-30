@@ -70,7 +70,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public boolean isExistBillStatus() {
-		return true;
+		return false;
 	}
 
 	public boolean isLoadCardFormula() {
