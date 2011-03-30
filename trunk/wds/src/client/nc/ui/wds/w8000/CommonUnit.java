@@ -17,6 +17,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
+import nc.vo.sm.login.LoginFailureInfo;
 import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
@@ -291,6 +292,9 @@ public class CommonUnit {
 	 * @throws BusinessException
 	 */
 	public static String getUserType(String pk_user) throws BusinessException {
+		
+		
+		
 		String sql = "select st_type from tb_stockstaff where dr = 0 and cuserid = '"
 				+ pk_user + "'";
 		ArrayList list = (ArrayList) iuap.executeQuery(sql,
