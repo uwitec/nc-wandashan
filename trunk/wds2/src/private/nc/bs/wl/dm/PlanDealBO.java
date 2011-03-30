@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.dm.PlanDealVO;
@@ -124,22 +125,22 @@ public class PlanDealBO {
 	 * @throws BusinessException
 	 */
 	private void reWriteDealNumForPlan(Map<String,UFDouble> map) throws BusinessException{
-	
+
 		if(map == null || map.size()==0)
 			return;
-			for(Entry<String, UFDouble> entry:map.entrySet()){
+		for(Entry<String, UFDouble> entry:map.entrySet()){
 			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
-				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
+				+entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
 			if(getDao().executeUpdate(sql)==0){
 				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
 			};
-			
+
 			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
-			
+
 			//如果累计安排数量大于计划数量将抛出异常
-			
-			String sql1="select count(*) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
-			Object o=getDao().executeQuery(sql1,new ColumnProcessor());
+
+			String sql1="select count(0) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
+			Object o=getDao().executeQuery(sql1,WdsPubResulSetProcesser.COLUMNPROCESSOR);
 			if(o==null){
 				throw new BusinessException("累计安排数量不能大于计划数量！");
 			}
