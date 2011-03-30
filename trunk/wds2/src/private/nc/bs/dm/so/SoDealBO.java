@@ -25,7 +25,7 @@ public class SoDealBO {
 		if(m_dao == null){
 			m_dao = new BaseDAO();
 		}
-		int a = 0;
+//		int a = 0;
 		return m_dao;
 	}
 	/**
