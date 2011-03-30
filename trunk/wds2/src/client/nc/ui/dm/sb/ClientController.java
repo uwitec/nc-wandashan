@@ -56,7 +56,7 @@ public class ClientController extends AbstractManageController {
 
 	public String getBodyCondition() {
 		// TODO Auto-generated method stub
-		return "1=1";
+		return null;
 	}
 
 	public String getBodyZYXKey() {
