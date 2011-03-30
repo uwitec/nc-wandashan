@@ -4,12 +4,8 @@ import java.util.ArrayList;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
-import nc.ui.ic.ic009.CardPanelCtrl;
-import nc.ui.ic.ic009.ListPanelCtrl;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.trade.base.IBillOperate;
-import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
@@ -17,20 +13,11 @@ import nc.ui.trade.query.HYQueryConditionDLG;
 import nc.vo.jcom.lang.StringUtil;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.BusinessRuntimeException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.query.ConditionVO;
-import nc.vo.so.so001.SaleorderBVO;
-import nc.vo.so.so001.SaleorderHVO;
-import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.w80021008.TbStockstaffVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.vo.wds.w80060406.MyBillVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
 
 /**
  * 

@@ -2,7 +2,6 @@ package nc.ui.wds.w80060820;
 
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.vo.pub.BusinessRuntimeException;
 
 /**
   *

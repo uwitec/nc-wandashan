@@ -1,16 +1,13 @@
 package nc.ui.wds.w80061002;
 
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
-import nc.ui.trade.bill.ISingleController;
-
-import nc.vo.wds.w80060202.MyBillVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
 import nc.ui.trade.button.IBillButton;
+import nc.vo.wds.w80060202.MyBillVO;
+import nc.vo.wds.w80060406.TbFydmxnewVO;
+import nc.vo.wds.w80060406.TbFydnewVO;
 
 
 /**
