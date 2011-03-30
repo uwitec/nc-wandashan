@@ -16,7 +16,8 @@ public class WdsWlPubConst {
 	/**lyf begin--------------------发运订单-----------------------------------------begin*/
 	 //1 功能节点
 	public static String DM_ORDER_NODECODE="80060415";
-	// 2. 单据类型
+	
+	/**发运订单出库类型 */
 	public static String WDS3="WDS3";
 	
 	/**lyf end--------------------发运订单-----------------------------------------end*/
@@ -56,4 +57,9 @@ public class WdsWlPubConst {
 	public static String DM_SO_DEALNUM_FIELD_NAME = "ntaldcnum";//利用系统销售订单  已参与价保数量 作为  累计发运数量
 
 	/**zhf-----------------------发运计划安排---------------------------*/
+	
+	/**其他出库单节点号 */
+	public static String  OTHER_OUT_FUNCODE="8004040208";
+	/**参照发运订单的节点标示 */
+	public static String  OTHER_OUT_REFWDS3_NODECODE="8004040210";
 }
