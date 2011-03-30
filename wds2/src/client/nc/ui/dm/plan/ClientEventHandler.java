@@ -100,10 +100,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if( i==null){
 			getBillUI().showWarningMessage("请在 仓库人员绑定 维护当前登录人人员类型");
 			return;
-		}else if( i != 2){//不是发运科的人
-			getBillUI().showWarningMessage("只有发运科的人才有增加权限");
-			return;
 		}
+//		else if( i != 2){//不是发运科的人
+//			getBillUI().showWarningMessage("只有发运科的人才有增加权限");
+//			return;
+//		}
 		super.onBoAdd(bo);
 	}
 }
