@@ -43,14 +43,13 @@ public class ClientController extends AbstractManageController {
 
 	public String getBillType() {
 		// TODO Auto-generated method stub
-		return "wds_tagdoc";
+		return "wds_sbdoc";
 	}
 
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-				SbDocVO.class.getName(),
-				SuperVO.class.getName()
+				SbDocVO.class.getName()
 		};
 	}
 
