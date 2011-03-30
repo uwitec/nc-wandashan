@@ -13,16 +13,6 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
  */
 public class ClientUI extends BillManageUI {
 
-	private static final long serialVersionUID = -3998675844592858916L;
-
-	public ClientUI() {
-		super();
-	}
-
-	public ClientUI(Boolean useBillSource) {
-		super(useBillSource);
-	}
-
 	@Override
 	protected AbstractManageController createController() {
 		// TODO Auto-generated method stub
