@@ -10,112 +10,124 @@ import nc.vo.trade.pub.HYBillVO;
 
 public class ClientController extends AbstractManageController {
 
-	public int[] getCardButtonAry() {
-		int[] buttonArray = new int[] {
-				IBillButton.Add,
-				IBillButton.Del,
-				IBillButton.Edit,
-				IBillButton.Save,
-				IBillButton.Line,
-				IBillButton.Cancel,
-				IBillButton.Query, 				 
-				IBillButton.Return,
-				IBillButton.Refresh};
-		return buttonArray;
+	public String[] getCardBodyHideCol() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public int[] getListButtonAry() {
-		int[] buttonArray = new int[] {
+	public int[] getCardButtonAry() {
+		return new int[]{
 				IBillButton.Add,
-				IBillButton.Del,
+				IBillButton.Line,
+				IBillButton.Save,
+				IBillButton.Query,
+				IBillButton.Delete,
+				IBillButton.Cancel,
 				IBillButton.Edit,
-				IBillButton.Query, 				 
-				IBillButton.Card,
-				IBillButton.Refresh
-		}
-				;
-		return buttonArray;
+				IBillButton.Refresh,
+				IBillButton.Return
+				
+			};
 	}
 
 	public boolean isShowCardRowNo() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
+	public boolean isShowCardTotal() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	public String getBillType() {
-		return "wds_sbdoc";
+		// TODO Auto-generated method stub
+		return "wds_tagdoc";
 	}
 
 	public String[] getBillVoName() {
-		return new String[] {
+		return new String[]{
 				HYBillVO.class.getName(),
-				SbDocVO.class.getName(),
-				null
-				};
+				SbDocVO.class.getName()
+		};
 	}
 
 	public String getBodyCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getBodyZYXKey() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public int getBusinessActionType() {
+		// TODO Auto-generated method stub
 		return nc.ui.trade.businessaction.IBusinessActionType.BD;
 	}
 
 	public String getChildPkField() {
+		// TODO Auto-generated method stub
 		return "";
 	}
 
+	public String getHeadZYXKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public String getPkField() {
+		// TODO Auto-generated method stub
 		return "";
 	}
 
 	public Boolean isEditInGoing() throws Exception {
-		return false;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public boolean isExistBillStatus() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isLoadCardFormula() {
+		// TODO Auto-generated method stub
 		return true;
-	}
-
-
-	public boolean isShowListRowNo() {
-		return true;
-	}
-
-	public String[] getCardBodyHideCol() {
-		return null;
-	}
-
-	public boolean isShowCardTotal() {
-		return false;
-	}
-
-	public String getBodyZYXKey() {
-
-		return null;
-	}
-
-	public String getHeadZYXKey() {
-
-		return null;
 	}
 
 	public String[] getListBodyHideCol() {
-
+		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int[] getListButtonAry() {
+		return new int[]{
+				IBillButton.Add,
+				IBillButton.Delete,
+				IBillButton.Query,
+				IBillButton.Edit,
+				IBillButton.Save,
+				IBillButton.Refresh,
+				IBillButton.Card
+		};
 	}
 
 	public String[] getListHeadHideCol() {
-
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public boolean isShowListTotal() {
+	public boolean isShowListRowNo() {
+		// TODO Auto-generated method stub
 		return true;
 	}
+
+	public boolean isShowListTotal() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }
