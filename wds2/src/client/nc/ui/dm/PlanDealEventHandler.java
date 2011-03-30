@@ -148,8 +148,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		getDataPane().execLoadFormula();
 		setDataBuffer(billdatas);		
 		showHintMessage("查询完成");
-		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
-	}
+		}
 	/**
 	 * 
 	 * @作者：lyf
@@ -216,8 +215,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 				((PlanDealVO)vo).validataOnDeal();
 			}
 			PlanDealHealper.doDeal(ldata, ui);
-			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
-			clearData();
+			getLeftDate(ldata);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
@@ -228,6 +226,21 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 			return;
 		}
 		ui.showHintMessage("安排已经完成...");
+	}
+	
+	private void getLeftDate(List<SuperVO> ldata){
+		List<PlanDealVO> leftDate = new ArrayList<PlanDealVO>();
+		if(m_billdatas == null || m_billdatas.length==0){
+			ui.showWarningMessage("获取缓存数据出错，请重新查询");
+		}
+		for(PlanDealVO dealVO:m_billdatas){
+			if(ldata.contains(dealVO))
+				continue;
+			leftDate.add(dealVO);
+		}
+		getDataPane().setBodyDataVO(leftDate.toArray(new PlanDealVO[0]));
+		getDataPane().execLoadFormula();
+		setDataBuffer(leftDate.toArray(new PlanDealVO[0]));	
 	}
 
 	public void afterEdit(BillEditEvent e) {
