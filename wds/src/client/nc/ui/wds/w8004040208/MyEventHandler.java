@@ -380,7 +380,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey(), WdsWlPubConsts.SEND_ORDER_FUNCODE, "1=1", 
+							.getPrimaryKey(), WdsWlPubConsts.DM_ORDER_NODECODE, "1=1", 
 							WdsWlPubConsts.WDS3, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
 			}
 			// 调用方法 获取查询后的聚合VO
