@@ -3,7 +3,6 @@ package nc.ui.dm.sbr;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.dm.sbr.SbDocRVO;
-import nc.vo.pub.SuperVO;
 import nc.vo.trade.pub.HYBillVO;
 
 public class ClientController extends AbstractManageController {
@@ -46,7 +45,7 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-				SuperVO.class.getName(),
+				SbDocRVO.class.getName(),
 				SbDocRVO.class.getName()
 			
 		};
