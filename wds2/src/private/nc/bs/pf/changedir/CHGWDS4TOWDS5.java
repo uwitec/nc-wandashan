@@ -41,7 +41,13 @@ public String[] getField() {
 			
 			"H_pk_corp->SYSCORP",
 			"H_voperatorid->SYSOPERATOR",
-			"H_pk_outwhouse->H_pk_outwhouse",
+			"H_pk_outwhouse->B_cbodywarehouseid",//发货站
+			"H_pk_cumandoc->B_ccustomerid",//收货客商
+//			批次
+			"B_picicode->B_cbatchid",
+//          是否赠品
+			"B_fisgift->B_blargessflag",
+			
 			
 			"B_csourcebillhid->B_csaleid",
 			"B_csourcebillbid->B_order_bid",
@@ -78,7 +84,10 @@ public String[] getFormulas() {
 //		    "H_fisbigglour->\"N\"",
 		    "H_dmakedate->\""+m_strDate+"\"",
 		    "H_dbilldate->\""+m_strDate+"\"",
-		    "H_dbegindate->\""+m_strDate+"\""
+		    "H_dbegindate->\""+m_strDate+"\"",
+		    "H_pk_cubasdoc->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,H_ccustomerid)",
+//			来源单据类型
+			"B_csourcetype->\""+WdsWlPubConst.WDS4+"\"",
 	};
 }
 /**
