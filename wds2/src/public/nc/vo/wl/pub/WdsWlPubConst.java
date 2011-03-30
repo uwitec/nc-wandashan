@@ -44,7 +44,7 @@ public class WdsWlPubConst {
 
 	//zhf end
 	
-	public static String WDS_WL_MODULENAME = "wdswl";
+	public static String WDS_WL_MODULENAME = "wds2";
 	public static String WDS_WL_ZC = "1021A91000000004YZ0P";//×Ü²ÖÊÇË«³Ç
 	
 	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};//"vbillno",

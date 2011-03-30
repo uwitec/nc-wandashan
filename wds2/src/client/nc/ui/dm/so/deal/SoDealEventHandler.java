@@ -121,7 +121,9 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		SoDealVO[] billdatas = null; 
 		try{
 			String whereSql = getSQL();
+			ui.showProgressBar(true);
 			billdatas = SoDealHealper.doQuery(whereSql);
+			ui.showProgressBar(false);
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -136,6 +138,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(billdatas);
 		getDataPane().execLoadFormula();
+		billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
 		setDataBuffer(billdatas);		
 		showHintMessage("查询完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
@@ -193,7 +196,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 */
 		WdsWlPubTool.stopEditing(getDataPane());
 		if(lseldata==null||lseldata.size()==0){
-			showHintMessage("请选中要处理的数据");
+			showWarnMessage("请选中要处理的数据");
 			return;
 		}
 		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata,"nnum");
@@ -235,8 +238,13 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			}   
 		}else if("nnum".equalsIgnoreCase(key)){
 			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
+			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nassnum")));
+		}else if("nassnum".equalsIgnoreCase(key)){
+			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
+			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nnum")));
+		}else if("warehousename".equalsIgnoreCase(key)){
+			getDataBuffer()[row].setCbodywarehouseid(PuPubVO.getString_TrimZeroLenAsNull(getDataPane().getValueAt(row, "cbodywarehouseid")));
 		}
-
 	}
 
 	public void bodyRowChange(BillEditEvent e) {

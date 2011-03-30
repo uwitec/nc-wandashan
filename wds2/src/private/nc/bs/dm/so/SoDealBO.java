@@ -1,11 +1,15 @@
 package nc.bs.dm.so;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
@@ -14,6 +18,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.so.so001.SaleorderHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -76,26 +81,26 @@ public class SoDealBO {
 	 * @throws BusinessException
 	 */
 	private void reWriteDealNumForPlan(Map<String,UFDouble> map) throws BusinessException{
-	
-//		if(map == null || map.size()==0)
-//			return;
-//			for(Entry<String, UFDouble> entry:map.entrySet()){
-//			String sql = "update h_b set ndealnum =coalesce(ndealnum,0)+"
-//				         +entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
-//			if(getDao().executeUpdate(sql)==0){
-//				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
-//			};
-//			
-//			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
-//			
-//			//如果累计安排数量大于计划数量将抛出异常
-//			
-//			String sql1="select count(*) from h_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
-//			Object o=getDao().executeQuery(sql1,new ColumnProcessor());
-//			if(o==null){
-//				throw new BusinessException("累计安排数量不能大于计划数量！");
-//			}
-//		}
+
+		if(map == null || map.size()==0)
+			return;
+		for(Entry<String, UFDouble> entry:map.entrySet()){
+			String sql = "update so_saleorder_b set "+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+" = coalesce("+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)+"
+				+PuPubVO.getUFDouble_NullAsZero(entry.getValue()).doubleValue()+" where corder_bid='"+entry.getKey()+"'";
+			if(getDao().executeUpdate(sql)==0){
+				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
+			};
+
+			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
+
+			//如果累计安排数量大于计划数量将抛出异常
+
+			String sql1="select count(0) from so_saleorder_b where corder_bid='"+entry.getKey()+ "'and (coalesce(nnumber,0)-coalesce("+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0))>=0";			
+			Object o=getDao().executeQuery(sql1,WdsPubResulSetProcesser.COLUMNPROCESSOR);
+			if(o==null){
+				throw new BusinessException("超计划量安排");
+			}
+		}
 	}
 	/**
 	 * 
@@ -119,17 +124,17 @@ public class SoDealBO {
 		 * 		 */
 		//回写计划累计安排数量
 		// 发运安排vo---》发运计划vo
-//		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
-//		for(int i=0;i<ldata.size();i++){
-//			String key = ldata.get(i).getPk_sendplanin_b();
-//			UFDouble num= PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNnum());
-//			if(map.containsKey(key)){
-//				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key));
-//				map.put(key, oldValue.add(num));
-//			}
-//			map.put(key, num);
-//		}
-//		reWriteDealNumForPlan(map);
+		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
+		for(int i=0;i<ldata.size();i++){
+			String key = ldata.get(i).getCorder_bid();
+			UFDouble num= PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNnum());
+			if(map.containsKey(key)){
+				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key));
+				map.put(key, oldValue.add(num));
+			}
+			map.put(key, num);
+		}
+		reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 客户 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
