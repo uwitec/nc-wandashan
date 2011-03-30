@@ -199,7 +199,9 @@ public class FydnewDlg extends BillSourceDLG {
 
 		return m_dlgQry;
 	}
-
+	/**
+	 * lyf
+	 */
 	public void loadHeadData() {
 		try {
 			// 获取查询条
