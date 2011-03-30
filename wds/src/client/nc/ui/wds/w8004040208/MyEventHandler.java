@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
@@ -14,11 +13,9 @@ import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.ISingleController;
-import nc.ui.trade.businessaction.BdBusinessAction;
 import nc.ui.trade.businessaction.BusinessAction;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.businessaction.IBusinessController;
@@ -39,13 +36,11 @@ import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.BusinessRuntimeException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.pub.WdsWlPubConsts;
@@ -56,8 +51,6 @@ import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w8004040208.MyBillVO;
 import nc.vo.wds.w80060406.TbFydmxnewVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
-import nc.vo.wds.w80060604.SoSaleVO;
-import nc.vo.wds.w80060604.SoSaleorderBVO;
 import nc.vo.wds.w80060608.IcGeneralBVO;
 import nc.vo.wds.w80060608.IcGeneralHVO;
 
@@ -609,7 +602,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (isControl == 3) {
 			// 如果是转库
 			if (null != billType && billType.equals("0")) {
-				// 根据来源单据号查询是否有做过出库
+				// 根据来源单据号查询是否有做过出库，如果有已经做过出库则新增到已有的出库单上去
 				String strWhere = " dr = 0 and vsourcebillcode = '"
 						+ generalh.getVsourcebillcode()
 						+ "' and csourcebillhid = '"
@@ -619,15 +612,16 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				if (null != tmpList && tmpList.size() > 0) {
 					tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
 				}
-				// 该单据有过出库记录
-				if (null != tmpgeneralh) {
-					tmpgeneralh.setCdispatcherid(generalh.getCdispatcherid());// 收发类别
-					tmpgeneralh.setCwhsmanagerid(generalh.getCwhsmanagerid());// 库管员
-					tmpgeneralh.setCdptid(generalh.getCdptid());// 部门
-					tmpgeneralh.setVnote(generalh.getVnote());// 备注
-					// 把表头替换
-					generalh = tmpgeneralh;
-				} else {
+//				// 该单据有过出库记录
+//				if (null != tmpgeneralh) {
+//					tmpgeneralh.setCdispatcherid(generalh.getCdispatcherid());// 收发类别
+//					tmpgeneralh.setCwhsmanagerid(generalh.getCwhsmanagerid());// 库管员
+//					tmpgeneralh.setCdptid(generalh.getCdptid());// 部门
+//					tmpgeneralh.setVnote(generalh.getVnote());// 备注
+//					// 把表头替换
+//					generalh = tmpgeneralh;
+//				} else 
+				 if(tmpgeneralh ==null){
 					isAdd = true;
 					// 制单时间
 					generalh.setTmaketime(myClientUI._getServerTime()

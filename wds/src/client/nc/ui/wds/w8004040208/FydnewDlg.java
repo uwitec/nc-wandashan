@@ -211,6 +211,7 @@ public class FydnewDlg extends BillSourceDLG {
 			if (!isStock) {//不是总仓人员的只能看到调出仓库是本仓库的
 				strWhere.append(" and wds_sendorder.pk_outwhouse = '" + pk_stock + "'");
 			}
+			
 			String initWhereSql = m_dlgQry.getWhereSQL();
 			if(initWhereSql != null && !"".equals(initWhereSql)){
 				strWhere.append(" and "+initWhereSql);
@@ -229,7 +230,9 @@ public class FydnewDlg extends BillSourceDLG {
 				for (int j = 0; j < list.size(); j++) {
 					SendorderVO head = (SendorderVO) list.get(j);
 					String mxWhere = " isnull(dr,0) = 0 and pk_sendorder= '"
-							+ head.getPk_sendorder() + "'";
+							+ head.getPk_sendorder() +
+							" ' and coalesce(ndealnum,0)-coalesce(noutnum,0)>0 "+
+							"  and coalesce(nassdealnum,0)-coalesce(nassoutnum,0)>0";
 					ArrayList mxlist = (ArrayList) IUAPQueryBS
 							.retrieveByClause(SendorderBVO.class, mxWhere);
 
@@ -246,17 +249,17 @@ public class FydnewDlg extends BillSourceDLG {
 								if (pkList.contains(body.getPk_invbasdoc())) {
 										isPkEqer = true;
 
-										// /根据子表中 主键，单品主键，操作=‘Y’
-										// 如果有该保管员做过出库，不显示该数据
-										ArrayList outbList = (ArrayList) CommonUnit
-										.getOutGeneralBVO(body
-												.getPk_invbasdoc(),
-												body.getPk_sendorder_b());
-										if (null != outbList
-												&& outbList.size() > 0) {
-											isData = true;
-											break;
-										}
+//										// /根据子表中 主键，单品主键，操作=‘Y’
+//										// 如果有该保管员做过出库，不显示该数据
+//										ArrayList outbList = (ArrayList) CommonUnit
+//										.getOutGeneralBVO(body
+//												.getPk_invbasdoc(),
+//												body.getPk_sendorder_b());
+//										if (null != outbList
+//												&& outbList.size() > 0) {
+//											isData = true;
+//											break;
+//										}
 										if ((null == body.getNplannum()
 												|| body.getNplannum()
 														.toDouble()<= 0)
