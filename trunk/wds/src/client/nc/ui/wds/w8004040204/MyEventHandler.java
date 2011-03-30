@@ -23,6 +23,8 @@ import nc.ui.trade.query.INormalQuery;
 import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8000.W8004040204Action;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.vo.dm.so.order.SoorderBVO;
+import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -36,11 +38,10 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
+import nc.vo.wds.pub.WdsWlPubConsts;
 import nc.vo.wds.w8004040204.MyBillVO;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
 import nc.vo.wds.w80060604.SoSaleVO;
 import nc.vo.wds.w80060604.SoSaleorderBVO;
 import nc.vo.wds.w80060608.IcGeneralBVO;
@@ -308,7 +309,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				return;
 		}
 		//生成运单
-		obj = insertFyd(generalh, generalb);
+//		obj = insertFyd(generalh, generalb);
 		TbOutgeneralHVO tmpgeneralh = null;
 		// 根据来源单据号查询是否有做过出库
 		String strWhere = " dr = 0 and vsourcebillcode = '"
@@ -470,98 +471,98 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		return true;
 	}
 
-	/**
-	 * 生成发运单
-	 * 
-	 * @throws Exception
-	 */
-	private Object[] insertFyd(TbOutgeneralHVO generalh,
-			TbOutgeneralBVO[] generalb) throws Exception {
-		Object[] o = new Object[3];
-		o[0] = false;
-		List<TbFydnewVO> fydList = new ArrayList<TbFydnewVO>();
-		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
-
-		// 进行VO转换/////////////////////////////////////////////
-
-		// ------------转换表头对象-----------------//
-		TbFydnewVO fydvo = new TbFydnewVO();
-		if (null != generalh && null != generalb && generalb.length > 0) {
-			if (null != generalh.getVdiliveraddress()
-					&& !"".equals(generalh.getVdiliveraddress())) {
-				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
-			}
-			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
-				fydvo.setFyd_bz(generalh.getVnote()); // 备注
-			}
-			if (null != generalh.getCdptid()
-					&& !"".equals(generalh.getCdptid())) {
-				fydvo.setCdeptid(generalh.getCdptid()); // 部门
-			}
-			// 设置运货方式
-			fydvo.setFyd_yhfs("汽运");
-			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-			fydvo.setBilltype(8);
-			fydvo.setVbillstatus(1);
-			// 单据号
-			fydvo.setVbillno(generalh.getVbillcode());
-			// 制单日期
-			fydvo.setDmakedate(generalh.getDbilldate());
-			fydvo.setVoperatorid(ClientEnvironment.getInstance().getUser()
-					.getPrimaryKey()); // 设置制单人
-			// 设置发货站
-			fydvo.setSrl_pk(generalh.getSrl_pk());
-			// 到货站
-			fydvo.setSrl_pkr(generalh.getSrl_pkr());
-			fydList.add(fydvo);
-			// --------------转换表头结束---------------//
-			// --------------转换表体----------------//
-			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
-			for (int j = 0; j < generalb.length; j++) {
-				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
-				TbOutgeneralBVO genb = generalb[j];
-				if (null != genb.getCinventoryid()
-						&& !"".equals(genb.getCinventoryid())) {
-					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
-				}
-				if (null != genb.getNshouldoutnum()
-						&& !"".equals(genb.getNshouldoutnum())) {
-					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
-				}
-				if (null != genb.getNshouldoutassistnum()
-						&& !"".equals(genb.getNshouldoutassistnum())) {
-					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
-				}
-				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
-					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
-				}
-				if (null != genb.getNoutassistnum()
-						&& !"".equals(genb.getNoutassistnum())) {
-					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
-				}
-				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
-					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
-				}
-				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
-					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
-				}
-				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次
-				tbfydmxList.add(fydmxnewvo);
-			}
-			// ----------------转换表体结束---------------------//
-			if (tbfydmxList.size() > 0) {
-				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
-				tbfydmxList.toArray(fydmxVO);
-				fydmxList.add(fydmxVO);
-				o[0] = true;
-			} else {
-				fydmxList.add(null);
-			}
-		}
-		o[1] = fydList;
-		o[2] = fydmxList;
-		return o;
-	}
+//	/**
+//	 * 生成发运单
+//	 * 
+//	 * @throws Exception
+//	 */
+//	private Object[] insertFyd(TbOutgeneralHVO generalh,
+//			TbOutgeneralBVO[] generalb) throws Exception {
+//		Object[] o = new Object[3];
+//		o[0] = false;
+//		List<TbFydnewVO> fydList = new ArrayList<TbFydnewVO>();
+//		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
+//
+//		// 进行VO转换/////////////////////////////////////////////
+//
+//		// ------------转换表头对象-----------------//
+//		TbFydnewVO fydvo = new TbFydnewVO();
+//		if (null != generalh && null != generalb && generalb.length > 0) {
+//			if (null != generalh.getVdiliveraddress()
+//					&& !"".equals(generalh.getVdiliveraddress())) {
+//				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
+//			}
+//			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
+//				fydvo.setFyd_bz(generalh.getVnote()); // 备注
+//			}
+//			if (null != generalh.getCdptid()
+//					&& !"".equals(generalh.getCdptid())) {
+//				fydvo.setCdeptid(generalh.getCdptid()); // 部门
+//			}
+//			// 设置运货方式
+//			fydvo.setFyd_yhfs("汽运");
+//			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
+//			fydvo.setBilltype(8);
+//			fydvo.setVbillstatus(1);
+//			// 单据号
+//			fydvo.setVbillno(generalh.getVbillcode());
+//			// 制单日期
+//			fydvo.setDmakedate(generalh.getDbilldate());
+//			fydvo.setVoperatorid(ClientEnvironment.getInstance().getUser()
+//					.getPrimaryKey()); // 设置制单人
+//			// 设置发货站
+//			fydvo.setSrl_pk(generalh.getSrl_pk());
+//			// 到货站
+//			fydvo.setSrl_pkr(generalh.getSrl_pkr());
+//			fydList.add(fydvo);
+//			// --------------转换表头结束---------------//
+//			// --------------转换表体----------------//
+//			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
+//			for (int j = 0; j < generalb.length; j++) {
+//				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
+//				TbOutgeneralBVO genb = generalb[j];
+//				if (null != genb.getCinventoryid()
+//						&& !"".equals(genb.getCinventoryid())) {
+//					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
+//				}
+//				if (null != genb.getNshouldoutnum()
+//						&& !"".equals(genb.getNshouldoutnum())) {
+//					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
+//				}
+//				if (null != genb.getNshouldoutassistnum()
+//						&& !"".equals(genb.getNshouldoutassistnum())) {
+//					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
+//				}
+//				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
+//					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
+//				}
+//				if (null != genb.getNoutassistnum()
+//						&& !"".equals(genb.getNoutassistnum())) {
+//					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
+//				}
+//				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
+//					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
+//				}
+//				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
+//					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
+//				}
+//				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次
+//				tbfydmxList.add(fydmxnewvo);
+//			}
+//			// ----------------转换表体结束---------------------//
+//			if (tbfydmxList.size() > 0) {
+//				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
+//				tbfydmxList.toArray(fydmxVO);
+//				fydmxList.add(fydmxVO);
+//				o[0] = true;
+//			} else {
+//				fydmxList.add(null);
+//			}
+//		}
+//		o[1] = fydList;
+//		o[2] = fydmxList;
+//		return o;
+//	}
 
 	// 验证方法
 	public boolean validateItem(TbOutgeneralBVO[] generalBVO) throws Exception {
@@ -803,15 +804,21 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (isControl == 2 || isControl == 3) {
 			isAdd = true;
 			// 实例查询类
-			fydnewdlg = new FydnewDlg(myClientUI, pkList, isStock);
+			if(fydnewdlg == null){
+				fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
+							.getCorporation().getPrimaryKey(),
+							ClientEnvironment.getInstance().getUser()
+							.getPrimaryKey(), WdsWlPubConsts.DM_SO_ORDER_NODECODE, "1=1", 
+							WdsWlPubConsts.WDS5, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
+			}
 			// 调用方法 获取查询后的聚合VO
 			AggregatedValueObject[] vos = fydnewdlg
 					.getReturnVOs(ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
-									.getPrimaryKey(), "4202",
-							ConstVO.m_sBillDRSQ, "8004040204", "8004040294",
-							myClientUI);
+									.getPrimaryKey(), WdsWlPubConsts.WDS5,
+							ConstVO.m_sBillDRSQ,WdsWlPubConsts.SO_OUT_FUNCODE, 
+							WdsWlPubConsts.SO_OUT_REFWDS5_NODECODE,fydnewdlg);
 			// 判断是否对查询模板有进行操作
 			if (null == vos || vos.length == 0) {
 				return;
@@ -1287,27 +1294,24 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		TbOutgeneralHVO generalHVO = new TbOutgeneralHVO();
 		// 子表信息数组集合
 		List<TbOutgeneralBVO> generalBList = new ArrayList<TbOutgeneralBVO>();
-
-		TbFydnewVO fydnew = (TbFydnewVO) vos[0].getParentVO();
-		generalHVO.setSrl_pk(fydnew.getSrl_pk()); // 出库仓库
+		SoorderVO fydnew = (SoorderVO) vos[0].getParentVO();
+		generalHVO.setSrl_pk(fydnew.getPk_outwhouse()); // 出库仓库
 		generalHVO.setCbiztype(fydnew.getPk_busitype()); // 业务类型主键
-		generalHVO.setCdptid(fydnew.getCdeptid()); // 部门
-		generalHVO.setCbizid(fydnew.getPk_psndoc()); // 业务员
-		generalHVO.setCcustomerid(fydnew.getPk_kh()); // 客户
-		generalHVO.setVdiliveraddress(fydnew.getFyd_shdz()); // 收货地址
-		generalHVO.setVnote(fydnew.getFyd_bz()); // 备注
+		generalHVO.setCdptid(fydnew.getPk_deptdoc()); // 部门
+		generalHVO.setCbizid(fydnew.getVemployeeid()); // 业务员
+		generalHVO.setCcustomerid(fydnew.getPk_cumandoc()); // 客户
+		generalHVO.setVdiliveraddress(fydnew.getVinaddress()); // 收货地址
+		generalHVO.setVnote(fydnew.getVmemo()); // 备注
 		generalHVO.setVsourcebillcode(fydnew.getVbillno()); // 来源单据号
 		generalHVO.setDauditdate(fydnew.getDapprovedate()); // 审核日期
-		generalHVO.setCsourcebillhid(fydnew.getFyd_pk()); // 来源单据表头主键
-		generalHVO.setVbilltype(fydnew.getBilltype().toString()); // 单据类型
-
+		generalHVO.setCsourcebillhid(fydnew.getPk_soorder()); // 来源单据表头主键
 		myBillVO.setParentVO(generalHVO);
 		// 循环缓存中的子表信息
 		if (null != fydnewdlg.getFydmxVO() && fydnewdlg.getFydmxVO().length > 0) {
 			// 获取缓存 转换子表其他的信息
 			for (int i = 0; i < fydnewdlg.getFydmxVO().length; i++) {
-				TbFydmxnewVO fydmxnewvo = fydnewdlg.getFydmxVO()[i];
-				if (fydnew.getFyd_pk().equals(fydmxnewvo.getFyd_pk())) {
+				SoorderBVO fydmxnewvo = fydnewdlg.getFydmxVO()[i];
+				if (fydnew.getPk_soorder().equals(fydmxnewvo.getPk_soorder())) {
 					TbOutgeneralBVO generalBVO = new TbOutgeneralBVO();
 					setGeneralbVO(fydnew, fydmxnewvo, generalBVO);
 					generalBVO.setIsoper(new UFBoolean("Y"));
@@ -1334,19 +1338,19 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	 * @param generalBVO
 	 *            出库单子表
 	 */
-	private void setGeneralbVO(TbFydnewVO fydnew, TbFydmxnewVO fydmxnewvo,
+	private void setGeneralbVO(SoorderVO fydnew, SoorderBVO fydmxnewvo,
 			TbOutgeneralBVO generalBVO) {
-		generalBVO.setCsourcebillhid(fydnew.getFyd_pk()); // 来源单据表头主键
+		generalBVO.setCsourcebillhid(fydnew.getPk_soorder()); // 来源单据表头主键
 		generalBVO.setVsourcebillcode(fydnew.getVbillno()); // 来源单据号
-		generalBVO.setCsourcetype(fydnew.getBilltype().toString()); // 来源单据类型
-		generalBVO.setCsourcebillbid(fydmxnewvo.getCfd_pk()); // 来源单据表体主键
-		generalBVO.setCfirstbillhid(fydmxnewvo.getCsaleid()); // 源头单据表头主键
-		generalBVO.setCfirstbillbid(fydmxnewvo.getCorder_bid()); // 源头单据表体主键
-		generalBVO.setCrowno(fydmxnewvo.getCrowno()); // 行号
-		generalBVO.setNshouldoutnum(fydmxnewvo.getCfd_yfsl()); // 应发数量
-		generalBVO.setNshouldoutassistnum(fydmxnewvo.getCfd_xs()); // 应发辅数量
-		generalBVO.setCinventoryid(fydmxnewvo.getPk_invbasdoc()); // 存货主键
-		generalBVO.setFlargess(fydmxnewvo.getBlargessflag()); // 是否赠品
+		generalBVO.setCsourcetype(fydnew.getPk_billtype()); // 来源单据类型
+		generalBVO.setCsourcebillbid(fydmxnewvo.getPk_soorder_b()); // 来源单据表体主键
+		generalBVO.setCfirstbillhid(fydmxnewvo.getCfirstbillhid()); // 源头单据表头主键
+		generalBVO.setCfirstbillbid(fydmxnewvo.getCfirstbillbid()); // 源头单据表体主键
+		generalBVO.setNshouldoutnum(fydmxnewvo.getNarrangnmu()); // 应发数量
+		generalBVO.setNshouldoutassistnum(fydmxnewvo.getNassarrangnum()); // 应发辅数量
+		generalBVO.setCinventoryid(fydmxnewvo.getPk_invmandoc()); // 存货主键
+		generalBVO.setCinvbasid(fydmxnewvo.getPk_invbasdoc());
+		generalBVO.setFlargess(fydmxnewvo.getFisgift()); // 是否赠品
 	}
 
 	public Iw8004040204 getIw() {

@@ -2,9 +2,7 @@ package nc.ui.wds.w8000;
 
 import java.util.ArrayList;
 
-import nc.bs.framework.common.NCLocator;
 import nc.itf.wds.w8000.Iw8000;
-import nc.itf.wds.w80060208.Iw80060208;
 import nc.ui.pf.pub.PfUIDataCache;
 import nc.ui.pub.pf.IUIBeforeProcAction;
 import nc.ui.trade.base.AbstractBillUI;

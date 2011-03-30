@@ -1,46 +1,30 @@
 package nc.ui.wds.w8004040204;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.plaf.PanelUI;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
-import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ClientEnvironment;
-import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.scm.pub.query.SCMQueryConditionDlg;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.vo.gl.querymodel.CondtionVO;
+import nc.vo.dm.order.SendorderBVO;
+import nc.vo.dm.so.order.SoorderBVO;
+import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessException;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w80060401.TbShipentryVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
 
 public class FydnewDlg extends BillSourceDLG {
 	Container m_parent = null;
 	private List pkList = null;
 	private boolean isStock = false;
+	private String pk_stock = null;
 	// 获取访问数据库对象
 	IUAPQueryBS IUAPQueryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(
 			IUAPQueryBS.class.getName());
@@ -49,24 +33,24 @@ public class FydnewDlg extends BillSourceDLG {
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 		if (getbillListPanel().getHeadTable().getSelectedRowCount() > 0) {
-			List<TbFydmxnewVO> fydmxList = new ArrayList<TbFydmxnewVO>();
-			TbFydmxnewVO[] fydmx = null;
+			List<SoorderBVO> fydmxList = new ArrayList<SoorderBVO>();
+			SoorderBVO[] fydmx = null;
 			// 获取所选择行的Id
 			Object o = getbillListPanel().getHeadBillModel().getValueAt(
 					getbillListPanel().getHeadTable().getSelectedRow(),
-					"fyd_pk");
+					"pk_soorder");
 			// 判断是否为空
 			if (o != null && o != "" && null != this.fydmxVO
 					&& this.fydmxVO.length > 0) {
 				String csaleid = o.toString();
 				for (int i = 0; i < this.fydmxVO.length; i++) {
-					String saleid = this.fydmxVO[i].getFyd_pk();
+					String saleid = this.fydmxVO[i].getPk_soorder();
 					if (csaleid.equals(saleid)) {
 						// 如果所选择的行id不为空 根据它去缓存里查询出子表Vo 进行显示
 						fydmxList.add(this.fydmxVO[i]);
 					}
 				}
-				fydmx = new TbFydmxnewVO[fydmxList.size()];
+				fydmx = new SoorderBVO[fydmxList.size()];
 				fydmx = fydmxList.toArray(fydmx);
 				getbillListPanel().setBodyValueVO(fydmx);
 			}
@@ -82,8 +66,8 @@ public class FydnewDlg extends BillSourceDLG {
 			AggregatedValueObject[] selectedBillVOs = getbillListPanel()
 					.getMultiSelectedVOs(
 							nc.vo.trade.pub.HYBillVO.class.getName(),
-							TbFydnewVO.class.getName(),
-							TbFydmxnewVO.class.getName());
+							SoorderVO.class.getName(),
+							SoorderBVO.class.getName());
 			retBillVo = selectedBillVOs.length > 0 ? selectedBillVOs[0] : null;
 			retBillVos = selectedBillVOs;
 			if (null == retBillVos || retBillVos.length != 1) {
@@ -96,24 +80,25 @@ public class FydnewDlg extends BillSourceDLG {
 
 	private SCMQueryConditionDlg m_dlgQry = null;
 
-	public TbFydnewVO[] fydVO;
-	public TbFydmxnewVO[] fydmxVO;
+	public SoorderVO[] fydVO;
+	public SoorderBVO[] fydmxVO;
 
-	public TbFydnewVO[] getFydVO() {
+	public SoorderVO[] getFydVO() {
 		return fydVO;
 	}
 
-	public void setFydVO(TbFydnewVO[] fydVO) {
+	public void setFydVO(SoorderVO[] fydVO) {
 		this.fydVO = fydVO;
 	}
 
-	public TbFydmxnewVO[] getFydmxVO() {
+	public SoorderBVO[] getFydmxVO() {
 		return fydmxVO;
 	}
 
-	public void setFydmxVO(TbFydmxnewVO[] fydmxVO) {
+	public void setFydmxVO(SoorderBVO[] fydmxVO) {
 		this.fydmxVO = fydmxVO;
 	}
+
 
 	public FydnewDlg(String pkField, String pkCorp, String operator,
 			String funNode, String queryWhere, String billType,
@@ -124,11 +109,17 @@ public class FydnewDlg extends BillSourceDLG {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FydnewDlg(Container parent, List pkList, boolean isStock) {
-		super(null, null, null, null, "1=1", "4202", null, null, null, parent);
+	public FydnewDlg(String pkField, String pkCorp, String operator,
+			String funNode, String queryWhere, String billType,
+			String businessType, String templateId, String currentBillType,
+			Container parent,List pkList, boolean isStock,
+			String pk_stock) {
+		super(pkField, pkCorp, operator, funNode, queryWhere, billType,
+				businessType, templateId, currentBillType, parent);
 		m_parent = parent;
 		this.pkList = pkList;
 		this.isStock = isStock;
+		this.pk_stock = pk_stock;
 		init();
 	}
 
@@ -207,125 +198,99 @@ public class FydnewDlg extends BillSourceDLG {
 
 	public void loadHeadData() {
 		try {
-			// 获取查询条件
-			nc.vo.pub.query.ConditionVO[] voCons = m_dlgQry.getConditionVO();
-
-			StringBuffer sWhere = new StringBuffer();
-			if (voCons != null && voCons.length > 0 && voCons[0] != null) {
-				for (int i = 0; i < voCons.length; i++) {
-					ConditionVO conti = voCons[i];
-					if (conti.getFieldCode().equals("tb_fydnew.billtype")) {
-						int resu = Integer.parseInt(conti.getValue().trim()
-								.toString());
-						switch (resu) {
-						case 0:
-							conti.setValue("1");
-							break;
-						case 1:
-							conti.setValue("3");
-							break;
-						case 2:
-							conti.setValue("4");
-							break;
-						default:
-							conti.setValue("0");
-							conti.setOperaCode("<>");
-							break;
-						}
-						voCons[i] = conti;
-					}
-				}
-				// 获取当前登录者查询人员绑定表 是属于哪个仓库，
-				String pk_stock = CommonUnit.getStordocName(ClientEnvironment
-						.getInstance().getUser().getPrimaryKey());
-				if (null != pk_stock && !"".equals(pk_stock)) {
-					sWhere.append(" srl_pk = '" + pk_stock + "' and ");
-				}
-				sWhere
-						.append(" dr = 0 and (fyd_constatus = 0 or  fyd_constatus is null)  and vbillstatus = 1 and fyd_fyzt = 0 and pk_mergelogo is null ");
-				sWhere.append(" and " + m_dlgQry.getWhereSQL(voCons));
+			// 获取查询条
+			StringBuffer strWhere = new StringBuffer();
+			strWhere.append(" isnull(wds_soorder.dr,0)=0 ");
+			strWhere.append(" and wds_soorder.vbillstatus =1");
+			strWhere.append(" and wds_soorder.dapprovedate<='"+ new UFDate(System.currentTimeMillis()).toString()+"'");
+			if (!isStock) {//不是总仓人员的只能看到调出仓库是本仓库的
+				strWhere.append(" and wds_soorder.pk_outwhouse = '" + pk_stock + "'");
+			}
+			String initWhereSql = m_dlgQry.getWhereSQL();
+			if(initWhereSql != null && !"".equals(initWhereSql)){
+				strWhere.append(" and "+initWhereSql);
 			}
 			// 表体VO
-			List<TbFydmxnewVO> fydmxList = new ArrayList<TbFydmxnewVO>();
-			TbFydmxnewVO[] fydmx = null;
+			List<SoorderBVO> fydmxList = new ArrayList<SoorderBVO>();
+			SoorderBVO[] fydmx = null;
 			ArrayList list = (ArrayList) IUAPQueryBS.retrieveByClause(
-					TbFydnewVO.class, sWhere.toString());
+					SoorderVO.class, strWhere.toString());
 
 			if (null != list && list.size() > 0) {
-				List<TbFydnewVO> fydVOList = new ArrayList<TbFydnewVO>();
+				List<SoorderVO> fydVOList = new ArrayList<SoorderVO>();
 				for (int j = 0; j < list.size(); j++) {
-					TbFydnewVO fydvo = (TbFydnewVO) list.get(j);
-					String mxWhere = " dr = 0 and fyd_pk= '"
-							+ fydvo.getFyd_pk() + "'";
+					SoorderVO head = (SoorderVO) list.get(j);
+					String mxWhere = " dr = 0 and pk_soorder= '"
+							+ head.getPk_soorder() + "'";
 					ArrayList mxlist = (ArrayList) IUAPQueryBS
-							.retrieveByClause(TbFydmxnewVO.class, mxWhere);
+							.retrieveByClause(SoorderBVO.class, mxWhere);
 					boolean isData = false;
 					// 判断总仓还是分仓
+					//如果是总仓根据当登录人绑定的货位过滤存货
 					if (isStock) {
 						if (null != mxlist && mxlist.size() > 0
 								&& null != pkList && pkList.size() > 0) {
 
 							boolean isPkEqer = false;
 							for (int i = 0; i < mxlist.size(); i++) {
-								TbFydmxnewVO tmpfyd = (TbFydmxnewVO) mxlist
+								SoorderBVO body = (SoorderBVO) mxlist
 										.get(i);
 								for (int z = 0; z < pkList.size(); z++) {
-									if (pkList.get(z).equals(
-											tmpfyd.getPk_invbasdoc())) {
+									if (pkList.contains(body.getPk_invbasdoc())) {
 										isPkEqer = true;
 										ArrayList outbList = (ArrayList) CommonUnit
-												.getOutGeneralBVO(tmpfyd
+												.getOutGeneralBVO(body
 														.getPk_invbasdoc(),
-														tmpfyd.getCfd_pk());
+														body.getPk_soorder_b());
 										if (null != outbList
 												&& outbList.size() > 0) {
 											isData = true;
 											break;
 										}
-										// 过滤应发数量是空或者0
-										if (null == tmpfyd.getCfd_xs()
-												|| tmpfyd.getCfd_xs()
+										// 过滤安排数量是空或者0
+										if (null == body.getNarrangnmu()
+												|| body.getNarrangnmu()
 														.toDouble()
 														.doubleValue() <= 0)
 											break;
-										fydmxList.add(tmpfyd);
+										fydmxList.add(body);
 										isData = false;
 										break;
 									}
 								}
 							}
 							if (!isData && isPkEqer)
-								fydVOList.add(fydvo);
+								fydVOList.add(head);
 						}
 					} else {
 						if (null != mxlist && mxlist.size() > 0) {
 							for (int i = 0; i < mxlist.size(); i++) {
-								TbFydmxnewVO tmpfyd = (TbFydmxnewVO) mxlist
+								SoorderBVO body = (SoorderBVO) mxlist
 										.get(i);
 								ArrayList outbList = (ArrayList) CommonUnit
-										.getOutGeneralBVO(tmpfyd
-												.getPk_invbasdoc(), tmpfyd
-												.getCfd_pk());
+										.getOutGeneralBVO(body
+												.getPk_invbasdoc(), body
+												.getPk_soorder_b());
 								if (null != outbList && outbList.size() > 0) {
 									continue;
 								}
-								fydmxList.add(tmpfyd);
+								fydmxList.add(body);
 								isData = true;
 							}
 						}
 						if (isData)
-							fydVOList.add(fydvo);
+							fydVOList.add(head);
 					}
 				}
 
 				if (fydVOList.size() > 0) {
 					// 表头VO
-					TbFydnewVO[] fyd = new TbFydnewVO[fydVOList.size()];
-					fyd = (TbFydnewVO[]) fydVOList.toArray(fyd);
+					SoorderVO[] fyd = new SoorderVO[fydVOList.size()];
+					fyd = (SoorderVO[]) fydVOList.toArray(fyd);
 					// 属性发运单主表数组
 					this.setFydVO(fyd);
 					if (fydmxList.size() > 0) {
-						TbFydmxnewVO[] fydmxvo = new TbFydmxnewVO[fydmxList
+						SoorderBVO[] fydmxvo = new SoorderBVO[fydmxList
 								.size()];
 						fydmxvo = fydmxList.toArray(fydmxvo);
 						// 属性发运单字表数组赋值

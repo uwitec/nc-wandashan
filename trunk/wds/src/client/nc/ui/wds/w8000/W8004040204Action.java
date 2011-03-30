@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.wds.w8004040204.Iw8004040204;
-import nc.itf.wds.w80060401.Iw80060401;
 import nc.ui.pf.pub.PfUIDataCache;
 import nc.ui.pub.pf.IUIBeforeProcAction;
 import nc.ui.trade.base.AbstractBillUI;

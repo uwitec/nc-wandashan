@@ -24,7 +24,6 @@ import nc.vo.wds.w8004040204.TbOutgeneralTVO;
 import nc.vo.wds.w8004040204.TbWarehousestockVO;
 import nc.vo.wds.w8004061002.BdCargdocTrayVO;
 import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
 import nc.vo.wds.w80060608.IcGeneralBVO;
 import nc.vo.wds.w80060608.IcGeneralHVO;
 

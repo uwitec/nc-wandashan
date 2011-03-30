@@ -137,9 +137,6 @@ public class FydnewDlg extends BillSourceDLG {
 	public AggregatedValueObject[] getReturnVOs(String pkCorp, String operator,
 			String billType, String currentBillType, String funNode,
 			String qrynodekey, java.awt.Container parent) {
-		// 得到调用节点的查询对话框
-		// funnode 40092010 申请单
-		// qrynodekey 40099906 参照单据查询
 		if(m_dlgQry ==null){
 		  m_dlgQry = getQueryDlg(pkCorp, funNode, operator, qrynodekey);
 		}
@@ -251,14 +248,10 @@ public class FydnewDlg extends BillSourceDLG {
 
 										// /根据子表中 主键，单品主键，操作=‘Y’
 										// 如果有该保管员做过出库，不显示该数据
-										String strWhereSql = " dr = 0 and isoper = 'Y' and cinventoryid = '"
-												+ body.getPk_invbasdoc()
-												+ "' and csourcebillhid = '"
-												+ body.getPk_sendorder() + "'";
-										ArrayList outbList = (ArrayList) IUAPQueryBS
-												.retrieveByClause(
-														TbOutgeneralBVO.class,
-														strWhereSql);
+										ArrayList outbList = (ArrayList) CommonUnit
+										.getOutGeneralBVO(body
+												.getPk_invbasdoc(),
+												body.getPk_sendorder_b());
 										if (null != outbList
 												&& outbList.size() > 0) {
 											isData = true;
