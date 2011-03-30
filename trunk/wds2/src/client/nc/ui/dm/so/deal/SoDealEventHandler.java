@@ -213,6 +213,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			getLeftDate(ldata);
 //			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
 //			clearData();
+			clearCache();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
