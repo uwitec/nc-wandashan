@@ -6,6 +6,7 @@ package nc.ui.dm.sb;
  */
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
+import nc.vo.pub.SuperVO;
 import nc.vo.trade.pub.HYBillVO;
 
 public class ClientController extends AbstractManageController {
@@ -49,7 +50,7 @@ public class ClientController extends AbstractManageController {
 		return new String[]{
 				HYBillVO.class.getName(),
 				SbDocVO.class.getName(),
-				null
+				SuperVO.class.getName()
 		};
 	}
 
