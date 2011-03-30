@@ -66,14 +66,15 @@ public class PlanOrderBO {
 		}
 		SendorderBVO[] bodys= (SendorderBVO[])obj.getChildrenVO();
 		StringBuffer sql = new StringBuffer();
-		sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
-		for(SendorderBVO body:bodys){
+		for(SendorderBVO body:bodys){			
+			sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
 			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum()));
 			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
 			sql.append(" and pk_sendplanin='"+body.getCsourcebillhid()+"'");
 			if(getBaseDAO().executeUpdate(sql.toString())==0){
 				throw new BusinessException("数据异常：该发运计划可能已作废");
 			};
+			sql.setLength(0);//清空buffer
 		}
 	}
 

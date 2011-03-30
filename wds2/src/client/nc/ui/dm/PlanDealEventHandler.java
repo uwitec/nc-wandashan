@@ -9,6 +9,7 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
@@ -146,6 +147,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(billdatas);
 		getDataPane().execLoadFormula();
+		billdatas = (PlanDealVO[])getDataPane().getBodyValueVOs(PlanDealVO.class.getName());
 		setDataBuffer(billdatas);		
 		showHintMessage("查询完成");
 		}

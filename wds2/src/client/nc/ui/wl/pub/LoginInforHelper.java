@@ -38,7 +38,17 @@ public class LoginInforHelper {
 		return m_loginInfor;
 	}
 	
+	public static String getWhidByUser(String userid) throws Exception{
+		return getLogInfor(userid).getWhid();
+	}
 	
+	public static int getITypeByUser(String userid) throws Exception{
+		return getLogInfor(userid).getType();
+	}
+	
+	public static String getCwhid(String userid) throws Exception{
+		return getLogInfor(userid).getWhid();
+	}
 	
 	/**
 	 * 
@@ -83,6 +93,18 @@ public class LoginInforHelper {
 	 */
 	public static String[] getSpaceByLogUser(String userid) throws Exception{
 		return null;
+	}
+	
+	public static String[] getInvBasdocIDsBySpaceID(String cspaceid) throws Exception{
+		return null;
+	}
+	
+	public static String[] getInvBasDocIDsByUserID(String userid) throws Exception{
+		LoginInforVO infor = getLogInfor(userid);
+		if(infor.getType()!=0){
+			throw new BusinessException("当前登陆人员不是保管员");
+		}
+		return getInvBasdocIDsBySpaceID(infor.getSpaceid());
 	}
 	
 	/**

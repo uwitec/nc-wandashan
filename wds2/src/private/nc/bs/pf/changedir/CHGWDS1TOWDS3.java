@@ -99,6 +99,7 @@ public String[] getField() {
 			"B_nassplannum->B_nassplannum",//安排辅数量
 			"B_nplannum->B_nplannum",//安排数量
 			"B_ndealnum->B_nnum",//安排数量
+			"B_nassdealnum->B_nassnum",//安排数量
 			"B_reserve2->B_reserve2",
 			"B_reserve1->B_reserve1", 
 			"B_pk_fdsyzc_h->B_reserve1", 

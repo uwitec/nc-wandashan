@@ -12,6 +12,7 @@ public class PlanDealVO extends SendplaninBVO {
 	 */
 	public static final long serialVersionUID = 5274835182681933810L;
 	public UFDouble nnum = null;//本次安排数量
+	public UFDouble nassnum = null;//本次安排辅数量
 	public String pk_corp;
     public UFDate dmakedate;
     public String voperatorid;
@@ -39,6 +40,8 @@ public class PlanDealVO extends SendplaninBVO {
     public Object getAttributeValue(String arg) {
     	if("nnum".equalsIgnoreCase(arg)){
     		return this.getNnum();
+    	}else if("nassnum".equalsIgnoreCase(arg)){
+    		return this.getNassnum();
     	}else if("pk_corp".equalsIgnoreCase(arg)){
     		return this.getPk_corp();
     	}else if("dmakedate".equalsIgnoreCase(arg)){
@@ -76,6 +79,58 @@ public class PlanDealVO extends SendplaninBVO {
     	}
     	return super.getAttributeValue(arg);
     }
+  public void setAttributeValue(String arg, Object value)  {
+    	if("nnum".equalsIgnoreCase(arg)){
+    		 setNnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("nassnum".equalsIgnoreCase(arg)){
+    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("pk_corp".equalsIgnoreCase(arg)){
+    		setPk_corp(PuPubVO.getString_TrimZeroLenAsNull(value));
+    	}else if("dmakedate".equalsIgnoreCase(arg)){
+    		setDmakedate((UFDate)value);
+    	}else if("voperatorid".equalsIgnoreCase(arg)){
+    		setVoperatorid((String)value);
+    	}else if("vapprovenote".equalsIgnoreCase(arg)){
+    		setVapprovenote((String)value);
+    	}else if("pk_billtype".equalsIgnoreCase(arg)){
+    		setPk_billtype((String)value);
+    	}else if("iplantype".equalsIgnoreCase(arg)){
+    		setIplantype(PuPubVO.getInteger_NullAs(value, WdsWlPubTool.INTEGER_ZERO_VALUE));
+    	}else if("vbillstatus".equalsIgnoreCase(arg)){
+    		setVbillstatus((Integer)value);
+    	}else if("vemployeeid".equalsIgnoreCase(arg)){
+    		setVemployeeid((String)value);
+    	}else if("pk_busitype".equalsIgnoreCase(arg)){
+    		setPk_busitype((String)value);
+    	}else if("pk_sendplanin".equalsIgnoreCase(arg)){
+    		setPk_sendplanin((String)value);
+    		
+    	}else if("dbilldate".equalsIgnoreCase(arg)){
+    		setDbilldate((UFDate)value);
+    	}else if("vbillno".equalsIgnoreCase(arg)){
+    		setVbillno((String)value);
+    	}else if("pk_inwhouse".equalsIgnoreCase(arg)){
+    		setPk_inwhouse((String)value);
+    	}else if("pk_deptdoc".equalsIgnoreCase(arg)){
+    		setPk_deptdoc((String)value);
+    	}else if("pk_outwhouse".equalsIgnoreCase(arg)){
+    		setPk_outwhouse((String)value);
+    	}else if("dapprovedate".equalsIgnoreCase(arg)){
+    		setDapprovedate((UFDate)value);
+    	}else if("vapproveid".equalsIgnoreCase(arg)){
+    		setVapproveid((String)value);
+    	}
+    	 super.setAttributeValue(arg, value);
+    }
+    
+	public UFDouble getNassnum() {
+		return nassnum;
+	}
+
+	public void setNassnum(UFDouble nassnum) {
+		this.nassnum = nassnum;
+	}
+
 	public UFDouble getNnum() {
 		return nnum;
 	}
