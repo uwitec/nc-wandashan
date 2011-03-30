@@ -4,7 +4,6 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.lang.UFNumberFormat;
 
 public class SbDocVO extends SuperVO{
 	
