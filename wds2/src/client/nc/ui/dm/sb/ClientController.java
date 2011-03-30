@@ -48,7 +48,8 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[]{
 				HYBillVO.class.getName(),
-				SbDocVO.class.getName()
+				SbDocVO.class.getName(),
+				null
 		};
 	}
 
