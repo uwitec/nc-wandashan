@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
@@ -28,6 +30,7 @@ import nc.ui.wds.w8000.W8004040204Action;
 import nc.ui.wds.w8004040204.TrayDisposeDetailDlg;
 import nc.ui.wds.w8004040204.TrayDisposeDlg;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
@@ -41,6 +44,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.pub.WdsWlPubConsts;
@@ -571,6 +575,8 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
+		Map<String,UFDouble> map = new HashMap<String,UFDouble>();
+		Map<String,UFDouble> assmap = new HashMap<String,UFDouble>();
 		// 获取当前页面中VO
 		AggregatedValueObject myBillVO = getBillUI().getVOFromUI();
 		setTSFormBufferToVO(myBillVO);
@@ -641,11 +647,15 @@ public class MyEventHandler extends AbstractMyEventHandler {
 					// 循环表体更改状态
 					for (int i = 0; i < generalb.length; i++) {
 						generalb[i].setStatus(VOStatus.NEW);
+						map.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutnum());
+						assmap.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutassistnum());
 					}
 				} else { // 设置表体状态“修改”
 					// 循环表体更改状态
 					for (int i = 0; i < generalb.length; i++) {
 						generalb[i].setStatus(VOStatus.UPDATED);
+						map.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutnum());
+						assmap.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutassistnum());
 					}
 				}
 
@@ -763,6 +773,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				myBillVO = getBusinessAction().saveAndCommit(myBillVO,
 						getUIController().getBillType(), _getDate().toString(),
 						getBillUI().getUserObject(), myBillVO);
+			
 			else {
 
 				List objUser = new ArrayList();
@@ -835,8 +846,19 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			getBufferData().setCurrentRow(nCurrentRow);
 		}
 		myClientUI.updateButtons();
+		reWriteTOWDS5(map,assmap,generalh.getCsourcebillhid());
 	}
-
+	/**
+	 * 回写发运订单累计出库数量
+	 * lyf
+	 * @param map
+	 * @throws Exception 
+	 */
+	private void reWriteTOWDS5(	Map<String,UFDouble> map,Map<String,UFDouble> assmap,String vsourbillhid) throws Exception{
+		Class[] ParameterTypes = new Class[]{Map.class,Map.class,String.class};
+		Object[] ParameterValues = new Object[]{map,assmap,vsourbillhid};
+		LongTimeTask.callRemoteService(WdsWlPubConsts.WDS_MODULENAME, "nc.bo.other.out.OtherOutBO","reWriteTOWDS5", ParameterTypes, ParameterValues, 2);
+	}
 	/**
 	 * 生成发运单
 	 * 
