@@ -2,10 +2,10 @@ package nc.ui.dm.so.order;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
-import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.querytemplate.TemplateInfo;
 
-public class ClientEventHandler extends ManageEventHandler {
+public class ClientEventHandler extends WdsPubEnventHandler {
 
 	public ClientUIQueryDlg queryDialog = null;
 
