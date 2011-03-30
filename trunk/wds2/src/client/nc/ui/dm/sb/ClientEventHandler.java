@@ -12,4 +12,9 @@ public class ClientEventHandler extends ManageEventHandler {
 	}
 
 	
+	@Override
+	protected void onBoSave() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoSave();
+	}
 }

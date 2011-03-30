@@ -70,5 +70,11 @@ public class ClientUI extends BillManageUI {
 		return super.getTitle();
 	}
 	
+	@Override
+	public boolean isSaveAndCommitTogether() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
 
 }
