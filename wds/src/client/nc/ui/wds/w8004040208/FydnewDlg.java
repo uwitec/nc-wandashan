@@ -19,7 +19,6 @@ import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 /**
  * 其他出库--转库处理类
  * @author Administrator
