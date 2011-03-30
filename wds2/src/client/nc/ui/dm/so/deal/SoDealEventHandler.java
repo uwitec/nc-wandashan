@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
@@ -209,8 +210,9 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				((SoDealVO)vo).validataOnDeal();
 			}
 			SoDealHealper.doDeal(ldata, ui);
-			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
-			clearData();
+			getLeftDate(ldata);
+//			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
+//			clearData();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
@@ -221,6 +223,21 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			return;
 		}
 		ui.showHintMessage("安排已经完成...");
+	}
+	
+	private void getLeftDate(List<SuperVO> ldata){
+		List<SoDealVO> leftDate = new ArrayList<SoDealVO>();
+		if(m_billdatas == null || m_billdatas.length==0){
+			ui.showWarningMessage("获取缓存数据出错，请重新查询");
+		}
+		for(SoDealVO dealVO:m_billdatas){
+			if(ldata.contains(dealVO))
+				continue;
+			leftDate.add(dealVO);
+		}
+		getDataPane().setBodyDataVO(leftDate.toArray(new PlanDealVO[0]));
+		getDataPane().execLoadFormula();
+		setDataBuffer(leftDate.toArray(new SoDealVO[0]));	
 	}
 
 	public void afterEdit(BillEditEvent e) {
