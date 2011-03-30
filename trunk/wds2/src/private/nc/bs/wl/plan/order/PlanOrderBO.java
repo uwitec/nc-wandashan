@@ -68,6 +68,7 @@ public class PlanOrderBO {
 		StringBuffer sql = new StringBuffer();
 		for(SendorderBVO body:bodys){			
 			sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
+			sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
 			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum()));
 			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
 			sql.append(" and pk_sendplanin='"+body.getCsourcebillhid()+"'");
