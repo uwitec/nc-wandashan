@@ -202,7 +202,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		 */
 		WdsWlPubTool.stopEditing(getDataPane());
 		if(lseldata==null||lseldata.size()==0){
-			showHintMessage("请选中要处理的数据");
+			showWarnMessage("请选中要处理的数据");
 			return;
 		}
 		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata,"nnum");
@@ -216,6 +216,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 			}
 			PlanDealHealper.doDeal(ldata, ui);
 			getLeftDate(ldata);
+			clearCache();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
