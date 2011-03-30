@@ -1,5 +1,9 @@
 package nc.ui.dm.sb;
 
+
+/*
+ * 特殊业务档案
+ */
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.trade.pub.HYBillVO;

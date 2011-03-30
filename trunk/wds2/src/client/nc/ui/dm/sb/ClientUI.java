@@ -7,8 +7,7 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 
-/**
- * 销售运单
+/**特殊业务
  * @author Administrator
  * 
  */
