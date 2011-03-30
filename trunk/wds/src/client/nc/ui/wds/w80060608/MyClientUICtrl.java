@@ -2,12 +2,10 @@ package nc.ui.wds.w80060608;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
-import nc.ui.trade.bill.ISingleController;
-
-import nc.vo.wds.w80060608.MyBillVO;
-import nc.vo.wds.w80060608.IcGeneralHVO;
-import nc.vo.wds.w80060608.IcGeneralBVO;
 import nc.ui.trade.button.IBillButton;
+import nc.vo.wds.w80060608.IcGeneralBVO;
+import nc.vo.wds.w80060608.IcGeneralHVO;
+import nc.vo.wds.w80060608.MyBillVO;
 
 
 /**

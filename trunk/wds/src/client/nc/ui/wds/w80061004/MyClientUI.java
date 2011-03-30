@@ -1,29 +1,22 @@
 package nc.ui.wds.w80061004;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.so.so001.SaleOrderVO;
-import nc.vo.wds.w80021008.TbStockstaffVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060804.TbTranscompanyVO;
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillItem;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BDBusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.wds.w80021008.TbStockstaffVO;
+import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
