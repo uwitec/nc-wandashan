@@ -44,7 +44,8 @@ public class ClientController extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[] {
 				HYBillVO.class.getName(),
-				SbDocVO.class.getName()
+				SbDocVO.class.getName(),
+				null
 				};
 	}
 
@@ -53,7 +54,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public int getBusinessActionType() {
-		return nc.ui.trade.businessaction.IBusinessActionType.PLATFORM;
+		return nc.ui.trade.businessaction.IBusinessActionType.BD;
 	}
 
 	public String getChildPkField() {
@@ -110,7 +111,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public boolean isShowListTotal() {
-		return false;
+		return true;
 	}
 
 }
