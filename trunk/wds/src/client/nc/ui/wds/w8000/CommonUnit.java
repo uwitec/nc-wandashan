@@ -8,6 +8,8 @@ import nc.itf.uap.IUAPQueryBS;
 import nc.itf.uap.IVOPersistence;
 import nc.itf.uap.sfapp.IBillcodeRuleService;
 import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
+import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.billcodemanage.BillCodeObjValueVO;
@@ -15,6 +17,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w8004040204.TbOutgeneralTVO;
@@ -80,7 +83,7 @@ public class CommonUnit {
 			if (list.size() > 0) {
 				queryVos = new SuperVO[list.size()];
 				// 把获取出来的值转换成数组
-				// WDSTools.getString_TrimZeroLenAsNull(tmpObj[15])
+				// PuPubVO.getString_TrimZeroLenAsNull(tmpObj[15])
 				for (int i = 0; i < list.size(); i++) {
 					Object[] tmpObj = (Object[]) list.get(i);
 					queryVos[i] = CommonUnit.getOutGenerlHVO(tmpObj);
@@ -112,49 +115,49 @@ public class CommonUnit {
 
 	public static TbOutgeneralHVO getOutGenerlHVO(Object[] tmpObj) {
 		TbOutgeneralHVO generalh = new TbOutgeneralHVO();
-		generalh.setGeneral_pk(WDSTools.getString_TrimZeroLenAsNull(tmpObj[0])); // 主键
-		generalh.setVbillcode(WDSTools.getString_TrimZeroLenAsNull(tmpObj[1]));// 单据号
+		generalh.setGeneral_pk(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[0])); // 主键
+		generalh.setVbillcode(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[1]));// 单据号
 		generalh.setDbilldate(CommonUnit.getUFDate_Null(tmpObj[2]));// 单据日期
-		generalh.setVbilltype(WDSTools.getString_TrimZeroLenAsNull(tmpObj[3]));// 单据类型
+		generalh.setVbilltype(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[3]));// 单据类型
 		generalh.setVbillstatus(CommonUnit.getInteger_Null(tmpObj[4]));// 单据状态
 		if (null != tmpObj[5])
-			generalh.setCoperatorid(WDSTools
+			generalh.setCoperatorid(PuPubVO
 					.getString_TrimZeroLenAsNull(tmpObj[5].toString().trim()));// 制单人
-		generalh.setTmaketime(WDSTools.getString_TrimZeroLenAsNull(tmpObj[6]));// 制单时间
-		generalh.setCsourcebillhid(WDSTools
+		generalh.setTmaketime(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[6]));// 制单时间
+		generalh.setCsourcebillhid(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[7]));// 来源单据表头
-		generalh.setVsourcebillcode(WDSTools
+		generalh.setVsourcebillcode(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[8]));// 来源单据号
-		generalh.setSrl_pkr(WDSTools.getString_TrimZeroLenAsNull(tmpObj[9]));// 入库仓库主键
-		generalh.setSrl_pk(WDSTools.getString_TrimZeroLenAsNull(tmpObj[10]));// 仓库主键
+		generalh.setSrl_pkr(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[9]));// 入库仓库主键
+		generalh.setSrl_pk(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[10]));// 仓库主键
 		generalh
-				.setPk_calbody(WDSTools.getString_TrimZeroLenAsNull(tmpObj[11]));// 库存组织主键
-		generalh.setCbiztype(WDSTools.getString_TrimZeroLenAsNull(tmpObj[12]));// 业务类型
-		generalh.setCdispatcherid(WDSTools
+				.setPk_calbody(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[11]));// 库存组织主键
+		generalh.setCbiztype(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[12]));// 业务类型
+		generalh.setCdispatcherid(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[13]));// 收发类别
-		generalh.setCwhsmanagerid(WDSTools
+		generalh.setCwhsmanagerid(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[14]));// 库管员主键
-		generalh.setCdptid(WDSTools.getString_TrimZeroLenAsNull(tmpObj[15]));// 部门主键
-		generalh.setCbizid(WDSTools.getString_TrimZeroLenAsNull(tmpObj[16]));// 业务员主键
-		generalh.setCcustomerid(WDSTools
+		generalh.setCdptid(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[15]));// 部门主键
+		generalh.setCbizid(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[16]));// 业务员主键
+		generalh.setCcustomerid(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[17]));// 客户主键
-		generalh.setPk_cubasdocc(WDSTools
+		generalh.setPk_cubasdocc(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[18]));// 客商基本档案主键
-		generalh.setVdiliveraddress(WDSTools
+		generalh.setVdiliveraddress(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[19]));// 收货地址
-		generalh.setVnote(WDSTools.getString_TrimZeroLenAsNull(tmpObj[20]));// 备注
-		generalh.setCregister(WDSTools.getString_TrimZeroLenAsNull(tmpObj[21]));// 签字人主键
-		generalh.setTaccounttime(WDSTools
+		generalh.setVnote(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[20]));// 备注
+		generalh.setCregister(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[21]));// 签字人主键
+		generalh.setTaccounttime(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[22]));// 签字时间
 		generalh
-				.setCauditorid(WDSTools.getString_TrimZeroLenAsNull(tmpObj[23]));// 审核人
+				.setCauditorid(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[23]));// 审核人
 		generalh.setDauditdate(CommonUnit.getUFDate_Null(tmpObj[24]));// 审核日期
-		generalh.setClastmodiid(WDSTools
+		generalh.setClastmodiid(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[25]));// 最后修改人
-		generalh.setTlastmoditime(WDSTools
+		generalh.setTlastmoditime(PuPubVO
 				.getString_TrimZeroLenAsNull(tmpObj[26]));// 最后修改时间
 		generalh.setIprintcount(CommonUnit.getInteger_Null(tmpObj[27]));// 打印次数
-		generalh.setComp(WDSTools.getString_TrimZeroLenAsNull(tmpObj[28]));// 公司
+		generalh.setComp(PuPubVO.getString_TrimZeroLenAsNull(tmpObj[28]));// 公司
 		generalh.setQianzidate(CommonUnit.getUFDate_Null(tmpObj[29]));// 签字日期
 		if (null != tmpObj[30])
 			generalh.setTs(new UFTime(tmpObj[30].toString()));// 时间戳
@@ -829,21 +832,21 @@ public class CommonUnit {
 				Object[] a = (Object[]) list.get(i);
 				if (null != a && a.length > 0 && null != a[0]) {
 					TbWarehousestockVO ware = new TbWarehousestockVO();
-					ware.setWhs_pk(WDSTools.getString_TrimZeroLenAsNull(a[0])); // 库存表主键
+					ware.setWhs_pk(PuPubVO.getString_TrimZeroLenAsNull(a[0])); // 库存表主键
 					ware
-							.setPplpt_pk(WDSTools
+							.setPplpt_pk(PuPubVO
 									.getString_TrimZeroLenAsNull(a[1])); // 托盘主键
-					ware.setWhs_stockpieces(WDSTools
+					ware.setWhs_stockpieces(PuPubVO
 							.getUFDouble_NullAsZero(a[2])); // 主数量
-					ware.setWhs_stocktonnage(WDSTools
+					ware.setWhs_stocktonnage(PuPubVO
 							.getUFDouble_NullAsZero(a[3])); // 辅数量
-					ware.setPk_invbasdoc(WDSTools
+					ware.setPk_invbasdoc(PuPubVO
 							.getString_TrimZeroLenAsNull(a[4])); // 存货主键
-					ware.setWhs_batchcode(WDSTools
+					ware.setWhs_batchcode(PuPubVO
 							.getString_TrimZeroLenAsNull(a[5])); // 批次
-					ware.setWhs_nprice(WDSTools.getUFDouble_NullAsZero(a[6]));// 单价
-					ware.setWhs_nmny(WDSTools.getUFDouble_NullAsZero(a[7])); // 金额
-					ware.setWhs_lbatchcode(WDSTools
+					ware.setWhs_nprice(PuPubVO.getUFDouble_NullAsZero(a[6]));// 单价
+					ware.setWhs_nmny(PuPubVO.getUFDouble_NullAsZero(a[7])); // 金额
+					ware.setWhs_lbatchcode(PuPubVO
 							.getString_TrimZeroLenAsNull(a[8]));// 来源批次
 					strList.add(ware);
 				}
