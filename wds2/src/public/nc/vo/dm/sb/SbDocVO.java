@@ -7,7 +7,7 @@ import nc.vo.pub.lang.UFDouble;
 
 public class SbDocVO extends SuperVO{
 	
-	public String pk_sbdocid;
+	public String pk_sbdoc;
 	public String vsbdocid;
 	public String vsbdocname;
 	public UFBoolean fisincity;
@@ -25,7 +25,7 @@ public class SbDocVO extends SuperVO{
 	@Override
 	public String getPKFieldName() {
 		// TODO Auto-generated method stub
-		return "pk_sbdocid";
+		return "pk_sbdoc";
 	}
 
 	@Override
@@ -41,11 +41,11 @@ public class SbDocVO extends SuperVO{
 	}
 
 	public String getPk_sbdocid() {
-		return pk_sbdocid;
+		return pk_sbdoc;
 	}
 
 	public void setPk_sbdocid(String pk_sbdocid) {
-		this.pk_sbdocid = pk_sbdocid;
+		this.pk_sbdoc = pk_sbdocid;
 	}
 
 	public String getVsbdocid() {
