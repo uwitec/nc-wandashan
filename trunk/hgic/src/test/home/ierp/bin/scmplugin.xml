@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="gb2312"?><!--外部插件-->
+
+<scm_plugin version="1.0">
+
+
+    <scm_plugin_ic name="">
+    
+        <ui_extend> <!--UI扩展-->
+             <cbilltypecode>45</cbilltypecode><!--单据类型-->
+             <nodecode>40080602</nodecode><!--节点号-->			 
+             <uiplugin><!--UI插件描述-->
+                 <classname>nc.ui.hg.ic.plugin.PurchaseInUIPlugin</classname><!--UI插件类名-->
+             </uiplugin>             
+        </ui_extend>
+       
+       
+        <bs_extend><!--BS扩展-->
+             <cbilltypecode>4Y</cbilltypecode><!--单据类型-->
+             <nodecode>40080820</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.ic.plugin.AllocationOutBsPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+
+       <bs_extend><!--BS扩展-->
+             <cbilltypecode>4D</cbilltypecode><!--单据类型-->
+             <nodecode>40080804</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.ic.plugin.MaterialOutBsPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+
+     <bs_extend><!--BS扩展-->
+             <cbilltypecode>45</cbilltypecode><!--单据类型-->
+             <nodecode>40080602</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.ic.plugin.PurchaseInBsPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+
+  <bs_extend><!--BS扩展-->
+             <cbilltypecode>4C</cbilltypecode><!--单据类型-->
+             <nodecode>40080802</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.ic.plugin.SaleOutBsPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+        
+    </scm_plugin_ic>
+
+
+
+  <scm_plugin_to name="">
+  
+        <ui_extend> <!--UI扩展-->
+             <cbilltypecode>5X</cbilltypecode><!--单据类型-->
+             <nodecode>40093009</nodecode><!--节点号-->			 
+             <uiplugin><!--UI插件描述-->
+                 <classname>nc.ui.hg.to.plugin.AllocationOrderUIPlugin</classname><!--UI插件类名-->
+             </uiplugin>             
+        </ui_extend>
+        
+        <bs_extend><!--BS扩展-->
+             <cbilltypecode>5X</cbilltypecode><!--单据类型-->
+             <nodecode>40093009</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.to.plugin.AllocationOrderPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+    </scm_plugin_to>
+   
+   
+
+    <scm_plugin_so name="">
+    
+        <ui_extend> <!--UI扩展-->
+             <cbilltypecode>30</cbilltypecode><!--单据类型-->
+             <nodecode>400603</nodecode><!--节点号-->			 
+             <uiplugin><!--UI插件描述-->
+                 <classname>nc.ui.hg.so.plugin.SaleOrderUIPlugin</classname><!--UI插件类名-->
+             </uiplugin>             
+        </ui_extend>
+    
+    
+        <bs_extend><!--BS扩展-->
+             <cbilltypecode>30</cbilltypecode><!--单据类型-->
+             <nodecode>400603</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.so.plugin.SaleOrderPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+    </scm_plugin_so>
+    
+
+      <scm_plugin_pu name="">
+    
+        <ui_extend> <!--UI扩展-->
+             <cbilltypecode>21</cbilltypecode><!--单据类型-->
+             <nodecode>4004020201</nodecode><!--节点号-->			 
+             <uiplugin><!--UI插件描述-->
+                 <classname>nc.ui.hg.pu.plugin.PoUIPlugin</classname><!--UI插件类名-->
+             </uiplugin>             
+        </ui_extend>
+        
+        <ui_extend> <!--UI扩展-->
+             <cbilltypecode>25</cbilltypecode><!--单据类型-->
+             <nodecode>40040401</nodecode><!--节点号-->			 
+             <uiplugin><!--UI插件描述-->
+                 <classname>nc.ui.hg.pu.plugin.PiUIPlugin</classname><!--UI插件类名-->
+             </uiplugin>             
+        </ui_extend>
+        
+         <bs_extend><!--BS扩展-->
+             <cbilltypecode>25</cbilltypecode><!--单据类型-->
+             <nodecode>40040401</nodecode><!--节点号-->
+             <bspluginclassname>nc.bs.hg.pu.plugin.InvoiceBsPlugin</bspluginclassname><!--BS插件描述-->
+        </bs_extend>
+    
+    </scm_plugin_pu>
+</scm_plugin>
