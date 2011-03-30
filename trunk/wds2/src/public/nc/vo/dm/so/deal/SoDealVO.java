@@ -36,6 +36,7 @@ public class SoDealVO extends SuperVO{
 	private String vnote;
 	
 	//----------------------------------订单表体字段
+	private UFDouble ntaldcnum;//销售订单累积安排数量
 	private String corder_bid;
 	private String csaleid;
 	private String creceipttype;
@@ -212,10 +213,17 @@ public class SoDealVO extends SuperVO{
 		"b.ntaxmny",
 		"b.nmny",
 		"b.nsummny", // 本币价税合计
-		"b.ndiscountmny"
+		"b.ndiscountmny",
+		"B.ntaldcnum"
 	};
 	
 	
+	public UFDouble getNtaldcnum() {
+		return ntaldcnum;
+	}
+	public void setNtaldcnum(UFDouble ntaldcnum) {
+		this.ntaldcnum = ntaldcnum;
+	}
 	public UFDouble getNassnum() {
 		return nassnum;
 	}
