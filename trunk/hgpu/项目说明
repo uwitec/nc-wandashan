@@ -1,0 +1,17 @@
+一  考核设置
+   1.资金设置   nc.ui.hg.pu.check.fund.ClientUI  / 40010701 / ---- ZJSZ单表体
+   2.定额设置   nc.ui.hg.pu.check.quota.ClientUI /40010702 /  -----DESZ单表体
+   3.专项设置   nc.ui.hg.pu.check.specialfund.ClientUI /40010703 /  -----ZXSZ单表体
+   4.新旧物资比例设置   nc.ui.hg.pu.check.oldmaterials.ClientUI /40010704 /  -----XJWZ单表体
+   5.容差比例设置   nc.ui.hg.pu.check.allowance.ClientUI /40010705 /  -----RCBL单表体
+二  计划管理
+   1.物资需求计划  nc.ui.hg.pu.plan.year.ClientUI  / 40040901 /-----------HG01
+   2.月需求计划  nc.ui.hg.pu.plan.month.ClientUI  /  40040905 /-----------HG02档案
+   3.专项资金计划  nc.ui.hg.pu.plan.mny.ClientUI  /  40040903 /-----------HG04
+   4.临时计划  nc.ui.hg.pu.plan.temp.ClientUI  /  40040902 /-----------HG03
+   5.计划项目  nc.ui.hg.pu.plan.project.ClientUI  /  40040907 /-----------JHXM  单表体
+   6.月需求计划调整  nc.ui.hg.pu.plan.mondeal.ClientUI  /  40040908 /-----------HG05
+   7.新物资申请  nc.ui.hg.pu.nmr.ClientUI  /  40050501 /-----------HG06  单表头
+    8.登录人与供应商之间的关系  nc.ui.hg.pu.usercust.ClientUI  /  100809 /-----------HG07  单表体
+   
+    --------------查询条件中状态的设置 S,全部,自由,审批进行中,审批通过-------------
