@@ -6,6 +6,7 @@ package nc.ui.dm.sb;
  */
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
+import nc.vo.dm.sb.SbDocVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.trade.pub.HYBillVO;
 
