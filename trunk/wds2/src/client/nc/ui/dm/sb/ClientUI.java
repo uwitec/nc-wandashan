@@ -1,80 +1,118 @@
 package nc.ui.dm.sb;
 
-import nc.ui.pub.ButtonObject;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.button.IBillButton;
-import nc.ui.trade.manage.BillManageUI;
-import nc.ui.trade.manage.ManageEventHandler;
-import nc.vo.pub.CircularlyAccessibleValueObject;
+import javax.swing.ListSelectionModel;
+
+import nc.ui.trade.bill.ICardController;
+import nc.ui.trade.card.BillCardUI;
+import nc.ui.trade.card.CardEventHandler;
+import nc.vo.pub.lang.UFBoolean;
+
 
 /**ÌØÊâÒµÎñ
  * @author Administrator
  * 
  */
-public class ClientUI extends BillManageUI {
+public class ClientUI extends BillCardUI{
 
-	@Override
-	protected AbstractManageController createController() {
-		// TODO Auto-generated method stub
-		
-		return new ClientController();
+	private static final long serialVersionUID = 859146761348083688L;
+	
+	public ClientUI() {
+		// TODO Auto-generated constructor stub
+		super();
 	}
 	
-	protected ManageEventHandler createEventHandler() {
+	public ClientUI(String pk_sbdoc,String vsbdocid,String vsbdocname,UFBoolean fisincity){
+		super();
+	}
+
+	@Override
+	protected CardEventHandler createEventHandler() {
+		// TODO Auto-generated method stub
 		return new ClientEventHandler(this, getUIControl());
 	}
 	
 	@Override
-	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
-			throws Exception {
+	public Object getUserObject() {
 		// TODO Auto-generated method stub
-
+		return null;
+	}
+	
+	@Override
+	protected ICardController createController() {
+		// TODO Auto-generated method stub
+		return new ClientController();
 	}
 
 	@Override
-	protected void setHeadSpecialData(CircularlyAccessibleValueObject vo,
-			int intRow) throws Exception {
+	public String getRefBillType() {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
-			throws Exception {
-		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	@Override
 	protected void initSelfData() {
-		ButtonObject btn = getButtonManager().getButton(IBillButton.Line);
-		if (btn != null) {
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.CopyLine));
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.PasteLine));
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.InsLine));
-		}
-
+		getBillCardPanel().getBillTable().setRowSelectionAllowed(true);
+	    getBillCardPanel().getBillTable().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 	}
-
+	
 	@Override
 	public void setDefaultData() throws Exception {
 		// TODO Auto-generated method stub
-
-	}
-	@Override
-	public String getTitle() {
-		// TODO Auto-generated method stub
-		return super.getTitle();
+		
 	}
 	
-	@Override
-	public boolean isSaveAndCommitTogether() {
-		// TODO Auto-generated method stub
-		return true;
+	public void afterEdit(nc.ui.pub.bill.BillEditEvent e) {
+//		super.afterEdit(e);
+//		String key= e.getKey();
+//		int row = e.getRow();
+//		if(e.getPos()==IBillItem.BODY){
+//		if("invcode".equalsIgnoreCase(key)){
+//			String invclass = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(e.getRow(),"invclname"));
+//			if(invclass==null){
+//				String[] formulas =
+//				    new String[] {
+//						"pk_invcl->getColValue(bd_invbasdoc,pk_invcl,pk_invbasdoc,pk_invbasdoc)",
+//						"invclname->getColValue(bd_invcl,invclassname,pk_invcl,pk_invcl)"};
+//				getBillCardPanel().getBillModel().execFormulas(row,formulas);
+//			}	
+//		}else if("invclname".equalsIgnoreCase(key)){
+//			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invmandoc");
+//			getBillCardPanel().getBillModel().setValueAt(null,row,"pk_invbasdoc");
+//			getBillCardPanel().getBillModel().setValueAt(null,row,"invcode");
+//			getBillCardPanel().getBillModel().setValueAt(null,row,"invname");
+//		}
+//		}
 	}
-	
 
+//	public boolean beforeEdit(nc.ui.pub.bill.BillEditEvent e) {
+//		String key= e.getKey();
+//		int row = e.getRow();
+//		if(e.getPos()==IBillItem.BODY){
+//			if("invcode".equalsIgnoreCase(key)){
+//				String pk_invcl =SbDocVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row,"pk_invcl"));
+////				JComponent  jf = getBillCardPanel().getBodyItem("invcode").getComponent();
+////				if(jf!=null && jf instanceof UIRefPane){
+////				UIRefPane uf = (UIRefPane)jf;
+////				AbstractRefModel refModel = (AbstractRefModel) uf.getRefModel();
+////				if(pk_invcl == null){
+////					refModel.addWherePart(" and 1=1");
+////					return true;
+////				}
+////					refModel.addWherePart("  and bd_invbasdoc.pk_invcl = '" + pk_invcl + "'");
+////					return true;
+////			    }
+//				
+//				if(pk_invcl != null){
+//					return false;
+//				}
+//		     }else if("invclname".equalsIgnoreCase(key)){
+//		    	 String invcode = SbDocVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row,"invcode"));
+//		    	 if(invcode != null){
+//		    		 return false;
+//		    	 }
+//		     }
+//	     }
+//		return super.beforeEdit(e);
+//	}
+	
 }
