@@ -8,6 +8,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 public class LoginInforHelper {	
 	
+	
 	private static String bo = "nc.bs.wl.pub.WdsWlPubBO";
 	
 	private static LoginInforVO m_loginInfor = null;
