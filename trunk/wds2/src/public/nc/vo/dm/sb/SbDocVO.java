@@ -5,6 +5,12 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 
+
+/**
+ * 
+ * @author Administrator
+ *
+ */
 public class SbDocVO extends SuperVO{
 	
 	public String pk_sbdoc;
