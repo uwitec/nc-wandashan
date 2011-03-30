@@ -22,7 +22,7 @@ public CHGWDS1TOWDS3() {
 * @return java.lang.String[]
 */
 public String getAfterClassName() {
-	return "nc.bs.wds2.conversion.AfterWDS1TOWDS3";
+	return "nc.bs.wds2.conversion.AfterWDSChg";
 }
 /**
 * 获得另一个后续类的全录径名称。
