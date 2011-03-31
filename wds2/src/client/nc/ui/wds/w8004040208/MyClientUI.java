@@ -109,7 +109,7 @@ public class MyClientUI extends AbstractMyClientUI implements
 			} else{ // Ç©×ÖÇ°
 				this.setButtonEnabled(true);
 				getButtonManager().getButton(IBillButton.Edit)
-						.setEnabled(false);
+						.setEnabled(true);
 			} 
 	}
 
