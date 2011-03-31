@@ -28,7 +28,7 @@ public class MyClientUICheckRuleGetter implements IBDGetCheckClass2,Serializable
 	 * 后台校验类
 	 */
 	public String getCheckClass() {
-		return null;
+		return "nc.bo.other.out.OtherOutBO";
 	}
 
 }

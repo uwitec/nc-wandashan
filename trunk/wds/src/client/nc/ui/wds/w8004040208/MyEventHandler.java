@@ -575,8 +575,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		Map<String,UFDouble> map = new HashMap<String,UFDouble>();
-		Map<String,UFDouble> assmap = new HashMap<String,UFDouble>();
+		
 		// 获取当前页面中VO
 		AggregatedValueObject myBillVO = getBillUI().getVOFromUI();
 		setTSFormBufferToVO(myBillVO);
@@ -647,15 +646,11 @@ public class MyEventHandler extends AbstractMyEventHandler {
 					// 循环表体更改状态
 					for (int i = 0; i < generalb.length; i++) {
 						generalb[i].setStatus(VOStatus.NEW);
-						map.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutnum());
-						assmap.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutassistnum());
 					}
 				} else { // 设置表体状态“修改”
 					// 循环表体更改状态
 					for (int i = 0; i < generalb.length; i++) {
 						generalb[i].setStatus(VOStatus.UPDATED);
-						map.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutnum());
-						assmap.put(generalb[i].getCsourcebillbid(), generalb[i].getNoutassistnum());
 					}
 				}
 
@@ -845,9 +840,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (nCurrentRow >= 0) {
 			getBufferData().setCurrentRow(nCurrentRow);
 		}
-		myClientUI.updateButtons();
-		reWriteTOWDS5(map,assmap,generalh.getCsourcebillhid());
-	}
+		myClientUI.updateButtons();	}
 	/**
 	 * 回写发运订单累计出库数量
 	 * lyf
