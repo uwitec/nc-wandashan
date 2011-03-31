@@ -157,13 +157,14 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	 */
 	private String getSQL() throws Exception{
 		StringBuffer whereSql = new StringBuffer();
+		whereSql.append(" h.pk_corp='"+ui.cl.getCorp()+"' and ");
 		String where = getQryDlg().getWhereSQL();
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(where);
 		}
 //		whereSql.append("  nvl(h.dr,0)=0");
 //		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
-		whereSql.append(" and h.pk_corp='"+ui.cl.getCorp()+"'");
+	
 //		whereSql.append(" and h.vbillstatus=1");
 		whereSql.append(" and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0");
 //		String cwhid  = LoginInforHelper.getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
