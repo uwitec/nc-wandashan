@@ -236,7 +236,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				continue;
 			leftDate.add(dealVO);
 		}
-		getDataPane().setBodyDataVO(leftDate.toArray(new PlanDealVO[0]));
+		getDataPane().setBodyDataVO(leftDate.toArray(new SoDealVO[0]));
 		getDataPane().execLoadFormula();
 		setDataBuffer(leftDate.toArray(new SoDealVO[0]));	
 	}
