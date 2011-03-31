@@ -1,18 +1,16 @@
 package nc.bo.other.out;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import nc.bs.dao.BaseDAO;
-import nc.bs.dao.DAOException;
-import nc.vo.pub.lang.UFDouble;
+import nc.bs.trade.business.IBDBusiCheck;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 /**
  * 
  * @author Administrator
  * 其他出库后台类
  */
-public class OtherOutBO {
+public class OtherOutBO  implements IBDBusiCheck{
 	
 BaseDAO dao = null;
 	
@@ -22,22 +20,21 @@ BaseDAO dao = null;
 		}
 		return dao;
 	}
-	
-	/**
-	 * lyf
-	 * @param map<来源单据表体id，实际出库数量>
-	 * @param assmap<来源单据表体id，实际辅数量>
-	 * @param vsourbillhid
-	 * @throws DAOException 
-	 */
-	private void reWriteTOWDS5(	Map<String,UFDouble> map,Map<String,UFDouble> assmap,String vsourbillhid) throws DAOException{
-		for(Entry<String, UFDouble> entry:map.entrySet()){
+	public void check(int intBdAction, AggregatedValueObject myBillVO, Object userObj)
+			throws Exception {
+		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[]) myBillVO.getChildrenVO();		
+		for (int i = 0; i < generalb.length; i++) {
 			String sql =" update wds_sendorder_b set ndealnum=coalesce(ndealnum,0)+" +
-					PuPubVO.getUFDouble_NullAsZero(entry.getValue())+
-					 " where pk_sendorder_b='"+entry.getKey();
-			getBaseDAO().executeUpdate(sql);
+			PuPubVO.getUFDouble_NullAsZero(generalb[i].getNoutnum())+
+			 " where pk_sendorder_b='"+generalb[i].getCsourcebillbid()+"'" +
+			 		" and pk_sendorder='"+generalb[i].getCsourcebillhid()+"'";
+			getBaseDAO().executeUpdate(sql);		
 		}
-	
+	}
+	public void dealAfter(int intBdAction, AggregatedValueObject billVo,
+			Object userObj) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
