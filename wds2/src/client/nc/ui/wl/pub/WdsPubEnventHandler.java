@@ -2,6 +2,7 @@ package nc.ui.wl.pub;
 
 import java.util.ArrayList;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
@@ -202,5 +203,35 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 				}
 			}
 		}
+	}
+	
+	protected SourceBillFlowDlg soureDlg = null;
+	
+	/**
+	 * 联查对话框
+	 */
+	public SourceBillFlowDlg getSourceDlg() throws BusinessException{
+			try {
+				soureDlg = new SourceBillFlowDlg(getBillManageUI(), getUIController().getBillType(),/* 当前单据类型 */
+						getBufferData().getCurrentVO().getParentVO().getPrimaryKey(), /* 当前单据ID */
+						null, /* 当前业务类型 */
+						_getOperator(), /* 当前用户ID */
+						(String)getBufferData().getCurrentVO().getParentVO().getAttributeValue("vbillno") /* 单据号 */);
+			} catch (BusinessException e) {
+				Logger.error(e);
+				throw new BusinessException("获取联查对话框出错! ");
+			}
+			return soureDlg;
+	}
+	
+  /**
+   * 联查
+   */
+	public void onJoinQuery()throws BusinessException {
+		getBillManageUI().showHintMessage("联查");
+		if(getBufferData().getCurrentVO() == null ){
+			return;
+		}
+		getSourceDlg().showModal();
 	}
 }
