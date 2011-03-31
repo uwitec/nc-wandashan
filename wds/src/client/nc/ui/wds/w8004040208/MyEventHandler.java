@@ -628,6 +628,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 //				} else 
 				 if(tmpgeneralh ==null){
 					isAdd = true;
+					generalh.setStatus(VOStatus.NEW);
 					// 制单时间
 					generalh.setTmaketime(myClientUI._getServerTime()
 							.toString());
@@ -640,6 +641,8 @@ public class MyEventHandler extends AbstractMyEventHandler {
 					// 公司
 					generalh.setComp(ClientEnvironment.getInstance()
 							.getCorporation().getPk_corp());
+				}else{
+					generalh.setStatus(VOStatus.UPDATED);
 				}
 				// 如果是新增设置表体状态“新增”
 				if (isAdd) {
