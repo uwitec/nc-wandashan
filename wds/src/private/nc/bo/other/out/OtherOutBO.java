@@ -5,7 +5,6 @@ import nc.bs.trade.business.IBDBusiCheck;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.VOStatus;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 /**
@@ -32,6 +31,8 @@ BaseDAO dao = null;
 		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[]) myBillVO.getChildrenVO();		
 		for (int i = 0; i < generalb.length; i++) {
 			String sql =" update wds_sendorder_b set noutnum=coalesce(noutnum,0)+" +
+			PuPubVO.getUFDouble_NullAsZero(generalb[i].getNoutnum())+
+			",nassoutnum=coalesce(nassoutnum,0)+" +
 			PuPubVO.getUFDouble_NullAsZero(generalb[i].getNoutnum())+
 			 " where pk_sendorder_b='"+generalb[i].getCsourcebillbid()+"'" +
 			 		" and pk_sendorder='"+generalb[i].getCsourcebillhid()+"'";
