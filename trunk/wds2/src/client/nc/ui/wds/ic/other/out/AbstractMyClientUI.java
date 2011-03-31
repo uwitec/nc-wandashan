@@ -46,7 +46,7 @@ import nc.ui.wds.w8004040208.MyClientUICtrl;
 	 * @return BusinessDelegator 不走平台的业务代理类
 	 */
 	protected BusinessDelegator createBusinessDelegator() {
-		return new nc.ui.wds.ic.otherout.MyDelegator();
+		return new MyDelegator();
 	}
 
 	/**
