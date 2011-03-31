@@ -21,13 +21,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				IBillButton.Action
-//				IBillButton.Audit,
-//				IBillButton.CancelAudit
-				};
+				IBillButton.Action};
 		return buttonArray;
-	}
-
+}
 	public int[] getListButtonAry() {
 		int[] buttonArray = new int[] {
 				IBillButton.Add,
@@ -38,10 +34,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Action
-//				IBillButton.Audit,
-//				IBillButton.CancelAudit
-		}
-				;
+		};
 		return buttonArray;
 	}
 

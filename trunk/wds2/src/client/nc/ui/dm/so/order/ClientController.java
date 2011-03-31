@@ -21,8 +21,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				IBillButton.Audit,
-				IBillButton.CancelAudit};
+				IBillButton.Action};
 		return buttonArray;
 	}
 
@@ -35,8 +34,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Card,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				IBillButton.Audit,
-				IBillButton.CancelAudit
+				IBillButton.Action
 		}
 				;
 		return buttonArray;
