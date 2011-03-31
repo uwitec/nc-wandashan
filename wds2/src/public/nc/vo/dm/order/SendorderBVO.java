@@ -109,6 +109,10 @@ public class SendorderBVO extends SuperVO {
 	public UFDouble ndealnum;
 	//安排辅数量
 	public UFDouble nassdealnum;
+	//已出库数量
+	public UFDouble noutnum;
+	//已出库辅数量
+	public UFDouble nassoutnum;
 
 	public static final String RESERVE5 = "reserve5";
 	public static final String TS = "ts";
@@ -1326,4 +1330,21 @@ public class SendorderBVO extends SuperVO {
 	public void setNassdealnum(UFDouble nassdealnum) {
 		this.nassdealnum = nassdealnum;
 	}
+
+	public UFDouble getNoutnum() {
+		return noutnum;
+	}
+
+	public void setNoutnum(UFDouble noutnum) {
+		this.noutnum = noutnum;
+	}
+
+	public UFDouble getNassoutnum() {
+		return nassoutnum;
+	}
+
+	public void setNassoutnum(UFDouble nassoutnum) {
+		this.nassoutnum = nassoutnum;
+	}
+	
 }
