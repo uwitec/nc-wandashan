@@ -135,15 +135,15 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				isStock = WdsWlPubTool.isZc(LoginInforHelper.getCwhid(m_logUser));
 				pkList = Arrays.asList(LoginInforHelper.getInvBasDocIDsByUserID(m_logUser));
 			}
-			if (isControl != 1) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				myClientUI.updateButtons();
-			}
+//			if (isControl != 1) {
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(false);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(false);
+//				myClientUI.updateButtons();
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			myClientUI.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -365,14 +365,6 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		} else {
 			myClientUI.showErrorMessage("请选中一条单据进行签字");
 		}
-
-		// Object o = PfUtilClient.processAction("PUSHSAVE", "4C", _getDate()
-		// .toString(), billvo);
-		// Object[] arrayO = (Object[]) o;
-		// billvo = (AggregatedValueObject) arrayO[0];
-		// o = PfUtilClient.processAction("SIGN", "4C", _getDate()
-		// .toString(), billvo);
-
 	}
 
 	/*

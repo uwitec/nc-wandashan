@@ -19,7 +19,6 @@ import nc.ui.wds.w8004040204.ssButtun.zjBtn;
 import nc.ui.wds.w8004040204.ssButtun.zkBtn;
 import nc.ui.wds.w8004040204.ssButtun.zzdjBtn;
 import nc.ui.wds.w8004040208.MyClientUICheckRuleGetter;
-import nc.ui.wds.w8004040208.MyClientUICtrl;
 
 
 

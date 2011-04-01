@@ -14,7 +14,6 @@ import nc.ui.scm.pub.query.SCMQueryConditionDlg;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.ui.wds.w8004040208.MyClientUI;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;

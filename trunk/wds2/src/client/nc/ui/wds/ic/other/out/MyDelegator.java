@@ -1,6 +1,5 @@
 package nc.ui.wds.ic.other.out;
 
-import nc.ui.wds.w8004040208.AbstractMyDelegator;
 
 /**
   *

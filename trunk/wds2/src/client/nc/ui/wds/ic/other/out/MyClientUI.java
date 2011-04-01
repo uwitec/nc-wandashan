@@ -2,11 +2,10 @@ package nc.ui.wds.ic.other.out;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wds.w8004040208.AbstractMyClientUI;
-import nc.ui.wds.w8004040208.MyEventHandler;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
