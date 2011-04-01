@@ -1419,7 +1419,7 @@ public class TbGeneralBVO extends SuperVO {
 	
 	public void validateOnZdrk() throws ValidationException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_cinvbasid())==null){
-			throw new ValidationException("批次号不能为空");
+			throw new ValidationException("存货不能为空");
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_vbatchcode())==null){
 			throw new ValidationException("批次号不能为空");
