@@ -62,4 +62,11 @@ public class WdsWlPubConst {
 	public static String  OTHER_OUT_FUNCODE="8004040208";
 	/**参照发运订单的节点标示 */
 	public static String  OTHER_OUT_REFWDS3_NODECODE="8004040210";
+	public static String DEFAULT_CALBODY = "1021B1100000000001JL";
+	
+	public static String BILLTYPE_OTHER_OUT = "WDS6";//其他出
+	public static String BILLTYPE_OTHER_IN = "WDS7";//其他入
+	public static String BILLTYPE_SALE_OUT = "WDS8";//销售出
+	public static String BILLTYPE_ALLO_OUT = "WDS9";//调拨入
+	public static String BILLTYPE_BACK_IN = "WDSA";//退货入
 }
