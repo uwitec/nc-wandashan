@@ -67,6 +67,26 @@ public class TbFydmxnewVO extends SuperVO {
 	public String cfd_lpc; //源批次
 	public UFDouble cfd_nprice ; //单价
 	public UFDouble cfd_nmny; //金额
+	
+	//源头单据号
+	public String vfirstbillcode;
+	//源头单据类型
+	public String cfirsttype;
+	//源头单据表头id
+	public String cfirstbillhid;
+	//源头单据表体id
+	public String cfirstbillbid;
+	
+
+	//来源单据类型
+	public String csourcetype;
+	//来源单据号	
+	public String vsourcebillcode;
+	//来源单据表头序列号
+	public String csourcebillhid;
+   //来源单据表体序列号	
+	public String csourcebillbid;
+
 
 	public static final String CFD_NMNY="cfd_nmny";
 	public static final String CFD_NPRICE = "cfd_nprice";
@@ -973,5 +993,70 @@ public class TbFydmxnewVO extends SuperVO {
 	public void setCfd_nmny(UFDouble cfd_nmny) {
 		this.cfd_nmny = cfd_nmny;
 	}
+
+	public String getCfirsttype() {
+		return cfirsttype;
+	}
+
+	public void setCfirsttype(String cfirsttype) {
+		this.cfirsttype = cfirsttype;
+	}
+
+	public String getCfirstbillhid() {
+		return cfirstbillhid;
+	}
+
+	public void setCfirstbillhid(String cfirstbillhid) {
+		this.cfirstbillhid = cfirstbillhid;
+	}
+
+	public String getCfirstbillbid() {
+		return cfirstbillbid;
+	}
+
+	public void setCfirstbillbid(String cfirstbillbid) {
+		this.cfirstbillbid = cfirstbillbid;
+	}
+
+	public String getCsourcetype() {
+		return csourcetype;
+	}
+
+	public void setCsourcetype(String csourcetype) {
+		this.csourcetype = csourcetype;
+	}
+
+	public String getVsourcebillcode() {
+		return vsourcebillcode;
+	}
+
+	public void setVsourcebillcode(String vsourcebillcode) {
+		this.vsourcebillcode = vsourcebillcode;
+	}
+
+	public String getCsourcebillhid() {
+		return csourcebillhid;
+	}
+
+	public void setCsourcebillhid(String csourcebillhid) {
+		this.csourcebillhid = csourcebillhid;
+	}
+
+	public String getCsourcebillbid() {
+		return csourcebillbid;
+	}
+
+	public void setCsourcebillbid(String csourcebillbid) {
+		this.csourcebillbid = csourcebillbid;
+	}
+
+	public String getVfirstbillcode() {
+		return vfirstbillcode;
+	}
+
+	public void setVfirstbillcode(String vfirstbillcode) {
+		this.vfirstbillcode = vfirstbillcode;
+	}
+
 
 }
