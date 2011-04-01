@@ -18,6 +18,7 @@ import nc.vo.bill.pub.MiscUtil;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.billtype.BilltypeVO;
 import nc.vo.trade.billsource.LightBillVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * DataFinder
@@ -53,64 +54,34 @@ public class WdsDataFinder extends DefaultDataFinder{
 	@Override
 	protected String createSQL1(String billType) {//这个billtype参数为下游单据类型
 		String sql = null;
-		//下游单据为
-		if(SrmBillStatus.SDM2.equals(billType)){//销售提成单
-			sql = "  select distinct pk_xsfhd_h,pk_corp,vbillno from SDM_TCD_H where cfhzcid = ?  and pk_billtype = '"+SrmBillStatus.SDM2+"' and isnull(dr,0)  = 0 ; ";
+		//根据上游单据ID，查询billtype所在单据的主键，公司，单据号
+		if(WdsWlPubConst.WDS3.equals(billType)){//发运订单
+			sql = " select distinct h1.PK_SENDORDER,h1.PK_CORP,h1.VBILLNO from wds_sendorder h1,wds_sendorder_b b1 where h1.PK_SENDORDER = b1.PK_SENDORDER and isnull(h1.dr,0) = 0 and isnull(b1.dr,0) = 0 and b1.CSOURCEBILLHID = ? ";
 			return sql;
-		}else if(SrmBillStatus.SDM8.equals(billType)){//销售计提单
-			sql = "  select distinct pk_xsfhd_h,pk_corp,vbillno from SDM_TCD_H where cfhzcid = ? and pk_billtype = '"+SrmBillStatus.SDM8+"' and isnull(dr,0)  = 0 ; ";
+		}else if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equals(billType)||//其它出库单
+				WdsWlPubConst.BILLTYPE_SALE_OUT.equals(billType)){//销售出库
+			sql = "  select distinct h1.GENERAL_PK,h1.COMP,h1.VBILLCODE from tb_outgeneral_h h1,tb_outgeneral_b b1 where h1.GENERAL_PK = b1.GENERAL_PK and isnull(h1.dr,0) = 0 and isnull(b1.dr,0) = 0 and b1.CSOURCEBILLHID = ? ";
 			return sql;
-		}else if(SrmBillStatus.SDM9.equals(billType)){//销售计提台帐
-			sql = "  select  distinct h.pk_fhtz_h, h.pk_corp, h.vbillno from SDM_TCTZ_H h,sdm_tctz_b1 b  where h.pk_fhtz_h=b.pk_fhtz_h and b.pk_fhd_h= ? and h.pk_billtype = '"+SrmBillStatus.SDM9+"' and isnull(h.dr,0)  = 0 and isnull(b.dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDM3.equals(billType)){//提成台帐
-			sql = "  select  distinct h.pk_fhtz_h, h.pk_corp, h.vbillno from SDM_TCTZ_H h,sdm_tctz_b1 b  where h.pk_fhtz_h=b.pk_fhtz_h and b.pk_fhd_h= ? and h.pk_billtype = '"+SrmBillStatus.SDM3+"' and isnull(h.dr,0)  = 0 and isnull(b.dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDM4.equals(billType)){//转赠品
-			sql = "  select distinct pk_sxfhzzp_h,pk_corp,vusedcode from SDM_TCSYFS_H where pk_sxfhtz_h = ? and pk_billtype = '"+SrmBillStatus.SDM4+"' and isnull(dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDM5.equals(billType)){//冲应收
-			sql = "  select distinct pk_sxfhzzp_h,pk_corp,vusedcode from SDM_TCSYFS_H where pk_sxfhtz_h = ? and pk_billtype = '"+SrmBillStatus.SDM5+"' and isnull(dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDM6.equals(billType)){//冲发票
-			sql = "  select distinct pk_sxfhzzp_h,pk_corp,vusedcode from SDM_TCSYFS_H where pk_sxfhtz_h = ? and pk_billtype = '"+SrmBillStatus.SDM6+"' and isnull(dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDM7.equals(billType)){//转应付
-			sql = "  select distinct h.pk_sxfhzzp_h,h.pk_corp,h.vbillno from SDM_TCSYFS_H h,SDM_TCSYFS_B b where h.pk_sxfhzzp_h=b.pk_sxfhzzp_h and b.csourcebillhid = ? and  h.pk_billtype = '"+SrmBillStatus.SDM7+"' and isnull(h.dr,0)  = 0 and isnull(b.dr,0)  = 0 ; ";
-			return sql;
-		}else if(SrmBillStatus.SDMA.equals(billType)){//计提使用申请
-			sql = "  select distinct pk_fledsysq_h,pk_corp,vbillno from SDM_JTSYSQ_H where pk_fhtz_h = ? and pk_billtype = '"+SrmBillStatus.SDMA+"' and isnull(dr,0)  = 0 ; ";
+		}else if(WdsWlPubConst.WDS5.equals(billType)){//销售运单
+			sql = "  select distinct h1.PK_SOORDER,h1.PK_CORP,h1.VBILLNO from WDS_SOORDER h1 ,WDS_SOORDER_B b1 where h1.PK_SOORDER = b1.PK_SOORDER and isnull(h1.dr,0) = 0 and isnull(b1.dr,0) = 0 and b1.CSOURCEBILLHID = ? ";
 			return sql;
 		}
-//		}
 		return super.createSQL1(billType);
 	}
 	//来源单据注册类
 	@Override
 	protected String createSQL(String billType) {//这个billtype参数为当前单据类型
-		//正常作法为：根据当前单据查询出 来源单据类型、来源单据ID即可
+		//正常作法为：根据billtype所在单据ID，查询当前单据出来 来源单据类型、来源单据ID即可
 		String sql = null;
-		if(SrmBillStatus.SDM2.equals(billType) ||//销售提成单 (来源为销售返还政策)
-				SrmBillStatus.SDM8.equals(billType)){//销售计提单 (来源为销售返还政策)
-			sql = " select distinct 'SDM1' ,cfhzcid from SDM_TCD_H where isnull(dr,0)= 0  and pk_xsfhd_h = ? ";
+		if(WdsWlPubConst.WDS3.equals(billType)){//发运订单
+			sql = " select distinct ss.CSOURCETYPE,ss.CSOURCEBILLHID from wds_sendorder_b ss  where ss.PK_SENDORDER = ? and isnull(ss.dr,0) = 0 ";
 			return sql;
-		}else if(SrmBillStatus.SDM3.equals(billType)){//销售提成台账 (来源为提成单,计提使用申请)
-				sql = " select pk_billtype , pk_fhd_h from SDM_TCTZ_B1 where isnull(dr,0)= 0  and pk_fhtz_h = ? ";
+		}else if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equals(billType)||//其它出库单
+				WdsWlPubConst.BILLTYPE_SALE_OUT.equals(billType)){//销售出库
+				sql = " select distinct zz.CSOURCETYPE,zz.CSOURCEBILLHID from tb_outgeneral_b  zz where zz.GENERAL_PK = ?  and isnull(zz.dr,0) = 0 ";
 			return sql;
-		}else if(SrmBillStatus.SDM9.equals(billType)){//销售计提台帐 (来源为计提单)
-			sql = " select distinct 'SDM8' , pk_fhd_h from SDM_TCTZ_B1 where isnull(dr,0)= 0  and pk_fhtz_h = ? ";
-			return sql;	
-		}else if(SrmBillStatus.SDMA.equals(billType)){//销售使用申请 (来源为计提台账)
-			sql = " select distinct 'SDM9',pk_fhtz_h from SDM_JTSYSQ_H where isnull(dr,0) = 0 and pk_fledsysq_h = ? ";
-			return sql;
-		}else if(SrmBillStatus.SDM4.equals(billType) ||//销售提成转赠品 (来源为提成台账)
-				SrmBillStatus.SDM5.equals(billType) ||//销售提成冲应收 (来源为提成台账)
-				SrmBillStatus.SDM6.equals(billType)
-				){//销售提成转应付 (来源为提成台账)
-			sql = " select distinct 'SDM3',pk_sxfhtz_h from SDM_TCSYFS_H where isnull(dr,0) = 0 and  pk_sxfhzzp_h = ? ";
-			return sql;
-		}else if(SrmBillStatus.SDM7.equals(billType)){ //销售提成冲发票 (来源为提成台账)
-			sql=" select distinct 'SDM3',csourcebillhid from SDM_TCSYFS_B where isnull(dr,0) = 0 and  pk_sxfhzzp_h = ?  ";
+		}else if(WdsWlPubConst.WDS5.equals(billType)){ //销售运单
+			sql="  select distinct zz.CSOURCETYPE,zz.CSOURCEBILLHID from WDS_SOORDER_b zz where zz.PK_SOORDER = ? and isnull(zz.dr,0) = 0 ";
 			return sql;
 		}
 		return super.createSQL(billType);
