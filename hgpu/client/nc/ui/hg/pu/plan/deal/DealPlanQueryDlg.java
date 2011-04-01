@@ -25,7 +25,7 @@ public class DealPlanQueryDlg extends QueryConditionClient {
 	}
 	public void initData() {
 		UFDate billdate = ClientEnvironment.getInstance().getDate();
-		setDefaultValue("h.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
+//		setDefaultValue("h.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 		super.initData();
 	}
 	private void changeQueryModelLayout() {
