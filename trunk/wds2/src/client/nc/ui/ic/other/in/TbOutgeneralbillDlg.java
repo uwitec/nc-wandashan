@@ -9,10 +9,10 @@ import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.scm.pub.query.SCMQueryConditionDlg;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 
 public class TbOutgeneralbillDlg extends BillSourceDLG {
 	private SCMQueryConditionDlg m_dlgQry = null;
