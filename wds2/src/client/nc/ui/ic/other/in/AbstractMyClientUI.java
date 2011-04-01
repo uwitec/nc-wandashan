@@ -1,4 +1,4 @@
-package nc.ui.wds.w8004040208;
+package nc.ui.ic.other.in;
 
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.ui.trade.bill.AbstractManageController;
@@ -10,14 +10,14 @@ import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
-import nc.ui.wds.w8004040204.ssButtun.cgqyBtn;
-import nc.ui.wds.w8004040204.ssButtun.ckmxBtn;
-import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
-import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
-import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
-import nc.ui.wds.w8004040204.ssButtun.zjBtn;
-import nc.ui.wds.w8004040204.ssButtun.zkBtn;
-import nc.ui.wds.w8004040204.ssButtun.zzdjBtn;
+import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
+import nc.ui.wds.w8004040214.buttun0214.FydjBtn;
+import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
+import nc.ui.wds.w8004040214.buttun0214.HwtzBtn;
+import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
+import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
+import nc.ui.wds.w8004040214.buttun0214.ZjBtn;
+import nc.ui.wds.w8004040214.buttun0214.ZzdjBtn;
 
 
 
@@ -44,36 +44,34 @@ import nc.ui.wds.w8004040204.ssButtun.zzdjBtn;
 	 * @return BusinessDelegator 不走平台的业务代理类
 	 */
 	protected BusinessDelegator createBusinessDelegator() {
-		return new nc.ui.wds.w8004040208.MyDelegator();
+		return new MyDelegator();
 	}
 
 	/**
 	 * 注册自定义按钮
 	 */
 	protected void initPrivateButton() {
-		
-		
-		zjBtn customizeButton1 = new zjBtn();
+		FzgnBtn customizeButton1=new FzgnBtn();
 		addPrivateButton(customizeButton1.getButtonVO());
-		zkBtn customizeButton2 = new zkBtn();
+		ZdtpBtn customizeButton2=new ZdtpBtn();
 		addPrivateButton(customizeButton2.getButtonVO());
-		cgqyBtn customizeButton3 = new cgqyBtn();
+		CkmxBtn customizeButton3=new CkmxBtn();
 		addPrivateButton(customizeButton3.getButtonVO());
-		zzdjBtn customizeButton4 = new zzdjBtn();
+		ZdrkBtn customizeButton4=new ZdrkBtn();
 		addPrivateButton(customizeButton4.getButtonVO());
-		fzgnBtn customizeButton5 = new fzgnBtn();
+		ZjBtn customizeButton5=new ZjBtn();
 		addPrivateButton(customizeButton5.getButtonVO());
-		tpzdBtn customizeButton6 = new tpzdBtn();
+		ZzdjBtn customizeButton6=new ZzdjBtn();
 		addPrivateButton(customizeButton6.getButtonVO());
-		zdqhBtn customizeButton7 = new zdqhBtn();
+		FydjBtn customizeButton7=new FydjBtn();
 		addPrivateButton(customizeButton7.getButtonVO());
-		ckmxBtn customizeButton8 = new ckmxBtn();
+		HwtzBtn customizeButton8=new HwtzBtn();
 		addPrivateButton(customizeButton8.getButtonVO());
-		
-		QxqzBtn customizeButton9 = new QxqzBtn();
+		QzqrBtn customizeButton9=new QzqrBtn();
 		addPrivateButton(customizeButton9.getButtonVO());
-		QzqrBtn customizeButton10 = new QzqrBtn();
+		QxqzBtn customizeButton10=new QxqzBtn();
 		addPrivateButton(customizeButton10.getButtonVO());
+		
 		
 		int[] listButns = getUIControl().getListButtonAry();
 		boolean hasCommit = false;
@@ -122,7 +120,7 @@ import nc.ui.wds.w8004040204.ssButtun.zzdjBtn;
 	 * 注册前台校验类
 	 */
 	public Object getUserObject() {
-		return new MyClientUICheckRuleGetter();
+		return null;//MyClientUICheckRuleGetter();
 	}
 	
 	public void doQueryAction(ILinkQueryData querydata) {

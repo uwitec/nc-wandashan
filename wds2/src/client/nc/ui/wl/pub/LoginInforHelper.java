@@ -1,6 +1,6 @@
 package nc.ui.wl.pub;
 
-import nc.ui.wl.pub.LongTimeTask;
+import java.util.HashMap;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
@@ -93,11 +93,29 @@ public class LoginInforHelper {
 	 * @throws Exception
 	 */
 	public static String[] getSpaceByLogUser(String userid) throws Exception{
-		return null;
+		LoginInforVO infor = getLogInfor(userid);
+		if(infor.getType()==0)
+			return new String[]{infor.getSpaceid()};
+		return getSpaceByWhid(infor.getWhid());
 	}
 	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 通过货位id获取该货位关联的存货id
+	 * @时间：2011-3-31上午10:24:28
+	 * @param cspaceid
+	 * @return
+	 * @throws Exception
+	 */
 	public static String[] getInvBasdocIDsBySpaceID(String cspaceid) throws Exception{
-		return null;
+		if(PuPubVO.getString_TrimZeroLenAsNull(cspaceid)==null)
+			return null;
+		Class[] ParameterTypes = new Class[]{String.class};
+		Object[] ParameterValues = new Object[]{cspaceid};
+		Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getInvBasdocIDsBySpaceID", ParameterTypes, ParameterValues, 2);
+
+		return (String[])os;	
 	}
 	
 	public static String[] getInvBasDocIDsByUserID(String userid) throws Exception{
@@ -121,6 +139,59 @@ public class LoginInforHelper {
 		return null;
 	}
 	
+	private static java.util.Map<String,String[]> trayInfor = null;
+	private static java.util.Map<String, Integer> trayVolumnInfor = null;
 	
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取指定货位存放指定存货的全部托盘
+	 * @时间：2011-3-31下午04:34:27
+	 * @param cspaceid
+	 * @param cinvbasid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static String[] getTrayInfor(String cspaceid,String cinvbasid) throws Exception{
+		String key = cspaceid+cinvbasid;
+		String[] trays = null;
+		if(trayInfor == null||!trayInfor.containsKey(key)){
+			Class[] ParameterTypes = new Class[]{String.class,String.class};
+			Object[] ParameterValues = new Object[]{cspaceid,cinvbasid};
+			trays = (String[])LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getTrayInfor", ParameterTypes, ParameterValues, 2);
+			
+			if(trays == null)
+				return null;
+			
+			if(trayInfor == null)
+				trayInfor = new HashMap<String, String[]>();
+			trayInfor.put(key, trays);
+		}
+		return trayInfor.get(key);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取存货托盘容量
+	 * @时间：2011-3-31下午04:59:46
+	 * @param cinvbasid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static Integer getTrayVolumeByInvbasid(String cinvbasid) throws Exception{
+		int volumn = 0;
+		if(trayVolumnInfor == null||!trayVolumnInfor.containsKey(cinvbasid)){
+			Class[] ParameterTypes = new Class[]{String.class};
+			Object[] ParameterValues = new Object[]{cinvbasid};
+			volumn = (Integer)LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getTrayInfor", ParameterTypes, ParameterValues, 2);
+			
+			if(trayVolumnInfor == null)
+				trayVolumnInfor = new HashMap<String, Integer>();
+			trayVolumnInfor.put(cinvbasid, volumn);
+		}
+		return trayVolumnInfor.get(cinvbasid);
+	}
 
 }

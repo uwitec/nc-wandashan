@@ -1,13 +1,17 @@
 package nc.bs.wl.pub;
 
+import java.util.HashMap;
+import java.util.List;
 import nc.bs.dao.BaseDAO;
 import nc.jdbc.framework.processor.BeanProcessor;
+import nc.vo.pub.BusinessException;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
 
 public class WdsWlPubBO {
 	
-	private BaseDAO m_dao = null;
-	private BaseDAO getDao(){
+	private  static BaseDAO m_dao = null;
+	private static  BaseDAO getDao(){
 		if(m_dao == null){
 			m_dao = new BaseDAO();
 		}
@@ -104,6 +108,14 @@ public class WdsWlPubBO {
 		return null;
 	}
 	
+	public String[] getInvBasdocIDsBySpaceID(String cspaceid) throws BusinessException{
+		String sql = "select pk_invbasdoc from tb_spacegoods where isnull(dr,0)=0 and pk_cargdoc = '"+cspaceid+"'";
+		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
+		if(ldata == null||ldata.size()==0)
+			return null;
+		return (String[])ldata.toArray(new String[0]);
+	}
+	
 	/**
 	 * 
 	 * @作者：zhf
@@ -115,6 +127,65 @@ public class WdsWlPubBO {
 	 */
 	public  String[] getCustomManIDByLogUser(String userid) throws Exception{
 		return null;
+	}
+	
+	private static java.util.Map<String,String[]> trayInfor = null;
+	private static java.util.Map<String, Integer> trayVolumnInfor = null;
+	
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取指定货位存放指定存货的全部托盘
+	 * @时间：2011-3-31下午04:34:27
+	 * @param cspaceid
+	 * @param cinvbasid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static String[] getTrayInfor(String cspaceid,String cinvbasid) throws BusinessException{
+		String key = cspaceid+cinvbasid;
+		String[] trays = null;
+		List ldata = null;
+		if(trayInfor == null||!trayInfor.containsKey(key)){
+			String sql = "select cdt_pk from bd_cargdoc_tray where cdt_invbasdoc='"
+				+ cinvbasid
+				+ "' and cdt_traystatus=0 and isnull(dr,0)=0 and  pk_cargdoc='"
+				+ cspaceid + "' ";
+			ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
+			
+			if(ldata == null || ldata.size() == 0)
+				return null;
+			trays = ((List<String>)ldata).toArray(new String[0]);
+//				throw new BusinessException("存货不属于人员所在仓库货位");
+			if(trayInfor == null)
+				trayInfor = new HashMap<String, String[]>();
+			trayInfor.put(key, trays);
+		}
+		return trayInfor.get(key);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取存货托盘容量
+	 * @时间：2011-3-31下午04:59:46
+	 * @param cinvbasid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static Integer getTrayVolumeByInvbasid(String cinvbasid) throws BusinessException{
+		int volumn = 0;
+		if(trayVolumnInfor == null||!trayVolumnInfor.containsKey(cinvbasid)){
+			String sql = "select def20 from bd_invbasdoc where pk_invbasdoc='"+cinvbasid+"'";
+			volumn = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 1);
+			if(volumn == -1)
+				throw new BusinessException("该存货托盘容量未定义");
+			if(trayVolumnInfor == null)
+				trayVolumnInfor = new HashMap<String, Integer>();
+			trayVolumnInfor.put(cinvbasid, volumn);
+		}
+		return trayVolumnInfor.get(cinvbasid);
 	}
 
 }
