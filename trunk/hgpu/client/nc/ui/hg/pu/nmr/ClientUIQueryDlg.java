@@ -23,7 +23,7 @@ public class ClientUIQueryDlg extends HYQueryDLG{
 	}
 	UFDate billdate = ClientEnvironment.getInstance().getDate();
 	public void initData(){//向查询对话框中填加当前日期
-		setDefaultValue("hg_new_materials.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
+//		setDefaultValue("hg_new_materials.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 		super.initData();
 	}
 	

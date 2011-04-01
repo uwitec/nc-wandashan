@@ -56,15 +56,17 @@ BillCardBeforeEditListener {
 	@Override
 	public void setDefaultData() throws Exception {
 		setHeadItemValue("vbillstatus", IBillStatus.FREE);// 单据状态
-		setHeadItemValue("voperatorid", _getOperator());// 
+		setHeadItemValue("reserve5", _getOperator());// 
 		setHeadItemValue("dbilldate", _getDate());
-		setHeadItemValue("pk_corp", _getCorp().getPrimaryKey());
+		setHeadItemValue("ccorpid", _getCorp().getPrimaryKey());
 		setHeadItemValue("pk_billtype", HgPubConst.NEW_MATERIALS_BILLTYPE);
 		setHeadItemValue("dmakedate", _getDate());
 		setHeadItemValue("ijjway", 0);
 		setHeadItemValue("biszywz",UFBoolean.FALSE);
 		setHeadItemValue("bisjjwz",UFBoolean.FALSE);
 		setHeadItemValue("bisdcdx",UFBoolean.FALSE);
+		setHeadItemValue("discountflag",UFBoolean.FALSE);
+		setHeadItemValue("laborflag",UFBoolean.FALSE);
 		
 		
 		if (m_appInfor == null) {
@@ -90,7 +92,7 @@ BillCardBeforeEditListener {
 		btnvo.setBtnChinaName("编码");
 		btnvo.setBtnCode(null);// code最好设置为空
 		btnvo.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT});
-		btnvo.setBusinessStatus(new int[]{IBillStatus.COMMIT});
+		btnvo.setBusinessStatus(new int[]{IBillStatus.FREE});
 		addPrivateButton(btnvo);
 		
 		ButtonVO btnvo1 = new ButtonVO();
@@ -99,7 +101,7 @@ BillCardBeforeEditListener {
 		btnvo1.setBtnChinaName("确定");
 		btnvo1.setBtnCode(null);// code最好设置为空
 		btnvo1.setOperateStatus(new int[] { IBillOperate.OP_EDIT});
-		//btnvo1.setBusinessStatus(new int[]{IBillStatus.COMMIT});
+//		btnvo1.setBusinessStatus(new int[]{IBillStatus.FREE});
 		addPrivateButton(btnvo1);
 		super.initPrivateButton();
 	}
