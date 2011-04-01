@@ -1,22 +1,11 @@
 package nc.bs.wds.w8004040204;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import javax.naming.NamingException;
-
-import org.apache.poi.hssf.record.formula.functions.Days360;
-import org.apache.poi.hssf.record.formula.functions.Max;
 
 import nc.bs.framework.common.NCLocator;
-import nc.bs.pub.DataManageObject;
-import nc.bs.pub.pf.IQueryData;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.itf.uap.IUAPQueryBS;
 import nc.itf.uap.IVOPersistence;
@@ -27,28 +16,15 @@ import nc.jdbc.framework.JdbcSession;
 import nc.jdbc.framework.PersistenceManager;
 import nc.jdbc.framework.exception.DbException;
 import nc.jdbc.framework.processor.ArrayListProcessor;
-import nc.ui.pub.ClientEnvironment;
-import nc.ui.trade.base.AbstractBillUI;
-import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.businessaction.IBusinessController;
-import nc.ui.trade.controller.IControllerBase;
-import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.w8000.CommonUnit;
-import nc.ui.wds.w8004040204.MyClientUI;
-import nc.ui.wds.w8004040204.MyEventHandler;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.pf.PfUtilWorkFlowVO;
-import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.w8004040204.MyBillVO;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w8004040204.TbOutgeneralTVO;
 import nc.vo.wds.w8004040204.TbWarehousestockVO;
-import nc.vo.wds.w8004061002.BdCargdocTrayVO;
-import nc.vo.wds.w80060401.TbShipentryBVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
 
 public class W8004040204Impl implements Iw8004040204 {
