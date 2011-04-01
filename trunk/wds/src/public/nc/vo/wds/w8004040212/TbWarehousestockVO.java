@@ -19,52 +19,64 @@
  * @author ${vmObject.author}
  * @version Your Project 1.0
  */
-     public class TbWarehousestockVO extends SuperVO {
+     public class TbWarehousestockVO extends SuperVO {   	
+             
+             public String pk_cargdoc;//货位
+             public String pplpt_pk;//托盘id
+             public String whs_batchcode;// 批次号
+             public String pk_invbasdoc;  
+             public String whs_munit;//主单位
+             public String whs_aunit;//辅单位
+             public UFDouble whs_omnum;//原始入库主数量
+             public UFDouble whs_stocktonnage;//库存主数量
+             public UFDouble whs_stockpieces;//库存辅数量
+             public UFDouble whs_oanum;//原始入库实收辅数量
+             public Integer whs_type;// 类型
+            
+             public String ss_pk;//库存状态id
+             public Integer whs_status;//库存表状态
+             public String whs_alert;//库存警戒
+             public UFDouble whs_nprice;//单价
+             public UFDouble whs_nmny;//金额
+             public UFDouble whs_hsl;//换算率
+             public String whs_lbatchcode;//原始批次号 
+             
+             public String pk_headsource;
+             public String pk_bodysource;	// 来源单据表体主键， 缓存表主键
+             public String whs_sourcecode;
+            
+             public UFTime ts;
+             public String nvote;
+             
+            
+             public String whs_customize3;
+             public String whs_pk;
+             
            
-             public String pk_customize4;
-             public UFDouble whs_oanum;
-             public Integer whs_type;
+             public String whs_customize9;
+            
+             
+            
+             
+             public UFDateTime operatetime;
              public String pk_customize3;
              public String whs_customize5;
-             public String pk_cargdoc;
-             public String whs_alert;
              public String whs_customize2;
              public Integer dr;
-             public String whs_customize8;
-             public UFDouble whs_stockpieces;
-             public String pk_bodysource;
              public String whs_customize1;
-             public String pk_invbasdoc;
+             public String whs_customize8;
              public String pk_customize9;
              public String whs_customize4;
              public String pk_customize6;
              public String pk_customize1;
-             public String ss_pk;
-             public Integer whs_status;
-             public UFTime ts;
-             public String nvote;
-             public String whs_batchcode;
-             public String whs_aunit;
-             public String whs_customize3;
-             public String whs_pk;
              public String whs_customize6;
              public String whs_customize7;
              public String pk_customize8;
              public String pk_customize7;
              public String pk_customize2;
-             public String pplpt_pk;
-             public String whs_munit;
-             public String whs_customize9;
-             public UFDouble whs_omnum;
-             public String whs_sourcecode;
-             public UFDouble whs_stocktonnage;
-             public String pk_headsource;
-             public UFDateTime operatetime;
              public String pk_customize5;
-             public UFDouble whs_nprice;//单价
-             public UFDouble whs_nmny;//金额
-             public UFDouble whs_hsl;//换算率
-             public String whs_lbatchcode;//原始批次号 
+                 public String pk_customize4;
+           
             
              public static final String  WHS_LBATCHCODE="whs_lbatchcode";
              public static final String  WHS_HSL="whs_hsl";
