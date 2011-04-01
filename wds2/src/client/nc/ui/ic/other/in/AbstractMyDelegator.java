@@ -1,6 +1,7 @@
 package nc.ui.ic.other.in;
 
 import java.util.Hashtable;
+import nc.vo.ic.pub.TbGeneralBVO;
 
 
 /**
@@ -17,9 +18,9 @@ public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusin
 		
 	   Hashtable dataHashTable = new Hashtable();
 	                         
-           nc.vo.wds.w8004040210.TbGeneralBVO[] bodyVOs1 =
-                       (nc.vo.wds.w8004040210.TbGeneralBVO[])queryByCondition(nc.vo.wds.w8004040210.TbGeneralBVO.class,
-                                                    getBodyCondition(nc.vo.wds.w8004040210.TbGeneralBVO.class,key));   
+           TbGeneralBVO[] bodyVOs1 =
+                       (TbGeneralBVO[])queryByCondition(TbGeneralBVO.class,
+                                                    getBodyCondition(TbGeneralBVO.class,key));   
             if(bodyVOs1 != null && bodyVOs1.length > 0){
                           
               dataHashTable.put("tb_general_b",bodyVOs1);
@@ -37,7 +38,7 @@ public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusin
          */	
        public String getBodyCondition(Class bodyClass,String key){
 		
-       	 if(bodyClass == nc.vo.wds.w8004040210.TbGeneralBVO.class)
+       	 if(bodyClass == TbGeneralBVO.class)
 	   return "${voAndTable.fkName} = '" + key + "' and isnull(dr,0)=0 ";
        		
 	 return null;

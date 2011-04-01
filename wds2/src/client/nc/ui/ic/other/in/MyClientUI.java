@@ -1,17 +1,24 @@
 package nc.ui.ic.other.in;
 
+import java.util.Date;
+
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.w8000.CommonUnit;
+import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.wds.w8004040210.TbGeneralHVO;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -46,8 +53,27 @@ public class MyClientUI extends AbstractMyClientUI implements
 	protected void initSelfData() {
 	}
 
+
 	public void setDefaultData() throws Exception {
+		//当前公司 当前库存组织  当前仓库  当前货位
+		getBillCardPanel().setHeadItem("geh_corp", _getCorp());
+		getBillCardPanel().setHeadItem("geh_calbody", WdsWlPubConst.DEFAULT_CALBODY);
+		try{
+			getBillCardPanel().setHeadItem("geh_cwarehouseid", LoginInforHelper.getCwhid(_getOperator()));
+			getBillCardPanel().setHeadItem("pk_cargdoc", LoginInforHelper.getSpaceByLogUserForStore(_getOperator()));
+		}catch(Exception e){
+			e.printStackTrace();//zhf  异常不处理
+		}
+		//制单人  制单日期   
+		getBillCardPanel().setHeadItem("tmaketime",_getServerTime());
+		getBillCardPanel().setHeadItem("geh_dbilldate",_getDate());
+		getBillCardPanel().setHeadItem("coperatorid",_getOperator());
+		getBillCardPanel().setHeadItem("geh_billtype",WdsWlPubConst.BILLTYPE_OTHER_IN);
+		getBillCardPanel().setHeadItem("pwb_fbillflag",2);
+		getBillCardPanel().setHeadItem("geh_bbillcode", 
+				HYPubBO_Client.getBillNo(WdsWlPubConst.BILLTYPE_OTHER_IN, _getOperator(), null, null));		
 	}
+
 
 	public boolean beforeEdit(BillEditEvent e) {
 		if (getBillCardPanel().isEnabled() == false) {
@@ -55,192 +81,53 @@ public class MyClientUI extends AbstractMyClientUI implements
 		}
 		// 这里如果单据上选择了客户，参选合同时，需要按客户过滤经销合同
 		if ("invcode".equals(e.getKey())) {
-			String st_type = "";
-			String stordocName = "";
-			boolean sotckIsTotal = true;
+			//          过滤存货档案只能参照到保管员对应货位的货品
+			//			获取当前登录人所在货位      非仓储科人员无货位
 			try {
-				st_type = nc.ui.wds.w8000.CommonUnit
-						.getUserType(ClientEnvironment.getInstance().getUser()
-								.getPrimaryKey());
-			} catch (BusinessException e1) {
+				if (!WdsWlPubTool.isZc(LoginInforHelper.getCwhid(_getOperator()))) {
+					return true;
+				}
+			
+			String[] pk_cargdoc = LoginInforHelper.getSpaceByLogUser(_getOperator());
+			if(pk_cargdoc==null||pk_cargdoc.length ==0)
+				return true;
+
+			// 得到合同参照
+			UIRefPane panel = (UIRefPane) this.getBillCardPanel()
+			.getBodyItem("invcode").getComponent();
+
+
+			panel
+			.getRefModel()
+			.setWherePart(
+					" pk_invbasdoc in (select pk_invbasdoc from tb_spacegoods where dr = 0 and pk_cargdoc = '"
+					+ pk_cargdoc.toString()
+					+ "') and dr=0 ");
+
+
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
-			if (null != st_type && !"".equals(st_type)) {
-				if ("0".equals(st_type)) {
-					try {
-						stordocName = nc.ui.wds.w8000.CommonUnit
-								.getStordocName(ClientEnvironment.getInstance()
-										.getUser().getPrimaryKey());
-					} catch (BusinessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (null != stordocName && !"".equals(stordocName)) {
-						try {
-							sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-									.getSotckIsTotal(stordocName);
-
-						} catch (BusinessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				}
-				if ("3".equals(st_type)) {
-					try {
-						stordocName = nc.ui.wds.w8000.CommonUnit
-								.getStordocName(ClientEnvironment.getInstance()
-										.getUser().getPrimaryKey());
-					} catch (BusinessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (null != stordocName && !"".equals(stordocName)) {
-						try {
-							sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-									.getSotckIsTotal(stordocName);
-
-						} catch (BusinessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-
-			String pk_cargdoc = "";
-			try {
-				pk_cargdoc = nc.ui.wds.w8000.CommonUnit
-						.getCargDocName(ClientEnvironment.getInstance()
-								.getUser().getPrimaryKey());
-			} catch (BusinessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if (pk_cargdoc != null && pk_cargdoc.length() > 0) {
-				// 得到合同参照
-				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-						.getBodyItem("invcode").getComponent();
-				// this.getBillCardPanel()
-				// .getHeadItem("cif_pk").setDecimalDigits(iDecimalDigits);
-				// 加上客户做为条件去过滤
-				if (sotckIsTotal) {
-
-					panel
-							.getRefModel()
-							.setWherePart(
-									" pk_invbasdoc in (select pk_invbasdoc from tb_spacegoods where dr = 0 and pk_cargdoc = '"
-											+ pk_cargdoc.toString()
-											+ "') and dr=0 ");
-
-				}
+				return true;
 			}
 		}
 		if ("geb_customize2".equals(e.getKey())) {
-			String st_type = "";
-			String stordocName = "";
-			boolean sotckIsTotal = true;
+			String stordocid="";
 			try {
-				st_type = nc.ui.wds.w8000.CommonUnit
-						.getUserType(ClientEnvironment.getInstance().getUser()
-								.getPrimaryKey());
-			} catch (BusinessException e1) {
+				stordocid = LoginInforHelper.getCwhid(_getOperator());
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return true;
 			}
-			if (null != st_type && !"".equals(st_type)) {
-				if ("0".equals(st_type)) {
-					try {
-						stordocName = nc.ui.wds.w8000.CommonUnit
-								.getStordocName(ClientEnvironment.getInstance()
-										.getUser().getPrimaryKey());
-					} catch (BusinessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (null != stordocName && !"".equals(stordocName)) {
-						try {
-							sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-									.getSotckIsTotal(stordocName);
+			// 得到合同参照
+			UIRefPane panel = (UIRefPane) this.getBillCardPanel()
+			.getBodyItem("geb_customize2").getComponent();
 
-						} catch (BusinessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				}
-				if ("3".equals(st_type)) {
-					try {
-						stordocName = nc.ui.wds.w8000.CommonUnit
-								.getStordocName(ClientEnvironment.getInstance()
-										.getUser().getPrimaryKey());
-					} catch (BusinessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (null != stordocName && !"".equals(stordocName)) {
-						try {
-							sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-									.getSotckIsTotal(stordocName);
-
-						} catch (BusinessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-
-			String pk_cargdoc = "";
-			try {
-				pk_cargdoc = nc.ui.wds.w8000.CommonUnit
-						.getCargDocName(ClientEnvironment.getInstance()
-								.getUser().getPrimaryKey());
-			} catch (BusinessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if (pk_cargdoc != null && pk_cargdoc.length() > 0) {
-				// 得到合同参照
-				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-						.getBodyItem("geb_customize2").getComponent();
-				// this.getBillCardPanel()
-				// .getHeadItem("cif_pk").setDecimalDigits(iDecimalDigits);
-				// 加上客户做为条件去过滤
-
-				panel.getRefModel().setWherePart(
-						" pk_stordoc = '" + stordocName.toString()
-								+ "' and dr=0 ");
-
-			}
+			panel.getRefModel().setWherePart(
+					" pk_stordoc = '" + stordocid
+					+ "' and dr=0 ");
 		}
-
-		// if ("geb_virtualbnum".equals(e.getKey())) {
-		// if (null != getBillCardPanel().getBillModel().getValueAt(
-		// getBillCardPanel().getBillTable().getSelectedRow(),
-		// "geb_isclose")) {
-		// Boolean geb_iscloseuf = (Boolean) getBillCardPanel()
-		// .getBillModel().getValueAt(
-		// getBillCardPanel().getBillTable()
-		// .getSelectedRow(), "geb_isclose");
-		// boolean geb_isclose = geb_iscloseuf.booleanValue();
-		// if (geb_isclose) {
-		// getBillCardPanel().getBodyItem("geb_virtualbnum").setEdit(
-		// false);
-		// } else {
-		// getBillCardPanel().getBodyItem("geb_virtualbnum").setEdit(
-		// true);
-		// }
-		// // this.showErrorMessage("1");
-		// } else {
-		// getBillCardPanel().getBodyItem("geb_virtualbnum").setEdit(true);
-		// }
-		//
-		// // this.showErrorMessage("1");
-		// }
-
-		// int i = 1;
 
 		return true;
 	}
@@ -254,79 +141,79 @@ public class MyClientUI extends AbstractMyClientUI implements
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		// TODO Auto-generated method stub
-		String isType = null;
-		try {
-			isType = CommonUnit.getUserType(ClientEnvironment.getInstance()
-					.getUser().getPrimaryKey());
-		} catch (BusinessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if (null != isType && isType.equals("1")
-				&& getBufferData().getVOBufferSize() > 0) {
-			int index = 0;
-			if (getBillListPanel().getHeadTable().getSelectedRow() != -1) {
-				index = getBillListPanel().getHeadTable().getSelectedRow();
-			}
-			AggregatedValueObject billvo = getBufferData().getVOByRowNo(index);
-			TbGeneralHVO generalhvo = (TbGeneralHVO) billvo.getParentVO(); //
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getButtonManager().getButton(IBillButton.Edit)
-						.setEnabled(false);
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
-			}
-		} else if (null != isType && isType.equals("3")
-				&& getBufferData().getVOBufferSize() > 0) {
-			int index = 0;
-			if (getBillListPanel().getHeadTable().getSelectedRow() != -1) {
-				index = getBillListPanel().getHeadTable().getSelectedRow();
-			}
-			AggregatedValueObject billvo = getBufferData().getVOByRowNo(index);
-			TbGeneralHVO generalhvo = (TbGeneralHVO) billvo.getParentVO(); //
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getButtonManager().getButton(IBillButton.Edit)
-						.setEnabled(false);
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
-			}
-		}
-		try {
-			this.updateButtonUI();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		// TODO Auto-generated method stub
+//		String isType = null;
+//		try {
+//			isType = CommonUnit.getUserType(ClientEnvironment.getInstance()
+//					.getUser().getPrimaryKey());
+//		} catch (BusinessException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		if (null != isType && isType.equals("1")
+//				&& getBufferData().getVOBufferSize() > 0) {
+//			int index = 0;
+//			if (getBillListPanel().getHeadTable().getSelectedRow() != -1) {
+//				index = getBillListPanel().getHeadTable().getSelectedRow();
+//			}
+//			AggregatedValueObject billvo = getBufferData().getVOByRowNo(index);
+//			TbGeneralHVO generalhvo = (TbGeneralHVO) billvo.getParentVO(); //
+//
+//			// 签字后
+//			if (null != generalhvo.getPwb_fbillflag()
+//					&& generalhvo.getPwb_fbillflag() == 3) {
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(false);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(true);
+//				getButtonManager().getButton(IBillButton.Edit)
+//						.setEnabled(false);
+//			} else { // 签字前
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(true);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(false);
+//				getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
+//			}
+//		} else if (null != isType && isType.equals("3")
+//				&& getBufferData().getVOBufferSize() > 0) {
+//			int index = 0;
+//			if (getBillListPanel().getHeadTable().getSelectedRow() != -1) {
+//				index = getBillListPanel().getHeadTable().getSelectedRow();
+//			}
+//			AggregatedValueObject billvo = getBufferData().getVOByRowNo(index);
+//			TbGeneralHVO generalhvo = (TbGeneralHVO) billvo.getParentVO(); //
+//
+//			// 签字后
+//			if (null != generalhvo.getPwb_fbillflag()
+//					&& generalhvo.getPwb_fbillflag() == 3) {
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(false);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(true);
+//				getButtonManager().getButton(IBillButton.Edit)
+//						.setEnabled(false);
+//			} else { // 签字前
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(true);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(false);
+//				getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
+//			}
+//		}
+//		try {
+//			this.updateButtonUI();
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 	}
 }

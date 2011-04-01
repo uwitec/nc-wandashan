@@ -3,10 +3,9 @@ package nc.ui.ic.other.in;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.bill.ISingleController;
-
-import nc.vo.wds.w8004040214.MyBillVO;
-import nc.vo.wds.w8004040210.TbGeneralHVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
+import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.pub.TbGeneralBVO;
+import nc.vo.ic.pub.TbGeneralHVO;
 import nc.ui.trade.button.IBillButton;
 
 /**
@@ -78,7 +77,7 @@ public class MyClientUICtrl extends AbstractManageController {
 	}
 
 	public String[] getBillVoName() {
-		return new String[] { MyBillVO.class.getName(),
+		return new String[] { OtherInBillVO.class.getName(),
 				TbGeneralHVO.class.getName(), TbGeneralBVO.class.getName() };
 	}
 

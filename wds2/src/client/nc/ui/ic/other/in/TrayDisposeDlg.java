@@ -6,51 +6,32 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
-import nc.bs.wds.w8004040210.W8004040210Impl;
 import nc.itf.uap.IUAPQueryBS;
-import nc.itf.uap.IVOPersistence;
-import nc.itf.wds.w8004040210.Iw8004040210;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.ml.NCLangRes;
 import nc.ui.pf.pub.PfUIDataCache;
 import nc.ui.pub.ClientEnvironment;
-import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.UIButton;
-import nc.ui.pub.beans.UIComboBox;
-import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIPanel;
-import nc.ui.pub.beans.UITextField;
-import nc.ui.pub.beans.ValueChangedEvent;
-import nc.ui.pub.beans.ValueChangedListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillListData;
-import nc.ui.pub.bill.BillListPanel; //import nc.ui.to.to103.BatchDisposeDlg.BtnListener;
+import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillMouseEnent;
-import nc.ui.pub.bill.BillTableMouseListener; //import nc.ui.pub.pf.BillSourceDLG.HeadRowStateListener;
-import nc.ui.to.to103.Const; //import nc.ui.to.to103.BatchDisposeDlg.ComboxListener;
-import nc.ui.trade.base.IBillOperate;
+import nc.ui.pub.bill.BillTableMouseListener;
+import nc.vo.ic.pub.TbGeneralBBVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.lang.UFDouble;
-import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.w8004040210.MyBillVO;
-import nc.vo.wds.w8004040210.TbGeneralBBVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
-import nc.vo.wds.w8004040210.TbGeneralHVO;
 import nc.vo.wds.w8004040212.TbWarehousestockVO;
-import nc.vo.wds.w8004061002.BdCargdocTrayVO;
 
 public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		ActionListener, BillEditListener, BillTableMouseListener,
@@ -133,6 +114,22 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		init(m_billType, m_operator, m_pkcorp, m_nodeKey, chlid);
 
 	}
+	
+	/**
+	 * zhf add
+	 * @param m_billType
+	 * @param m_operator
+	 * @param m_pkcorp
+	 * @param m_nodeKey
+	 * @param myClientUI
+	 */
+	public TrayDisposeDlg(String m_billType, String m_operator,
+			String m_pkcorp, String m_nodeKey, 
+			Container myClientUI) {
+		this.myClientUI = myClientUI;
+		init(m_billType, m_operator, m_pkcorp, m_nodeKey);
+
+	}
 
 	private void init(String m_billType, String m_operator, String m_pkcorp,
 			String m_nodeKey, TbGeneralBVO child) {
@@ -149,6 +146,22 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		setTitle("选择托盘");
 		setContentPane(getUIDialogContentPane());
 	}
+	private void init(String m_billType, String m_operator, String m_pkcorp,
+			String m_nodeKey) {
+		this.m_billType = m_billType;
+		this.m_operator = m_operator;
+		this.m_pkcorp = m_pkcorp;
+		this.m_nodeKey = m_nodeKey;
+//		this.child = child;
+		getbtnOk().addActionListener(this);
+		getbtnCancel().addActionListener(this);
+		setName("BillSourceUI");
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(750, 550);
+		setTitle("选择托盘");
+		setContentPane(getUIDialogContentPane());
+	}
+
 
 	public TbGeneralBVO getReturnVOs(TbGeneralBVO child) {
 
@@ -532,159 +545,159 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(getbtnOk())) {
 
-			// 获得自定义接口
-			Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
-					Iw8004040210.class.getName());
-			// 获得表头VO
-			TbGeneralBVO[] tbs = (TbGeneralBVO[]) getbillListPanel()
-					.getHeadBillModel().getBodyValueVOs(
-							TbGeneralBVO.class.getName());
-			// 获得所有表体VO
-			TbGeneralBBVO[] tbGeneralBBVO = (TbGeneralBBVO[]) getbillListPanel()
-					.getBodyBillModel().getBodyValueVOs(
-							TbGeneralBBVO.class.getName());
-			// 获得billVO
-
-			IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-					IUAPQueryBS.class.getName());
-
-			// 获得要删除的VO
-			StringBuffer tbbsql = new StringBuffer("pwb_pk='");
-			tbbsql.append(tbs[0].getGeb_cgeneralbid());
-			tbbsql.append("' and pk_invbasdoc='");
-			tbbsql.append(tbs[0].getGeb_cinvbasid());
-			tbbsql.append("' and dr = 0");
-			ArrayList dtbbvos = new ArrayList();
-			try {
-
-				dtbbvos = (ArrayList) query.retrieveByClause(
-						TbGeneralBBVO.class, tbbsql.toString());
-			} catch (BusinessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			// 实入数量
-			double geb_banum = 0;
-			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
-					"geb_banum")) {
-				String geb_banums = getbillListPanel().getHeadBillModel()
-						.getValueAt(0, "geb_banum").toString();
-				geb_banum = Double.parseDouble(getbillListPanel()
-						.getHeadBillModel().getValueAt(0, "geb_banum")
-						.toString());
-			}
-			// 应入数量
-			double geb_bsnum = 0;
-			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
-					"geb_bsnum")) {
-				String geb_bsnums = getbillListPanel().getHeadBillModel()
-						.getValueAt(0, "geb_bsnum").toString();
-				geb_bsnum = Double.parseDouble(getbillListPanel()
-						.getHeadBillModel().getValueAt(0, "geb_bsnum")
-						.toString());
-			}
-			// 通过实存数量的判断，获得改变的表体VO
-			// TbGeneralBBVO[] tbGeneralBBVO1 = new
-			// TbGeneralBBVO[tbGeneralBBVO.length];
-
-			ArrayList tbgbbss = new ArrayList();
-			List tbbvos = new ArrayList();
-			// 托盘中入库数量
-			double traysum = 0;
-			// ArrayList bdCargdocTrayVOs = new ArrayList();
-			String Cdt_pk = "";
-			for (int i = 0; i < tbGeneralBBVO.length; i++) {
-				if (null != tbGeneralBBVO[i]) {
-					tbGeneralBBVO[i].setDr(0);
-					tbGeneralBBVO[i].setGeb_pk(tbs[0].getGeb_pk());
-					if (null != tbGeneralBBVO[i].getGebb_num()
-							&& !("".equals(tbGeneralBBVO[i].getGebb_num()) || 0 == tbGeneralBBVO[i]
-									.getGebb_num().toDouble())) {
-						// tbGeneralBBVO1[i] = tbGeneralBBVO[i];
-						tbgbbss.add(tbGeneralBBVO[i]);
-						traysum += tbGeneralBBVO[i].getGebb_num().toDouble();
-						// tbbvos.add(tbGeneralBBVO[i]);
-						// 托盘状态
-
-						Cdt_pk = getbillListPanel().getBodyBillModel()
-								.getValueAt(i, "cdt_pk").toString();
-						BdCargdocTrayVO bdCargdocTrayVO = new BdCargdocTrayVO();
-						try {
-							bdCargdocTrayVO = (BdCargdocTrayVO) query
-									.retrieveByPK(BdCargdocTrayVO.class, Cdt_pk);
-						} catch (BusinessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						// bdCargdocTrayVO.setCdt_traystatus(new Integer(1));
-						// bdCargdocTrayVOs.add(bdCargdocTrayVO);
-					}
-				}
-			}
-			// 通过实存数量的判断，获得改变的表体VO
-			TbGeneralBBVO[] tbGeneralBBVO1 = new TbGeneralBBVO[tbgbbss.size()];
-			tbgbbss.toArray(tbGeneralBBVO1);
-			if (traysum > geb_bsnum) {
-				((MyClientUI) myClientUI).showErrorMessage("托盘存放总数量大于应入数量！");
-				return;
-			}
-			// 换算率
-			double geb_hsl = 0;
-			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
-					"geb_hsl")) {
-				String geb_hsls = getbillListPanel().getHeadBillModel()
-						.getValueAt(0, "geb_hsl").toString();
-				geb_hsl = Double
-						.parseDouble(getbillListPanel().getHeadBillModel()
-								.getValueAt(0, "geb_hsl").toString());
-			}
-			//
-
-			// getbillListPanel().getHeadBillModel().setValueAt(traysum *
-			// geb_hsl,
-			// 0, "geb_anum");
-			// getbillListPanel().getHeadBillModel().setValueAt("1",
-			// 0, "geb_banum");
-			// 在途数量添加
-			if (null != tbs[0].getGeb_pk() && !"".equals(tbs[0].getGeb_pk())) {
-				String tbssql = " geb_pk='" + tbs[0].getGeb_pk()
-						+ "' and dr=0 ";
-				// +
-				// " and cdt_pk in (select cdt_pk from bd_cargdoc_tray where
-				// cdt_traystatus !=1 ) ";
-				ArrayList dtbvos = new ArrayList();
-				try {
-
-					dtbvos = (ArrayList) query.retrieveByClause(
-							TbGeneralBVO.class, tbssql.toString());
-				} catch (BusinessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				if (null != dtbvos && dtbvos.size() > 0) {
-					if (null != dtbvos.get(0)) {
-						TbGeneralBVO dtbvo = (TbGeneralBVO) dtbvos.get(0);
-						if (null != dtbvo.getGeb_banum()) {
-							traysum += dtbvo.getGeb_banum().doubleValue();
-						}
-					}
-				}
-
-			}
-			//
-			getbillListPanel().getHeadBillModel().setValueAt(traysum, 0,
-					"geb_banum");
-			//
-			tbs[0].setGeb_banum(new UFDouble(traysum));
-			tbs[0].setGeb_anum(new UFDouble(traysum * geb_hsl));
-			try {
-				iw.delAndInsertTbGeneralBBVO(dtbbvos, tbGeneralBBVO1);
-			} catch (BusinessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			// 返回当前页面VO
-			this.m_tbGeneralBVO = tbs[0];
+//			// 获得自定义接口
+//			Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
+//					Iw8004040210.class.getName());
+//			// 获得表头VO
+//			TbGeneralBVO[] tbs = (TbGeneralBVO[]) getbillListPanel()
+//					.getHeadBillModel().getBodyValueVOs(
+//							TbGeneralBVO.class.getName());
+//			// 获得所有表体VO
+//			TbGeneralBBVO[] tbGeneralBBVO = (TbGeneralBBVO[]) getbillListPanel()
+//					.getBodyBillModel().getBodyValueVOs(
+//							TbGeneralBBVO.class.getName());
+//			// 获得billVO
+//
+//			IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
+//					IUAPQueryBS.class.getName());
+//
+//			// 获得要删除的VO
+//			StringBuffer tbbsql = new StringBuffer("pwb_pk='");
+//			tbbsql.append(tbs[0].getGeb_cgeneralbid());
+//			tbbsql.append("' and pk_invbasdoc='");
+//			tbbsql.append(tbs[0].getGeb_cinvbasid());
+//			tbbsql.append("' and dr = 0");
+//			ArrayList dtbbvos = new ArrayList();
+//			try {
+//
+//				dtbbvos = (ArrayList) query.retrieveByClause(
+//						TbGeneralBBVO.class, tbbsql.toString());
+//			} catch (BusinessException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			// 实入数量
+//			double geb_banum = 0;
+//			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
+//					"geb_banum")) {
+//				String geb_banums = getbillListPanel().getHeadBillModel()
+//						.getValueAt(0, "geb_banum").toString();
+//				geb_banum = Double.parseDouble(getbillListPanel()
+//						.getHeadBillModel().getValueAt(0, "geb_banum")
+//						.toString());
+//			}
+//			// 应入数量
+//			double geb_bsnum = 0;
+//			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
+//					"geb_bsnum")) {
+//				String geb_bsnums = getbillListPanel().getHeadBillModel()
+//						.getValueAt(0, "geb_bsnum").toString();
+//				geb_bsnum = Double.parseDouble(getbillListPanel()
+//						.getHeadBillModel().getValueAt(0, "geb_bsnum")
+//						.toString());
+//			}
+//			// 通过实存数量的判断，获得改变的表体VO
+//			// TbGeneralBBVO[] tbGeneralBBVO1 = new
+//			// TbGeneralBBVO[tbGeneralBBVO.length];
+//
+//			ArrayList tbgbbss = new ArrayList();
+//			List tbbvos = new ArrayList();
+//			// 托盘中入库数量
+//			double traysum = 0;
+//			// ArrayList bdCargdocTrayVOs = new ArrayList();
+//			String Cdt_pk = "";
+//			for (int i = 0; i < tbGeneralBBVO.length; i++) {
+//				if (null != tbGeneralBBVO[i]) {
+//					tbGeneralBBVO[i].setDr(0);
+//					tbGeneralBBVO[i].setGeb_pk(tbs[0].getGeb_pk());
+//					if (null != tbGeneralBBVO[i].getGebb_num()
+//							&& !("".equals(tbGeneralBBVO[i].getGebb_num()) || 0 == tbGeneralBBVO[i]
+//									.getGebb_num().toDouble())) {
+//						// tbGeneralBBVO1[i] = tbGeneralBBVO[i];
+//						tbgbbss.add(tbGeneralBBVO[i]);
+//						traysum += tbGeneralBBVO[i].getGebb_num().toDouble();
+//						// tbbvos.add(tbGeneralBBVO[i]);
+//						// 托盘状态
+//
+//						Cdt_pk = getbillListPanel().getBodyBillModel()
+//								.getValueAt(i, "cdt_pk").toString();
+//						BdCargdocTrayVO bdCargdocTrayVO = new BdCargdocTrayVO();
+//						try {
+//							bdCargdocTrayVO = (BdCargdocTrayVO) query
+//									.retrieveByPK(BdCargdocTrayVO.class, Cdt_pk);
+//						} catch (BusinessException e1) {
+//							// TODO Auto-generated catch block
+//							e1.printStackTrace();
+//						}
+//						// bdCargdocTrayVO.setCdt_traystatus(new Integer(1));
+//						// bdCargdocTrayVOs.add(bdCargdocTrayVO);
+//					}
+//				}
+//			}
+//			// 通过实存数量的判断，获得改变的表体VO
+//			TbGeneralBBVO[] tbGeneralBBVO1 = new TbGeneralBBVO[tbgbbss.size()];
+//			tbgbbss.toArray(tbGeneralBBVO1);
+//			if (traysum > geb_bsnum) {
+//				((MyClientUI) myClientUI).showErrorMessage("托盘存放总数量大于应入数量！");
+//				return;
+//			}
+//			// 换算率
+//			double geb_hsl = 0;
+//			if (null != getbillListPanel().getHeadBillModel().getValueAt(0,
+//					"geb_hsl")) {
+//				String geb_hsls = getbillListPanel().getHeadBillModel()
+//						.getValueAt(0, "geb_hsl").toString();
+//				geb_hsl = Double
+//						.parseDouble(getbillListPanel().getHeadBillModel()
+//								.getValueAt(0, "geb_hsl").toString());
+//			}
+//			//
+//
+//			// getbillListPanel().getHeadBillModel().setValueAt(traysum *
+//			// geb_hsl,
+//			// 0, "geb_anum");
+//			// getbillListPanel().getHeadBillModel().setValueAt("1",
+//			// 0, "geb_banum");
+//			// 在途数量添加
+//			if (null != tbs[0].getGeb_pk() && !"".equals(tbs[0].getGeb_pk())) {
+//				String tbssql = " geb_pk='" + tbs[0].getGeb_pk()
+//						+ "' and dr=0 ";
+//				// +
+//				// " and cdt_pk in (select cdt_pk from bd_cargdoc_tray where
+//				// cdt_traystatus !=1 ) ";
+//				ArrayList dtbvos = new ArrayList();
+//				try {
+//
+//					dtbvos = (ArrayList) query.retrieveByClause(
+//							TbGeneralBVO.class, tbssql.toString());
+//				} catch (BusinessException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				if (null != dtbvos && dtbvos.size() > 0) {
+//					if (null != dtbvos.get(0)) {
+//						TbGeneralBVO dtbvo = (TbGeneralBVO) dtbvos.get(0);
+//						if (null != dtbvo.getGeb_banum()) {
+//							traysum += dtbvo.getGeb_banum().doubleValue();
+//						}
+//					}
+//				}
+//
+//			}
+//			//
+//			getbillListPanel().getHeadBillModel().setValueAt(traysum, 0,
+//					"geb_banum");
+//			//
+//			tbs[0].setGeb_banum(new UFDouble(traysum));
+//			tbs[0].setGeb_anum(new UFDouble(traysum * geb_hsl));
+//			try {
+//				iw.delAndInsertTbGeneralBBVO(dtbbvos, tbGeneralBBVO1);
+//			} catch (BusinessException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			// 返回当前页面VO
+//			this.m_tbGeneralBVO = tbs[0];
 			this.closeOK();
 
 		}
