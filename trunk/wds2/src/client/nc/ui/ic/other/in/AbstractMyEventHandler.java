@@ -1,6 +1,5 @@
 package nc.ui.ic.other.in;
 
-import nc.ui.pub.ButtonObject;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
