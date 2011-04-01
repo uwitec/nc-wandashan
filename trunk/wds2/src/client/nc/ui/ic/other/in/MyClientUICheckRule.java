@@ -1,4 +1,4 @@
-package nc.ui.wds.w8004040208;
+package nc.ui.ic.other.in;
 
 import java.awt.Container;
 import nc.ui.trade.businessaction.IPFACTION;

@@ -1,12 +1,13 @@
-package nc.ui.wds.w8004040208;
+package nc.ui.ic.other.in;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
+import nc.ui.trade.bill.ISingleController;
+
+import nc.vo.wds.w8004040214.MyBillVO;
+import nc.vo.wds.w8004040210.TbGeneralHVO;
+import nc.vo.wds.w8004040210.TbGeneralBVO;
 import nc.ui.trade.button.IBillButton;
-import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.vo.wds.w8004040208.MyBillVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -29,22 +30,38 @@ public class MyClientUICtrl extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 
-		return new int[] { IBillButton.Query, ISsButtun.zj,IBillButton.Edit,
-				IBillButton.Line, IBillButton.Save, IBillButton.Cancel,
-				IBillButton.Return, IBillButton.Refresh,
-				nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn,
-				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr,
-				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz };
+		return new int[] { 
+				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj,
+				IBillButton.Query, 
+				IBillButton.Edit,
+				IBillButton.Line, 
+				IBillButton.Save, 
+				IBillButton.Cancel,
+				IBillButton.Return,
+				IBillButton.Refresh,
+				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
+				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr,
+				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz
+				
+		};
 
 	}
 
 	public int[] getListButtonAry() {
-		return new int[] { IBillButton.Query, ISsButtun.zj,IBillButton.Edit,
-				IBillButton.Save, IBillButton.Cancel, IBillButton.Card,
+		return new int[] { 
+				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj,
+				IBillButton.Query, 
+				IBillButton.Edit,
+				IBillButton.Line, 
+				IBillButton.Save, 
+				IBillButton.Cancel,
+				IBillButton.Card, 
 				IBillButton.Refresh,
-				nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn,
-				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr,
-				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz };
+				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
+				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr,
+				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz
+				
+		};
 
 	}
 
@@ -57,13 +74,12 @@ public class MyClientUICtrl extends AbstractManageController {
 	}
 
 	public String getBillType() {
-		return "8004040208";
+		return "8004040214";
 	}
 
 	public String[] getBillVoName() {
 		return new String[] { MyBillVO.class.getName(),
-				TbOutgeneralHVO.class.getName(),
-				TbOutgeneralBVO.class.getName() };
+				TbGeneralHVO.class.getName(), TbGeneralBVO.class.getName() };
 	}
 
 	public String getBodyCondition() {

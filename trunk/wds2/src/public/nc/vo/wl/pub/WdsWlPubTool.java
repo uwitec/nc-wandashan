@@ -154,28 +154,28 @@ public class WdsWlPubTool {
 	}
 	
 
-	/**
-	 * 
-	 * @author zhf
-	 * @说明 获取vo转换类实例
-	 * @时间 2010-9-26上午10:47:52
-	 * @param classname
-	 * @return
-	 */
-	private static nc.vo.pf.change.IchangeVO getChangeClass(String classname)
-			throws Exception {
-		if (PuPubVO.getString_TrimZeroLenAsNull(classname) == null)
-			return null;
-		try {
-			Class c = Class.forName(classname);
-			Object o = c.newInstance();
-			return (nc.vo.pf.change.IchangeVO) o;
-		} catch (Exception ex) {
-//			Logger.error(ex.getMessage(), ex);
-			throw ex;
-		}
-		// return null;
-	}
+//	/**
+//	 * 
+//	 * @author zhf
+//	 * @说明 获取vo转换类实例
+//	 * @时间 2010-9-26上午10:47:52
+//	 * @param classname
+//	 * @return
+//	 */
+//	private static nc.vo.pf.change.IchangeVO getChangeClass(String classname)
+//			throws Exception {
+//		if (PuPubVO.getString_TrimZeroLenAsNull(classname) == null)
+//			return null;
+//		try {
+//			Class c = Class.forName(classname);
+//			Object o = c.newInstance();
+//			return (nc.vo.pf.change.IchangeVO) o;
+//		} catch (Exception ex) {
+////			Logger.error(ex.getMessage(), ex);
+//			throw ex;
+//		}
+//		// return null;
+//	}
 	
 	/**
 	 * 

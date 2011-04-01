@@ -60,45 +60,6 @@ public class MyClientUI extends AbstractMyClientUI implements
 		if (getBillCardPanel().isEnabled() == false) {
 			return false;
 		}
-
-		// if ("pk_yjzbzj".equals(e.getItem().getKey())) {
-		// String cif_pk = (String) this.getBillCardPanel().getHeadItem(
-		// "cif_pk").getValueObject();
-		// Object fyd_yjzl = this.getBillCardPanel().getHeadItem("fyd_yjzl")
-		// .getValueObject();
-		//
-		// if (cif_pk != null && cif_pk.length() > 0 && fyd_yjzl != null) {
-		// // 得到合同参照
-		// UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-		// .getHeadItem("pk_yjzbzj").getComponent();
-		// UIRefPane panelp = (UIRefPane) this.getBillCardPanel()
-		// .getHeadItem("yjby1").getComponent();
-		// UIRefPane panelt = (UIRefPane) this.getBillCardPanel()
-		// .getHeadItem("yjby2").getComponent();
-		// if (Integer.parseInt(fyd_yjzl + "") == 0) {
-		// panel.setRefNodeName(panelt.getRefNodeName());
-		// panel.setRefModel(panelt.getRefModel());
-		// panel.getRefModel().setWherePart(
-		// " tc_pk = '" + cif_pk + "' and dr=0 ");
-		// }
-		// if (Integer.parseInt(fyd_yjzl + "") == 1) {
-		// panel.setRefNodeName(panelp.getRefNodeName());
-		// panel.setRefModel(panelp.getRefModel());
-		// panel.getRefModel().setWherePart(
-		// " tc_pk = '" + cif_pk + "' and dr=0 ");
-		// }
-		//
-		// } else {
-		//
-		// this.showErrorMessage("您没有选择运输公司和运价种类，将不显示任何货位");
-		// UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-		// .getHeadItem("pk_yjzbzj").getComponent();
-		// // 加上客户做为条件去过滤
-		// panel.getRefModel().setWherePart(" dr=0 and 1=2 ");
-		//
-		// }
-		// }
-
 		return true;
 	}
 
@@ -206,16 +167,6 @@ public class MyClientUI extends AbstractMyClientUI implements
 								getBillCardPanel().setHeadItem("fyd_yslc", km);
 							}
 
-							//
-							/*
-							 * if (null != arr && arr.size() > 0) { if (null ==
-							 * (Object[])arr.get(0)) { String
-							 * ddd=((Object[])arr.get(0))[0].toString(); //
-							 * 显示公里数 getBillCardPanel().setHeadItem("fyd_yslc",
-							 * Double.parseDouble(ddd)); }else{
-							 * this.showErrorMessage("没有对应公里数！"); return; } }
-							 * else { this.showErrorMessage("没有对应公里数！"); return; }
-							 */
 						} catch (BusinessException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();

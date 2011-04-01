@@ -3,6 +3,7 @@ package nc.ui.dm.confirm;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.jdbc.framework.processor.ArrayListProcessor;
@@ -16,10 +17,8 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
-import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
