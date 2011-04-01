@@ -98,6 +98,21 @@ public class LoginInforHelper {
 			return new String[]{infor.getSpaceid()};
 		return getSpaceByWhid(infor.getWhid());
 	}
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 根据当前登陆人员如果是保管员返回负责货位如果不是保管员返回隶属仓库所有的货位信息
+	 * @时间：2011-3-23下午05:12:57
+	 * @param userid
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getSpaceByLogUserForStore(String userid) throws Exception{
+		LoginInforVO infor = getLogInfor(userid);
+		if(infor.getType()==0)
+			return infor.getSpaceid();
+		return null;
+	}
 	
 	/**
 	 * 
