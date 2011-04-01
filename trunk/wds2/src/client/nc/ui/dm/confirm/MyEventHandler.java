@@ -18,11 +18,11 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
 
 /**
