@@ -2,18 +2,18 @@ package nc.ui.ic.other.in;
 
 import java.awt.Container;
 import java.util.ArrayList;
-import java.util.List;
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.scm.pub.query.SCMQueryConditionDlg;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessException;
 import nc.vo.scm.pub.SCMEnv;
 import nc.vo.wds.w80060406.TbFydnewVO;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ProdWaybillDlg extends BillSourceDLG {
 	private SCMQueryConditionDlg m_dlgQry = null;
@@ -40,24 +40,12 @@ public class ProdWaybillDlg extends BillSourceDLG {
 		// 登录人仓库主键
 		String pk_stordoc = "";
 		try {
-			pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-		} catch (BusinessException e) {
+			pk_stordoc = LoginInforHelper.getCwhid(operator);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		boolean isTotal = true;
-		if (null != pk_stordoc && !"".equals(pk_stordoc)) {
-			// 判断是总仓还是分仓
-			try {
-				isTotal = nc.ui.wds.w8000.CommonUnit
-						.getSotckIsTotal(pk_stordoc);
-			} catch (BusinessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		boolean isTotal = WdsWlPubTool.isZc(pk_stordoc);
 
 		m_dlgQry = getQueryDlg(pkCorp, funNode, operator, qrynodekey);
 
@@ -110,6 +98,15 @@ public class ProdWaybillDlg extends BillSourceDLG {
 
 		return m_dlgQry;
 	}
+	
+	private IUAPQueryBS  query = null;
+	private IUAPQueryBS getQueryBO(){
+		if(query == null){
+			query = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
+		}
+		return query;
+	}
+			
 
 	/**
 	 * 总仓
@@ -125,9 +122,7 @@ public class ProdWaybillDlg extends BillSourceDLG {
 			// .getSotckIsTotal(ClientEnvironment.getInstance().getUser()
 			// .getPrimaryKey());
 			// 登录人仓库主键
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
+			String pk_stordoc = LoginInforHelper.getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey());
 			// 分仓
 			// 总仓
 			StringBuffer sWhere = new StringBuffer(
@@ -142,38 +137,35 @@ public class ProdWaybillDlg extends BillSourceDLG {
 				sWhere.append(m_dlgQry.getWhereSQL(voCons));
 			}
 
-			IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-					IUAPQueryBS.class.getName());
+			
 			// 查询发运单的集合
-			ArrayList os = (ArrayList) query.retrieveByClause(TbFydnewVO.class,
+			ArrayList os = (ArrayList) getQueryBO().retrieveByClause(TbFydnewVO.class,
 					sWhere.toString());
 			// 过滤本地表后的集合
 			ArrayList ttcs = new ArrayList();
 			for (int i = 0; i < os.size(); i++) {
 				// Object[] gvo = (Object[]) ttcs.get(i);
 				String pwb_sql = "select count(geh_cgeneralhid) from tb_general_h where "
-						+ "dr=0 and geh_cgeneralhid='"
+						+ "isnull(dr,0)=0 and geh_cgeneralhid='"
 						+ ((TbFydnewVO) os.get(i)).getFyd_pk() + "' and dr=0";
-				ArrayList pwb_count = (ArrayList) query.executeQuery(pwb_sql,
+				ArrayList pwb_count = (ArrayList) getQueryBO().executeQuery(pwb_sql,
 						new ArrayListProcessor());
 				int countnum = Integer
 						.parseInt((((Object[]) pwb_count.get(0))[0]).toString());
+				String[] invLisk = LoginInforHelper.getInvBasDocIDsByUserID(ClientEnvironment.getInstance()
+						.getUser().getPrimaryKey());
 				if (countnum == 0) {
-					List invLisk = nc.ui.wds.w8000.CommonUnit
-							.getInvbasdoc_Pk(ClientEnvironment.getInstance()
-									.getUser().getPrimaryKey());
-					String geb_sql = "select count(*) from tb_fydmxnew where fyd_pk ='"
+					
+					String geb_sql = "select count(0) from tb_fydmxnew where fyd_pk ='"
 							+ ((TbFydnewVO) os.get(i)).getFyd_pk()
 							+ "' and pk_invbasdoc in('";
-					for (int k = 0; k < invLisk.size(); k++) {
-						if (null != invLisk && invLisk.size() > 0
-								&& null != invLisk.get(k)
-								&& !"".equals(invLisk.get(k))) {
-							geb_sql += invLisk.get(k) + "','";
-						}
+					for (int k = 0; k < invLisk.length; k++) {						
+							geb_sql += invLisk[k] + "','";
+						
 					}
-					geb_sql += "') and dr=0 ";
-					ArrayList icgebs = (ArrayList) query.executeQuery(geb_sql,
+					
+					geb_sql += "') and isnull(dr,0)=0 ";
+					ArrayList icgebs = (ArrayList) getQueryBO().executeQuery(geb_sql,
 							new ArrayListProcessor());
 					int countnum1 = Integer
 							.parseInt((((Object[]) icgebs.get(0))[0])
@@ -183,77 +175,58 @@ public class ProdWaybillDlg extends BillSourceDLG {
 					}
 				} else {
 					// 当前登录的保管员能管理的货品
-					List invLisk = nc.ui.wds.w8000.CommonUnit
-							.getInvbasdoc_Pk(ClientEnvironment.getInstance()
-									.getUser().getPrimaryKey());
+//					List invLisk = nc.ui.wds.w8000.CommonUnit
+//							.getInvbasdoc_Pk(ClientEnvironment.getInstance()
+//									.getUser().getPrimaryKey());
 					String geb_sql = "select count(*) from tb_fydmxnew where fyd_pk ='"
 							+ ((TbFydnewVO) os.get(i)).getFyd_pk()
 							+ "' and pk_invbasdoc in('";
-					for (int k = 0; k < invLisk.size(); k++) {
-						if (null != invLisk && invLisk.size() > 0
-								&& null != invLisk.get(k)
-								&& !"".equals(invLisk.get(k))) {
-							geb_sql += invLisk.get(k) + "','";
-						}
+					for (int k = 0; k < invLisk.length; k++) {
+						
+							geb_sql += invLisk[k] + "','";
+						
 					}
-					geb_sql += "') and dr=0 ";
+					geb_sql += "') and isnull(dr,0)=0 ";
 
-					ArrayList icgebs = (ArrayList) query.executeQuery(geb_sql,
+					ArrayList icgebs = (ArrayList) getQueryBO().executeQuery(geb_sql,
 							new ArrayListProcessor());
 					int countnum1 = Integer
 							.parseInt((((Object[]) icgebs.get(0))[0])
 									.toString());
 					if (0 != countnum1) {
 						// 查看所有明细是否全部关闭
-						String gebbvosql = " dr=0 and geb_cgeneralhid ='"
+						String gebbvosql = " isnull(dr,0)=0 and geb_cgeneralhid ='"
 								+ ((TbFydnewVO) os.get(i)).getFyd_pk()
 								+ "' and geb_cinvbasid in ('";
-						for (int k = 0; k < invLisk.size(); k++) {
-							if (null != invLisk && invLisk.size() > 0
-									&& null != invLisk.get(k)
-									&& !"".equals(invLisk.get(k))) {
-								gebbvosql += invLisk.get(k) + "','";
-							}
+						for (int k = 0; k < invLisk.length; k++) {
+							
+								gebbvosql += invLisk[k] + "','";
+							
 						}
 						gebbvosql += "') ";
-						ArrayList gebbvos = (ArrayList) query.retrieveByClause(
+						ArrayList gebbvos = (ArrayList) getQueryBO().retrieveByClause(
 								TbGeneralBVO.class, gebbvosql);
 						boolean isallclose = true;
 						if (null != gebbvos && gebbvos.size() > 0) {
 							for (int j = 0; j < gebbvos.size(); j++) {
 								TbGeneralBVO tbgeneralbvo = (TbGeneralBVO) gebbvos
 										.get(j);
-								for (int k = 0; k < invLisk.size(); k++) {
-									if (null != tbgeneralbvo && null != invLisk
-											&& invLisk.size() > 0
-											&& null != invLisk.get(k)
-											&& !"".equals(invLisk.get(k))) {
-										if (null != tbgeneralbvo
-												.getGeb_cinvbasid()
-												&& !"".equals(tbgeneralbvo
-														.getGeb_cinvbasid())) {
+								for (int k = 0; k < invLisk.length; k++) {
+									
 											if (tbgeneralbvo.getGeb_cinvbasid()
-													.equals(invLisk.get(k))) {
+													.equals(invLisk[k])) {
 												if (null != tbgeneralbvo
 														.getGeb_isclose()) {
 													if (!tbgeneralbvo
 															.getGeb_isclose()
 															.booleanValue()) {
-														// if (null !=
-														// tbgeneralbvo
-														// .getGeb_snum()
-														// && 0 != tbgeneralbvo
-														// .getGeb_snum()
-														// .doubleValue()) {
 														isallclose = false;
-														// }
 													}
 												}
 											}
-										}
-									}
+										}									
 								}
-							}
+							
 						} else {
 							isallclose = false;
 						}
@@ -292,9 +265,7 @@ public class ProdWaybillDlg extends BillSourceDLG {
 			// .getSotckIsTotal(ClientEnvironment.getInstance().getUser()
 			// .getPrimaryKey());
 			// 登录人仓库主键
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
+			String pk_stordoc = LoginInforHelper.getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey());
 			// 分仓
 			// 总仓
 			StringBuffer sWhere = new StringBuffer(
@@ -309,19 +280,18 @@ public class ProdWaybillDlg extends BillSourceDLG {
 				sWhere.append(m_dlgQry.getWhereSQL(voCons));
 			}
 
-			IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-					IUAPQueryBS.class.getName());
+//			IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
+//					IUAPQueryBS.class.getName());
 			// 查询发运单的集合
-			ArrayList os = (ArrayList) query.retrieveByClause(TbFydnewVO.class,
+			ArrayList os = (ArrayList) getQueryBO().retrieveByClause(TbFydnewVO.class,
 					sWhere.toString());
 			// 过滤本地表后的集合
 			ArrayList ttcs = new ArrayList();
 			for (int i = 0; i < os.size(); i++) {
-				// Object[] gvo = (Object[]) ttcs.get(i);
 				String pwb_sql = "select count(geh_cgeneralhid) from tb_general_h where "
 						+ "dr=0 and geh_cgeneralhid='"
-						+ ((TbFydnewVO) os.get(i)).getFyd_pk() + "' and dr=0";
-				ArrayList pwb_count = (ArrayList) query.executeQuery(pwb_sql,
+						+ ((TbFydnewVO) os.get(i)).getFyd_pk() + "' and isnull(dr,0)=0";
+				ArrayList pwb_count = (ArrayList) getQueryBO().executeQuery(pwb_sql,
 						new ArrayListProcessor());
 				int countnum = Integer
 						.parseInt((((Object[]) pwb_count.get(0))[0]).toString());
@@ -329,14 +299,14 @@ public class ProdWaybillDlg extends BillSourceDLG {
 					ttcs.add(os.get(i));
 				} else {
 					// 当前登录的保管员能管理的货品
-					List invLisk = nc.ui.wds.w8000.CommonUnit
-							.getInvbasdoc_Pk(ClientEnvironment.getInstance()
+					String[] invLisk = LoginInforHelper.getInvBasDocIDsByUserID(
+							ClientEnvironment.getInstance()
 									.getUser().getPrimaryKey());
 					// 查看所有明细是否全部关闭
 					String gebbvosql = " dr=0 and geb_cgeneralhid ='"
 							+ ((TbFydnewVO) os.get(i)).getFyd_pk() + "' ";
 
-					ArrayList gebbvos = (ArrayList) query.retrieveByClause(
+					ArrayList gebbvos = (ArrayList) getQueryBO().retrieveByClause(
 							TbGeneralBVO.class, gebbvosql);
 					boolean isallclose = true;
 					if (null != gebbvos && gebbvos.size() > 0) {
