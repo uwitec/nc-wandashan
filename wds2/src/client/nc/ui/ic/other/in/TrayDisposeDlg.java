@@ -26,12 +26,12 @@ import nc.ui.pub.bill.BillListData;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillMouseEnent;
 import nc.ui.pub.bill.BillTableMouseListener;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.wds.w8004040210.MyBillVO;
-import nc.vo.wds.w8004040212.TbWarehousestockVO;
 
 public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		ActionListener, BillEditListener, BillTableMouseListener,
@@ -394,13 +394,13 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ArrayList whss = new ArrayList();
 			try {
 				whss = (ArrayList) query.retrieveByClause(
-						TbWarehousestockVO.class, numsql.toString());
+						StockInvOnHandVO.class, numsql.toString());
 			} catch (BusinessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (null != whss && whss.size() > 0) {
-				tbGeneralBBVO[i].setGebb_customize1(((TbWarehousestockVO) whss
+				tbGeneralBBVO[i].setGebb_customize1(((StockInvOnHandVO) whss
 						.get(0)).getWhs_stockpieces().toString());
 			}
 			// if (sotckIsTotal) {
