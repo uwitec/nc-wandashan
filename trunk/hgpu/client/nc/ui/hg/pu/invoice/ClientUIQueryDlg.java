@@ -24,7 +24,7 @@ public class ClientUIQueryDlg extends HYQueryDLG{
 	UFDate billdate = ClientEnvironment.getInstance().getDate();
 	@Override
 	public void initData(){//向查询对话框中填加当前日期
-		setDefaultValue("h.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
+//		setDefaultValue("h.dbilldate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 //		setDefaultValue("h.dmakedate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 //		setDefaultValue("h.dapprovedate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 		super.initData();

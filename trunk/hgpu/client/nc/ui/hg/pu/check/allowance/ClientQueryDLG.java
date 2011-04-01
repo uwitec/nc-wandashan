@@ -20,7 +20,7 @@ public class ClientQueryDLG extends HYQueryDLG{
 	UFDate billdate = ClientEnvironment.getInstance().getDate();
 	@Override
 	public void initData() {
-		setDefaultValue("hg_allowance.dmakedate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
+//		setDefaultValue("hg_allowance.dmakedate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 //		setDefaultValue("hg_allowance.dmodifydate",null,PuPubVO.getString_TrimZeroLenAsNull(billdate.toString()));
 		super.initData();
 	}
