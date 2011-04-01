@@ -3,7 +3,9 @@ package nc.ui.wds.ic.other.out;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.event.ListSelectionEvent;
+
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.ui.pub.ClientEnvironment;
@@ -12,7 +14,6 @@ import nc.ui.scm.pub.query.SCMQueryConditionDlg;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.ui.wds.w8004040208.MyClientUI;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.scm.pub.SCMEnv;
 import nc.vo.wds.w80021030.TbQycgjh2VO;
