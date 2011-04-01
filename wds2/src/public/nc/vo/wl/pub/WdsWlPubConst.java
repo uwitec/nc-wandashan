@@ -60,4 +60,8 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_ALLO_OUT = "WDS9";
 	/** 退货入库*/
 	public static String BILLTYPE_BACK_IN = "WDSA";
+	/**运输确认单*/
+	public static String BILLTYPE_SEND_CONFIRM = "WDSB";
+	
+	public static String default_inv_state = "0001AA100000000B1TYK";//入库时设置默认库存状态  合格
 }
