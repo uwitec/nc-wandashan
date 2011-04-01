@@ -70,7 +70,7 @@ public class HgBsPubTool {
 				Object ob = al.get(i);
 				if(ob != null){
 					Object[] str = (Object[])ob;
-					m_puchTypeInfor.put(PuPubVO.getString_TrimZeroLenAsNull(str[0]),PuPubVO.getString_TrimZeroLenAsNull(str[1]));
+					m_puchTypeInfor.put(PuPubVO.getString_TrimZeroLenAsNull(str[1]),PuPubVO.getString_TrimZeroLenAsNull(str[0]));
 				}
 			}
 		}
