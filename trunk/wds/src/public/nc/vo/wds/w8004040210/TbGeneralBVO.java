@@ -5,8 +5,13 @@
 package nc.vo.wds.w8004040210;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import nc.vo.pub.*;
 import nc.vo.pub.lang.*;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.pub.WdsWlPubConsts;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -1410,6 +1415,38 @@ public class TbGeneralBVO extends SuperVO {
 
 	public void setGeb_isclose(UFBoolean geb_isclose) {
 		this.geb_isclose = geb_isclose;
+	}
+	
+	public void validateOnZdrk() throws ValidationException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_cinvbasid())==null){
+			throw new ValidationException("批次号不能为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_vbatchcode())==null){
+			throw new ValidationException("批次号不能为空");
+		}
+		
+		if(PuPubVO.getUFDouble_NullAsZero(getGeb_bsnum()).equals(new UFDouble(0.0))){
+			throw new ValidationException("应收辅数量不能为空或为0");
+		}
+		// 验证批次号是否正确
+		if (getGeb_vbatchcode().trim().length() < 8) {
+			throw new ValidationException("批次号不能小于8位!");
+			
+		}
+
+		Pattern p = Pattern
+				.compile(
+						"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+								+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+								+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+								+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+						Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(getGeb_vbatchcode().trim().substring(0, 8));
+		if (!m.find()) {
+			throw new ValidationException(
+					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+			
+		}
 	}
 
 	
