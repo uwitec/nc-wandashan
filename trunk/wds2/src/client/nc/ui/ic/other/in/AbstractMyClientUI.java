@@ -120,7 +120,7 @@ import nc.ui.wds.w8004040214.buttun0214.ZzdjBtn;
 	 * 注册前台校验类
 	 */
 	public Object getUserObject() {
-		return null;//MyClientUICheckRuleGetter();
+		return new MyClientUICheckRuleGetter();
 	}
 	
 	public void doQueryAction(ILinkQueryData querydata) {

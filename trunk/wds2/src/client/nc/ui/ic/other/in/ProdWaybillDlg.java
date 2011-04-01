@@ -3,25 +3,17 @@ package nc.ui.ic.other.in;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.bs.framework.common.NCLocator;
-import nc.itf.ic.service.IICPub_GeneralBillBO;
 import nc.itf.uap.IUAPQueryBS;
 import nc.jdbc.framework.processor.ArrayListProcessor;
-import nc.jdbc.framework.processor.ResultSetProcessor;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.scm.pub.query.SCMQueryConditionDlg;
-import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
-import nc.vo.wds.w80060804.TbTranscompanyVO;
 
 public class ProdWaybillDlg extends BillSourceDLG {
 	private SCMQueryConditionDlg m_dlgQry = null;

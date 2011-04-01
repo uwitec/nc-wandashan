@@ -1,8 +1,8 @@
 package nc.ui.ic.other.in;
 
 import nc.ui.wl.pub.LongTimeTask;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**

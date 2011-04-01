@@ -28,10 +28,10 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
 import nc.ui.wds.w8000.CommonUnit;
-import nc.ui.wds.w8004040210.TrayAction;
-import nc.ui.wds.w8004040214.TrayDisposeDetailDlg;
-import nc.ui.wds.w8004040214.TrayDisposeDlg;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.pub.TbGeneralBVO;
+import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -53,9 +53,6 @@ import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w8004040210.MyBillVO;
-import nc.vo.wds.w8004040210.TbGeneralBBVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
-import nc.vo.wds.w8004040210.TbGeneralHVO;
 import nc.vo.wds.w8004040212.TbWarehousestockVO;
 import nc.vo.wds.w8004061002.BdCargdocTrayVO;
 import nc.vo.wds.w8004061002.BdCargdocVO;
@@ -63,6 +60,7 @@ import nc.vo.wds.w80060406.TbFydmxnewVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
 import nc.vo.wds.w80060608.IcGeneralBVO;
 import nc.vo.wds.w80060608.IcGeneralHVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
@@ -77,261 +75,148 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	private List myTempall;
 	private MyClientUI myClientUI;
-	private String billCode = null;
-	private boolean dbbool = true;
-	private boolean isControl1 = true;
+//	private String billCode = null;
+//	private boolean dbbool = true;
+//	private boolean isControl1 = true;
 	private IUAPQueryBS iuap = null;
 	// 判断用户身份
-	private String st_type = "";
+//	private String st_type = "";
 	// 判断是总仓还是分仓
 	private boolean sotckIsTotal = true;
+	private int iUserType = -1;
 
 	protected IBusinessController createBusinessAction() {
 		// TODO Auto-generated method stub
-		switch (getUIController().getBusinessActionType()) {
-		case IBusinessActionType.PLATFORM:
-			dbbool = false;
-			return new BusinessAction(getBillUI());
-		case IBusinessActionType.BD:
-			dbbool = true;
-			// if (isControl1) {
-			// return new BdBusinessAction(getBillUI());
-			// } else {
-			// if ("1".equals(st_type)) {
-			// return new BdBusinessAction(getBillUI());
-			// }
-			// if ("3".equals(st_type) && isedit) {
-			// return new BdBusinessAction(getBillUI());
-			// }
+//		switch (getUIController().getBusinessActionType()) {
+//		case IBusinessActionType.PLATFORM:
+//			dbbool = false;
+//			return new BusinessAction(getBillUI());
+//		case IBusinessActionType.BD:
+//			dbbool = true;
 			return new TrayAction(getBillUI());
-			// }
-		default:
-			dbbool = false;
-			return new BusinessAction(getBillUI());
-		}
+//			// }
+//		default:
+//			dbbool = false;
+//			return new BusinessAction(getBillUI());
+//		}
 	}
 
 	public MyEventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
 		myClientUI = (MyClientUI) billUI;
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
-				false);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
-				false);
-		//
-		List InvLisk = new ArrayList();
 		try {
-			InvLisk = nc.ui.wds.w8000.CommonUnit
-					.getInvbasdoc_Pk(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
+			iUserType = LoginInforHelper.getITypeByUser(myClientUI._getOperator());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			iUserType =0 ;
 		}
-		// boolean isControl = true;
-		// if (null != InvLisk && InvLisk.size() > 0) {
-		// isControl = false;
-		// isControl1 = false;
-		// } else {
-		// isControl = true;
-		// isControl1 = true;
-		// }
-
 		try {
-			st_type = nc.ui.wds.w8000.CommonUnit.getUserType(ClientEnvironment
-					.getInstance().getUser().getPrimaryKey());
-		} catch (BusinessException e) {
+			sotckIsTotal = WdsWlPubTool.isZc(LoginInforHelper.getCwhid(myClientUI._getOperator()));
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			sotckIsTotal = true;
 		}
-		// 仓库主键
-		String stordocName = "";
-		try {
-			stordocName = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (null != stordocName && !"".equals(stordocName)) {
-			try {
-				sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-						.getSotckIsTotal(stordocName);
-
-			} catch (BusinessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (null != st_type) {
-			if ("1".equals(st_type)) {
-				getButtonManager().getButton(
-						nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
-						.setEnabled(false);
-				isControl1 = true;
-			} else if ("0".equals(st_type)) {
-				getButtonManager().getButton(
-						nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
-						.setEnabled(true);
-				isControl1 = false;
-				try {
-					stordocName = nc.ui.wds.w8000.CommonUnit
-							.getStordocName(ClientEnvironment.getInstance()
-									.getUser().getPrimaryKey());
-				} catch (BusinessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (null != stordocName && !"".equals(stordocName)) {
-					try {
-						sotckIsTotal = nc.ui.wds.w8000.CommonUnit
-								.getSotckIsTotal(stordocName);
-
-					} catch (BusinessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-			} else if ("3".equals(st_type)) {
-				getButtonManager().getButton(
-						nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
-						.setEnabled(true);
-				// isControl1 = false;
-			} else {
-				isControl1 = false;
-			}
-		}
-		// getButtonManager().getButton(
-		// nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-		// .setEnabled(false);
-		// getButtonManager().getButton(
-		// nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-		// .setEnabled(false);
-		getButtonManager().getButton(
-				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-				.setEnabled(false);
-		getButtonManager().getButton(
-				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-				.setEnabled(false);
 	}
 
 	/**
 	 * 自制单据
 	 */
 	public void onZzdj() throws Exception {
-		if (getBillManageUI().isListPanelSelected())
-			getBillManageUI().setCurrentPanel(BillTemplateWrapper.CARDPANEL);
-		getBillUI().setBillOperate(IBillOperate.OP_ADD);
-		// 入库单类型
-		getBillCardPanelWrapper().getBillCardPanel()
-				.getHeadItem("geh_billtype").setValue(new Integer(1));
-		// 制单人
-		getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-				"coperatorid").setValue(
-				ClientEnvironment.getInstance().getUser().getPrimaryKey());
-		// 添加仓库
-		if (null != st_type && "0".equals(st_type)) {
-			// 根据登录人默认仓库
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_cwarehouseid").setValue(pk_stordoc);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_corp").setValue("1021");
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_calbody").setValue("1021B1100000000001JL");
-		} else if (null != st_type && "3".equals(st_type)) {
-			// 根据登录人默认仓库
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_cwarehouseid").setValue(pk_stordoc);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_corp").setValue("1021");
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"geh_calbody").setValue("1021B1100000000001JL");
-		}
-
-		// 自制单据号
-		// try {
-		// billCode = getBillCode("0214", ClientEnvironment.getInstance()
-		// .getUser().getCorpId(), "", "");
-		// getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-		// "geh_billcode").setValue(billCode);
-		// } catch (BusinessException e1) {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-		// getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-		// "geh_cgeneralhid").setValue(getRandomNum());
-		// 源头单据
-
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwarehouseid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwhsmanagerid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cbizid")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cdispatcherid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercorpid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercalbodyid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cotherwhid").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cdptid")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("fallocname")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-				.setEdit(true);
-		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_crowno")
-		// .setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("invcode")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_vbatchcode").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_bsnum")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_snum")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel()
-				.getBodyItem("geb_proddate").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_dvalidate").setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nprice")
-				.setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nmny")
-				.setEdit(true);
-		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_banum")
-		// .setEdit(true);
-		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_anum")
-		// .setEdit(true);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("vnote")
-				.setEdit(true);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
-				true);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
-				true);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
-				.setEnabled(false);
-		getBillUI().updateButtonUI();
-		isedit = false;
-		allRowNO = -1;
+//		onBoAdd()
+//		if (getBillManageUI().isListPanelSelected())
+//			getBillManageUI().setCurrentPanel(BillTemplateWrapper.CARDPANEL);
+//		getBillUI().setBillOperate(IBillOperate.OP_ADD);
+//		// 入库单类型
+//		getBillCardPanelWrapper().getBillCardPanel()
+//				.getHeadItem("geh_billtype").setValue(new Integer(1));
+//		// 制单人
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+//				"coperatorid").setValue(
+//				ClientEnvironment.getInstance().getUser().getPrimaryKey());
+//		// 添加仓库
+////		if (iUserType == 0) {//保管员 自制入库单
+//			// 根据登录人默认仓库
+//			String pk_stordoc = LoginInforHelper.getCwhid(myClientUI._getOperator());
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+//					"geh_cwarehouseid").setValue(pk_stordoc);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+//					"geh_corp").setValue(myClientUI._getCorp());
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+//					"geh_calbody").setValue("1021B1100000000001JL");
+////		} 
+////		else if (iUserType == 3) {//内勤人员 自制  入库单
+////			// 根据登录人默认仓库
+////			String pk_stordoc = LoginInforHelper.getCwhid(myClientUI._getOperator());
+////			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+////					"geh_cwarehouseid").setValue(pk_stordoc);
+////			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+////					"geh_corp").setValue("1021");
+////			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+////					"geh_calbody").setValue("1021B1100000000001JL");
+////		}
+//
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwarehouseid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwhsmanagerid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cbizid")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cdispatcherid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cothercorpid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cothercalbodyid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cotherwhid").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cdptid")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("fallocname")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
+//				.setEdit(true);
+//		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_crowno")
+//		// .setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("invcode")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//				"geb_vbatchcode").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_bsnum")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_snum")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel()
+//				.getBodyItem("geb_proddate").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//				"geb_dvalidate").setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nprice")
+//				.setEdit(true);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nmny")
+//				.setEdit(true);
+//		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_banum")
+//		// .setEdit(true);
+//		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_anum")
+//		// .setEdit(true);
+////		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("vnote")
+////				.setEdit(true);
+////		getButtonManager().getButton(
+////				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
+////				true);
+////		getButtonManager().getButton(
+////				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
+////				true);
+////		getButtonManager().getButton(
+////				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
+////				.setEnabled(false);
+////		getBillUI().updateButtonUI();
+//		isedit = false;
+//		allRowNO = -1;
 		// createBusinessAction();
 	}
 
@@ -1689,153 +1574,153 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				.getInvbasdoc_Pk(ClientEnvironment.getInstance().getUser()
 						.getPrimaryKey());
 		boolean isControl = false;
-		if ("1".equals(st_type)) {
-			isControl = true;
-		}
+//		if ("1".equals(st_type)) {
+//			isControl = true;
+//		}
 		// 先需要切换列表模式下一次，方便过滤数据
 		super.onBoReturn();
-		if (!isControl) {
-			// 判断是否为空，如果为空 说明当前登录者不是仓库保管员
-			if (sotckIsTotal) {
-				if (null != InvLisk && InvLisk.size() > 0) {
-					List list = new ArrayList();
-					TbGeneralBVO[] generalbvo = null;
-					// 获取当前选中行
-					AggregatedValueObject billvo = getBufferData()
-							.getCurrentVO();
-					for (int i = 0; i < InvLisk.size(); i++) {
-						// 判断选中行是否有数据
-						if (null != billvo && null != billvo.getParentVO()
-								&& null != billvo.getChildrenVO()
-								&& billvo.getChildrenVO().length > 0) {
-							// 取出子表数据
-							generalbvo = (TbGeneralBVO[]) billvo
-									.getChildrenVO();
-							// 进行判断是否为空然后进行循环
-							if (null != generalbvo && generalbvo.length > 0) {
-								for (int j = 0; j < generalbvo.length; j++) {
-									// 如果当前登录者仓库中的单品主键和单据中的单品主键相等放到一个集合里面 去
-									// 然后填充页面
-									if (InvLisk.get(i).equals(
-											generalbvo[j].getGeb_cinvbasid())) {
-										list.add(generalbvo[j]);
-									}
-								}
-							}
-						}
-					}
-
-					if (null != list && list.size() > 0) {
-						// 进行数组转换
-						generalbvo = new TbGeneralBVO[list.size()];
-						generalbvo = (TbGeneralBVO[]) list.toArray(generalbvo);
-						billvo.setChildrenVO(generalbvo);
-						// 在更新到当前选中行中
-						getBufferData().setCurrentVO(billvo);
-						// 托盘指定按钮和自动取货按钮可用
-						// changeButton(true);
-					} else {
-						// 如果集合里面没有数据 当前登录者是其他仓库的保管员
-						// 把辅助功能按钮置为不可用
-						// getButtonManager().getButton(ISsButtun.fzgn).setEnabled(
-						// false);
-						billvo.setChildrenVO(null);
-						getBufferData().setCurrentVO(billvo);
-					}
-				}
-			}
-		}
+//		if (!isControl) {
+//			// 判断是否为空，如果为空 说明当前登录者不是仓库保管员
+//			if (sotckIsTotal) {
+//				if (null != InvLisk && InvLisk.size() > 0) {
+//					List list = new ArrayList();
+//					TbGeneralBVO[] generalbvo = null;
+//					// 获取当前选中行
+//					AggregatedValueObject billvo = getBufferData()
+//							.getCurrentVO();
+//					for (int i = 0; i < InvLisk.size(); i++) {
+//						// 判断选中行是否有数据
+//						if (null != billvo && null != billvo.getParentVO()
+//								&& null != billvo.getChildrenVO()
+//								&& billvo.getChildrenVO().length > 0) {
+//							// 取出子表数据
+//							generalbvo = (TbGeneralBVO[]) billvo
+//									.getChildrenVO();
+//							// 进行判断是否为空然后进行循环
+//							if (null != generalbvo && generalbvo.length > 0) {
+//								for (int j = 0; j < generalbvo.length; j++) {
+//									// 如果当前登录者仓库中的单品主键和单据中的单品主键相等放到一个集合里面 去
+//									// 然后填充页面
+//									if (InvLisk.get(i).equals(
+//											generalbvo[j].getGeb_cinvbasid())) {
+//										list.add(generalbvo[j]);
+//									}
+//								}
+//							}
+//						}
+//					}
+//
+//					if (null != list && list.size() > 0) {
+//						// 进行数组转换
+//						generalbvo = new TbGeneralBVO[list.size()];
+//						generalbvo = (TbGeneralBVO[]) list.toArray(generalbvo);
+//						billvo.setChildrenVO(generalbvo);
+//						// 在更新到当前选中行中
+//						getBufferData().setCurrentVO(billvo);
+//						// 托盘指定按钮和自动取货按钮可用
+//						// changeButton(true);
+//					} else {
+//						// 如果集合里面没有数据 当前登录者是其他仓库的保管员
+//						// 把辅助功能按钮置为不可用
+//						// getButtonManager().getButton(ISsButtun.fzgn).setEnabled(
+//						// false);
+//						billvo.setChildrenVO(null);
+//						getBufferData().setCurrentVO(billvo);
+//					}
+//				}
+//			}
+//		}
 		// super.onBoEdit();
 
-		if (isControl) {
-			// 设置收发类别和备注可编辑
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cdispatcherid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cwarehouseid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel()
-					.getHeadItem("geh_corp").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_calbody").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cwhsmanagerid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cdptid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cothercorpid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cothercalbodyid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cotherwhid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cbizid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-					.setEdit(true);
-			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-
-			getBillUI().updateButtonUI();
-
-		} else {
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp)
-					.setEnabled(true);
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk)
-					.setEnabled(true);
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					false);
-			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-			getBillUI().updateButtonUI();
-		}
-
-		if ("3".equals(st_type)) {
-			// 设置收发类别和备注可编辑
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cdispatcherid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cwarehouseid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel()
-					.getHeadItem("geh_corp").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_calbody").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cwhsmanagerid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cdptid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cothercorpid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cothercalbodyid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cotherwhid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-					"geh_cbizid").setEdit(true);
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-					.setEdit(true);
-			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp)
-					.setEnabled(true);
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk)
-					.setEnabled(true);
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					false);
-			// getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-			getBillUI().updateButtonUI();
-		}
-		getButtonManager().getButton(
-				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-				.setEnabled(false);
-		getButtonManager().getButton(
-				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-				.setEnabled(false);
-		super.onBoEdit();
-		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-		getBillUI().updateButtonUI();
+//		if (isControl) {
+//			// 设置收发类别和备注可编辑
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cdispatcherid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cwarehouseid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel()
+//					.getHeadItem("geh_corp").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_calbody").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cwhsmanagerid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cdptid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cothercorpid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cothercalbodyid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cotherwhid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cbizid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
+//					.setEdit(true);
+//			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//
+//			getBillUI().updateButtonUI();
+//
+//		} else {
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp)
+//					.setEnabled(true);
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk)
+//					.setEnabled(true);
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
+//					false);
+//			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//			getBillUI().updateButtonUI();
+//		}
+//
+//		if ("3".equals(st_type)) {
+//			// 设置收发类别和备注可编辑
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cdispatcherid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cwarehouseid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel()
+//					.getHeadItem("geh_corp").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_calbody").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cwhsmanagerid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cdptid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cothercorpid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cothercalbodyid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cotherwhid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//					"geh_cbizid").setEdit(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
+//					.setEdit(true);
+//			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp)
+//					.setEnabled(true);
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk)
+//					.setEnabled(true);
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
+//					false);
+//			// getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//			getBillUI().updateButtonUI();
+//		}
+//		getButtonManager().getButton(
+//				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//				.setEnabled(false);
+//		getButtonManager().getButton(
+//				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//				.setEnabled(false);
+//		super.onBoEdit();
+//		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//		getBillUI().updateButtonUI();
 		addoredit = false;
 		isedit = true;
 		// createBusinessAction();
@@ -2195,1701 +2080,203 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		// TODO Auto-generated method stub
-		// 判断入库仓库和登录保管员是否是同一仓库
-		// if ("1".equals(st_type)) {
-		// super.onBoSave();
-		// return;
-		//
-		// }
-		// 1保管员 2信息科
-		String islast = "1";
-		if ("1".equals(st_type)) {
-			islast = "2";
+		OtherInBillVO billvo = (OtherInBillVO)getBillCardPanelWrapper().getBillVOFromUI();
+		if(billvo == null || billvo.getChildrenVO()==null || billvo.getChildrenVO().length ==0){
+			throw new BusinessException("从界面获取数据为空");
 		}
-		if ("3".equals(st_type) && isedit) {
-			islast = "2";
+//		校验数据
+		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();
+		for(TbGeneralBVO body:bodys){
+			body.validateOnSave();
 		}
-
-		if (null != st_type && !"".equals(st_type)) {
-			if ("1".equals(st_type)) {
-				// super.onBoSave();
-				if (null != st_type && st_type.equals("1")
-						&& getBufferData().getVOBufferSize() > 0) {
-
-					AggregatedValueObject billvo = getBillUI().getVOFromUI();
-					TbGeneralHVO generalhvo = null;
-					if (null != billvo.getParentVO()) {
-						generalhvo = (TbGeneralHVO) billvo.getParentVO();
-					} // 
-					// 签字后
-					if (null != generalhvo.getPwb_fbillflag()
-							&& generalhvo.getPwb_fbillflag() == 3) {
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-								.setEnabled(false);
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-								.setEnabled(true);
-						getBillUI().updateButtonUI();
-					} else { // 签字前
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-								.setEnabled(true);
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-								.setEnabled(false);
-						getBillUI().updateButtonUI();
-					}
-				}
-				// return;
-			}
-			if ("3".equals(st_type) && isedit) {
-				// super.onBoSave();
-				if (null != st_type && st_type.equals("3")
-						&& getBufferData().getVOBufferSize() > 0) {
-
-					AggregatedValueObject billvo = getBillUI().getVOFromUI();
-					TbGeneralHVO generalhvo = null;
-					if (null != billvo.getParentVO()) {
-						generalhvo = (TbGeneralHVO) billvo.getParentVO();
-					} //
-					// 签字后
-					if (null != generalhvo.getPwb_fbillflag()
-							&& generalhvo.getPwb_fbillflag() == 3) {
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-								.setEnabled(false);
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-								.setEnabled(true);
-						getBillUI().updateButtonUI();
-					} else { // 签字前
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-								.setEnabled(true);
-						getButtonManager().getButton(
-								nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-								.setEnabled(false);
-						getBillUI().updateButtonUI();
-					}
-				}
-				if (null != st_type && st_type.equals("3")) {
-					getButtonManager().getButton(
-							nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj)
-							.setEnabled(true);
-					getButtonManager().getButton(IBillButton.Edit).setEnabled(
-							true);
-					getBillUI().updateButtonUI();
-				}
-				// return;
-			}
-		}
-
-		if (null != st_type && !"".equals(st_type)) {
-
-		} else {
-			getBillUI().showErrorMessage("你没有权限！");
-			return;
-		}
-		if ("0".equals(st_type)) {
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-			String pk_stordocnow = "";
-			if (null != getBillCardPanelWrapper().getBillCardPanel()
-					.getHeadTailItem("geh_cwarehouseid")) {
-				pk_stordocnow = getBillCardPanelWrapper().getBillCardPanel()
-						.getHeadTailItem("geh_cwarehouseid").getValue();
-			}
-
-			if (!pk_stordoc.equals(pk_stordocnow)) {
-				getBillUI().showErrorMessage("入库仓库和保管员仓库不符，不能保存！");
-				return;
-			}
-		}
-		if ("3".equals(st_type) && !isedit) {
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-			String pk_stordocnow = "";
-			if (null != getBillCardPanelWrapper().getBillCardPanel()
-					.getHeadTailItem("geh_cwarehouseid")) {
-				pk_stordocnow = getBillCardPanelWrapper().getBillCardPanel()
-						.getHeadTailItem("geh_cwarehouseid").getValue();
-			}
-
-			if (!pk_stordoc.equals(pk_stordocnow)) {
-				getBillUI().showErrorMessage("入库仓库和保管员仓库不符，不能保存！");
-				return;
-			}
-		}
-//		IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-//				IUAPQueryBS.class.getName());
-
-		int bodyrownum = getBillCardPanelWrapper().getBillCardPanel()
-				.getBillTable().getRowCount();
-		if (bodyrownum == 0) {
-			getBillUI().showErrorMessage("子表不能为空！");
-			return;
-		}
-		// 验证货品主键
-		for (int i = 0; i < bodyrownum; i++) {
-			String geb_cinvbasidy = (String) getBillCardPanelWrapper()
-					.getBillCardPanel().getBillModel().getValueAt(i, "invcode");
-			if (null == geb_cinvbasidy || "".equals(geb_cinvbasidy)) {
-				getBillUI().showErrorMessage("货品不能为空!");
-				return;
-			}
-			// 验证批次号是否为空
-			String geb_vbatchcodey = (String) getBillCardPanelWrapper()
-					.getBillCardPanel().getBillModel().getValueAt(i,
-							"geb_vbatchcode");
-			if (null == geb_vbatchcodey || "".equals(geb_vbatchcodey)) {
-				getBillUI().showErrorMessage("批次号不能为空!");
-				return;
-			}
-			// 验证应入数量
-			UFDouble geb_bsnumy = (UFDouble) getBillCardPanelWrapper()
-					.getBillCardPanel().getBillModel().getValueAt(i,
-							"geb_bsnum");
-			if (null == geb_bsnumy) {
-				getBillUI().showErrorMessage("应入数量不能为空!");
-				return;
-			}
-			// 验证批次号是否正确
-			if (geb_vbatchcodey.trim().length() < 8) {
-				getBillUI().showErrorMessage("批次号不能小于8位!");
-				return;
-			}
-
-			Pattern p = Pattern
-					.compile(
-							"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
-									+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
-									+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
-									+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
-							Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-			Matcher m = p.matcher(geb_vbatchcodey.trim().substring(0, 8));
-			if (!m.find()) {
-				getBillUI().showErrorMessage(
-						"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-				return;
-			}
-
-		}
-		// 非发运入库
-		if (!isfydj) {
-			// 判断调拨入库是否完成
-			if ("0".equals(st_type) || "3".equals(st_type)) {
-				int rowNum = getBillCardPanelWrapper().getBillCardPanel()
-						.getBillTable().getRowCount();
-				for (int i = 0; i < rowNum; i++) {
-					double geb_bsnum = 0;
-					double geb_snum = 0;
-					double geb_banum = 0;
-					double geb_anum = 0;
-					// 应入辅数量
-					if (null != getBillCardPanelWrapper().getBillCardPanel()
-							.getBillModel().getValueAt(i, "geb_bsnum")) {
-						geb_bsnum = Double
-								.parseDouble(getBillCardPanelWrapper()
-										.getBillCardPanel().getBillModel()
-										.getValueAt(i, "geb_bsnum").toString());
-					}
-					// 应入数量
-					if (null != getBillCardPanelWrapper().getBillCardPanel()
-							.getBillModel().getValueAt(i, "geb_snum")) {
-						geb_snum = Double.parseDouble(getBillCardPanelWrapper()
-								.getBillCardPanel().getBillModel().getValueAt(
-										i, "geb_snum").toString());
-					}
-					// 实入辅数量
-					if (null != getBillCardPanelWrapper().getBillCardPanel()
-							.getBillModel().getValueAt(i, "geb_banum")) {
-						geb_banum = Double
-								.parseDouble(getBillCardPanelWrapper()
-										.getBillCardPanel().getBillModel()
-										.getValueAt(i, "geb_banum").toString());
-					}
-					// 实入数量
-					if (null != getBillCardPanelWrapper().getBillCardPanel()
-							.getBillModel().getValueAt(i, "geb_anum")) {
-						geb_anum = Double.parseDouble(getBillCardPanelWrapper()
-								.getBillCardPanel().getBillModel().getValueAt(
-										i, "geb_anum").toString());
-					}
-					if (geb_bsnum != geb_banum || geb_snum != geb_anum) {
-						getBillUI().showErrorMessage("应入库、实入库数量不等，不能保存！");
-						return;
-					}
-				}
-			}
-
-		}
-		// 得到全部表体VO
-
-		TbGeneralBVO[] tbGeneralBVOss = null;
-		if (getBillManageUI().isListPanelSelected()) {
-			// if (getBufferData().getVOBufferSize() != 0) {
-			tbGeneralBVOss = (TbGeneralBVO[]) getBillManageUI()
-					.getBillListWrapper().getVOFromUI().getChildrenVO();
-			// }
-		} else {
-			// if (getBufferData().getVOBufferSize() != 0) {
-			tbGeneralBVOss = (TbGeneralBVO[]) getBillCardPanelWrapper()
-					.getBillVOFromUI().getChildrenVO();
-			// }
-		}
-		// 判断表体是否有数据
-		if (null == tbGeneralBVOss || tbGeneralBVOss.length == 0) {
-			getBillUI().showErrorMessage("表体中没有数据，不能进行操作或无权操作！");
-			return;
-		}
-
-		// if (null != st_type && !"".equals(st_type)) {
-		// if ("1".equals(st_type)) {
-		// super.onBoSave();
-		// return;
-		// }
-		// }
-
-		// getBillCardPanelWrapper().getBillCardPanel()
-		// .getHeadItem("geh_billtype").setValue(new Integer(0));
-		AggregatedValueObject billVO = getBillUI().getVOFromUI();
-
-		if (!addoredit) {
-			for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-				billVO.getChildrenVO()[i].setStatus(VOStatus.UPDATED);
-			}
-		} else {
-			for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-				billVO.getChildrenVO()[i].setStatus(VOStatus.NEW);
-
-			}
-		}
-		if ("3".equals(st_type) && isedit) {
-			for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-				billVO.getChildrenVO()[i].setStatus(VOStatus.UPDATED);
-			}
-		} else if ("3".equals(st_type) && (!isedit)) {
-			for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-				billVO.getChildrenVO()[i].setStatus(VOStatus.NEW);
-
-			}
-		}
-
-		billVO.getChildrenVO()[0].setStatus(1);
-		setTSFormBufferToVO(billVO);
-		AggregatedValueObject checkVO = getBillUI().getVOFromUI();
-		setTSFormBufferToVO(checkVO);
-
-		//
-		TbGeneralBVO[] tbGeneralBVOas = (TbGeneralBVO[]) billVO.getChildrenVO();
-		// 验证表体是否有数据
-		if (null == tbGeneralBVOas || tbGeneralBVOas.length < 0) {
-			myClientUI.showErrorMessage("操作失败,您无权操作");
-			return;
-		}
-		// 循环验证是否有没有出库的产品
-		if (!isfydj) {
-			for (int i = 0; i < tbGeneralBVOas.length; i++) {
-				TbGeneralBVO genb = tbGeneralBVOas[i];
-				if (null != genb.getGeb_banum()
-						&& !"".equals(genb.getGeb_banum())) {
-					if (null != genb.getGeb_bsnum()
-							&& !"".equals(genb.getGeb_bsnum())) {
-						if (genb.getGeb_banum().doubleValue() != genb
-								.getGeb_bsnum().doubleValue()) {
-							// int result = getBillUI().showOkCancelMessage(
-							// "您有产品没有指定入库,是否保存?");
-							// if (result != 1)
-							// return;
-							// else
-							// break;
-							getBillUI().showErrorMessage("您有产品没有指定入库");
-							return;
-						}
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < tbGeneralBVOas.length; i++) {
-				TbGeneralBVO genb = tbGeneralBVOas[i];
-				if (null != genb.getGeb_banum()
-						&& !"".equals(genb.getGeb_banum())) {
-					if (null != genb.getGeb_bsnum()
-							&& !"".equals(genb.getGeb_bsnum())) {
-						if (null != genb.getGeb_virtualbnum()
-								&& !"".equals(genb.getGeb_virtualbnum())) {
-
-							if (genb.getGeb_banum().doubleValue()
-									+ genb.getGeb_virtualbnum().doubleValue() != genb
-									.getGeb_bsnum().doubleValue()) {
-								// int result = getBillUI().showOkCancelMessage(
-								// "您有产品没有指定入库,是否保存?");
-								// if (result != 1)
-								// return;
-								// else
-								// break;
-								getBillUI().showErrorMessage(
-										"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-								return;
-							}
-						} else {
-							if (genb.getGeb_banum().doubleValue() != genb
-									.getGeb_bsnum().doubleValue()) {
-								// int result = getBillUI().showOkCancelMessage(
-								// "您有产品没有指定入库,是否保存?");
-								// if (result != 1)
-								// return;
-								// else
-								// break;
-								getBillUI().showErrorMessage(
-										"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-								return;
-							}
-						}
-					} else {
-						getBillUI().showErrorMessage(
-								"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-						return;
-					}
-				} else {
-
-					if (null != genb.getGeb_bsnum()
-							&& !"".equals(genb.getGeb_bsnum())) {
-						if (null != genb.getGeb_virtualbnum()
-								&& !"".equals(genb.getGeb_virtualbnum())) {
-
-							if (genb.getGeb_virtualbnum().doubleValue() != genb
-									.getGeb_bsnum().doubleValue()) {
-								// int result = getBillUI().showOkCancelMessage(
-								// "您有产品没有指定入库,是否保存?");
-								// if (result != 1)
-								// return;
-								// else
-								// break;
-								getBillUI().showErrorMessage(
-										"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-								return;
-							}
-						} else {
-							getBillUI().showErrorMessage(
-									"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-							return;
-						}
-					} else {
-						getBillUI().showErrorMessage(
-								"您有产品没有指定入库或实入数量加在途数量大于应入数量！");
-						return;
-					}
-
-				}
-			}
-		}
-		//
-
-		// if (null != myTempall && myTempall.size() > 0) {
-		// // 把页面中显示的数据和后台隐藏的数据进行合并
-		// TbGeneralBVO[] tbGeneralBVObs = new TbGeneralBVO[myTempall.size()];
-		// myTempall.toArray(tbGeneralBVObs);
-		// if (null != tbGeneralBVOas && tbGeneralBVOas.length > 0) {
-		// for (int j = 0; j < tbGeneralBVObs.length; j++) {
-		// TbGeneralBVO tmplistb = tbGeneralBVObs[j];
-		// for (int i = 0; i < tbGeneralBVOas.length; i++) {
-		// if (tmplistb.getGeb_cinvbasid().equals(
-		// tbGeneralBVOas[i].getGeb_cinvbasid())) {
-		// tbGeneralBVObs[j] = tbGeneralBVOas[i];
-		// break;
-		// }
-		// }
-		// }
-		//
-		// billVO.setChildrenVO(tbGeneralBVObs);
-		// }
-		//
-		// }
-
-		// 总仓和分仓的
-
-		TbGeneralHVO generalh = (TbGeneralHVO) billVO.getParentVO();
-
-		if (sotckIsTotal) {
-			if ("0".equals(st_type)) {
-				// 根据保管员货品，保存或修改自己货品子表
-				List invLisk = nc.ui.wds.w8000.CommonUnit
-						.getInvbasdoc_Pk(ClientEnvironment.getInstance()
-								.getUser().getPrimaryKey());
-
-				TbGeneralHVO tmpgeneralh = null;
-				// 根据来源单据号查询是否有做过出库
-				String strWhere = " geh_vbillcode='"
-						+ generalh.getGeh_vbillcode()
-						+ "' and geh_cgeneralhid='"
-						+ generalh.getGeh_cgeneralhid() + "' and dr=0 ";
-				ArrayList tmpList = (ArrayList) getQueryBO().retrieveByClause(
-						TbGeneralHVO.class, strWhere);
-				if (null != tmpList && tmpList.size() > 0) {
-					tmpgeneralh = (TbGeneralHVO) tmpList.get(0);
-				}
-				// boolean myisadd=true;
-				// 该单据有过出库记录
-				if (null != tmpgeneralh) {
-					// 把表头替换
-					generalh = tmpgeneralh;
-					String gebbvosql = " dr=0 and geh_pk ='"
-							+ generalh.getGeh_pk()
-							+ "' and geb_cinvbasid in ('";
-					for (int k = 0; k < invLisk.size(); k++) {
-						if (null != invLisk && invLisk.size() > 0
-								&& null != invLisk.get(k)
-								&& !"".equals(invLisk.get(k))) {
-							gebbvosql += invLisk.get(k) + "','";
-						}
-					}
-					gebbvosql += "') ";
-					ArrayList gebbvos = (ArrayList) getQueryBO().retrieveByClause(
-							TbGeneralBVO.class, gebbvosql);
-					if (null != gebbvos && gebbvos.size() > 0) {
-						addoredit = false;
-					} else {
-						addoredit = true;
-					}
-
-				} else {
-					addoredit = true;
-					// myisadd=true;
-					// 制单时间
-					generalh.setTmaketime(myClientUI._getServerTime()
-							.toString());
-					// 制单日期，单据日期
-					generalh.setCopetadate(new UFDate(new Date()));
-					generalh.setGeh_dbilldate(new UFDate(new Date()));
-					// 设置单据号
-					generalh.setGeh_billcode(CommonUnit.getBillCode("4A",
-							ClientEnvironment.getInstance().getCorporation()
-									.getPk_corp(), "", ""));
-				}
-
-				// 如果是新增设置表体状态“新增”
-				if (addoredit) {
-					// 循环表体更改状态
-					for (int i = 0; i < tbGeneralBVOas.length; i++) {
-						tbGeneralBVOas[i].setStatus(VOStatus.NEW);
-					}
-				} else { // 设置表体状态“修改”
-					// 循环表体更改状态
-					for (int i = 0; i < tbGeneralBVOas.length; i++) {
-						tbGeneralBVOas[i].setStatus(VOStatus.UPDATED);
-					}
-				}
-			}
-		} else {
-			if ("0".equals(st_type) || "3".equals(st_type)) {
-				// 根据保管员货品，保存或修改自己货品子表
-				List invLisk = nc.ui.wds.w8000.CommonUnit
-						.getInvbasdoc_Pk(ClientEnvironment.getInstance()
-								.getUser().getPrimaryKey());
-
-				TbGeneralHVO tmpgeneralh = null;
-				// 根据来源单据号查询是否有做过出库
-				String strWhere = " geh_vbillcode='"
-						+ generalh.getGeh_vbillcode()
-						+ "' and geh_cgeneralhid='"
-						+ generalh.getGeh_cgeneralhid() + "' and dr=0 ";
-				ArrayList tmpList = (ArrayList) getQueryBO().retrieveByClause(
-						TbGeneralHVO.class, strWhere);
-				if (null != tmpList && tmpList.size() > 0) {
-					tmpgeneralh = (TbGeneralHVO) tmpList.get(0);
-					addoredit = false;
-				} else {
-					addoredit = true;
-					// 制单时间
-					generalh.setTmaketime(myClientUI._getServerTime()
-							.toString());
-					// 制单日期，单据日期
-					generalh.setCopetadate(new UFDate(new Date()));
-					generalh.setGeh_dbilldate(new UFDate(new Date()));
-					// 设置单据号
-					generalh.setGeh_billcode(CommonUnit.getBillCode("4A",
-							ClientEnvironment.getInstance().getCorporation()
-									.getPk_corp(), "", ""));
-				}
-				// 如果是新增设置表体状态“新增”
-				if (addoredit) {
-					// 循环表体更改状态
-					for (int i = 0; i < tbGeneralBVOas.length; i++) {
-						tbGeneralBVOas[i].setStatus(VOStatus.NEW);
-					}
-				} else { // 设置表体状态“修改”
-					// 循环表体更改状态
-					for (int i = 0; i < tbGeneralBVOas.length; i++) {
-						tbGeneralBVOas[i].setStatus(VOStatus.UPDATED);
-					}
-				}
-
-			}
-		}
-		// 最后修改时间
-		generalh.setClastmodetime(myClientUI._getServerTime().toString());
-		// 设置修改人
-		generalh.setClastmodiid(ClientEnvironment.getInstance().getUser()
-				.getPrimaryKey());
-		// 单据状态
-		generalh.setPwb_fbillflag(2);
-		// 给聚合VO中表头赋值
-		billVO.setParentVO(generalh);
-		// 表体赋值
-		billVO.setChildrenVO(tbGeneralBVOas);
-
-		// 单据是否关闭
-		TbGeneralBVO[] tbGenBVOs = (TbGeneralBVO[]) billVO.getChildrenVO();
-		// 在途集合子表
-		ArrayList vgebvos = new ArrayList();
-		// 在库存存储
-		double geb_virtualbnumy = 0;
-		double geb_virtualnumy = 0;
-		if (isfydj) {
-			for (int i = 0; i < tbGenBVOs.length; i++) {
-				double geb_virtualbnum = 0;
-				double geb_virtualnum = 0;
-				double geb_banum = 0;
-				double geb_anum = 0;
-				if (null != tbGenBVOs[i].getGeb_virtualbnum()
-						&& tbGenBVOs[i].getGeb_virtualbnum().doubleValue() != 0) {
-					geb_virtualbnum = tbGenBVOs[i].getGeb_virtualbnum()
-							.doubleValue();
-					geb_virtualbnumy = tbGenBVOs[i].getGeb_virtualbnum()
-							.doubleValue();
-					vgebvos.add(tbGenBVOs[i]);
-				}
-				if (null != tbGenBVOs[i].getGeb_virtualnum()) {
-					geb_virtualnum = tbGenBVOs[i].getGeb_virtualnum()
-							.doubleValue();
-					geb_virtualnumy = tbGenBVOs[i].getGeb_virtualnum()
-							.doubleValue();
-				}
-
-				if (null != tbGenBVOs[i].getGeb_banum()
-						&& null != tbGenBVOs[i].getGeb_anum()) {
-					geb_banum = tbGenBVOs[i].getGeb_banum().doubleValue();
-					geb_anum = tbGenBVOs[i].getGeb_anum().doubleValue();
-				}
-				// DecimalFormat df=new DecimalFormat("0.00");
-				//				
-				// double x=(geb_anum + geb_virtualnum);
-				// df.format(x);
-				if (tbGenBVOs[i].getGeb_bsnum().toDouble().doubleValue() < geb_banum
-						+ geb_virtualbnum
-				// || geb_anum + geb_virtualnum > tbGenBVOs[i]
-				// .getGeb_snum().toDouble().doubleValue()
-				) {
-					getBillUI().showErrorMessage("实际入库数量大于应入库数量！");
-					return;
-
-				}
-				if (tbGenBVOs[i].getGeb_bsnum().toDouble().doubleValue() == geb_banum
-						+ geb_virtualbnum
-				// || geb_anum + geb_virtualnum == tbGenBVOs[i]
-				// .getGeb_snum().toDouble().doubleValue()
-				) {
-					((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-							.setGeb_isclose(new UFBoolean("Y"));
-				} else {
-					((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-							.setGeb_isclose(new UFBoolean("N"));
-				}
-				// tbGenBVOs[i].setGeb_banum(new UFDouble(tbGenBVOs[i]
-				// .getGeb_banum().toDouble().doubleValue()
-				// + geb_virtualbnum));
-				// tbGenBVOs[i].setGeb_anum(new UFDouble(tbGenBVOs[i]
-				// .getGeb_anum().toDouble().doubleValue()
-				// + geb_virtualnum));
-				// tbGenBVOs[i].setGeb_virtualbnum(new UFDouble(0));
-				// tbGenBVOs[i].setGeb_virtualnum(new UFDouble(0));
-				if (!isfirst) {
-					tbGenBVOs[i].setStatus(VOStatus.UPDATED);
-				}
-
-			}
-		} else {
-
-			for (int i = 0; i < tbGenBVOs.length; i++) {
-				if (null != tbGenBVOs[i].getGeb_banum()
-						&& null != tbGenBVOs[i].getGeb_anum()) {
-					if (tbGenBVOs[i].getGeb_bsnum().toDouble().doubleValue() == tbGenBVOs[i]
-							.getGeb_banum().toDouble().doubleValue()
-							&& tbGenBVOs[i].getGeb_anum().toDouble()
-									.doubleValue() == tbGenBVOs[i]
-									.getGeb_snum().toDouble().doubleValue()) {
-						((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-								.setGeb_isclose(new UFBoolean("Y"));
-					} else {
-						((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-								.setGeb_isclose(new UFBoolean("N"));
-					}
-				} else {
-					((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-							.setGeb_isclose(new UFBoolean("N"));
-				}
-			}
-		}
-		for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-			if (null == ((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-					.getGeb_backvbatchcode()
-					|| "".equals(((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-							.getGeb_backvbatchcode().trim())) {
-				((TbGeneralBVO[]) billVO.getChildrenVO())[i]
-						.setGeb_backvbatchcode("2009");
-			}
-
-		}
-		// 进行数据晴空
-		Object o = null;
-		ISingleController sCtrl = null;
-		if (getUIController() instanceof ISingleController) {
-			sCtrl = (ISingleController) getUIController();
-			if (sCtrl.isSingleDetail()) {
-				o = billVO.getParentVO();
-				billVO.setParentVO(null);
-			} else {
-				o = billVO.getChildrenVO();
-				billVO.setChildrenVO(null);
-			}
-		}
-
-		boolean isSave = true;
-
-		// 判断是否有存盘数据
-		if (billVO.getParentVO() == null
-				&& (billVO.getChildrenVO() == null || billVO.getChildrenVO().length == 0)) {
-			isSave = false;
-		} else {
-			ArrayList params = new ArrayList();
-
-			if (isfydj) {
-				// if(null!=tbs[0].getGeb_pk()&&!"".equals(tbs[0].getGeb_pk())){
-				// String tbssql=" geb_pk='"+tbs[0].getGeb_pk()+"' and dr=0 ";
-				// ArrayList dtbvos = new ArrayList();
-				// try {
-				//
-				// dtbvos = (ArrayList) query.retrieveByClause(
-				// TbGeneralBVO.class, tbssql.toString());
-				// } catch (BusinessException e1) {
-				// // TODO Auto-generated catch block
-				// e1.printStackTrace();
-				// }
-				//					
-				//					
-				// }
-
-				// 获得要回写的集合VO
-				// GeneralBillVO voTempBill = getVoTempBill();
-				// 保存方法
-
-				params.add(getBillUI().getUserObject());
-				// 回写数据
-				params.add(null);
-				// 库存表数据
-				TbGeneralBVO[] tbGeneralBVOs = (TbGeneralBVO[]) getBillUI()
-						.getVOFromUI().getChildrenVO();
-				// //
-				// TbGeneralHVO abs = (TbGeneralHVO) getBillUI().getVOFromUI()
-				// .getParentVO();
-				// 通过出库单子表主键得到存库数据
-				StringBuffer tgbbsql = new StringBuffer(" pwb_pk in ('");
-				if (null != tbGeneralBVOs && tbGeneralBVOs.length > 0) {
-
-					for (int i = 0; i < tbGeneralBVOs.length; i++) {
-						TbGeneralBVO tbgenvo = null;
-						if (null != tbGeneralBVOs[i].getGeb_pk()) {
-							tbgenvo = (TbGeneralBVO) getQueryBO().retrieveByPK(
-									TbGeneralBVO.class, tbGeneralBVOs[i]
-											.getGeb_pk().toString().trim());
-						}
-						if (isfirst) {
-							if (null != tbGeneralBVOs[i].getGeb_cgeneralbid()
-									&& !"".equals(tbGeneralBVOs[i]
-											.getGeb_cgeneralbid())) {
-								tgbbsql.append(tbGeneralBVOs[i]
-										.getGeb_cgeneralbid());
-								tgbbsql.append("','");
-							}
-
-						} else {
-							if (null != tbgenvo) {
-								if (tbGeneralBVOs[i].getGeb_banum()
-										.doubleValue() != tbgenvo
-										.getGeb_banum().doubleValue()
-										&& tbGeneralBVOs[i].getGeb_anum()
-												.doubleValue() != tbgenvo
-												.getGeb_anum().doubleValue()) {
-
-									if (null != tbGeneralBVOs[i]
-											.getGeb_cgeneralbid()
-											&& !"".equals(tbGeneralBVOs[i]
-													.getGeb_cgeneralbid())) {
-										tgbbsql.append(tbGeneralBVOs[i]
-												.getGeb_cgeneralbid());
-										tgbbsql.append("','");
-									}
-								}
-							}
-						}
-
-					}
-					tgbbsql.append("') and dr=0 ");
-				}
-				// 用户权限判断
-
-				// 托盘缓存表
-
-				ArrayList tbGeneralBBVOs = new ArrayList();
-
-				// if (isfirst) {
-				tbGeneralBBVOs = (ArrayList) getQueryBO().retrieveByClause(
-						TbGeneralBBVO.class, tgbbsql.toString());
-				if (!isfydj) {
-					if (null == tbGeneralBBVOs || tbGeneralBBVOs.size() == 0) {
-						getBillUI().showErrorMessage("请指定托盘后再保存！");
-						return;
-					}
-					// }
-				}
-				// 库存VO
-				TbWarehousestockVO[] tbWarehousestockVO = new TbWarehousestockVO[tbGeneralBBVOs
-						.size()
-						+ vgebvos.size()];
-				// 库存VO集合
-				ArrayList twhsVOs = new ArrayList();
-				// 托盘集合
-				ArrayList bdCargdocTrayVOs = new ArrayList();
-				String Cdt_pk = "";
-				int k = 0;
-				// 实际入库
-				for (int i = 0; i < tbGeneralBBVOs.size(); i++) {
-					if (null != tbGeneralBBVOs.get(i)) {
-						TbGeneralBBVO tbbbvo = (TbGeneralBBVO) tbGeneralBBVOs
-								.get(i);
-						TbWarehousestockVO tbWarehousestockVO1 = new TbWarehousestockVO();
-						// 托盘主键
-						if (null != tbbbvo.getCdt_pk()
-								&& !"".equals(tbbbvo.getCdt_pk())) {
-							tbWarehousestockVO1.setPplpt_pk(tbbbvo.getCdt_pk());
-						}
-						// dr
-						tbWarehousestockVO1.setDr(0);
-						// 辅数量
-						if (null != tbbbvo.gebb_num) {
-							tbWarehousestockVO1.setWhs_stockpieces(tbbbvo
-									.getGebb_num());
-							tbWarehousestockVO1.setWhs_oanum(tbbbvo.gebb_num);
-						}
-						// 换算率
-						if (null != tbbbvo.getGebb_hsl()) {
-							tbWarehousestockVO1
-									.setWhs_hsl(tbbbvo.getGebb_hsl());
-						}
-						// 单价
-						if (null != tbbbvo.getGebb_nprice()) {
-							tbWarehousestockVO1.setWhs_nprice(tbbbvo
-									.getGebb_nprice());
-						}
-						// 金额
-						if (null != tbbbvo.getGebb_nmny()) {
-							tbWarehousestockVO1.setWhs_nmny(tbbbvo
-									.getGebb_nmny());
-						}
-						// 主数量
-						if (null != tbbbvo.getGebb_num()
-								&& null != tbbbvo.getGebb_hsl()) {
-							tbWarehousestockVO1
-									.setWhs_stocktonnage(new UFDouble(tbbbvo
-											.getGebb_num().doubleValue()
-											* tbbbvo.getGebb_hsl()
-													.doubleValue()));
-							tbWarehousestockVO1.setWhs_omnum(new UFDouble(
-									tbbbvo.getGebb_num().doubleValue()
-											* tbbbvo.getGebb_hsl()
-													.doubleValue()));
-
-						}
-
-						// 库存检查状态(默认合适)
-						tbWarehousestockVO1.setSs_pk("0001AA100000000B1TYK");
-						// 库存表状态
-						tbWarehousestockVO1.setWhs_status(0);
-						// 类型
-						tbWarehousestockVO1.setWhs_type(1);
-						//
-						if (null != tbbbvo.getPwb_pk()
-								&& !"".equals(tbbbvo.getPwb_pk())) {
-							tbWarehousestockVO1.setPk_bodysource(tbbbvo
-									.getPwb_pk());
-						}
-						// 存货档案主键
-						if (null != tbbbvo.getPk_invbasdoc()
-								&& !"".equals(tbbbvo.getPk_invbasdoc())) {
-							tbWarehousestockVO1.setPk_invbasdoc(tbbbvo
-									.getPk_invbasdoc());
-						}
-						// 批次号
-						if (null != tbbbvo.getGebb_vbatchcode()
-								&& !"".equals(tbbbvo.getGebb_vbatchcode())) {
-							tbWarehousestockVO1.setWhs_batchcode(tbbbvo
-									.getGebb_vbatchcode());
-						}
-						// 回写批次号
-						if (null != tbbbvo.getGebb_lvbatchcode()
-								&& !"".equals(tbbbvo.getGebb_lvbatchcode())) {
-							tbWarehousestockVO1.setWhs_lbatchcode(tbbbvo
-									.getGebb_lvbatchcode());
-						} else {
-							tbWarehousestockVO1.setWhs_lbatchcode("2009");
-						}
-						// 操作时间
-						tbWarehousestockVO1.setOperatetime(new UFDateTime(
-								new Date()));
-						// 货位
-						String cargdocPK = LoginInforHelper.getSpaceByLogUser(myClientUI._getOperator())[0];
-						tbWarehousestockVO1.setPk_cargdoc(cargdocPK);
-						// 来源单据表体主键， 缓存表主键
-						tbWarehousestockVO1.setPk_bodysource(tbbbvo
-								.getGebb_pk());
-						//
-						// if (!addoredit) {
-						//						
-						// }
-						//
-						// 托盘状态
-
-						if (null != tbbbvo.getCdt_pk()
-								&& !"".equals(tbbbvo.getCdt_pk())) {
-							Cdt_pk = tbbbvo.getCdt_pk();
-						}
-						BdCargdocTrayVO bdCargdocTrayVO = (BdCargdocTrayVO) getQueryBO()
-								.retrieveByPK(BdCargdocTrayVO.class, Cdt_pk);
-						bdCargdocTrayVO.setCdt_traystatus(new Integer(1));
-						bdCargdocTrayVOs.add(bdCargdocTrayVO);
-						twhsVOs.add(tbWarehousestockVO1);
-
-					}
-					// k = i + 1;
-				}
-				// 在途入库
-				for (int i = 0; i < vgebvos.size(); i++) {
-					if (null != vgebvos.get(i)) {
-						TbGeneralBVO vgebvo = (TbGeneralBVO) vgebvos.get(i);
-						TbWarehousestockVO tbWarehousestockVO1 = new TbWarehousestockVO();
-						// 登录人所属仓库
-						String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-								.getStordocName(ClientEnvironment.getInstance()
-										.getUser().getPrimaryKey());
-						// 查询在途库
-						String stordoc_sql = "";
-						if (sotckIsTotal) {
-							stordoc_sql = "pk_stordoc='" + pk_stordoc
-									+ "' and cscode='11' and dr=0 ";
-						} else {
-							stordoc_sql = "pk_stordoc='" + pk_stordoc
-									+ "' and cscode='03' and dr=0 ";
-						}
-						ArrayList bdCargdocVOs = (ArrayList) getQueryBO()
-								.retrieveByClause(BdCargdocVO.class,
-										stordoc_sql);
-						// 在途货位
-						String bdCargdocname = "";
-						if (null != vgebvo.getPk_customize2()
-								&& !"".equals(vgebvo.getPk_customize2())) {
-							bdCargdocname = vgebvo.getPk_customize2();
-
-						} else {
-							getBillUI().showErrorMessage("请您选择在途库！");
-							return;
-						}
-
-						// 查询在途库托盘
-						String bdcargtray_sql = "";
-						if (null != bdCargdocname && !"".equals(bdCargdocname)) {
-							bdcargtray_sql = "pk_cargdoc='" + bdCargdocname
-									+ "' and dr=0 ";
-							// 货位
-							// String cargdocPK = getCargdocPK(ClientEnvironment
-							// .getInstance().getUser().getPrimaryKey());
-							tbWarehousestockVO1.setPk_cargdoc(bdCargdocname);
-						} else {
-							getBillUI().showErrorMessage("请您选择在途库！");
-							return;
-						}
-						ArrayList bdcargdoctrays = new ArrayList();
-						if (!"".equals(bdcargtray_sql)) {
-							bdcargdoctrays = (ArrayList) getQueryBO()
-									.retrieveByClause(BdCargdocTrayVO.class,
-											bdcargtray_sql);
-						} else {
-							getBillUI().showErrorMessage("没有在途库或在途库错误!");
-							return;
-						}
-
-						// 托盘主键
-						if (null != bdcargdoctrays && bdcargdoctrays.size() > 0
-								&& null != bdcargdoctrays.get(0)) {
-							tbWarehousestockVO1
-									.setPplpt_pk(((BdCargdocTrayVO) bdcargdoctrays
-											.get(0)).getCdt_pk());
-							Cdt_pk = ((BdCargdocTrayVO) bdcargdoctrays.get(0))
-									.getCdt_pk();
-						}
-						// tbWarehousestockVO1.setPplpt_pk("0001RT100000000CJ81N");
-						// dr
-						tbWarehousestockVO1.setDr(0);
-						// 辅数量
-						if (null != vgebvo.getGeb_virtualbnum()) {
-							tbWarehousestockVO1
-									.setWhs_stockpieces(new UFDouble(vgebvo
-											.getGeb_virtualbnum()));
-							tbWarehousestockVO1.setWhs_oanum(new UFDouble(
-									vgebvo.getGeb_virtualbnum()));
-						}
-						// 换算率
-						if (null != vgebvo.getGeb_hsl()) {
-							tbWarehousestockVO1.setWhs_hsl(vgebvo.getGeb_hsl());
-						}
-						// 单价
-						if (null != vgebvo.getGeb_nprice()) {
-							tbWarehousestockVO1.setWhs_nprice(vgebvo
-									.getGeb_nprice());
-						}
-						// 金额
-						if (null != vgebvo.getGeb_nmny()) {
-							tbWarehousestockVO1.setWhs_nmny(vgebvo
-									.getGeb_nmny());
-						}
-						// 主数量
-						if (null != vgebvo.getGeb_virtualnum()) {
-							tbWarehousestockVO1
-									.setWhs_stocktonnage(new UFDouble(vgebvo
-											.getGeb_virtualnum()));
-							tbWarehousestockVO1.setWhs_omnum(new UFDouble(
-									vgebvo.getGeb_virtualnum()));
-
-						}
-
-						// 库存检查状态(默认合适)
-						tbWarehousestockVO1.setSs_pk("0001AA100000000B1TYK");
-						// 库存表状态
-						tbWarehousestockVO1.setWhs_status(0);
-						// 类型
-						tbWarehousestockVO1.setWhs_type(1);
-						//
-						if (null != vgebvo.getGeb_cgeneralbid()
-								&& !"".equals(vgebvo.getGeb_cgeneralbid())) {
-							tbWarehousestockVO1.setPk_bodysource(vgebvo
-									.getGeb_cgeneralbid());
-						}
-						// 存货档案主键
-						if (null != vgebvo.getGeb_cinvbasid()
-								&& !"".equals(vgebvo.getGeb_cinvbasid())) {
-							tbWarehousestockVO1.setPk_invbasdoc(vgebvo
-									.getGeb_cinvbasid());
-						}
-						// 批次号
-						if (null != vgebvo.getGeb_vbatchcode()
-								&& !"".equals(vgebvo.getGeb_vbatchcode())) {
-							tbWarehousestockVO1.setWhs_batchcode(vgebvo
-									.getGeb_vbatchcode());
-						}
-						// 回写批次号
-						if (null != vgebvo.getGeb_backvbatchcode()
-								&& !"".equals(vgebvo.getGeb_backvbatchcode())) {
-							tbWarehousestockVO1.setWhs_lbatchcode(vgebvo
-									.getGeb_backvbatchcode());
-						} else {
-							tbWarehousestockVO1.setWhs_lbatchcode("2009");
-						}
-						// 操作时间
-						tbWarehousestockVO1.setOperatetime(new UFDateTime(
-								new Date()));
-
-						// 来源单据表体主键， 缓存表主键
-						// tbWarehousestockVO1.setPk_bodysource(vgebvo
-						// .getGebb_pk());
-						//
-						// if (!addoredit) {
-						//						
-						// }
-						//
-						// 托盘状态
-						// Cdt_pk = "0001RT100000000CJ81N";
-
-						BdCargdocTrayVO bdCargdocTrayVO = (BdCargdocTrayVO) getQueryBO()
-								.retrieveByPK(BdCargdocTrayVO.class, Cdt_pk);
-						bdCargdocTrayVO.setCdt_traystatus(new Integer(1));
-						bdCargdocTrayVOs.add(bdCargdocTrayVO);
-						twhsVOs.add(tbWarehousestockVO1);
-
-					}
-					// k = i + 1;
-				}
-				twhsVOs.toArray(tbWarehousestockVO);
-				params.add(tbWarehousestockVO);
-				params.add(bdCargdocTrayVOs);
-				// 制单时间
-				// if (addoredit) {
-				// ((TbGeneralHVO) billVO.getParentVO())
-				// .setTmaketime(getBillUI()._getServerTime()
-				// .toString());
-				// }
-			} else {
-
-				// 获得要回写的集合VO
-				// GeneralBillVO voTempBill = getVoTempBill();
-				// 保存方法
-
-				params.add(getBillUI().getUserObject());
-				// 回写数据
-				params.add(null);
-				// 库存表数据
-				TbGeneralBVO[] tbGeneralBVOs = (TbGeneralBVO[]) getBillUI()
-						.getVOFromUI().getChildrenVO();
-				//
-				// TbGeneralHVO abs = (TbGeneralHVO) getBillUI().getVOFromUI()
-				// .getParentVO();
-
-				// 通过出库单子表主键得到存库数据
-				StringBuffer tgbbsql = new StringBuffer(" pwb_pk in ('");
-				if (null != tbGeneralBVOs && tbGeneralBVOs.length > 0) {
-					for (int i = 0; i < tbGeneralBVOs.length; i++) {
-						if (null != tbGeneralBVOs[i].getGeb_cgeneralbid()
-								&& !"".equals(tbGeneralBVOs[i]
-										.getGeb_cgeneralbid())) {
-							tgbbsql.append(tbGeneralBVOs[i]
-									.getGeb_cgeneralbid());
-							tgbbsql.append("','");
-						}
-
-					}
-					tgbbsql.append("') and dr=0 ");
-				}
-				// 用户权限判断
-
-				// 托盘缓存表
-
-				ArrayList tbGeneralBBVOs = (ArrayList) getQueryBO().retrieveByClause(
-						TbGeneralBBVO.class, tgbbsql.toString());
-				if (null == tbGeneralBBVOs || tbGeneralBBVOs.size() == 0) {
-					getBillUI().showErrorMessage("请指定托盘后再保存！");
-					return;
-				}
-				// 库存VO
-				TbWarehousestockVO[] tbWarehousestockVO = new TbWarehousestockVO[tbGeneralBBVOs
-						.size()];
-				ArrayList bdCargdocTrayVOs = new ArrayList();
-				String Cdt_pk = "";
-				for (int i = 0; i < tbGeneralBBVOs.size(); i++) {
-					if (null != tbGeneralBBVOs.get(i)) {
-						TbGeneralBBVO tbbbvo = (TbGeneralBBVO) tbGeneralBBVOs
-								.get(i);
-						tbWarehousestockVO[i] = new TbWarehousestockVO();
-						// 托盘主键
-						if (null != tbbbvo.getCdt_pk()
-								&& !"".equals(tbbbvo.getCdt_pk())) {
-							tbWarehousestockVO[i].setPplpt_pk(tbbbvo
-									.getCdt_pk());
-						}
-						// dr
-						tbWarehousestockVO[i].setDr(0);
-						// 辅数量
-						if (null != tbbbvo.gebb_num) {
-							tbWarehousestockVO[i].setWhs_stockpieces(tbbbvo
-									.getGebb_num());
-							tbWarehousestockVO[i].setWhs_oanum(tbbbvo.gebb_num);
-						}
-						// 换算率
-						if (null != tbbbvo.getGebb_hsl()) {
-							tbWarehousestockVO[i].setWhs_hsl(tbbbvo
-									.getGebb_hsl());
-						}
-						// 单价
-						if (null != tbbbvo.getGebb_nprice()) {
-							tbWarehousestockVO[i].setWhs_nprice(tbbbvo
-									.getGebb_nprice());
-						}
-						// 金额
-						if (null != tbbbvo.getGebb_nmny()) {
-							tbWarehousestockVO[i].setWhs_nmny(tbbbvo
-									.getGebb_nmny());
-						}
-						// 主数量
-						if (null != tbbbvo.getGebb_num()
-								&& null != tbbbvo.getGebb_hsl()) {
-							tbWarehousestockVO[i]
-									.setWhs_stocktonnage(new UFDouble(tbbbvo
-											.getGebb_num().toDouble()
-											* tbbbvo.getGebb_hsl().toDouble()));
-							tbWarehousestockVO[i].setWhs_omnum(new UFDouble(
-									tbbbvo.getGebb_num().toDouble()
-											* tbbbvo.getGebb_hsl().toDouble()));
-
-						}
-
-						// 库存检查状态(默认合适)
-						tbWarehousestockVO[i].setSs_pk("0001AA100000000B1TYK");
-						// 库存表状态
-						tbWarehousestockVO[i].setWhs_status(0);
-						// 类型
-						tbWarehousestockVO[i].setWhs_type(1);
-						//
-						if (null != tbbbvo.getPwb_pk()
-								&& !"".equals(tbbbvo.getPwb_pk())) {
-							tbWarehousestockVO[i].setPk_bodysource(tbbbvo
-									.getPwb_pk());
-						}
-						// 存货档案主键
-						if (null != tbbbvo.getPk_invbasdoc()
-								&& !"".equals(tbbbvo.getPk_invbasdoc())) {
-							tbWarehousestockVO[i].setPk_invbasdoc(tbbbvo
-									.getPk_invbasdoc());
-						}
-						// 批次号
-						if (null != tbbbvo.getGebb_vbatchcode()
-								&& !"".equals(tbbbvo.getGebb_vbatchcode())) {
-							tbWarehousestockVO[i].setWhs_batchcode(tbbbvo
-									.getGebb_vbatchcode());
-						}
-						// 回写批次号
-						if (null != tbbbvo.getGebb_lvbatchcode()
-								&& !"".equals(tbbbvo.getGebb_lvbatchcode())) {
-							tbWarehousestockVO[i].setWhs_lbatchcode(tbbbvo
-									.getGebb_lvbatchcode());
-						} else {
-							tbWarehousestockVO[i].setWhs_lbatchcode("2009");
-						}
-						// 操作时间
-						tbWarehousestockVO[i].setOperatetime(new UFDateTime(
-								new Date()));
-						// 货位
-						String cargdocPK = LoginInforHelper.getSpaceByLogUser(myClientUI._getOperator())[0];;
-						tbWarehousestockVO[i].setPk_cargdoc(cargdocPK);
-						// // 来源单据表体主键， 缓存表主键
-						// tbWarehousestockVO[i].setPk_bodysource(tbbbvo
-						// .getGebb_pk());
-						//
-						// if (!addoredit) {
-						//						
-						// }
-						//
-						// 托盘状态
-
-						if (null != tbbbvo.getCdt_pk()
-								&& !"".equals(tbbbvo.getCdt_pk())) {
-							Cdt_pk = tbbbvo.getCdt_pk();
-						}
-						BdCargdocTrayVO bdCargdocTrayVO = (BdCargdocTrayVO) getQueryBO()
-								.retrieveByPK(BdCargdocTrayVO.class, Cdt_pk);
-						bdCargdocTrayVO.setCdt_traystatus(new Integer(1));
-						bdCargdocTrayVOs.add(bdCargdocTrayVO);
-
-					}
-
-				}
-				params.add(tbWarehousestockVO);
-				params.add(bdCargdocTrayVOs);
-				// 制单时间
-				// if (addoredit) {
-				// ((TbGeneralHVO) billVO.getParentVO())
-				// .setTmaketime(getBillUI()._getServerTime()
-				// .toString());
-				// }
-			}
-			params.add(islast);
-			if ("3".equals(st_type) && isedit) {
-				for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-					billVO.getChildrenVO()[i].setStatus(VOStatus.UPDATED);
-				}
-			} else if ("3".equals(st_type) && (!isedit)) {
-				for (int i = 0; i < billVO.getChildrenVO().length; i++) {
-					billVO.getChildrenVO()[i].setStatus(VOStatus.NEW);
-
-				}
-			}
-			//
-			if (getBillUI().isSaveAndCommitTogether()) {
-				billVO = getBusinessAction().saveAndCommit(billVO,
-						getUIController().getBillType(), _getDate().toString(),
-						getBillUI().getUserObject(), checkVO);
-			} else {
-
-				// write to database
-				// if (isControl1) {// 信息科保存，只保存当前单据
-				// billVO = getBusinessAction().save(billVO,
-				// getUIController().getBillType(),
-				// _getDate().toString(), getBillUI().getUserObject(),
-				// checkVO);
-				// } else {// 保管员保存，需要其他信息的改动
-				billVO = getBusinessAction().save(billVO,
-						getUIController().getBillType(), _getDate().toString(),
-						params, checkVO);
-				// }
-			}
-
-		}
-
-		// 进行数据恢复处理
-		if (sCtrl != null) {
-			if (sCtrl.isSingleDetail())
-				billVO.setParentVO((CircularlyAccessibleValueObject) o);
-		}
-		int nCurrentRow = -1;
-		if (isSave) {
-			if (isEditing()) {
-				if (getBufferData().isVOBufferEmpty()) {
-					getBufferData().addVOToBuffer(billVO);
-					nCurrentRow = 0;
-
-				} else {
-					getBufferData().setCurrentVO(billVO);
-					nCurrentRow = getBufferData().getCurrentRow();
-				}
-			}
-			// 新增后操作处理
-			setAddNewOperate(isAdding(), billVO);
-		}
-		// 设置保存后状态
-		setSaveOperateState();
-		if (nCurrentRow >= 0) {
-			getBufferData().setCurrentRow(nCurrentRow);
-		}
-		showZeroLikeNull(false);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
-				false);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
-				false);
-		if (!isControl1) {
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					true);
-		}
-		if (!isControl1) {
-			getButtonManager().getButton(IBillButton.Edit).setEnabled(false);
-
-		}
-		getBillUI().updateButtonUI();
-		// 页面标签
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwarehouseid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwhsmanagerid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cbizid")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cdispatcherid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercorpid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercalbodyid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cotherwhid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("fallocname")
-				.setEdit(false);
-		// getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-		// .setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_crowno")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("invcode")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_vbatchcode").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_bsnum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_snum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_banum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_anum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("vnote")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_virtualbnum").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_customize2").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nprice")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nmny")
-				.setEdit(false);
-		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-		// "geb_virtualbnum").setShow(false);
-
-		isfydj = false;
-		isfirst = true;
-		if (null != st_type && st_type.equals("1")
-				&& getBufferData().getVOBufferSize() > 0) {
-
-			AggregatedValueObject billvo = getBillUI().getVOFromUI();
-			TbGeneralHVO generalhvo = null;
-			if (null != billvo.getParentVO()) {
-				generalhvo = (TbGeneralHVO) billvo.getParentVO();
-			}
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getBillUI().updateButtonUI();
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getBillUI().updateButtonUI();
-			}
-		}
-		if (null != st_type && st_type.equals("3")
-				&& getBufferData().getVOBufferSize() > 0) {
-			AggregatedValueObject billvo = getBillUI().getVOFromUI();
-			TbGeneralHVO generalhvo = null;
-			if (null != billvo.getParentVO()) {
-				generalhvo = (TbGeneralHVO) billvo.getParentVO();
-			}
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getBillUI().updateButtonUI();
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getBillUI().updateButtonUI();
-			}
-		}
-		if (null != st_type && st_type.equals("3")) {
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					true);
-			getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
-			getBillUI().updateButtonUI();
-		}
-		showZeroLikeNull(false);
+		super.onBoSave();
 	}
 
-//	/**
-//	 * 根据登录人员主键查询出对应的货位主键
-//	 * 
-//	 * @param pk
-//	 *            人员主键
-//	 * @return 仓库主键
-//	 * @throws BusinessException
-//	 */
-//	public static String getCargdocPK(String pk) throws BusinessException {
-//		String tmp = null;
-////		IUAPQueryBS iuap = (IUAPQueryBS) NCLocator.getInstance().lookup(
-////				IUAPQueryBS.class.getName());
-//		String sql = "select pk_cargdoc from tb_stockstaff where dr = 0 and cuserid='"
-//				+ pk + "'";
-//		ArrayList list = (ArrayList) getQueryBO().executeQuery(sql,
-//				new ArrayListProcessor());
-//		if (null != list && list.size() > 0) {
-//			Object[] a = (Object[]) list.get(0);
-//			if (null != a && a.length > 0 && null != a[0]) {
-//				tmp = a[0].toString();
+
+
+//	@Override
+//	protected void onBoCancel() throws Exception {
+//		// TODO Auto-generated method stub
+//		super.onBoCancel();
+//		if (addoredit) {
+//			getBufferData().clear();
+//			getBillUI().setBillOperate(IBillOperate.OP_INIT);
+//			getBillUI().initUI();
+//			// super.onBoRefresh();
+//		}
+//		IVOPersistence perse = (IVOPersistence) NCLocator.getInstance().lookup(
+//				IVOPersistence.class.getName());
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cdispatcherid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwarehouseid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwhsmanagerid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
+//				.setEdit(false);
+//		getButtonManager().getButton(
+//				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
+//				false);
+//		getButtonManager().getButton(
+//				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
+//				false);
+//		if (!isControl1) {
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
+//					true);
+//		}
+//		if (!isControl1) {
+//			getButtonManager().getButton(IBillButton.Edit).setEnabled(false);
+//
+//		}
+//		getBillUI().updateButtonUI();
+//		// 页面标签
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwarehouseid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cwhsmanagerid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cbizid")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cdispatcherid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cothercorpid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cothercalbodyid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"geh_cotherwhid").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("fallocname")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_crowno")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("invcode")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//				"geb_vbatchcode").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_bsnum")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_snum")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_banum")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_anum")
+//				.setEdit(false);
+//		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("vnote")
+//		// .setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//				"geb_virtualbnum").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//				"geb_customize2").setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nprice")
+//				.setEdit(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nmny")
+//				.setEdit(false);
+//
+//		isfydj = false;
+//		isfirst = true;
+//		if (null != st_type && st_type.equals("1")
+//				&& getBufferData().getVOBufferSize() > 0) {
+//
+//			AggregatedValueObject billvo = getBillUI().getVOFromUI();
+//			TbGeneralHVO generalhvo = null;
+//			if (null != billvo.getParentVO()) {
+//				generalhvo = (TbGeneralHVO) billvo.getParentVO();
+//			}
+//
+//			//
+//
+//			// 签字后
+//			if (null != generalhvo.getPwb_fbillflag()
+//					&& generalhvo.getPwb_fbillflag() == 3) {
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(false);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(true);
+//				getBillUI().updateButtonUI();
+//			} else { // 签字前
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(true);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(false);
+//				getBillUI().updateButtonUI();
 //			}
 //		}
+//		if (null != st_type && st_type.equals("3")
+//				&& getBufferData().getVOBufferSize() > 0) {
 //
-//		return tmp;
+//			AggregatedValueObject billvo = getBillUI().getVOFromUI();
+//			TbGeneralHVO generalhvo = null;
+//			if (null != billvo.getParentVO()) {
+//				generalhvo = (TbGeneralHVO) billvo.getParentVO();
+//			}
+//
+//			//
+//
+//			// 签字后
+//			if (null != generalhvo.getPwb_fbillflag()
+//					&& generalhvo.getPwb_fbillflag() == 3) {
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(false);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(true);
+//				getBillUI().updateButtonUI();
+//			} else { // 签字前
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
+//						.setEnabled(true);
+//				getButtonManager().getButton(
+//						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
+//						.setEnabled(false);
+//				getBillUI().updateButtonUI();
+//			}
+//
+//		}
+//		if (null != st_type && st_type.equals("3")) {
+//			getButtonManager().getButton(
+//					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
+//					true);
+//			getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
+//			getBillUI().updateButtonUI();
+//		}
+//		isedit = true;
+//		// createBusinessAction();
 //	}
 
-	// 获得单据号
-	public String getBillCode(String billtype, String pkcorp, String gcbm,
-			String operator) throws BusinessException {
-		String scddh = null;
-		try {
-			BillCodeObjValueVO vo = new BillCodeObjValueVO();
-			String[] names = { "库存组织", "操作员" };
-			String[] values = new String[] { gcbm, operator };
-			vo.setAttributeValue(names, values);
-			scddh = getBillCode(billtype, pkcorp, vo);
-		} catch (Exception e) {
-			GenMethod.throwBusiException(e);
-		}
-		return scddh;
-	}
-
-	private String getBillCode(String billtype, String pkcorp,
-			nc.vo.pub.billcodemanage.BillCodeObjValueVO billVO)
-			throws BusinessException {
-		String djh = null;
-		try {
-			IBillcodeRuleService bo = (IBillcodeRuleService) NCLocator
-					.getInstance().lookup(IBillcodeRuleService.class.getName());
-			djh = bo.getBillCode_RequiresNew(billtype, pkcorp, null, billVO);
-
-		} catch (Exception e) {
-			GenMethod.throwBusiException(e);
-		}
-		return djh;
-	}
-
-	@Override
-	protected void onBoCancel() throws Exception {
-		// TODO Auto-generated method stub
-		super.onBoCancel();
-		if (addoredit) {
-			getBufferData().clear();
-			getBillUI().setBillOperate(IBillOperate.OP_INIT);
-			getBillUI().initUI();
-			// super.onBoRefresh();
-		}
-		IVOPersistence perse = (IVOPersistence) NCLocator.getInstance().lookup(
-				IVOPersistence.class.getName());
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cdispatcherid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwarehouseid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwhsmanagerid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-				.setEdit(false);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdtp).setEnabled(
-				false);
-		getButtonManager().getButton(
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zdrk).setEnabled(
-				false);
-		if (!isControl1) {
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					true);
-		}
-		if (!isControl1) {
-			getButtonManager().getButton(IBillButton.Edit).setEnabled(false);
-
-		}
-		getBillUI().updateButtonUI();
-		// 页面标签
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_corp")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_calbody")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwarehouseid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cwhsmanagerid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cbizid")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cdispatcherid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercorpid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cothercalbodyid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"geh_cotherwhid").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("fallocname")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_crowno")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("invcode")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_vbatchcode").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_bsnum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_snum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_banum")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_anum")
-				.setEdit(false);
-		// getBillCardPanelWrapper().getBillCardPanel().getBodyItem("vnote")
-		// .setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_virtualbnum").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-				"geb_customize2").setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nprice")
-				.setEdit(false);
-		getBillCardPanelWrapper().getBillCardPanel().getBodyItem("geb_nmny")
-				.setEdit(false);
-
-		isfydj = false;
-		isfirst = true;
-		if (null != st_type && st_type.equals("1")
-				&& getBufferData().getVOBufferSize() > 0) {
-
-			AggregatedValueObject billvo = getBillUI().getVOFromUI();
-			TbGeneralHVO generalhvo = null;
-			if (null != billvo.getParentVO()) {
-				generalhvo = (TbGeneralHVO) billvo.getParentVO();
-			}
-
-			//
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getBillUI().updateButtonUI();
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getBillUI().updateButtonUI();
-			}
-		}
-		if (null != st_type && st_type.equals("3")
-				&& getBufferData().getVOBufferSize() > 0) {
-
-			AggregatedValueObject billvo = getBillUI().getVOFromUI();
-			TbGeneralHVO generalhvo = null;
-			if (null != billvo.getParentVO()) {
-				generalhvo = (TbGeneralHVO) billvo.getParentVO();
-			}
-
-			//
-
-			// 签字后
-			if (null != generalhvo.getPwb_fbillflag()
-					&& generalhvo.getPwb_fbillflag() == 3) {
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(false);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(true);
-				getBillUI().updateButtonUI();
-			} else { // 签字前
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr)
-						.setEnabled(true);
-				getButtonManager().getButton(
-						nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz)
-						.setEnabled(false);
-				getBillUI().updateButtonUI();
-			}
-
-		}
-		if (null != st_type && st_type.equals("3")) {
-			getButtonManager().getButton(
-					nc.ui.wds.w8004040214.buttun0214.ISsButtun.Zj).setEnabled(
-					true);
-			getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
-			getBillUI().updateButtonUI();
-		}
-		isedit = true;
-		// createBusinessAction();
-	}
-
-	@Override
+	/**
+	 * 当前登录的保管员只能查询自己货位的入库单
+	 */
 	protected void onBoQuery() throws Exception {
-		// TODO Auto-generated method stub
 		StringBuffer strWhere = new StringBuffer();
-
 		if (askForQueryCondition(strWhere) == false)
 			return;// 用户放弃了查询
-		strWhere.append(" and geh_billtype !=0 ");
-
-//		IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-//				IUAPQueryBS.class.getName());
-		List invLisk = nc.ui.wds.w8000.CommonUnit
-				.getInvbasdoc_Pk(ClientEnvironment.getInstance().getUser()
-						.getPrimaryKey());
-
-		if ("0".equals(st_type)) {
-			String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-					.getStordocName(ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey());
-			if (sotckIsTotal) {
-				String gebbvosql = " dr=0 " + " and geb_cinvbasid in ('";
-				for (int k = 0; k < invLisk.size(); k++) {
-					if (null != invLisk && invLisk.size() > 0
-							&& null != invLisk.get(k)
-							&& !"".equals(invLisk.get(k))) {
-						gebbvosql += invLisk.get(k) + "','";
-					}
-				}
-				gebbvosql += "') ";
-				ArrayList gebbvos = (ArrayList) getQueryBO().retrieveByClause(
-						TbGeneralBVO.class, gebbvosql);
-				if (null != gebbvos && gebbvos.size() > 0) {
-					strWhere.append(" and geh_cwarehouseid='" + pk_stordoc
-							+ "' and geh_pk in ('");
-					for (int i = 0; i < gebbvos.size(); i++) {
-						strWhere.append(((TbGeneralBVO) gebbvos.get(i))
-								.getGeh_pk());
-						strWhere.append("','");
-					}
-					strWhere.append("')");
-				} else {
-					strWhere.append(" and 1=2 ");
-				}
-			} else {
-				strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
-			}
-		} else if ("3".equals(st_type)) {
-			if (!sotckIsTotal) {
-				String pk_stordoc = nc.ui.wds.w8000.CommonUnit
-						.getStordocName(ClientEnvironment.getInstance()
-								.getUser().getPrimaryKey());
-				strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
-			}
+		strWhere.append(" and geh_billtype ='"+WdsWlPubConst.BILLTYPE_OTHER_IN+"' ");
+		String pk_stordoc = LoginInforHelper.getCwhid(_getOperator());
+		strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
+		String cargdocid = LoginInforHelper.getSpaceByLogUserForStore(myClientUI._getOperator());
+		if(cargdocid != null){//不是保管员登录 可以查看所有入库单
+			strWhere.append(" and pk_cargdoc = '"+cargdocid+"'");
 		}
-
 		SuperVO[] queryVos = queryHeadVOs(strWhere.toString());
-
 		getBufferData().clear();
 		// 增加数据到Buffer
 		addDataToBuffer(queryVos);
-
 		updateBuffer();
-		if (!isControl1) {
-			getButtonManager().getButton(IBillButton.Edit).setEnabled(false);
-			getBillUI().updateButtonUI();
-		}
-		super.onBoReturn();
-		// if ("3".equals(st_type) && getBufferData().getVOBufferSize() > 0) {
-		// getButtonManager().getButton(IBillButton.Edit).setEnabled(true);
-		// getBillUI().updateButtonUI();
-		// }
-		showZeroLikeNull(false);
 	}
 
 	/**
@@ -3995,11 +2382,11 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		// Object o = nc.ui.pub.pf.PfUtilClient.processAction(
 		// "CANCELSIGN"/* 回写脚本名称 */, "4E"/* 单据类型 */, _getDate()
 		// .toString(), voTempBill);
-		Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
-				Iw8004040210.class.getName());
-		iw.canceldelete8004040210("CANCELSIGN", "DELETE"/* 回写脚本名称 */,
-				"4A"/* 单据类型 */, _getDate().toString(), voTempBill,
-				tbGeneralHVOss);
+//		Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
+//				Iw8004040210.class.getName());
+//		iw.canceldelete8004040210("CANCELSIGN", "DELETE"/* 回写脚本名称 */,
+//				"4A"/* 单据类型 */, _getDate().toString(), voTempBill,
+//				tbGeneralHVOss);
 
 		// Object o = nc.ui.pub.pf.PfUtilClient.processAction(
 		// "DELETE"/* 回写脚本名称 */, "4E"/* 单据类型 */, _getDate().toString(),
@@ -4120,10 +2507,10 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		tbGeneralHVOss.setPwb_fbillflag(3);
 		// 要回写的方法
 
-		Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
-				Iw8004040210.class.getName());
-		iw.pushsavesign8004040210("PUSHSAVESIGN"/* 回写脚本名称 */, "4A"/* 单据类型 */,
-				_getDate().toString(), voTempBill, tbGeneralHVOss);
+//		Iw8004040210 iw = (Iw8004040210) NCLocator.getInstance().lookup(
+//				Iw8004040210.class.getName());
+//		iw.pushsavesign8004040210("PUSHSAVESIGN"/* 回写脚本名称 */, "4A"/* 单据类型 */,
+//				_getDate().toString(), voTempBill, tbGeneralHVOss);
 		// Object o = nc.ui.pub.pf.PfUtilClient.processAction(
 		// "PUSHSAVESIGN"/* 回写脚本名称 */, "4E"/* 单据类型 */, _getDate()
 		// .toString(), voTempBill);
@@ -4168,39 +2555,13 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (null == tbGeneralHVOss) {
 			return null;
 		}
-		// // 获得调拨出库单表头主键
-		// String h_cgeneralhid = tbGeneralHVOss.getGeh_cgeneralhid();
-		//
-		// // 获得调拨出库单表头VO
-		// StringBuffer hsql = new StringBuffer(
-		// "select fallocflag,PK_CALBODY,PK_CORP,CWAREHOUSEID"
-		// + ",CPROVIDERID,FALLOCFLAG,PK_CUBASDOC,vbillcode"
-		// + ",cgeneralhid "
-		// + " from ic_general_h where cgeneralhid='");
-		// hsql.append(h_cgeneralhid);
-//		// hsql.append("' and dr=0");
-//		IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-//				IUAPQueryBS.class.getName());
-		//
-		// // 调拨出库单表头VO集合
-		// ArrayList firstVOs = (ArrayList) query.executeQuery(hsql.toString(),
-		// new ArrayListProcessor());
-		// if (null != firstVOs && firstVOs.size() != 0) {
-
-		// Object[] firstVO = (Object[]) firstVOs.get(0);
+	
 		// 要回写的调拨入库单表头VO
 		GeneralBillHeaderVO gbillhVO = new GeneralBillHeaderVO();
 
 		// 库存单据类型编码
 		gbillhVO.setCbilltypecode("4A");
-		// 调拨类型标志
-		// if (null != firstVO[0]) {
-		// gbillhVO.setFallocflag(Integer.parseInt(firstVO[0].toString()));
-		// }
-		// 业务员ID
-		// if (null != tbGeneralHVOss.getGeh_cbizid()) {
-		// gbillhVO.setCbizid(tbGeneralHVOss.getGeh_cbizid());
-		// }
+		
 		// 收发类型ID
 		if (null != tbGeneralHVOss.getGeh_cdispatcherid()) {
 			gbillhVO.setCdispatcherid(tbGeneralHVOss.getGeh_cdispatcherid());
@@ -4218,11 +2579,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		// 操作员
 		gbillhVO.setAttributeValue("coperatoridnow", ClientEnvironment
 				.getInstance().getUser().getPrimaryKey());
-		// // // 对方库存组织PK
-		// // if (null != tbGeneralHVOss) {
-		// // gbillhVO.setAttributeValue("cothercalbodyid", tbGeneralHVOss
-		// // .getGeh_cothercalbodyid());
-		// // }
+		
 		// 对方公司ID
 		if (null != tbGeneralHVOss) {
 			gbillhVO.setAttributeValue("cothercorpid", tbGeneralHVOss
@@ -4233,25 +2590,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			gbillhVO.setAttributeValue("cotherwhid", tbGeneralHVOss
 					.getGeh_cotherwhid());
 		}
-		// // // 调出库存组织ID
-		// // if (null != tbGeneralHVOss) {
-		// // gbillhVO.setAttributeValue("cothercalbodyid", tbGeneralHVOss
-		// // .getGeh_cothercalbodyid());
-		// // }
-		// 调出公司ID
-		// if (null != tbGeneralHVOss) {
-		// gbillhVO.setAttributeValue("coutcorpid", tbGeneralHVOss
-		// .getGeh_cothercorpid());
-		//
-		// }
-		//
-		// // 供应商ID
-		// // if (null != firstVO[4]) {
-		// // gbillhVO.setCproviderid(firstVO[4].toString());
-		// // }
-		// // 库房签字人
-		// // gbillhVO.setCregister(ClientEnvironment.getInstance().getUser()
-		// // .getPrimaryKey());
+		
 		// 仓库ID
 		if (null != tbGeneralHVOss.getGeh_cwarehouseid()) {
 			gbillhVO.setCwarehouseid(tbGeneralHVOss.getGeh_cwarehouseid());

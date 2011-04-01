@@ -6,17 +6,13 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
 import nc.itf.uap.IUAPQueryBS;
-import nc.itf.wds.w8004040210.Iw8004040210;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.ml.NCLangRes;
 import nc.ui.pub.beans.UIButton;
@@ -27,10 +23,10 @@ import nc.ui.pub.bill.BillListData;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillMouseEnent;
 import nc.ui.pub.bill.BillTableMouseListener;
+import nc.vo.ic.pub.TbGeneralBBVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.wds.w8004040210.TbGeneralBBVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
 
 public class TrayDisposeDetailDlg extends nc.ui.pub.beans.UIDialog implements
 		ActionListener, BillEditListener, BillTableMouseListener,
