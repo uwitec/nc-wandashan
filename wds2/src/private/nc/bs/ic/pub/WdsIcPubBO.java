@@ -8,12 +8,12 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.bs.wl.pub.WdsWlPubBO;
 import nc.itf.scm.cenpur.service.TempTableUtil;
+import nc.vo.ic.pub.TbGeneralBBVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.w8004040210.TbGeneralBBVO;
-import nc.vo.wds.w8004040210.TbGeneralBVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsIcPubBO {
