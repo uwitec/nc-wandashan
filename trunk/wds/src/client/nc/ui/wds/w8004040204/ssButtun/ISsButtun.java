@@ -19,9 +19,9 @@ package nc.ui.wds.w8004040204.ssButtun;
         public final static int SsAdd = 117;
         public final static int Con = 102;
         public final static int pd = 118;
+        public final static int tpzd = 121;//托盘指定
         public final static int sp = 119;
-        public final static int tpzd = 121;
-        public final static int zdqh = 122;
+        public final static int zdqh = 122;//自动取货
         public final static int CfStop = 107;
         public final static int CfOpen = 108;
         public final static int fzgn = 120;

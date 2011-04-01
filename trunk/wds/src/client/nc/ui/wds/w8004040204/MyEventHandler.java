@@ -61,23 +61,25 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	// 调用接口
 	private Iw8004040204 iw = null;
 
-	private FydnewDlg fydnewdlg = null; // 查询方法的类
-
+	private FydnewDlg fydnewdlg = null; // 查询对话框
 	boolean isAdd = false;
-
 	boolean opType = false; // 是否赠品
-
-	private List hiddenList = null;
+//	private List hiddenList = null;
 	private String pk_stock = ""; // 当前登录者对应的仓库主键
-	IUAPQueryBS iuap = (IUAPQueryBS) NCLocator.getInstance().lookup(
-			IUAPQueryBS.class.getName());
+	
+	IUAPQueryBS iuap = null;
+	
+	private IUAPQueryBS getIuapInstance(){
+		if(iuap == null){
+			iuap = (IUAPQueryBS) NCLocator.getInstance().lookup(
+					IUAPQueryBS.class.getName());
+		}
+		return iuap;
+	}
 
-	private Integer isControl = -1; // 是否有权限操作当前单据 1为可以签字的用户 0 修改操作 2 可以进行出库
-									// 3所有权限
-
-	private boolean isStock = false; // 是否为总仓 true 总仓 false 分仓
-	// 根据当前登录者查询所属仓库和其仓库所存储的产品
-	private List pkList = null;
+	private Integer isControl = -1; // 是否有权限操作当前单据 1为可以签字的用户 0 修改操作 2 可以进行出库 3所有权限
+	private boolean isStock = false; // 是否为总仓: true 总仓 false 分仓	
+	private List pkList = null;// 根据当前登录者查询所属仓库和其仓库所存储的产品
 
 	public MyEventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
@@ -144,15 +146,11 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	@Override
 	protected void onBoEdit() throws Exception {
 		// 发运科或者内勤
-		if (isControl == 0 || isControl == 3) {
 			super.onBoEdit();
-			// 设置托盘指定按钮可用，修改状态
-			isAdd = false;
-			getButtonManager().getButton(ISsButtun.tpzd).setEnabled(true);
-			myClientUI.updateButtons();
-		} else {
-			myClientUI.showErrorMessage("您没有权限");
-		}
+//			// 设置托盘指定按钮可用，修改状态
+//			isAdd = false;
+//			getButtonManager().getButton(ISsButtun.tpzd).setEnabled(true);
+//			myClientUI.updateButtons();
 	}
 
 	/**
@@ -181,7 +179,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	protected void onBoQuery() throws Exception {
 		StringBuffer strWhere = new StringBuffer();
 		if (isControl == -1) {
-			myClientUI.showErrorMessage("您没有权限操作");
+			myClientUI.showErrorMessage("您没有权限操作,请先绑定仓库");
 			return;
 		}
 		if (askForQueryCondition(strWhere) == false)
@@ -315,7 +313,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		String strWhere = " dr = 0 and vsourcebillcode = '"
 				+ generalh.getVsourcebillcode() + "' and csourcebillhid = '"
 				+ generalh.getCsourcebillhid() + "'";
-		ArrayList tmpList = (ArrayList) iuap.retrieveByClause(
+		ArrayList tmpList = (ArrayList) getIuapInstance().retrieveByClause(
 				TbOutgeneralHVO.class, strWhere);
 		if (null != tmpList && tmpList.size() > 0) {
 			tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
@@ -890,7 +888,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			if (retu == 1) {
 				TbOutgeneralHVO generalh = (TbOutgeneralHVO) getBufferData()
 						.getCurrentVO().getParentVO();
-				Object result = iuap.retrieveByPK(TbOutgeneralHVO.class,
+				Object result = getIuapInstance().retrieveByPK(TbOutgeneralHVO.class,
 						generalh.getGeneral_pk());
 				if (null != result) {
 					generalh = (TbOutgeneralHVO) result;
@@ -907,7 +905,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 						String strWhere = " dr = 0 and vbillcode = '"
 								+ generalh.getVbillcode() + "'";
 
-						ArrayList list = (ArrayList) iuap.retrieveByClause(
+						ArrayList list = (ArrayList) getIuapInstance().retrieveByClause(
 								IcGeneralHVO.class, strWhere);
 						if (null != list && list.size() > 0) {
 							IcGeneralHVO header = (IcGeneralHVO) list.get(0);
@@ -915,7 +913,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 								strWhere = " dr = 0 and cgeneralhid = '"
 										+ header.getCgeneralhid() + "'";
-								list = (ArrayList) iuap.retrieveByClause(
+								list = (ArrayList) getIuapInstance().retrieveByClause(
 										IcGeneralBVO.class, strWhere);
 								if (null != list && list.size() > 0) {
 									IcGeneralBVO[] itemvo = new IcGeneralBVO[list
@@ -983,7 +981,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 						// TbOutgeneralBVO[] bvo = (TbOutgeneralBVO[]) value
 						// .getChildrenVO();
 
-						Object result = iuap
+						Object result = getIuapInstance()
 								.retrieveByPK(TbOutgeneralHVO.class, generalh
 										.getGeneral_pk());
 						if (null != result) {
@@ -1092,7 +1090,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				&& !"".equals(outbvo[0].getCfirstbillhid())) {
 			String sWhere = " dr = 0 and csaleid = '"
 					+ outbvo[0].getCfirstbillhid() + "'";
-			ArrayList list = (ArrayList) iuap.retrieveByClause(SoSaleVO.class,
+			ArrayList list = (ArrayList) getIuapInstance().retrieveByClause(SoSaleVO.class,
 					sWhere);
 			if (null != list && list.size() > 0) {
 				SoSaleVO salehvo = (SoSaleVO) list.get(0);
@@ -1146,7 +1144,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 								&& !"".equals(outbvo[i].getCfirstbillhid())) {
 							sWhere = " dr = 0 and corder_bid = '"
 									+ outbvo[i].getCfirstbillbid() + "'";
-							ArrayList saleblist = (ArrayList) iuap
+							ArrayList saleblist = (ArrayList) getIuapInstance()
 									.retrieveByClause(SoSaleorderBVO.class,
 											sWhere);
 							if (null != saleblist && saleblist.size() > 0) {
@@ -1163,7 +1161,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 									// 。因为后面在回写销售发票的时候被二次开发过，所以必须要回写自定义11字段(买赠业务)
 									String sellSql = " select  vdef10,vdef11  from so_saleexecute where dr = 0 and csale_bid = '"
 											+ salebvo.getCorder_bid() + "'";
-									ArrayList sellList = (ArrayList) iuap
+									ArrayList sellList = (ArrayList) getIuapInstance()
 											.executeQuery(sellSql,
 													new ArrayListProcessor());
 									if (null != sellList && sellList.size() > 0) {
@@ -1189,7 +1187,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 										+ "' and vbatchcode='"
 										+ outbvo[i].getLvbatchcode()
 										+ "' and dr=0";
-								ArrayList batchList = (ArrayList) iuap
+								ArrayList batchList = (ArrayList) getIuapInstance()
 										.executeQuery(sql,
 												new ArrayListProcessor());
 								if (null != batchList && batchList.size() > 0) {
