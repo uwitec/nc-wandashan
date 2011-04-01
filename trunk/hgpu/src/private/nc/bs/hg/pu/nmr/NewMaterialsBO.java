@@ -83,8 +83,8 @@ public class NewMaterialsBO {
 		invVO.setAttributeValue(HgPubConst.INVBAS_VTS_FIELDNAME,vo.getVtechstan());//技术标准
 		invVO.setInvmnecode(vo.getInvmnecode());//助记码
 		invVO.setPk_taxitems(vo.getPk_taxitems());//税目
-		invVO.setDiscountflag(UFBoolean.FALSE);//价格折扣
-		invVO.setLaborflag(UFBoolean.FALSE);//应税劳务
+		invVO.setDiscountflag(PuPubVO.getUFBoolean_NullAs(vo.getDiscountflag(), UFBoolean.FALSE));//价格折扣
+		invVO.setLaborflag(PuPubVO.getUFBoolean_NullAs(vo.getLaborflag(), UFBoolean.FALSE));//应税劳务
 		invVO.setAssistunit(UFBoolean.FALSE);
 		invVO.setPk_corp(HgPubConst.PK_CORP);
 		invVO.setStatus(VOStatus.NEW);
