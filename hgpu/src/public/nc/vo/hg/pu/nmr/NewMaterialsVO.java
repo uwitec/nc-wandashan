@@ -28,7 +28,7 @@ public class NewMaterialsVO extends SuperVO {
 	private String vinvname;//名称
 	private String vmemo;//备注
 	private String pk_invbasdoc;//正式物资基本ID
-	private String voperatorid;//制单人
+	private String voperatorid;////编码人
 	private String vbillno;//单据号
 	private String pk_invcl;//存货分类
 	private String pk_measdoc;//计量单位
@@ -51,7 +51,11 @@ public class NewMaterialsVO extends SuperVO {
 	private String vtechstan;//技术标准
 	private String vmaterial;//材质
 	private String invcode;//存货编码
-	
+	private UFBoolean discountflag;//价格折扣
+	private UFBoolean laborflag;//应税劳务
+	private UFDate reserve12;///编码日期
+	private String reserve5;//制单人
+	private String ccorpid;//申请公司
 	
 	
 	private UFDateTime ts;
@@ -64,12 +68,10 @@ public class NewMaterialsVO extends SuperVO {
 	private UFDate reserve11;
 	private String reserve20;
 	private UFDouble reserve9;
-	private String reserve5;
 	private String pk_busitype;
 	private String reserve19;
 	private String vapprovenote;
 	private String reserve18;
-	private UFDate reserve12;
 	private UFDouble reserve6;
 	private String reserve1;
 	private UFBoolean reserve16;
@@ -1004,6 +1006,24 @@ public class NewMaterialsVO extends SuperVO {
 	}
 	public void setVmaterial(String vmaterial) {
 		this.vmaterial = vmaterial;
+	}
+	public UFBoolean getDiscountflag() {
+		return discountflag;
+	}
+	public void setDiscountflag(UFBoolean discountflag) {
+		this.discountflag = discountflag;
+	}
+	public UFBoolean getLaborflag() {
+		return laborflag;
+	}
+	public void setLaborflag(UFBoolean laborflag) {
+		this.laborflag = laborflag;
+	}
+	public String getCcorpid() {
+		return ccorpid;
+	}
+	public void setCcorpid(String ccorpid) {
+		this.ccorpid = ccorpid;
 	}    
 } 
 
