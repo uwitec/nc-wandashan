@@ -46,7 +46,7 @@ public class BalancePlanQueryDlg extends QueryConditionClient {
 		} catch (InvalidAccperiodExcetion e) {
 		    MessageDialog.showErrorDlg(e);
 		}
-		int mon=Integer.parseInt(calendar.getMonthVO().getMonth())+1;
+		int mon=Integer.parseInt(calendar.getMonthVO().getMonth());
 		if(mon<10){
 			setDefaultValue("h.cmonth",null,"0"+PuPubVO.getString_TrimZeroLenAsNull(mon));
 		}else{
