@@ -17,6 +17,7 @@ import nc.vo.hg.pu.pub.HgPubTool;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
 public class NewMaterialsBO {
@@ -82,6 +83,8 @@ public class NewMaterialsBO {
 		invVO.setAttributeValue(HgPubConst.INVBAS_VTS_FIELDNAME,vo.getVtechstan());//技术标准
 		invVO.setInvmnecode(vo.getInvmnecode());//助记码
 		invVO.setPk_taxitems(vo.getPk_taxitems());//税目
+		invVO.setDiscountflag(UFBoolean.FALSE);//价格折扣
+		invVO.setLaborflag(UFBoolean.FALSE);//应税劳务
 		invVO.setAssistunit(UFBoolean.FALSE);
 		invVO.setPk_corp(HgPubConst.PK_CORP);
 		invVO.setStatus(VOStatus.NEW);
