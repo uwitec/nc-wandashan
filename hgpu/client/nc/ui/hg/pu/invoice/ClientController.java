@@ -53,7 +53,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Card,
-				IBillButton.Print
+//				IBillButton.Print
 //				IBillButton.ApproveInfo
 		};
 	}
