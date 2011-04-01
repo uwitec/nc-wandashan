@@ -2,11 +2,8 @@ package nc.ui.wds.ic.inv;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BDBusinessDelegator;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 
 
 /**
