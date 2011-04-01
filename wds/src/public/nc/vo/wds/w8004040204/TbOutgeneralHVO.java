@@ -31,13 +31,13 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String coperatorid;
 	public Integer iprintcount;
 	public String vuserdef14;
-	public String comp;
+	public String comp;//公司
 	public String pk_defdoc10;
 	public String pk_defdoc6;
 	public String cbiztype;
 	public String pk_defdoc3;
 	public String general_pk;
-	public String srl_pkr;
+	public String srl_pkr;//入库仓库
 	public String vuserdef10;
 	public String pk_defdoc2;
 	public String vdiliveraddress;
@@ -66,7 +66,7 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String vuserdef2;
 	public String vuserdef5;
 	public String vnote;
-	public String srl_pk;
+	public String srl_pk;//出库仓库
 	public String vbilltype;
 	public String vuserdef8;
 	public String vuserdef4;
