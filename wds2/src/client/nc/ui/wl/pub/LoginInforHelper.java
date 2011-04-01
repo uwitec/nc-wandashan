@@ -1,6 +1,8 @@
 package nc.ui.wl.pub;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
@@ -133,12 +135,18 @@ public class LoginInforHelper {
 		return (String[])os;	
 	}
 	
+	private static Map<String,String[]> invInfor = null;
 	public static String[] getInvBasDocIDsByUserID(String userid) throws Exception{
-		LoginInforVO infor = getLogInfor(userid);
-		if(infor.getType()!=0){
-			throw new BusinessException("当前登陆人员不是保管员");
-		}
-		return getInvBasdocIDsBySpaceID(infor.getSpaceid());
+		if(invInfor == null)
+			invInfor = new HashMap<String, String[]>();
+			if(invInfor.containsKey(userid))
+				return invInfor.get(userid);
+			LoginInforVO infor = getLogInfor(userid);
+			if(infor.getType()!=0){
+				throw new BusinessException("当前登陆人员不是保管员");
+			}
+			invInfor.put(userid, getInvBasdocIDsBySpaceID(infor.getSpaceid())) ;
+			return invInfor.get(userid);
 	}
 	
 	/**
