@@ -863,6 +863,8 @@ public class CommonUnit {
 	 *            人员主键
 	 * @return 货品主键数组
 	 * @throws BusinessException
+	 * tb_stockstaff:仓库人员绑定表
+	 * tb_spacegoods：存货货位信息
 	 */
 	public static List getInvbasdoc_Pk(String pk) {
 		String sql = "select s.pk_invbasdoc from tb_stockstaff t,tb_spacegoods s "
@@ -899,7 +901,7 @@ public class CommonUnit {
 	 */
 	public static String getStordocName(String pk) throws BusinessException {
 		String tmp = null;
-		String sql = "select pk_stordoc from tb_stockstaff where dr = 0 and cuserid='"
+		String sql = "select pk_stordoc from tb_stockstaff where isnull(dr,0) = 0 and cuserid='"
 				+ pk + "'";
 		ArrayList list = (ArrayList) iuap.executeQuery(sql,
 				new ArrayListProcessor());
