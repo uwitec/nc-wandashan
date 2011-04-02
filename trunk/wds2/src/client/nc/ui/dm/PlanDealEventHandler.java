@@ -126,6 +126,7 @@ public class PlanDealEventHandler implements BillEditListener,IBillRelaSortListe
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 
 		 */	
+		clearData();
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
