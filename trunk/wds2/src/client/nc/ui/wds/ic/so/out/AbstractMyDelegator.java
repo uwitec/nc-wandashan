@@ -2,6 +2,8 @@ package nc.ui.wds.ic.so.out;
 
 import java.util.Hashtable;
 
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+
 
 /**
  *
@@ -17,9 +19,9 @@ public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusin
 		
 	   Hashtable dataHashTable = new Hashtable();
 	                         
-           nc.vo.wds.w8004040204.TbOutgeneralBVO[] bodyVOs1 =
-                       (nc.vo.wds.w8004040204.TbOutgeneralBVO[])queryByCondition(nc.vo.wds.w8004040204.TbOutgeneralBVO.class,
-                                                    getBodyCondition(nc.vo.wds.w8004040204.TbOutgeneralBVO.class,key));   
+          TbOutgeneralBVO[] bodyVOs1 =
+                       (TbOutgeneralBVO[])queryByCondition(TbOutgeneralBVO.class,
+                                                    getBodyCondition(TbOutgeneralBVO.class,key));   
             if(bodyVOs1 != null && bodyVOs1.length > 0){
                           
               dataHashTable.put("tb_outgeneral_b",bodyVOs1);
@@ -37,7 +39,7 @@ public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusin
          */	
        public String getBodyCondition(Class bodyClass,String key){
 		
-       	 if(bodyClass == nc.vo.wds.w8004040204.TbOutgeneralBVO.class)
+       	 if(bodyClass == TbOutgeneralBVO.class)
 	   return "general_pk = '" + key + "' and isnull(dr,0)=0 ";
        		
 	 return null;
