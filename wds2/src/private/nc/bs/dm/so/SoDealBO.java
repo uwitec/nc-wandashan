@@ -61,8 +61,11 @@ public class SoDealBO {
 				" inner join so_saleexecute c on b.corder_bid = c.csale_bid ");
 		
 		sql.append(" where");
-		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(c.dr,0)=0 and ");
-		sql.append(whereSql);
+		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(c.dr,0)=0  ");
+		if( whereSql !=null && whereSql.length()>0){
+		sql.append(" and "+whereSql);
+		}
+		
 		Object o = getDao().executeQuery(sql.toString(), new BeanListProcessor(SoDealVO.class));
 		if( o != null){
 			ArrayList<SoDealVO> list = (ArrayList<SoDealVO>)o;
