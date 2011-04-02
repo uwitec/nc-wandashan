@@ -34,7 +34,7 @@ import nc.ui.trade.bill.BillTemplateWrapper;
 	 * @return BusinessDelegator 不走平台的业务代理类
 	 */
 	protected BusinessDelegator createBusinessDelegator() {
-		return new nc.ui.wds.w8004040602.MyDelegator();
+		return new MyDelegator();
 	}
 
 	/**
