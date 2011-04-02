@@ -8,9 +8,12 @@ import nc.itf.uap.IUAPQueryBS;
 import nc.itf.uap.IVOPersistence;
 import nc.itf.uap.sfapp.IBillcodeRuleService;
 import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.vo.dm.confirm.TbFydmxnewVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.IcGeneralBVO;
+import nc.vo.ic.pub.IcGeneralHVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
@@ -23,9 +26,6 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.w8004061002.BdCargdocTrayVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060608.IcGeneralBVO;
-import nc.vo.wds.w80060608.IcGeneralHVO;
 
 public class CommonUnit {
 	static IUAPQueryBS iuap = (IUAPQueryBS) NCLocator.getInstance().lookup(
@@ -806,7 +806,7 @@ public class CommonUnit {
 	 * @return ¿â´æ±í¼¯ºÏ
 	 */
 	public static List getStockDetailByPk_User(String pk_user,
-			String pk_invbasdoc) {
+			String pk_invbasdoc) throws Exception{
 		StringBuffer sql = new StringBuffer(
 				"select o.whs_pk ,o.pplpt_pk,o.whs_stockpieces,o.whs_stocktonnage,o.pk_invbasdoc,o.whs_batchcode,"
 						+ "o.whs_nprice,o.whs_nmny,o.whs_lbatchcode from tb_warehousestock o ,tb_stockstaff s, "
@@ -825,6 +825,7 @@ public class CommonUnit {
 		} catch (BusinessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw e;
 		}
 		if (null != list && list.size() > 0) {
 			List strList = new ArrayList();

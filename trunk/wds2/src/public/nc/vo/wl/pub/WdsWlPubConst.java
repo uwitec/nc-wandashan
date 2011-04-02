@@ -57,7 +57,7 @@ public class WdsWlPubConst {
 	/** 销售出库 */
 	public static String BILLTYPE_SALE_OUT = "WDS8";
 	/** 调拨入库*/
-	public static String BILLTYPE_ALLO_OUT = "WDS9";
+	public static String BILLTYPE_ALLO_IN = "WDS9";
 	/** 退货入库*/
 	public static String BILLTYPE_BACK_IN = "WDSA";
 	/**运输确认单*/
