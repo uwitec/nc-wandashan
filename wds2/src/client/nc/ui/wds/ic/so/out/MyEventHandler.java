@@ -23,6 +23,8 @@ import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
+import nc.vo.ic.pub.IcGeneralBVO;
+import nc.vo.ic.pub.IcGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -32,15 +34,14 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
-import nc.vo.wds.pub.WdsWlPubConsts;
 import nc.vo.wds.w80060604.SoSaleVO;
 import nc.vo.wds.w80060604.SoSaleorderBVO;
-import nc.vo.wds.w80060608.IcGeneralBVO;
-import nc.vo.wds.w80060608.IcGeneralHVO;
 import nc.vo.wl.pub.CommonUnit;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubConsts;
 
 /**
  * 
@@ -390,90 +391,81 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	 */
 	protected void onzdqh() throws Exception {
 		int results = myClientUI.showOkCancelMessage("确认自动拣货?");
-		if (results == 1) {
-			TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
-					.getVOFromUI().getChildrenVO();
-			TbOutgeneralBVO[] tmpbVO = null;
-			if (null != generalbVO && generalbVO.length > 0) {
-				Object pk_stordoc = getBillCardPanelWrapper()
-						.getBillCardPanel().getHeadItem("srl_pk")
-						.getValueObject();
-				if (null == pk_stordoc || "".equals(pk_stordoc)) {
-					myClientUI.showErrorMessage("操作失败,您无权操作");
-					return;
-				}
-				String msg = getIwBO().autoPickAction(ClientEnvironment
-						.getInstance().getUser().getPrimaryKey(), generalbVO,
-						pk_stordoc.toString(), "def16");
-				if (null != msg) {
-					myClientUI.showErrorMessage(msg);
-					return;
-				} else {
-					tmpbVO = new TbOutgeneralBVO[generalbVO.length];
-					for (int i = 0; i < generalbVO.length; i++) {
-						getBillCardPanelWrapper().getBillCardPanel()
-								.setBodyValueAt(null, i, "noutnum");
-						getBillCardPanelWrapper().getBillCardPanel()
-								.setBodyValueAt(null, i, "noutassistnum");
-						getBillCardPanelWrapper().getBillCardPanel()
-								.setBodyValueAt(null, i, "vbatchcode");
-						// 调用接口查询缓存表中的实出主辅数量
-						Object[] a = getIwBO().getNoutNum(generalbVO[i]
-								.getCsourcebillbid(), generalbVO[i]
-								.getCinventoryid().trim());
-						if (null != a && a.length > 0) {
-							// 实发数量
-							if (null != a[0])
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[0], i, "noutnum");
-							// 实发辅数量
-							if (null != a[1]) {
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[1], i,
-												"noutassistnum");
-							}
-							// 批次
-							if (null != a[2]
-									&& a[2].toString().trim().length() > 0) {
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[2], i, "vbatchcode");
-							}
-							// 单价
-							if (null != a[3]) {
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[3], i, "nprice");
-							}
-							// 金额
-							if (null != a[4]) {
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[4], i, "nmny");
-							}
-							// 来源批次
-							if (null != a[5]
-									&& a[5].toString().trim().length() > 0) {
-								getBillCardPanelWrapper().getBillCardPanel()
-										.setBodyValueAt(a[5], i, "lvbatchcode");
-							}
-							// 货位ID
-							getBillCardPanelWrapper()
-									.getBillCardPanel()
-									.setBodyValueAt(
-											CommonUnit
-													.getCargDocName(ClientEnvironment
-															.getInstance()
-															.getUser()
-															.getPrimaryKey()),
-											i, "cspaceid");
-						}
-					}
-					this.onckmx();
-				}
-			} else {
-				myClientUI.showErrorMessage("操作失败,您无权操作");
-				return;
-			}
+		if (results != 1) 
+			return;
+		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
+		.getVOFromUI().getChildrenVO();
+//		TbOutgeneralBVO[] tmpbVO = null;
+		if (null == generalbVO || generalbVO.length == 0) {
+			throw new BusinessException("无货品数据");
 		}
 
+		Object pk_stordoc = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk")
+		.getValueObject();
+		if (PuPubVO.getString_TrimZeroLenAsNull(pk_stordoc)==null) {
+			myClientUI.showErrorMessage("操作失败,您无权操作");
+			return;
+		}
+		
+		String msg = getIwBO().autoPickAction(myClientUI._getOperator(), generalbVO,
+				pk_stordoc.toString(), "def16");
+		if (null != msg){
+			myClientUI.showErrorMessage(msg);
+			return;
+		}
+
+
+		String pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+		for (int i = 0; i < generalbVO.length; i++) {
+			getBillCardPanelWrapper().getBillCardPanel()
+			.setBodyValueAt(null, i, "noutnum");
+			getBillCardPanelWrapper().getBillCardPanel()
+			.setBodyValueAt(null, i, "noutassistnum");
+			getBillCardPanelWrapper().getBillCardPanel()
+			.setBodyValueAt(null, i, "vbatchcode");
+			// 调用接口查询缓存表中的实出主辅数量
+			Object[] a = getIwBO().getNoutNum(generalbVO[i]
+			                                             .getCsourcebillbid(), generalbVO[i]
+			                                                                              .getCinventoryid().trim());
+			if (null != a && a.length > 0) {
+				// 实发数量
+				if (null != a[0])
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[0], i, "noutnum");
+				// 实发辅数量
+				if (null != a[1]) {
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[1], i,
+							"noutassistnum");
+				}
+				// 批次
+				if (null != a[2]
+				              && a[2].toString().trim().length() > 0) {
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[2], i, "vbatchcode");
+				}
+				// 单价
+				if (null != a[3]) {
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[3], i, "nprice");
+				}
+				// 金额
+				if (null != a[4]) {
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[4], i, "nmny");
+				}
+				// 来源批次
+				if (PuPubVO.getString_TrimZeroLenAsNull(a[5])!=null) {
+					getBillCardPanelWrapper().getBillCardPanel()
+					.setBodyValueAt(a[5], i, "lvbatchcode");
+				}
+				// 货位ID
+				getBillCardPanelWrapper()
+				.getBillCardPanel()
+				.setBodyValueAt(pk_cargdoc,i, "cspaceid");
+			}
+		}
+		this.onckmx();
 	}
 
 	/*

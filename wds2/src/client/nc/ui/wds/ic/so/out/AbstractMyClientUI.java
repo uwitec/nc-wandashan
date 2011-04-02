@@ -1,21 +1,20 @@
 package nc.ui.wds.ic.so.out;
 
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
-import nc.ui.pub.linkoperate.*;
-import nc.vo.trade.button.ButtonVO;
-import nc.vo.pub.AggregatedValueObject;
+import nc.ui.pub.linkoperate.ILinkQuery;
+import nc.ui.pub.linkoperate.ILinkQueryData;
 import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
-import nc.ui.wds.w8004040204.MyClientUICheckRuleGetter;
-import nc.ui.wds.w8004040204.MyClientUICtrl;
 import nc.ui.wds.w8004040204.ssButtun.ckmxBtn;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
