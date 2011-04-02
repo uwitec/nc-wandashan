@@ -1,13 +1,11 @@
 package nc.ui.wds.ic.other.out;
 
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
-import nc.ui.pub.linkoperate.*;
-import nc.vo.trade.button.ButtonVO;
-import nc.vo.pub.AggregatedValueObject;
+import nc.ui.pub.linkoperate.ILinkQuery;
+import nc.ui.pub.linkoperate.ILinkQueryData;
 import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040204.ssButtun.cgqyBtn;
@@ -18,7 +16,9 @@ import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w8004040204.ssButtun.zjBtn;
 import nc.ui.wds.w8004040204.ssButtun.zkBtn;
 import nc.ui.wds.w8004040204.ssButtun.zzdjBtn;
-import nc.ui.wds.w8004040208.MyClientUICheckRuleGetter;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
 
 
 
@@ -123,7 +123,7 @@ import nc.ui.wds.w8004040208.MyClientUICheckRuleGetter;
 	 * 注册前台校验类
 	 */
 	public Object getUserObject() {
-		return new MyClientUICheckRuleGetter();
+		return new nc.ui.wds.w8004040208.MyClientUICheckRuleGetter();
 	}
 	
 	public void doQueryAction(ILinkQueryData querydata) {

@@ -17,17 +17,13 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.ISingleController;
-import nc.ui.trade.businessaction.BusinessAction;
-import nc.ui.trade.businessaction.IBusinessActionType;
-import nc.ui.trade.businessaction.IBusinessController;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
+import nc.ui.wds.ic.so.out.TrayDisposeDetailDlg;
+import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wds.w8000.CommonUnit;
-import nc.ui.wds.w8000.W8004040204Action;
-import nc.ui.wds.w8004040204.TrayDisposeDetailDlg;
-import nc.ui.wds.w8004040204.TrayDisposeDlg;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.order.SendorderBVO;
@@ -205,17 +201,6 @@ public class MyEventHandler extends AbstractMyEventHandler {
 				"8",
 				getBillCardPanelWrapper().getBillCardPanel().getBillTable()
 						.getSelectedRow(), "csourcetype");
-	}
-
-	protected IBusinessController createBusinessAction() {
-		switch (getUIController().getBusinessActionType()) {
-		case IBusinessActionType.PLATFORM:
-			return new BusinessAction(getBillUI());
-		case IBusinessActionType.BD:
-			return new W8004040204Action(getBillUI());
-		default:
-			return new BusinessAction(getBillUI());
-		}
 	}
 
 	// È¡ÏûÇ©×Ö

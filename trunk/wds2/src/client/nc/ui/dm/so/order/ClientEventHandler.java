@@ -3,6 +3,9 @@ package nc.ui.dm.so.order;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.dm.so.order.SoorderBVO;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.querytemplate.TemplateInfo;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -44,7 +47,18 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	 * @throws Exception
 	 */
 	protected void beforeSaveCheck() throws Exception{
-		
+		//表体非空校验
+		if(getBillUI().getVOFromUI()!=null){
+			CircularlyAccessibleValueObject[] bodys =getBillUI().getVOFromUI().getChildrenVO();
+			if(bodys==null||
+					bodys.length==0	){
+				throw new BusinessException("表体不允许为空");
+			}else{
+				for(CircularlyAccessibleValueObject body:bodys){
+					((SoorderBVO)body).validate();
+				}
+			}
+		};
 	}
 	@Override
 	protected void onBoLineAdd() throws Exception {

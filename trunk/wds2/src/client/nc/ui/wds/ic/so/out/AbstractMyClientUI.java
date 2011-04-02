@@ -109,7 +109,7 @@ public abstract class AbstractMyClientUI extends
 	 * 注册前台校验类
 	 */
 	public Object getUserObject() {
-		return new MyClientUICheckRuleGetter();
+		return new nc.ui.wds.ic.so.out.check.MyClientUICheckRuleGetter();
 	}
 
 	public void doQueryAction(ILinkQueryData querydata) {

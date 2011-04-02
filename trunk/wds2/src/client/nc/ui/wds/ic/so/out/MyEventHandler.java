@@ -14,15 +14,11 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.businessaction.BusinessAction;
-import nc.ui.trade.businessaction.IBusinessActionType;
-import nc.ui.trade.businessaction.IBusinessController;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
 import nc.ui.wds.w8000.CommonUnit;
-import nc.ui.wds.w8000.W8004040204Action;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
@@ -124,18 +120,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 		// getButtonManager().getButton(IBillButton.Edit).setEnabled(false);
 	}
-
-	protected IBusinessController createBusinessAction() {
-		// TODO Auto-generated method stub
-		switch (getUIController().getBusinessActionType()) {
-		case IBusinessActionType.PLATFORM:
-			return new BusinessAction(getBillUI());
-		case IBusinessActionType.BD:
-			return new W8004040204Action(getBillUI());
-		default:
-			return new BusinessAction(getBillUI());
-		}
-	}
+	
 
 //	// 清除颜色
 //	private void noColor(TbOutgeneralBVO[] generalb) {
@@ -189,40 +174,40 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (askForQueryCondition(strWhere) == false)
 			return;// 用户放弃了查询
 
-		int tmp = strWhere.indexOf("tb_outgeneral_h.vbilltype");
-		StringBuffer strtmp = new StringBuffer(strWhere.substring(tmp, strWhere
-				.length()));
-		StringBuffer a = new StringBuffer(strWhere.toString().toLowerCase()
-				.substring(tmp, strWhere.length()));
-
-		int tmpnum = a.indexOf("and");
-		// 进行单据类型转换
-		StringBuffer b = new StringBuffer(a.substring(0, tmpnum));
-		for (int i = 28; i < b.length(); i++) {
-			String stra = b.substring(i, i + 1);
-			if (stra.equals("0"))
-				b.replace(i, i + 1, "1");
-			if (stra.equals("1"))
-				b.replace(i, i + 1, "3");
-			if (stra.equals("2"))
-				b.replace(i, i + 1, "4");
-		}
-		strtmp.replace(0, tmpnum, b.toString());
-		strWhere.replace(tmp, strWhere.length(), strtmp.toString());
+//		int tmp = strWhere.indexOf("tb_outgeneral_h.vbilltype");
+//		StringBuffer strtmp = new StringBuffer(strWhere.substring(tmp, strWhere
+//				.length()));
+//		StringBuffer a = new StringBuffer(strWhere.toString().toLowerCase()
+//				.substring(tmp, strWhere.length()));
+//
+//		int tmpnum = a.indexOf("and");
+//		// 进行单据类型转换
+//		StringBuffer b = new StringBuffer(a.substring(0, tmpnum));
+//		for (int i = 28; i < b.length(); i++) {
+//			String stra = b.substring(i, i + 1);
+//			if (stra.equals("0"))
+//				b.replace(i, i + 1, "1");
+//			if (stra.equals("1"))
+//				b.replace(i, i + 1, "3");
+//			if (stra.equals("2"))
+//				b.replace(i, i + 1, "4");
+//		}
+//		strtmp.replace(0, tmpnum, b.toString());
+//		strWhere.replace(tmp, strWhere.length(), strtmp.toString());
 
 		SuperVO[] queryVos = null;
 		if (isControl == 2 || isControl == 0) {
-			// 获取开始索引
-			tmp = strWhere.indexOf("tb_outgeneral_h.srl_pk");
-			// 保管员后台给仓库赋值，就算前台有选择仓库也会默认当前登录人的。
-			if (tmp > -1) {
-				// 从开始索引到结束的所有字符串
-				strtmp = new StringBuffer(strWhere.substring(tmp, strWhere
-						.length()));
-				strtmp.replace(strtmp.indexOf("'"), strtmp.indexOf("'") + 21,
-						"'" + pk_stock);
-				strWhere.replace(tmp, strWhere.length(), strtmp.toString());
-			} else
+//			// 获取开始索引
+//			tmp = strWhere.indexOf("tb_outgeneral_h.srl_pk");
+//			// 保管员后台给仓库赋值，就算前台有选择仓库也会默认当前登录人的。
+//			if (tmp > -1) {
+//				// 从开始索引到结束的所有字符串
+//				strtmp = new StringBuffer(strWhere.substring(tmp, strWhere
+//						.length()));
+//				strtmp.replace(strtmp.indexOf("'"), strtmp.indexOf("'") + 21,
+//						"'" + pk_stock);
+//				strWhere.replace(tmp, strWhere.length(), strtmp.toString());
+//			} else
 				strWhere.append(" and srl_pk = '" + pk_stock + "' ");
 			if (isControl == 0) // 发运科 查询全部本仓库
 				queryVos = queryHeadVOs(strWhere.toString());

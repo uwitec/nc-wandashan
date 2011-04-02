@@ -2,12 +2,11 @@ package nc.ui.dm.so.deal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
-import nc.ui.wl.pub.LoginInforHelper;
-import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
@@ -116,10 +115,12 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 
 		 */	
+		clearData();
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
 		SoDealVO[] billdatas = null; 
+		
 		try{
 			String whereSql = getSQL();
 			ui.showProgressBar(true);
@@ -157,16 +158,16 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	 */
 	private String getSQL() throws Exception{
 		StringBuffer whereSql = new StringBuffer();
-		whereSql.append(" h.pk_corp='"+ui.cl.getCorp()+"' and ");
+		whereSql.append(" h.pk_corp='"+ui.cl.getCorp());
+		whereSql.append("' and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0 ");
 		String where = getQryDlg().getWhereSQL();
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
-			whereSql.append(where);
+			whereSql.append(" and "+where);
 		}
 //		whereSql.append("  nvl(h.dr,0)=0");
 //		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
 	
 //		whereSql.append(" and h.vbillstatus=1");
-		whereSql.append(" and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0");
 //		String cwhid  = LoginInforHelper.getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
 //		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
 //			whereSql.append(" and wds_sendplanin.pk_outwhouse = '"+cwhid+"' ");
