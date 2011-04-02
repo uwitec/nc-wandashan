@@ -11,13 +11,13 @@ import nc.itf.uap.IUAPQueryBS;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.scm.pub.query.SCMQueryConditionDlg;
-import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
+import nc.vo.wl.pub.CommonUnit;
 
 public class FydnewDlg extends BillSourceDLG {
 	Container m_parent = null;

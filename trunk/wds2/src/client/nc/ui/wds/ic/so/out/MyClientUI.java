@@ -2,15 +2,16 @@ package nc.ui.wds.ic.so.out;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wds.w8000.CommonUnit;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.wl.pub.CommonUnit;
 
 /**
  * <b> ÏúÊÛ³ö¿â </b>
