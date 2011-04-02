@@ -21,6 +21,8 @@ public class WdsWlPubConsts {
 	public static String  SO_OUT_FUNCODE="8004040204";
 	/**参照销售运单的节点标示 */
 	public static String  SO_OUT_REFWDS5_NODECODE="80060425";
+	/**捡货弹出窗口节点标示 */
+	public static String  AUTO_CHECK_INV_NODEKEY="8004040208";
 	
 	public static String WDS_MODULENAME="wdswl";
 //	8004040208
