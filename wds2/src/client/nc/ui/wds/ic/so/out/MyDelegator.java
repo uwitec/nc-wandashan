@@ -1,7 +1,7 @@
 package nc.ui.wds.ic.so.out;
 import nc.ui.wds.w8004040204.AbstractMyDelegator;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
