@@ -5,12 +5,12 @@ import java.util.List;
 import nc.bs.trade.business.HYPubBO;
 import nc.bs.trade.business.IBDBusiCheck;
 import nc.ui.pub.ClientEnvironment;
+import nc.vo.dm.confirm.TbFydmxnewVO;
+import nc.vo.dm.confirm.TbFydnewVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.trade.pub.HYBillVO;
-import nc.vo.wds.w80060406.TbFydmxnewVO;
-import nc.vo.wds.w80060406.TbFydnewVO;
 /**
  * 
  * @author Administrator
