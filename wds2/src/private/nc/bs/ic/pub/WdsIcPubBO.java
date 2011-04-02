@@ -14,6 +14,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.w8004040204.TbOutgeneralBVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsIcPubBO {
