@@ -4,12 +4,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -45,6 +48,24 @@ public class MyClientUI extends AbstractMyClientUI implements
 	}
 
 	public void setDefaultData() throws Exception {
+		//当前公司 当前库存组织  当前仓库  当前货位
+		getBillCardPanel().setHeadItem("comp", _getCorp());
+		getBillCardPanel().setHeadItem("pk_calbody", WdsWlPubConst.DEFAULT_CALBODY);
+		try{
+			getBillCardPanel().setHeadItem("srl_pk", LoginInforHelper.getCwhid(_getOperator()));
+			getBillCardPanel().setHeadItem("pk_cargdoc", LoginInforHelper.getSpaceByLogUserForStore(_getOperator()));
+		}catch(Exception e){
+			e.printStackTrace();//zhf  异常不处理
+		}
+		//制单人  制单日期   
+		getBillCardPanel().setHeadItem("tmaketime",_getServerTime());
+		getBillCardPanel().setHeadItem("dbilldate",_getDate());
+		getBillCardPanel().setHeadItem("coperatorid",_getOperator());
+		getBillCardPanel().setHeadItem("vbilltype",WdsWlPubConst.BILLTYPE_OTHER_OUT);
+//		getBillCardPanel().setHeadItem("pwb_fbillflag",2);
+		getBillCardPanel().setHeadItem("vbillcode", 
+				HYPubBO_Client.getBillNo(WdsWlPubConst.BILLTYPE_OTHER_OUT, _getOperator(), null, null));		
+	
 	}
 
 	@Override
