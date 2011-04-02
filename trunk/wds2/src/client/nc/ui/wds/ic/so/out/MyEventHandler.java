@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.itf.wds.w8004040204.Iw8004040204;
@@ -18,10 +17,12 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.query.INormalQuery;
-import nc.ui.wds.w8000.CommonUnit;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
+import nc.vo.ic.other.out.MyBillVO;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -34,13 +35,11 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.to.pub.ConstVO;
 import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.pub.WdsWlPubConsts;
-import nc.vo.wds.w8004040204.MyBillVO;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w80060604.SoSaleVO;
 import nc.vo.wds.w80060604.SoSaleorderBVO;
 import nc.vo.wds.w80060608.IcGeneralBVO;
 import nc.vo.wds.w80060608.IcGeneralHVO;
+import nc.vo.wl.pub.CommonUnit;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
