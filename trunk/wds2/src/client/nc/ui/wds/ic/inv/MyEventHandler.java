@@ -1,37 +1,26 @@
 package nc.ui.wds.ic.inv;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.util.*;
-
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
+import java.util.ArrayList;
+import java.util.List;
 
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.itf.uap.IVOPersistence;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ClientEnvironment;
-import nc.ui.pub.beans.UILabel;
-import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.bill.BillItem;
-import nc.ui.scm.pub.RowNOCellRenderer;
-import nc.ui.scm.pub.panel.SetColor;
 import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.businessaction.BusinessAction;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.businessaction.IBusinessController;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.wds.w8000.CommonUnit;
-import nc.ui.wds.w8000.W8004040204Action;
-import nc.ui.wds.w8000.W8004040602Action;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessRuntimeException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.wds.pub.WDSTools;
+import nc.vo.wl.pub.CommonUnit;
 
 /**
  * 
