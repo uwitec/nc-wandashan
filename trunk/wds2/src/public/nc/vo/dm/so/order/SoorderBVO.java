@@ -5,8 +5,11 @@
       	package nc.vo.dm.so.order;
    	
 	import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 	import nc.vo.pub.*;
-	import nc.vo.pub.lang.*;
+import nc.vo.pub.lang.*;
 	
 /**
  * <b> 销售订单子表 </b>
@@ -1305,26 +1308,21 @@
 	  * ValidationException,对错误进行解释.
 	 */
 	 public void validate() throws ValidationException {
-	
-	 	ArrayList errFields = new ArrayList(); // errFields record those null
-
-                                                      // fields that cannot be null.
-       		  // 检查是否为不允许空的字段赋了空值,你可能需要修改下面的提示信息:
-	
-	   		if (pk_soorder_b == null) {
-			errFields.add(new String("pk_soorder_b"));
-			  }	
-	   	
-	    StringBuffer message = new StringBuffer();
-		message.append("下列字段不能为空:");
-		if (errFields.size() > 0) {
-		String[] temp = (String[]) errFields.toArray(new String[0]);
-		message.append(temp[0]);
-		for ( int i= 1; i < temp.length; i++ ) {
-			message.append(",");
-			message.append(temp[i]);
+		if (getPicicode()==null||getPicicode().length()==0||getPicicode().trim().length() < 8) {
+			throw new ValidationException("批次号不能小于8位!");
+			
 		}
-		throw new NullFieldException(message.toString());
+		Pattern p = Pattern
+				.compile("^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+								+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+								+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+								+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+						Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(getPicicode().trim().substring(0, 8));
+		if (!m.find()) {
+			throw new ValidationException(
+					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+			
 		}
 	 }
 			   
