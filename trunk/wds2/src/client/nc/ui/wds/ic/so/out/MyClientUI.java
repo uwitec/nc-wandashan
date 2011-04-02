@@ -7,10 +7,10 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.w8000.CommonUnit;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 
 /**
  * <b> ÏúÊÛ³ö¿â </b>
