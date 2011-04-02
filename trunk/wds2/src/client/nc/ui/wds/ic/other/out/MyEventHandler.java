@@ -28,6 +28,8 @@ import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -44,8 +46,6 @@ import nc.vo.wds.pub.WDSTools;
 import nc.vo.wds.pub.WdsWlPubConsts;
 import nc.vo.wds.w80021030.TbQycgjh2VO;
 import nc.vo.wds.w80021030.TbQycgjhVO;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
 import nc.vo.wds.w8004040208.MyBillVO;
 import nc.vo.wds.w80060406.TbFydmxnewVO;
 import nc.vo.wds.w80060406.TbFydnewVO;
@@ -74,8 +74,26 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	private List pkList = null;
 
 	private FydnewDlg fydnewdlg = null; // 转库查询方法的类
+	
+	private FydnewDlg getFydnewDlg(){
+		if(fydnewdlg == null){
+			fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
+						.getCorporation().getPrimaryKey(),
+						ClientEnvironment.getInstance().getUser()
+						.getPrimaryKey(), WdsWlPubConsts.DM_ORDER_NODECODE, "1=1", 
+						WdsWlPubConsts.WDS3, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
+		}
+		return fydnewdlg;
+	}
 
 	private CgqyDlg cgqydlg = null; // 其他出库中采购取样查询方法的类
+	
+	private CgqyDlg getCgqyDlg(){
+		if(cgqydlg == null){
+			cgqydlg = new CgqyDlg(myClientUI, pkList, isStock);
+		}
+		return cgqydlg;
+	}
 
 	boolean isAdd = false;
 
@@ -361,15 +379,9 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		lineNo = -1;
 		if (isControl == 2 || isControl == 3) {
 			isAdd = true;
-			if(fydnewdlg == null){
-				fydnewdlg = new FydnewDlg(null, ClientEnvironment.getInstance()
-							.getCorporation().getPrimaryKey(),
-							ClientEnvironment.getInstance().getUser()
-							.getPrimaryKey(), WdsWlPubConsts.DM_ORDER_NODECODE, "1=1", 
-							WdsWlPubConsts.WDS3, null, null,"4C", myClientUI, pkList, isStock, pk_stock);
-			}
+			
 			// 调用方法 获取查询后的聚合VO
-			AggregatedValueObject[] vos = fydnewdlg
+			AggregatedValueObject[] vos = getFydnewDlg()
 					.getReturnVOs(ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
@@ -401,8 +413,10 @@ public class MyEventHandler extends AbstractMyEventHandler {
 					"ccunhuobianma").setEnabled(false);
 			getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
 					"nshouldoutassistnum").setEnabled(false);
-			billType = "0";
-			changeButton(true);
+			
+			
+//			billType = "0";
+//			changeButton(true);
 			isTypes = 1;
 		} else {
 			myClientUI.showErrorMessage("操作失败,您无权操作");
@@ -458,10 +472,10 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if (isControl == 2 || isControl == 3) {
 			isAdd = true;
 
-			cgqydlg = new CgqyDlg(myClientUI, pkList, isStock);
+//			cgqydlg = new CgqyDlg(myClientUI, pkList, isStock);
 
 			// 调用方法 获取查询后的聚合VO
-			AggregatedValueObject[] vos = cgqydlg
+			AggregatedValueObject[] vos = getCgqyDlg()
 					.getReturnVOs(ClientEnvironment.getInstance()
 							.getCorporation().getPrimaryKey(),
 							ClientEnvironment.getInstance().getUser()
@@ -563,272 +577,272 @@ public class MyEventHandler extends AbstractMyEventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		
-		// 获取当前页面中VO
-		AggregatedValueObject myBillVO = getBillUI().getVOFromUI();
-		setTSFormBufferToVO(myBillVO);
-		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[]) myBillVO
-				.getChildrenVO();
-		TbOutgeneralHVO tmpgeneralh = null;
-		TbOutgeneralHVO generalh = (TbOutgeneralHVO) myBillVO.getParentVO();
-		// 验证表体是否有数据
-		if (null == generalb || generalb.length < 0) {
-			myClientUI.showErrorMessage("操作失败,表体无数据不能保存");
-			return;
-		}
-		// 运单的Object,里面共三个值，[0]true or false false为生成运单失败
-		// [1]运单主表对象集合List [2]运单子表对象集合List
-		Object[] obj = null;
-		// 如果类型是自制单据进行验证
-		if (null != billType && billType.equals("8") && isAdd) {
-			// 验证表体信息
-			if (!validate(generalb))
-				return;
-			// 是否生成运单
-			if (generalh.getIs_yundan().booleanValue())
-				obj = insertFyd(generalh, generalb);
-		} else {
-			obj = new Object[1];
-			obj[0] = false;
-		}
-		// 内勤人员
-		if (isControl == 3) {
-			// 如果是转库
-			if (null != billType && billType.equals("0")) {
-				// 根据来源单据号查询是否有做过出库，如果有已经做过出库则新增到已有的出库单上去
-				String strWhere = " dr = 0 and vsourcebillcode = '"
-						+ generalh.getVsourcebillcode()
-						+ "' and csourcebillhid = '"
-						+ generalh.getCsourcebillhid() + "'";
-				ArrayList tmpList = (ArrayList) iuap.retrieveByClause(
-						TbOutgeneralHVO.class, strWhere);
-				if (null != tmpList && tmpList.size() > 0) {
-					tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
-				}
-//				// 该单据有过出库记录
-//				if (null != tmpgeneralh) {
-//					tmpgeneralh.setCdispatcherid(generalh.getCdispatcherid());// 收发类别
-//					tmpgeneralh.setCwhsmanagerid(generalh.getCwhsmanagerid());// 库管员
-//					tmpgeneralh.setCdptid(generalh.getCdptid());// 部门
-//					tmpgeneralh.setVnote(generalh.getVnote());// 备注
-//					// 把表头替换
-//					generalh = tmpgeneralh;
-//				} else 
-				 if(tmpgeneralh ==null){
-					isAdd = true;
-					// 制单时间
-					generalh.setTmaketime(myClientUI._getServerTime()
-							.toString());
-					// 设置单据号
-					generalh.setVbillcode(CommonUnit.getBillCode("4I",
-							ClientEnvironment.getInstance().getCorporation()
-									.getPk_corp(), "", ""));
-					// 单据类别
-					generalh.setVbilltype(billType);
-					// 公司
-					generalh.setComp(ClientEnvironment.getInstance()
-							.getCorporation().getPk_corp());
-				}
-				// 如果是新增设置表体状态“新增”
-				if (isAdd) {
-					// 循环表体更改状态
-					for (int i = 0; i < generalb.length; i++) {
-						generalb[i].setStatus(VOStatus.NEW);
-					}
-				} else { // 设置表体状态“修改”
-					// 循环表体更改状态
-					for (int i = 0; i < generalb.length; i++) {
-						generalb[i].setStatus(VOStatus.UPDATED);
-					}
-				}
-
-			} else {
-				// 新增状态
-				if (isAdd) {
-
-					// 循环表体更改状态
-					for (int i = 0; i < generalb.length; i++) {
-						generalb[i].setStatus(VOStatus.NEW);
-					}
-					// 制单时间
-					generalh.setTmaketime(myClientUI._getServerTime()
-							.toString());
-					// 设置单据号
-					generalh.setVbillcode(CommonUnit.getBillCode("4I",
-							ClientEnvironment.getInstance().getCorporation()
-									.getPk_corp(), "", ""));
-					// 单据类别
-					generalh.setVbilltype(billType);
-					// 公司
-					generalh.setComp(ClientEnvironment.getInstance()
-							.getCorporation().getPk_corp());
-				} else {
-					// 循环表体更改状态
-					for (int i = 0; i < generalb.length; i++) {
-						generalb[i].setStatus(VOStatus.UPDATED);
-					}
-
-				}
-			}
-		} else if (isControl == 1) { // 如果是信息科进行保存
-			// 验证表头信息
-			if (!validate(generalh))
-				return;
-
-		} else {
-			// 根据来源单据号查询是否有做过出库
-			String strWhere = " dr = 0 and vsourcebillcode = '"
-					+ generalh.getVsourcebillcode()
-					+ "' and csourcebillhid = '" + generalh.getCsourcebillhid()
-					+ "'";
-			ArrayList tmpList = (ArrayList)getQueryBO().retrieveByClause(
-					TbOutgeneralHVO.class, strWhere);
-			if (null != tmpList && tmpList.size() > 0) {
-				tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
-			}
-			// 该单据有过出库记录
-			if (null != tmpgeneralh && !billType.equals("8")) {
-				// 把表头替换
-				generalh = tmpgeneralh;
-			} else if (!billType.equals("8")) {
-				isAdd = true;
-				// 制单时间
-				generalh.setTmaketime(myClientUI._getServerTime().toString());
-				// 设置单据号
-				generalh.setVbillcode(CommonUnit.getBillCode("4I",
-						ClientEnvironment.getInstance().getCorporation()
-								.getPk_corp(), "", ""));
-			} else if (isAdd) {
-				// 制单时间
-				generalh.setTmaketime(myClientUI._getServerTime().toString());
-			}
-			// 如果是新增设置表体状态“新增”
-			if (isAdd) {
-				// 循环表体更改状态
-				for (int i = 0; i < generalb.length; i++) {
-					generalb[i].setStatus(VOStatus.NEW);
-				}
-			} else { // 设置表体状态“修改”
-				// 循环表体更改状态
-				for (int i = 0; i < generalb.length; i++) {
-					generalb[i].setStatus(VOStatus.UPDATED);
-				}
-			}
-			// 单据类别
-			generalh.setVbilltype(billType);
-			// 单据状态
-			// generalh.setVbillstatus(new Integer(1));// 没有签字
-			// 公司
-			generalh.setComp(ClientEnvironment.getInstance().getCorporation()
-					.getPk_corp());
-		}
-		// 最后修改时间
-		generalh.setTlastmoditime(myClientUI._getServerTime().toString());
-		// 设置修改人
-		generalh.setClastmodiid(ClientEnvironment.getInstance().getUser()
-				.getPrimaryKey());
-
-		myBillVO.setParentVO(generalh);
-		myBillVO.setChildrenVO(generalb);
-		// 进行数据晴空
-		Object o = null;
-		ISingleController sCtrl = null;
-		if (getUIController() instanceof ISingleController) {
-			sCtrl = (ISingleController) getUIController();
-			if (sCtrl.isSingleDetail()) {
-				o = myBillVO.getParentVO();
-				myBillVO.setParentVO(null);
-			} else {
-				o = myBillVO.getChildrenVO();
-				myBillVO.setChildrenVO(null);
-			}
-		}
-
-		boolean isSave = true;
-
-		// 判断是否有存盘数据
-		if (myBillVO.getParentVO() == null
-				&& (myBillVO.getChildrenVO() == null || myBillVO
-						.getChildrenVO().length == 0)) {
-			isSave = false;
-		} else {
-			if (getBillUI().isSaveAndCommitTogether())
-				myBillVO = getBusinessAction().saveAndCommit(myBillVO,
-						getUIController().getBillType(), _getDate().toString(),
-						getBillUI().getUserObject(), myBillVO);
-			
-			else {
-
-				List objUser = new ArrayList();
-				objUser.add(getBillUI().getUserObject());
-				objUser.add(generalb);
-				if (isAdd)
-					objUser.add(true);
-				else
-					objUser.add(false);
-				objUser.add(true);
-
-				objUser.add(isStock);
-
-				objUser.add(obj);
-				// write to database
-				myBillVO = getBusinessAction().save(myBillVO,
-						getUIController().getBillType(), _getDate().toString(),
-						objUser, myBillVO);
-				// myBillVO.setChildrenVO(generalb);
-				if (null == myBillVO) {
-					myClientUI.showErrorMessage("操作失败,请重新操作该单据");
-					return;
-				}
-				// 清除颜色
-				noColor((TbOutgeneralBVO[]) myBillVO.getChildrenVO());
-				// 托盘指定按钮和自动取货按钮不可用
-				changeButton(false);
-				// 判断如果是自制单据类型 增行按钮不可用表体参照和应发辅数量不可用
-				if (null != billType && billType.equals("8")) {
-					getButtonManager().getButton(IBillButton.Line).setVisible(
-							false);
-
-					getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-							"ccunhuobianma").setEnabled(false);
-					getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-							"nshouldoutassistnum").setEnabled(false);
-				}
-				if (isControl == 1 || isControl == 3) {
-					getButtonManager().getButton(
-							nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr)
-							.setEnabled(true);
-					myClientUI.updateButtons();
-				}
-			}
-		}
-
-		// 进行数据恢复处理
-		if (sCtrl != null) {
-			if (sCtrl.isSingleDetail())
-				myBillVO.setParentVO((CircularlyAccessibleValueObject) o);
-		}
-		int nCurrentRow = -1;
-		if (isSave) {
-			if (isEditing()) {
-				if (getBufferData().isVOBufferEmpty()) {
-					getBufferData().addVOToBuffer(myBillVO);
-					nCurrentRow = 0;
-
-				} else {
-					getBufferData().setCurrentVO(myBillVO);
-					nCurrentRow = getBufferData().getCurrentRow();
-				}
-			}
-			// 新增后操作处理
-			setAddNewOperate(isAdding(), myBillVO);
-		}
-		// 设置保存后状态
-		setSaveOperateState();
-		if (nCurrentRow >= 0) {
-			getBufferData().setCurrentRow(nCurrentRow);
-		}
-		myClientUI.updateButtons();	
+		super.onBoSave();
+//		// 获取当前页面中VO
+//		AggregatedValueObject myBillVO = getBillUI().getVOFromUI();
+//		setTSFormBufferToVO(myBillVO);
+//		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[]) myBillVO
+//				.getChildrenVO();
+//		TbOutgeneralHVO tmpgeneralh = null;
+//		TbOutgeneralHVO generalh = (TbOutgeneralHVO) myBillVO.getParentVO();
+//		// 验证表体是否有数据
+//		if (null == generalb || generalb.length < 0) {
+//			myClientUI.showErrorMessage("操作失败,表体无数据不能保存");
+//			return;
+//		}
+//		// 运单的Object,里面共三个值，[0]true or false false为生成运单失败
+//		// [1]运单主表对象集合List [2]运单子表对象集合List
+//		Object[] obj = null;
+//		// 如果类型是自制单据进行验证
+//		if (null != billType && billType.equals("8") && isAdd) {
+//			// 验证表体信息
+//			if (!validate(generalb))
+//				return;
+//			// 是否生成运单
+//			if (generalh.getIs_yundan().booleanValue())
+//				obj = insertFyd(generalh, generalb);
+//		} else {
+//			obj = new Object[1];
+//			obj[0] = false;
+//		}
+//		// 内勤人员
+//		if (isControl == 3) {
+//			// 如果是转库
+//			if (null != billType && billType.equals("0")) {
+//				// 根据来源单据号查询是否有做过出库，如果有已经做过出库则新增到已有的出库单上去
+//				String strWhere = " dr = 0 and vsourcebillcode = '"
+//						+ generalh.getVsourcebillcode()
+//						+ "' and csourcebillhid = '"
+//						+ generalh.getCsourcebillhid() + "'";
+//				ArrayList tmpList = (ArrayList) iuap.retrieveByClause(
+//						TbOutgeneralHVO.class, strWhere);
+//				if (null != tmpList && tmpList.size() > 0) {
+//					tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
+//				}
+////				// 该单据有过出库记录
+////				if (null != tmpgeneralh) {
+////					tmpgeneralh.setCdispatcherid(generalh.getCdispatcherid());// 收发类别
+////					tmpgeneralh.setCwhsmanagerid(generalh.getCwhsmanagerid());// 库管员
+////					tmpgeneralh.setCdptid(generalh.getCdptid());// 部门
+////					tmpgeneralh.setVnote(generalh.getVnote());// 备注
+////					// 把表头替换
+////					generalh = tmpgeneralh;
+////				} else 
+//				 if(tmpgeneralh ==null){
+//					isAdd = true;
+//					// 制单时间
+//					generalh.setTmaketime(myClientUI._getServerTime()
+//							.toString());
+//					// 设置单据号
+//					generalh.setVbillcode(CommonUnit.getBillCode("4I",
+//							ClientEnvironment.getInstance().getCorporation()
+//									.getPk_corp(), "", ""));
+//					// 单据类别
+//					generalh.setVbilltype(billType);
+//					// 公司
+//					generalh.setComp(ClientEnvironment.getInstance()
+//							.getCorporation().getPk_corp());
+//				}
+//				// 如果是新增设置表体状态“新增”
+//				if (isAdd) {
+//					// 循环表体更改状态
+//					for (int i = 0; i < generalb.length; i++) {
+//						generalb[i].setStatus(VOStatus.NEW);
+//					}
+//				} else { // 设置表体状态“修改”
+//					// 循环表体更改状态
+//					for (int i = 0; i < generalb.length; i++) {
+//						generalb[i].setStatus(VOStatus.UPDATED);
+//					}
+//				}
+//
+//			} else {
+//				// 新增状态
+//				if (isAdd) {
+//
+//					// 循环表体更改状态
+//					for (int i = 0; i < generalb.length; i++) {
+//						generalb[i].setStatus(VOStatus.NEW);
+//					}
+//					// 制单时间
+//					generalh.setTmaketime(myClientUI._getServerTime()
+//							.toString());
+//					// 设置单据号
+//					generalh.setVbillcode(CommonUnit.getBillCode("4I",
+//							ClientEnvironment.getInstance().getCorporation()
+//									.getPk_corp(), "", ""));
+//					// 单据类别
+//					generalh.setVbilltype(billType);
+//					// 公司
+//					generalh.setComp(ClientEnvironment.getInstance()
+//							.getCorporation().getPk_corp());
+//				} else {
+//					// 循环表体更改状态
+//					for (int i = 0; i < generalb.length; i++) {
+//						generalb[i].setStatus(VOStatus.UPDATED);
+//					}
+//
+//				}
+//			}
+//		} else if (isControl == 1) { // 如果是信息科进行保存
+//			// 验证表头信息
+//			if (!validate(generalh))
+//				return;
+//
+//		} else {
+//			// 根据来源单据号查询是否有做过出库
+//			String strWhere = " dr = 0 and vsourcebillcode = '"
+//					+ generalh.getVsourcebillcode()
+//					+ "' and csourcebillhid = '" + generalh.getCsourcebillhid()
+//					+ "'";
+//			ArrayList tmpList = (ArrayList)getQueryBO().retrieveByClause(
+//					TbOutgeneralHVO.class, strWhere);
+//			if (null != tmpList && tmpList.size() > 0) {
+//				tmpgeneralh = (TbOutgeneralHVO) tmpList.get(0);
+//			}
+//			// 该单据有过出库记录
+//			if (null != tmpgeneralh && !billType.equals("8")) {
+//				// 把表头替换
+//				generalh = tmpgeneralh;
+//			} else if (!billType.equals("8")) {
+//				isAdd = true;
+//				// 制单时间
+//				generalh.setTmaketime(myClientUI._getServerTime().toString());
+//				// 设置单据号
+//				generalh.setVbillcode(CommonUnit.getBillCode("4I",
+//						ClientEnvironment.getInstance().getCorporation()
+//								.getPk_corp(), "", ""));
+//			} else if (isAdd) {
+//				// 制单时间
+//				generalh.setTmaketime(myClientUI._getServerTime().toString());
+//			}
+//			// 如果是新增设置表体状态“新增”
+//			if (isAdd) {
+//				// 循环表体更改状态
+//				for (int i = 0; i < generalb.length; i++) {
+//					generalb[i].setStatus(VOStatus.NEW);
+//				}
+//			} else { // 设置表体状态“修改”
+//				// 循环表体更改状态
+//				for (int i = 0; i < generalb.length; i++) {
+//					generalb[i].setStatus(VOStatus.UPDATED);
+//				}
+//			}
+//			// 单据类别
+//			generalh.setVbilltype(billType);
+//			// 单据状态
+//			// generalh.setVbillstatus(new Integer(1));// 没有签字
+//			// 公司
+//			generalh.setComp(ClientEnvironment.getInstance().getCorporation()
+//					.getPk_corp());
+//		}
+//		// 最后修改时间
+//		generalh.setTlastmoditime(myClientUI._getServerTime().toString());
+//		// 设置修改人
+//		generalh.setClastmodiid(ClientEnvironment.getInstance().getUser()
+//				.getPrimaryKey());
+//
+//		myBillVO.setParentVO(generalh);
+//		myBillVO.setChildrenVO(generalb);
+//		// 进行数据晴空
+//		Object o = null;
+//		ISingleController sCtrl = null;
+//		if (getUIController() instanceof ISingleController) {
+//			sCtrl = (ISingleController) getUIController();
+//			if (sCtrl.isSingleDetail()) {
+//				o = myBillVO.getParentVO();
+//				myBillVO.setParentVO(null);
+//			} else {
+//				o = myBillVO.getChildrenVO();
+//				myBillVO.setChildrenVO(null);
+//			}
+//		}
+//
+//		boolean isSave = true;
+//
+//		// 判断是否有存盘数据
+//		if (myBillVO.getParentVO() == null
+//				&& (myBillVO.getChildrenVO() == null || myBillVO
+//						.getChildrenVO().length == 0)) {
+//			isSave = false;
+//		} else {
+//			if (getBillUI().isSaveAndCommitTogether())
+//				myBillVO = getBusinessAction().saveAndCommit(myBillVO,
+//						getUIController().getBillType(), _getDate().toString(),
+//						getBillUI().getUserObject(), myBillVO);
+//			
+//			else {
+//
+//				List objUser = new ArrayList();
+//				objUser.add(getBillUI().getUserObject());
+//				objUser.add(generalb);
+//				if (isAdd)
+//					objUser.add(true);
+//				else
+//					objUser.add(false);
+//				objUser.add(true);
+//
+//				objUser.add(isStock);
+//
+//				objUser.add(obj);
+//				// write to database
+//				myBillVO = getBusinessAction().save(myBillVO,
+//						getUIController().getBillType(), _getDate().toString(),
+//						objUser, myBillVO);
+//				// myBillVO.setChildrenVO(generalb);
+//				if (null == myBillVO) {
+//					myClientUI.showErrorMessage("操作失败,请重新操作该单据");
+//					return;
+//				}
+//				// 清除颜色
+//				noColor((TbOutgeneralBVO[]) myBillVO.getChildrenVO());
+//				// 托盘指定按钮和自动取货按钮不可用
+//				changeButton(false);
+//				// 判断如果是自制单据类型 增行按钮不可用表体参照和应发辅数量不可用
+//				if (null != billType && billType.equals("8")) {
+//					getButtonManager().getButton(IBillButton.Line).setVisible(
+//							false);
+//
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//							"ccunhuobianma").setEnabled(false);
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//							"nshouldoutassistnum").setEnabled(false);
+//				}
+//				if (isControl == 1 || isControl == 3) {
+//					getButtonManager().getButton(
+//							nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr)
+//							.setEnabled(true);
+//					myClientUI.updateButtons();
+//				}
+//			}
+//		}
+//
+//		// 进行数据恢复处理
+//		if (sCtrl != null) {
+//			if (sCtrl.isSingleDetail())
+//				myBillVO.setParentVO((CircularlyAccessibleValueObject) o);
+//		}
+//		int nCurrentRow = -1;
+//		if (isSave) {
+//			if (isEditing()) {
+//				if (getBufferData().isVOBufferEmpty()) {
+//					getBufferData().addVOToBuffer(myBillVO);
+//					nCurrentRow = 0;
+//
+//				} else {
+//					getBufferData().setCurrentVO(myBillVO);
+//					nCurrentRow = getBufferData().getCurrentRow();
+//				}
+//			}
+//			// 新增后操作处理
+//			setAddNewOperate(isAdding(), myBillVO);
+//		}
+//		// 设置保存后状态
+//		setSaveOperateState();
+//		if (nCurrentRow >= 0) {
+//			getBufferData().setCurrentRow(nCurrentRow);
+//		}
+//		myClientUI.updateButtons();	
 		}
 
 	/**
@@ -1008,64 +1022,65 @@ public class MyEventHandler extends AbstractMyEventHandler {
 	 * @see nc.ui.wds.w8004040208.AbstractMyEventHandler#onzzdj()
 	 */
 	protected void onzzdj(ButtonObject bo) throws Exception {
-		if (isControl == 2 || isControl == 3) {
-			lineNo = -1;
-			getButtonManager().getButton(IBillButton.Line).setVisible(true);
-			super.onBoAdd(bo);
-			UIRefPane panel = (UIRefPane) getBillCardPanelWrapper()
-					.getBillCardPanel().getBodyItem("ccunhuobianma")
-					.getComponent();
-			StringBuffer strWhere = new StringBuffer();
-			// 根据总仓或者分仓进行过滤单品显示参照
-			if (isStock) {
-				if (null != pkList && pkList.size() > 0) {
-
-					strWhere.append(" pk_invbasdoc in (");
-					for (int i = 0; i < pkList.size(); i++) {
-						if (i == pkList.size() - 1)
-							strWhere.append("'" + pkList.get(i) + "')");
-						else {
-							strWhere.append("'" + pkList.get(i) + "'").append(
-									" , ");
-						}
-					}
-					panel.getRefModel().setWherePart(strWhere.toString());
-				} else {
-					panel.getRefModel().setWherePart(" 1=2");
-				}
-			} else {
-				strWhere.append(" dr = 0 and ( def14 ='0' or def14 = '1') ");
-				panel.getRefModel().setWherePart(strWhere.toString());
-			}
-			for (int i = 0; i < columnName.length; i++) {
-				getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-						columnName[i]).setEnabled(true);
-			}
-			getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-					"ccunhuobianma").setEnabled(true);
-			getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
-					"nshouldoutassistnum").setEnabled(true);
-			String pk_stock = CommonUnit.getStordocName(ClientEnvironment
-					.getInstance().getUser().getPrimaryKey());
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk")
-					.setValue(pk_stock);
-			setViewPro();
-			// 设置单据号
-			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-					"vbillcode").setValue(
-					CommonUnit.getBillCode("4I", ClientEnvironment
-							.getInstance().getCorporation().getPk_corp(), "",
-							""));
-			// getButtonManager().getButton(ISsButtun.zzdj).setEnabled(false);
-
-			billType = "8";
-			changeButton();
-			isTypes = 3;
-			isAdd = true;
-		} else {
-			myClientUI.showErrorMessage("操作失败,您无权操作");
-			return;
-		}
+		super.onBoAdd(bo);
+//		if (isControl == 2 || isControl == 3) {
+//			lineNo = -1;
+//			getButtonManager().getButton(IBillButton.Line).setVisible(true);
+//			super.onBoAdd(bo);
+//			UIRefPane panel = (UIRefPane) getBillCardPanelWrapper()
+//					.getBillCardPanel().getBodyItem("ccunhuobianma")
+//					.getComponent();
+//			StringBuffer strWhere = new StringBuffer();
+//			// 根据总仓或者分仓进行过滤单品显示参照
+//			if (isStock) {
+//				if (null != pkList && pkList.size() > 0) {
+//
+//					strWhere.append(" pk_invbasdoc in (");
+//					for (int i = 0; i < pkList.size(); i++) {
+//						if (i == pkList.size() - 1)
+//							strWhere.append("'" + pkList.get(i) + "')");
+//						else {
+//							strWhere.append("'" + pkList.get(i) + "'").append(
+//									" , ");
+//						}
+//					}
+//					panel.getRefModel().setWherePart(strWhere.toString());
+//				} else {
+//					panel.getRefModel().setWherePart(" 1=2");
+//				}
+//			} else {
+//				strWhere.append(" dr = 0 and ( def14 ='0' or def14 = '1') ");
+//				panel.getRefModel().setWherePart(strWhere.toString());
+//			}
+//			for (int i = 0; i < columnName.length; i++) {
+//				getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//						columnName[i]).setEnabled(true);
+//			}
+//			getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//					"ccunhuobianma").setEnabled(true);
+//			getBillCardPanelWrapper().getBillCardPanel().getBodyItem(
+//					"nshouldoutassistnum").setEnabled(true);
+//			String pk_stock = CommonUnit.getStordocName(ClientEnvironment
+//					.getInstance().getUser().getPrimaryKey());
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk")
+//					.setValue(pk_stock);
+//			setViewPro();
+//			// 设置单据号
+//			getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+//					"vbillcode").setValue(
+//					CommonUnit.getBillCode("4I", ClientEnvironment
+//							.getInstance().getCorporation().getPk_corp(), "",
+//							""));
+//			// getButtonManager().getButton(ISsButtun.zzdj).setEnabled(false);
+//
+//			billType = "8";
+//			changeButton();
+//			isTypes = 3;
+//			isAdd = true;
+//		} else {
+//			myClientUI.showErrorMessage("操作失败,您无权操作");
+//			return;
+//		}
 	}
 
 	// 在自制单据状态下那些字段可以编辑
