@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
 import nc.itf.uap.IUAPQueryBS;
@@ -30,12 +29,12 @@ import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillMouseEnent;
 import nc.ui.pub.bill.BillTableMouseListener;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.wds.w8000.CommonUnit;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w8004040204.TbOutgeneralTVO;
-import nc.vo.wds.w8004040204.TbWarehousestockVO;
+import nc.vo.wl.pub.CommonUnit;
 
 public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		ActionListener, BillEditListener, BillTableMouseListener,
@@ -208,7 +207,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	public TbOutgeneralTVO[] getWarehousestock(TbOutgeneralBVO item,
 			String pk_stordoc, boolean type) throws Exception {
 		// 库存表中数组对象
-		TbWarehousestockVO[] stockVO = null;
+		StockInvOnHandVO[] stockVO = null;
 		// 设置where语句
 		String sWhere = null;
 		// 获取访问数据库对象
@@ -224,8 +223,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		// 判断结果集是否为空
 		if (null != list && list.size() > 0) {
 			// 库存表数组赋值
-			stockVO = new TbWarehousestockVO[list.size()];
-			stockVO = (TbWarehousestockVO[]) list.toArray(stockVO);
+			stockVO = new StockInvOnHandVO[list.size()];
+			stockVO = (StockInvOnHandVO[]) list.toArray(stockVO);
 
 			// 循环库存表
 			for (int i = 0; i < stockVO.length; i++) {
