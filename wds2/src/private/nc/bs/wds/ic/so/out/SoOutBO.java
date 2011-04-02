@@ -30,7 +30,6 @@ public class SoOutBO  implements IBDBusiCheck{
 		if(arg1 == null)
 			return;
 		insertFyd(arg1);
-		
 	}
 	
 	/**
