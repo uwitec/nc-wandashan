@@ -4,9 +4,9 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
-import nc.vo.wds.w8004040204.MyBillVO;
-import nc.vo.wds.w8004040204.TbOutgeneralBVO;
-import nc.vo.wds.w8004040204.TbOutgeneralHVO;
+import nc.vo.ic.other.out.MyBillVO;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
