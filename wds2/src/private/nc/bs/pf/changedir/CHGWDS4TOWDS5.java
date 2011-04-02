@@ -43,6 +43,7 @@ public String[] getField() {
 			"H_voperatorid->SYSOPERATOR",
 			"H_pk_outwhouse->B_cbodywarehouseid",//发货站
 			"H_pk_cumandoc->B_ccustomerid",//收货客商
+			"H_pk_deptdoc->H_cdeptid",
 //			批次
 			"B_picicode->B_cbatchid",
 //          是否赠品
@@ -59,7 +60,7 @@ public String[] getField() {
 			
 			"B_pk_invmandoc->B_cinventoryid",
 			"B_pk_invbasdoc->B_cinvbasdocid",
-			"B_unit->B_cunitid",//主 计量单位
+			"B_uint->B_cunitid",//主 计量单位
 			"B_assunit->B_cpackunitid",//辅计量单位
 			
 			"B_nassarrangnum->B_nassnum",//安排辅数量
@@ -80,7 +81,8 @@ public String[] getFormulas() {
 //		"H_forderstatus->int(0)",
 			"H_pk_billtype->\""+WdsWlPubConst.WDS5+"\"",
 			"H_vbillstatus->int(8)",
-		    "B_csourcetype->\""+WdsWlPubConst.WDS4+"\"",
+			"H_itranstype->int(0)",//运输方式
+		    "B_csourcetype->\""+30+"\"",
 //		    "H_fisbigglour->\"N\"",
 		    "H_dmakedate->\""+m_strDate+"\"",
 		    "H_dbilldate->\""+m_strDate+"\"",
