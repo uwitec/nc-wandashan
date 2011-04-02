@@ -83,28 +83,32 @@ public class SendorderBVO extends SuperVO {
 	public UFDouble ninacceptnum;
 	public String vdef10;
 	public String vdef5;
-	//源头单据表体id
-	public String cfirstbillbid;
-	//来源单据行号
-	public String vsourcerowno;
-	//源头单据表头id
-	public String cfirstbillhid;
 	//源头单据行号
 	public String vfirstrowno;
-	//来源单据号
-	public String vsourcebillcode;
-	//源头单据制单日期
-	public UFDate dfirstbilldate;
-	//来源单据表体序列号	
-	public String csourcebillbid;
 	//源头单据类型
 	public String cfirsttype;
-	//来源单据表头序列号
-	public String csourcebillhid;
-	//源头单据号
-	public String vfirstbillcode;
+	//源头单据表头id
+	public String cfirstbillhid;
+	//源头单据表体id
+	public String cfirstbillbid;
+	
+
 	//来源单据类型
 	public String csourcetype;
+	//来源单据号	
+	public String vsourcebillcode;
+	//来源单据表头序列号
+	public String csourcebillhid;
+   //来源单据表体序列号	
+	public String csourcebillbid;
+	//源头单据号
+	public String vfirstbillcode;
+	//源头单据制单日期
+	public UFDate dfirstbilldate;
+	
+	//来源单据行号
+	public String vsourcerowno;
+
 	//安排数量
 	public UFDouble ndealnum;
 	//安排辅数量
