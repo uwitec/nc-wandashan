@@ -63,7 +63,7 @@ public class ClientUI extends BillCardUI{
 		
 	}
 	
-	public void afterEdit(nc.ui.pub.bill.BillEditEvent e) {
+//	public void afterEdit(nc.ui.pub.bill.BillEditEvent e) {
 //		super.afterEdit(e);
 //		String key= e.getKey();
 //		int row = e.getRow();
@@ -84,7 +84,7 @@ public class ClientUI extends BillCardUI{
 ////			getBillCardPanel().getBillModel().setValueAt(null,row,"invname");
 ////		}
 //		}
-	}
+//	}
 
 //	public boolean beforeEdit(nc.ui.pub.bill.BillEditEvent e) {
 //		String key= e.getKey();

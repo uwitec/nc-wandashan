@@ -24,13 +24,13 @@ public class ClientController implements ICardController, ISingleController{
 	public int[] getCardButtonAry() {
 		return new int[]{
 				IBillButton.Add,
-//				IBillButton.Line,
 				IBillButton.Save,
 				IBillButton.Query,
 				IBillButton.Delete,
 				IBillButton.Cancel,
 				IBillButton.Edit,
-				IBillButton.Refresh,
+				IBillButton.Refresh
+//				IBillButton.Line,
 //				IBillButton.Return
 				
 			};
@@ -38,7 +38,7 @@ public class ClientController implements ICardController, ISingleController{
 
 	public boolean isShowCardRowNo() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public boolean isShowCardTotal() {

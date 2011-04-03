@@ -46,11 +46,11 @@ public class ClientEventHandler extends CardEventHandler {
 //		beforeSave();
 //		super.onBoSave();
 //	}
-//	public void onBoDelete() throws Exception{
-//		int selectRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
-////		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt("Y", selectRow, "vdef1");//设置删除标志
-//		super.onBoDelete();
-//	}
+	public void onBoDel() throws Exception{
+		int selectRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
+		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt("y", selectRow, "dr");//设置删除标志
+		super.onBoDelete();
+	}
 //	protected void beforeSave() throws BusinessException{
 //		int selectRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
 //		if(selectRow<0){
