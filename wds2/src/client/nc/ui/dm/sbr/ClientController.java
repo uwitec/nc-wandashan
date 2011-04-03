@@ -1,28 +1,37 @@
 package nc.ui.dm.sbr;
 
-import nc.ui.trade.bill.AbstractManageController;
+
+/*
+ * 特殊业务档案
+ */
+import nc.ui.trade.bill.ICardController;
+import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.dm.sbr.SbDocRVO;
 import nc.vo.trade.pub.HYBillVO;
 
-public class ClientController extends AbstractManageController {
+public class ClientController implements ICardController, ISingleController{
 
-	public String[] getCardBodyHideCol() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public ClientController() {
+		super();
 	}
-
+	
+	public ClientController(String corp) {
+		super();
+	}
+	
 	public int[] getCardButtonAry() {
 		return new int[]{
 				IBillButton.Add,
+//				IBillButton.Line,
 				IBillButton.Save,
-				IBillButton.Line,
 				IBillButton.Query,
 				IBillButton.Delete,
 				IBillButton.Cancel,
 				IBillButton.Edit,
 				IBillButton.Refresh,
-				IBillButton.Return
+//				IBillButton.Return
 				
 			};
 	}
@@ -47,13 +56,12 @@ public class ClientController extends AbstractManageController {
 				HYBillVO.class.getName(),
 				SbDocRVO.class.getName(),
 				SbDocRVO.class.getName()
-			
 		};
 	}
 
 	public String getBodyCondition() {
 		// TODO Auto-generated method stub
-		return null;
+		return "1=1";
 	}
 
 	public String getBodyZYXKey() {
@@ -68,7 +76,7 @@ public class ClientController extends AbstractManageController {
 
 	public String getChildPkField() {
 		// TODO Auto-generated method stub
-		return "";
+		return null;
 	}
 
 	public String getHeadZYXKey() {
@@ -78,7 +86,7 @@ public class ClientController extends AbstractManageController {
 
 	public String getPkField() {
 		// TODO Auto-generated method stub
-		return "";
+		return "pk_sbdocr";
 	}
 
 	public Boolean isEditInGoing() throws Exception {
@@ -96,38 +104,13 @@ public class ClientController extends AbstractManageController {
 		return true;
 	}
 
-	public String[] getListBodyHideCol() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int[] getListButtonAry() {
-		return new int[]{
-				IBillButton.Add,
-				IBillButton.Delete,
-				IBillButton.Query,
-				IBillButton.Edit,
-				IBillButton.Save,
-				IBillButton.Refresh,
-				IBillButton.Card
-		};
-	}
-
-	public String[] getListHeadHideCol() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean isShowListRowNo() {
+		
+	public boolean isSingleDetail() {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
-	public boolean isShowListTotal() {
+	public String[] getCardBodyHideCol() {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
-
-
-
 }
