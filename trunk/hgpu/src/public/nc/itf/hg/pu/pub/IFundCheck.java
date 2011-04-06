@@ -156,5 +156,39 @@ public interface IFundCheck {
 			String cust, UFDate uDate, UFDouble nbeforemny, UFDouble nmny)
 			throws BusinessException;
 
+	/**
+	 * 
+	 * @author zhw  用于调拨出库
+	 * @说明：（鹤岗矿业）实扣 2011-2-2下午04:44:00
+	 * @param pk_plan
+	 * @param ifundtype
+	 * @param scorpid内销时 领用物资的各个公司（矿）
+	 * @param sdeptid当公司为空时  代表客户管理id  用于外销
+	 * @param uDate
+	 * @param nbeforemny
+	 * @param nmny
+	 * @throws BusinessException
+	 * add by zhw   pk  主键  billtype 类型  找出修改前的金额
+	 */
+	public void useFund1(String pk_plan, int ifundtype, String scorpid,
+			String sdeptid, UFDate uDate, UFDouble nbeforemny, UFDouble nmny,String pk,String billtype,UFDouble nmny1)
+			throws BusinessException;
+
+	/**
+	 * 
+	 * @author zhw  用于调拨出库
+	 * @说明：（鹤岗矿业） 2011-4-2上午11:47:17
+	 * @param pk_plan
+	 * @param ifundtype
+	 * @param scorpid
+	 * @param sdeptid
+	 * @param uDate
+	 * @param nbeforemny
+	 * @param nmny
+	 * @throws BusinessException
+	 */
+	public void reUseFund1(String pk_plan, int ifundtype, String scorpid,
+			String sdeptid, UFDate uDate, UFDouble nbeforemny, UFDouble nmny,UFDouble nmny1)
+			throws BusinessException;
 
 }
