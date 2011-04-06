@@ -100,13 +100,13 @@ public class AllocationOrderPlugin implements IScmBSPlugin {
 			}
 		}else if(action == Action.DELETE){
 			for (BillVO billvo:vos) {	
-				//modify by zhw  2011-01-08   调拨订单进行回写预扣 在删除的时候
+				//modify by zhw  2011-01-08   调拨订单进行回写预预留  在删除的时候
 				bo.checkAndUseFund_before(billvo,false);
 				BillItemVO[] bodys = (BillItemVO[])billvo.getChildrenVO();
 				for(BillItemVO body:bodys){
 					String pk = PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcebid());
-					String sql1 =" update hg_fundset_b set nmny = '0' where pk_planother_b  = '"+pk+"'";
-					bo.getBaseDao().executeUpdate(sql1);
+//					String sql1 =" update hg_fundset_b set nmny = '0' where pk_planother_b  = '"+pk+"'";
+//					bo.getBaseDao().executeUpdate(sql1);
 				}
 			}
 		}
