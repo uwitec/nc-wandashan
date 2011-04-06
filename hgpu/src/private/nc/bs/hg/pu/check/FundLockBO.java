@@ -890,7 +890,6 @@ public class FundLockBO implements IFundCheck {
 
 		UFDouble nlockfund = PuPubVO.getUFDouble_NullAsZero(vo.getNlockfund());// 预扣
 		UFDouble nactfund = PuPubVO.getUFDouble_NullAsZero(vo.getNactfund());// 实扣
-
 		UFDouble nlockmny = null;// 预留
 		if (PuPubVO.getString_TrimZeroLenAsNull(pk_plan) != null) {
 			// 获取计划预留资金
@@ -915,7 +914,6 @@ public class FundLockBO implements IFundCheck {
 				nlockmny = noldlockmny;
 			}
 		}
-
 		vo.setNactfund(nactfund);
 		vo.setNlockfund(nlockfund);
 		getDao().updateVO(vo, HgBsPubTool.CHECK_FUND_USENAMES);
@@ -1211,5 +1209,140 @@ public class FundLockBO implements IFundCheck {
 		
 //		updateLockSpecalFund()
 		
+	}
+	
+	/**
+	 * 
+	 * @author zhw  用于调拨出库
+	 * @说明：（鹤岗矿业）实扣 根据实际出库数量计算金额 扣除 资金 限额 或专项资金 2011-2-2下午01:49:26
+	 * @param pk_plan
+	 * @param ifundtype
+	 * @param scorpid
+	 * @param sdeptid
+	 * @param uDate
+	 * @param nbeforemny
+	 *            预扣
+	 * @param nmny
+	 *            实扣
+	 * @throws BusinessException
+	 */
+	public void useFund1(String pk_plan, int ifundtype, String scorpid,
+			String sdeptid, UFDate uDate, UFDouble nbeforemny, UFDouble nmny,
+			String pk, String billtype,UFDouble nmny1) throws BusinessException {
+		// 扣减顺序 预留 预扣 总资金
+		if (PuPubVO.getUFDouble_NullAsZero(nmny).doubleValue() == UFDouble.ZERO_DBL
+				.doubleValue())
+			return;
+		// add by zhw 2010-12-28
+		FUNDSETVO vo = getFundSet(scorpid, sdeptid, null, uDate, ifundtype,
+				false);
+		if (vo == null)
+			return;
+		// add by zhw 2010-12-28 end
+
+		UFDouble nfund = PuPubVO.getUFDouble_NullAsZero(vo.getNfund());// 总资金
+		UFDouble nlockfund = PuPubVO.getUFDouble_NullAsZero(vo.getNlockfund());// 预扣
+		UFDouble nactfund = PuPubVO.getUFDouble_NullAsZero(vo.getNactfund());
+		// modify by zhw 2010-12-28 begin
+		UFDouble oldnmny = PuPubVO.getUFDouble_NullAsZero(getNMY(pk, billtype));// 修改前金额
+		nactfund = nactfund.sub(oldnmny);
+		// modify by zhw 2010-12-28 end
+		UFDouble nlockmny = null;// 计划预留
+
+//		if (PuPubVO.getString_TrimZeroLenAsNull(pk_plan) != null) {
+//			// 获取计划预留资金
+//			nlockmny = getPlanLockFund(pk_plan, vo.getPk_fundset());
+//		}
+		
+		if (ifundtype == HgPubConst.FUND_CHECK_SPECIALFUND) {
+			nlockmny =getPlanLockFundByCorp(scorpid, sdeptid,uDate);
+		}
+
+		boolean islock = nlockmny == null ? false : true;
+
+		nlockmny = PuPubVO.getUFDouble_NullAsZero(nlockmny);
+
+		// 实扣 和 预扣得大小关系
+		UFDouble nsubmny = nmny.sub(nbeforemny);
+
+		if (nfund.add(nlockmny).sub(nlockfund).sub(nactfund).sub(nsubmny)
+				.doubleValue() < 0)
+			throw new BusinessException("超" + HgPubTool.getSFundType(ifundtype)
+					+ "控制");
+
+		// nlockfund = nlockfund.sub(nbeforemny);
+		//nlockfund = nlockfund.sub(nmny.sub(oldnmny));
+		UFDouble nlockfund1=nlockfund.sub(nmny1.sub(oldnmny));
+		nactfund = nactfund.add(nmny);
+//		vo.setNlockfund(nlockfund);
+		vo.setNlockfund(nlockfund1);
+		vo.setNactfund(nactfund);
+		getDao().updateVO(vo, HgBsPubTool.CHECK_FUND_USENAMES);
+
+		if (!islock)
+			return;
+
+		// 调整预留
+		nlockmny = nlockmny.sub(nsubmny);
+		if (nlockmny.doubleValue() < 0)
+			nlockmny = UFDouble.ZERO_DBL;
+		UFDouble noldlockmny = PuPubVO
+				.getUFDouble_NullAsZero(getPlanOldLockFund(pk_plan, vo
+						.getPk_fundset()));
+		if (nlockmny.doubleValue() > noldlockmny.doubleValue())
+			nlockmny = noldlockmny;
+
+		updateLockFund(pk_plan, vo.getPrimaryKey(), nlockmny, null, true);
+	}
+    /**
+     * 用于调拨出库 zhw
+     */
+	public void reUseFund1(String pk_plan, int ifundtype, String scorpid,
+			String sdeptid, UFDate uDate, UFDouble nbeforemny, UFDouble nmny,UFDouble nmny1)
+			throws BusinessException {
+
+		if (PuPubVO.getUFDouble_NullAsZero(nmny).doubleValue() == UFDouble.ZERO_DBL
+				.doubleValue())
+			return;
+		FUNDSETVO vo = getFundSet(scorpid, sdeptid, null, uDate, ifundtype,
+				false);
+		if (vo == null) {
+			return;
+		}
+
+		UFDouble nlockfund = PuPubVO.getUFDouble_NullAsZero(vo.getNlockfund());// 预扣
+		UFDouble nactfund = PuPubVO.getUFDouble_NullAsZero(vo.getNactfund());// 实扣
+        UFDouble  nlockfund1 =UFDouble.ZERO_DBL;
+		UFDouble nlockmny = null;// 预留
+		if (PuPubVO.getString_TrimZeroLenAsNull(pk_plan) != null) {
+			// 获取计划预留资金
+			nlockmny = getPlanLockFund(pk_plan, vo.getPk_fundset());
+		}
+		boolean isLock = nlockmny == null ? false : true;
+
+		if (nactfund.doubleValue() < nmny.doubleValue())
+			throw new BusinessException("数据错误，超实扣金额");
+
+		nactfund = nactfund.sub(nmny);
+		// nlockfund = nlockfund.add(nbeforemny);
+//		nlockfund = nlockfund.add(nmny);
+		UFDouble nsubmny = nbeforemny.sub(nmny);
+
+		if (isLock) {//
+			UFDouble noldlockmny = PuPubVO
+					.getUFDouble_NullAsZero(getPlanOldLockFund(pk_plan, vo
+							.getPk_fundset()));
+			nlockmny = nlockmny.sub(nsubmny);
+			if (nlockmny.doubleValue() > noldlockmny.doubleValue()) {
+				nlockmny = noldlockmny;
+			}
+		}
+		nlockfund1 =nlockfund.add(nmny1);
+		vo.setNactfund(nactfund);
+		vo.setNlockfund(nlockfund1);
+//		vo.setNlockfund(nlockfund);
+		getDao().updateVO(vo, HgBsPubTool.CHECK_FUND_USENAMES);
+
+		updateLockFund(pk_plan, vo.getPrimaryKey(), nlockmny, null, true);
 	}
 }
