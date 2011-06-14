@@ -45,6 +45,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	
 	@Override
 	protected void onBoSave() throws Exception {
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("itransstatus", 1);
 		beforeSaveCheck();
 		super.onBoSave();
 	}
@@ -59,24 +60,24 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	protected void beforeSaveCheck() throws Exception{
 		//mlr
 		//对发货开始和结束日期检验，发货日期不能大于结束日期
+		//spf 修改
 		Object start=getBillCardPanelWrapper().getBillCardPanel().getHeadItem("dbegindate").getValueObject();
 		Object end=getBillCardPanelWrapper().getBillCardPanel().getHeadItem("denddate").getValueObject();
-       if(start ==null || end==null
-    		   ||"".equals(start)||"".equals(end)){
-    	   throw new BusinessException("开始日期和结束日期不能为空");
+		Object status = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("itransstatus").getValueObject();
+       if(start ==null || "".equals(start)){
+    	   throw new BusinessException("开始日期不能为空");
     	   
-       }else if(start.toString().compareTo(end.toString())>0){
-    	   
-    	   throw new BusinessException("开始日期不能大于结束日期");
-       }	
-		//表体非空校验
-		if(getBillUI().getVOFromUI()!=null){
-			if(getBillUI().getVOFromUI().getChildrenVO()==null||
-					(getBillUI().getVOFromUI().getChildrenVO()).length==0	){
-				throw new BusinessException("表体不允许为空");
-			}
-		};			
-		
+       }
+       if(status == null || "".equals(status)){
+    	  throw new BusinessException("运单状态不能为空！");
+       }else if("2".equals(status.toString())){
+    	   if(end == null || "".equals(end)){
+    		   throw new BusinessException("运单状态为到货!结束日期不能为空！");
+    	   }
+    	   if(start.toString().compareTo(end.toString())>0){
+        	   throw new BusinessException("开始日期不能大于结束日期");
+           }	
+       }
 	}
 	@Override
 	protected void onBoLineAdd() throws Exception {
