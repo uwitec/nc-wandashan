@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding='gb2312'?>
+<root docType="(Java lang)Middleware depoly parameter">
+	<ejbBeans>
+		<beanName>nc.itf.wds.ejb</beanName>
+		<ejb_ref_name>nc.itf.wds.ejbEjbBean</ejb_ref_name>
+		<HomeClassName>nc.itf.wds.ejbHome</HomeClassName>
+		<PrimaryKeyClassName></PrimaryKeyClassName>
+		<RemoteInterfaceClassName>nc.itf.wds.ejbEjbObject</RemoteInterfaceClassName>
+		<beSession>true</beSession>
+		<beStatelessSession>true</beStatelessSession>
+		<Description>ejb's Description.</Description>
+		<envParameter>
+			<ParameterName>envParameter</ParameterName>
+			<ParameterValue>ppt</ParameterValue>
+		</envParameter>
+		<methodTransectionType>
+			<methodName>void deleteGeneralTVO(java.util.List arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>200</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void insertGeneralTVO(java.util.List arg0 ,java.util.List arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>201</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void insertWarehousestock(nc.vo.ic.pub.StockInvOnHandVO arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>202</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>java.util.List queryGeneralTVO(java.lang.String arg0 ,java.lang.String arg1  ,java.lang.String arg2 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>203</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void queryWarehousestock(java.util.List arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>204</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void updateWarehousestock(nc.vo.ic.pub.StockInvOnHandVO arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>205</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void updateBdcargdocTray(java.lang.String arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>206</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void saveGeneralVO(nc.vo.ic.other.out.MyBillVO arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>207</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>java.lang.String autoPickAction(java.lang.String arg0 ,nc.vo.ic.other.out.TbOutgeneralBVO[] arg1  ,java.lang.String arg2  ,java.lang.String arg3 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>208</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>nc.vo.pub.AggregatedValueObject deleteBD8004040204(nc.vo.pub.AggregatedValueObject arg0 ,java.lang.Object arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>209</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>nc.vo.pub.AggregatedValueObject saveBD8004040204(nc.vo.pub.AggregatedValueObject arg0 ,java.lang.Object arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>210</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>java.lang.Object[] getNoutNum(java.lang.String arg0 ,java.lang.String arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>211</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>nc.vo.pub.AggregatedValueObject saveBD8004040602(nc.vo.pub.AggregatedValueObject arg0 ,java.lang.Object arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>212</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>java.lang.Object whs_processAction(java.lang.String arg0 ,java.lang.String arg1  ,java.lang.String arg2  ,java.lang.String arg3  ,nc.vo.pub.AggregatedValueObject arg4  ,java.lang.Object arg5 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>213</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>nc.vo.pub.AggregatedValueObject saveBD(nc.vo.pub.AggregatedValueObject arg0 ,java.lang.Object arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>214</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>int delTbGeneralBBVO(java.util.List arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>215</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>int insertTbGeneralBBVO(nc.vo.ic.pub.TbGeneralBBVO[] arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>216</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>int updateBdCargdocTray(java.util.List arg0)</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>217</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void delAndInsertTbGeneralBBVO(java.util.List arg0 ,nc.vo.ic.pub.TbGeneralBBVO[] arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>218</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void canceldelete8004040210(java.lang.String arg0 ,java.lang.String arg1  ,java.lang.String arg2  ,java.lang.String arg3  ,nc.vo.pub.AggregatedValueObject arg4  ,nc.vo.ic.pub.TbGeneralHVO arg5 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>219</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>void pushsavesign8004040210(java.lang.String arg0 ,java.lang.String arg1  ,java.lang.String arg2  ,nc.vo.pub.AggregatedValueObject arg3  ,nc.vo.ic.pub.TbGeneralHVO arg4 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>220</methodId>
+		</methodTransectionType>	
+		<methodTransectionType>
+			<methodName>nc.vo.pub.AggregatedValueObject deleteBD(nc.vo.pub.AggregatedValueObject arg0 ,java.lang.Object arg1 )</methodName>
+			<methodTransectionType>Required</methodTransectionType>
+			<methodIsolateLevel>TRANSECTION_READ_COMMITED</methodIsolateLevel>
+			<methodId>221</methodId>
+		</methodTransectionType>	
+		
+		<maxInstance>100</maxInstance>
+		<beCmt>true </beCmt>
+		<beCmp>true</beCmp>
+	</ejbBeans>
+</root>

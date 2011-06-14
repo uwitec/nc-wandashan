@@ -1,0 +1,33 @@
+        节点编码          节点名称         数据库表                            单据类型                入口类
+
+   80021008     仓库人员绑定      tb_stockstaff                   80021008             nc.ui.wds.ie.storepersons.MyClientUI 
+   80021010     存货明细           bd_invbasdoc                   80021010            nc.ui.wds.w80021010.MyClientUI
+   80021040     样品计划单       wds_cgqy_h和wds_cgqy_b             WDSC                 nc.ui.wds.ie.cgqy.ClientUI
+   8004040204   销售出库        tb_outgeneral_h和tb_outgeneral_b       WDS8               nc.ui.wds.ic.so.out.MyClientUI
+   8004040208    其他出库      tb_outgeneral_h和tb_outgeneral_b       WDS6                nc.ui.wds.ic.other.out.MyClientUI
+   8004040210    调拨入库      tb_general_h和tb_general_b            WDS9               nc.ui.wds.ic.allocation.in.MyClientUI
+   8004040212    托盘移动        wds_tpyd_h和wds_tpyd_b              WDSD                nc.ui.wds.ic.tpyd.ClientUI
+   8004040214     其他入库      tb_general_h和tb_general_b           WDS7                  nc.ui.wds.ic.other.in.MyClientUI
+   8004040602     存货状态           tb_warehousestock                 8004040602           nc.ui.wds.ic.inv.MyClientUI
+   80040602     货位存货绑定        wds_cargdoc和tb_spacegoods            80040602          nc.ui.wds.ic.invstore.MyClientUI 
+   8004061002   货位托盘信息          wds_cargdoc和bd_cargdoc_tray         8004061002             nc.ui.wds.ic.cargtray.MyClientUI
+   80060201      销售计划安排                                                        WDS4                 nc.ui.dm.so.deal.SoDealClientUI  
+   8004061008     存货档案                wds_invbasdoc                          8004061008           nc.ui.wds.invbasdoc.MyClient   
+  80060405       发运计划录入         wds_sendplanin 和wds_sendplanin_b     WDS1                   nc.ui.dm.plan.ClientUI   
+  80060410       发运计划安排                                                     WDS2                 nc.ui.dm.PlanDealClientUI
+   80060415      发运订单            wds_sendorder和wds_sendorder_b          WDS3                  nc.ui.dm.order.ClientUI
+  80060425      销售运单            wds_soorder和wds_soorder_b               WDS5                    nc.ui.dm.order.ClientUI
+  8006080204     分仓区域绑定         tb_storareacl                       8006080204           nc.ui.wds.dm.store.MyClientUI
+  8006080206    分仓客商绑定       bd_stordoc和tb_storcubasdoc            8006080206             nc.ui.wds.dm.storebing.MyClientUI
+ ---------费用核算--------
+  8008010101	班组档案			wds_teamdoc_h               								nc.ui.wds.load.teamdoc.ClientUI
+  8008010102    装卸费价格设       wds_loadprice                         WDSE                 nc.ui.wds.load.price.ClientUI
+  8008010201    运输里程表   		wds_transmil						 8008010201			nc.ui.wds.tranprice.transmil.ClientUI  
+  8008010202	运输公司档案		wds_tanscorp_h和wds_tanscorp_b1			8008010202				nc.ui.wds.tranprice.transcorp.ClientUI
+  								wds_tanscorp_b2
+  
+  80080201		装卸费核算单        wds_loadprice_h和wds_loadprice_b1,		WDSF                nc.ui.wds.load.account.ClientUI
+  								 wds_loadprice_b2
+  8008010210    吨公里运价表                                                     WDSI
+  8008010215    箱数运价表                                                        WDSJ
+  8008010216    特殊运价表                                                        WDSK

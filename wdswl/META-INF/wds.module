@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="gb2312"?>
+<module name="wds">
+    <public>		
+		<component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.wds.w8004040204.Iw8004040204</interface>
+			<implementation>nc.bs.wds.w8004040204.W8004040204Impl</implementation>
+	    </component>
+		<component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.wds.w8004040210.Iw8004040210</interface>
+			<implementation>nc.bs.wds.w8004040210.W8004040210Impl</implementation>
+	    </component>
+	    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.wds.w80060210.Iw80060210</interface>
+			<implementation>nc.bs.wds.w80060210.W80060210Impl</implementation>
+	    </component>
+	   	<component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.wds.w80060604.Iw80060604</interface>
+			<implementation>nc.bs.wds.w80060604.W80060604Impl</implementation>
+	    </component>	    
+    </public>
+</module>

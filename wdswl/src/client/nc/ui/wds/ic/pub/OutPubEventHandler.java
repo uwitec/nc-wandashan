@@ -1,0 +1,358 @@
+package nc.ui.wds.ic.pub;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.bill.BillModel;
+import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wds.ic.so.out.TrayDisposeDlg;
+import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
+
+public class OutPubEventHandler extends WdsPubEnventHandler {
+
+	public OutPubClientUI ui = null;
+
+	public OutPubEventHandler(OutPubClientUI billUI, IControllerBase control) {
+		super(billUI, control);
+		ui = billUI;
+	}
+
+	/*
+	 * 自动取货(non-Javadoc)
+	 */
+	@SuppressWarnings("unchecked")
+	protected void onzdqh() throws Exception {
+		int results = ui.showOkCancelMessage("确认自动拣货?");
+		if (results != 1) {
+			return;
+		}
+		if (getBillUI().getVOFromUI() == null
+				|| getBillUI().getVOFromUI().getChildrenVO() == null
+				|| getBillUI().getVOFromUI().getChildrenVO().length == 0) {
+			ui.showErrorMessage("获取当前界面数据出错.");
+			return;
+		}
+		AggregatedValueObject billvo = getBillUI().getVOFromUI();
+		TbOutgeneralBVO[] generalbVOs = (TbOutgeneralBVO[]) billvo
+				.getChildrenVO();
+
+		// 数据校验 begin
+		WdsWlPubTool.validationOnPickAction(getBillCardPanelWrapper()
+				.getBillCardPanel(), generalbVOs);
+		// 数据校验end
+		String pk_stordoc = PuPubVO
+				.getString_TrimZeroLenAsNull(getBillCardPanelWrapper()
+						.getBillCardPanel().getHeadItem("srl_pk")
+						.getValueObject());
+		Map<String, List<TbOutgeneralTVO>> trayInfor = null;
+		// ui.showProgressBar(true);
+		try {
+			Class[] ParameterTypes = new Class[] { String.class,
+					AggregatedValueObject.class, String.class };
+			Object[] ParameterValues = new Object[] { ui._getOperator(),
+					billvo, pk_stordoc };
+			Object o = LongTimeTask.callRemoteService(
+					WdsWlPubConst.WDS_WL_MODULENAME,
+					"nc.bs.wds.w8004040204.W8004040204Impl", "autoPickAction",
+					ParameterTypes, ParameterValues, 2);
+			if (o != null) {
+				trayInfor = (Map<String, List<TbOutgeneralTVO>>) o;
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			ui.showProgressBar(false);
+		}
+		if (null == trayInfor || trayInfor.size() == 0) {
+			chaneColor();
+			return;
+		}
+		ui.setTrayInfor(trayInfor);
+		if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
+			// 将信息同步到缓存
+			TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) getBufferData()
+					.getCurrentVO().getChildrenVO();
+			if (bodys != null && bodys.length != 0) {
+				String key = null;
+				for (TbOutgeneralBVO body : bodys) {
+					key = body.getCrowno();
+					body.setTrayInfor(trayInfor.get(key));
+				}
+			}
+		}
+
+		WdsWlPubTool.setDatasToPanelForOutBill(generalbVOs,
+				getBillCardPanelWrapper().getBillCardPanel(), trayInfor);
+
+		chaneColor();
+		setBodyModelState();
+		ontpzd();
+	}
+
+
+
+	/**
+	 * tT
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目
+	 * @时间：2011-4-20下午09:09:55
+	 */
+	protected void setBodyModelState() {
+		int row = getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+				.getRowCount();
+		if (row < 0)
+			return;
+		for (int i = 0; i < row; i++) {
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+					.setRowState(i, BillModel.MODIFICATION);
+		}
+	}
+
+	// 参照数据交换完毕后， 设置默认值
+	@Override
+	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
+		super.setRefData(vos);
+		getBillUI().setDefaultData();
+		setBodySpace();
+	}
+
+	@Override
+	protected void onBoLineAdd() throws Exception {
+		super.onBoLineAdd();
+		setBodySpace();
+	}
+
+	// 表体赋货位
+	protected void setBodySpace() throws BusinessException {
+		String pk_cargdoc = getPk_cargDoc();
+		if (pk_cargdoc == null || "".equals(pk_cargdoc)) {
+			// throw new BusinessException("请指定货位信息");
+			return;
+		}
+		int row = getBillCardPanelWrapper().getBillCardPanel().getBillTable()
+				.getRowCount();
+		for (int i = 0; i < row; i++) {
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+					.setValueAt(pk_cargdoc, i, "cspaceid");
+			//liuys add 其他出库 带入默认业务日期
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt(_getDate(), i, "dbizdate");
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormulasByKey("cspaceid");
+		}
+	}
+
+	// 表头获取出库货位
+	protected String getPk_cargDoc() {
+		String pk_cargdoc = (String) getBillCardPanelWrapper()
+				.getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+		return pk_cargdoc;
+	}
+
+	// 表头获取出库仓库
+	protected String getCwhid() {
+		String cwhid = (String) getBillCardPanelWrapper().getBillCardPanel()
+				.getHeadItem("srl_pk").getValueObject();
+		return cwhid;
+	}
+
+	/*
+	 * 查询明细
+	 */
+	protected void onckmx() throws Exception {
+		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
+				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
+						._getCorp().getPrimaryKey(), ui, false);
+		tdpDlg.showModal();
+	}
+
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-6-14下午09:43:54
+	 * @throws Exception
+	 */
+	public void chaneColor() throws Exception {
+		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
+				.getVOFromUI().getChildrenVO();
+
+		// 获取并判断表体是否有值，进行循环
+		if (null != generalbVO && generalbVO.length > 0) {
+			for (int i = 0; i < generalbVO.length; i++) {
+				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
+				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
+				UFDouble num = PuPubVO
+						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
+								.getBillCardPanel().getBodyValueAt(i,
+										"nshouldoutassistnum"));// 应发辅数量
+				UFDouble tatonum = PuPubVO
+						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
+								.getBillCardPanel().getBodyValueAt(i,
+										"noutassistnum"));// 实发辅数量
+				if (tatonum.doubleValue() == 0) {
+					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+							.setCellBackGround(i, "ccunhuobianma", Color.red);
+				} else {
+					if (tatonum.sub(num, 8).doubleValue() == 0) {
+						getBillCardPanelWrapper().getBillCardPanel()
+								.getBodyPanel().setCellBackGround(i,
+										"ccunhuobianma", Color.white);
+					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
+						getBillCardPanelWrapper().getBillCardPanel()
+								.getBodyPanel().setCellBackGround(i,
+										"ccunhuobianma", Color.blue);
+					}
+				}
+
+			}
+
+		}
+
+	}
+
+	protected void onBoCancel() throws Exception {
+		super.onBoCancel();
+		onBoRefresh();
+	}
+
+	@Override
+	protected void onBoSave() throws Exception {
+		CircularlyAccessibleValueObject[] bodys = getBillUI().getVOFromUI()
+				.getChildrenVO();
+		super.onBoSave();
+		onBoRefresh();
+	}
+
+	/*
+	 * 托盘指定(non-Javadoc)
+	 * 
+	 * @see nc.ui.wds.w8004040208.AbstractMyEventHandler#ontpzd()
+	 */
+	protected void ontpzd() throws Exception {
+		String pk_cargdoc = getPk_cargDoc();// 货位
+		if (pk_cargdoc == null || "".equals(pk_cargdoc))
+			throw new BusinessException("请指定货位信息");
+		AggregatedValueObject aggvo = getBillUI().getVOFromUI();
+		TbOutgeneralBVO[] bvo = (TbOutgeneralBVO[]) aggvo.getChildrenVO();
+		if (bvo == null || bvo.length == 0)
+			throw new BusinessException("没有表体数据，不允许操作! ");
+		for (TbOutgeneralBVO vo : bvo) {
+			vo.validationOnZdck();
+		}
+		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
+				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
+						._getCorp().getPrimaryKey(), ui, true);
+		if (tdpDlg.showModal() == UIDialog.ID_OK) {
+			Map<String, List<TbOutgeneralTVO>> map2 = tdpDlg.getBufferData();
+			ui.setTrayInfor(map2);
+			setBodyValueToft();
+		}
+		chaneColor();
+		setBodyModelState();
+	}
+
+	public void setBodyValueToft() {
+		int row = getBodyRowCount();
+		Map<String, List<TbOutgeneralTVO>> map = ((OutPubClientUI) getBillUI())
+				.getTrayInfor();
+		if (row > 0) {
+			for (int i = 0; i < row; i++) {
+				String crowno = (String) getBillCardPanelWrapper()
+						.getBillCardPanel().getBillModel().getValueAt(i,
+								"crowno");// 行号
+				UFDouble[] d = getDFromBuffer(crowno);
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+						.setValueAt(d[0], i, "noutnum");// 主数量
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+						.setValueAt(d[1], i, "noutassistnum");// 辅数量
+				List<TbOutgeneralTVO> list = map.get(crowno);
+				if (list == null || list.size() <= 0) {
+					return;
+				}
+				// 获取批次号
+				// 批次号
+				String vbachcode = "";
+				// 来源批次号
+				String svbachcode = "";
+				// 存取批次
+				List vbp = new ArrayList();
+				// 存取来源批次
+				List vbl = new ArrayList();
+				for (int j = 0; j < list.size(); j++) {
+					TbOutgeneralTVO vo = list.get(j);
+					if (vo.getVbatchcode() != null
+							&& !vo.getVbatchcode().equalsIgnoreCase("")) {
+						if (!vbp.contains(vo.getVbatchcode())) {
+							vbachcode = vbachcode + "," + vo.getVbatchcode();
+							vbp.add(vo.getVbatchcode());
+						}
+					}
+					if (vo.getLvbatchcode() != null
+							&& !vo.getLvbatchcode().equalsIgnoreCase("")) {
+						if (!vbl.contains(vo.getVbatchcode())) {
+							svbachcode = svbachcode + "," + vo.getLvbatchcode();
+							vbl.add(vo.getLvbatchcode());
+						}
+					}
+				}
+				if (vbachcode.length() > 1) {
+					// 给界面的批次号赋值
+					getBillCardPanelWrapper().getBillCardPanel()
+							.setBodyValueAt(
+									vbachcode.substring(1, vbachcode.length()),
+									i, "vbatchcode");
+				}
+
+				if (svbachcode.length() > 1) {
+					// 给界面的来源批次号赋值
+					getBillCardPanelWrapper().getBillCardPanel()
+							.setBodyValueAt(
+									svbachcode
+											.substring(1, svbachcode.length()),
+									i, "lvbatchcode");
+				}
+			}
+		}
+	}
+
+	public int getBodyRowCount() {
+		int rowcount = -1;
+		if (ui.getBillListPanel().isShowing()) {
+			rowcount = ui.getBillListPanel().getBodyBillModel().getRowCount();
+		} else {
+			rowcount = ui.getBillCardPanel().getBillModel().getRowCount();
+		}
+		return rowcount;
+	}
+
+	public UFDouble[] getDFromBuffer(String crowno) {
+		UFDouble[] d = new UFDouble[2];
+		d[0] = new UFDouble(0);// 实入数量
+		d[1] = new UFDouble(0);// 实入辅数量
+		List<TbOutgeneralTVO> list = ui.getTrayInfor().get(crowno);
+		if (list != null && list.size() > 0) {
+			for (TbOutgeneralTVO l : list) {
+				UFDouble b = l.getNoutnum();
+				UFDouble b1 = l.getNoutassistnum();// 实入辅数量
+				d[0] = d[0].add(b);
+				d[1] = d[1].add(b1);
+			}
+		}
+		return d;
+	}
+
+}

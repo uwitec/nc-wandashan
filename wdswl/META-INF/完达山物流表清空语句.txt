@@ -1,0 +1,53 @@
+---truncate table tb_stockstaff ;
+
+ truncate table wds_cgqy_h;
+
+truncate table wds_cgqy_b;
+
+truncate table tb_outgeneral_h;
+
+
+ truncate table tb_outgeneral_b;
+
+truncate table tb_general_h;
+
+truncate table tb_general_b;
+
+truncate table wds_tpyd_h;
+
+truncate table wds_tpyd_b;
+
+ --truncate table tb_warehousestock;
+ 
+--truncate table wds_cargdoc;
+--truncate table tb_spacegoods;
+
+ --truncate table tb_stockstate;
+
+--truncate table  bd_cargdoc_tray;
+
+truncate table wds_fyd_h;
+
+truncate table wds_fyd_b;
+
+--truncate table tb_carmanager;
+
+truncate table  wds_sendplanin;
+
+truncate table  wds_sendplanin_b;
+
+truncate table  wds_sendorder;
+
+truncate table  wds_sendorder_b;
+
+truncate table  wds_soorder;
+
+ truncate table wds_soorder_b;
+
+---truncate table  tb_storareacl;
+
+---truncate table  tb_storcubasdoc;
+
+
+truncate table wds_cargdoc;
+

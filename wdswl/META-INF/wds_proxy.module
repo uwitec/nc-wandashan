@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="proxy">
+  <public>
+    <component name="nc.itf.wds" priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.wds.w8004040204.Iw8004040204</interface>
+      <interface>nc.itf.wds.w8004040210.Iw8004040210</interface>
+      <interface>nc.itf.wds.w80060210.Iw80060210</interface>
+      <interface>nc.itf.wds.w80060604.Iw80060604</interface>
+      <implementation>nc.impl.wds</implementation>
+      <property name="iw80060604">
+        <ref>Iw80060604</ref>
+      </property>
+      <property name="iw80060210">
+        <ref>Iw80060210</ref>
+      </property>
+      <property name="iw8004040210">
+        <ref>Iw8004040210</ref>
+      </property>
+      <property name="iw8004040204">
+        <ref>Iw8004040204</ref>
+      </property>
+    </component>
+  </public>
+  <private />
+</module>
+
