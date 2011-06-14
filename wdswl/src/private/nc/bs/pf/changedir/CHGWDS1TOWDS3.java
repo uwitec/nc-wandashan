@@ -159,7 +159,8 @@ public String[] getFormulas() {
 		    "H_fisbigglour->\"N\"",
 		    "H_dmakedate->\""+m_strDate+"\"",
 		    "H_dbilldate->\""+m_strDate+"\"",
-		    "H_dbegindate->\""+m_strDate+"\""
+		    "H_dbegindate->\""+m_strDate+"\"",
+		    "H_itransstatus->\""+0+"\""
 	};
 }
 /**
