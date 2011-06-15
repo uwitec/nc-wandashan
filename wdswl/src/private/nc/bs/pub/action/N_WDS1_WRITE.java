@@ -33,7 +33,7 @@ try{
 			if(iplantype !=null && 0==(Integer)iplantype){
 				setParameter("InWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_inwhouse"));
 				setParameter("Pk", vo.m_preValueVo.getParentVO().getAttributeValue("pk_sendplanin"));
-				setParameter("Date", vo.m_currentDate);
+				setParameter("Date", vo.m_currentDate);//SPF ADD
 				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&InWhouse:String,&Pk:String,&Date:String", vo, m_keyHas,	m_methodReturnHas);
 			}
 			/**begin-------如果是月计划，则校验当前调入仓库在当前月是否已经有月计划---------end */
