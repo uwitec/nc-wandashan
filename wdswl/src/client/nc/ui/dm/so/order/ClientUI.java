@@ -162,11 +162,13 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		if(e.getPos()==BillItem.HEAD){
 			if("icoltype".equalsIgnoreCase(e.getKey())){
 				if(" ÷∂Ø".equals(value)){
+					getBillCardPanel().getTailItem("ngls").setEnabled(true);
 					getBillCardPanel().getTailItem("ntranprice").setEnabled(true);
 					getBillCardPanel().getTailItem("iadjusttype").setEnabled(true);
 					getBillCardPanel().getTailItem("nadjustprice").setEnabled(true);
 					getBillCardPanel().getTailItem("ntransmny").setEnabled(true);
 				}else{
+					getBillCardPanel().getTailItem("ngls").setEnabled(false);
 					getBillCardPanel().getTailItem("ntranprice").setEnabled(false);
 					getBillCardPanel().getTailItem("iadjusttype").setEnabled(false);
 					getBillCardPanel().getTailItem("nadjustprice").setEnabled(false);
