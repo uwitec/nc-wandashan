@@ -131,8 +131,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			//
 			int row = geLineRowByCrowno(key);
 			//复制
-			CircularlyAccessibleValueObject vo = getSelectedBodyVO(row);//复制粘贴行
-			
+			CircularlyAccessibleValueObject vo = getSelectedBodyVO(row);//复制粘贴行			
 			Map<String,ArrayList<TbOutgeneralTVO>> map = new HashMap<String,ArrayList<TbOutgeneralTVO>>();
 			for(TbOutgeneralTVO tvo :list){
 				String code = tvo.getVbatchcode();
@@ -317,8 +316,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		if(rowcout > 0){
 			for(int i = 0 ;i<rowcout;i++){
 				String crowno_1 = (String)getBillManageUI().getBillCardPanel().getBillModel().getValueAt(i, "crowno");
-				if(crowno.equals(crowno_1)){
 					row = i;
+					if(crowno.equals(crowno_1)){
 					break;
 				}
 			}
