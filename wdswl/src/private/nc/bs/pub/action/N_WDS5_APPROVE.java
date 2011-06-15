@@ -33,6 +33,7 @@ public class N_WDS5_APPROVE extends AbstractCompiler2 {
 			}
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
+			vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 2);
 			setParameter("currentVo", vo.m_preValueVo);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,

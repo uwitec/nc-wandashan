@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.uap.pf.PFBusinessException;
 /**
  *  销售运单
@@ -29,6 +30,11 @@ try{
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
+			String pk=vo.m_preValueVo.getParentVO().getPrimaryKey();
+			if(pk!=null){
+				vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 1);
+				vo.m_preValueVo.getParentVO().setAttributeValue("fisended", UFBoolean.TRUE);//运单冻结
+			}
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

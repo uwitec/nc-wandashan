@@ -19,6 +19,7 @@ public class AfterWDSChg implements IchangeVO {
 			return nowVo;
 		SuperVO head = (SuperVO)nowVo.getParentVO();
 		head.setAttributeValue("vbillno",new HYPubBO().getBillNo(head.getAttributeValue("pk_billtype").toString(), head.getAttributeValue("pk_corp").toString(), null, null));
+		head.setAttributeValue("itransstatus", 0);//默认在途
 		return nowVo;
 	}
 
@@ -32,7 +33,7 @@ public class AfterWDSChg implements IchangeVO {
 		for(AggregatedValueObject nowVo:nowVos){
 			SuperVO head = (SuperVO)nowVo.getParentVO();
 			head.setAttributeValue("vbillno", bo.getBillNo(head.getAttributeValue("pk_billtype").toString(), head.getAttributeValue("pk_corp").toString(), null, null));
-
+			head.setAttributeValue("itransstatus", 0);//默认在途
 		}
 		return nowVos;
 	}
