@@ -29,7 +29,7 @@ public class N_WDS1_SAVE extends AbstractCompiler2 {
 			super.m_tmpVo = vo;
 		    setParameter ( "INCURVO",vo.m_preValueVo);
 		    setParameter ( "BillType", WdsWlPubConst.WDS1);
-		    setParameter ( "BillDate",getUserDate ().toString ());
+		    setParameter ( "BillDate",vo.m_currentDate);
 		    setParameter ( "ActionName", "WRITE");
 		    setParameter ( "P3",null);
 		    setParameter ( "P5",null); //getUserObj ());

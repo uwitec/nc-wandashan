@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.uap.pf.PFBusinessException;
 /**
  *  发运计划录入
@@ -32,7 +33,8 @@ try{
 			if(iplantype !=null && 0==(Integer)iplantype){
 				setParameter("InWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_inwhouse"));
 				setParameter("Pk", vo.m_preValueVo.getParentVO().getAttributeValue("pk_sendplanin"));
-				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&InWhouse:String,&Pk:String", vo, m_keyHas,	m_methodReturnHas);
+				setParameter("Date", vo.m_currentDate);
+				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&InWhouse:String,&Pk:String,&Date:String", vo, m_keyHas,	m_methodReturnHas);
 			}
 			/**begin-------如果是月计划，则校验当前调入仓库在当前月是否已经有月计划---------end */
 			
