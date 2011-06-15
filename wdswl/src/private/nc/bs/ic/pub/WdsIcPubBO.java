@@ -246,52 +246,55 @@ public class WdsIcPubBO {
 			if (index <= 0)
 				throw new ValidationException("分仓没有虚拟托盘");
 			//			return null;
-		}
-		
-		for (TbGeneralBVO body : bodys) {
-			String notIn = " and cdt_pk not in"+getTempTableUtil().getSubSql(usedTary);
-			String oldCdt= getOldCdt(body);
-			// 获取满足条件的托盘信息
-			tmpTrays = getWdsWLBO().getTrayInfor(cspaceid, body
-					.getGeb_cinvbasid(),notIn,oldCdt);
-			if (tmpTrays == null || tmpTrays.length == 0) {
-				retInfor.put(body.getGeb_crowno(), 0);// 没有闲置的托盘了------------------------
-				continue;
+			String fcTaryId = getWdsWLBO().getFcTrayInfor(cspaceid);
+			if(fcTaryId == null){
+				throw new ValidationException("分仓没有虚拟托盘");
 			}
-			// 计算托盘容积
-			if(iszc){
-				iVolumn = getWdsWLBO().getTrayVolumeByInvbasid(body
-					.getGeb_cinvbasid());
-			}else{//分仓虚拟托盘容量无限大
-				iVolumn=100000000;
-			}
-			iAllVolumn = iVolumn * tmpTrays.length;// 总容积
-			// 判断 总容积不能小于 当前物品的应收辅数量
-			UFDouble nRes = body.getGeb_bsnum().sub(
-					PuPubVO.getUFDouble_NullAsZero(iAllVolumn));
-
-			if(trayInfor.containsKey(body.getGeb_crowno())){
-				ltray = trayInfor.get(body.getGeb_crowno());
-			}else
+			iVolumn=1000000000;
+			for (TbGeneralBVO body : bodys) {
 				ltray = new ArrayList<TbGeneralBBVO>();
-
-			if (nRes.doubleValue() > 0) {
-				retInfor.put(body.getGeb_crowno(), 1);// 要放的货物超出当前货位下可存放该存货的托盘承受量----------------
-				continue;
-			} else if (nRes.equals(WdsWlPubTool.DOUBLE_ZERO)) {// 托盘正好满足本次需求
-				ltray.addAll(shareNumToTrays(tmpTrays, body, iVolumn, iszc));
-			} else {// 托盘绰绰有余 如何使用托盘 托盘使用是否有优先级 按托盘编码？
-				ltray.addAll(shareNumToTrays(tmpTrays, body, iVolumn, iszc));
+				ltray.addAll(shareNumToTrays(new String[]{fcTaryId}, body, iVolumn, iszc));
+				trayInfor.put(body.getGeb_crowno(), ltray);
 			}
+		}else{
+			for (TbGeneralBVO body : bodys) {
+				String notIn = " and cdt_pk not in"+getTempTableUtil().getSubSql(usedTary);
+				String oldCdt= getOldCdt(body);
+				// 获取满足条件的托盘信息
+				tmpTrays = getWdsWLBO().getTrayInfor(cspaceid, body
+						.getGeb_cinvbasid(),notIn,oldCdt);
+				if (tmpTrays == null || tmpTrays.length == 0) {
+					retInfor.put(body.getGeb_crowno(), 0);// 没有闲置的托盘了------------------------
+					continue;
+				}
+	
+				iVolumn = getWdsWLBO().getTrayVolumeByInvbasid(body
+						.getGeb_cinvbasid());				
+				
+				iAllVolumn = iVolumn * tmpTrays.length;// 总容积
+				// 判断 总容积不能小于 当前物品的应收辅数量
+				UFDouble nRes = body.getGeb_bsnum().sub(
+						PuPubVO.getUFDouble_NullAsZero(iAllVolumn));
 
-			trayInfor.put(body.getGeb_crowno(), ltray);
+				if(trayInfor.containsKey(body.getGeb_crowno())){
+					ltray = trayInfor.get(body.getGeb_crowno());
+				}else
+					ltray = new ArrayList<TbGeneralBBVO>();
 
+				if (nRes.doubleValue() > 0) {
+					retInfor.put(body.getGeb_crowno(), 1);// 要放的货物超出当前货位下可存放该存货的托盘承受量----------------
+					continue;
+				} else if (nRes.equals(WdsWlPubTool.DOUBLE_ZERO)) {// 托盘正好满足本次需求
+					ltray.addAll(shareNumToTrays(tmpTrays, body, iVolumn, iszc));
+				} else {// 托盘绰绰有余 如何使用托盘 托盘使用是否有优先级 按托盘编码？
+					ltray.addAll(shareNumToTrays(tmpTrays, body, iVolumn, iszc));
+				}
+
+				trayInfor.put(body.getGeb_crowno(), ltray);
+
+			}
 		}
-
 		Object[] retObj = new Object[]{trayInfor,retInfor}; 
-
-		//保存托盘信息(先删后存)
-		//		doSaveTrayInfor(lallbbvos);	
 		return retObj;	
 	}
 	/**

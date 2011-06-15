@@ -188,6 +188,23 @@ public class WdsWlPubBO {
 		trayInfor.put(key, trays);
 		return trayInfor.get(key);
 	}
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：获取分仓托盘id
+	 * @时间：2011-3-31下午04:34:27
+	 * @param cspaceid
+	 * @param cinvbasid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public  String getFcTrayInfor(String cspaceid) throws BusinessException{
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select cdt_pk from bd_cargdoc_tray ");//托盘档案
+		sql.append(" where pk_cargdoc='"+cspaceid+"'");
+		sql.append(" and isnull(dr,0)=0  ");		
+		return PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR));
+	}
 	
 	/**
 	 * 

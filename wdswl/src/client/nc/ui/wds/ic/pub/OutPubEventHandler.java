@@ -113,11 +113,14 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 * @说明：捡货完成后， 
 	 * @时间：2011-6-12上午09:53:55
 	 * @param trayInfor
+	 * @throws Exception 
 	 */
 	//zpm--start
-	private Map<String,List<TbOutgeneralTVO>> splitLine(Map<String,List<TbOutgeneralTVO>> trayInfor){		
-		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])getBufferData().getCurrentVO().getChildrenVO();
-		if(bodys != null && bodys.length !=0) return null;
+	private Map<String,List<TbOutgeneralTVO>> splitLine(Map<String,List<TbOutgeneralTVO>> trayInfor) throws Exception{
+		AggregatedValueObject billvo = getBillUI().getVOFromUI();
+		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) billvo
+				.getChildrenVO();
+		if(bodys == null && bodys.length ==0) return null;
 //		ArrayList<TbOutgeneralBVO> newBodys = new ArrayList<TbOutgeneralBVO>();
 //		int rowno = 10;
 		String key = null;
