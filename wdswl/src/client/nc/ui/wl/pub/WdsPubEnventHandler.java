@@ -38,6 +38,7 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 			return;
 		}
 		super.onBoSave();
+		onBoRefresh();
 	}
 
 	protected void onBoCancel() throws Exception {

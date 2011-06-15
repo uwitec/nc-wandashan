@@ -210,7 +210,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			}
 		}
 		super.onBoSave();
-		onBoRefresh();
+//		onBoRefresh();
 	}
 	
 	@Override
