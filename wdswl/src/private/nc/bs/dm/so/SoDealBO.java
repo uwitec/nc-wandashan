@@ -142,7 +142,7 @@ public class SoDealBO {
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
 						.toArray(new SoDealVO[0])),
-				WdsWlPubConst.DM_PLAN_DEAL_SPLIT_FIELDS);
+				WdsWlPubConst.SO_PLAN_DEAL_SPLIT_FIELDS);
 		if (datas == null || datas.length == 0)
 			return;
 		int len = datas.length;
