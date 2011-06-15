@@ -2,6 +2,8 @@ package nc.ui.wds.ic.pub;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -81,6 +84,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			chaneColor();
 			return;
 		}
+		trayInfor = splitLine(trayInfor);
 		ui.setTrayInfor(trayInfor);
 		if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
 			// 将信息同步到缓存
@@ -103,7 +107,79 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		ontpzd();
 	}
 
-
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：捡货完成后， 
+	 * @时间：2011-6-12上午09:53:55
+	 * @param trayInfor
+	 */
+	//zpm--start
+	private Map<String,List<TbOutgeneralTVO>> splitLine(Map<String,List<TbOutgeneralTVO>> trayInfor){		
+		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])getBufferData().getCurrentVO().getChildrenVO();
+		if(bodys != null && bodys.length !=0) return null;
+//		ArrayList<TbOutgeneralBVO> newBodys = new ArrayList<TbOutgeneralBVO>();
+//		int rowno = 10;
+		String key = null;
+		Map<String,List<TbOutgeneralTVO>> lmap = new HashMap<String,List<TbOutgeneralTVO>>();
+		for(TbOutgeneralBVO body:bodys){
+			key = body.getCrowno();
+			List<TbOutgeneralTVO> list = trayInfor.get(key);
+			//
+			int row = geLineRowByCrowno(key);
+			//复制
+			CircularlyAccessibleValueObject vo = getSelectedBodyVO(row);//复制粘贴行
+			
+			Map<String,ArrayList<TbOutgeneralTVO>> map = new HashMap<String,ArrayList<TbOutgeneralTVO>>();
+			for(TbOutgeneralTVO tvo :list){
+				String code = tvo.getVbatchcode();
+				if(map.containsKey(code)){
+					map.get(code).add(tvo);
+				}else{
+					ArrayList<TbOutgeneralTVO> list2 = new ArrayList<TbOutgeneralTVO>();
+					list2.add(tvo);
+					map.put(code, list2);
+				}
+			}
+			if(map.size()>0){
+				int index  = 0 ;
+				Iterator<String> it = map.keySet().iterator();
+				while(it.hasNext()){
+					String key2 = it.next();
+					ArrayList<TbOutgeneralTVO> list3 = map.get(key2);
+					if(index == 0 ){
+						lmap.put(key, list3);
+						setValueAt(key,list3);
+					}else{
+						onBoPaste(vo);
+						String crowno = getLastLineNO();
+						lmap.put(crowno, list3);
+						setValueAt(crowno,list3);
+					}
+					index++;
+				}
+			}
+		}
+		return lmap;
+	}
+	
+	
+	protected void setValueAt(String crowno,ArrayList<TbOutgeneralTVO> list){
+		if(list == null || list.size() == 0 ){
+			return;
+		}
+		UFDouble noutnum = new UFDouble(0);
+		UFDouble nassistnum = new UFDouble(0);
+		for(TbOutgeneralTVO v:list){
+			noutnum = noutnum.add(v.getNoutnum());// 实出数量
+			nassistnum = nassistnum.add(v.getNoutassistnum());// 实出辅数量
+		}
+		int row = geLineRowByCrowno(crowno);
+		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(list.get(0).getVbatchcode(), row, "vbatchcode");//批次
+		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(noutnum, row, "noutnum");//主数量
+		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(nassistnum, row, "noutassistnum");//辅数量
+	}
+	//zpm--end
 
 	/**
 	 * tT
@@ -135,6 +211,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoLineAdd() throws Exception {
 		super.onBoLineAdd();
 		setBodySpace();
+		///zpm start//生成行号
+	    BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),WdsWlPubConst.BILLTYPE_OTHER_OUT, "crowno");
+		//zpm end
 	}
 
 	// 表体赋货位
@@ -228,6 +307,21 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super.onBoCancel();
 		onBoRefresh();
 	}
+	/**zpm start **/
+	protected int geLineRowByCrowno(String crowno){
+		int row = -1;
+		int rowcout = getBillManageUI().getBillCardPanel().getBillModel().getRowCount();
+		if(rowcout > 0){
+			for(int i = 0 ;i<rowcout;i++){
+				String crowno_1 = (String)getBillManageUI().getBillCardPanel().getBillModel().getValueAt(i, "crowno");
+				if(crowno.equals(crowno_1)){
+					row = i;
+					break;
+				}
+			}
+		}
+		return row;
+	}
 
 	@Override
 	protected void onBoSave() throws Exception {
@@ -237,6 +331,54 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		onBoRefresh();
 	}
 
+	protected void onPasteLineToTail(int line,String[] vbatchcodes) throws Exception{
+		if(vbatchcodes!=null && vbatchcodes.length>0){
+			for(int i = 0 ;i<vbatchcodes.length;i++){
+				String vbatchcode = vbatchcodes[i];
+				if(vbatchcode !=null && "".equals(vbatchcode)){
+					CircularlyAccessibleValueObject vo = getSelectedBodyVO(i);//复制粘贴行
+					onBoPaste(vo);
+				}
+			}
+		}
+	}
+	//复制当前行
+	public CircularlyAccessibleValueObject getSelectedBodyVO(int row){
+		CircularlyAccessibleValueObject vo = getBillManageUI().getBillCardPanel().getBillModel()
+		.getBodyValueRowVO(row, getBillManageUI().getUIControl().getBillVoName()[2]);
+		return vo;
+	}
+	//粘贴当前行到行尾前处理
+	protected void processCopyedBodyVOsBeforePaste(CircularlyAccessibleValueObject vo) {
+		if (vo == null)
+			return;
+		vo.setAttributeValue(getUIController().getPkField(), null);
+		vo.setAttributeValue(getUIController().getChildPkField(), null);
+	}
+	//粘贴
+	protected void onBoPaste(CircularlyAccessibleValueObject vo){
+		processCopyedBodyVOsBeforePaste(vo);
+		getBillManageUI().getBillCardPanel().stopEditing();
+		getBillManageUI().getBillCardPanel().addLine();
+		int selectedRow = getBillManageUI().getBillCardPanel().getBillTable().getRowCount()-1;
+		getBillManageUI().getBillCardPanel().getBillModel().setBodyRowVO(vo,selectedRow);
+		execLoadBodyRowFormula(selectedRow);
+	}
+	//得到新增行的行号
+	protected String getLastLineNO(){
+		int selectedRow = getBillManageUI().getBillCardPanel().getBillTable().getRowCount()-1;
+		String crowno  = (String)getBillManageUI().getBillCardPanel().getBillModel().getValueAt(selectedRow, "crowno");
+		return crowno;
+	}
+	//执行公式
+	private void execLoadBodyRowFormula(int intRow){
+		try{
+			getBillManageUI().getBillCardPanel().getBillModel().execEditFormulas(intRow);
+		}catch (Exception ex){
+			System.out.println("BillListWrapper:执行行公式加载数据错误");
+			ex.printStackTrace();
+		}
+	}
 	/*
 	 * 托盘指定(non-Javadoc)
 	 * 
