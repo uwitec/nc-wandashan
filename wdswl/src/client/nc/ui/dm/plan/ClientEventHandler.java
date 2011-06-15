@@ -1,13 +1,18 @@
 package nc.ui.dm.plan;
 
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.SendplaninVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
 import nc.vo.wds.dm.sendinvdoc.SendinvdocVO;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -53,7 +58,76 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	@Override
 	protected void onBoSave() throws Exception {
 		beforeSaveCheck();
-		super.onBoSave();
+		
+		try {
+			dataNotNullValidate();
+		} catch (ValidationException e) {
+			MessageDialog.showErrorDlg(getBillUI(), "校验", e.getMessage());
+			return;
+		}
+		
+		AggregatedValueObject billVO = getBillUI().getChangedVOFromUI();
+		setTSFormBufferToVO(billVO);
+		AggregatedValueObject checkVO = getBillUI().getVOFromUI();
+		setTSFormBufferToVO(checkVO);
+		// 进行数据晴空
+		Object o = null;
+		ISingleController sCtrl = null;
+		if (getUIController() instanceof ISingleController) {
+			sCtrl = (ISingleController) getUIController();
+			if (sCtrl.isSingleDetail()) {
+				o = billVO.getParentVO();
+				billVO.setParentVO(null);
+			} else {
+				o = billVO.getChildrenVO();
+				billVO.setChildrenVO(null);
+			}
+		}
+
+		boolean isSave = true;
+
+		// 判断是否有存盘数据
+		if (billVO.getParentVO() == null
+				&& (billVO.getChildrenVO() == null || billVO.getChildrenVO().length == 0)) {
+			isSave = false;
+		} else {
+			if (getBillUI().isSaveAndCommitTogether())
+				billVO = getBusinessAction().saveAndCommit(billVO,
+						getUIController().getBillType(), _getDate().toString(),
+						getBillUI().getUserObject(), checkVO);
+			else
+
+				// write to database
+				billVO = getBusinessAction().save(billVO,
+						getUIController().getBillType(), _getDate().toString(),
+						getBillUI().getUserObject(), checkVO);
+		}
+
+		// 进行数据恢复处理
+		if (sCtrl != null) {
+			if (sCtrl.isSingleDetail())
+				billVO.setParentVO((CircularlyAccessibleValueObject) o);
+		}
+		int nCurrentRow=-1;
+		if (isSave) {
+			if (isEditing()) {
+				if (getBufferData().isVOBufferEmpty()) {
+					getBufferData().addVOToBuffer(billVO);
+					nCurrentRow=0;
+					
+				} else {
+					getBufferData().setCurrentVO(billVO);
+					nCurrentRow=getBufferData().getCurrentRow();
+				}
+			}
+			// 新增后操作处理
+			setAddNewOperate(isAdding(), billVO);
+		}
+		// 设置保存后状态
+		setSaveOperateState();
+		if(nCurrentRow>=0){
+			getBufferData().setCurrentRow(nCurrentRow);
+		}
 	}
 	/**
 	 * 
