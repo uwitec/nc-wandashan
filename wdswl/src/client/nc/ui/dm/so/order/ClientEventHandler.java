@@ -7,6 +7,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.pub.ListPanelPRTS;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
@@ -17,12 +18,20 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
 	public ClientUIQueryDlg queryDialog = null;
-
+private LoginInforHelper helper = null;
+	
+	public LoginInforHelper getLoginInforHelper(){
+		if(helper == null){
+			helper = new LoginInforHelper();
+		}
+		return helper;
+	}
 	public ClientEventHandler(ClientUI clientUI, IControllerBase control) {
 		super(clientUI, control);
 	}
@@ -40,7 +49,21 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected String getHeadCondition() {
-		return null;
+		boolean isStock = true;
+		String pk_stordoc =WdsWlPubConst.WDS_WL_ZC;
+		try {
+			pk_stordoc = getLoginInforHelper().getCwhid(_getOperator());
+			isStock = WdsWlPubTool.isZc(pk_stordoc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//是否是总仓
+		if(isStock){
+			return null;
+		}else{
+			return " wds_soorder.pk_outwhouse='"+pk_stordoc+"'";
+		}
+		
 	}
 	
 	@Override
@@ -218,6 +241,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			getBillUI().showHintMessage("表体数据为空");
 			return;
 		}
+		SoorderVO head =(SoorderVO) getBufferData().getCurrentVO().getParentVO();
+		if(PuPubVO.getInteger_NullAs(head.getIcoltype(), 0)==3)//手动核算运费
+			return ;
 		try{	
 			billvo = TranColHelper.col(getBillUI(), billvo, _getDate(),_getOperator());
 			if(getBillManageUI().isListPanelSelected()){

@@ -135,23 +135,7 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
-		String key = e.getKey();
-//		if(key==null){
-//			return false;
-//		}
-//		//过滤存货分类只属于粉类 的存货
-//		if(key.equalsIgnoreCase("invcode")){
-//			JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
-//			if( c instanceof UIRefPane){
-//				UIRefPane ref = (UIRefPane)c;
-//				
-//				ref.getRefModel().addWherePart(" and bd_invbasdoc.pk_invcl in " +
-//						"(select bd_invcl.pk_invcl from bd_invcl where bd_invcl.invclasscode like '30101%')" +
-//						"    and isnull(bd_invmandoc.dr,0) = 0");
-//			}		
-//		}
-		
-		
+		String key = e.getKey();		
 		if(e.getPos() ==BillItem.HEAD){
 			//仓库过滤，只属于物流系统的
 			if("pk_outwhouse".equalsIgnoreCase(key)){
@@ -174,6 +158,24 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		@Override
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
+		Object value = e.getValue();
+		if(e.getPos()==BillItem.HEAD){
+			if("icoltype".equalsIgnoreCase(e.getKey())){
+				if("手动".equals(value)){
+					getBillCardPanel().getTailItem("ntranprice").setEnabled(true);
+					getBillCardPanel().getTailItem("iadjusttype").setEnabled(true);
+					getBillCardPanel().getTailItem("nadjustprice").setEnabled(true);
+					getBillCardPanel().getTailItem("ntransmny").setEnabled(true);
+				}else{
+					getBillCardPanel().getTailItem("ntranprice").setEnabled(false);
+					getBillCardPanel().getTailItem("iadjusttype").setEnabled(false);
+					getBillCardPanel().getTailItem("nadjustprice").setEnabled(false);
+					getBillCardPanel().getTailItem("ntransmny").setEnabled(false);
+				
+				}
+			
+			}
+		}
 	}
 
 	/**

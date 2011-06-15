@@ -236,6 +236,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			getBillUI().showHintMessage("表体数据为空");
 			return;
 		}
+		SendorderVO head =(SendorderVO) getBufferData().getCurrentVO().getParentVO();
+		if(PuPubVO.getInteger_NullAs(head.getIcoltype(), 0)==3)//手动核算运费
+			return ;
 		try{	
 			billvo = TranColHelper.col(getBillUI(), billvo, _getDate(),_getOperator());
 			if(getBillManageUI().isListPanelSelected()){
