@@ -8,6 +8,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
@@ -179,10 +180,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 //		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
 	
 //		whereSql.append(" and h.vbillstatus=1");
-//		String cwhid  = LoginInforHelper.getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
-//		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-//			whereSql.append(" and wds_sendplanin.pk_outwhouse = '"+cwhid+"' ");
-//		}
+		//liuys add for wds项目   总仓能查出所有分仓计划,分仓只能查出自己分仓计划(与登录人仓库绑定有关)
+		String cwhid  = new LoginInforHelper().getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
+		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
+			whereSql.append(" and h.cwarehouseid = '"+cwhid+"' ");
+		}
 		return whereSql.toString();
 	}
 	
