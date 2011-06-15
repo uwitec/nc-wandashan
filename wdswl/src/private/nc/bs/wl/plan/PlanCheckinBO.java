@@ -11,6 +11,7 @@ import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.BsUniqueCheck;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.ColumnProcessor;
+import nc.ui.pub.ClientEnvironment;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -43,8 +44,9 @@ public class PlanCheckinBO {
 	 * @时间：2011-3-23下午09:14:56
 	 * @param pk_inwhouse =调入仓库p主键，pk=主表主键
 	 */
-	public void beforeCheck(String  pk_inwhouse,String pk) throws BusinessException{
+	public void beforeCheck(String  pk_inwhouse,String pk,String date) throws BusinessException{
 		AccountCalendar calendar = AccountCalendar.getInstance();
+		calendar.setDate(new UFDate(date));//spf add
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();
 		StringBuffer sql = new StringBuffer();
