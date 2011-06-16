@@ -124,21 +124,11 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 				getBillCardPanel().execHeadTailEditFormulas();
 			}
 		}else{
-			if("nmindistance".equalsIgnoreCase(key)){
-				if(row>0){
-					UFDouble lnmaxdistance = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt((row-1), "nmaxdistance"));
-					UFDouble nmindistance =PuPubVO.getUFDouble_NullAsZero(e.getValue());
-					if(nmindistance.sub(lnmaxdistance).doubleValue()<=0){
-						showWarningMessage("不能小于等于上一行，最大距离");
-						getBillCardPanel().setBodyValueAt(e.getOldValue(), row, key);
-						return;
-					}
-				}
-			}else if("nmaxdistance".equalsIgnoreCase(key)){
+		 if("nmaxdistance".equalsIgnoreCase(key)){
 				UFDouble nmindistance = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt((row), "nmindistance"));
 				UFDouble nmaxdistance =PuPubVO.getUFDouble_NullAsZero(e.getValue());
 				if(nmindistance.sub(nmaxdistance).doubleValue()>=0){
-					showWarningMessage("不能最小等距离");
+					showWarningMessage("不能小于最小距离");
 					getBillCardPanel().setBodyValueAt(e.getOldValue(), row, key);
 					return;
 				}
