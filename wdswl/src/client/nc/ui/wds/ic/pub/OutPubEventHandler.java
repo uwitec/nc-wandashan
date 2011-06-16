@@ -138,9 +138,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			nassshoutnum =PuPubVO.getUFDouble_NullAsZero( body.getNshouldoutassistnum());
 			key = body.getCrowno();
 			List<TbOutgeneralTVO> list = trayInfor.get(key);
-			if(list.size()<=1){
-				continue;
-			}
 			//
 			int row = geLineRowByCrowno(key);
 			//¸´ÖÆ
