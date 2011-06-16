@@ -33,7 +33,13 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super(billUI, control);
 		ui = billUI;
 	}
-
+	
+	//当前行应发数量--拆行使用
+	private UFDouble nshoutnum = new UFDouble(0);
+	//当前应发辅数量--拆行使用
+	private UFDouble nassshoutnum = new UFDouble(0);
+	//是否最后一行
+	private boolean flastLine = false;
 	/*
 	 * 自动取货(non-Javadoc)
 	 */
@@ -125,9 +131,16 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 //		int rowno = 10;
 		String key = null;
 		Map<String,List<TbOutgeneralTVO>> lmap = new HashMap<String,List<TbOutgeneralTVO>>();
+		
 		for(TbOutgeneralBVO body:bodys){
+			flastLine = false;
+			nshoutnum = PuPubVO.getUFDouble_NullAsZero(body.getNshouldoutnum());
+			nassshoutnum =PuPubVO.getUFDouble_NullAsZero( body.getNshouldoutassistnum());
 			key = body.getCrowno();
 			List<TbOutgeneralTVO> list = trayInfor.get(key);
+			if(list.size()<=1){
+				continue;
+			}
 			//
 			int row = geLineRowByCrowno(key);
 			//复制
@@ -148,6 +161,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				Iterator<String> it = map.keySet().iterator();
 				while(it.hasNext()){
 					String key2 = it.next();
+					if(index==map.size()-1){
+						flastLine=true;
+					}
 					ArrayList<TbOutgeneralTVO> list3 = map.get(key2);
 					if(index == 0 ){
 						lmap.put(key, list3);
@@ -158,7 +174,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 						lmap.put(crowno, list3);
 						setValueAt(crowno,list3);
 					}
-					index++;
+					index = index+1;
 				}
 			}
 		}
@@ -173,13 +189,23 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		UFDouble noutnum = new UFDouble(0);
 		UFDouble nassistnum = new UFDouble(0);
 		for(TbOutgeneralTVO v:list){
-			noutnum = noutnum.add(v.getNoutnum());// 实出数量
-			nassistnum = nassistnum.add(v.getNoutassistnum());// 实出辅数量
+			noutnum = noutnum.add(PuPubVO.getUFDouble_NullAsZero(v.getNoutnum()));// 实出数量
+			nassistnum = nassistnum.add(PuPubVO.getUFDouble_NullAsZero(v.getNoutassistnum()));// 实出辅数量
 		}
 		int row = geLineRowByCrowno(crowno);
 		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(list.get(0).getVbatchcode(), row, "vbatchcode");//批次
 		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(noutnum, row, "noutnum");//主数量
 		getBillManageUI().getBillCardPanel().getBillModel().setValueAt(nassistnum, row, "noutassistnum");//辅数量
+		if(flastLine){
+			getBillManageUI().getBillCardPanel().getBillModel().setValueAt(nshoutnum, row, "nshouldoutnum");//主数量
+			getBillManageUI().getBillCardPanel().getBillModel().setValueAt(nassshoutnum, row, "nshouldoutassistnum");//辅数量
+		}else{
+			getBillManageUI().getBillCardPanel().getBillModel().setValueAt(noutnum, row, "nshouldoutnum");//主数量
+			getBillManageUI().getBillCardPanel().getBillModel().setValueAt(nassistnum, row, "nshouldoutassistnum");//辅数量
+			nshoutnum = nshoutnum.sub(noutnum);
+			nassshoutnum = nassshoutnum.sub(nassistnum);
+		}
+	
 	}
 	//zpm--end
 
@@ -363,6 +389,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		getBillManageUI().getBillCardPanel().stopEditing();
 		getBillManageUI().getBillCardPanel().addLine();
 		int selectedRow = getBillManageUI().getBillCardPanel().getBillTable().getRowCount()-1;
+		String crowno = ""+((selectedRow+1)*10);
+		vo.setAttributeValue("crowno", crowno);
+		vo.setAttributeValue("general_b_pk", null);
 		getBillManageUI().getBillCardPanel().getBillModel().setBodyRowVO(vo,selectedRow);
 		execLoadBodyRowFormula(selectedRow);
 	}
