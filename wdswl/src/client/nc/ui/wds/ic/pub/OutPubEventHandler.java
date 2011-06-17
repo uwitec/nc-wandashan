@@ -6,19 +6,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
@@ -83,8 +89,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			}
 		} catch (Exception e) {
 			throw e;
-		} finally {
-			ui.showProgressBar(false);
 		}
 		if (null == trayInfor || trayInfor.size() == 0) {
 			chaneColor();
@@ -104,10 +108,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				}
 			}
 		}
-
-		WdsWlPubTool.setDatasToPanelForOutBill(generalbVOs,
-				getBillCardPanelWrapper().getBillCardPanel(), trayInfor);
-
 		chaneColor();
 		setBodyModelState();
 		ontpzd();
@@ -179,7 +179,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	}
 	
 	
-	protected void setValueAt(String crowno,ArrayList<TbOutgeneralTVO> list){
+	protected void setValueAt(String crowno,ArrayList<TbOutgeneralTVO> list) throws Exception{
 		if(list == null || list.size() == 0 ){
 			return;
 		}
@@ -202,7 +202,37 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			nshoutnum = nshoutnum.sub(noutnum);
 			nassshoutnum = nassshoutnum.sub(nassistnum);
 		}
-	
+		setDateInfor(list.get(0).getVbatchcode(),row);
+	}
+	protected  void setDateInfor(String va,int row) throws Exception{
+		UFDate date =_getDate();
+	    //如果批次号输入格式正确就给生产日期赋值
+		Pattern p = Pattern
+		.compile(
+				"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+				+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+				+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+				+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(va.trim().substring(0, 8));
+		if (!m.find()) {
+			String year=va.substring(0,4);
+			String month=va.substring(4,6);
+			String day=va.substring(6,8);
+			String startdate=year+"-"+month+"-"+day;
+			new UFDate(startdate);
+		}
+		getBillManageUI().getBillCardPanel().setBodyValueAt(date, row, "cshengchanriqi");	
+		//给失效的日期赋值
+		String cinventoryid = (String)getBillManageUI().getBillCardPanel().getBodyValueAt(row, "cinventoryid");		
+			if(cinventoryid == null) 
+				return;
+			InvmandocVO vo = (InvmandocVO)HYPubBO_Client.queryByPrimaryKey(InvmandocVO.class, cinventoryid);
+			Integer num = vo.getQualitydaynum();//保质期天数
+			UFBoolean b = vo.getQualitymanflag();//是否保质期
+			if(b!=null && b.booleanValue()){
+				getBillManageUI().getBillCardPanel().setBodyValueAt(date.getDateAfter(num), row, "cshixiaoriqi");//失效日期
+			}	
 	}
 	//zpm--end
 
