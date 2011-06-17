@@ -416,7 +416,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			}
 			UIRefPane ref = (UIRefPane)getbillListPanel().getBodyItem("ctuopanbianma").getComponent();			
 			ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 and" +
-					"  tb_warehousestock.whs_oanum > 0" +
+					" tb_warehousestock.whs_stocktonnage > 0" +
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
 					" and bd_cargdoc_tray.cdt_pk not in "+subsql 		
 			);
