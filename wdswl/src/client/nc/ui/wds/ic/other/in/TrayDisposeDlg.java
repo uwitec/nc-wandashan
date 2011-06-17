@@ -331,7 +331,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	}
 	//校验托盘不能为空&&&校验托盘不允许重复
 	public void checkIsNullTp()throws BusinessException{
-		Map<String,String> h = new HashMap<String,String>();
+//		Map<String,String> h = new HashMap<String,String>();
 		Map<String,List<TbGeneralBBVO>> map = getBufferData();
 		Iterator<String> it = map.keySet().iterator();
 		while(it.hasNext()){
@@ -341,10 +341,10 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				for(TbGeneralBBVO b : l1){
 					if(b.getCdt_pk() == null || "".equals(b.getCdt_pk()))
 						throw new BusinessException("存在托盘为空的情况!");
-					if(h.containsKey(b.getCdt_pk()))
-						throw new BusinessException("指定托盘不允许重复!");
-					else
-						h.put(b.getCdt_pk(), b.getCdt_pk());
+//					if(h.containsKey(b.getCdt_pk()))
+//						throw new BusinessException("指定托盘不允许重复!");
+//					else
+//						h.put(b.getCdt_pk(), b.getCdt_pk());
 				}
 			}
 		}
