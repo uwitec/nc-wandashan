@@ -8,6 +8,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
@@ -183,7 +184,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		//liuys add for wds项目   总仓能查出所有分仓计划,分仓只能查出自己分仓计划(与登录人仓库绑定有关)
 		String cwhid  = new LoginInforHelper().getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
 		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-			whereSql.append(" and h.cwarehouseid = '"+cwhid+"' ");
+			
+			whereSql.append(" and tb_storcubasdoc.pk_stordoc = '"+cwhid+"' ");
 		}
 		return whereSql.toString();
 	}
