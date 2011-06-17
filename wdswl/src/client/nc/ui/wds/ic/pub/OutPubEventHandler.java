@@ -350,8 +350,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		CircularlyAccessibleValueObject[] bodys = getBillUI().getVOFromUI()
-				.getChildrenVO();
 		super.onBoSave();
 	}
 
