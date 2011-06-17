@@ -151,6 +151,16 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 			if (csourcetype != null) {
 				return false;
 			} else {
+				String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+				if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
+					showWarningMessage("前选择入库货位");
+					return false;
+				}			
+				JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
+				if( c instanceof UIRefPane){
+					UIRefPane ref = (UIRefPane)c;
+					ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
+				}
 				return true;
 			}
 		}
@@ -168,21 +178,12 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 			}		
 		}
 			
-		//过滤当前货位下的存货
-		if("invcode".equalsIgnoreCase(key)){
-			String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
-			if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
-				showWarningMessage("前选择入库货位");
-				return false;
-			}			
-			JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
-			if( c instanceof UIRefPane){
-				UIRefPane ref = (UIRefPane)c;
-				ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
-			}
-			return true;	
-						
-		}
+//		//过滤当前货位下的存货
+//		if("invcode".equalsIgnoreCase(key)){
+//			
+//			return true;	
+//						
+//		}
 	
 
 		return true;
