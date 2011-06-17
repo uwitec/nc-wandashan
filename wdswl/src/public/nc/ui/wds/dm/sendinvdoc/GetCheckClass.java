@@ -18,7 +18,7 @@ public class GetCheckClass implements Serializable,IBDGetCheckClass2{
 
 	public String getCheckClass() {
 		
-		return "nc.bs.wds.load.teamdoc.BSCheck";
+		return "nc.bs.wds.dm.sendinvdoc.BSCheck";
 	}
 	
 
