@@ -57,7 +57,7 @@ public class CHGWDS6TO4I  extends nc.bs.pf.change.VOConversion {
 				"B_noutnum->B_noutnum",//实发数量
 				"B_nprice->B_nprice",//单价
 				"B_nmny->B_nmny",//金额
-//				"B_vbatchcode->B_vbatchcode",//批次号	------------------------------zpm
+				"B_vbatchcode->B_vbatchcode",//批次号	------------------------------zpm
 				
 				"B_flargess->B_flargess",//是否赠品
 				"B_cspaceid->B_cspaceid",//货位ID

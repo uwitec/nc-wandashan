@@ -18,8 +18,10 @@ import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.para.SysInitVO;
+import nc.vo.scm.pu.PuPubVO;
 /**
  * 
  * @author zpm
@@ -31,6 +33,7 @@ public class ChangeTo4I {
 	
 	private String s_billtype = "4I";
 	private String corp = null;//当前登录公司pk
+	private boolean isReturn = false;
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();;
 	
 	public  ArrayList queryBills(String arg0 ,QryConditionVO arg1 ) throws Exception{
@@ -87,7 +90,10 @@ public class ChangeTo4I {
 	 * @param date
 	 */
 	public void setSpcGenBillVO(AggregatedValueObject billVO,String coperator,String date){
-		String para = getVbatchCode();
+		String para = null;
+		if(!isReturn){
+			para =getVbatchCode();
+		}
 		if(billVO != null && billVO instanceof GeneralBillVO){
 			GeneralBillVO bill = (GeneralBillVO)billVO;
 			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
@@ -101,7 +107,9 @@ public class ChangeTo4I {
 					if(bill.getItemVOs()[i].getDbizdate() == null){
 						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期
 					}
-					bill.getItemVOs()[i].setVbatchcode(para);
+					if(!isReturn){
+						bill.getItemVOs()[i].setVbatchcode(para);
+					}
 					//设置货位信息csourcebillbid
 					String key  = bill.getItemVOs()[i].getCsourcebillbid();
 					ArrayList<LocatorVO> lvo = l_map.get(key);
@@ -146,6 +154,7 @@ public class ChangeTo4I {
 		}
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
 		TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) value.getChildrenVO();
+		isReturn = PuPubVO.getUFBoolean_NullAs(outhvo.getIs_yundan(),UFBoolean.FALSE).booleanValue();
 		corp =outhvo.getPk_corp();
 		//
 		for(int i = 0 ;i<bvos.length;i++){

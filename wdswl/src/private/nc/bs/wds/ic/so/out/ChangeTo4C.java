@@ -8,6 +8,7 @@ import java.util.Map;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.itf.ic.pub.IGeneralBill;
+import nc.itf.uap.busibean.ISysInitQry;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
@@ -15,8 +16,12 @@ import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.ic.pub.bill.QryConditionVO;
 import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.para.SysInitVO;
+import nc.vo.scm.pu.PuPubVO;
 /**
  * 
  * @author zpm
@@ -25,6 +30,8 @@ import nc.vo.pub.lang.UFDate;
 public class ChangeTo4C {
 	
 	private  String beanName = IGeneralBill.class.getName(); 
+	private boolean isReturn = false;
+	private String corp=null;
 	
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();;
 	
@@ -74,6 +81,10 @@ public class ChangeTo4C {
 	}
 	
 	public void setSpcGenBillVO(AggregatedValueObject billVO,String coperator,String date){
+		String para = null;
+		if(!isReturn){
+			para =getVbatchCode();						
+		}
 		if(billVO != null && billVO instanceof GeneralBillVO){
 			GeneralBillVO bill = (GeneralBillVO)billVO;
 			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
@@ -88,6 +99,9 @@ public class ChangeTo4C {
 					if(bill.getItemVOs()[i].getDbizdate() == null){
 						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期
 					}
+					if(!isReturn){
+						bill.getItemVOs()[i].setVbatchcode(para);				
+					}					
 					//设置货位信息
 					String key  = bill.getItemVOs()[i].getCfirstbillbid();
 					ArrayList<LocatorVO> lvo = l_map.get(key);
@@ -106,6 +120,8 @@ public class ChangeTo4C {
 		}
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
 		TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) value.getChildrenVO();
+		isReturn = PuPubVO.getUFBoolean_NullAs(outhvo.getIs_yundan(),UFBoolean.FALSE).booleanValue();
+		corp =outhvo.getPk_corp();
 		//
 		for(int i = 0 ;i<bvos.length;i++){
 			String key = bvos[i].getGeneral_b_pk();
@@ -129,5 +145,25 @@ public class ChangeTo4C {
 				}
 			}
 		}
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * 完达山物流回写供应链的批次号，默认是2009，可通过参数来配置
+	 * @时间：2011-4-20上午11:57:57
+	 * @return
+	 */
+	private String getVbatchCode(){
+		ISysInitQry sysinitQry = (ISysInitQry) NCLocator.getInstance().lookup(ISysInitQry.class.getName());
+		String para = "2009";
+		try {
+			SysInitVO vo =sysinitQry.queryByParaCode(corp, "WDS00");
+			 para = vo.getValue();
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			System.out.println("获取参数WDS00失败");
+		}
+		return para;
 	}
 }

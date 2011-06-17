@@ -18,8 +18,10 @@ import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.para.SysInitVO;
+import nc.vo.scm.pu.PuPubVO;
 /**
  * 调拨入库
  * @author zpm
@@ -31,7 +33,7 @@ public class ChangeTo4E {
 	
 	private String s_billtype = "4E";
 	private String corp = null;//当前登录公司pk
-	boolean isWriteOldBatchecode = false;
+	boolean isReturn = false;
 	
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();;
 	
@@ -75,7 +77,6 @@ public class ChangeTo4E {
 			return null;
 		}
 		TbGeneralHVO hvo =(TbGeneralHVO) billVO.getParentVO();
-		isWriteOldBatchecode = hvo.getFisnewcode() == null ? false : hvo.getFisnewcode().booleanValue();
 		setLocatorVO(billVO); //设置货位信息
 		AggregatedValueObject vo = PfUtilTools.runChangeData(pk_billtype, s_billtype, billVO,null); //调拨入库
 		setSpcGenBillVO(vo,coperator,date);
@@ -83,8 +84,11 @@ public class ChangeTo4E {
 	}
 	
 	public void setSpcGenBillVO(AggregatedValueObject billVO,String coperator,String date){
+		String para =null;
 		if(billVO != null && billVO instanceof GeneralBillVO){
-			String para = getVbatchCode();
+			if(!isReturn){
+				para =getVbatchCode();						
+			}
 			GeneralBillVO bill = (GeneralBillVO)billVO;
 			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 //			bill.getHeaderVO().setCoperatorid(coperator);//制单人
@@ -97,7 +101,7 @@ public class ChangeTo4E {
 					bill.getItemVOs()[i].setStatus(VOStatus.NEW);//单据新增状态
 					if(bill.getItemVOs()[i].getDbizdate() == null){
 						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期
-						if(isWriteOldBatchecode){
+						if(!isReturn){
 							bill.getItemVOs()[i].setVbatchcode(para);
 						}
 					}
@@ -141,6 +145,7 @@ public class ChangeTo4E {
 		TbGeneralHVO outhvo = (TbGeneralHVO) value.getParentVO();
 		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
 		corp =outhvo.getPk_corp();
+		isReturn = PuPubVO.getUFBoolean_NullAs(outhvo.getFisnewcode(),UFBoolean.FALSE).booleanValue();
 		//
 		for(int i = 0 ;i<bvos.length;i++){
 			String key = bvos[i].getGeb_pk();

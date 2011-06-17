@@ -18,8 +18,10 @@ import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.para.SysInitVO;
+import nc.vo.scm.pu.PuPubVO;
 /**
  * 其他入库
  * @author zpm
@@ -31,6 +33,7 @@ public class ChangeTo4A {
 	
 	private String s_billtype = "4A";
 	private String corp = null;//当前登录公司pk
+	private boolean isReturn = false;
 	
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();;
 	
@@ -95,6 +98,10 @@ public class ChangeTo4A {
 					if(bill.getItemVOs()[i].getDbizdate() == null){
 						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期						
 					}
+					if(!isReturn){
+						para =getVbatchCode();
+						bill.getItemVOs()[i].setVbatchcode(para);
+					}
 					bill.getItemVOs()[i].setVbatchcode(para);
 					//设置货位信息
 					String key  = bill.getItemVOs()[i].getCfirstbillbid();
@@ -135,8 +142,8 @@ public class ChangeTo4A {
 		}
 		TbGeneralHVO outhvo = (TbGeneralHVO) value.getParentVO();
 		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
+		isReturn = PuPubVO.getUFBoolean_NullAs(outhvo.getFisnewcode(),UFBoolean.FALSE).booleanValue();
 		corp =outhvo.getPk_corp();
-		//
 		for(int i = 0 ;i<bvos.length;i++){
 			String key = bvos[i].getGeb_pk();
 			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();

@@ -70,7 +70,7 @@ public class CHG4ITOWDS7 extends nc.ui.pf.change.VOConversionUI{
 			"B_geb_nprice->B_nprice",//单价
 			"B_geb_nmny->B_nmny",//金额
 			"B_geb_vbatchcode->B_vbatchcode",//批次号	
-			
+			"B_geb_backvbatchcode->B_vbatchcode",//来源批次号
 			"B_geb_flargess->B_flargess",//是否赠品
 			"B_geb_space->B_cspaceid",//货位ID
 			 

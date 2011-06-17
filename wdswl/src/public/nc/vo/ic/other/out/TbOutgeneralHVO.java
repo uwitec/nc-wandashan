@@ -105,7 +105,7 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String freight;// 运费
 	public String vsourcebillcode; // 来源订单号
 	public String csourcebillhid; // 来源单据表头
-	/**是否生成运单 */
+	/**是否回写新批次--不勾选回写参数设置的批次 */
 	public UFBoolean is_yundan; 
 	public String creceiptcustomerid;//收货单位
 	
