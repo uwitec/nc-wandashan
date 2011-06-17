@@ -115,13 +115,13 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	/**
 	 * 
-	 * @作者：lyf
-	 * @说明：捡货完成后， 
-	 * @时间：2011-6-12上午09:53:55
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-6-17下午08:48:24
 	 * @param trayInfor
-	 * @throws Exception 
+	 * @return
+	 * @throws Exception
 	 */
-	//zpm--start
 	private Map<String,List<TbOutgeneralTVO>> splitLine(Map<String,List<TbOutgeneralTVO>> trayInfor) throws Exception{
 		AggregatedValueObject billvo = getBillUI().getVOFromUI();
 		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) billvo
