@@ -101,21 +101,7 @@ public class MyClientUI extends OutPubClientUI implements
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
-		// 过滤当前货位下的存货
-		if ("ccunhuobianma".equalsIgnoreCase(key)) {
-			String pk_cargdoc = (String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
-			if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
-				showWarningMessage("前选择入库货位");
-				return false;
-			}
-			JComponent c = getBillCardPanel().getBodyItem("ccunhuobianma").getComponent();
-			if (c instanceof UIRefPane) {
-				UIRefPane ref = (UIRefPane) c;
-				ref.getRefModel().addWherePart("  and 	tb_spacegoods.pk_cargdoc='"+ pk_cargdoc + "' ");
-			}
-			return true;
-
-		}
+	
 		int row = e.getRow();
 		if (e.getPos() == BillItem.BODY) {
 		String csourcetype = PuPubVO
@@ -126,6 +112,17 @@ public class MyClientUI extends OutPubClientUI implements
 				if (csourcetype != null) {
 					return false;
 				} else {
+					//
+					String pk_cargdoc = (String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+					if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
+						showWarningMessage("前选择入库货位");
+						return false;
+					}
+					JComponent c = getBillCardPanel().getBodyItem("ccunhuobianma").getComponent();
+					if (c instanceof UIRefPane) {
+						UIRefPane ref = (UIRefPane) c;
+						ref.getRefModel().addWherePart("  and 	tb_spacegoods.pk_cargdoc='"+ pk_cargdoc + "' ");
+					}
 					return true;
 				}
 			}else if("nshouldoutnum".equalsIgnoreCase(key)){
