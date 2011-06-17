@@ -353,7 +353,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		CircularlyAccessibleValueObject[] bodys = getBillUI().getVOFromUI()
 				.getChildrenVO();
 		super.onBoSave();
-		onBoRefresh();
 	}
 
 	protected void onPasteLineToTail(int line,String[] vbatchcodes) throws Exception{
