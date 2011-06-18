@@ -282,7 +282,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 	private void checkTrayUsed(TbOutgeneralBVO[] bodys) throws BusinessException{
 		String sql ="select cdt_traycode from bd_cargdoc_tray  " +
 				" join tb_warehousestock on tb_warehousestock.pplpt_pk = bd_cargdoc_tray.cdt_pk " +
-				" where bd_cargdoc_tray.cdt_pk=? and (bd_cargdoc_tray.cdt_traystatus=0 or  coalesce(tb_warehousestock.whs_stocktonnage,0)<?)";
+				" where bd_cargdoc_tray.cdt_pk=? and (bd_cargdoc_tray.cdt_traystatus=0 or  coalesce(tb_warehousestock.whs_stocktonnage,0)<? and tb_warehousestock.whs_stocktonnage>0)";
 		SQLParameter para = new SQLParameter();
 		for(TbOutgeneralBVO bvo:bodys){
 			List<TbOutgeneralTVO> tray = bvo.getTrayInfor();
