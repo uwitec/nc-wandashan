@@ -82,7 +82,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 					billvo, pk_stordoc };
 			Object o = LongTimeTask.callRemoteService(
 					WdsWlPubConst.WDS_WL_MODULENAME,
-					"nc.bs.wds.w8004040204.w8004040204impl", "autoPickAction",
+					"nc.bs.wds.w8004040204.W8004040204Impl", "autoPickAction",
 					ParameterTypes, ParameterValues, 2);
 			if (o != null) {
 				trayInfor = (Map<String, List<TbOutgeneralTVO>>) o;
