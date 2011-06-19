@@ -30,7 +30,7 @@ public class CHGWDS6TO4I  extends nc.bs.pf.change.VOConversion {
 				
 				"H_cotherwhid->H_srl_pkr",//入库仓库
 				"H_cwarehouseid->H_srl_pk",//仓库
-				"H_pk_calbody->H_pk_calbody",//库存组织
+//				"H_pk_calbody->H_pk_calbody",//库存组织
 				"H_cbiztype->H_cbiztype",//业务类型
 				"H_cdispatcherid->H_cdispatcherid",//收发类别
 				"H_cwhsmanagerid->H_cwhsmanagerid",//库管员
@@ -83,7 +83,11 @@ public class CHGWDS6TO4I  extends nc.bs.pf.change.VOConversion {
 	public String[] getFormulas() {
 		
 		return new String[] {
-				"H_cbilltypecode->\"4I\""
+				"H_cbilltypecode->\"4I\"",
+				"H_pk_calbody->getColValue(bd_stordoc, pk_calbody,pk_stordoc,H_srl_pk)",//库存组织
+				"H_cothercorpid->getColValue(bd_stordoc, pk_corp,pk_stordoc,H_srl_pk)",//入库公司
+				"H_cothercalbodyid->getColValue(bd_stordoc, pk_calbody,pk_stordoc,H_srl_pk)",//入库库存组织 
+//
 		};
 	}
 	/**
