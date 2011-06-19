@@ -846,7 +846,7 @@ public class CommonUnit {
 		sql.append(" tb_stockstate k");//库存状态
 		sql.append(" where isnull(o.dr,0) = 0 and isnull(s.dr,0) = 0 and isnull(k.dr,0) = 0 and " +
 				" o.pk_cargdoc=s.pk_cargdoc and o.ss_pk = k.ss_pk");
-		sql.append(" and s.cuserid='"+pk_user+"' ");
+		sql.append(" and s.cuserid='"+pk_user+"' and o.whs_stocktonnage>0");
 		if(body.getCinventoryid() == null  || "".equalsIgnoreCase(body.getCinventoryid())){
 			throw new BusinessException("行号："+body.getCrowno()+"请录入表体存货信息");
 		}
