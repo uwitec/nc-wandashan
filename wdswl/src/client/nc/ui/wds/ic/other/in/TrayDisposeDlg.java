@@ -571,7 +571,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 					if ((st).toUpperCase().contains("XN")) {
 						getbillListPanel().getBodyBillModel().execLoadFormula();
 						getbillListPanel().getBodyBillModel().setValueAt(
-								100000000, row, "traymax");
+								100000000, o, "traymax");
 					}
 				}
 			}
