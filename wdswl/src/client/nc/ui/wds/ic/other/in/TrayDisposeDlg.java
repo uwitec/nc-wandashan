@@ -413,7 +413,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 					+"'  and bd_cargdoc_tray.cdt_pk not in"+subSql
 					+"   or bd_cargdoc_tray.cdt_invmandoc = '"+bvo.getPk_invmandoc()+" '"
 					+"   and bd_cargdoc_tray.pk_cargdoc = '"	+bvo.getPk_cargdoc()+" '"
-					+"   and upper(bd_cargdoc_tray.cdt_traycode) like 'XN%'"
+					+"   and upper(bd_cargdoc_tray.cdt_traycode) like 'XN%' and"
+					+"   bd_cargdoc_tray.cdt_traystatus = 0" 
 					+"   and bd_cargdoc_tray.cdt_pk not in"+subSql 
 			
 			);
@@ -504,6 +505,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				getbillListPanel().getBodyBillModel().setBodyDataVO(list.toArray(new TbGeneralBBVO[0]));
 				getbillListPanel().getBodyBillModel().execLoadFormula();
 			}
+			
 		}
 	}
 
