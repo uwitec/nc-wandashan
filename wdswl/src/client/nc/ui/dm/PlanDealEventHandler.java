@@ -185,9 +185,9 @@ public class PlanDealEventHandler implements BillEditListener,
 				.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
 		String cwhid = getLoginInforHelper().getLogInfor(
 				ui.m_ce.getUser().getPrimaryKey()).getWhid();
-		if (!WdsWlPubTool.isZc(cwhid)) {// 非总仓人员登陆 只能查询 发货仓库为自身的发运计划
-			whereSql.append(" and wds_sendplanin.pk_inwhouse = '" + cwhid
-					+ "' ");
+		if (!WdsWlPubTool.isZc(cwhid)) {//只有总仓才有发运计划
+//			whereSql.append(" and wds_sendplanin.pk_inwhouse = '" + cwhid
+//					+ "' ");
 		}
 		return whereSql.toString();
 	}
