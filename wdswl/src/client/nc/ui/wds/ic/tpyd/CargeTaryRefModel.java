@@ -91,6 +91,10 @@ public class CargeTaryRefModel extends AbstractRefModel {
     	StringBuffer strWhere = new StringBuffer();
     	strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
     	strWhere.append(" and isnull(tb_warehousestock.dr,0)=0 ");
+    	
+    	strWhere.append(" and isnull(bd_invmandoc.dr,0)=0 ");
+    	strWhere.append(" and isnull(bd_invbasdoc.dr,0)=0 ");
+    	
     	strWhere.append(" and tb_warehousestock.pk_corp='"+getPk_corp()+"'");
     	return strWhere.toString();
     }
