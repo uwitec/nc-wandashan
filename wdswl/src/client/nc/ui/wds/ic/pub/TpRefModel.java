@@ -57,6 +57,12 @@ public class TpRefModel  extends AbstractRefModel {
 	public boolean isCacheEnabled() {
 		return false;
 	}
+	 @Override
+	    public String getWherePart() {
+	    	StringBuffer strWhere = new StringBuffer();
+	    	strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
+	    	return strWhere.toString();
+	    }
 	//@Override
 	protected String[][] getFormulas() {
 		String[][] str = {{"cdt_traystatus","cdt_traystatus->iif(cdt_traystatus == \"0\" ,\"未占用\",\"占用\")"}};

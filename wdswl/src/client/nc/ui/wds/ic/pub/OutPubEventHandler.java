@@ -111,6 +111,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		chaneColor();
 		setBodyModelState();
 		ontpzd();
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
 	}
 
 	/**
