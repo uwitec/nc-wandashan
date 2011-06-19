@@ -65,7 +65,7 @@ public class SoDealBO {
 				"join  tb_storcubasdoc tbst on tbst.pk_cumandoc = h.creceiptcustomerid");
 	
 		sql.append(" where");
-		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(c.dr,0)=0  ");
+		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(c.dr,0)=0 and isnull(tbst.dr,0)=0");
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
