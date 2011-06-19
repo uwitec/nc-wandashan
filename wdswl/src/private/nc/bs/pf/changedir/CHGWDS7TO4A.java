@@ -32,7 +32,6 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 	public String[] getField() {
 		return (
 				new String[] {
-						"H_pk_calbody->H_geh_calbody",//库存组织
 						"H_cbiztype->H_geh_cbiztype",//业务类型
 						"H_cdispatcherid->H_geh_cdispatcherid",//收发类别
 						"H_cwhsmanagerid->H_geh_cwhsmanagerid",//库管员
@@ -94,6 +93,9 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 		{ 
 			return (new String[] {
 					"H_cbilltypecode->\"4A\"", 
+					"H_pk_calbody->getColValue(bd_stordoc, pk_calbody,pk_stordoc,H_geh_cotherwhid)",
+					"H_cothercorpid->getColValue(bd_stordoc, pk_corp,pk_stordoc,H_geh_cwarehouseid)",//入库公司
+					"H_cothercalbodyid->getColValue(bd_stordoc, pk_calbody,pk_stordoc,H_geh_cwarehouseid)", 
 //					"B_csourcetype->\"WDS7\"",					
 				});
 		}
