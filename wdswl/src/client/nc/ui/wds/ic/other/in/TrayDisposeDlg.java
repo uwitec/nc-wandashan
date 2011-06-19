@@ -394,7 +394,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				v1 = v1.add(b1);
 			}
 			TbGeneralBVO bvo = getGenBVO(key);
-			if (v.sub(bvo.getGeb_snum()).doubleValue() > 0) {
+			if (v1.sub(bvo.getGeb_banum()).doubleValue() > 0) {
 				throw new BusinessException("托盘指定实入数量大于应收数量!");
 			}
 		}
