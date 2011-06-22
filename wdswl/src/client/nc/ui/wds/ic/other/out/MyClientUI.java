@@ -171,7 +171,7 @@ public class MyClientUI extends OutPubClientUI implements
 		getBillCardPanel().setTailItem("coperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("vbilltype",
 				WdsWlPubConst.BILLTYPE_OTHER_OUT);
-		getBillCardPanel().setHeadItem("is_yundan", UFBoolean.TRUE);
+		//getBillCardPanel().setHeadItem("is_yundan", UFBoolean.TRUE);
 		// 单据状态
 		getBillCardPanel().getHeadTailItem("vbillstatus").setValue(
 				IBillStatus.FREE); // 自由状态
@@ -206,7 +206,7 @@ public class MyClientUI extends OutPubClientUI implements
 		getBillCardPanel().setTailItem("coperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("vbilltype",
 				WdsWlPubConst.BILLTYPE_OTHER_OUT);
-		getBillCardPanel().setHeadItem("is_yundan", UFBoolean.TRUE);
+		//getBillCardPanel().setHeadItem("is_yundan", UFBoolean.TRUE);
 		setBillNo();
 		// getBillCardPanel().setHeadItem("pwb_fbillflag",2);
 		// getBillCardPanel().setHeadItem("vbillcode",
