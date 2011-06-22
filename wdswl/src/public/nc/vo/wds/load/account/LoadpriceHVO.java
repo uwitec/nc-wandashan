@@ -65,6 +65,8 @@
              public String vdef6;
              public String vdef10;
              public String vdef5;
+             
+             public UFDouble vzfee ;//合计总费用 
             
              public static final String  PK_CORP="pk_corp";   
              public static final String  RESERVE5="reserve5";   
@@ -1160,5 +1162,15 @@
 				
 	   return "wds_loadprice_h"; 
 				
-	 } 
+	 }
+
+	public UFDouble getVzfee() {
+		return vzfee;
+	}
+
+	public void setVzfee(UFDouble vzfee) {
+		this.vzfee = vzfee;
+	}
+	 
+	 
 } 
