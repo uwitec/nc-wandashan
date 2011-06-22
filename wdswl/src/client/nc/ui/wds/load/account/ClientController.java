@@ -102,7 +102,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public boolean isShowCardTotal() {
-		return false;
+		return true;
 	}
 
 	public String getBodyZYXKey() {
@@ -126,7 +126,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public boolean isShowListTotal() {
-		return false;
+		return true;
 	}
 
 }

@@ -182,6 +182,7 @@ public class ClientUI extends MutilChildUI {
 	public void afterEdit(BillEditEvent e) {
 		
 		super.afterEdit(e);
+		//key e.getKey()
 		
 	}
 

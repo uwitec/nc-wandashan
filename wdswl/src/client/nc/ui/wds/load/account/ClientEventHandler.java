@@ -7,7 +7,11 @@ import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
+import nc.vo.wds.load.account.LoadpriceB1VO;
+import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -68,6 +72,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	@Override
 	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
 		// 设置单据状态
+		
+		//项目主键	nloadprice 项目主键	nunloadprice 项目主键	ncodeprice 项目主键	ntagprice
 		getBillUI().setCardUIState();
 		AggregatedValueObject vo = refVOChange(vos);
 		if (vo == null)
@@ -76,6 +82,26 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		Object[] ParameterValues = new Object[]{vos,_getCorp().getPk_corp()};
 		Object o =LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.wds.load.account.LoadAccountBS", "accoutLoadPrice", ParameterTypes, ParameterValues, 2);
 		ExaggLoadPricVO billVo =(ExaggLoadPricVO) o;
+	
+		//设置表头字段的总费用
+	     if(billVo.getTableVO("wds_loadprice_b1")!=null){
+	    	 LoadpriceB1VO[]  vss=(LoadpriceB1VO[]) billVo.getTableVO("wds_loadprice_b1");
+	    	 UFDouble fees=new UFDouble();
+	    	 UFDouble feess=new UFDouble();
+	    	 for(int i=0;i<vss.length;i++){    		
+	    		 feess=fees.add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNloadprice()))
+	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNunloadprice()))
+	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNcodeprice()))
+	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNtagprice()));
+	    	 }
+	    	if(billVo.getParentVO()!=null){
+	    		LoadpriceHVO l=	(LoadpriceHVO)(billVo.getParentVO());
+	    	    l.setVzfee(feess);
+	       }
+		
+		
+		
+		
 		// 设置为新增处理
 		getBillUI().setBillOperate(IBillOperate.OP_REFADD);
 		// 填充界面
@@ -85,4 +111,5 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	}
 	
 
-}
+ }
+} 
