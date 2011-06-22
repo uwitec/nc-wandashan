@@ -69,6 +69,9 @@ public class WdsDataFinder extends DefaultDataFinder{
 			sql = null;
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_IN.equals(billType)){//其他入库
 			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  tb_general_b zz where zz.geh_pk = ? and nvl(zz.dr,0) = 0 ";
+		
+		}else if(WdsWlPubConst.WDSF.equals(billType)){//装卸费核算
+			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  wds_loadprice_b1 zz where zz.pk_loadprice = ? and nvl(zz.dr,0) = 0 ";
 		}else{
 			super.createSQL(billType);
 		}

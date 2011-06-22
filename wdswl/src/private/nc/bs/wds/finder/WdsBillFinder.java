@@ -33,6 +33,8 @@ public class WdsBillFinder extends AbstractBillFinder {
 			return new String[]{"4C"};//供应链销售出库
 		}else if(WdsWlPubConst.WDSC.equals(type)){//采购取样
 			return new String[] {WdsWlPubConst.BILLTYPE_OTHER_OUT};
+		}else if(WdsWlPubConst.WDSF.equals(type)){//装卸费核算
+			return null;
 		}
 		return null;
 	}
