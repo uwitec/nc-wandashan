@@ -55,10 +55,10 @@ public class SoOutBO  {
 		if(billvo != null && billvo[0]!= null && billvo[0] instanceof GeneralBillVO){
 			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());
 		for(int i=0;i<billvo.length;i++){
-			ArrayList retList = (ArrayList)bsBusiAction.processAction("CANCELSIGN", s_billtype,date,null,billvo[i], null,null);
-			if(retList.get(0) !=null && (Boolean)retList.get(0)){//取消签字成功
+		//	ArrayList retList = (ArrayList)bsBusiAction.processAction("CANCELSIGN", s_billtype,date,null,billvo[i], null,null);
+		//	if(retList.get(0) !=null && (Boolean)retList.get(0)){//取消签字成功
 				bsBusiAction.processBatch("CANELDELETE", s_billtype, date, billvo, null, null);//执行删除
-			}
+		//	}
 		   }
 		}
 	}
