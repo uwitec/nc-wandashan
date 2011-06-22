@@ -94,14 +94,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNcodeprice()))
 	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNtagprice()));
 	    	 }
-	    	if(billVo.getParentVO()!=null){
-	    		LoadpriceHVO l=	(LoadpriceHVO)(billVo.getParentVO());
-	    	    l.setVzfee(feess);
-	       }
-		
-		
-		
-		
+//	    	if(billVo.getParentVO()!=null){
+//	    		LoadpriceHVO l=	(LoadpriceHVO)(billVo.getParentVO());
+//	    	    l.setVzfee(feess);
+//	       }	    	 
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vzfee", feess);	
 		// 设置为新增处理
 		getBillUI().setBillOperate(IBillOperate.OP_REFADD);
 		// 填充界面
