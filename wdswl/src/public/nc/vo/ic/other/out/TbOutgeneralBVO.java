@@ -21,6 +21,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	private static final long serialVersionUID = 1L;
 	
 	
+ 
 	public String vuserdef9;
 	public String castunitid;//¸¨µ¥Î»
 	public String csourcebillhid;

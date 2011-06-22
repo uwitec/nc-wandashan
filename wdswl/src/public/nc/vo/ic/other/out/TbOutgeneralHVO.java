@@ -26,7 +26,8 @@ public class TbOutgeneralHVO extends SuperVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+
 	public String vuserdef9;
 	public String tmaketime;
 	public String ccustomerid;
