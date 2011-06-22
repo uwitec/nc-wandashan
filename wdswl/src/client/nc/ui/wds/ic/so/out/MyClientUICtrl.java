@@ -53,9 +53,7 @@ public class MyClientUICtrl extends AbstractManageController {
 		return true;
 	}
 
-	public boolean isShowCardTotal() {
-		return true;
-	}
+
 
 	public String getBillType() {
 		return WdsWlPubConst.BILLTYPE_SALE_OUT;
@@ -115,11 +113,14 @@ public class MyClientUICtrl extends AbstractManageController {
 		return true;
 	}
 
+	
 	public boolean isShowListTotal() {
 		return true;
 	}
 
-	
+	public boolean isShowCardTotal() {
+		return true;
+	}
 	
 	
 }
