@@ -55,7 +55,7 @@ public class OtherOutBO  {
 			//签字检查 <->[签字日期和表体业务日期]
 			//当前操作人<->[业务加锁，锁定当前操作人员]
 			//空货位检查 bb1表
-		//	bsBusiAction.processAction("SIGN", s_billtype,date,null,billVO, null,null);
+			bsBusiAction.processAction("SIGN", s_billtype,date,null,billVO, null,null);
 		}
 		
 	}
