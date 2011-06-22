@@ -186,8 +186,8 @@ public class PlanDealEventHandler implements BillEditListener,
 		String cwhid = getLoginInforHelper().getLogInfor(
 				ui.m_ce.getUser().getPrimaryKey()).getWhid();
 		if (!WdsWlPubTool.isZc(cwhid)) {//只有总仓才有发运计划
-//			whereSql.append(" and wds_sendplanin.pk_inwhouse = '" + cwhid
-//					+ "' ");
+			whereSql.append(" and wds_sendplanin.pk_inwhouse = '" + cwhid
+					+ "' ");
 		}
 		return whereSql.toString();
 	}
