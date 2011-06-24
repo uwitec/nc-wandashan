@@ -13,6 +13,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -163,6 +164,32 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			getBillManageUI().showErrorMessage("签字失败！");
 		}
 	}
+	
+	
+	
+	
+	
+	@Override
+	protected void onBoSave() throws Exception {
+		//对贴签数量    小于    实入数量的校验
+		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
+			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
+			for(int i=0;i<tbs.length;i++){
+				
+				if(tbs[i].getNoutassistnum().sub(tbs[i].getNtagnum()).doubleValue()<0){
+					throw new BusinessException("贴签数量   不能大于 实入数量");
+				}
+				
+				
+			}			
+		}
+		
+		
+		
+		
+		super.onBoSave();
+	}
+
 	// 取消签字
 	protected void onQxqz() throws Exception {
 		try{
