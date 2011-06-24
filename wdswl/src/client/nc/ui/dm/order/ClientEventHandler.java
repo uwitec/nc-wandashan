@@ -158,6 +158,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 						//					如果表体打印不正常玉石可  把上面两句话打开 试试
 						bt.getSelectionModel().setSelectionInterval(i, i);
 						print.print(true, false);
+						Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
+						iprintcount=iprintcount+1;
+						getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+						HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+						onBoRefresh();	
 					}				
 			}
 
@@ -165,12 +170,14 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		// 如果是卡片界面，使用CardPanelPRTS数据源
 		else{
 			super.onBoPrint();
+			Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
+			iprintcount=iprintcount+1;
+			getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+			HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+			onBoRefresh();	
 		}
-		Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
-		iprintcount=iprintcount+1;
-		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
-		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-		onBoRefresh();	
+		
+		
 	}	
 	
 //	@Override
