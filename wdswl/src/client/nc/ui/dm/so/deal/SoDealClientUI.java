@@ -91,6 +91,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 			m_panel.loadTemplet(WdsWlPubConst.WDS4, null, m_ce.getUser()
 					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
 			m_panel.setEnabled(true);
+			m_panel.getParentListPanel().setTotalRowShow(true);
 		}
 		return m_panel;
 	}
