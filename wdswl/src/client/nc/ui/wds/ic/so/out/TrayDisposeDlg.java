@@ -418,7 +418,11 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 and" +
 					" tb_warehousestock.whs_stocktonnage > 0" +
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
-					" and bd_cargdoc_tray.cdt_pk not in "+subsql 		
+					" and bd_cargdoc_tray.cdt_pk not in "+subsql +
+					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 "+
+					" and tb_warehousestock.whs_stocktonnage > 0"+
+					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
+					" and bd_cargdoc_tray.cdt_traycode like 'XN%'"
 			);
 		}
 		return true;
@@ -439,6 +443,28 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		sql.append(")");
 		return sql.toString();
 	}
+	//Òª¹ýÂËµÄÐéÄâÍÐÅÌ
+	private String getSubSql1(int curRow){
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("('aa'");
+		int rowCount = getbillListPanel().getBodyTable().getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			if (i == curRow)
+				continue;
+			String cdt_id = PuPubVO
+					.getString_TrimZeroLenAsNull(getbillListPanel()
+							.getBodyBillModel().getValueAt(i, "cdt_pk"));// ÍÐÅÌid
+			if (cdt_id == null)
+				continue;
+			sql.append(",'" + cdt_id + "'");
+		}
+		sql.append(")");
+		
+		return sql.toString();
+		
+	}
+	
 	
 //	public Map<String,List<TbOutgeneralTVO>> getBufferData(){
 //		map = ((OutPubClientUI)myClientUI).getTrayInfor();

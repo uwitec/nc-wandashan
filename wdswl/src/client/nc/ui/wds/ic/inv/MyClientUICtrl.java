@@ -48,7 +48,7 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	}
 
 	public boolean isShowCardTotal() {
-		return false;
+		return true;
 	}
 
 	public String getBillType() {
@@ -112,7 +112,7 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	}
 
 	public boolean isShowListTotal() {
-		return false;
+		return true;
 	}
 	
 	/**

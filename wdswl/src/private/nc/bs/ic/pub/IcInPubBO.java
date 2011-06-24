@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
@@ -286,6 +287,9 @@ public class IcInPubBO {
 				" cdt_pk in "+getTempTableUtil().getSubSql(ltrayid.toArray(new String[0]));
 		List<String> listxn = (List<String>)getDao().executeQuery(sql1, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
 		List<String> listzc=new ArrayList<String>();		
+		if(listxn==null ||listxn.size()<=0){
+			listzc=ltrayid;
+		}
 		if(listxn!=null && listxn.size()>0){
 			for(int i=0;i<ltrayid.size();i++){
 				if(!listxn.contains(ltrayid.get(i))){

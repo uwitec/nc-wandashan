@@ -13,7 +13,7 @@ import nc.vo.uap.rbac.util.ObjectUtil;
 
 
 /**
- *  发运计划录入
+ *  
  * @author Administrator
  *
  */

@@ -1,9 +1,11 @@
 package nc.ui.dm.so.order;
 
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.pub.ListPanelPRTS;
@@ -64,6 +66,40 @@ private LoginInforHelper helper = null;
 			return " wds_soorder.pk_outwhouse='"+pk_stordoc+"'";
 		}
 		
+	}
+
+	@Override
+	public void onButton(ButtonObject bo){
+		
+	   // 冻结后 不允许单据修改的处理
+		Object o = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+				"fisended").getValueObject();
+		ButtonObject parentBtn = bo.getParent();
+		if (parentBtn != null ) {
+			int intParentBtn = Integer.parseInt(parentBtn.getTag());
+			if(IBillButton.Action == intParentBtn){
+				if (o != null && ((String) o).equalsIgnoreCase("true")) {
+					getBillUI().showErrorMessage("该单据已冻结不允许操作");
+					return;
+
+				}
+			}
+
+		} else {
+			Integer intbtn = Integer.valueOf(bo.getTag());
+			if (IBillButton.Edit == intbtn || IBillButton.Del == intbtn
+					|| IBillButton.Delete == intbtn
+					
+					|| ButtonCommon.TRAN_COL == intbtn) {
+				if (o != null && ((String) o).equalsIgnoreCase("true")) {
+					getBillUI().showErrorMessage("该单据已冻结不允许操作");
+					return;
+
+				}
+			}
+
+		}
+		super.onButton(bo);
 	}
 	
 	@Override
