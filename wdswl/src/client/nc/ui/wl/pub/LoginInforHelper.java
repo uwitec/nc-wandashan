@@ -172,9 +172,9 @@ public class LoginInforHelper {
 			if(invInfor.containsKey(userid))
 				return invInfor.get(userid);
 			LoginInforVO infor = getLogInfor(userid);
-			if(infor.getType()!=0){
-				throw new BusinessException("当前登陆人员不是保管员");
-			}
+//			if(infor.getType()!=0){   zhf   注释掉    不同该字段 控制操作权限 走系统权限分配 解决 权限问题
+//				throw new BusinessException("当前登陆人员不是保管员");
+//			}
 			invInfor.put(userid, getInvBasdocIDsBySpaceID(infor.getSpaceid())) ;
 			return invInfor.get(userid);
 	}

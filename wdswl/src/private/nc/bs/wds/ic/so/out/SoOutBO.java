@@ -46,7 +46,7 @@ public class SoOutBO  {
 			//当前操作人<->[业务加锁，锁定当前操作人员]
 			//空货位检查 bb1表
 
-//			bsBusiAction.processAction("SIGN", s_billtype,date,null,billVO, null,null);
+			bsBusiAction.processAction("SIGN", s_billtype,date,null,billVO, null,null);
 		}		
 	}
 	

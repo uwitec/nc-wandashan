@@ -43,7 +43,7 @@ public class RefWDS3BillSourceDlg  extends WdsBillSourceDLG {
 		return helper;
 	}
 	private TempTableUtil ttutil = null;
-	private TempTableUtil getTempTableUtil(){
+	private TempTableUtil getTempTableUtil(){//如果  in  语句中超过上限 会报错  该类最好不要用在前台
 		if(ttutil == null)
 			ttutil = new TempTableUtil();
 		return ttutil;
