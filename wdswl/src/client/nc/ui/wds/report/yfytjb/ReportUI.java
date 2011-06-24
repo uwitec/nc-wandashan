@@ -137,80 +137,84 @@ public class ReportUI extends ReportBaseUI {
      */
     public String getQuerySQL(){
     	StringBuffer sql = new StringBuffer();          
-    	sql.append("  select ");
-    	sql.append("  min(WDS_TRANPRICEBILL_H.carriersid)  carriersid,");//承运商ID
-    	sql.append("  wds_tanscorp_h.ctranscorpcode transcorpcode,");//承运商编码
-    	sql.append("  min(wds_tanscorp_h.vtranscorpname) transcorpname,");//承运商名称
-    	sql.append("  min(wds_tanscorp_h.vtranscorpaddr) vtranscorpaddr,");//承运商地址
-    	sql.append("  min(wds_tanscorp_h.vofficespace) vofficespace,");//办公地点
-    	sql.append("  min(wds_tanscorp_h.vlawpsn) vlawpsn,");//法人
-    	sql.append("  min(wds_tanscorp_h.vemail) vemail,");//邮箱
-    	sql.append("  min(wds_tanscorp_h.vfax) vfax,");//传真
-    	sql.append("  min(wds_tanscorp_h.denddate) denddate,");//合同结束日期
-    	sql.append("  min(wds_tanscorp_h.dstartdate) dstartdate,");//合同开始日期
-    	sql.append("  min(wds_tanscorp_h.pk_stordoc) pk_stordoc,");//承运商关联仓库   	
-//    	sql.append( " WDS_TRANPRICE_B.pk_destore  pk_destore,");//发货仓库ID
-//    	sql.append( " bd_stordocf.storcode storcodef,");//发货仓库编码
-//    	sql.append( " bd_stordocf.storname stornamef,");//发货仓库名称   
-    	sql.append(" min(wds_tranpricebill_b.pk_trader)  pk_trader,");//发货仓库绑定的经销商ID（即：客商档案ID）（销售出库才客商，其他出库没有）
-     	sql.append(" bd_cubasdoc.custcode sotranscode,");//客商编码
-    	sql.append(" min(bd_cubasdoc.custname) sotransname,");//客商名称
-    	sql.append(" min(bd_cubasdoc.conaddr) conaddr,");//客商地址   	
-    	sql.append(" min(wds_tranpricebill_b.pk_restore) pk_restore,");//收获仓库ID     	
-    	sql.append("  bd_stordocs.storcode storecode,");//收获仓库编码
-    	sql.append("  min(bd_stordocs.storname) storename,");//收获仓库名称     	
-//    	sql.append( " WDS_TRANPRICE_B.csendareaid csendareaid,");//表体发货地区   	
-//    	sql.append(" bd_areaclf.areaclcode areaclcodef,");//发货地区编码
-//    	sql.append(" bd_areaclf.areaclname areaclnamef,");//发货地区名称    	
-    	sql.append(" min(wds_tranpricebill_b.creceiverealid) creceiverealid,");//表体收获地区   	    	
-    	sql.append(" bd_areacls.areaclcode replacecode,");//收获地区编码
-    	sql.append(" min(bd_areacls.areaclname) replacename,");//收获地区名称    	   	
-//    	sql.append( " WDS_TRANPRICE_B.cinvbasdocid  cinvbasdocid,");//存货基本ID   	
-//    	sql.append(" bd_invbasdoc.invcode invcode,");//存货编码
-//    	sql.append(" bd_invbasdoc.invname invname,");//存货名称
-//    	sql.append(" bd_invbasdoc.invspec invspec,");//规格
-//    	sql.append(" bd_invbasdoc.invtype invtype,");//型号    	
-//    	sql.append( " WDS_TRANPRICE_B.cinvmandocid cinvmandocid,");//存货管理ID
-//    	sql.append( " WDS_TRANPRICE_B.nnum nnum,");//出库数量
-//    	sql.append( " WDS_TRANPRICE_B.nassnum nassnum,");//出库辅数量    	
-//    	sql.append( " WDS_TRANPRICE_B.cpricehid cpricehid,");//运价表主表ID
-//    	sql.append("  wds_transprice_h.ipriceunit ipriceunit,");//运价单位  	
-//    	sql.append( " WDS_TRANPRICE_B.cpriceid cpriceid ,");//运价表子表ID  	
-//    	sql.append( " WDS_TRANPRICE_B.nprice nprice,");//单价
-    	sql.append( " sum(wds_tranpricebill_b.ncolmny) ncolmny,");//计算金额
-    	sql.append( " sum(wds_tranpricebill_b.nadjustmny) nadjustmny,");//运费调整额	  
-    	sql.append( " sum(wds_tranpricebill_b.nmny) transaccount ");//运费   	
-    	sql.append( " from WDS_TRANPRICEBILL_H join wds_tranpricebill_b on" );
-    	sql.append( " WDS_TRANPRICEBILL_H.pk_tranpricebill_h=wds_tranpricebill_b.pk_tranpricebill_h");
-    	sql.append( " left join wds_tanscorp_h on ");
-    	sql.append( " WDS_TRANPRICEBILL_H.carriersid=wds_tanscorp_h.pk_wds_tanscorp_h");//关联 承运商    	
-    	sql.append( " left join bd_areacl bd_areaclf on ");// 关联 发货地区
-    	sql.append( " wds_tranpricebill_b.csendareaid=bd_areaclf.pk_areacl");
-    	sql.append( " left join bd_areacl bd_areacls on"); // 关联 收获地区
-    	sql.append( " wds_tranpricebill_b.creceiverealid=bd_areacls.pk_areacl");
-    	sql.append( " left join bd_invbasdoc on"); //关联  存货基本 档案
-    	sql.append( " wds_tranpricebill_b.cinvbasdocid=bd_invbasdoc.pk_invbasdoc");
-    	sql.append( " left join bd_invmandoc on");//关联 存货管理档案
-    	sql.append( " wds_tranpricebill_b.cinvmandocid=bd_invmandoc.pk_invmandoc");
-    	sql.append( " left join wds_transprice_h on");//关联 运价表主表
-    	sql.append( " wds_tranpricebill_b.cpricehid=wds_transprice_h.pk_wds_transprice_h");
-    	sql.append( " left join wds_transprice_b on"); //关联  运价表子表
-    	sql.append( " wds_tranpricebill_b.cpriceid=wds_transprice_b.pk_wds_transprice_b");
-    	sql.append( " left join bd_stordoc bd_stordocf on");//关联 发货仓库
-    	sql.append( " wds_tranpricebill_b.pk_destore=bd_stordocf.pk_stordoc");
-    	sql.append( " left join bd_cubasdoc on");//关联  客商
-    	sql.append( " wds_tranpricebill_b.pk_trader=bd_cubasdoc.pk_cubasdoc");
-    	sql.append( " left join bd_stordoc bd_stordocs on");//关联  收获仓库
-    	sql.append( " wds_tranpricebill_b.pk_restore=bd_stordocs.pk_stordoc");
-    	sql.append( " where ");
-    	sql.append( " WDS_TRANPRICEBILL_H.pk_corp='"+_getCorpID()+"'");
-    	sql.append( " and isnull(WDS_TRANPRICEBILL_H.dr,0)=0");
-    	sql.append( " and WDS_TRANPRICEBILL_H.vbillstatus=1");//过滤审批通过的	
-    	sql.append( " and WDS_TRANPRICEBILL_H.dapprovedate ");//审批日期
-    	sql.append( " between '"+ddatefrom+"' and '"+ddateto+"'");
-    	sql.append( " group by ");
-    	sql.append( " wds_tanscorp_h.ctranscorpcode,bd_areacls.areaclcode,bd_stordocs.storcode,bd_cubasdoc.custcode"); 	
-        return sql.toString();
+//    	sql.append("  select ");
+//    	sql.append("  min(WDS_TRANPRICEBILL_H.carriersid)  carriersid,");//承运商ID
+//    	sql.append("  wds_tanscorp_h.ctranscorpcode transcorpcode,");//承运商编码
+//    	sql.append("  min(wds_tanscorp_h.vtranscorpname) transcorpname,");//承运商名称
+//    	sql.append("  min(wds_tanscorp_h.vtranscorpaddr) vtranscorpaddr,");//承运商地址
+//    	sql.append("  min(wds_tanscorp_h.vofficespace) vofficespace,");//办公地点
+//    	sql.append("  min(wds_tanscorp_h.vlawpsn) vlawpsn,");//法人
+//    	sql.append("  min(wds_tanscorp_h.vemail) vemail,");//邮箱
+//    	sql.append("  min(wds_tanscorp_h.vfax) vfax,");//传真
+//    	sql.append("  min(wds_tanscorp_h.denddate) denddate,");//合同结束日期
+//    	sql.append("  min(wds_tanscorp_h.dstartdate) dstartdate,");//合同开始日期
+//    	sql.append("  min(wds_tanscorp_h.pk_stordoc) pk_stordoc,");//承运商关联仓库   	
+////    	sql.append( " WDS_TRANPRICE_B.pk_destore  pk_destore,");//发货仓库ID
+////    	sql.append( " bd_stordocf.storcode storcodef,");//发货仓库编码
+////    	sql.append( " bd_stordocf.storname stornamef,");//发货仓库名称   
+//    	sql.append(" min(wds_tranpricebill_b.pk_trader)  pk_trader,");//发货仓库绑定的经销商ID（即：客商档案ID）（销售出库才客商，其他出库没有）
+//     	sql.append(" bd_cubasdoc.custcode sotranscode,");//客商编码
+//    	sql.append(" min(bd_cubasdoc.custname) sotransname,");//客商名称
+//    	sql.append(" min(bd_cubasdoc.conaddr) conaddr,");//客商地址   	
+//    	sql.append(" min(wds_tranpricebill_b.pk_restore) pk_restore,");//收获仓库ID     	
+//    	sql.append("  bd_stordocs.storcode storecode,");//收获仓库编码
+//    	sql.append("  min(bd_stordocs.storname) storename,");//收获仓库名称     	
+////    	sql.append( " WDS_TRANPRICE_B.csendareaid csendareaid,");//表体发货地区   	
+////    	sql.append(" bd_areaclf.areaclcode areaclcodef,");//发货地区编码
+////    	sql.append(" bd_areaclf.areaclname areaclnamef,");//发货地区名称    	
+//    	sql.append(" min(wds_tranpricebill_b.creceiverealid) creceiverealid,");//表体收获地区   	    	
+//    	sql.append(" bd_areacls.areaclcode replacecode,");//收获地区编码
+//    	sql.append(" min(bd_areacls.areaclname) replacename,");//收获地区名称    	   	
+////    	sql.append( " WDS_TRANPRICE_B.cinvbasdocid  cinvbasdocid,");//存货基本ID   	
+////    	sql.append(" bd_invbasdoc.invcode invcode,");//存货编码
+////    	sql.append(" bd_invbasdoc.invname invname,");//存货名称
+////    	sql.append(" bd_invbasdoc.invspec invspec,");//规格
+////    	sql.append(" bd_invbasdoc.invtype invtype,");//型号    	
+////    	sql.append( " WDS_TRANPRICE_B.cinvmandocid cinvmandocid,");//存货管理ID
+////    	sql.append( " WDS_TRANPRICE_B.nnum nnum,");//出库数量
+////    	sql.append( " WDS_TRANPRICE_B.nassnum nassnum,");//出库辅数量    	
+////    	sql.append( " WDS_TRANPRICE_B.cpricehid cpricehid,");//运价表主表ID
+////    	sql.append("  wds_transprice_h.ipriceunit ipriceunit,");//运价单位  	
+////    	sql.append( " WDS_TRANPRICE_B.cpriceid cpriceid ,");//运价表子表ID  	
+////    	sql.append( " WDS_TRANPRICE_B.nprice nprice,");//单价
+//    	sql.append( " sum(wds_tranpricebill_b.ncolmny) ncolmny,");//计算金额
+//    	sql.append( " sum(wds_tranpricebill_b.nadjustmny) nadjustmny,");//运费调整额	  
+//    	sql.append( " sum(wds_tranpricebill_b.nmny) transaccount ");//运费   	
+//    	sql.append( " from WDS_TRANPRICEBILL_H join wds_tranpricebill_b on" );
+//    	sql.append( " WDS_TRANPRICEBILL_H.pk_tranpricebill_h=wds_tranpricebill_b.pk_tranpricebill_h");
+//    	sql.append( " left join wds_tanscorp_h on ");
+//    	sql.append( " WDS_TRANPRICEBILL_H.carriersid=wds_tanscorp_h.pk_wds_tanscorp_h");//关联 承运商    	
+//    	sql.append( " left join bd_areacl bd_areaclf on ");// 关联 发货地区
+//    	sql.append( " wds_tranpricebill_b.csendareaid=bd_areaclf.pk_areacl");
+//    	sql.append( " left join bd_areacl bd_areacls on"); // 关联 收获地区
+//    	sql.append( " wds_tranpricebill_b.creceiverealid=bd_areacls.pk_areacl");
+//    	sql.append( " left join bd_invbasdoc on"); //关联  存货基本 档案
+//    	sql.append( " wds_tranpricebill_b.cinvbasdocid=bd_invbasdoc.pk_invbasdoc");
+//    	sql.append( " left join bd_invmandoc on");//关联 存货管理档案
+//    	sql.append( " wds_tranpricebill_b.cinvmandocid=bd_invmandoc.pk_invmandoc");
+//    	sql.append( " left join wds_transprice_h on");//关联 运价表主表
+//    	sql.append( " wds_tranpricebill_b.cpricehid=wds_transprice_h.pk_wds_transprice_h");
+//    	sql.append( " left join wds_transprice_b on"); //关联  运价表子表
+//    	sql.append( " wds_tranpricebill_b.cpriceid=wds_transprice_b.pk_wds_transprice_b");
+//    	sql.append( " left join bd_stordoc bd_stordocf on");//关联 发货仓库
+//    	sql.append( " wds_tranpricebill_b.pk_destore=bd_stordocf.pk_stordoc");
+//    	sql.append( " left join bd_cubasdoc on");//关联  客商
+//    	sql.append( " wds_tranpricebill_b.pk_trader=bd_cubasdoc.pk_cubasdoc");
+//    	sql.append( " left join bd_stordoc bd_stordocs on");//关联  收获仓库
+//    	sql.append( " wds_tranpricebill_b.pk_restore=bd_stordocs.pk_stordoc");
+//    	sql.append( " where ");
+//    	sql.append( " WDS_TRANPRICEBILL_H.pk_corp='"+_getCorpID()+"'");
+//    	sql.append( " and isnull(WDS_TRANPRICEBILL_H.dr,0)=0");
+//    	sql.append( " and WDS_TRANPRICEBILL_H.vbillstatus=1");//过滤审批通过的	
+//    	sql.append( " and WDS_TRANPRICEBILL_H.dapprovedate ");//审批日期
+//    	sql.append( " between '"+ddatefrom+"' and '"+ddateto+"'");
+//    	sql.append( " group by ");
+//    	sql.append( " wds_tanscorp_h.ctranscorpcode,bd_areacls.areaclcode,bd_stordocs.storcode,bd_cubasdoc.custcode"); 	
+      
+    	
+    	
+    	
+    	return sql.toString();
     } 
     
     public ReportBaseVO[] getReportVO(String sql) throws BusinessException{
