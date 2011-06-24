@@ -76,12 +76,14 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		super.onBillRef();
 		//设置单据号
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vbillno", ((MyClientUI)getBillUI()).getBillNo());
+	
 		//增行按钮去掉
 		ButtonObject btnobj = getBillUI().getButtonManager().getButton(IBillButton.AddLine);
 		if (btnobj != null) {
 			btnobj.setEnabled(false);
 			btnobj.setHint("参照不允许增行");
 		}
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("is_yundan", null);
 	}
 
 	@Override
