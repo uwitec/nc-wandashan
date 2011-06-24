@@ -13,6 +13,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wl.pub.LongTimeTask;
@@ -547,6 +548,14 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			}
 		}
 		return d;
+	}
+	
+	/**
+	 * zhf add  不支持修改时 行操作
+	 */
+	protected void onBoEdit() throws Exception {
+		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+		getBillUI().updateButtons();
 	}
 
 }

@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.other.out;
 
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -24,7 +23,6 @@ import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -109,6 +107,9 @@ public class MyClientUI extends OutPubClientUI implements
 						.getBodyValueAt(row, "csourcetype"));
 		   //如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
 			if ("ccunhuobianma".equalsIgnoreCase(key)) {
+//				编辑是不可修改  zhf add 20110624
+				if(getBillOperate() == IBillOperate.OP_EDIT)
+					return false;
 				if (csourcetype != null) {
 					return false;
 				} else {
@@ -126,6 +127,9 @@ public class MyClientUI extends OutPubClientUI implements
 					return true;
 				}
 			}else if("nshouldoutnum".equalsIgnoreCase(key)){
+//				zhf add
+				if(getBillOperate() == IBillOperate.OP_EDIT)
+					return false;
 				if(csourcetype != null){
 
 					return false;
@@ -133,6 +137,9 @@ public class MyClientUI extends OutPubClientUI implements
 					return true;
 				}
 			}else if("nshouldoutassistnum".equalsIgnoreCase(key)){
+//				zhf add
+				if(getBillOperate() == IBillOperate.OP_EDIT)
+					return false;
 				if (csourcetype != null) {
 				return false;
 				} else {

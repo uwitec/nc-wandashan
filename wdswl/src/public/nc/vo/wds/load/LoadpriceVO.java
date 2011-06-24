@@ -45,6 +45,16 @@ import nc.vo.pub.lang.UFDouble;
              public String invcode;//存货编码
              public String invname;//存货名称
              
+             public String getCwarehouseid() {
+				return cwarehouseid;
+			}
+
+			public void setCwarehouseid(String cwarehouseid) {
+				this.cwarehouseid = cwarehouseid;
+			}
+
+			private String cwarehouseid;//仓库   zhf  add    20110624   修改为仓库级别
+             
             
              public static final String  PK_INVBASDOC="pk_invbasdoc";   
              public static final String  PK_CORP="pk_corp";   

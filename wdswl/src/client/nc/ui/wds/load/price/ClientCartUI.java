@@ -13,12 +13,14 @@ import nc.ui.trade.card.CardEventHandler;
 import nc.ui.trade.pub.IVOTreeData;
 import nc.ui.trade.pub.IVOTreeDataByID;
 import nc.ui.trade.treecard.BillTreeCardUI;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.load.LoadpriceVO;
+import nc.vo.wl.pub.LoginInforVO;
 
 public class ClientCartUI extends BillTreeCardUI{
 
@@ -29,6 +31,18 @@ public class ClientCartUI extends BillTreeCardUI{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private LoginInforVO login = null;
+	public LoginInforVO getLogInfor(){
+		if(login == null)
+			try {
+				login = new LoginInforHelper().getLogInfor(_getOperator());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				login = null;
+			}
+		return login;
+	}
 	public ClientCartUI() {
 		super();
 	}
@@ -38,6 +52,12 @@ public class ClientCartUI extends BillTreeCardUI{
 		super.setDefaultData();
 		//公司
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPrimaryKey());
+		if(getLogInfor() == null){
+			showErrorMessage("当前登录人关联的仓库信息为空");
+			return;
+		}
+			
+		getBillCardPanel().setHeadItem("cwarehouseid", getLogInfor().getWhid());
 	}
 	
 	public ClientCartUI(String pk_corp, String pk_billType, String pk_busitype,String operater, String billId) {
@@ -109,7 +129,7 @@ public class ClientCartUI extends BillTreeCardUI{
 			return "invname";//invcode
 		}
 
-		public SuperVO[] getTreeVO() {
+		public SuperVO[] getTreeVO() {//zhf modify
 			if (m_ChnlManagerVOs == null) {
 				IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 				ArrayList list = null;
@@ -119,7 +139,9 @@ public class ClientCartUI extends BillTreeCardUI{
 					sql.append(" from wds_loadprice  ");
 					sql.append(" join bd_invmandoc on wds_loadprice.pk_invmandoc=bd_invmandoc.pk_invmandoc ");
 					sql.append(" join bd_invbasdoc on  bd_invmandoc.pk_invbasdoc = bd_invbasdoc.pk_invbasdoc ");
-					sql.append(" where nvl(wds_loadprice.dr,0)=0 and nvl(bd_invmandoc.dr,0)=0 and nvl(bd_invbasdoc.dr,0)=0  and wds_loadprice.pk_corp='"+ _getCorp().getPrimaryKey()+"'");
+					sql.append(" where nvl(wds_loadprice.dr,0)=0 and nvl(bd_invmandoc.dr,0)=0 and nvl(bd_invbasdoc.dr,0)=0" +
+							"  and wds_loadprice.pk_corp='"+ _getCorp().getPrimaryKey()+"'");
+					sql.append(" and wds_loadprice.cwarehouseid = '"+getLogInfor().getWhid()+"'");
 					list = (ArrayList)queryBS.executeQuery(sql.toString(), new BeanListProcessor(LoadpriceVO.class));
 				} catch (BusinessException e) {
 					Logger.error(e.getMessage(), e);

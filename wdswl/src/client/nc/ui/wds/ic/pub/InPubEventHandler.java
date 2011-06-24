@@ -13,7 +13,9 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.other.in.TrayDisposeDlg;
 import nc.ui.wl.pub.WdsPubEnventHandler;
@@ -480,7 +482,12 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	}
 		
      
-		
+	protected void onBoEdit() throws Exception {
+		super.onBoEdit();
+//		zhf add
+		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+		getBillUI().updateButtons();
+	}	
 		
 	
 

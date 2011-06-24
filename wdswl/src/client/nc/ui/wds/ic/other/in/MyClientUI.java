@@ -148,6 +148,8 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 					.getBodyValueAt(row, "csourcetype"));
 	     //如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
 		if ("invcode".equalsIgnoreCase(key)) {
+			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+				return false;
 			if (csourcetype != null) {
 				return false;
 			} else {
@@ -165,12 +167,16 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 			}
 		}
 		if("geb_snum".equalsIgnoreCase(key)){
+			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+				return false;
 			if (csourcetype != null) {
 				return false;
 			} else {
 				return true;
 			}		
 		}if("geb_bsnum".equalsIgnoreCase(key)){
+			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+				return false;
 			if (csourcetype != null) {
 				return false;
 			} else {
@@ -186,7 +192,7 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 //		}
 	
 
-		return true;
+		return super.beforeEdit(e);
 	}
 	/**
 	 * 注册自定义按钮

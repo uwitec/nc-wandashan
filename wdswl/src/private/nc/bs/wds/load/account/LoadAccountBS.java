@@ -32,6 +32,8 @@ public class LoadAccountBS {
 
 	// 当前登录公司
 	private String pk_corp = null;
+//	当前登录仓库
+	private String cwarehouseid = null;
 	// <存货管理id,存货装卸价格定义VO>
 	Map<String, LoadpriceVO> invLoadPrice = null;
 
@@ -58,8 +60,9 @@ public class LoadAccountBS {
 	 * @throws BusinessException
 	 */
 	public AggregatedValueObject accoutLoadPrice(AggregatedValueObject[] vos,
-			String corpid) throws BusinessException {
+			String corpid,String cwarehouseid) throws BusinessException {
 		this.pk_corp = corpid;
+		this.cwarehouseid = cwarehouseid;
 		// 得到装卸费价格定义
 		getInvLoadPrice();
 		// 根据来源数据的不同转换成实际的数据类型
@@ -102,7 +105,7 @@ public class LoadAccountBS {
 	 */
 	private Map<String, LoadpriceVO> getInvLoadPrice() throws BusinessException {
 		String sql = "select * from wds_loadprice where pk_corp='" + pk_corp
-				+ "' and isnull(dr,0)=0";
+				+ "' and isnull(dr,0)=0 and cwarehouseid = '"+cwarehouseid+"'";
 		Object o = getBaseDAO().executeQuery(sql,
 				new BeanListProcessor(LoadpriceVO.class));
 		if (o == null) {
@@ -203,12 +206,14 @@ public class LoadAccountBS {
 			b1.setNunloadprice(PuPubVO.getUFDouble_NullAsZero(
 					loadPricvo.getNunloadprice()).multiply(
 					PuPubVO.getUFDouble_NullAsZero(bvo.getGeb_banum())));// 卸货费用
-			if (loadPricvo.getFiscoded() != null
-					&& loadPricvo.getFiscoded() == UFBoolean.TRUE) {// 是否采码
-				b1.setNcodeprice(PuPubVO.getUFDouble_NullAsZero(
-						loadPricvo.getNcodeprice()).multiply(
-						PuPubVO.getUFDouble_NullAsZero(bvo.getGeb_banum())));// 采码费用
-			}
+			
+//			zhf   add  入库不需要核算采码费     注释掉
+//			if (loadPricvo.getFiscoded() != null
+//					&& loadPricvo.getFiscoded() == UFBoolean.TRUE) {// 是否采码
+//				b1.setNcodeprice(PuPubVO.getUFDouble_NullAsZero(
+//						loadPricvo.getNcodeprice()).multiply(
+//						PuPubVO.getUFDouble_NullAsZero(bvo.getGeb_banum())));// 采码费用
+//			}
 			// 设置存货数量信息
 			b1.setPk_invmandoc(bvo.getGeb_cinventoryid());
 			b1.setPk_invbasdoc(bvo.getGeb_cinvbasid());
