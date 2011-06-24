@@ -311,6 +311,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
 				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
 						._getCorp().getPrimaryKey(), ui, false);
+		
 		tdpDlg.showModal();
 	}
 
