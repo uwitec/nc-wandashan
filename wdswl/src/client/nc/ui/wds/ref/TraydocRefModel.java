@@ -4,7 +4,7 @@ import nc.ui.bd.ref.AbstractRefModel;
 
 public class TraydocRefModel extends AbstractRefModel{
 
-	 private String m_sRefTitle = "特殊业务档案";
+	 private String m_sRefTitle = "托盘档案";
 	 
 	 private String tablename=" bd_cargdoc_tray";
 	
