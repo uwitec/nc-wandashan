@@ -8,7 +8,6 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;

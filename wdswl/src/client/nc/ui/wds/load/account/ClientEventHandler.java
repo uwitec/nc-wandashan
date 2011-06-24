@@ -1,6 +1,7 @@
 package nc.ui.wds.load.account;
 
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.LongTimeTask;
@@ -11,6 +12,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB1VO;
+import nc.vo.wds.load.account.LoadpriceB2VO;
 import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -39,6 +41,26 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	
 	@Override
 	protected void onBoSave() throws Exception {
+		//对总费用  分配给班组的费用校验
+		ExaggLoadPricVO   billvo= (ExaggLoadPricVO) getBillUI().getVOFromUI();
+		LoadpriceHVO h= (LoadpriceHVO) billvo.getParentVO();
+		LoadpriceB2VO[] b= (LoadpriceB2VO[]) billvo.getTableVO("wds_loadprice_b2");
+	    UFDouble zfee=h.getVzfee();
+	    if(h !=null){
+	    	UFDouble zbz=new UFDouble();
+	    	for(int i=0;i<b.length;i++){
+	    		zbz=zbz.add(b[i].getNloadprice());
+	    	}
+	    	if(zbz!=null){
+	    		if(zfee.sub(zbz).intValue()<0){
+	    			throw new BusinessException(" 班组装卸费用不能大于总费用");
+	    		}
+	    	}
+	    	
+	    }
+		
+		
+		
 		super.onBoSave();
 	}
 	@Override
@@ -86,13 +108,14 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		//设置表头字段的总费用
 	     if(billVo.getTableVO("wds_loadprice_b1")!=null){
 	    	 LoadpriceB1VO[]  vss=(LoadpriceB1VO[]) billVo.getTableVO("wds_loadprice_b1");
-	    	 UFDouble fees=new UFDouble();
 	    	 UFDouble feess=new UFDouble();
-	    	 for(int i=0;i<vss.length;i++){    		
-	    		 feess=fees.add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNloadprice()))
+	    	 for(int i=0;i<vss.length;i++){   
+	    		 UFDouble fees=new UFDouble();		    	
+	    		  fees=PuPubVO.getUFDouble_NullAsZero(vss[i].getNloadprice())
 	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNunloadprice()))
 	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNcodeprice()))
 	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNtagprice()));
+	    		 feess=feess.add(fees);
 	    	 }
 //	    	if(billVo.getParentVO()!=null){
 //	    		LoadpriceHVO l=	(LoadpriceHVO)(billVo.getParentVO());
