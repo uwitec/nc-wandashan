@@ -88,7 +88,7 @@ import nc.ui.trade.bill.BillTemplateWrapper;
 	 * 注册前台校验类
 	 */
 	public Object getUserObject() {
-		return null;//new MyClientUICheckRuleGetter();
+		return new GetCheckClass();//new MyClientUICheckRuleGetter();
 	}
 	
 	public void doQueryAction(ILinkQueryData querydata) {
