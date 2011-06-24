@@ -31,7 +31,11 @@ public class BSCheck implements IBDBusiCheck {
 			return;
 		}
 		StockInvOnHandVO sk=(StockInvOnHandVO) vo.getParentVO();
-		String sql=" update tb_warehousestock set whs_type='"+sk.getWhs_type()+"' where  ";
+		String sql=" update tb_warehousestock set ss_pk='"+sk.getSs_pk()+"' where " +
+				" pk_cargdoc='"+sk.getPk_cargdoc()+"' " +
+				" and pk_invbasdoc='"+sk.getPk_invbasdoc()+"'" +
+				" and pk_invmandoc='"+sk.getPk_invmandoc()+"'" +
+				" and whs_batchcode='"+sk.getWhs_batchcode()+"'";
         getDao().executeUpdate(sql);
 		
 	}
