@@ -48,12 +48,13 @@ public class PlanDealClientUI extends ToftPanel{
 			m_panel.loadTemplet(WdsWlPubConst.DM_PLAN_DEAL_BILLTYPE, null, m_ce.getUser().getPrimaryKey(), m_ce.getCorporation().getPrimaryKey()
 					);
 			m_panel.setEnabled(true);
+			m_panel.getParentListPanel().setTotalRowShow(true);
 		}
 		return m_panel;
 	}
-	public BillListPanel getBillListPanel(){
-		return m_panel;
-	}
+//	public BillListPanel getBillListPanel(){
+//		return m_panel;
+//	}
 	public ClientEnvironment getEviment(){
 		return m_ce;
 	}
