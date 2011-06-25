@@ -210,7 +210,29 @@ public class ReportUI extends ReportBaseUI {
 //    	sql.append( " between '"+ddatefrom+"' and '"+ddateto+"'");
 //    	sql.append( " group by ");
 //    	sql.append( " wds_tanscorp_h.ctranscorpcode,bd_areacls.areaclcode,bd_stordocs.storcode,bd_cubasdoc.custcode"); 	
-      
+ 
+    	sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        sql.append("");
+        
     	
     	
     	
