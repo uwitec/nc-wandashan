@@ -19,6 +19,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.BillRowNo;
@@ -177,8 +178,9 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
 			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
 			for(int i=0;i<tbs.length;i++){
-				
-				if(tbs[i].getNoutassistnum().sub(tbs[i].getNtagnum()).doubleValue()<0){
+				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());
+				UFDouble u2=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNtagnum());
+				if(u1.sub(u2).doubleValue()<0){
 					throw new BusinessException("贴签数量   不能大于 实入数量");
 				}
 				
