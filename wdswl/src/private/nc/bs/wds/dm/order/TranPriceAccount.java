@@ -11,6 +11,7 @@ import nc.vo.dm.order.SendorderVO;
 import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
@@ -36,6 +37,8 @@ public class TranPriceAccount {
 	private String colType = WdsWlPubConst.WDSI;
 	// 是否总仓
 	private boolean isZC = true;
+	//是否原料粉
+	private boolean fisbigflour = false;
 	// 是否零担
 	private boolean isSmall = false;
 	// 分仓与客商绑定关系VO
@@ -134,7 +137,7 @@ public class TranPriceAccount {
 		head
 				.setNtranprice((getTransprice().multiply(nrate.div(100).add(1),
 						8)));
-		if (isAdjust()) {
+		if (isSmall&&WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
 			// 零担调整值
 			head.setNadjustprice(curTranpriceBvo.getNpriceadj());
 			// 零担调整类型
@@ -312,6 +315,7 @@ public class TranPriceAccount {
 		}
 		totalNum.add(ntotalNum);
 		totalNum.add(ntotalAssNUm);
+		fisbigflour = PuPubVO.getUFBoolean_NullAs(head.getFisbigflour(), UFBoolean.FALSE).booleanValue();
 		// 判断是否总仓
 		if (WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)) {
 			isZC = true;
@@ -453,6 +457,11 @@ public class TranPriceAccount {
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
 		sqlb.append(" and (isnull(b.ifw,0) = 0 or b.ifw =1) ");// 应运范围过滤
+		if(fisbigflour){
+			sqlb.append(" and isnull(fiseffect,'N')='Y'");
+		}else{
+			sqlb.append(" and isnull(fiseffect,'N')='N'");
+		}
 		sqlb.append(" and h.dstartdate <= '" + date + "' and h.denddate >= '"
 				+ date + "'");
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");

@@ -286,6 +286,7 @@ public class TranPriceAccount {
 		}
 		totalNum.add(ntotalNum);
 		totalNum.add(ntotalAssNUm);
+
 		// ÅÐ¶ÏÊÇ·ñ×Ü²Ö
 		if (WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)) {
 			isZC = true;
@@ -329,6 +330,8 @@ public class TranPriceAccount {
 			isZC = false;
 			colType = WdsWlPubConst.WDSK;
 		}
+	
+		
 	
 	}
 
