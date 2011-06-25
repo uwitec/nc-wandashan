@@ -1,8 +1,6 @@
 package nc.ui.wds.tranprice.fencang;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -10,8 +8,6 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 

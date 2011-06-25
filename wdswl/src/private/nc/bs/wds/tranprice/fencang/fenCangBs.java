@@ -1,4 +1,4 @@
-package nc.bs.wds.tranprice.box;
+package nc.bs.wds.tranprice.fencang;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,10 +14,9 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
- * @author Administrator
- *  箱数运价表后台校验类
+ * @author Administrator 分仓运价表后台校验类
  */
-public class BoxBs  implements Serializable{
+public class fenCangBs implements Serializable {
 
 	/**
 	 * 
@@ -49,8 +48,7 @@ public class BoxBs  implements Serializable{
 		sql.append(" and vbillstatus=1");//审批通过的
 		sql.append(" and reserve1='"+hvo.getReserve1()+"'");//仓库
 		sql.append(" and carriersid='"+hvo.getCarriersid()+"'");//承运商 	
-//		sql.append(" and ipriceunit='"+hvo.getIpriceunit()+"'");
-		sql.append(" and pk_billtype='"+WdsWlPubConst.WDSJ+"'");
+		sql.append(" and pk_billtype='"+WdsWlPubConst.WDSK+"'");
 		sql.append(" and ((nmincase<='"+hvo.getNmincase()+"' and nmaxcase>='"+hvo.getNmincase()+"')");		
 		sql.append(" or (nmincase<='"+hvo.getNmaxcase()+"' and nmaxcase>='"+hvo.getNmaxcase()+"')");
 		sql.append(" or (nmincase>='"+hvo.getNmincase()+"' and nmaxcase<='"+hvo.getNmaxcase()+"'))");
@@ -59,8 +57,8 @@ public class BoxBs  implements Serializable{
 		if (list.size() > 0) {
 			TranspriceHVO oldHvo = list.get(0);
 			throw new BusinessException("和已经审批过的相同仓库相同承运商 运价表存在交叉:\n单据编号="
-					+ oldHvo.getVbillno() +"\n运价编码="+oldHvo.getVpricecode()+"\n运价名称="+oldHvo.getVpricename()+"\n最小箱数=" + oldHvo.getNmincase()
-					+ "\n最大箱数=" + oldHvo.getNmaxcase());
+					+ oldHvo.getVbillno() +"\n运价编码="+oldHvo.getVpricecode()+"\n运价名称="+oldHvo.getVpricename()+"\n最小数=" + oldHvo.getNmincase()
+					+ "\n最大数=" + oldHvo.getNmaxcase());
 		}
 	}
 

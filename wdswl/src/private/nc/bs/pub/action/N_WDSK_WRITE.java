@@ -8,15 +8,15 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
 /**
- *   吨公里运价表
+ * 分仓运价表
  * @author Administrator
  *
  */
-public class N_WDSI_WRITE extends AbstractCompiler2 {
+public class N_WDSK_WRITE extends AbstractCompiler2 {
 private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 private Hashtable m_keyHas=null;
 
-public N_WDSI_WRITE() {
+public N_WDSK_WRITE() {
 	super();
 }
 /*
