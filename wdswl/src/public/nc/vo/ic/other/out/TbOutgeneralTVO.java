@@ -7,6 +7,7 @@ package nc.vo.ic.other.out;
 import java.util.ArrayList;
 import nc.vo.pub.*;
 import nc.vo.pub.lang.*;
+import nc.vo.scm.pu.PuPubVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -21,6 +22,9 @@ import nc.vo.pub.lang.*;
  * @version Your Project 1.0
  */
 public class TbOutgeneralTVO extends SuperVO {
+	
+	public static String[] combin_fields = new String[]{"cdt_pk","pk_invbasdoc","vbatchcode"};
+	
 
 	/**
 	 * 
@@ -278,6 +282,11 @@ public class TbOutgeneralTVO extends SuperVO {
 
 	public void setVuserdef10(String vuserdef10) {
 		this.vuserdef10 = vuserdef10;
+	}
+	
+	public void validateOnTP() throws BusinessException{
+		if(PuPubVO.getUFDouble_NullAsZero(getStockpieces()).sub(PuPubVO.getUFDouble_NullAsZero(getNoutassistnum())).doubleValue()<0)
+			throw new BusinessException("指定的托盘出现负结存");
 	}
 
 	/**

@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 
 import nc.bs.logging.Logger;
 import nc.ui.ml.NCLangRes;
+import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIButton;
 import nc.ui.pub.beans.UIPanel;
@@ -31,8 +32,12 @@ import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * 
@@ -233,6 +238,14 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		// 判断是否为确定按钮
 		if (e.getSource().equals(getbtnOk())) {
+//			int rowcount = getbillListPanel().getBodyBillModel().getRowCount();
+//			int[] rows = new int[rowcount];
+//			for(int i=0;i<rowcount;i++){
+//				rows[i] = 0;
+//			}
+//			boolean flag  = getbillListPanel().getBodyBillModel().execValidateForumlas(null, new String[]{"shengyuliang"}, rows);
+//			if(!flag)
+//				return;
 			try{
 				saveCurrentData(getHeadCurrentRow());
 				chekcNumBody();
@@ -249,13 +262,27 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 	}	
 	
-	public void saveCurrentData(int row){
+	public void saveCurrentData(int row) throws BusinessException{
 		if(row<0){
 			return;
 		}
 		TbOutgeneralBVO  bvo = getHeadBVO(row);
 		String key = bvo.getCrowno();
 		TbOutgeneralTVO[] bvos = (TbOutgeneralTVO[])getbillListPanel().getBodyBillModel().getBodyValueVOs(TbOutgeneralTVO.class.getName());
+
+//		zhf  add 
+		 CircularlyAccessibleValueObject[][] os = SplitBillVOs.getSplitVOs(bvos, TbOutgeneralTVO.combin_fields);
+		 if(os == null || os.length ==0)
+			 throw new BusinessException("数据处理异常");
+		 int len = os.length;
+		
+		 for(int i=0;i<len;i++){
+			 
+		 }
+
+		for(TbOutgeneralTVO bb:bvos)
+			bb.validateOnTP();
+
 		if(bvos!=null && bvos.length>0){
 			getBufferData().put(key, arrayToList(bvos));
 		}else{
@@ -375,6 +402,11 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");	
 				
 			}
+		}else if("noutassistnum".equalsIgnoreCase(e.getKey())){
+			UFDouble nshengyu = PuPubVO.getUFDouble_NullAsZero(getbillListPanel().getBodyBillModel().getValueAt(e.getRow(), "shengyuliang"));
+			if(nshengyu.compareTo(new UFDouble(0))<0){
+				MessageDialog.showErrorDlg(this, "错误", "托盘存量不足");
+			}
 		}
 }
 
@@ -427,7 +459,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	    	        " and isnull(tb_warehousestock.dr,0)=0 "+	    	
 	    	        " and isnull(bd_invmandoc.dr,0)=0 "+
 	                " and isnull(bd_invbasdoc.dr,0)=0 "+	    	
-	    	        " and tb_warehousestock.pk_corp='1021'");
+	    	        " and tb_warehousestock.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
 		
 		}
 		return true;

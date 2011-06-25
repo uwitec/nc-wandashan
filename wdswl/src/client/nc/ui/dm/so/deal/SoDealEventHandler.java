@@ -14,6 +14,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.sp.pub.bill.BillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -174,7 +175,16 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);
 		}
-		whereSql.append(" and h.fstatus =2 and isnull(h.dr,0)=0");//审核通过的
+		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' and isnull(h.dr,0)=0");//审核通过的
+				
+		/**
+		 * 
+		 * bifreceiptfinish              CHAR(1)             是否发货结束                                      NULL                
+           bifinventoryfinish            CHAR(1)             是否出库结束     
+		 * 
+		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
+		 * 
+		 */
 		
 //		whereSql.append("  nvl(h.dr,0)=0");
 //		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");

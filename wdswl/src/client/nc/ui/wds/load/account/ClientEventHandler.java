@@ -3,6 +3,7 @@ package nc.ui.wds.load.account;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
@@ -99,8 +100,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		AggregatedValueObject vo = refVOChange(vos);
 		if (vo == null)
 			throw new BusinessException("未选择参照单据");
-		Class[] ParameterTypes = new Class[]{AggregatedValueObject[].class,String.class};
-		Object[] ParameterValues = new Object[]{vos,_getCorp().getPk_corp()};
+		LoginInforHelper login = new LoginInforHelper();//zhf
+		Class[] ParameterTypes = new Class[]{AggregatedValueObject[].class,String.class,String.class};
+		Object[] ParameterValues = new Object[]{vos,_getCorp().getPk_corp(),login.getWhidByUser(_getOperator())};
 		Object o =LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.wds.load.account.LoadAccountBS", "accoutLoadPrice", ParameterTypes, ParameterValues, 2);
 		ExaggLoadPricVO billVo =(ExaggLoadPricVO) o;
 	

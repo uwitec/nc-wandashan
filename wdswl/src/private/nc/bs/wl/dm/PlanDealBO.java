@@ -101,7 +101,7 @@ public class PlanDealBO {
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
 		sql.append(" on wds_sendplanin.pk_sendplanin = wds_sendplanin_b.pk_sendplanin ");
-		sql.append(" where"+whereSql);
+		sql.append(" where "+whereSql);
 		Object o = getDao().executeQuery(sql.toString(), new BeanListProcessor(PlanDealVO.class));
 		if( o != null){
 			ArrayList<PlanDealVO> list = (ArrayList<PlanDealVO>)o;
