@@ -466,9 +466,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			String subSql = getSubSql(row);
 			UIRefPane ref = (UIRefPane) getbillListPanel().getBodyItem(
 					"trayname").getComponent();
-			ref
-					.getRefModel()
-					.addWherePart(
+			ref.getRefModel().addWherePart(
 							" and bd_cargdoc_tray.cdt_invmandoc = '"
 									+ bvo.getPk_invmandoc()
 									+ "'  and  bd_cargdoc_tray.cdt_traystatus = 0 and bd_cargdoc_tray.pk_cargdoc = '"
@@ -482,6 +480,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 									+ bvo.getPk_cargdoc()
 									+ " '"
 									+ "   and upper(bd_cargdoc_tray.cdt_traycode) like 'XN%'"
+									+"    and isnull(bd_cargdoc_tray.dr,0)=0"
 									+ "   and bd_cargdoc_tray.cdt_pk not in"
 									+ subSql
 
