@@ -206,7 +206,7 @@ public class WdsWlPubConst {
 	/**箱数运价表 */
 	public static String WDSJ="WDSJ";
 	
-	/**特殊运价表 */
+	/**分仓运价表 */
 	public static String WDSK="WDSK";
 	
 	/**特殊业务运价表 */

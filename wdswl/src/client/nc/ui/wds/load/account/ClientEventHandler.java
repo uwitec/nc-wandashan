@@ -1,7 +1,6 @@
 package nc.ui.wds.load.account;
 
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.LongTimeTask;

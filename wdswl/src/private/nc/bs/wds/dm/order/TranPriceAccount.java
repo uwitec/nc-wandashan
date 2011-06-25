@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nc.bs.dao.BaseDAO;
-import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
+import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
@@ -17,6 +17,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.dm.storebing.TbStorcubasdocVO;
+import nc.vo.wds.dm.storetranscorp.StortranscorpBVO;
 import nc.vo.wds.tranprice.tonkilometre.TranspriceBVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -32,9 +33,11 @@ public class TranPriceAccount {
 	// 当前登录日期
 	private UFDate date = null;
 	// 运价表类型
-	private String colType = null;
-	//是否总仓
+	private String colType = WdsWlPubConst.WDSI;
+	// 是否总仓
 	private boolean isZC = true;
+	// 是否零担
+	private boolean isSmall = false;
 	// 分仓与客商绑定关系VO
 	private TbStorcubasdocVO bingVO = null;
 	// 收货地区
@@ -83,20 +86,29 @@ public class TranPriceAccount {
 		// 确定运费计算类型（吨公里，或者箱数）
 		setColType();
 		// 查找运价表
-		if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
-			List<TranspriceBVO> lprice = getDsPriceInfor(colType, head
+		if(isZC){
+			if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
+				List<TranspriceBVO> lprice = getDsPriceInfor(colType, head
+						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
+				if (lprice == null || lprice.size() == 0) {
+					throw new BusinessException("未查询到匹配的运价表");
+				}
+				curTranpriceBvo = lprice.get(0);
+			} else {
+				List<TranspriceBVO> lprice = getXsPriceInfor(colType, head
+						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
+				if (lprice == null || lprice.size() == 0) {
+					throw new BusinessException("未查询到匹配的运价表");
+				}
+				curTranpriceBvo = lprice.get(0);
+			}
+		}else{
+			List<TranspriceBVO> lprice = getFCPriceInfor(colType, head
 					.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 			if (lprice == null || lprice.size() == 0) {
 				throw new BusinessException("未查询到匹配的运价表");
 			}
-			curTranpriceBvo = lprice.get(0);
-		} else {
-			List<TranspriceBVO> lprice = getXsPriceInfor(colType, head
-					.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
-			if (lprice == null || lprice.size() == 0) {
-				throw new BusinessException("未查询到匹配的运价表");
-			}
-			curTranpriceBvo = lprice.get(0);
+			curTranpriceBvo = lprice.get(0);		
 		}
 		// 计算运费，并且扫描运费信息到发运单
 		appendPriceInfor();
@@ -142,7 +154,8 @@ public class TranPriceAccount {
 		getBaseDAO().updateVO(
 				head,
 				new String[] { "ngls", "ntranprice", "nadjustprice",
-						"iadjusttype", "ntransmny", "vcolpersonid","custareaid","icoltype" });
+						"iadjusttype", "ntransmny", "vcolpersonid",
+						"custareaid", "icoltype" });
 		String sql = "select ts from wds_soorder where pk_soorder = '"
 				+ head.getPrimaryKey() + "'";
 		String ts = PuPubVO.getString_TrimZeroLenAsNull(getBaseDAO()
@@ -204,32 +217,58 @@ public class TranPriceAccount {
 	 * @时间：2011-5-20下午01:22:14
 	 */
 	void setNcolmny() throws BusinessException {
-		SendorderVO head = (SendorderVO) curBillvo.getParentVO();
+		SoorderVO head = (SoorderVO) curBillvo.getParentVO();
 		UFDouble nnum = null;
 		UFDouble ngls = null;
 		UFDouble nprice = null;
-		if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType) || !isZC) {
-			nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(0));
-			ngls = PuPubVO.getUFDouble_NullAsZero(head.getNgls());
-			nprice = PuPubVO.getUFDouble_NullAsZero(head.getNtranprice());
-			UFDouble nadustmny = null;
-			Integer iadjstType = PuPubVO.getInteger_NullAs(head
-					.getIadjusttype(), 1);
-			if (iadjstType == 0) {// 按照吨调整
-				nadustmny = PuPubVO.getUFDouble_NullAsZero(
-						head.getNadjustprice()).multiply(nnum);
-			} else {// 按照箱调整
-				nadustmny = PuPubVO.getUFDouble_NullAsZero(
-						head.getNadjustprice()).multiply(
-						PuPubVO.getUFDouble_NullAsZero(totalNum.get(1)));
+		if(isZC){
+			if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
+				nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(0));
+				ngls = PuPubVO.getUFDouble_NullAsZero(head.getNgls());
+				nprice = PuPubVO.getUFDouble_NullAsZero(head.getNtranprice());
+				UFDouble nadustmny = null;
+				Integer iadjstType = PuPubVO.getInteger_NullAs(head
+						.getIadjusttype(), 1);
+				if (iadjstType == 0) {// 按照吨调整
+					nadustmny = PuPubVO.getUFDouble_NullAsZero(
+							head.getNadjustprice()).multiply(nnum);
+				} else {// 按照箱调整
+					nadustmny = PuPubVO.getUFDouble_NullAsZero(
+							head.getNadjustprice()).multiply(
+							PuPubVO.getUFDouble_NullAsZero(totalNum.get(1)));
+				}
+				head.setNtransmny(nprice.multiply(nnum, 8).multiply(ngls, 8).add(
+						nadustmny));
+			} else {
+				nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(1));
+				nprice = PuPubVO.getUFDouble_NullAsZero(head.getNtranprice());
+				head.setNtransmny(nprice.multiply(nnum, 8));
 			}
-			head.setNtransmny(nprice.multiply(nnum, 8).multiply(ngls, 8).add(
-					nadustmny));
-		} else {
-			nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(1));
-			nprice = PuPubVO.getUFDouble_NullAsZero(head.getNtranprice());
-			head.setNtransmny(nprice.multiply(nnum, 8));
+		}else{
+			Integer ifw = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIfw(), 0);
+			UFDouble nmny = null;
+			UFDouble nadjmny = null;
+			if(ifw==0){//总费用
+				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
+			}else if(ifw==1){//每箱运价
+				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
+			}else if(ifw ==2){//每吨运价
+				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
+			}
+			UFDouble nsmall = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNsmallnum());
+			if(nsmall.sub(totalNum.get(0)).doubleValue()>0){
+				Integer iadjtype = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIadjtype(), 0);
+				if(iadjtype==0){//总费用
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
+				}else if(iadjtype==1){//每箱补贴价格
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
+				}else if(iadjtype ==2){//每吨补贴价格
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
+				}
+			}
+			head.setNtransmny(nmny.add(nadjmny, 8));
 		}
+
 	}
 
 	/**
@@ -250,11 +289,6 @@ public class TranPriceAccount {
 		if (pk_outwhouse == null || "".equalsIgnoreCase(pk_outwhouse)) {
 			throw new BusinessException("未取到发货站");
 		}
-		if(WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)){
-			isZC = true;
-		}else{
-			isZC = false;
-		}
 		String pk_custman = head.getPk_inwhouse();
 		if (pk_custman == null || "".equalsIgnoreCase(pk_custman)) {
 			throw new BusinessException("未取到收货仓库信息");
@@ -274,29 +308,54 @@ public class TranPriceAccount {
 					.getNoutnum()), 8);
 			ntotalAssNUm = ntotalNum.add(PuPubVO.getUFDouble_NullAsZero(body
 					.getNassoutnum()), 8);
-			
+
 		}
 		totalNum.add(ntotalNum);
 		totalNum.add(ntotalAssNUm);
-		Integer IcolType = PuPubVO.getInteger_NullAs(head.getIcoltype(), 0);
-		if(IcolType==0){
-			// 查询分仓与承运商的绑定关系，得到零担吨数
-			UFDouble nsmallNum = getNsmallNum(pk_outwhouse, pk_transcorp);
-			// 如果汇总主数量的 大于 零担数量 按照吨公里;否则按照箱数
-			UFDouble sumNum = ntotalNum.sub(nsmallNum, 8);
-			if (sumNum.doubleValue() > 0) {
+		// 判断是否总仓
+		if (WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)) {
+			isZC = true;
+			// 仓库与承运商绑定的VO
+			List<StortranscorpBVO> stroCorp = getStroCorpVO(pk_outwhouse,
+					pk_transcorp, reareaid,true);
+			// 如果没有声明有零担标准，默认按照吨公里来计算
+			if (stroCorp == null || stroCorp.size() == 0) {
 				colType = WdsWlPubConst.WDSI;
-				head.setIcoltype(1);
 			} else {
-				colType = WdsWlPubConst.WDSJ;
-				head.setIcoltype(2);
+				Integer ismalltype = stroCorp.get(0).getIsmalltype();
+				Integer ismallprice = stroCorp.get(0).getIsmallprice();
+				UFDouble nsmallnum = PuPubVO.getUFDouble_NullAsZero(stroCorp.get(0).getNsmallnum());
+				if (0 == ismalltype) {// 以主数量作为区分标准
+					if (nsmallnum.sub(totalNum.get(0)).doubleValue() >= 0) {
+						isSmall = true;
+						if (0 == ismallprice) {
+							colType = WdsWlPubConst.WDSI;
+						} else if (1 == ismallprice) {
+							colType = WdsWlPubConst.WDSJ;
+						}
+					} else {
+						isSmall = false;
+						colType = WdsWlPubConst.WDSI;
+					}
+				} else {// 以辅数量作为区分标准
+					if (nsmallnum.sub(totalNum.get(1)).doubleValue() >= 0) {
+						isSmall = true;
+						if (0 == ismallprice) {
+							colType = WdsWlPubConst.WDSI;
+						} else if (1 == ismallprice) {
+							colType = WdsWlPubConst.WDSJ;
+						}
+					} else {
+						isSmall = false;
+						colType = WdsWlPubConst.WDSI;
+					}
+				}
 			}
-		
-		}else if(IcolType==1){
-			colType = WdsWlPubConst.WDSI;
-		}else if(IcolType ==2){
-			colType = WdsWlPubConst.WDSJ;
+		} else {
+			isZC = false;
+			colType = WdsWlPubConst.WDSK;
 		}
+
 	}
 
 	/**
@@ -305,20 +364,29 @@ public class TranPriceAccount {
 	 * @说明：完达山物流项目
 	 * @时间：2011-6-9下午10:52:12
 	 * @param pk_outwhouse:仓库id
-	 *            pk_transcorp 承运商id
-	 * @return 零担数量
-	 * @throws DAOException
+	 *            pk_transcorp 承运商id 发货地区 id
+	 *            isDG 是否递归
+	 * @return 仓库承运商绑定VO
+	 * @throws BusinessException
 	 */
-	public UFDouble getNsmallNum(String pk_outwhouse, String pk_transcorp)
-			throws DAOException {
-		String sql = "select  nsmallnum from wds_stortranscorp_b where pk_stordoc='"
-				+ pk_outwhouse
-				+ "' and pk_wds_tanscorp_h='"
-				+ pk_transcorp
-				+ "' and isnull(dr,0)=0";
-		Object o = getBaseDAO().executeQuery(sql,
-				WdsPubResulSetProcesser.COLUMNPROCESSOR);
-		return PuPubVO.getUFDouble_NullAsZero(o);
+	public ArrayList<StortranscorpBVO>  getStroCorpVO(String pk_outwhouse,
+			String pk_transcorp, String caredid,boolean isDG) throws BusinessException {
+		ArrayList<StortranscorpBVO> obj = null;
+		String fatherId = null;
+		String sql = "select  * from wds_stortranscorp_b where pk_stordoc='"
+				+ pk_outwhouse + "' and pk_wds_tanscorp_h='" + pk_transcorp
+				+ "' and isnull(dr,0)=0 and careaid='" + caredid + "'";
+		obj = (ArrayList<StortranscorpBVO>) getBaseDAO().executeQuery(sql,
+				new BeanListProcessor(StortranscorpBVO.class));
+		if ((obj == null ||obj.size() == 0) && isDG) {
+			fatherId = getFatherId(caredid);
+			if (fatherId == null || "".equalsIgnoreCase(fatherId)) {
+				obj = getStroCorpVO(pk_outwhouse, pk_transcorp, fatherId,false);
+			} else {
+				obj = getStroCorpVO(pk_outwhouse, pk_transcorp, fatherId,true);
+			}
+		}
+		return obj;
 	}
 
 	/**
@@ -337,9 +405,10 @@ public class TranPriceAccount {
 		String sql = "select * from tb_storcubasdoc  where pk_stordoc='"
 				+ pk_outwhouse + "' and pk_stordoc1='" + pk_inwhouse
 				+ "' and isnull(dr,0)=0";
-		ArrayList<TbStorcubasdocVO> list = (ArrayList<TbStorcubasdocVO>)getBaseDAO().executeQuery(sql,
-				new BeanListProcessor(TbStorcubasdocVO.class));
-		if (list == null || list.size()==0) {
+		ArrayList<TbStorcubasdocVO> list = (ArrayList<TbStorcubasdocVO>) getBaseDAO()
+				.executeQuery(sql,
+						new BeanListProcessor(TbStorcubasdocVO.class));
+		if (list == null || list.size() == 0) {
 			throw new BusinessException("请维护客商与分仓的绑定关系");
 		}
 		this.bingVO = (TbStorcubasdocVO) list.get(0);
@@ -393,30 +462,11 @@ public class TranPriceAccount {
 		if ((lprice == null || lprice.size() == 0) && isDG) {
 			String pk_fatherarea = getFatherId(reareaid);
 			if (pk_fatherarea == null || "".equalsIgnoreCase(pk_fatherarea)) {
-				// 如果没有上级分类，取东三省内或者东三省外定义
-				String name = getAreaName(reareaid);
-				// 地区分类编码 黑龙江省='01' 吉林省='02' 辽宁省='03'
-				if (name.contains("黑龙江") || name.contains("吉林")
-						|| name.contains("辽宁")) {
-					pk_fatherarea = getAreaIdByCode("0001");
-					if (pk_fatherarea == null
-							|| "".equalsIgnoreCase(pk_fatherarea)) {
-						throw new BusinessException(
-								"请以 0001 作为地区分类编码 定义东三省内地区分类");
-					}
-				} else {
-					pk_fatherarea = getAreaIdByCode("0002");
-					if (pk_fatherarea == null
-							|| "".equalsIgnoreCase(pk_fatherarea)) {
-						throw new BusinessException(
-								"请以 0002 作为地区分类编码 定义东三省外地区分类");
-					}
-				}
 				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
 						pk_fatherarea, false);
 			} else {
 				// 如果有上进地区分类，递归查询
-				lprice =getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
 						pk_fatherarea, true);
 			}
 		}
@@ -471,30 +521,69 @@ public class TranPriceAccount {
 		if ((lprice == null || lprice.size() == 0) && isDG) {
 			String pk_fatherarea = getFatherId(reareaid);
 			if (pk_fatherarea == null || "".equalsIgnoreCase(pk_fatherarea)) {
-				// 如果没有上级分类，取东三省内或者东三省外定义
-				String name = getAreaName(reareaid);
-				// 地区分类编码 黑龙江省='01' 吉林省='02' 辽宁省='03'
-				if (name.contains("黑龙江") || name.contains("吉林")
-						|| name.contains("辽宁")) {
-					pk_fatherarea = getAreaIdByCode("0001");
-					if (pk_fatherarea == null
-							|| "".equalsIgnoreCase(pk_fatherarea)) {
-						throw new BusinessException(
-								"请以 0001 作为地区分类编码 定义东三省内地区分类");
-					}
-				} else {
-					pk_fatherarea = getAreaIdByCode("0002");
-					if (pk_fatherarea == null
-							|| "".equalsIgnoreCase(pk_fatherarea)) {
-						throw new BusinessException(
-								"请以 0002 作为地区分类编码 定义东三省外地区分类");
-					}
-				}
 				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
 						pk_fatherarea, false);
 			} else {
 				// 如果有上进地区分类，递归查询
-				lprice =getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+						pk_fatherarea, true);
+			}
+		}
+		return lprice;
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：查询分仓运价表 
+	 * @时间：2011-6-10上午09:59:35
+	 * @param pricetype
+	 *            运价表类型
+	 * @param pk_transcorp
+	 *            承运商
+	 * @param pk_outwhouse
+	 *            发货仓库
+	 * @param reareaid
+	 *            收货地区
+	 * @param isDG
+	 *            是否递归
+	 * @return
+	 * @throws BusinessException
+	 */
+	public List<TranspriceBVO> getFCPriceInfor(String pricetype,
+			String pk_transcorp, String pk_outwhouse, String reareaid,
+			boolean isDG) throws BusinessException {
+		List<TranspriceBVO> lprice = null;
+		StringBuffer sqlb = new StringBuffer();
+		sqlb.append("select ");
+		String[] names = new TranspriceBVO().getAttributeNames();
+		for (String name : names) {
+			sqlb.append(" b." + name + ",");
+		}
+		sqlb.append(" 'aaa'");
+		sqlb
+				.append("from wds_transprice_h h inner join wds_transprice_b  b on b.pk_wds_transprice_h = h.pk_wds_transprice_h ");
+		sqlb
+				.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and vbillstatus = "
+						+ IBillStatus.CHECKPASS);
+		sqlb.append(" and h.pk_billtype = '" + pricetype + "'");// 运价表单据类型
+		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
+		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
+		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
+		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" h.nmincase <= " + totalNum.get(0).doubleValue());
+		sqlb.append(" h.nmaxcase > " + totalNum.get(0).doubleValue());
+		sqlb.append(" and b.pk_replace='" + reareaid + "'");
+		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
+				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
+		// 如果没有获取对应收货地区的定义，查询有没有上级的定义
+		if ((lprice == null || lprice.size() == 0) && isDG) {
+			String pk_fatherarea = getFatherId(reareaid);
+			if (pk_fatherarea == null || "".equalsIgnoreCase(pk_fatherarea)) {
+				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+						pk_fatherarea, false);
+			} else {
+				// 如果有上进地区分类，递归查询
+				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
 						pk_fatherarea, true);
 			}
 		}
@@ -511,20 +600,12 @@ public class TranPriceAccount {
 	 */
 	public String getPricePeriodWhereSql() throws BusinessException {
 		UFDouble ntotalAssNum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(1));
-		Integer 	ipriceunit = 1;
-		//分仓
-		if(!isZC){
-			ntotalAssNum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(0));
-			ipriceunit =0;
-		}
-		
 		UFDouble gls = PuPubVO.getUFDouble_NullAsZero(this.bingVO
 				.getKilometer());
 		return " h.nmincase <= " + ntotalAssNum.doubleValue()
 				+ " and h.nmaxcase >= " + ntotalAssNum.doubleValue()
 				+ "  and b.nmindistance <= " + gls.doubleValue()
-				+ " and b.nmaxdistance >= " + gls.doubleValue()
-				+" and h.ipriceunit="+ipriceunit;
+				+ " and b.nmaxdistance >= " + gls.doubleValue();
 
 	}
 
@@ -540,11 +621,11 @@ public class TranPriceAccount {
 	protected String getFatherId(String reareaid) throws BusinessException {
 		String sql = "select pk_fatherarea,areaclname from  bd_areacl where pk_areacl = '"
 				+ reareaid + "'";
-		ArrayList<Object> list = (ArrayList<Object>)getBaseDAO().executeQuery(sql,
-				WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
-		if (list != null && list.size()>0) {
-			Object[] obj= (Object[])list.get(0);
-			String areaclname =PuPubVO.getString_TrimZeroLenAsNull(obj[1]);
+		ArrayList<Object> list = (ArrayList<Object>) getBaseDAO().executeQuery(
+				sql, WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+		if (list != null && list.size() > 0) {
+			Object[] obj = (Object[]) list.get(0);
+			String areaclname = PuPubVO.getString_TrimZeroLenAsNull(obj[1]);
 			if (areaclname != null) {
 				if (areaclname.contains("省")) {
 					return null;
@@ -555,6 +636,7 @@ public class TranPriceAccount {
 		}
 		return null;
 	}
+
 	/**
 	 * 
 	 * @作者：lyf

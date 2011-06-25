@@ -27,9 +27,11 @@ public class StortranscorpBVO extends SuperVO {
 	public String vmemo;
 	public UFDateTime ts;
 	public String pk_wds_tanscorp_h;//承运商
-	public UFDouble nsmallnum;//零担吨数
+	public UFDouble nsmallnum;//零担数量
 	public String pk_storetranscorp;//子表主键
-	
+	public String careaid;//运输地区id
+	public Integer ismalltype;//零担标准
+	public Integer ismallprice;//零担运价方式
 	//预留字段
 	public String reserve1;
 	public String reserve2;
@@ -59,7 +61,9 @@ public class StortranscorpBVO extends SuperVO {
 	public String vdef9;
 	public String vdef10;	
 
-
+	public static final String CAREAID = "careaid";
+	public static final String ISMALLTYPE = "ismalltype";
+	public static final String ISMALLPRICE = "ismallprice";
 	public static final String RESERVE5 = "reserve5";
 	public static final String PK_STORDOC = "pk_stordoc";
 	public static final String RESERVE4 = "reserve4";
@@ -1020,5 +1024,29 @@ public class StortranscorpBVO extends SuperVO {
 
 		return "wds_stortranscorp_b";
 
+	}
+
+	public String getCareaid() {
+		return careaid;
+	}
+
+	public void setCareaid(String careaid) {
+		this.careaid = careaid;
+	}
+
+	public Integer getIsmalltype() {
+		return ismalltype;
+	}
+
+	public void setIsmalltype(Integer ismalltype) {
+		this.ismalltype = ismalltype;
+	}
+
+	public Integer getIsmallprice() {
+		return ismallprice;
+	}
+
+	public void setIsmallprice(Integer ismallprice) {
+		this.ismallprice = ismallprice;
 	}
 }
