@@ -322,9 +322,10 @@ public class W8004040204Impl implements Iw8004040204 {
 			if(body == null)
 				throw new BusinessException("非法传入数据");
 			String oldCdt= getOldCdt(body);
-			lware = CommonUnit.getStockDetailByPk_User(pk_user,head,body,oldCdt);//获得当前可用的存货
+			//获得符合自动拣货要求的存货的存量信息
+			lware = CommonUnit.getStockDetailByPk_User(pk_user,head,body,oldCdt);
 			if(lware == null||lware.size()==0)
-				throw new BusinessException("行号："+body.getCrowno()+",货品无存量");
+				throw new BusinessException("行号："+body.getCrowno()+",货品无存量或存量不够");
 			UFDouble asum = PuPubVO.getUFDouble_NullAsZero(body.getNshouldoutassistnum());//应发辅数量
 			StockInvOnHandVO warevo = null;
 			for (int j = 0; j < lware.size(); j++) {
