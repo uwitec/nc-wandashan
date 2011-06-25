@@ -422,8 +422,13 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 "+
 					" and tb_warehousestock.whs_stocktonnage > 0"+
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
-					" and bd_cargdoc_tray.cdt_traycode like 'XN%'"
-			);
+					" and bd_cargdoc_tray.cdt_traycode like 'XN%'"+
+					" and isnull(bd_cargdoc_tray.dr,0)=0 "+
+	    	        " and isnull(tb_warehousestock.dr,0)=0 "+	    	
+	    	        " and isnull(bd_invmandoc.dr,0)=0 "+
+	                " and isnull(bd_invbasdoc.dr,0)=0 "+	    	
+	    	        " and tb_warehousestock.pk_corp='1021'");
+		
 		}
 		return true;
 	}
