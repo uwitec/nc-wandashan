@@ -2,10 +2,10 @@ package nc.ui.dm;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.ToftPanel;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 发运安排调用后台累
@@ -61,5 +61,49 @@ public class PlanDealHealper {
 					ParameterValues);
 		}
 	
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 发运计划录入 整单关闭  暂未实现
+	 * @时间：2011-6-25下午09:29:06
+	 * @param billid
+	 * @return
+	 * @throws Exception
+	 */
+	public static HYBillVO closeBill(String billid) throws Exception{
+//		if(lpara == null || lpara.size() ==0)
+//			return null;
+//		HYBillVO newbill = null;
+//		Class[] ParameterTypes = new Class[] { java.util.List.class };
+//		Object[] ParameterValues = new Object[] { lpara };
+//		Object o = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "closeRows", ParameterTypes, ParameterValues, 2);
+//		if(o != null){
+//			newbill  = (HYBillVO)o;
+//		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 计划录入行关闭
+	 * @时间：2011-6-25下午09:12:02
+	 * @param lpara
+	 * @return
+	 * @throws Exception
+	 */
+	public static HYBillVO closeRows(List lpara) throws Exception{
+		if(lpara == null || lpara.size() ==0)
+			return null;
+		HYBillVO newbill = null;
+		Class[] ParameterTypes = new Class[] { java.util.List.class };
+		Object[] ParameterValues = new Object[] { lpara };
+		Object o = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "closeRows", ParameterTypes, ParameterValues, 2);
+		if(o != null){
+			newbill  = (HYBillVO)o;
+		}
+		return newbill;
 	}
 }

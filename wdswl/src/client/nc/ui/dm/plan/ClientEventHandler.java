@@ -1,5 +1,8 @@
 package nc.ui.dm.plan;
 
+import java.util.ArrayList;
+
+import nc.ui.dm.PlanDealHealper;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
@@ -7,13 +10,17 @@ import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.dm.sendinvdoc.SendinvdocVO;
+import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -157,8 +164,140 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {
+		if(intBtn == ButtonCommon.BILLCLOSE){
+			closeBill();
+		}else if(intBtn == ButtonCommon.ROWCLOSE){
+			closeRow();
+		}else
 		super.onBoElse(intBtn);
 	}
+	
+/**
+ * 
+ * @作者：zhf
+ * @说明：完达山物流项目 整单关闭  不支持列表批操作
+ * @时间：2011-6-25下午06:19:49
+ */
+	private void closeBill(){
+		if(getBufferData().isVOBufferEmpty()){
+			getBillUI().showWarningMessage("无数据");
+			return;
+		}
+		if(getBufferData().getCurrentRow()<0){
+			getBillUI().showWarningMessage("无数据");
+			return;
+		}
+		
+		int flag = MessageDialog.showOkCancelDlg(getBillUI(), "询问", "确认关闭当前发运计划吗?"); 
+		if(flag != UIDialog.ID_OK){
+			getBillUI().showHintMessage("取消了关闭操作");
+			return;
+		}
+		
+		HYBillVO bill = (HYBillVO)getBufferData().getCurrentVO();
+		
+		HYBillVO newbill = null;
+//		后台关闭计划
+	   try {
+		newbill = PlanDealHealper.closeBill(bill.getParentVO().getPrimaryKey());
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		getBillUI().showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+		return;
+	}
+		
+//		关闭成功前台数据处理   更新缓存  跟新 卡片界面
+		if(newbill == null){
+			getBillUI().showWarningMessage("关闭操作成功,刷新前台数据失败");
+			return;
+		}
+		
+		getBufferData().setCurrentVO(newbill);
+		getBillCardPanelWrapper().getBillCardPanel().getBillData().setBillValueVO(newbill);
+		
+//		后台关闭计划
+		
+//		关闭成功前台数据处理   更新缓存  跟新 卡片界面
+		
+		
+//		int[] rows = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRows();
+//		if(rows == null || rows.length ==0){
+//			getBillUI().showWarningMessage("");
+//		}
+			
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 行关闭  卡片下  的选中多行进行关闭
+	 * @时间：2011-6-25下午06:20:15
+	 */
+	private void closeRow(){
+		if(getBufferData().isVOBufferEmpty()){
+			getBillUI().showWarningMessage("无数据");
+			return;
+		}
+		if(getBufferData().getCurrentRow()<0){
+			getBillUI().showWarningMessage("无数据");
+			return;
+		}
+		
+		int[] rows = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRows();
+		if(rows == null || rows.length ==0){
+			getBillUI().showWarningMessage("请选择要关闭的行");
+			return;
+		}
+		
+		int flag = MessageDialog.showOkCancelDlg(getBillUI(), "询问", "确认关闭选中行吗?"); 
+		if(flag != UIDialog.ID_OK){
+			getBillUI().showHintMessage("取消了行关闭操作");
+			return;
+		}
+		
+//		获取数据
+	    java.util.List<String> ldata = new ArrayList<String>();
+	    HYBillVO bill = (HYBillVO)getBufferData().getCurrentVO();
+	    if(bill == null){
+
+			getBillUI().showWarningMessage("无数据");
+			return;
+		
+	    }
+	    
+	    SendplaninVO head = (SendplaninVO)bill.getParentVO(); 
+	    
+	    ldata.add(head.getPrimaryKey());
+	    
+	    SuperVO tmpbody = null;
+	    for(int row:rows){
+	    	tmpbody = (SuperVO)getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyValueRowVO(row, SendplaninBVO.class.getName());
+	    	ldata.add(tmpbody.getPrimaryKey());
+	    }
+	    	
+		HYBillVO newbill = null;
+//		后台关闭计划
+	   try {
+		newbill = PlanDealHealper.closeRows(ldata);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		getBillUI().showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+		return;
+	}
+		
+//		关闭成功前台数据处理   更新缓存  跟新 卡片界面
+		if(newbill == null){
+			getBillUI().showWarningMessage("关闭操作成功,刷新前台数据失败");
+			return;
+		}
+		
+		getBufferData().setCurrentVO(newbill);
+		getBillCardPanelWrapper().getBillCardPanel().getBillData().setBillValueVO(newbill);
+	}
+	
+	
 	@Override
 	public void onBoAudit() throws Exception {
 		if(getBufferData().getCurrentVO() ==null){

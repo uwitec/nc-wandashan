@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.trade.business.HYPubBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -21,11 +23,13 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+
 /**
  * 发运计划处理后台类
  * @author Administrator
  *
  */
+
 public class PlanDealBO {
 
 	private BaseDAO m_dao = null;
@@ -34,6 +38,19 @@ public class PlanDealBO {
 			m_dao = new BaseDAO();
 		}
 		return m_dao;
+	}
+	
+	private TempTableUtil ttbo = null;
+	private TempTableUtil getTempTableUtil(){
+		if(ttbo == null)
+			ttbo = new TempTableUtil();
+		return ttbo;
+	}
+	private HYPubBO superbo = null;
+	private HYPubBO getSuperBO(){
+		if(superbo == null)
+			superbo = new HYPubBO();
+		return superbo;
 	}
 	/**
 	 * 
@@ -240,6 +257,34 @@ public class PlanDealBO {
 			head.setAttributeValue(name, dealVo.getAttributeValue(name));
 		}
 		return head;
+	}
+	
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 计划录入行关闭
+	 * @时间：2011-6-25下午09:12:02
+	 * @param lpara 第一个参数为表头id
+	 * @return
+	 * @throws Exception
+	 */
+	public  HYBillVO closeRows(List lpara) throws BusinessException{
+		if(lpara == null || lpara.size() ==0 || lpara.size() == 1)
+			return null;
+		HYBillVO newbill = null;
+		
+		String billid = PuPubVO.getString_TrimZeroLenAsNull(lpara.get(0));
+		lpara.remove(0);
+		int len = lpara.size();
+		
+		String sql = "update wds_sendplanin_b set reserve14 = 'Y' where pk_sendplanin_b in "+getTempTableUtil().getSubSql((ArrayList)lpara);
+		int size = getDao().executeUpdate(sql);
+		if(size !=len)
+			throw new BusinessException("操作失败");
+		newbill = (HYBillVO)getSuperBO().queryBillVOByPrimaryKey(new String[]{HYBillVO.class.getName(),SendplaninVO.class.getName(),SendplaninBVO.class.getName()}, billid);
+		
+		return newbill;
 	}
 	
 }

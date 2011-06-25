@@ -18,12 +18,13 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Save,
 				IBillButton.Line,
 				IBillButton.Cancel,
-				IBillButton.Query, 				 
+				IBillButton.Query, 	
+				IBillButton.Action,							 
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				ButtonCommon.joinup,
-				IBillButton.Action,
+				ButtonCommon.joinup,				
+				ButtonCommon.FZGN,
 		IBillButton.Print		
 		};
 		return buttonArray;

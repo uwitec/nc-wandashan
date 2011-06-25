@@ -18,4 +18,9 @@ public class ButtonCommon {
 	public final static int LOCK=228;//冻结
 	public final static int UNLOCK=229;//解封
 	
+	//-----------------------------------zhf add
+	public static final int FZGN= 230;//辅助功能
+	public static final int BILLCLOSE= 231;//整单关闭
+	public static final int ROWCLOSE= 232;//行关闭
+	
 }

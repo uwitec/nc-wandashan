@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -16,7 +17,9 @@ import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -345,6 +348,42 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 			
 		}else if(e.getItem().getPos() ==BillItem.BODY){}
 		return true;
+	}
+	
+	@Override
+	protected void initPrivateButton() {
+		
+		//辅助功能
+		ButtonVO btnvo = new ButtonVO();
+		btnvo.setBtnNo(ButtonCommon.FZGN);
+		btnvo.setBtnName("辅助功能");
+		btnvo.setBtnChinaName("辅助功能");
+		btnvo.setBtnCode(null);// code最好设置为空
+		btnvo.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
+		btnvo.setChildAry(new int[] {ButtonCommon.ROWCLOSE});
+		addPrivateButton(btnvo);
+		
+		//整单关闭-------------------------------暂不支持整单关闭   后续需要可以加上  zhf
+		ButtonVO btnvo3 = new ButtonVO();
+		btnvo3.setBtnNo(ButtonCommon.BILLCLOSE);
+		btnvo3.setBtnName("关闭");
+		btnvo3.setBtnChinaName("关闭");
+		btnvo3.setBtnCode(null);// code最好设置为空
+		btnvo3.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
+//		btnvo3.setBusinessStatus( new int[]{IBillStatus.CHECKPASS});
+		addPrivateButton(btnvo3);
+		
+		//行关闭
+		ButtonVO btnvo2 = new ButtonVO();
+		btnvo2.setBtnNo(ButtonCommon.ROWCLOSE);
+		btnvo2.setBtnName("行关闭");
+		btnvo2.setBtnChinaName("行关闭");
+		btnvo2.setBtnCode(null);// code最好设置为空
+		btnvo2.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
+//		btnvo2.setBusinessStatus( new int[]{IBillStatus.CHECKPASS});
+		addPrivateButton(btnvo2);		
+	
+		super.initPrivateButton();		
 	}
 
 }

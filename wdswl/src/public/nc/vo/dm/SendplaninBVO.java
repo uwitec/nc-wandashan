@@ -62,7 +62,7 @@ import nc.vo.pub.lang.UFDouble;
              public UFDouble reserve6;
              public String vdef1;
              public String reserve3;
-             public UFBoolean reserve14;
+             public UFBoolean reserve14;//------------------是否关闭
              public UFDouble reserve10;
              public UFDate reserve13;
              /** 计量单位*/

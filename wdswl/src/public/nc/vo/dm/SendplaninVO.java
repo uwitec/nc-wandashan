@@ -58,7 +58,7 @@
              public String reserve6;
              public String vdef1;
              public String reserve3;
-             public UFBoolean reserve14;
+             public UFBoolean reserve14;//------------是否关闭 zhf  add  20110625
              //单据日期
              public UFDate dbilldate;
              //单据编号
