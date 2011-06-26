@@ -853,7 +853,7 @@ public class CommonUnit {
 		sql.append(" and o.pk_invmandoc = '"+body.getCinventoryid()+"'");
 		sql.append(" and ((o.whs_status = 0 " +//托盘是否有存量
 				"and k.ss_isout = 0 )"+oldCdt+")");//托盘物资是否可出库
-		sql.append("  order by o.whs_batchcode) tmp  ");
+		sql.append(" ) tmp  ");
 		sql.append(" join wds_invbasdoc ");
 		sql.append(" on tmp.pk_invmandoc=wds_invbasdoc.pk_invmandoc");
 		sql.append(" where to_date(substr(tmp.whs_batchcode,1,8),'yyyy-mm-dd')+");//批次号=生日日期+流水号组成;(前8位已约定一定是生成日期)
@@ -863,6 +863,7 @@ public class CommonUnit {
 			sql.append(" wds_invbasdoc.so_ywaring_days");
 		}
 		sql.append(">=sysdate");
+		sql.append(" order by tmp.whs_batchcode");
 		ArrayList<StockInvOnHandVO> list = (ArrayList<StockInvOnHandVO>)getbaseDao().executeQuery(sql.toString(), new BeanListProcessor(StockInvOnHandVO.class));
 		
 		return list;
