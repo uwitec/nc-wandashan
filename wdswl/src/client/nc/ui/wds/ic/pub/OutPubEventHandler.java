@@ -3,7 +3,6 @@ package nc.ui.wds.ic.pub;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -141,22 +140,22 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			List<TbOutgeneralTVO> list = trayInfor.get(key);
 			int row = geLineRowByCrowno(key);
 			Map<String,ArrayList<TbOutgeneralTVO>> map = new HashMap<String,ArrayList<TbOutgeneralTVO>>();
-			for(TbOutgeneralTVO tvo :list){
-				String code = tvo.getVbatchcode();
+			ArrayList<String> vbatchCode = new ArrayList<String>();
+			for(int i=0;i<list.size();i++){
+				String code = list.get(i).getVbatchcode();
 				if(map.containsKey(code)){
-					map.get(code).add(tvo);
+					map.get(code).add(list.get(i));
 				}else{
 					ArrayList<TbOutgeneralTVO> list2 = new ArrayList<TbOutgeneralTVO>();
-					list2.add(tvo);
+					list2.add(list.get(i));
 					map.put(code, list2);
+					vbatchCode.add(code);
 				}
 			}
 			if(map.size()>0){
-				int index  = 0 ;
-				Iterator<String> it = map.keySet().iterator();
-				while(it.hasNext()){
-					String key2 = it.next();
-					if(index==map.size()-1){
+				for(int i=0;i<map.size();i++){
+					String key2 = vbatchCode.get(i);
+					if(i == map.size()-1){
 						flastLine=true;
 					}
 					ArrayList<TbOutgeneralTVO> list3 = map.get(key2);
@@ -184,13 +183,12 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 					}
 					vo.setCrowno(""+crowno);
 					newBodys.add(vo);
-					index = index+1;
 					crowno=crowno+10;
 				}
 			}
 		}
 		getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(newBodys.toArray(new TbOutgeneralBVO[0]));
-		getBillCardPanelWrapper().getBillCardPanel().execHeadLoadFormulas();
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
 		return lmap;
 	}
 	/**
