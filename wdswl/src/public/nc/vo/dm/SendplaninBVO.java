@@ -6,6 +6,7 @@
    	
 	import java.util.ArrayList;
 
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
@@ -13,6 +14,8 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubTool;
 	
 /**
  * <b>发运计划录入子表 </b>
@@ -888,6 +891,15 @@ import nc.vo.pub.lang.UFDouble;
 		
 		vdef5 = newVdef5;
 	 } 	  
+	
+	
+	public void validationOnSave() throws ValidationException{
+		if(PuPubVO.getUFDouble_NullAsZero(getNplannum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+			if(!PuPubVO.getUFDouble_NullAsZero(getNassplannum()).equals(WdsWlPubTool.DOUBLE_ZERO))
+				throw new ValidationException("数量不能为空");
+		}
+	}
+	
        
        
     /**

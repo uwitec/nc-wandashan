@@ -159,6 +159,9 @@ public class W8004040204Impl implements Iw8004040204 {
 	public void updateWarehousestock(StockInvOnHandVO item) throws Exception {
 		// TODO Auto-generated method stub
 		if (null != item) {
+			if(PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces()).doubleValue()<0|| PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage()).doubleValue()<0){
+				throw new BusinessException("出现负结存");
+			}
 			this.getIvo().updateVO(item);
 		}
 	}

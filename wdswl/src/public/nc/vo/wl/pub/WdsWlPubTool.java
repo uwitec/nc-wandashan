@@ -22,6 +22,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
 public class WdsWlPubTool {
+	
 
 	/**
 	 * 
@@ -41,7 +42,7 @@ public class WdsWlPubTool {
 
 	public static final Integer INTEGER_ZERO_VALUE = new Integer(0); // ÕûÊýÁã
 
-	public static final UFDouble DOUBLE_ZERO = new UFDouble(0.0);
+	public static final UFDouble DOUBLE_ZERO = new UFDouble(0f);
 
 	private static nc.bs.pub.formulaparse.FormulaParse fp = new nc.bs.pub.formulaparse.FormulaParse();
 

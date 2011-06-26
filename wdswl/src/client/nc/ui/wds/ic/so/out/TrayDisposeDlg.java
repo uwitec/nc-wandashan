@@ -276,8 +276,13 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			 throw new BusinessException("数据处理异常");
 		 int len = os.length;
 		
+		 TbOutgeneralTVO[] tmpvos = null;
+//		 List<TbOutgeneralTVO> ldata = new ArrayList<TbOutgeneralTVO>();
 		 for(int i=0;i<len;i++){
-			 
+			 tmpvos = (TbOutgeneralTVO[])os[i];
+			 if(tmpvos.length>1){
+				 throw new BusinessException("同一托盘同一批次存在多行,请重新操作");
+			 }
 		 }
 
 		for(TbOutgeneralTVO bb:bvos)

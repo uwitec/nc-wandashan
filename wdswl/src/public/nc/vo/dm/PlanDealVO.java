@@ -34,9 +34,10 @@ public class PlanDealVO extends SendplaninBVO {
     public String pk_outwhouse;
     public UFDate dapprovedate;
     public String vapproveid; 
-   
+      
     
-    @Override
+   
+	@Override
     public Object getAttributeValue(String arg) {
     	if("nnum".equalsIgnoreCase(arg)){
     		return this.getNnum();

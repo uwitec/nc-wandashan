@@ -11,18 +11,22 @@ import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
+import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * 发运计划处理后台类
@@ -98,6 +102,7 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.nassplannum,");
 		sql.append(" wds_sendplanin_b.hsl,");
 		sql.append("wds_sendplanin_b.ndealnum");
+		sql.append("wds_sendplanin_b.ts");
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
 		sql.append(" on wds_sendplanin.pk_sendplanin = wds_sendplanin_b.pk_sendplanin ");
@@ -163,6 +168,27 @@ public class PlanDealBO {
 			}
 		}
 	}
+	
+	private void checkTs(Map<String,UFDateTime> tsInfor) throws Exception{
+		if(tsInfor == null || tsInfor.size() ==0)
+			return;
+		String sql = "select pk_sendplanin_b,ts from wds_sendplanin_b where pk_sendplanin_b in "+getTempTableUtil().getSubSql(tsInfor.keySet().toArray(new String[0]));
+		List ldata = (List)getDao().executeQuery(sql, new ArrayListProcessor());
+		if(ldata == null || ldata.size() == 0)
+			throw new  ValidationException("数据异常");
+		Object[] os = null;
+		int len = ldata.size();
+		String key = null;
+		String newts = null;
+		for(int i=0;i<len;i++){
+			os = (Object[])ldata.get(i);
+			key = WdsWlPubTool.getString_NullAsTrimZeroLen(os[0]);
+			newts = WdsWlPubTool.getString_NullAsTrimZeroLen(os[1]);
+			if(!WdsWlPubTool.getString_NullAsTrimZeroLen(tsInfor.get(key)).equalsIgnoreCase(newts)){
+				throw new ValidationException("发生并发操作,请刷新界面重新操作");
+			}
+		}
+	}
 	/**
 	 * 
 	 * @作者：lyf
@@ -176,6 +202,19 @@ public class PlanDealBO {
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;
+		
+		
+		/**
+		 * zhf  add  应首先进行 并发校验  校验发运计划是否发生了改变
+		 */
+		Map<String,UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
+		for(PlanDealVO data:ldata){
+			tsInfor.put(data.getPrimaryKey(), data.getTs());
+		}
+		
+		checkTs(tsInfor);
+		
+		
 		/**
 		 * 安排：生成发运订单 发运计划安排生成发运订单
 		 * 

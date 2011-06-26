@@ -17,6 +17,8 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.dm.sendinvdoc.SendinvdocVO;
 import nc.vo.wl.pub.ButtonCommon;
@@ -77,6 +79,15 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		setTSFormBufferToVO(billVO);
 		AggregatedValueObject checkVO = getBillUI().getVOFromUI();
 		setTSFormBufferToVO(checkVO);
+		
+//		zhf add 校验
+		SendplaninBVO[] bodys = (SendplaninBVO[])checkVO.getChildrenVO();
+		if(bodys==null || bodys.length ==0)
+			throw new BusinessException("表体数据不能为空");
+		for(SendplaninBVO body:bodys)
+			body.validationOnSave();
+//		zhf end
+		
 		// 进行数据晴空
 		Object o = null;
 		ISingleController sCtrl = null;
@@ -270,11 +281,15 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	    
 	    ldata.add(head.getPrimaryKey());
 	    
-	    SuperVO tmpbody = null;
+	    SendplaninBVO tmpbody = null;
 	    for(int row:rows){
-	    	tmpbody = (SuperVO)getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyValueRowVO(row, SendplaninBVO.class.getName());
+	    	tmpbody = (SendplaninBVO)getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyValueRowVO(row, SendplaninBVO.class.getName());
+	    	if(!PuPubVO.getUFBoolean_NullAs(tmpbody.getReserve14(), UFBoolean.FALSE).booleanValue())
 	    	ldata.add(tmpbody.getPrimaryKey());
 	    }
+	    
+	    if(ldata.size()<=0)
+	    	return;
 	    	
 		HYBillVO newbill = null;
 //		后台关闭计划
