@@ -558,10 +558,11 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 * zhf add  不支持修改时 行操作
 	 */
 	protected void onBoEdit() throws Exception {
+		super.onBoEdit();
 		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
 		getBillUI().updateButtons();
 		setHeadPartEdit();
-		super.onBoEdit();
+		
 	}
 
 }
