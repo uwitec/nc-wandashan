@@ -189,6 +189,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				}
 			}
 		}
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(newBodys.toArray(new TbOutgeneralBVO[0]));
 		return lmap;
 	}
 	/**
