@@ -101,7 +101,7 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.nplannum,");
 		sql.append(" wds_sendplanin_b.nassplannum,");
 		sql.append(" wds_sendplanin_b.hsl,");
-		sql.append("wds_sendplanin_b.ndealnum");
+		sql.append("wds_sendplanin_b.ndealnum,");
 		sql.append("wds_sendplanin_b.ts");
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
