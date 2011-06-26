@@ -12,6 +12,7 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
@@ -22,7 +23,6 @@ import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.pub.IBillStatus;
@@ -141,9 +141,13 @@ public class InPubClientUI extends WdsBillManagUI {
 
 	public AggregatedValueObject getChangedVOFromUI() throws java.lang.Exception {
 		OtherInBillVO billvo = (OtherInBillVO)this.getBillCardWrapper().getChangedVOFromUI();	
+		OtherInBillVO billvo2 = (OtherInBillVO)this.getBillCardWrapper().getBillVOFromUI();	
+		if(getBillOperate() == IBillOperate.OP_ADD){//新增时 应使用 界面 vo 数据  不考虑删行情况
+			billvo = billvo2;
+		}
 		if(billvo == null)
 			return null;
-		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();
+		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();		
 		if(bodys == null || bodys.length==0)
 			return billvo;
 		

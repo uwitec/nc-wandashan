@@ -13,11 +13,12 @@ import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.lang.UFDouble;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.VOStatus;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
+import nc.vo.trade.voutils.IFilter;
 import nc.vo.wl.pub.VOTool;
-import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsIcInPubBillSave extends BillSave {
 	
@@ -34,6 +35,21 @@ public class WdsIcInPubBillSave extends BillSave {
 			dao = new IcInPubBO();
 		return dao;
 	}
+	
+	class filterDelLine implements IFilter{
+
+		public boolean accept(Object o) {
+			// TODO Auto-generated method stub
+			if(o == null)
+				return false;
+			SuperVO vo = (SuperVO)o;
+			if(vo.getStatus() == VOStatus.DELETED)
+				return false;
+			return true;
+		}
+		
+	}
+	
 	/**
 	 * 单据VO保存。 保存 先删除托盘信息  再保存新的托盘信息
 	 *    1单据vo保存  2托盘信息保存 3来源单据回写 4生成运输确认单
@@ -53,15 +69,19 @@ public class WdsIcInPubBillSave extends BillSave {
 		TbGeneralHVO head = (TbGeneralHVO)billVo.getParentVO();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
-		TbGeneralBVO[] bodys = (TbGeneralBVO[])billVo.getChildrenVO();
-		UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
-		if(bodys != null&&bodys.length >0){			
-			bodyChanged = true;
-			for(TbGeneralBVO body:bodys){
-				body.validateOnSave();
-				}
+		TbGeneralBVO[] obodys = (TbGeneralBVO[])billVo.getChildrenVO();
+		//过滤掉删除行  zhf add
+		TbGeneralBVO[] bodys = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(obodys, new filterDelLine());
+		billVo.setChildrenVO(bodys);
+//		UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
+		if(bodys == null||bodys.length ==0){			
+			throw new BusinessException("表体数据为空");
 			
 		}
+		bodyChanged = true;
+		for(TbGeneralBVO body:bodys){
+			body.validateOnSave();
+			}
 		if(!isAdd && bodyChanged){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
 			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),bodys);
 		}

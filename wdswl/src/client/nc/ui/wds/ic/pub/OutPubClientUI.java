@@ -12,6 +12,7 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wds.ic.other.out.BillField;
@@ -149,6 +150,9 @@ public class OutPubClientUI extends WdsBillManagUI {
 	public AggregatedValueObject getChangedVOFromUI()
 	throws java.lang.Exception {
 		MyBillVO billvo = (MyBillVO)this.getBillCardWrapper().getChangedVOFromUI();
+		MyBillVO billvo2 = (MyBillVO)this.getBillCardWrapper().getBillVOFromUI();
+		if(getBillOperate() == IBillOperate.OP_ADD)
+			billvo = billvo2;
 		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billvo.getChildrenVO();
 
 		if(bodys == null || bodys.length==0)

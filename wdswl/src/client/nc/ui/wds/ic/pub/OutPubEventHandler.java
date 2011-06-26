@@ -552,12 +552,18 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		return d;
 	}
 	
+	private void setHeadPartEdit(){
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cwarehouseid").setEdit(false);
+	}
+	
 	/**
 	 * zhf add  不支持修改时 行操作
 	 */
 	protected void onBoEdit() throws Exception {
 		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
 		getBillUI().updateButtons();
+		setHeadPartEdit();
+		super.onBoEdit();
 	}
 
 }

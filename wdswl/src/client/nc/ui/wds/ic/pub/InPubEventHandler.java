@@ -8,12 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nc.bs.logging.Logger;
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.base.IBillOperate;
-import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
@@ -40,6 +40,11 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	public InPubEventHandler(InPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 		ui = billUI;
+	}
+	
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		super.onBoAdd(bo);
+		setHeadPartEdit(true);
 	}
 
 	@Override
@@ -192,6 +197,20 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		super.onBoLineDel();
 	}
 	
+//	class filterDelLine implements IFilter{
+//
+//		public boolean accept(Object o) {
+//			// TODO Auto-generated method stub
+//			if(o == null)
+//				return false;
+//			SuperVO vo = (SuperVO)o;
+//			if(vo.getStatus() == VOStatus.DELETED)
+//				return false;
+//			return true;
+//		}
+//		
+//	}
+//	
 	@Override
 	protected void onBoSave() throws Exception {
 		AggregatedValueObject vo = ui.getChangedVOFromUI();
@@ -199,10 +218,11 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		hvo.validateBeforSave();
 		
 		TbGeneralBVO[] vos = (TbGeneralBVO[])vo.getChildrenVO();
-//		if(vos == null || vos.length ==0){
-//			throw new BusinessException("表体不允许为空");
-//		}
-		if(vos != null && vos.length > 0 ){
+//		TbGeneralBVO[] vos = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(ovos, new filterDelLine());
+		if(vos == null || vos.length ==0){
+			throw new BusinessException("表体不允许为空");
+		}
+//		if(vos != null && vos.length > 0 ){
 			for(TbGeneralBVO v : vos){
 				v.validateOnSave();
 				List<TbGeneralBBVO> list = v.getTrayInfor();
@@ -210,7 +230,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 					b.validateOnSave();
 				}
 			}
-		}
+//		}
 		super.onBoSave();
 //		onBoRefresh();
 	}
@@ -480,11 +500,16 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		
 		
 	}
-		
+	private void setHeadPartEdit(boolean flag){
+		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cwarehouseid").setEdit(flag);
+		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setEdit(flag);
+//		项目主键	pk_cargdoc
+	}	
      
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
 //		zhf add
+		setHeadPartEdit(false);
 		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
 		getBillUI().updateButtons();
 	}	
