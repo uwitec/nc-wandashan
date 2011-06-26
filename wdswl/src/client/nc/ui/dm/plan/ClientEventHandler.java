@@ -310,6 +310,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		
 		getBufferData().setCurrentVO(newbill);
 		getBillCardPanelWrapper().getBillCardPanel().getBillData().setBillValueVO(newbill);
+		getBillCardPanelWrapper().getBillCardPanel().execHeadTailLoadFormulas();
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
 	}
 	
 	

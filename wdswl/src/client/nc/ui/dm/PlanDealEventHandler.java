@@ -1,7 +1,9 @@
 package nc.ui.dm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillEditEvent;
@@ -13,6 +15,7 @@ import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -152,11 +155,21 @@ public class PlanDealEventHandler implements BillEditListener,
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
+		
+//		处理时间戳
+		Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
+		for(PlanDealVO data:billdatas){
+			tsInfor.put(data.getPrimaryKey(), data.getTs());
+		}
+		
 		// 处理查询出的计划 缓存 界面
 		getDataPane().setBodyDataVO(billdatas);
 		getDataPane().execLoadFormula();
 		billdatas = (PlanDealVO[]) getDataPane().getBodyValueVOs(
 				PlanDealVO.class.getName());
+		for(PlanDealVO data:billdatas){
+			data.setTs(tsInfor.get(data.getPrimaryKey()));
+		}
 		setDataBuffer(billdatas);
 		showHintMessage("查询完成");
 	}
