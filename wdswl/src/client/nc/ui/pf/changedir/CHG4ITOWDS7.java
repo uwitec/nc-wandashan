@@ -95,6 +95,7 @@ public class CHG4ITOWDS7 extends nc.ui.pf.change.VOConversionUI{
 	public String[] getFormulas() {
 		return new String[] {
 			"H_geh_cbilltypecode->\"WDS7\"",
+			"B_geb_vbatchcode->getColValue(tb_outgeneral_b,vbatchcode,general_b_pk,B_csourcebillbid)"
 		//	"B_status->2",//不行，vo状态
 		//	"H_status->2"//不行，vo状态
 		};
