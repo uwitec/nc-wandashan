@@ -1,9 +1,15 @@
 package nc.ui.wds.ic.storestate;
 
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.vo.ic.pub.StockInvOnHandVO;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.BusinessRuntimeException;
+import nc.vo.pub.SuperVO;
+import nc.vo.wds.ic.storestate.TbStockstateVO;
 
 /**
  * 
@@ -31,6 +37,27 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		);
 	}
 
+	
+	
+	
+	@Override
+	protected void onBoDelete() throws Exception {
+		//校验库存状态是否存在下游
+		AggregatedValueObject  billvo= getBillUI().getVOFromUI();
+		if(billvo.getParentVO()!=null){
+			TbStockstateVO tb=(TbStockstateVO) billvo.getParentVO();
+			if(tb.getPrimaryKey()!=null && ! tb.equals("")){
+				String whereSql=" whs_pk='"+tb.getPrimaryKey()+"' and isnull(dr,0)=0";
+			 SuperVO[] sus=	HYPubBO_Client.queryByCondition(StockInvOnHandVO.class,whereSql);
+			 if(sus==null ||sus.length <=0){
+				 throw new BusinessException("已存在下游数据不能删除");
+			 }
+				
+			}			
+		}
+		super.onBoDelete();
+	}
+
 	@Override
 	protected void onBoSave() throws Exception {
 		// TODO Auto-generated method stub
@@ -47,6 +74,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(
 					"ss_isout", temp);
 		}
+			
 		super.onBoSave();
 	}
 }

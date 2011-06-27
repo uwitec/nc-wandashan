@@ -1248,7 +1248,7 @@ public class SendorderBVO extends SuperVO {
 	 */
 	public java.lang.String getTableName() {
 
-		return "wds_sendorder_b";
+		return "wds_sendorder";
 	}
 
 	/**

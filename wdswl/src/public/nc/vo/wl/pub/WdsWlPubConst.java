@@ -230,5 +230,5 @@ public class WdsWlPubConst {
 	
 	
 	
-	public static String default_inv_state = "1021ZZ100000000850MH";//入库时设置默认库存状态=====+++++select * from tb_stockstate
+	public static String default_inv_state = "1021S31000000009FS98";//入库时设置默认库存状态=====+++++select * from tb_stockstate
 }

@@ -239,7 +239,7 @@ public class WdsIcPubBO {
 //		 WdsWlPubBO wlbo = new WdsWlPubBO();
 		if (!iszc) {
 			//总仓分托盘存放，分仓只有一个虚拟托盘
-			String sql = "select count(0) from bd_cargdoc_tray where cdt_traystatus=0 and isnull(dr,0)=0 and pk_cargdoc = '"
+			String sql = "select count(0) from bd_cargdoc_tray where  isnull(dr,0)=0 and pk_cargdoc = '"
 				+ cspaceid + "'";
 			int index = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql,
 					WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
