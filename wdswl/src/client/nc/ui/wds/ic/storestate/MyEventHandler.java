@@ -47,9 +47,9 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if(billvo.getParentVO()!=null){
 			TbStockstateVO tb=(TbStockstateVO) billvo.getParentVO();
 			if(tb.getPrimaryKey()!=null && ! tb.equals("")){
-				String whereSql=" whs_pk='"+tb.getPrimaryKey()+"' and isnull(dr,0)=0";
+				String whereSql=" ss_pk='"+tb.getPrimaryKey()+"' and isnull(dr,0)=0";
 			 SuperVO[] sus=	HYPubBO_Client.queryByCondition(StockInvOnHandVO.class,whereSql);
-			 if(sus==null ||sus.length <=0){
+			 if(sus.length >0){
 				 throw new BusinessException("已存在下游数据不能删除");
 			 }
 				
