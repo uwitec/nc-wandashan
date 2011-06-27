@@ -7,6 +7,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
@@ -14,8 +15,6 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.sp.pub.bill.BillStatus;
-
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
