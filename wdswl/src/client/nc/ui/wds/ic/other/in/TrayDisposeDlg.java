@@ -144,6 +144,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			bbvo.setPk_invmandoc(child.getGeb_cinventoryid());// 存货管理ID
 			bbvo.setAunit(child.getCastunitid());// 辅单位
 			bbvo.setUnitid(child.getPk_measdoc());// 主单位
+			bbvo.setCreadate(child.getGeb_dbizdate());//生产日期
+		    bbvo.setExpdate(child.getGeb_dvalidate());//失效日期
 			bbvo.setPk_cargdoc(child.getGeb_space());// 货位
 			bbvo.setGebb_hsl(child.getGeb_hsl());// 换算率
 			bbvo.setGebb_vbatchcode(child.getGeb_vbatchcode());// 批次

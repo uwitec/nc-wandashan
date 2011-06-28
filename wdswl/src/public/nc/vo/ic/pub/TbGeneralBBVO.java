@@ -1,7 +1,9 @@
 package nc.vo.ic.pub;
 
+
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
 import nc.vo.scm.pu.PuPubVO;
@@ -19,6 +21,8 @@ public class TbGeneralBBVO extends SuperVO {
 	public String pk_invbasdoc;//存货 基本ID
 	public String gebb_vbatchcode;//批次	
 	public UFDouble gebb_num;// 实入数量
+	public UFDate creadate;//生产日期
+	public UFDate expdate;//失效日期
 
 	public String pk_invmandoc;//存货管理ID-------
 	public UFDouble ninassistnum;//实入辅数量
@@ -147,6 +151,22 @@ public class TbGeneralBBVO extends SuperVO {
 
 	public String getVnote() {
 		return vnote;
+	}
+
+	public UFDate getCreadate() {
+		return creadate;
+	}
+
+	public void setCreadate(UFDate creadate) {
+		this.creadate = creadate;
+	}
+
+	public UFDate getExpdate() {
+		return expdate;
+	}
+
+	public void setExpdate(UFDate expdate) {
+		this.expdate = expdate;
 	}
 
 	public void setVnote(String vnote) {

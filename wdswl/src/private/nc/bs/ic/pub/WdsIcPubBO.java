@@ -29,6 +29,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsIcPubBO {
@@ -139,6 +140,10 @@ public class WdsIcPubBO {
 		if(iszc){
 			while (geb_bsnumd.doubleValue() > iVolumn) {
 				tbgbbvo = new TbGeneralBBVO();
+				//生产日期
+				tbgbbvo.setCreadate(body.getGeb_dbizdate());
+				//失效日期
+				tbgbbvo.setExpdate(body.getGeb_dvalidate());
 				// 批次
 				tbgbbvo.setGebb_vbatchcode(body.getGeb_vbatchcode());
 				// 回写批次
@@ -178,6 +183,11 @@ public class WdsIcPubBO {
 		}
 
 		TbGeneralBBVO tbgbbvo1 = new TbGeneralBBVO();
+		
+		//生产日期
+		tbgbbvo1.setCreadate(body.getGeb_dbizdate());
+		//失效日期
+		tbgbbvo1.setExpdate(body.getGeb_dvalidate());
 		// 批次
 		tbgbbvo1.setGebb_vbatchcode(body.getGeb_vbatchcode());
 		// 回写批次
@@ -258,7 +268,8 @@ public class WdsIcPubBO {
 			}
 		}else{
 			for (TbGeneralBVO body : bodys) {
-				String notIn = " and cdt_pk not in"+getTempTableUtil().getSubSql(usedTary);
+				String notIn = " and cdt_pk not in"+getTempTableUtil().getSubSql(usedTary)
+				+" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'";
 				String oldCdt= getOldCdt(body);
 				// 获取满足条件的托盘信息
 				tmpTrays = getWdsWLBO().getTrayInfor(cspaceid, body

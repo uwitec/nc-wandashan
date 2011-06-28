@@ -156,6 +156,10 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	 * 指定托盘
 	 */
 	protected void onZdtp() throws Exception {
+		//校验批次号
+		if(! validateBachCode()){
+		   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+		}
 		String pk_cargdoc =  getPk_cargDoc();//货位
 		if(pk_cargdoc == null || "".equals(pk_cargdoc))
 			throw new BusinessException("请指定货位信息");
@@ -213,6 +217,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 //	
 	@Override
 	protected void onBoSave() throws Exception {
+		if(! validateBachCode()){
+			   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+		}
 		AggregatedValueObject vo = ui.getChangedVOFromUI();
 		TbGeneralHVO hvo = (TbGeneralHVO)vo.getParentVO();
 		hvo.validateBeforSave();
@@ -334,6 +341,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	 * 自动入库
 	 */
 	protected void onZdrk() throws Exception {
+		if(! validateBachCode()){
+			   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+		}
 		String cwid = getCwhid();//仓库
 		if(cwid == null || "".equals(cwid))
 			throw new BusinessException("请指定仓库信息");
@@ -456,27 +466,8 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		for(int i=0;i<num;i++){
 			int row=i;
 		String va=(String)getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "geb_vbatchcode");
-		if(va==null ||va.equalsIgnoreCase("")){
-			
+		if( !validateBachCode(va)){
 			return;
-		}
-		if (va.trim().length() < 8) {
-			
-		     return ;
-		}
-
-		Pattern p = Pattern
-		.compile(
-				"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
-				+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
-				+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
-				+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
-				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-		Matcher m = p.matcher(va.trim().substring(0, 8));
-		if (!m.find()) {
-			
-			return;
-
 		}
 	    //如果批次号输入格式正确就给生产日期赋值
 		String year=va.substring(0,4);
@@ -497,9 +488,44 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date.getDateAfter(num1), row, "geb_dvalidate");//失效日期
 			}			
 	}	
+
 		
 		
 	}
+	//批量验证批次号是否正确mlr
+	protected boolean validateBachCode(){		
+		int num = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getRowCount();
+		for (int i = 0; i < num; i++) {
+			int row = i;
+			String va = (String) getBillCardPanelWrapper().getBillCardPanel()
+					.getBodyValueAt(i, "geb_vbatchcode");
+			if (!validateBachCode(va)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	//验证批次号是否正确 va为要验证的批次号mlr
+	private boolean validateBachCode(String va){		
+			if (va == null || va.equalsIgnoreCase("")) {
+				return false;
+			}
+			if (va.trim().length() < 8) {
+				return false;
+			}
+			Pattern p = Pattern.compile(
+							"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+									+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+									+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+									+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+							Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+			Matcher m = p.matcher(va.trim().substring(0, 8));
+			if (!m.find()) {
+				return false;
+			}	
+		return true;
+	}
+	
 	private void setHeadPartEdit(boolean flag){
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cwarehouseid").setEdit(flag);
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setEdit(flag);

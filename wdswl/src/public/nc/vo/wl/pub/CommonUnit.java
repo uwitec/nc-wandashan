@@ -843,17 +843,19 @@ public class CommonUnit {
 		sql.append("select * from ");
 		sql.append("(select o.* from tb_warehousestock o ,");//存货状态
 		sql.append(" tb_stockstaff s,");//仓库人员绑定
-		sql.append(" tb_stockstate k");//库存状态
-		sql.append(" where isnull(o.dr,0) = 0 and isnull(s.dr,0) = 0 and isnull(k.dr,0) = 0 and " +
-				" o.pk_cargdoc=s.pk_cargdoc and o.ss_pk = k.ss_pk");
+		sql.append(" tb_stockstate k,");//库存状态
+		sql.append(" bd_cargdoc_tray t");//托盘信息
+		sql.append(" where isnull(o.dr,0) = 0 and isnull(s.dr,0) = 0 and isnull(k.dr,0) = 0 and isnull(t.dr,0)=0" +
+				" and o.pk_cargdoc=s.pk_cargdoc and o.ss_pk = k.ss_pk and o.pplpt_pk=t.cdt_pk");
 		sql.append(" and s.cuserid='"+pk_user+"' and o.whs_stocktonnage>0");
 		if(body.getCinventoryid() == null  || "".equalsIgnoreCase(body.getCinventoryid())){
 			throw new BusinessException("行号："+body.getCrowno()+"请录入表体存货信息");
 		}
 		sql.append(" and o.pk_invmandoc = '"+body.getCinventoryid()+"'");
+		sql.append(" and t.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'");
 		sql.append(" and ((o.whs_status = 0 " +//托盘是否有存量
-				"and k.ss_isout = 0 )"+oldCdt+")");//托盘物资是否可出库
-		sql.append(" ) tmp  ");
+				   " and k.ss_isout = 0 )"+oldCdt+")");//托盘物资是否可出库
+		sql.append("  ) tmp  ");
 		sql.append(" join wds_invbasdoc ");
 		sql.append(" on tmp.pk_invmandoc=wds_invbasdoc.pk_invmandoc");
 		sql.append(" where to_date(substr(tmp.whs_batchcode,1,8),'yyyy-mm-dd')+");//批次号=生日日期+流水号组成;(前8位已约定一定是生成日期)

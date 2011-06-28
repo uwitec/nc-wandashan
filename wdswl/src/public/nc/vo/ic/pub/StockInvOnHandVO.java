@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
@@ -24,6 +25,8 @@ public class StockInvOnHandVO extends SuperVO {
 	public String whs_batchcode;// 批次号
 	public String pk_invbasdoc; //存货基本ID
 	public String pk_invmandoc; //存货管理ID
+	public UFDate creadate;//生成日期	
+	public UFDate expdate;//失效日期
 	public String pk_corp; //公司
 	public String whs_munit;//主单位
 	public String whs_aunit;//辅单位
@@ -125,6 +128,22 @@ public class StockInvOnHandVO extends SuperVO {
 	 */
 	public String getPk_customize4() {
 		return pk_customize4;
+	}
+
+	public UFDate getCreadate() {
+		return creadate;
+	}
+
+	public void setCreadate(UFDate creadate) {
+		this.creadate = creadate;
+	}
+
+	public UFDate getExpdate() {
+		return expdate;
+	}
+
+	public void setExpdate(UFDate expdate) {
+		this.expdate = expdate;
 	}
 
 	/**

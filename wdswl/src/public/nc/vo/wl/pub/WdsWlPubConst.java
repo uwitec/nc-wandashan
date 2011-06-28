@@ -118,6 +118,11 @@ public class WdsWlPubConst {
 	
 	
 	public static String IC_INV_SALE_ALERT_DAYNO = "def16";//存货销售警戒天数字段
+	/**虚拟托盘 开头命名方式*/
+	public static String XN_CARGDOC_TRAY_NAME="XN";
+	
+	/**默认回写ERP的批次*/
+	public static String ERP_BANCHCODE="2009";
 	
 	public static String[] out_split_names = new String[]{"vbatchcode"};
 	

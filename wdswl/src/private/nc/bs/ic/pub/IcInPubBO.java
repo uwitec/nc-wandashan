@@ -71,6 +71,10 @@ public class IcInPubBO {
 				// 存货档案主键
 				tmpInvVO.setPk_invbasdoc(tray.getPk_invbasdoc());
 				tmpInvVO.setPk_invmandoc(tray.getPk_invmandoc());
+				//生成日期
+				tmpInvVO.setCreadate(tray.getCreadate());
+			    //失效日期
+				tmpInvVO.setExpdate(tray.getExpdate());
 				// 批次号
 				tmpInvVO.setWhs_batchcode(tray.getGebb_vbatchcode());
 				// 回写批次号
@@ -78,7 +82,7 @@ public class IcInPubBO {
 						&& !"".equals(tray.getGebb_lvbatchcode())) {
 					tmpInvVO.setWhs_lbatchcode(tray.getGebb_lvbatchcode());
 				} else {
-					tmpInvVO.setWhs_lbatchcode("2009");
+					tmpInvVO.setWhs_lbatchcode(WdsWlPubConst.ERP_BANCHCODE);
 				}
 				tmpInvVO.setWhs_munit(tray.getUnitid());//主计量单位
 				tmpInvVO.setWhs_aunit(tray.getAunit());//辅计量单位
@@ -108,8 +112,8 @@ public class IcInPubBO {
 				linvInfor.add(tmpInvVO);
 			}
 		}
-		if(linvInfor.size()>0){
-			getDao().insertVOArray(linvInfor.toArray(new StockInvOnHandVO[0]));
+		if(linvInfor.size()>0){		
+			filterBanchCode(linvInfor);		
 		}
 		//更新托盘状态
 		if(lTrayID.size()>0){
@@ -117,6 +121,43 @@ public class IcInPubBO {
 		}
 	}
 	
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：现存量表要求 仓库， 货位， 托盘，存货，批次， 这个维度保持唯一 
+	          所以 每次要入库的货， 都要按这个维度查询 已存在的这个维度的现存量
+	          将本次入库的货与现存量合并形成一条记录
+	 * @时间：2011-4-8下午06:52:43
+	 * @param newBillVo 要操作的单据数据
+	 * @param iBdAction 操作状态
+	 * @param isNew  是否新增保存
+	 * @throws Exception
+	 */
+	private void filterBanchCode(List<StockInvOnHandVO> linvInfor) throws DAOException {
+		
+		for(int i=0;i<linvInfor.size();i++){		
+			StockInvOnHandVO st=linvInfor.get(i);
+			String condition=" pk_cargdoc='"+st.getPk_cargdoc()+"' and pplpt_pk='"+st.getPplpt_pk()+"'" +
+					         " and whs_batchcode='"+st.getWhs_batchcode()+"' and pk_invmandoc='"+st.getPk_invmandoc()+"'" +
+					         " and isnull(dr,0)=0";
+			List<StockInvOnHandVO> list=(List<StockInvOnHandVO>) getDao().retrieveByClause(StockInvOnHandVO.class,condition);
+			if(list!=null && list.size()>=1){
+				StockInvOnHandVO st1=list.get(0);
+				st1.setWhs_oanum(st.getWhs_oanum().add(st1.getWhs_oanum()));
+				st1.setWhs_omnum(st.getWhs_omnum().add(st1.getWhs_omnum()));
+				st1.setWhs_stockpieces(st.getWhs_stockpieces().add(st1.getWhs_stockpieces()));
+				st1.setWhs_stocktonnage(st.getWhs_stocktonnage().add(st1.getWhs_stocktonnage()));
+				getDao().updateVO(st1);
+			}else{				
+				getDao().insertVO(st);
+			}			
+			
+		}
+		
+	}
+
+
+
 	/**
 	 * 
 	 * @作者：lyf
