@@ -8,6 +8,7 @@ import nc.bs.trade.comsave.BillSave;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.SQLParameter;
 import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
@@ -275,7 +276,7 @@ public class WdsIcInPubBillSave extends BillSave {
 	 */
 	private void checkTrayUsed(TbGeneralBVO[] bodys) throws BusinessException{
 		String sql ="select cdt_traycode from bd_cargdoc_tray  " +
-				" where cdt_pk=? and cdt_traystatus=1";
+				" where cdt_pk=? and cdt_traystatus="+StockInvOnHandVO.stock_state_use;
 		SQLParameter para = new SQLParameter();
 		for(TbGeneralBVO bvo:bodys){
 			List<TbGeneralBBVO> tray = bvo.getTrayInfor();
