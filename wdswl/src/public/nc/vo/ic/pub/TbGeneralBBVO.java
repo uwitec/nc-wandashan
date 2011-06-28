@@ -39,22 +39,22 @@ public class TbGeneralBBVO extends SuperVO {
 	public UFTime ts;
 	public String gebb_customize1;
 	public String gebb_customize2;
-	public static final String GEBB_LVBATCHCODE="gebb_lvbatchcode";
-	public static final String GEBB_NMNY="gebb_nmny";
-	public static final String GEBB_NPRICE="gebb_nprice";
-	public static final String GEBB_HSL="gebb_hsl";
-	public static final String GEB_PK="geb_pk";
-	public static final String GEBB_PK = "gebb_pk";
-	public static final String PWB_PK = "pwb_pk";
-	public static final String PK_INVBASDOC = "pk_invbasdoc";
-	public static final String GEBB_VBATCHCODE = "gebb_vbatchcode";
-	public static final String CDT_PK = "cdt_pk";
-	public static final String GEBB_NUM = "gebb_num";
-	public static final String DR = "dr";
-	public static final String TS = "ts";
-	public static final String GEBB_CUSTOMIZE1 = "gebb_customize1";
-	public static final String GEBB_CUSTOMIZE2 = "gebb_customize2";
-	public static final String VNOTE = "vnote";
+//	public static final String GEBB_LVBATCHCODE="gebb_lvbatchcode";
+//	public static final String GEBB_NMNY="gebb_nmny";
+//	public static final String GEBB_NPRICE="gebb_nprice";
+//	public static final String GEBB_HSL="gebb_hsl";
+//	public static final String GEB_PK="geb_pk";
+//	public static final String GEBB_PK = "gebb_pk";
+//	public static final String PWB_PK = "pwb_pk";
+//	public static final String PK_INVBASDOC = "pk_invbasdoc";
+//	public static final String GEBB_VBATCHCODE = "gebb_vbatchcode";
+//	public static final String CDT_PK = "cdt_pk";
+//	public static final String GEBB_NUM = "gebb_num";
+//	public static final String DR = "dr";
+//	public static final String TS = "ts";
+//	public static final String GEBB_CUSTOMIZE1 = "gebb_customize1";
+//	public static final String GEBB_CUSTOMIZE2 = "gebb_customize2";
+//	public static final String VNOTE = "vnote";
 	
 
 	public String getTraymax() {

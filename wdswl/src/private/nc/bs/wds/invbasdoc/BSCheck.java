@@ -32,6 +32,7 @@ public class BSCheck implements IBDBusiCheck{
 		
 		//判断是修改后的保存还是新增后的保存
 		InvbasdocVO ivo=(InvbasdocVO) vo.getParentVO();
+		ivo.validateOnSave();
 		//如果是新增后的保存执行下面的代码
 		if(ivo.getPrimaryKey()==null ||ivo.getPrimaryKey().trim().equals("")){
 		

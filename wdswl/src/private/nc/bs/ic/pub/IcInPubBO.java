@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
@@ -16,6 +17,7 @@ import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
@@ -253,7 +255,39 @@ public class IcInPubBO {
 		return ttutil;
 	}
 
-	
+	/**
+	 * 入库单删除时 存量校验  是否可删除  如果可以  调整库存状态   如果存量调为零 则删除该条记录
+	 */
+	public void checkOnDelBill(String inbillid,TbGeneralBVO[] bvos)throws BusinessException, DAOException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(inbillid)==null)
+			return;
+		if(bvos == null || bvos.length == 0)
+			return;
+		List<TbGeneralBBVO> ltray = null;//托盘明细数据
+		if(bvos[0].getTrayInfor() == null || bvos[0].getTrayInfor().size() == 0){
+//			没有托盘明细信息的话  从 数据库获取
+			String whereSql = " isnull(dr,0)=0 and geh_pk = '"+inbillid+"'";
+		    ltray = (List<TbGeneralBBVO>)getDao().retrieveByClause(TbGeneralBBVO.class, whereSql);
+		}else{
+			for(TbGeneralBVO bvo:bvos){
+				if(ltray == null){
+					ltray = new ArrayList<TbGeneralBBVO>();
+				}
+				if(bvo.getTrayInfor() == null || bvo.getTrayInfor().size() ==0)
+					throw new ValidationException("数据异常，获取托盘明细信息为空");
+				ltray.addAll(bvo.getTrayInfor());
+			}
+		}
+		
+		if(ltray == null || ltray.size() == 0){
+			throw new ValidationException("数据异常，获取托盘明细信息为空");
+		}
+		String pk_corp = SQLHelper.getCorpPk();
+		for(TbGeneralBBVO tray:ltray){
+//			无论是对于 总仓实际托盘  虚拟托盘 还是分仓  该校验都包括了
+			checkOnHandNum(pk_corp, null,tray.getPk_cargdoc(), tray.getCdt_pk(), tray.getPk_invbasdoc(), tray.getGebb_vbatchcode(), tray.getNinassistnum());
+		}	
+	}
 	/**
 	 * 
 	 * @作者：zhf
@@ -264,6 +298,16 @@ public class IcInPubBO {
 	 * @throws BusinessException
 	 */
 	public void deleteOtherInforOnDelBill(String inbillid,TbGeneralBVO[] bvo) throws BusinessException{
+//		zhf   modify 20110627   支持虚拟托盘后算法调整
+		
+//		托盘存量校验   入库的量 是否已经  出库了  如果已 出库该 入库单 不能再次作废
+		checkOnDelBill(inbillid, bvo);
+//		调整托盘状态  如果是总仓实际托盘  状态调整为 未占用    虚拟托盘 和 分仓托盘  状态 不进行维护
+		
+//		删除托盘明细流水表
+		
+		
+		
 		List<String> ltrayid = null;
 		String sql = "select distinct cdt_pk from tb_general_b_b where isnull(dr,0)=0 and geh_pk = '"+inbillid+"'";
 		ltrayid = (List<String>)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
@@ -320,12 +364,27 @@ public class IcInPubBO {
 
 	}
 	
-	public void checkOnHandNum(String pk_cargdoc,String ctrayid,String cinvbasid,String vbatchcode,UFDouble nassnum) throws BusinessException{
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 存量校验   无论是对于 总仓实际托盘  虚拟托盘 还是分仓  该校验都包括了
+	 * @时间：2011-6-28下午03:10:47
+	 * @param corp 公司
+	 * @param pk_cargdoc  货位
+	 * @param ctrayid 托盘
+	 * @param cinvbasid 存货
+	 * @param vbatchcode 批次
+	 * @param nassnum 数量   辅数量
+	 * @throws BusinessException
+	 */
+	public void checkOnHandNum(String corp,String cwarehouseid,String pk_cargdoc,String ctrayid,String cinvbasid,String vbatchcode,UFDouble nassnum) throws BusinessException{
 		StringBuffer whereSql = new StringBuffer();
 		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)==null){
 			throw new BusinessException("货位不能为空");
 		}
-		whereSql.append(" isnull(dr,0)=0 and pk_cargdoc = '"+pk_cargdoc+"'");
+		whereSql.append(" isnull(dr,0)=0 and pk_cargdoc = '"+pk_cargdoc+"' and pk_corp = '"+corp+"'");
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null)
+			whereSql.append(" and pk_customize1 = '"+cwarehouseid+"'");
 		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null){
 			whereSql.append(" and pplpt_pk = '"+ctrayid+"'");
 		}
@@ -350,7 +409,7 @@ public class IcInPubBO {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 
+	 * @说明：完达山物流项目 只能用于对 总仓 实际托盘存量的校验  历史版本 保留zhf2011-06027
 	 * @时间：2011-4-11下午01:38:05
 	 * @param ltrayid 托盘信息
 	 * @param nassnum 

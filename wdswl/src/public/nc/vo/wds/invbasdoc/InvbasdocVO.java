@@ -6,7 +6,8 @@
    	
 	import java.util.ArrayList;
 	import nc.vo.pub.*;
-	import nc.vo.pub.lang.*;
+import nc.vo.pub.lang.*;
+import nc.vo.scm.pu.PuPubVO;
 	
 /**
  * 
@@ -22,12 +23,12 @@
      public class InvbasdocVO extends SuperVO {
            
              public String pk_invbasdoc;
-             public String vdef2;
+             public String vdef2;//------zhf 20110627  所属存货分类编码
              public String vdef4;
              public String pk_invmandoc;
              public String vdef6;
              public String vdef7;
-             public String vdef1;
+             public String vdef1;//------zhf 20110627  存货分类ID
              public String vdef3;
              public String vdef5;
              public UFDouble tray_volume;//托盘对该存货的容量
@@ -39,17 +40,26 @@
              public Integer  fuesed;//下拉 ：常用，不常用
              public String pk_wds_invbasdoc;
             
-             public static final String  PK_INVBASDOC="pk_invbasdoc";   
-             public static final String  VDEF2="vdef2";   
-             public static final String  VDEF4="vdef4";   
-             public static final String  PK_INVMANDOC="pk_invmandoc";   
-             public static final String  VDEF6="vdef6";   
-             public static final String  VDEF7="vdef7";   
-             public static final String  VDEF1="vdef1";   
-             public static final String  VDEF3="vdef3";   
-             public static final String  VDEF5="vdef5";   
-             public static final String  TRAY_VOLUME="tray_volume";   
-             public static final String  PK_WDS_INVBASDOC="pk_wds_invbasdoc";   
+//             public static final String  PK_INVBASDOC="pk_invbasdoc";   
+//             public static final String  VDEF2="vdef2";   
+//             public static final String  VDEF4="vdef4";   
+//             public static final String  PK_INVMANDOC="pk_invmandoc";   
+//             public static final String  VDEF6="vdef6";   
+//             public static final String  VDEF7="vdef7";   
+//             public static final String  VDEF1="vdef1";   
+//             public static final String  VDEF3="vdef3";   
+//             public static final String  VDEF5="vdef5";   
+//             public static final String  TRAY_VOLUME="tray_volume";   
+//             public static final String  PK_WDS_INVBASDOC="pk_wds_invbasdoc";  
+             
+             public void validateOnSave() throws ValidationException{
+            	 if(PuPubVO.getString_TrimZeroLenAsNull(pk_invbasdoc)==null)
+            		 throw new ValidationException("存货不能为空");
+            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef1)==null)
+            		 throw new ValidationException("存货分类不能为空");
+            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef2)==null)
+            		 throw new ValidationException("存货分类编码不能为空");
+             }
       
     
         public Integer getTray_volume_layers() {
