@@ -1,16 +1,17 @@
 package nc.bs.wds.ic.stock;
 
 import java.util.List;
-
 import nc.bs.dao.BaseDAO;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.util.SQLHelper;
+import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class StockInvOnHandBO {
@@ -108,7 +109,7 @@ public class StockInvOnHandBO {
 	 * @param ltray
 	 * @throws Exception
 	 */
-	public  void updateWarehousestockOnDel(List<TbGeneralBBVO> ltray) throws Exception {
+	public  void updateStockOnDelForIn(List<TbGeneralBBVO> ltray) throws Exception {
 		// TODO Auto-generated method stub
 		if (null == ltray || ltray.size() == 0) {			
 			return;
@@ -137,7 +138,7 @@ public class StockInvOnHandBO {
 			if (noutassistnum.equals(nhandassnum)							
 					&& noutnum.equals(nhandnum)){
 				item.setWhs_status(1);//------------这个更新为  1  对  虚拟托盘  和  分仓来说  不严密
-				updateBdcargdocTray(item.getPplpt_pk());//将托盘状态更新为  空盘  
+				updateBdcargdocTray(item.getPplpt_pk(),StockInvOnHandVO.stock_state_null);//将托盘状态更新为  空盘  
 			}
 			item.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
 			item.setWhs_stocktonnage(nhandnum.sub(noutnum));
@@ -145,6 +146,44 @@ public class StockInvOnHandBO {
 			this.updateWarehousestock(item);
 		}
 
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 根据出库流水信息表 更新 库存存量状态表
+	 * @时间：2011-4-7下午08:39:17
+	 * @param ltray
+	 * @throws Exception
+	 */
+	public  void updateStockForOut(String corp,String warehousid,List<TbOutgeneralTVO> ltray) throws Exception {
+		// TODO Auto-generated method stub
+		if (null == ltray || ltray.size() == 0) {			
+			return;
+		}
+		UFDouble noutnum = WdsWlPubTool.DOUBLE_ZERO; // 实出数量
+		UFDouble noutassistnum = WdsWlPubTool.DOUBLE_ZERO; // 实出辅数量
+        StockInvOnHandVO[] stocks = null;
+		for (TbOutgeneralTVO tray:ltray) {				
+			noutassistnum = PuPubVO.getUFDouble_NullAsZero(tray.getNoutassistnum());
+			noutnum = PuPubVO.getUFDouble_NullAsZero(tray.getNoutnum());				
+			stocks = getStockInvDatas(corp, warehousid, tray.getPk_cargdoc(), tray.getCdt_pk(), tray.getPk_invbasdoc(), tray.getVbatchcode());
+			if(stocks == null || stocks.length == 0)
+				throw new BusinessException("存量不足");
+
+			StockInvOnHandVO stock = stocks[0];
+			UFDouble nhandnum = PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stocktonnage());
+			UFDouble nhandassnum = PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces());
+			if (noutassistnum.equals(nhandassnum)							
+					&& noutnum.equals(nhandnum)){
+				stock.setWhs_status(1);
+				updateBdcargdocTray(stock.getPplpt_pk(),StockInvOnHandVO.stock_state_null);//将托盘状态更新为  空盘  
+			}
+			stock.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
+			stock.setWhs_stocktonnage(nhandnum.sub(noutnum));
+			stock.setStatus(VOStatus.UPDATED);
+			this.updateWarehousestock(stock);
+		}
 	}
 	
 	/**
@@ -159,7 +198,7 @@ public class StockInvOnHandBO {
 	 * @param isNew  是否新增保存
 	 * @throws Exception
 	 */
-	public void inserStockInv(List<StockInvOnHandVO> linvInfor) throws Exception {		
+	public void inserStockForIn(List<StockInvOnHandVO> linvInfor) throws Exception {		
 		StockInvOnHandVO[] tmps = null;
 		for(StockInvOnHandVO stock:linvInfor){
 			tmps = getStockInvDatas(stock.getPk_corp(), stock.getPk_customize1()
@@ -171,7 +210,7 @@ public class StockInvOnHandBO {
 				stock.setWhs_omnum(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_omnum()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_omnum())));
 				stock.setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stockpieces())));
 				stock.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stocktonnage()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stocktonnage())));
-				getDao().updateVO(stock);
+				updateWarehousestock(stock);
 			}else
 				throw new BusinessException("获取存货状态异常");
 		}		
@@ -192,11 +231,14 @@ public class StockInvOnHandBO {
 	}
 	
 	// 更新托盘状态
-	public void updateBdcargdocTray(String trayPK) throws Exception {
+	public void updateBdcargdocTray(String trayPK,int state) throws BusinessException {
 		if(PuPubVO.getString_TrimZeroLenAsNull(trayPK)==null)
 			return;
-		String sql = "update bd_cargdoc_tray set cdt_traystatus = " + 0
+		String sql = "update bd_cargdoc_tray set cdt_traystatus = " + state
 		+ " where cdt_pk='" + trayPK + "'";
+		if(state == StockInvOnHandVO.stock_state_null){//对于虚拟托盘永远不更新为 空
+			sql = sql + " and cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'";
+		}
 		getDao().executeUpdate(sql);
 	}
 	
@@ -212,6 +254,9 @@ public class StockInvOnHandBO {
 	 */
 	public void updateTrayState(int state,List<String> ltrayid,TempTableUtil tempUtil) throws BusinessException{
 		String sql = "update bd_cargdoc_tray set cdt_traystatus = "+state+" where cdt_pk in "+tempUtil.getSubSql(ltrayid.toArray(new String[0]));
+		if(state == StockInvOnHandVO.stock_state_null){//对于虚拟托盘永远不更新为 空
+			sql = sql + " and cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'";
+		}
 		getDao().executeUpdate(sql);
 	}
 

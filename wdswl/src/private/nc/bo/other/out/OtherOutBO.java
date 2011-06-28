@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import nc.bs.dao.BaseDAO;
+import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.BusinessException;
@@ -19,6 +22,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubConsts;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * 
@@ -38,6 +42,13 @@ public class OtherOutBO {
 			dao = new BaseDAO();
 		}
 		return dao;
+	}
+	
+	private StockInvOnHandBO stockBO = null;
+	private StockInvOnHandBO getStockBO(){
+		if(stockBO == null)
+			stockBO = new StockInvOnHandBO(getBaseDAO());
+		return stockBO;
 	}
 
 	private TempTableUtil ttutil = null;
@@ -60,6 +71,7 @@ public class OtherOutBO {
 		if (billVo == null) {
 			return;
 		}
+		TbOutgeneralHVO head = (TbOutgeneralHVO)billVo.getParentVO();
 		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) billVo.getChildrenVO();
 		if (bodys == null || bodys.length == 0)
 			return;
@@ -75,7 +87,7 @@ public class OtherOutBO {
 		}
 		if (ltray.size() <= 0)
 			return;
-		deleteOtherInforOnDelBill(ltray);
+		deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
 	}
 
 	/**
@@ -329,13 +341,55 @@ public class OtherOutBO {
 		}
 	}
 
-	public void deleteOtherInforOnDelBill(List<TbOutgeneralTVO> ltray)
+	public void deleteOtherInforOnDelBill(String cwarehouseid,List<TbOutgeneralTVO> ltray)
 			throws BusinessException {
 		// 恢复托盘存量
-		backTrayInforOnDelBill(ltray);
+		backTrayInforOnDelBill(cwarehouseid,ltray);
 		// 删除单据托盘明细表
 		if (ltray.size() > 0)// 数据无法回复 硬删除
 			getBaseDAO().deleteVOList(ltray);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 出库单作废时校验（针对主仓库实际托盘存在）已被占用不能作废
+	 * @时间：2011-6-28下午08:04:17
+	 * @param ltray
+	 * @throws BusinessException
+	 */
+	private void checkTrayIsUse(List<TbOutgeneralTVO> ltray) throws BusinessException{
+		if(ltray == null || ltray.size() == 0)
+			return;
+		ArrayList<String> lid = new ArrayList<String>();
+		for(TbOutgeneralTVO tray:ltray){
+			if(!lid.contains(tray.getCdt_pk()))
+				lid.add(tray.getCdt_pk());
+		}
+		if(lid.size() == 0)
+			throw new BusinessException("数据异常");
+		
+		String sql = "select count(0) from tb_warehousestock  stock inner join bd_cargdoc_tray tray " +
+				" on stock.pplpt_pk = tray.cdt_pk " +
+				" where stock.pplpt_pk in '"+getTempTableUtil().getSubSql(lid)+"' and isnull(stock.dr,0)=0 and isnull(tray.dr,0) = 0" +
+						" and tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
+								" and tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_use;
+	   int iv = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+	   if(iv>0)
+		   throw new BusinessException("存在托盘已被占用无法作废当前单据");
+	   
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 保存出库单时调整库存状态表
+	 * @时间：2011-6-28下午08:29:05
+	 * @param ltray
+	 * @throws Exception
+	 */
+	public void updateStockOnSaveBill(String corp,String warehousid,List<TbOutgeneralTVO> ltray) throws Exception{
+		getStockBO().updateStockForOut(corp,warehousid,ltray);
 	}
 
 	/**
@@ -346,39 +400,43 @@ public class OtherOutBO {
 	 * @param ltray
 	 * @throws BusinessException
 	 */
-	public void backTrayInforOnDelBill(List<TbOutgeneralTVO> ltray)
-			throws BusinessException {
-		String whereSql = null;
-		StockInvOnHandVO trayInv = null;
+	public void backTrayInforOnDelBill(String cwarehouseid,List<TbOutgeneralTVO> ltray)
+	throws BusinessException {
+		//		String whereSql = null;
+		StockInvOnHandVO stock = null;
 		if (ltray == null || ltray.size() == 0)
 			return;
+		//		如果是总仓的实际托盘恢复需要校验是否超最大量限制
+		if(WdsWlPubTool.isZc(cwarehouseid))
+			checkTrayIsUse(ltray);
 		List<StockInvOnHandVO> linvOnhand = new ArrayList<StockInvOnHandVO>();
+		StockInvOnHandVO[] stocks = null;
+		String pk_corp = SQLHelper.getCorpPk();
 		for (TbOutgeneralTVO tray : ltray) {
-			whereSql = " pplpt_pk = '" + tray.getCdt_pk()
-					+ "' and pk_invbasdoc = '" + tray.getPk_invbasdoc()
-					+ "' and isnull(dr,0)=0 and whs_batchcode = '"
-					+ tray.getVbatchcode() + "'";
-			List<StockInvOnHandVO> linv = (List<StockInvOnHandVO>) getBaseDAO()
-					.retrieveByClause(StockInvOnHandVO.class, whereSql);
-			if (linv == null || linv.size() == 0) {
+
+			stocks = getStockBO().getStockInvDatas(pk_corp, cwarehouseid, tray.getPk_cargdoc(), tray.getCdt_pk(), tray.getPk_invbasdoc(), tray.getVbatchcode()
+			);			
+
+			if (stocks == null || stocks.length == 0) {
 				throw new BusinessException("原货品托盘存放信息丢失，无法删除出库单");
 			}
 
-			if (linv.size() > 1)
+			if (stocks.length > 1)
 				throw new BusinessException("获取原货品托盘存放信息异常");
 
-			trayInv = linv.get(0);
+			stock = stocks[0];
 
-			trayInv.setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(
-					trayInv.getWhs_stockpieces()).add(
-					PuPubVO.getUFDouble_NullAsZero(tray.getNoutassistnum())));
-			trayInv.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(
-					trayInv.getWhs_stocktonnage()).add(
-					PuPubVO.getUFDouble_NullAsZero(tray.getNoutnum())));
-			trayInv.setWhs_status(0);
-			trayInv.setStatus(VOStatus.UPDATED);
-			linvOnhand.add(trayInv);
-			updateBdcargdocTray(tray.getCdt_pk(), 1);
+			stock.setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(
+					stock.getWhs_stockpieces()).add(
+							PuPubVO.getUFDouble_NullAsZero(tray.getNoutassistnum())));
+			stock.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(
+					stock.getWhs_stocktonnage()).add(
+							PuPubVO.getUFDouble_NullAsZero(tray.getNoutnum())));
+
+			stock.setWhs_status(0);
+			stock.setStatus(VOStatus.UPDATED);
+			linvOnhand.add(stock);
+			getStockBO().updateBdcargdocTray(tray.getCdt_pk(),StockInvOnHandVO.stock_state_use);
 		}
 		if (linvOnhand.size() > 0)
 			getBaseDAO().updateVOArray(
@@ -386,12 +444,6 @@ public class OtherOutBO {
 					WdsWlPubConsts.stockinvonhand_fieldnames);
 
 	}
-
-	// 更新托盘状态
-	public void updateBdcargdocTray(String trayPK, int state)
-			throws BusinessException {
-		String sql = "update bd_cargdoc_tray set cdt_traystatus = " + state
-				+ " where cdt_pk='" + trayPK + "'";
-		getBaseDAO().executeUpdate(sql);
-	}
+	
+	
 }

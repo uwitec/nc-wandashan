@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilBO;
@@ -27,7 +26,6 @@ import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.CommonUnit;
@@ -102,56 +100,56 @@ public class W8004040204Impl implements Iw8004040204 {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @作者：zhf
-	 * @说明：完达山物流项目 根据出库流水信息表 更新 库存存量状态表
-	 * @时间：2011-4-7下午08:39:17
-	 * @param ltray
-	 * @throws Exception
-	 */
-	public  void updateWarehousestock(List<TbOutgeneralTVO> ltray) throws Exception {
-		// TODO Auto-generated method stub
-		if (null == ltray || ltray.size() == 0) {			
-			return;
-		}
-		UFDouble noutnum = WdsWlPubTool.DOUBLE_ZERO; // 实出数量
-		UFDouble noutassistnum = WdsWlPubTool.DOUBLE_ZERO; // 实出辅数量
-//		int len = ltray.size();
-//		int index = 0;
-		ArrayList linvhand = null;
-		for (TbOutgeneralTVO tray:ltray) {				
-			noutassistnum = tray.getNoutassistnum();
-			noutnum = tray.getNoutnum();				
-
-			//			if (index == len - 1) {
-			String sWhere = " isnull(dr,0) = 0 and whs_status = 0 and pplpt_pk = '"
-				+ tray.getCdt_pk()
-				+ "' and pk_invbasdoc = '"
-				+ tray.getPk_invbasdoc() + "' and whs_batchcode = '"+tray.getVbatchcode()+"'";
-			// 操作数据库得到结果集
-			linvhand = (ArrayList) getIuap()
-			.retrieveByClause(StockInvOnHandVO.class, sWhere);
-			// 判断结果集是否为空
-			//				if (null != linvhand && generaltList.size() > 0) {
-			if(linvhand == null || linvhand.size() == 0)
-				return;
-
-			StockInvOnHandVO item = (StockInvOnHandVO) linvhand.get(0);
-			UFDouble nhandnum = PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage());
-			UFDouble nhandassnum = PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces());
-			if (noutassistnum.equals(nhandassnum)							
-					&& noutnum.equals(nhandnum)){
-				item.setWhs_status(1);
-				updateBdcargdocTray(item.getPplpt_pk());//将托盘状态更新为  空盘  
-			}
-			item.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
-			item.setWhs_stocktonnage(nhandnum.sub(noutnum));
-			item.setStatus(VOStatus.UPDATED);
-			this.updateWarehousestock(item);
-		}
-
-	}
+//	/**
+//	 * 
+//	 * @作者：zhf
+//	 * @说明：完达山物流项目 根据出库流水信息表 更新 库存存量状态表
+//	 * @时间：2011-4-7下午08:39:17
+//	 * @param ltray
+//	 * @throws Exception
+//	 */
+//	public  void updateWarehousestock(List<TbOutgeneralTVO> ltray) throws Exception {
+//		// TODO Auto-generated method stub
+//		if (null == ltray || ltray.size() == 0) {			
+//			return;
+//		}
+//		UFDouble noutnum = WdsWlPubTool.DOUBLE_ZERO; // 实出数量
+//		UFDouble noutassistnum = WdsWlPubTool.DOUBLE_ZERO; // 实出辅数量
+////		int len = ltray.size();
+////		int index = 0;
+//		ArrayList linvhand = null;
+//		for (TbOutgeneralTVO tray:ltray) {				
+//			noutassistnum = tray.getNoutassistnum();
+//			noutnum = tray.getNoutnum();				
+//
+//			//			if (index == len - 1) {
+//			String sWhere = " isnull(dr,0) = 0 and whs_status = 0 and pplpt_pk = '"
+//				+ tray.getCdt_pk()
+//				+ "' and pk_invbasdoc = '"
+//				+ tray.getPk_invbasdoc() + "' and whs_batchcode = '"+tray.getVbatchcode()+"'";
+//			// 操作数据库得到结果集
+//			linvhand = (ArrayList) getIuap()
+//			.retrieveByClause(StockInvOnHandVO.class, sWhere);
+//			// 判断结果集是否为空
+//			//				if (null != linvhand && generaltList.size() > 0) {
+//			if(linvhand == null || linvhand.size() == 0)
+//				return;
+//
+//			StockInvOnHandVO item = (StockInvOnHandVO) linvhand.get(0);
+//			UFDouble nhandnum = PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage());
+//			UFDouble nhandassnum = PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces());
+//			if (noutassistnum.equals(nhandassnum)							
+//					&& noutnum.equals(nhandnum)){
+//				item.setWhs_status(1);
+//				updateBdcargdocTray(item.getPplpt_pk());//将托盘状态更新为  空盘  
+//			}
+//			item.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
+//			item.setWhs_stocktonnage(nhandnum.sub(noutnum));
+//			item.setStatus(VOStatus.UPDATED);
+//			this.updateWarehousestock(item);
+//		}
+//
+//	}
 
 	/**
 	 * 更新库存表

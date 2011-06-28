@@ -2,10 +2,8 @@ package nc.bo.other.out;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.bs.pub.SuperDMO;
 import nc.bs.trade.business.HYPubBO;
-import nc.bs.wds.w8004040204.W8004040204Impl;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.SQLParameter;
 import nc.vo.dm.confirm.TbFydmxnewVO;
@@ -14,6 +12,7 @@ import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDouble;
@@ -76,7 +75,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				String wheresql = " general_b_pk = '"+b.getPrimaryKey()+"' and isnull(dr,0)=0";
 				List<TbOutgeneralTVO> ltray = (List<TbOutgeneralTVO> )getOutBO().getBaseDAO().retrieveByClause(TbOutgeneralTVO.class, wheresql);
 				if(ltray!=null && ltray.size()>0)
-					getOutBO().deleteOtherInforOnDelBill(ltray);
+					getOutBO().deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
 			}
 		}
 		//保存后  回写数据来源
@@ -95,16 +94,14 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 			//插入托盘信息流水表
 			insertTrayInfor(newBillVo, old_billVo);
 			//更新库存存量状态表
-			W8004040204Impl handbo = new W8004040204Impl();
 			try {
 				TbOutgeneralBVO[] newbodys = (TbOutgeneralBVO[])newBillVo.getChildrenVO();
+				List<TbOutgeneralTVO> ltray = new ArrayList<TbOutgeneralTVO>();
 				for(TbOutgeneralBVO newbody:newbodys){
-					handbo.updateWarehousestock(newbody.getTrayInfor());
+					ltray.addAll(newbody.getTrayInfor());
 				}
-//				//生成发运单
-//				if(PuPubVO.getUFBoolean_NullAs(((TbOutgeneralHVO)newBillVo.getParentVO()).getIs_yundan(), UFBoolean.FALSE).booleanValue()){
-//					insertFyd(newBillVo);
-//				}
+				if(ltray.size()>0)
+					getOutBO().updateStockOnSaveBill(head.getPk_corp(),head.getSrl_pk(),ltray);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				if(e instanceof BusinessException){
@@ -113,9 +110,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				throw new BusinessException(e);
 			}		
 		}
-			
-
-	
+		
 		return retAry;
 	}
 	
@@ -282,7 +277,10 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 	private void checkTrayUsed(TbOutgeneralBVO[] bodys) throws BusinessException{
 		String sql ="select cdt_traycode from bd_cargdoc_tray  " +
 				" join tb_warehousestock on tb_warehousestock.pplpt_pk = bd_cargdoc_tray.cdt_pk " +
-				" where bd_cargdoc_tray.cdt_pk=? and tb_warehousestock.whs_pk=? and (bd_cargdoc_tray.cdt_traystatus=0 or  coalesce(tb_warehousestock.whs_stocktonnage,0)<? and tb_warehousestock.whs_stocktonnage>0)";
+				" where bd_cargdoc_tray.cdt_pk=? and tb_warehousestock.whs_pk=? " +
+				" and (bd_cargdoc_tray.cdt_traystatus="+StockInvOnHandVO.stock_state_null+" or  " +
+				" coalesce(tb_warehousestock.whs_stocktonnage,0)<? " +
+				" and tb_warehousestock.whs_stocktonnage>0)";
 		SQLParameter para = new SQLParameter();
 		for(TbOutgeneralBVO bvo:bodys){
 			List<TbOutgeneralTVO> tray = bvo.getTrayInfor();

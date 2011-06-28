@@ -41,7 +41,7 @@ public class IcInPubBO {
 	private StockInvOnHandBO stockBO = null;
 	private StockInvOnHandBO getStockBO(){
 		if(stockBO == null)
-			stockBO = new StockInvOnHandBO();
+			stockBO = new StockInvOnHandBO(getDao());
 		return stockBO;
 	}
 	
@@ -125,7 +125,7 @@ public class IcInPubBO {
 		}
 		if(linvInfor.size()>0){		
 			try {
-				getStockBO().inserStockInv(linvInfor);
+				getStockBO().inserStockForIn(linvInfor);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -349,7 +349,7 @@ public class IcInPubBO {
 //		调整托盘状态  如果是总仓实际托盘  状态调整为 未占用    虚拟托盘 和 分仓托盘  状态 不进行维护
 		if(ltray!=null && ltray.size()>0){
 			try {
-				getStockBO().updateWarehousestockOnDel(ltray);
+				getStockBO().updateStockOnDelForIn(ltray);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
