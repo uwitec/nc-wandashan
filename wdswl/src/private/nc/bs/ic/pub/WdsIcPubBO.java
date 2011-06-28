@@ -132,8 +132,8 @@ public class WdsIcPubBO {
 	 */
 	private List<TbGeneralBBVO> shareNumToTrays(String[] tmpTrays, TbGeneralBVO body,
 			int iVolumn,boolean iszc) {
-		UFDouble geb_bsnumd = PuPubVO.getUFDouble_NullAsZero(body.getGeb_bsnum());
-		//				WdsWlPubTool.INTEGER_ZERO_VALUE);
+		//当前表体要入到托盘的 辅数量  将该辅数量分摊到一个或多个托盘上  
+		UFDouble geb_bsnumd = PuPubVO.getUFDouble_NullAsZero(body.getGeb_bsnum());	    
 		int k = 0;
 		ArrayList<TbGeneralBBVO> lbbvos = new ArrayList<TbGeneralBBVO>();
 		TbGeneralBBVO tbgbbvo = null;
@@ -237,18 +237,22 @@ public class WdsIcPubBO {
 	throws BusinessException {
 		if (bodys == null || bodys.length == 0)
 			throw new BusinessException("传入表体数据为空");
-
-		Map<String, Integer> retInfor = new HashMap<String, Integer>();//<行号，不能够指定托盘的具体原因>
-		Map<String,List<TbGeneralBBVO>> trayInfor= new HashMap<String,List<TbGeneralBBVO>>();//<行号，托盘>
-		usedTary = new ArrayList<String>();//当前已经表体存货提前占有的托盘id
+//<行号，不能够指定托盘的具体原因>
+		Map<String, Integer> retInfor = new HashMap<String, Integer>();		
+//<行号，托盘>
+		Map<String,List<TbGeneralBBVO>> trayInfor= new HashMap<String,List<TbGeneralBBVO>>();
+//当前已经表体存货提前占有的托盘id
+		usedTary = new ArrayList<String>();
 		List<TbGeneralBBVO> ltray = null;
-		String[] tmpTrays = null;//能放指定存货的本货位内的所有的托盘id
-		int iVolumn = 0;//一个托盘可用放多少货品
-		int iAllVolumn = 0;//托盘剩余可容纳货品总量
+//能放指定存货的本货位内的所有的托盘id
+		String[] tmpTrays = null;
+//托盘容量
+		int iVolumn = 0;
+//当前货位下空托盘数*托盘容量
+		int iAllVolumn = 0;
 		boolean iszc = WdsWlPubTool.isZc(cwhid);
-//		 WdsWlPubBO wlbo = new WdsWlPubBO();
 		if (!iszc) {
-			//总仓分托盘存放，分仓只有一个虚拟托盘
+//总仓分托盘存放，分仓只有一个虚拟托盘
 			String sql = "select count(0) from bd_cargdoc_tray where  isnull(dr,0)=0 and pk_cargdoc = '"
 				+ cspaceid + "'";
 			int index = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql,
@@ -260,7 +264,7 @@ public class WdsIcPubBO {
 			if(fcTaryId == null){
 				throw new ValidationException("分仓没有虚拟托盘");
 			}
-			iVolumn=1000000000;
+			iVolumn=WdsWlPubConst.XN_CARGDOC_TRAY_VO;
 			for (TbGeneralBVO body : bodys) {
 				ltray = new ArrayList<TbGeneralBBVO>();
 				ltray.addAll(shareNumToTrays(new String[]{fcTaryId}, body, iVolumn, iszc));
@@ -271,27 +275,25 @@ public class WdsIcPubBO {
 				String notIn = " and cdt_pk not in"+getTempTableUtil().getSubSql(usedTary)
 				+" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'";
 				String oldCdt= getOldCdt(body);
-				// 获取满足条件的托盘信息
-				tmpTrays = getWdsWLBO().getTrayInfor(cspaceid, body
-						.getGeb_cinvbasid(),notIn,oldCdt);
+// 获取满足条件的托盘信息
+				tmpTrays = getWdsWLBO().getTrayInfor(cspaceid, body.getGeb_cinvbasid(),notIn,oldCdt);
 				if (tmpTrays == null || tmpTrays.length == 0) {
-					retInfor.put(body.getGeb_crowno(), 0);// 没有闲置的托盘了------------------------
+// 没有闲置的托盘了
+					retInfor.put(body.getGeb_crowno(), 0);
 					continue;
 				}
-	
-				iVolumn = getWdsWLBO().getTrayVolumeByInvbasid(body
-						.getGeb_cinvbasid());				
-				
-				iAllVolumn = iVolumn * tmpTrays.length;// 总容积
-				// 判断 总容积不能小于 当前物品的应收辅数量
-				UFDouble nRes = body.getGeb_bsnum().sub(
-						PuPubVO.getUFDouble_NullAsZero(iAllVolumn));
-
+//从存货档案中获取托盘存放容量	
+				iVolumn = getWdsWLBO().getTrayVolumeByInvbasid(body.getGeb_cinvbasid());				
+//计算当前货位下存放该单品的托盘总容量				
+				iAllVolumn = iVolumn * tmpTrays.length;
+//总容积 a 与 当前物品的应收辅数量比较b
+// 如果	a>b 则能够存放该单品
+// 如果   a<b 则不够存放该单品												
+				UFDouble nRes = body.getGeb_bsnum().sub(PuPubVO.getUFDouble_NullAsZero(iAllVolumn));
 				if(trayInfor.containsKey(body.getGeb_crowno())){
 					ltray = trayInfor.get(body.getGeb_crowno());
 				}else
 					ltray = new ArrayList<TbGeneralBBVO>();
-
 				if (nRes.doubleValue() > 0) {
 					retInfor.put(body.getGeb_crowno(), 1);// 要放的货物超出当前货位下可存放该存货的托盘承受量----------------
 					continue;
