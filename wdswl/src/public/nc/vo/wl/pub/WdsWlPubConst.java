@@ -120,6 +120,8 @@ public class WdsWlPubConst {
 	public static String IC_INV_SALE_ALERT_DAYNO = "def16";//存货销售警戒天数字段
 	/**虚拟托盘 开头命名方式*/
 	public static String XN_CARGDOC_TRAY_NAME="XN";
+	/**虚拟托盘 默认存货的容量*/
+	public static Integer XN_CARGDOC_TRAY_VO=100000000;
 	
 	/**默认回写ERP的批次*/
 	public static String ERP_BANCHCODE="2009";
