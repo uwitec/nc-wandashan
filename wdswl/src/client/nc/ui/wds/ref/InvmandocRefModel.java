@@ -83,7 +83,7 @@ public class InvmandocRefModel extends AbstractRefModel {
 	@Override
 	public String getWherePart() {
 		StringBuffer strWhere = new StringBuffer();
-		strWhere.append(" isnull(wds_invbasdoc.dr,0)=0 ");
+		strWhere.append(" isnull(wds_invbasdoc.dr,0)=0 and isnull(bd_invbasdoc.dr,0)=0");
 
 		return strWhere.toString();
 	}

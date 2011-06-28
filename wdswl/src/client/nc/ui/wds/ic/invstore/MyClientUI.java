@@ -77,7 +77,7 @@ import nc.vo.wl.pub.LoginInforVO;
 			if(jc instanceof UIRefPane){
 				UIRefPane ref =(UIRefPane)jc;
 				ref.getRefModel().addWherePart(" and wds_invbasdoc.pk_invmandoc not in ( select pk_invmandoc from tb_spacegoods " +
-						" where isnull(dr,0)=0 and pk_storedoc ='"+pk_stordoc+"')");
+						" where isnull(dr,0)=0 and pk_storedoc ='"+pk_stordoc+" ' and pk_invmandoc is not null)");
 			}
 		}
 		return super.beforeEdit(e);
