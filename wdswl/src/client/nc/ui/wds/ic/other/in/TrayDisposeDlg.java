@@ -36,6 +36,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * @author zpm
@@ -155,21 +156,6 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			getbillListPanel().getBodyBillModel().setBodyRowVO(bbvo, row);
 			getbillListPanel().getBodyBillModel().execLoadFormula();
 			CircularlyAccessibleValueObject[] bvos = getbillListPanel().getBodyBillModel().getBodyValueVOs(TbGeneralBBVO.class.getName());
-			for (int o = 0; o < bvos.length; o++) {// spf add for wds
-				String st = (String) bvos[o].getAttributeValue("cdt_pk");
-				try {
-					st = (String) HYPubBO_Client.findColValue(
-							"bd_cargdoc_tray", "cdt_traycode", "cdt_pk = '"
-									+ st + "'");
-				} catch (UifException e1) {
-					e1.printStackTrace();
-				}
-				if ((st).toUpperCase().contains("XN")) {
-					getbillListPanel().getBodyBillModel().execLoadFormula();
-					getbillListPanel().getBodyBillModel().setValueAt(
-							"100000000", o, "traymax");
-				}
-			}
 		}
 	}
 
@@ -237,14 +223,31 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			return ;
 		}	
 		for(int i=0;i<length;i++){
-			Object trayName= getbillListPanel().getBodyBillModel().getValueAt(i, "trayname");
-			if(trayName!=null){
-				String s=(String)(trayName);
-				if(s.substring(0, 2).equalsIgnoreCase("XN")){
-					getbillListPanel().getBodyBillModel().setValueAt(100000000, i, "traymax");
-				}				
-			}			
+			Object trayName= getbillListPanel().getBodyBillModel().getValueAt(i, "trayname");		
+			//界面设置虚拟托盘容量		
+			setXNNum(trayName,i);			
 		}
+	}
+
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：设置虚拟托盘容量
+	 * @时间：2011-4-7下午02:28:26
+	 * @param newBillVo  保存后的 库存单据vo
+	 * @param oldBillVo  保存前库存单据vo
+	 * @throws BusinessException
+	 */
+	private void setXNNum(Object trayName,int i) {
+		if(trayName!=null && trayName instanceof String ){
+			String s=(String)trayName;
+			if(s.length()<WdsWlPubConst.XN_CARGDOC_TRAY_NAME.length()){
+				return;
+			}
+			if(s.substring(0,WdsWlPubConst.XN_CARGDOC_TRAY_NAME.length()).equalsIgnoreCase(WdsWlPubConst.XN_CARGDOC_TRAY_NAME)){
+				getbillListPanel().getBodyBillModel().setValueAt(WdsWlPubConst.XN_CARGDOC_TRAY_VO, i, "traymax");
+			}			
+		}	
 	}
 
 	// 删行
@@ -549,9 +552,9 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		if ("trayname".equalsIgnoreCase(key)) {
 			String value = e.getValue() == null ? "" : e.getValue().toString();
-			if (value.toUpperCase().contains("XN")) {
-				getbillListPanel().getBodyBillModel().setValueAt(100000000,
-						row, "traymax");
+					
+			if (value.toUpperCase().startsWith(WdsWlPubConst.XN_CARGDOC_TRAY_NAME)) {
+				setXNNum(value, row);
 			} else {
 				getbillListPanel().getBodyBillModel().execLoadFormulaByKey(
 						"pk_invmandoc");
@@ -591,22 +594,11 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				getbillListPanel().getBodyBillModel().execLoadFormula();
 				//更改虚拟托盘的最大容量
 				TbGeneralBBVO [] bos=list.toArray(new TbGeneralBBVO[0]);
-				for(int i=0;i<bos.length;i++){
-				    
+				for(int i=0;i<bos.length;i++){		    
 					Object trayName= getbillListPanel().getBodyBillModel().getValueAt(i, "trayname");
-					if(trayName!=null){
-						String s=(String)(trayName);
-						if(s.substring(0, 2).equalsIgnoreCase("XN")){
-							getbillListPanel().getBodyBillModel().setValueAt(100000000, i, "traymax");
-						}
-						
-					}
-					
-				}
-				
-				
-			}
-			
+					setXNNum(trayName,i);
+				}				
+			}			
 		}
 	}
 
