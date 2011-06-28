@@ -38,6 +38,7 @@ public class CargeTaryRefModel extends AbstractRefModel {
 			"tb_warehousestock.whs_lbatchcode",
 			"tb_warehousestock.pk_invmandoc",
 			"tb_warehousestock.pk_invbasdoc",
+			"tb_warehousestock.whs_pk",//zhf add  库存状态表ID
 			"bd_cargdoc_tray.cdt_pk",
     	};
     }
@@ -55,6 +56,7 @@ public class CargeTaryRefModel extends AbstractRefModel {
 			"库存主数量",
 			"库存辅数量",
 			"批次号",
+			"库存状态ID",
 			"来源批次号"
     	};
     }

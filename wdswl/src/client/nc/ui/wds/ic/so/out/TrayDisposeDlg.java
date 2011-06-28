@@ -404,7 +404,9 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				//编辑后事件，从托盘参照中取批次号，给表体赋值
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbatchcode");	
 				//编辑后事件，从托盘参照中取来源批次号，给表体赋值
-				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");	
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");
+//				库存状态表ID
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_pk"), row, "whs_pk");
 				
 			}
 		}else if("noutassistnum".equalsIgnoreCase(e.getKey())){

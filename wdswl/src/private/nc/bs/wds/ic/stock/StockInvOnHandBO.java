@@ -170,6 +170,8 @@ public class StockInvOnHandBO {
 			stocks = getStockInvDatas(corp, warehousid, tray.getPk_cargdoc(), tray.getCdt_pk(), tray.getPk_invbasdoc(), tray.getVbatchcode());
 			if(stocks == null || stocks.length == 0)
 				throw new BusinessException("存量不足");
+			if(stocks.length>1)
+				throw new BusinessException("数据异常");
 
 			StockInvOnHandVO stock = stocks[0];
 			UFDouble nhandnum = PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stocktonnage());

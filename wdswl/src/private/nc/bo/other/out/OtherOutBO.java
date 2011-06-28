@@ -362,18 +362,22 @@ public class OtherOutBO {
 		if(ltray == null || ltray.size() == 0)
 			return;
 		ArrayList<String> lid = new ArrayList<String>();
+		ArrayList<String> lwhsid = new ArrayList<String>();
 		for(TbOutgeneralTVO tray:ltray){
 			if(!lid.contains(tray.getCdt_pk()))
 				lid.add(tray.getCdt_pk());
+			if(!lwhsid.contains(tray.getWhs_pk()))
+				lwhsid.add(tray.getWhs_pk());
 		}
 		if(lid.size() == 0)
 			throw new BusinessException("数据异常");
 		
 		String sql = "select count(0) from tb_warehousestock  stock inner join bd_cargdoc_tray tray " +
 				" on stock.pplpt_pk = tray.cdt_pk " +
-				" where stock.pplpt_pk in '"+getTempTableUtil().getSubSql(lid)+"' and isnull(stock.dr,0)=0 and isnull(tray.dr,0) = 0" +
+				" where stock.pplpt_pk in "+getTempTableUtil().getSubSql(lid)+" and isnull(stock.dr,0)=0 and isnull(tray.dr,0) = 0" +
 						" and tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
-								" and tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_use;
+								" and tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_use+
+								" and stock.whs_pk not in "+getTempTableUtil().getSubSql(lwhsid);
 	   int iv = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
 	   if(iv>0)
 		   throw new BusinessException("存在托盘已被占用无法作废当前单据");
