@@ -9,7 +9,9 @@ import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
+import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.util.SQLHelper;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
@@ -66,7 +68,9 @@ public class IcInPubBO {
 				tmpInvVO.setPplpt_pk(tray.getCdt_pk());
 				if(!lTrayID.contains(tray.getCdt_pk())){
 					lTrayID.add(tray.getCdt_pk());
-				}
+				}				
+				//仓库
+				tmpInvVO.setPk_customize1(getStroreByCargdoc(cargdocPK));
 				// 存货档案主键
 				tmpInvVO.setPk_invbasdoc(tray.getPk_invbasdoc());
 				tmpInvVO.setPk_invmandoc(tray.getPk_invmandoc());
@@ -119,7 +123,25 @@ public class IcInPubBO {
 			updateTrayState(1, lTrayID);
 		}
 	}
-	
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：通过货位得到仓库信息
+	 * @时间：2011-4-8下午06:52:43
+	 * @param newBillVo 要操作的单据数据
+	 * @param iBdAction 操作状态
+	 * @param isNew  是否新增保存
+	 * @throws Exception
+	 */
+	private String getStroreByCargdoc(String cargdoc) throws DAOException{
+		
+		String sql=" select pk_stordoc from wds_cargdoc c where c.pk_cargdoc='"+cargdoc+"' and isnull(c.dr,0)=0";
+		Object pk_storedoc=getDao().executeQuery(sql,new  ColumnProcessor());
+		if(pk_storedoc !=null && !pk_storedoc.equals("") ){
+			return (String)pk_storedoc;
+		}
+		return null;
+	}
 	/**
 	 * 
 	 * @作者：mlr
