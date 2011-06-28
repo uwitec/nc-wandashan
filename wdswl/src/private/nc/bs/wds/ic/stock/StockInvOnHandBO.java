@@ -13,6 +13,14 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
+/**
+ * 
+ * @作者：zhf
+ * @说明  现存量的业务操作类
+ * @时间：2011-6-28下午04:20:27
+
+ * @throws BusinessException
+ */
 
 public class StockInvOnHandBO {
 	
