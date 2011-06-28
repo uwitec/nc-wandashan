@@ -174,6 +174,7 @@ public class WdsWlPubBO {
 		String key = cspaceid+cinvbasid;
 		String[] trays = null;
 		List ldata = null;
+		//<货位和存货id,满足条件的托盘的主键>
 		java.util.Map<String,String[]> trayInfor = new HashMap<String, String[]>();
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select cdt_pk from bd_cargdoc_tray ");//托盘档案
