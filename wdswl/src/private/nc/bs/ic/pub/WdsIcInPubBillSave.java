@@ -19,6 +19,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.wl.pub.VOTool;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public class WdsIcInPubBillSave extends BillSave {
 	
@@ -282,7 +283,7 @@ public class WdsIcInPubBillSave extends BillSave {
 				String cdp_pk =tray.get(i).getCdt_pk();
 				para.addParam(cdp_pk);
 				Object o =getOutBO().getDao().executeQuery(sql, para, WdsPubResulSetProcesser.COLUMNPROCESSOR);
-				if(o!=null && ! (((String)o).substring(0,2)).equalsIgnoreCase("XN")){
+				if(o!=null && ! (((String)o).substring(0,2)).equalsIgnoreCase(WdsWlPubConst.XN_CARGDOC_TRAY_NAME)){
 					throw new BusinessException("第"+(i+1)+"行，指定的托盘:"+o.toString()+"\n已被抢先使用，请重新指定");
 				}
 				para.clearParams();
