@@ -3,24 +3,18 @@ package nc.bo.other.out;
 import java.util.ArrayList;
 import java.util.List;
 import nc.bs.pub.SuperDMO;
-import nc.bs.trade.business.HYPubBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.SQLParameter;
-import nc.vo.dm.confirm.TbFydmxnewVO;
-import nc.vo.dm.confirm.TbFydnewVO;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.HYBillVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wl.pub.VOTool;
-import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
@@ -116,107 +110,107 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 	
 	
 	
-	/**
-	 * 
-	 * @作者：zhf
-	 * @说明：完达山物流项目 
-	 * @时间：2011-4-7下午04:57:17
-	 * @param arg1
-	 * @param sLogUser
-	 * @param uLogDate
-	 * @param sLogCorp	 * @param itype 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-	 * @throws Exception
-	 */
-	public void insertFyd(AggregatedValueObject arg1) throws Exception {
-		if(arg1 == null)
-			return;
-		MyBillVO billVo = (MyBillVO)arg1;
-		TbOutgeneralHVO generalh =(TbOutgeneralHVO) arg1.getParentVO();
-		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[])arg1.getChildrenVO();
-		Object[] o = new Object[3];
-		o[0] = false;
-		TbFydnewVO fydvo = new TbFydnewVO();
-		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
-		HYPubBO hybo = new HYPubBO();
-
-		// 进行VO转换/////////////////////////////////////////////
-
-		// ------------转换表头对象-----------------//
-		
-		if (null != generalh && null != generalb && generalb.length > 0) {
-			if (null != generalh.getVdiliveraddress()
-					&& !"".equals(generalh.getVdiliveraddress())) {
-				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
-			}
-			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
-				fydvo.setFyd_bz(generalh.getVnote()); // 备注
-			}
-			if (null != generalh.getCdptid()
-					&& !"".equals(generalh.getCdptid())) {
-				fydvo.setCdeptid(generalh.getCdptid()); // 部门
-			}
-			// 设置运货方式
-			fydvo.setFyd_yhfs("汽运");
-			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-			fydvo.setBilltype(billVo.getItype());
-			fydvo.setVbillstatus(1);
-			// 单据号----------------------------------------------------------------
-			fydvo.setVbillno(hybo.getBillNo(WdsWlPubConst.BILLTYPE_SEND_CONFIRM, billVo.getSLogCorp(), null, null));
-			// 制单日期
-			fydvo.setDmakedate(billVo.getULogDate());
-			fydvo.setVoperatorid(billVo.getSLogUser()); // 设置制单人
-			// 设置发货站
-			fydvo.setSrl_pk(generalh.getSrl_pk());
-			// 到货站
-			fydvo.setSrl_pkr(generalh.getSrl_pkr());
-			// --------------转换表头结束---------------//
-			// --------------转换表体----------------//
-			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
-			for (int j = 0; j < generalb.length; j++) {
-				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
-				TbOutgeneralBVO genb = generalb[j];
-				if (null != genb.getCinventoryid()
-						&& !"".equals(genb.getCinventoryid())) {
-					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
-				}
-				if (null != genb.getNshouldoutnum()
-						&& !"".equals(genb.getNshouldoutnum())) {
-					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
-				}
-				if (null != genb.getNshouldoutassistnum()
-						&& !"".equals(genb.getNshouldoutassistnum())) {
-					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
-				}
-				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
-					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
-				}
-				if (null != genb.getNoutassistnum()
-						&& !"".equals(genb.getNoutassistnum())) {
-					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
-				}
-				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
-					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
-				}
-				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
-					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
-				}
-				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次		
-				fydmxnewvo.setVsourcebillcode(WdsWlPubConst.BILLTYPE_OTHER_OUT);
-				fydmxnewvo.setCsourcebillbid(genb.getGeneral_b_pk());
-				fydmxnewvo.setCsourcebillhid(genb.getGeneral_pk());
-				tbfydmxList.add(fydmxnewvo);
-			}
-			// ----------------转换表体结束---------------------//
-				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
-				tbfydmxList.toArray(fydmxVO);
-				fydmxList.add(fydmxVO);
-				o[0] = true;
-		HYBillVO newBillVo = new HYBillVO();
-		newBillVo.setParentVO(fydvo);
-		newBillVo.setChildrenVO(fydmxVO);
-		saveBD(newBillVo, null);
-	}
-	}
+//	/**
+//	 * 
+//	 * @作者：zhf
+//	 * @说明：完达山物流项目 
+//	 * @时间：2011-4-7下午04:57:17
+//	 * @param arg1
+//	 * @param sLogUser
+//	 * @param uLogDate
+//	 * @param sLogCorp	 * @param itype 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
+//	 * @throws Exception
+//	 */
+//	public void insertFyd(AggregatedValueObject arg1) throws Exception {
+//		if(arg1 == null)
+//			return;
+//		MyBillVO billVo = (MyBillVO)arg1;
+//		TbOutgeneralHVO generalh =(TbOutgeneralHVO) arg1.getParentVO();
+//		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[])arg1.getChildrenVO();
+//		Object[] o = new Object[3];
+//		o[0] = false;
+//		TbFydnewVO fydvo = new TbFydnewVO();
+//		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
+//		HYPubBO hybo = new HYPubBO();
+//
+//		// 进行VO转换/////////////////////////////////////////////
+//
+//		// ------------转换表头对象-----------------//
+//		
+//		if (null != generalh && null != generalb && generalb.length > 0) {
+//			if (null != generalh.getVdiliveraddress()
+//					&& !"".equals(generalh.getVdiliveraddress())) {
+//				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
+//			}
+//			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
+//				fydvo.setFyd_bz(generalh.getVnote()); // 备注
+//			}
+//			if (null != generalh.getCdptid()
+//					&& !"".equals(generalh.getCdptid())) {
+//				fydvo.setCdeptid(generalh.getCdptid()); // 部门
+//			}
+//			// 设置运货方式
+//			fydvo.setFyd_yhfs("汽运");
+//			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
+//			fydvo.setBilltype(billVo.getItype());
+//			fydvo.setVbillstatus(1);
+//			// 单据号----------------------------------------------------------------
+//			fydvo.setVbillno(hybo.getBillNo(WdsWlPubConst.BILLTYPE_SEND_CONFIRM, billVo.getSLogCorp(), null, null));
+//			// 制单日期
+//			fydvo.setDmakedate(billVo.getULogDate());
+//			fydvo.setVoperatorid(billVo.getSLogUser()); // 设置制单人
+//			// 设置发货站
+//			fydvo.setSrl_pk(generalh.getSrl_pk());
+//			// 到货站
+//			fydvo.setSrl_pkr(generalh.getSrl_pkr());
+//			// --------------转换表头结束---------------//
+//			// --------------转换表体----------------//
+//			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
+//			for (int j = 0; j < generalb.length; j++) {
+//				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
+//				TbOutgeneralBVO genb = generalb[j];
+//				if (null != genb.getCinventoryid()
+//						&& !"".equals(genb.getCinventoryid())) {
+//					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
+//				}
+//				if (null != genb.getNshouldoutnum()
+//						&& !"".equals(genb.getNshouldoutnum())) {
+//					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
+//				}
+//				if (null != genb.getNshouldoutassistnum()
+//						&& !"".equals(genb.getNshouldoutassistnum())) {
+//					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
+//				}
+//				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
+//					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
+//				}
+//				if (null != genb.getNoutassistnum()
+//						&& !"".equals(genb.getNoutassistnum())) {
+//					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
+//				}
+//				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
+//					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
+//				}
+//				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
+//					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
+//				}
+//				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次		
+//				fydmxnewvo.setVsourcebillcode(WdsWlPubConst.BILLTYPE_OTHER_OUT);
+//				fydmxnewvo.setCsourcebillbid(genb.getGeneral_b_pk());
+//				fydmxnewvo.setCsourcebillhid(genb.getGeneral_pk());
+//				tbfydmxList.add(fydmxnewvo);
+//			}
+//			// ----------------转换表体结束---------------------//
+//				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
+//				tbfydmxList.toArray(fydmxVO);
+//				fydmxList.add(fydmxVO);
+//				o[0] = true;
+//		HYBillVO newBillVo = new HYBillVO();
+//		newBillVo.setParentVO(fydvo);
+//		newBillVo.setChildrenVO(fydmxVO);
+//		saveBD(newBillVo, null);
+//	}
+//	}
 	
 	/**
 	 * 
