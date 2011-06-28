@@ -119,6 +119,10 @@ public class StockInvOnHandVO extends SuperVO {
 //	public static final String PK_HEADSOURCE = "pk_headsource";
 //	public static final String OPERATETIME = "operatetime";
 //	public static final String PK_CUSTOMIZE5 = "pk_customize5";
+//	托盘状态
+	public static int stock_state_use = 1;//占用
+	public static int stock_state_null = 0;//空
+	public static int stock_state_lock = 2;//锁定
 
 	/**
 	 * 属性pk_customize4的Getter方法.
