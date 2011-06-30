@@ -220,7 +220,7 @@ public class TranPriceAccount {
 	 * @时间：2011-5-20下午01:22:14
 	 */
 	void setNcolmny() throws BusinessException {
-		SoorderVO head = (SoorderVO) curBillvo.getParentVO();
+		SendorderVO head = (SendorderVO) curBillvo.getParentVO();
 		UFDouble nnum = null;
 		UFDouble ngls = null;
 		UFDouble nprice = null;
@@ -628,20 +628,20 @@ public class TranPriceAccount {
 	 * @throws BusinessException
 	 */
 	protected String getFatherId(String reareaid) throws BusinessException {
-		String sql = "select pk_fatherarea,areaclname from  bd_areacl where pk_areacl = '"
+		String sql = "select pk_fatherarea from  bd_areacl where pk_areacl = '"
 				+ reareaid + "'";
 		ArrayList<Object> list = (ArrayList<Object>) getBaseDAO().executeQuery(
 				sql, WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
 		if (list != null && list.size() > 0) {
 			Object[] obj = (Object[]) list.get(0);
-			String areaclname = PuPubVO.getString_TrimZeroLenAsNull(obj[1]);
-			if (areaclname != null) {
-				if (areaclname.contains("省")) {
-					return null;
-				} else {
-					return PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
-				}
-			}
+			//String areaclname = PuPubVO.getString_TrimZeroLenAsNull(obj[1]);
+			//			if (areaclname != null) {
+			//				if (areaclname.contains("省")) {
+			//					return null;
+			//				} else {
+			return PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
+			//				}
+			//			}
 		}
 		return null;
 	}
