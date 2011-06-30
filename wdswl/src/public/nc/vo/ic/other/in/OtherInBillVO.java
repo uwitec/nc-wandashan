@@ -1,6 +1,5 @@
 package nc.vo.ic.other.in;
 
-import java.util.Arrays;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -22,7 +21,7 @@ public class  OtherInBillVO extends HYBillVO {
 	private static final long serialVersionUID = 1L;
 
 	public CircularlyAccessibleValueObject[] getChildrenVO() {
-		return (TbGeneralBVO[]) super.getChildrenVO();
+		return super.getChildrenVO();
 	}
 
 	public CircularlyAccessibleValueObject getParentVO() {
@@ -30,12 +29,13 @@ public class  OtherInBillVO extends HYBillVO {
 	}
 
 	public void setChildrenVO(CircularlyAccessibleValueObject[] children) {
-		if( children == null || children.length == 0 ){
-			super.setChildrenVO(null);
-		}
-		else{
-			super.setChildrenVO((CircularlyAccessibleValueObject[]) Arrays.asList(children).toArray(new TbGeneralBVO[0]));
-		}
+//		if( children == null || children.length == 0 ){
+//			super.setChildrenVO(null);
+//		}
+//		else{
+//			super.setChildrenVO((CircularlyAccessibleValueObject[]) Arrays.asList(children).toArray(new TbGeneralBVO[0]));
+//		}
+		super.setChildrenVO(children);
 	}
 
 	public void setParentVO(CircularlyAccessibleValueObject parent) {

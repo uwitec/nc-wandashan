@@ -233,6 +233,11 @@ public class WdsWlPubConst {
 //	public static String DLG_IN_TRAY_LOOK = "ITL";
 //	发运订单 ，销售运单 安排
 	public static String XNAP = "XNAP";
+	
+	
+//	zhd   为打印定义的单据模板
+//	调拨入库单 
+	public static String PRINT_BILL_TEMPLET = "0001S3100000000KPO7G";
 
 	
 	
