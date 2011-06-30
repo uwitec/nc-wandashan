@@ -1,26 +1,19 @@
 package nc.ui.wds.tranprice.tonkilometre;
-import nc.ui.pub.ButtonObject;
-import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
-import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
-import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wds.tranprice.pub.TranPricePubUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  *  吨公里运价表
  * @author Administrator
  * 
  */
-public class ClientUI extends BillManageUI implements BillCardBeforeEditListener{
+public class ClientUI extends TranPricePubUI{
 
 	private static final long serialVersionUID = -3998675844592858916L;
 	
@@ -50,58 +43,68 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}
+	
+	
 
-	@Override
-	protected void initSelfData() {
-		
-		ButtonObject btn = getButtonManager().getButton(IBillButton.Line);
-		if (btn != null) {
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.CopyLine));
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.PasteLine));
-			btn.removeChildButton(getButtonManager().getButton(
-					IBillButton.InsLine));
-		}
-	}
-	@Override
-	protected void initEventListener() {
-		
-		super.initEventListener();
-		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
-	}
+//	@Override
+//	protected void initSelfData() {
+//		
+//		ButtonObject btn = getButtonManager().getButton(IBillButton.Line);
+//		if (btn != null) {
+//			btn.removeChildButton(getButtonManager().getButton(
+//					IBillButton.CopyLine));
+//			btn.removeChildButton(getButtonManager().getButton(
+//					IBillButton.PasteLine));
+//			btn.removeChildButton(getButtonManager().getButton(
+//					IBillButton.InsLine));
+//		}
+//		
+////		初始当前登录人 角色
+//		LoginInforHelper login = new LoginInforHelper();
+//		try {
+//			m_loginInfor = login.getLogInfor(_getOperator());
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			m_loginInfor = null;
+//		}
+//	}
+//	@Override
+//	protected void initEventListener() {
+//		
+//		super.initEventListener();
+//		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
+//	}
 
-	@Override
-	public void setDefaultData() throws Exception {
-		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
-		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
-		getBillCardPanel().setTailItem("voperatorid", _getOperator());
-		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSI);
-		getBillCardPanel().setTailItem("dmakedate", _getDate());
-		getBillCardPanel().setHeadItem("dbilldate", _getDate());
-	}
+//	@Override
+//	public void setDefaultData() throws Exception {
+//		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
+//		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
+//		getBillCardPanel().setTailItem("voperatorid", _getOperator());
+//		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSI);
+//		getBillCardPanel().setTailItem("dmakedate", _getDate());
+//		getBillCardPanel().setHeadItem("dbilldate", _getDate());
+////		zhf add  初始化  默认 发货仓库 
+//		getBillCardPanel().setHeadItem("reserve1", m_loginInfor.getWhid());
+//	}
 
 	protected ManageEventHandler createEventHandler() {
 		return new ClientEventHandler(this, getUIControl());
 	}
 
-	// 单据号a
-	public String getBillNo() throws java.lang.Exception {
-		return HYPubBO_Client.getBillNo(getUIControl().getBillType(),
-				_getCorp().getPrimaryKey(), null, null);
-	}
-	public boolean beforeEdit(BillItemEvent e) {
-		String key=e.getItem().getKey();
-		return true;
-	}
 	
-	@Override
-	public boolean beforeEdit(BillEditEvent e) {
-		String key=e.getKey();
-		int row = e.getRow();
-		
-		return super.beforeEdit(e);		
-	}
+//	public boolean beforeEdit(BillItemEvent e) {
+////		String key=e.getItem().getKey();
+//		return true;
+//	}
+	
+//	@Override
+//	public boolean beforeEdit(BillEditEvent e) {
+//		String key=e.getKey();
+//		int row = e.getRow();
+//		
+//		return super.beforeEdit(e);		
+//	}
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		String key=e.getKey();
@@ -136,16 +139,16 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		super.afterEdit(e);
 	}
 
-	
-	public Object getUserObject() {
-		return null;
-	}
+//	
+//	public Object getUserObject() {
+//		return null;
+//	}
 
-	@Override
-	public boolean isSaveAndCommitTogether() {
-		
-		return true;
-	}
+//	@Override
+//	public boolean isSaveAndCommitTogether() {
+//		
+//		return true;
+//	}
     
 	
 	
