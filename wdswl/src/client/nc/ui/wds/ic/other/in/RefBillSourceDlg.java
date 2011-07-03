@@ -90,7 +90,7 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 			hsql.append("(");
 			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
 			//hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(nacceptnum,0)>0");//应入数量-转出数量>0
-			String sub = getTempTableUtil().getSubSql(inv_Pks);
+			String sub = getIvnSubSql(inv_Pks);
 			hsql.append(" and cinventoryid in"+sub);
 			hsql.append(")");
 		}else{
@@ -100,8 +100,25 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 		return hsql.toString();
 		//head.fbillflag=3 签字状态
 		}
-	
-	
+	/**
+	 * 
+	 * @作者：lyf---调用临时表出错
+	 * @说明：完达山物流项目 
+	 * @时间：2011-7-3上午09:43:58
+	 * @param inv_Pks
+	 * @return
+	 */
+	private String getIvnSubSql(String[] inv_Pks){
+		StringBuffer invSbuSql = new StringBuffer();
+		invSbuSql.append("('aa'");
+		if(inv_Pks != null && inv_Pks.length>0){
+			for(int i=0 ;i<inv_Pks.length;i++){
+				invSbuSql.append(",'"+inv_Pks[i]+"'");
+			}
+		}
+		invSbuSql.append(")");
+		return invSbuSql.toString();
+	}
 	@Override
 	public String getBodyCondition() {
 		String sub = getTempTableUtil().getSubSql(inv_Pks);
