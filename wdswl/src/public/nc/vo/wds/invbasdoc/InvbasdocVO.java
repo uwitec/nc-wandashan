@@ -55,10 +55,10 @@ import nc.vo.scm.pu.PuPubVO;
              public void validateOnSave() throws ValidationException{
             	 if(PuPubVO.getString_TrimZeroLenAsNull(pk_invbasdoc)==null)
             		 throw new ValidationException("存货不能为空");
-            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef1)==null)
-            		 throw new ValidationException("存货分类不能为空");
-            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef2)==null)
-            		 throw new ValidationException("存货分类编码不能为空");
+//            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef1)==null)
+//            		 throw new ValidationException("存货分类不能为空");
+//            	 if(PuPubVO.getString_TrimZeroLenAsNull(vdef2)==null)
+//            		 throw new ValidationException("存货分类编码不能为空");
              }
       
     
