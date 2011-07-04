@@ -28,6 +28,6 @@
   
   80080201		装卸费核算单        wds_loadprice_h和wds_loadprice_b1,		WDSF                nc.ui.wds.load.account.ClientUI
   								 wds_loadprice_b2
-  8008010210    吨公里运价表                                                     WDSI
-  8008010215    箱数运价表                                                        WDSJ
-  8008010216    特殊运价表                                                        WDSK
+  8008010210    吨公里运价表                   WDSI   wds_transprice_h和wds_transprice_b
+  8008010215    箱数运价表                        WDSJ   wds_specprice
+  8008010216    特殊运价表                         WDSK
