@@ -59,38 +59,6 @@ public class BdCargdocTrayVO extends SuperVO {
 	public String cdt_customize2;
 	public Integer cdt_outpriority;//出库优先级
 	public String pk_customize5;
-	
-	
-//	public static final String CDT_TRAYCODE="cdt_traycode";
-//	public static final String PK_CUSTOMIZE4 = "pk_customize4";
-//	public static final String PK_CUSTOMIZE3 = "pk_customize3";
-//	public static final String CDT_CUSTOMIZE1 = "cdt_customize1";
-//	public static final String PK_CARGDOC = "pk_cargdoc";
-//	public static final String DR = "dr";
-//	public static final String CDT_CUSTOMIZE4 = "cdt_customize4";
-//	public static final String CDT_TRAYNO = "cdt_trayno";
-//	public static final String PK_CUSTOMIZE9 = "pk_customize9";
-//	public static final String PK_CUSTOMIZE6 = "pk_customize6";
-//	public static final String CDT_CUSTOMIZE7 = "cdt_customize7";
-//	public static final String CDT_CUSTOMIZE8 = "cdt_customize8";
-//	public static final String PK_CUSTOMIZE1 = "pk_customize1";
-//	public static final String TS = "ts";
-//	public static final String CDT_CUSTOMIZE9 = "cdt_customize9";
-//	public static final String CDT_CUSTOMIZE6 = "cdt_customize6";
-//	public static final String SEALFLAG = "sealflag";
-//	public static final String CDT_INPRIORITY = "cdt_inpriority";
-//	public static final String CDT_CUSTOMIZE5 = "cdt_customize5";
-//	public static final String CDT_PK = "cdt_pk";
-//	public static final String CDT_TRAYSTATUS = "cdt_traystatus";
-//	public static final String PK_CUSTOMIZE8 = "pk_customize8";
-//	public static final String VNOTE = "vnote";
-//	public static final String CDT_INVBASDOC = "cdt_invbasdoc";
-//	public static final String PK_CUSTOMIZE7 = "pk_customize7";
-//	public static final String PK_CUSTOMIZE2 = "pk_customize2";
-//	public static final String CDT_CUSTOMIZE3 = "cdt_customize3";
-//	public static final String CDT_CUSTOMIZE2 = "cdt_customize2";
-//	public static final String CDT_OUTPRIORITY = "cdt_outpriority";
-//	public static final String PK_CUSTOMIZE5 = "pk_customize5";
 
 	/**
 	 * 属性pk_customize4的Getter方法.
