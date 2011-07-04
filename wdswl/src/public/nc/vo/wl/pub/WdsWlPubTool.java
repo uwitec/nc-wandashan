@@ -401,6 +401,26 @@ public class WdsWlPubTool {
 			}
 		}
 	}
+	
+	/**
+	 * 解析编码规则。
+	 * 创建日期：(2011-5-24 14:32:51)
+	 */
+	public static  String[] splitCode(String value) throws BusinessException{
+		java.util.StringTokenizer st = new java.util.StringTokenizer(value, " ,.+/\\:;", false);
+		int count = st.countTokens();
+		String[] showvalues = new String[count];
+		int index = 0;
+		try{
+			while(st.hasMoreTokens()){
+				showvalues[index++] = st.nextToken().trim();
+			}
+		}
+		catch(Exception e){
+			System.out.println("解析比例出错！");
+			throw new BusinessException("解析比例出错！"+getString_NullAsTrimZeroLen(e.getMessage()));
+		}
 
-
+		return showvalues;
+	}
 }
