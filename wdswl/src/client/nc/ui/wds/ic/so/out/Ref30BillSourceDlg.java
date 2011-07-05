@@ -95,7 +95,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
 		hsql.append(" isnull(so_sale.dr,0)=0 and so_sale.fstatus = 2 ");
-		hsql.append(" and isnull(so_sale.fisended,'N')='N'");
+		hsql.append(" and isnull(so_sale.bretinvflag,'N')='N'");
 		if(!isStock){
 			hsql.append("and so_sale.cwarehouseid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
