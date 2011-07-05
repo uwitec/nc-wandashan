@@ -10,14 +10,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
-
 import nc.bs.logging.Logger;
 import nc.ui.ml.NCLangRes;
 import nc.ui.pub.ClientEnvironment;
@@ -38,9 +34,6 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.WdsWlPubTool;
-
 /**
  * 
  * @author Administrator
@@ -274,7 +267,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	 *        主要校验表体是否为空 
 	 * @时间：2011-7-5下午02:15:18
 	 */
-	private void validute() throws Exception{
+	private void validute() throws Exception{	
 		Map<String,List<TbOutgeneralTVO>> map =getBufferData();
         Iterator<String> it= map.keySet().iterator();
         String errorMsg="";
@@ -296,7 +289,9 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		TbOutgeneralBVO  bvo = getHeadBVO(row);
 		String key = bvo.getCrowno();
 		TbOutgeneralTVO[] bvos = (TbOutgeneralTVO[])getbillListPanel().getBodyBillModel().getBodyValueVOs(TbOutgeneralTVO.class.getName());
-
+        if(bvos==null || bvos.length==0){
+          throw new BusinessException("表体数据不允许为空");	
+        }
 //		zhf  add 
 		 CircularlyAccessibleValueObject[][] os = SplitBillVOs.getSplitVOs(bvos, TbOutgeneralTVO.combin_fields);
 		 if(os == null || os.length ==0)
