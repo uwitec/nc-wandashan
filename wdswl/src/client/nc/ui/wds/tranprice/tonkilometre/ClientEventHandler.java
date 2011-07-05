@@ -59,13 +59,13 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		beforeSaveBodyUnique(
 				getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-				new String[]{"pk_deplace","pk_replace","ifw"}, 
-				new String[]{"发货地区","收获地区","应用范围"});
+				new String[]{"pk_replace","ifw"}, 
+				new String[]{"收获地区","应用范围"});
 		
 	}
 	/**
 	 * 
-	 * @作者：lyf
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-5-24下午12:54:55
 	 * @param table
