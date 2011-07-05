@@ -85,18 +85,18 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 		StringBuffer hsql = new StringBuffer();
 		hsql.append(" isnull(head.dr,0)=0 and head.pk_corp ='"+pk_corp+"' and head.cbilltypecode = '4I' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
 		hsql.append("and head.cotherwhid='"+pk_stock+"'");//
+		hsql.append(" and head.cgeneralhid not in(select distinct gylbillhid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)");
 		hsql.append("and head.cgeneralhid in");//只能看到包含当前登录人绑定货位下存货的单据
-		if(inv_Pks !=null && inv_Pks.length>0){
+		//if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
 			//hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(nacceptnum,0)>0");//应入数量-转出数量>0
-			String sub = getIvnSubSql(inv_Pks);
-			hsql.append(" and cinventoryid in"+sub);
-			hsql.append(")");
-		}else{
-			hsql.append("('')");
-		}
-		hsql.append(" and head.cgeneralhid not in(select distinct gylbillhid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)");
+		    //	String sub = getIvnSubSql(inv_Pks);
+			hsql.append(" and cinventoryid in");
+		//	hsql.append(")");
+		//}else{
+		//	hsql.append("('')");
+		//}	
 		return hsql.toString();
 		//head.fbillflag=3 签字状态
 		}
@@ -122,9 +122,18 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 	@Override
 	public String getBodyCondition() {
 		String sub = getTempTableUtil().getSubSql(inv_Pks);
-	return " body.cinventoryid in"+sub+" and body.cgeneralbid not in(select distinct gylbillbid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)";
+	return " and body.cgeneralbid not in(select distinct gylbillbid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0) and body.cinventoryid in ";
 	
 	}
+	@Override
+	public boolean isSelfLoadHead(){
+		return true;
+	}	
+	
+	@Override
+	public boolean isSelfLoadBody(){
+		return true;
+	}	
 	@Override
 	protected boolean isHeadCanMultiSelect() {
 		return false;
@@ -133,8 +142,12 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 	protected boolean isBodyCanSelected() {
 		return true;
 	}
-	
-	
+	@Override
+	public Object getUseObjOnRef() throws Exception{
+		
+		return inv_Pks;
+	}
+
 	
 	@Override
 	public boolean getIsBusinessType() {

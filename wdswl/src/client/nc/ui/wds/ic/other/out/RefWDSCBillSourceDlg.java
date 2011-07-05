@@ -94,16 +94,14 @@ public class RefWDSCBillSourceDlg  extends WdsBillSourceDLG {
 			hsql.append("and wds_cgqy_h.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
 		hsql.append("and wds_cgqy_h.pk_cgqy_h in");//只能看到包含当前登录人绑定货位下存货的单据
-		if(inv_Pks !=null && inv_Pks.length>0){
+	    //if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct pk_cgqy_h from wds_cgqy_b where isnull(wds_cgqy_b.dr,0)=0");
 			hsql.append(" and coalesce(nplannum,0)-coalesce(noutnum,0)>0");//安排数量-出库数量>0
 			String sub = getTempTableUtil().getSubSql(inv_Pks);
-			hsql.append(" and pk_invmandoc in"+sub);
-			hsql.append(")");
-		}else{
-			hsql.append("('')");
-		}
+			hsql.append(" and pk_invmandoc in");
+			
+		
 		return hsql.toString();
 	}
 	
@@ -112,7 +110,7 @@ public class RefWDSCBillSourceDlg  extends WdsBillSourceDLG {
 	public String getBodyCondition() {	
 		String sub = getTempTableUtil().getSubSql(inv_Pks);
 		return " coalesce(wds_cgqy_b.nplannum,0)-coalesce(wds_cgqy_b.noutnum,0)>0"+//安排数量-出库数量>0
-		" and wds_cgqy_b.pk_invmandoc in"+sub;
+		" and wds_cgqy_b.pk_invmandoc in";
 	}
 	@Override
 	protected boolean isHeadCanMultiSelect() {
@@ -121,10 +119,20 @@ public class RefWDSCBillSourceDlg  extends WdsBillSourceDLG {
 	@Override
 	protected boolean isBodyCanSelected() {
 		return true;
+	}	
+	@Override
+	protected Object getUseObjOnRef() throws Exception {		
+		return inv_Pks;
 	}
-	
-	
-	
+	@Override
+	public boolean isSelfLoadBody() {		
+		return true;
+	}
+	@Override
+	protected boolean isSelfLoadHead() {
+		
+		return true;
+	}
 	@Override
 	public boolean getIsBusinessType() {
 		return false;

@@ -100,42 +100,55 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 			hsql.append("and so_sale.cwarehouseid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
 		hsql.append("and so_sale.csaleid in");//只能看到包含当前登录人绑定货位下存货的单据
-		if(inv_Pks !=null && inv_Pks.length>0){
+//		if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct csaleid from so_saleorder_b where isnull(so_saleorder_b.dr,0)=0 ");
 			hsql.append(" and coalesce(nnumber,0)-coalesce(ntaldcnum,0)<0");//订单数量->//利用系统销售订单  已参与价保数量(ntaldcnum) 作为  累计发运数量
-			String sub = getTempTableUtil().getSubSql(inv_Pks);
-			hsql.append(" and cinventoryid in"+sub);
-			hsql.append(")");
-		}else{
-			hsql.append("('')");
-		}
+//			String sub = getTempTableUtil().getSubSql(inv_Pks);
+			hsql.append(" and cinventoryid in");
+//			hsql.append(")");
+//		}else{
+//			hsql.append("('')");
+//		}
 		return hsql.toString();
 	}
 	
 	@Override
 	public String getBodyCondition() {
-		String sub = getTempTableUtil().getSubSql(inv_Pks);
+//		String sub = getTempTableUtil().getSubSql(inv_Pks);
 		return " and coalesce(nnumber,0)-coalesce(ntaldcnum,0)<0"+//订单数量-出库数量<0
-			" and cinventoryid in"+sub;
+			" and cinventoryid in";
 		}
 	
-	public String getBodyContinos(){
-		StringBuffer bs = new StringBuffer();
-		bs.append(" isnull(so_saleorder_b.dr,0)=0  ");
-		return bs.toString();
-	}
+//	public String getBodyContinos(){
+//		StringBuffer bs = new StringBuffer();
+//		bs.append(" isnull(so_saleorder_b.dr,0)=0  ");
+//		return bs.toString();
+//	}
 	
+	@Override
+	protected boolean isSelfLoadHead(){
+		return true;
+	}
+	@Override
+    public boolean isSelfLoadBody() {
+		
+		return true;
+	}
+	@Override
+    protected Object getUseObjOnRef()throws Exception{
+		return inv_Pks;
+	}
 	@Override
 	public boolean getIsBusinessType() {
 		return false;
 	}
-	public void loadMultiBodyData(String tableCode,String key,String name) throws Exception{
-		if(tableCode != null && key != null && name != null 
-				&& !"".equals(tableCode) && !"".equals(key) && !"".equals(name) ){
-			SuperVO[] supervos = HYPubBO_Client.queryByCondition(Class.forName(name), " pk_soorder='" + key + "' and "+getBodyContinos());
-			getbillListPanel().setBodyValueVO(tableCode, supervos);
-			getbillListPanel().getBodyBillModel(tableCode).execLoadFormula();
-		}
-	}
+//	public void loadMultiBodyData(String tableCode,String key,String name) throws Exception{
+//		if(tableCode != null && key != null && name != null 
+//				&& !"".equals(tableCode) && !"".equals(key) && !"".equals(name) ){
+//			SuperVO[] supervos = HYPubBO_Client.queryByCondition(Class.forName(name), " pk_soorder='" + key + "' and "+getBodyContinos());
+//			getbillListPanel().setBodyValueVO(tableCode, supervos);
+//			getbillListPanel().getBodyBillModel(tableCode).execLoadFormula();
+//		}
+//	}
 }

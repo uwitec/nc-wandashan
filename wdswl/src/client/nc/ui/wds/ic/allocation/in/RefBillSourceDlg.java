@@ -95,16 +95,16 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 			hsql.append("and head.cotherwhid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
 		hsql.append("and head.cgeneralhid in");//只能看到包含当前登录人绑定货位下存货的单据
-		if(inv_Pks !=null && inv_Pks.length>0){
+//		if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
 			hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(ntranoutnum,0)>0");//应入数量-转出数量>0
-			String sub = getTempTableUtil().getSubSql(inv_Pks);
-			hsql.append(" and cinvbasid in"+sub);
-			hsql.append(")");
-		}else{
+//			String sub = getTempTableUtil().getSubSql(inv_Pks);
+			hsql.append(" and cinvbasid in");
+//			hsql.append(")");
+//		}else{
 			hsql.append("('')");
-		}
+	//	}
 		return hsql.toString();
 	}
 	
@@ -113,7 +113,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	public String getBodyCondition() {
 		String sub = getTempTableUtil().getSubSql(inv_Pks);
 		return " coalesce(body.nshouldoutnum,0)-coalesce(body.ntranoutnum,0)>0"+//应入数量-转出数量>0
-			" and body.cinvbasid in"+sub;}
+			" and body.cinvbasid in";}
 	@Override
 	protected boolean isHeadCanMultiSelect() {
 		return false;
@@ -122,9 +122,19 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	protected boolean isBodyCanSelected() {
 		return true;
 	}
-	
-	
-	
+	@Override
+	protected boolean isSelfLoadHead(){
+		return true;
+	}
+	@Override
+    public boolean isSelfLoadBody() {
+		
+		return true;
+	}
+	@Override
+    protected Object getUseObjOnRef()throws Exception{
+		return inv_Pks;
+	}	
 	@Override
 	public boolean getIsBusinessType() {
 		return false;

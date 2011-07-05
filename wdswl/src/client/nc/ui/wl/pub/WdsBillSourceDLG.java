@@ -1065,6 +1065,11 @@ public class WdsBillSourceDLG extends BillSourceDLG {
 	 *            选中的表头行
 	 */
 	public void loadBodyData(int row) {
+		
+		if(isSelfLoadBody()){
+			loadBodyDataSelf(row);
+			return;
+		}
 		try {
 			// 获得主表ID
 			String id = getbillListPanel().getHeadBillModel().getValueAt(row,
@@ -1082,12 +1087,91 @@ public class WdsBillSourceDLG extends BillSourceDLG {
 			Logger.error(e.getMessage(), e);
 		}
 	}
+	
+	/**
+	 * 根据主表获取子表数据
+	 * 
+	 * @param row
+	 *            选中的表头行
+	 */
+	public void loadBodyDataSelf(int row) {
+		try {
+			// 获得主表ID
+			String id = getbillListPanel().getHeadBillModel().getValueAt(row,
+					getpkField()).toString();
+			// 查询子表VO数组
+			CircularlyAccessibleValueObject[] tmpBodyVo =RefBillPubHelper.queryBodyAllData(getBillType(), id, getBodyCondition(),getUseObjOnRef());
+
+			// 表头界面数据加载前业务扩展
+			tmpBodyVo = beforeLoadBodyData(row, tmpBodyVo);
+
+			getbillListPanel().setBodyValueVO(tmpBodyVo);
+			getbillListPanel().getBodyBillModel().execLoadFormula();
+		} catch (Exception e) {
+			Logger.error(e.getMessage(), e);
+		}
+	}
+
 
 	/**
 	 * @see nc.ui.pub.pf.BillSourceDLG#loadHeadData() 作者：薛恩平 创建日期：2008-3-17
 	 *      下午04:13:43
 	 */
+	public void loadHeadDataSelf() {
+		try {
+			// 利用产品组传入的条件与当前查询条件获得条件组成主表查询条件
+			String tmpWhere = null;
+			if (getHeadCondition() != null) {
+				if (m_whereStr == null) {
+					tmpWhere = getHeadCondition();
+				} else {
+					tmpWhere =m_whereStr + " and "
+							+ getHeadCondition() ;
+				}
+			} else {
+				tmpWhere = m_whereStr;
+			}
+			String businessType = null;
+			if (getIsBusinessType()) {
+				businessType = getBusinessType();
+			}		
+			CircularlyAccessibleValueObject[] tmpHeadVo=RefBillPubHelper.queryHeadAllData(getBillType(), businessType,tmpWhere,getUseObjOnRef());			
+			// 表头界面数据加载前业务扩展
+			tmpHeadVo = beforeLoadHeadData(tmpHeadVo);
+			// 根据主表原币币种，设置表头、表体本币汇率、原币金额精度
+//			updateShowDigits(tmpHeadVo);////////////////////////////////////////////////////////////////////////////////////////////////
+
+			getbillListPanel().setHeaderValueVO(tmpHeadVo);
+			getbillListPanel().getHeadBillModel().execLoadFormula();
+
+			// lj+ 2005-4-5
+			// selectFirstHeadRow();
+		} catch (Exception e) {
+			Logger.error(e.getMessage(), e);
+			MessageDialog.showErrorDlg(this,
+					nc.ui.ml.NCLangRes.getInstance().getStrByID("pfworkflow",
+							"UPPpfworkflow-000237")/* @res "错误" */,
+					nc.ui.ml.NCLangRes.getInstance().getStrByID("pfworkflow",
+							"UPPpfworkflow-000490")/* @res "数据加载失败！" */);
+		}
+	}
+	
+	protected boolean isSelfLoadHead(){
+		return false;
+	}
+	
+	protected Object getUseObjOnRef()throws Exception{
+		return null;
+	}
+
+	
 	public void loadHeadData() {
+
+		if(isSelfLoadHead()){
+			loadHeadDataSelf();
+			return;
+		}
+		
 		try {
 			// 利用产品组传入的条件与当前查询条件获得条件组成主表查询条件
 			String tmpWhere = null;
@@ -1126,7 +1210,7 @@ public class WdsBillSourceDLG extends BillSourceDLG {
 							"UPPpfworkflow-000237")/* @res "错误" */,
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("pfworkflow",
 							"UPPpfworkflow-000490")/* @res "数据加载失败！" */);
-		}
+		}		
 	}
 
 	/**
@@ -1355,6 +1439,11 @@ public class WdsBillSourceDLG extends BillSourceDLG {
 				cmb.addItem(values[i]);
 			}
 		}
+	}
+
+	public boolean isSelfLoadBody() {
+		
+		return false;
 	}
 	
 }
