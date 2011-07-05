@@ -2,12 +2,10 @@ package nc.bs.wl.pub;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.List;
-
 import nc.bs.dao.BaseDAO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
-
 /**
  * 
  * 后台字段唯一性校验
@@ -17,7 +15,7 @@ import nc.vo.pub.lang.UFDate;
 public class BsUniqueCheck {
 	
 	private static BaseDAO dao;
-
+	
 	private static BaseDAO getDao() {
 		if (dao == null) {
 			dao = new BaseDAO();
@@ -33,11 +31,19 @@ public class BsUniqueCheck {
 		}	
 	}
 	/**
-	* 校验数据库中某个字段的唯一性
-	*/
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       校验数据库中某个字段的唯一性
+	 * @时间：2011-7-5下午08:46:12
+	 * @param vo  校验的vo
+	 * @param checkField  校验的字段的名字 
+	 * @param errorMessage 错误提示信息
+	 * @throws Exception
+	 */
 	public static void FieldUniqueCheck(SuperVO vo,String checkField,String errorMessage) throws Exception{			
 		if(isNULL(vo)){
-			throw new BusinessException("要检验的VO不能为空");
+			return;
 		}
 		if(isNULL(checkField)){
 			throw new BusinessException("检验唯一性的的字段名字不能为口空");
@@ -110,21 +116,27 @@ public class BsUniqueCheck {
 		   FieldUniqueCheck(vos[i], checkFields, errorMessage);  
 	   }
 	}
-	
-	/**
-	* 校验数据库中组合字段的唯一性
-	*/
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *       校验数据库中组合字段的唯一性
+    * @时间：2011-7-5下午08:49:35
+    * @param vo 校验vo
+    * @param checkFields 校验字段数组的名字
+    * @param errorMessage 返回错误提示信息
+    * @throws Exception
+    */
 	public static void FieldUniqueCheck(SuperVO vo, String[] checkFields,String errorMessage) throws Exception {
 		if(isNULL(vo)){
-			throw new BusinessException("要检验的VO不能为空");
+			return;
 		}
 		if(isEmpty(checkFields)){
 			throw new BusinessException("检验唯一性的的字段名字不能为空");
 		}
 		if(isNULL(errorMessage)){
 			throw new BusinessException("错误提示信息不能为空");
-		}			
-		
+		}				
 		// 判断是修改后的保存还是新增后的保存
 		if (isNULL(vo.getPrimaryKey())) {
 			queryByCheckFields(vo, checkFields,errorMessage);
@@ -178,6 +190,15 @@ public class BsUniqueCheck {
 				throw new BusinessException(errorMessage);
 			}
      }
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *       判断传入的对象是否是字符串
+    * @时间：2011-7-5下午08:51:48
+    * @param value 
+    * @return
+    */
 	private static boolean isChar(Object value) {
 		if(value==null){
 		 return false;
@@ -187,6 +208,15 @@ public class BsUniqueCheck {
 		}
 		return false;
 	}
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *        判断传入的对象是否为空
+    * @时间：2011-7-5下午08:53:00
+    * @param o
+    * @return
+    */
 	private static boolean isNULL(Object o) {
 		if (o == null || o.toString().trim().equals(""))
 			return true;
