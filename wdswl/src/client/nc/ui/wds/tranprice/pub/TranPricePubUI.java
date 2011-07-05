@@ -11,17 +11,33 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 public abstract class TranPricePubUI extends BillManageUI {
 	
-	private  LoginInforVO m_loginInfor = null; 
+	protected  LoginInforVO m_loginInfor = null; 
 
 	public TranPricePubUI(Boolean useBillSource) {
 		super(useBillSource);
+		init();
 	}
 	public TranPricePubUI() {
 		super();
+		init();
 	}
 	public TranPricePubUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+		init();
+	}
+	
+	private void init(){
+		
+//		初始当前登录人 角色
+		LoginInforHelper login = new LoginInforHelper();
+		try {
+			m_loginInfor = login.getLogInfor(_getOperator());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			m_loginInfor = null;
+		}
 	}
 	
 //	@Override
@@ -62,16 +78,6 @@ public abstract class TranPricePubUI extends BillManageUI {
 					IBillButton.PasteLine));
 			btn.removeChildButton(getButtonManager().getButton(
 					IBillButton.InsLine));
-		}
-		
-//		初始当前登录人 角色
-		LoginInforHelper login = new LoginInforHelper();
-		try {
-			m_loginInfor = login.getLogInfor(_getOperator());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			m_loginInfor = null;
 		}
 	}
 	
