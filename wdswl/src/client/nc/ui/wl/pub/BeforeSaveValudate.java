@@ -2,24 +2,30 @@ package nc.ui.wl.pub;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
-
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillModel;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.trade.checkrule.ICompareRule;
-import nc.vo.trade.checkrule.IUniqueRule;
-
 /**
- * 
+ * author:mlr
  * 该类为保存前的 前台校验类 
  * 
  * */
-public  class BeforeSaveValudate{
-	
-	//表体的几个字段构成唯一性，每一行的记录的几个字段构成行唯一性记录，与其它行比较 ，进行唯一性校验
+public  class BeforeSaveValudate{	
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+            表体的几个字段构成唯一性，每一行的记录的几个字段构成行唯一性记录，与其它行比较 ，进行唯一性校验
+	 * @时间：2011-7-5下午08:58:49
+	 * @param table 
+	 * @param model
+	 * @param fields  校验的字段名字数组
+	 * @param displays 校验的字段的显示名字
+	 * @throws Exception
+	 */
 	public static void  beforeSaveBodyUnique(UITable table,BillModel model,String[] fields,String[] displays) throws Exception{
 		int num =table.getRowCount();
 		if(fields == null || fields.length == 0){
@@ -45,16 +51,31 @@ public  class BeforeSaveValudate{
 			}
 		}
 	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       表体不允许为空的校验
+	 * @时间：2011-7-5下午09:00:23
+	 * @param table
+	 * @throws Exception
+	 */
 	public static void BodyNotNULL(UITable table) throws Exception{
 		if(table.getRowCount()<=0){
 			throw new Exception("表体不允许为空");
 		}
 	}
-	
-	//表体某个字段的唯一性校验
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       表体某个字段的唯一性校验
+	 * @时间：2011-7-5下午09:00:23
+	 * @param table
+	 * @throws Exception
+	 */
 	public static void  FieldBodyUnique(UITable table,BillModel model,String checkField,String displayName) throws Exception{
-		int num =table.getRowCount();
-		
+		int num =table.getRowCount();	
 		if(checkField == null || "".equalsIgnoreCase(checkField)){
 			return;
 		}
@@ -63,8 +84,7 @@ public  class BeforeSaveValudate{
 			for(int i = 0 ;i<num; i++){
 				    String key = "";			
 					Object o1 = model.getValueAt(i,checkField);
-					key = String.valueOf(o1);	
-					
+					key = String.valueOf(o1);					
 				if(list.contains(key)){
 					throw new BusinessException("表体第["+(i+1)+"]行字段"+"[ "+displayName+" ]"+"存在重复!");
 				}else{
@@ -73,45 +93,15 @@ public  class BeforeSaveValudate{
 			}
 		}
 	}
-	//传入的必须是从界面获取的整个的表体的vos(效率低，最好不用)
-	public static  boolean checkUniqueRule(CircularlyAccessibleValueObject[] vos, IUniqueRule rule) throws Exception
-	{
-        StringBuffer errormsg=new StringBuffer();
-		 
-		if (isEmpty(vos) || isEmpty(rule))
-			return true;
-
-		for (int i = 0; i < vos.length - 1; i++)
-		{
-			for (int j = i + 1; j < vos.length; j++)
-			{
-				boolean same = true;
-				for (int k = 0; k < rule.getFields().length; k++)
-				{
-					Object o1 = vos[i].getAttributeValue(rule.getFields()[k]);
-					Object o2 = vos[j].getAttributeValue(rule.getFields()[k]);
-					same = same
-							&& voassert(o1, ICompareRule.OPERATOR_EQUAL, o2);
-				}
-				if (same)
-				{
-					errormsg.append(rule.getHint());
-					errormsg.append("\n");
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	//传入的必须是从界面获取的整个的表体的vos(效率低，最好不用)
-	public static void bodyFieldNotNull(CircularlyAccessibleValueObject[] bodys,String checkField,String displayName)throws Exception{
-		
-		  for(int i=0;i<bodys.length;i++){
-              if(isEmpty(bodys[i].getAttributeValue(checkField))){            	  
-            	  throw new Exception("表体第"+(i+1)+"行"+displayName+"不能为空");
-              }
-          }    	
-	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       判断传入的对象是否为空
+	 * @时间：2011-7-5下午09:02:51
+	 * @param value
+	 * @return
+	 */
 	public static boolean isEmpty(Object value)
 	{
 		if (value == null)
@@ -127,7 +117,15 @@ public  class BeforeSaveValudate{
 			return true;
 		return false;
 	}
-
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *       判断出入的对象是否为空
+    * @时间：2011-7-5下午09:03:51
+    * @param o
+    * @return
+    */
 	public static boolean isNULL(Object o) {
 		if (o == null || o.toString().trim().equals(""))
 			return true;
