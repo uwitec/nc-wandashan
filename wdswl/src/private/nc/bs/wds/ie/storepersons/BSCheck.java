@@ -2,9 +2,11 @@ package nc.bs.wds.ie.storepersons;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.trade.business.IBDBusiCheck;
+import nc.bs.wl.pub.BsNotNullCheck;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wds.ie.storepersons.TbStockstaffVO;
@@ -27,7 +29,6 @@ public class BSCheck implements IBDBusiCheck{
 			TbStockstaffVO head=(TbStockstaffVO)vo.getParentVO();
 			if(head ==null)
 				return;
-
 			//判断是新增后的保存，还是修改后得保存
 			if(head.getPrimaryKey()==null || head.getPrimaryKey().equals("") || head.getPrimaryKey().trim().length()==0){
 				String sql="select count(0) from tb_stockstaff where cuserid='"+head.getCuserid()+"' and  isnull(dr,0)=0";

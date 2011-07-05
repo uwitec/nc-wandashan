@@ -2,6 +2,7 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wl.pub.BsNotNullCheck;
 import nc.bs.wl.pub.BsUniqueCheck;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
@@ -28,9 +29,11 @@ try{
 	super.m_tmpVo=vo;
 	try {
 			super.m_tmpVo = vo;
-			Object retObj = null;
-			//价格编码  唯一性的校验
-			BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.m_preValueVo.getParentVO(), new String[]{"vpricecode","pk_billtype"}, "[  运价编码  ] 在数据库中已经存在");
+			Object retObj = null;	
+			//保存前校验
+			setParameter("currentVo", vo.m_preValueVo);
+			runClass("nc.bs.wds.tranprice.tonkilometre.TonKilometerBs", "beforeSaveCheck",
+					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);		
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {
