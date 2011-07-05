@@ -103,7 +103,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 			hsql.append(" and cinvbasid in");
 //			hsql.append(")");
 //		}else{
-			hsql.append("('')");
+//			hsql.append("('')");
 	//	}
 		return hsql.toString();
 	}
