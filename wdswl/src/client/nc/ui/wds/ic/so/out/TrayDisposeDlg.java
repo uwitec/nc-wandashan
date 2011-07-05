@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -247,8 +249,11 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 //			if(!flag)
 //				return;
 			try{
+				//确定前数据合法行校验
+				validute();
 				saveCurrentData(getHeadCurrentRow());
 				chekcNumBody();
+				
 			}catch(Exception e1){
 				MessageDialog.showErrorDlg(this, "警告", e1.getMessage());
 				return;
@@ -260,8 +265,30 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}else if (e.getSource().equals(getDeline())) {
 			onLineDel();
 		}
-	}	
-	
+	}		
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 *        用于确定前的校验
+	 *        主要校验表体是否为空 
+	 * @时间：2011-7-5下午02:15:18
+	 */
+	private void validute() throws Exception{
+		Map<String,List<TbOutgeneralTVO>> map =getBufferData();
+        Iterator<String> it= map.keySet().iterator();
+        String errorMsg="";
+        while(it.hasNext()){
+          String key=it.next();
+          if(map.get(key)==null || map.get(key).size()==0){
+        	  errorMsg=errorMsg+","+key;     	  
+          }
+        }
+        if(!errorMsg.equalsIgnoreCase("")){
+       	 throw new BusinessException(" 表头第"+errorMsg.substring(1)+"行的表体为空");
+        }	
+	}
+
 	public void saveCurrentData(int row) throws BusinessException{
 		if(row<0){
 			return;
