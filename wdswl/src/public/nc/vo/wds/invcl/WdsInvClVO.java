@@ -41,8 +41,8 @@ public class WdsInvClVO extends SuperVO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(vinvclname)==null){
 			throw new ValidationException("分类名称不能为空");
 		}
-		if(PuPubVO.getString_TrimZeroLenAsNull(pk_father)==null)
-			throw new ValidationException("父类为空");
+//		if(PuPubVO.getString_TrimZeroLenAsNull(pk_father)==null)
+//			throw new ValidationException("父类为空");
 		if(PuPubVO.getString_TrimZeroLenAsNull(pk_corp)==null)
 			throw new ValidationException("公司为空");
 	}
