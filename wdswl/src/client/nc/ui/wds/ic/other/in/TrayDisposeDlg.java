@@ -20,15 +20,15 @@ import javax.swing.event.ListSelectionListener;
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIButton;
+import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillListPanel;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wds.ic.pub.InPubClientUI;
-import nc.uif.pub.exception.UifException;
+import nc.ui.wds.tray.lock.LockTrayDialog;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
@@ -36,7 +36,9 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * @author zpm
@@ -71,10 +73,15 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	private UIButton btn_addline = null;
 
 	private UIButton btn_deline = null;
+	
+//	zhf add 增加虚拟托盘的绑定实际托盘功能按钮   绑定
+	private UIButton ivjbtnLock = null;
 
 	private Map<String, List<TbGeneralBBVO>> map = null;
 
 	private boolean isEdit = true;
+	
+	private String pk_ware = null;//仓库
 
 	public TrayDisposeDlg(String m_billType, String m_operator,
 			String m_pkcorp, String m_nodeKey, InPubClientUI myClientUI,
@@ -98,6 +105,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		setEdit();
 		//
 		getbtnOk().addActionListener(this);
+		getbtnLock().addActionListener(this);
 		getbtnCancel().addActionListener(this);
 		getAddLine().addActionListener(this);
 		getDeline().addActionListener(this);
@@ -126,6 +134,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			if (billvo != null) {
 				getbillListPanel().setHeaderValueVO(billvo.getChildrenVO());
 				getbillListPanel().getHeadBillModel().execLoadFormula();
+				pk_ware = PuPubVO.getString_TrimZeroLenAsNull(billvo.getParentVO().getAttributeValue("geh_cwarehouseid"));
 			}
 		} catch (Exception e) {
 			Logger.error(e);
@@ -297,6 +306,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ivjPanlCmd.add(getDeline(), getDeline().getName());
 			ivjPanlCmd.add(getbtnOk(), getbtnOk().getName());
 			ivjPanlCmd.add(getbtnCancel(), getbtnCancel().getName());
+			ivjPanlCmd.add(getbtnLock(),getbtnLock().getName());
 		}
 		return ivjPanlCmd;
 	}
@@ -336,6 +346,16 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		return ivjbtnCancel;
 	}
+	
+	// 添加绑定按钮
+	private UIButton getbtnLock() {
+		if (ivjbtnLock == null) {
+			ivjbtnLock = new UIButton();
+			ivjbtnLock.setName("ivjbtnLock");
+			ivjbtnLock.setText("绑定");
+		}
+		return ivjbtnLock;
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(getbtnOk())) {
@@ -352,6 +372,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			onLineAdd();
 		} else if (e.getSource().equals(getDeline())) {
 			onLineDel();
+		}else if(e.getSource().equals(getbtnLock())){
+			onLock();
 		}
 	}
 
@@ -608,5 +630,75 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 
 	public void setEdit(boolean isEdit) {
 		this.isEdit = isEdit;
+	}
+	
+	private String getkey(int row){
+		return WdsWlPubTool.getString_NullAsTrimZeroLen(getBodyValue(row, "cdt_pk"))+","+
+		WdsWlPubTool.getString_NullAsTrimZeroLen(getBodyValue(row, "gebb_vbatchcode"));
+	}
+	
+	private Object getBodyValue(int row,String fieldname){
+		return getbillListPanel().getBodyBillModel().getValueAt(row, fieldname);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 手工拣货时  虚拟托盘入库 时 绑定 实际托盘
+	 * 绑定逻辑：必须选中  托盘行   选中的行的托盘必须是  虚拟托盘
+	 * @时间：2011-7-4下午05:07:43
+	 */
+	private void onLock(){
+//		判断是否选中行
+		int row = getbillListPanel().getBodyTable().getSelectedRow();
+		if(row < 0){
+			MessageDialog.showWarningDlg(this, "警告", "未选中表体行");
+			return;
+		}			
+//		判断选中行是否为虚拟托盘
+		String traycode = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row,"trayname"));
+		
+		if(traycode == null){
+			MessageDialog.showWarningDlg(this, "警告", "托盘编码不能为空");
+			return;
+		}
+		if(!traycode.substring(0,2).equalsIgnoreCase(WdsWlPubConst.XN_CARGDOC_TRAY_NAME)){
+			MessageDialog.showWarningDlg(this, "警告", "不是虚拟托盘");
+			return;
+		}
+//		将数据绑定信息 缓存下
+		int retFlag = getLockTrayDialog().showModal();
+		if(retFlag != UIDialog.ID_OK)
+			return;
+		if(isEdit){
+			SmallTrayVO[] trays = getLockTrayDialog().getRetVos();			String key = getkey(row);			getTrayLockInfor(false).put(key, trays);
+		}
+	}
+	
+	private LockTrayDialog lockDlg = null;
+	private LockTrayDialog getLockTrayDialog(){
+		if(lockDlg == null){
+			lockDlg = new LockTrayDialog(myClientUI,this,getbillListPanel(),pk_ware,isEdit());
+		}
+		return lockDlg;
+	}
+	
+	private Object getHeadValue(String fieldname){
+		if(PuPubVO.getString_TrimZeroLenAsNull(fieldname)==null)
+			return null;
+		int row = getbillListPanel().getHeadTable().getSelectedRow();
+		if(row < 0)
+			return null;
+		return getbillListPanel().getHeadBillModel().getValueAt(row, fieldname);
+	}	
+
+	private Map<String,SmallTrayVO[]> trayLockInfor = null;
+	public Map<String,SmallTrayVO[]> getTrayLockInfor(boolean isclear){
+		if(trayLockInfor == null){
+			trayLockInfor = new HashMap<String, SmallTrayVO[]>();
+		}
+		if(isclear)
+			trayLockInfor.clear();
+		return trayLockInfor;
 	}
 }
