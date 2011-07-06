@@ -19,6 +19,7 @@ import nc.ui.ml.NCLangRes;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIButton;
+import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
@@ -26,6 +27,8 @@ import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.wds.ic.pub.OutPubClientUI;
+import nc.ui.wds.tray.lock.LockTrayHelper;
+import nc.ui.wds.tray.relock.ReLockTrayDialog;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -34,18 +37,23 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
+
+
 /**
  * 
  * @author Administrator
  * 其他出库（销售出库）手动捡货对话框
  */
 public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
-		ActionListener, BillEditListener,BillEditListener2{
+ActionListener, BillEditListener,BillEditListener2{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	protected OutPubClientUI myClientUI = null;
 
 	private JPanel ivjUIDialogContentPane = null;
@@ -66,24 +74,32 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	// 确定按钮
 	private UIButton ivjbtnOk = null;
 
+	//	zhf add 增加虚拟托盘的绑定实际托盘功能按钮   绑定
+	private UIButton ivjbtnLock = null;
+
 	// 取消按钮
 	private UIButton ivjbtnCancel = null;
-	
+
 	private UIButton btn_addline = null;
-	
+
 	private UIButton btn_deline = null;
-	
+
 	private boolean isEdit = true;
-	
+
 	private String pk_cargdoc=null;
 	
+	private String pk_ware = null;//仓库
+
 	private Map<String,List<TbOutgeneralTVO>> map = null;
 	
+//	private ToftPanel tp = null;
+
 
 	@SuppressWarnings("deprecation")
 	public TrayDisposeDlg(String m_billType, String m_operator,
 			String m_pkcorp, OutPubClientUI parent,boolean isEdit) {
 		super(parent);
+//		tp = parent;
 		this.m_billType = m_billType;
 		this.m_operator = m_operator;
 		this.m_pkcorp = m_pkcorp;
@@ -113,7 +129,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		return ivjUIDialogContentPane;
 	}
-	
+
 	public void setEdit(){
 		getbillListPanel().setEnabled(isEdit);
 		getbtnCancel().setEnabled(true);
@@ -121,8 +137,9 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		getbtnOk().setEnabled(isEdit);
 		getAddLine().setEnabled(isEdit);
 		getDeline().setEnabled(isEdit);
+		getbtnLock().setEnabled(isEdit);
 	}
-	
+
 	protected BillListPanel getbillListPanel() {
 		if (ivjbillListPanel == null) {
 			try {
@@ -150,10 +167,11 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ivjPanlCmd.add(getDeline(), getDeline().getName());
 			ivjPanlCmd.add(getbtnOk(), getbtnOk().getName());
 			ivjPanlCmd.add(getbtnCancel(), getbtnCancel().getName());
+			ivjPanlCmd.add(getbtnLock(),getbtnLock().getName());
 		}
 		return ivjPanlCmd;
 	}
-	
+
 	private UIButton getAddLine() {
 		if (btn_addline == null) {
 			btn_addline = new UIButton();
@@ -177,9 +195,19 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ivjbtnOk = new UIButton();
 			ivjbtnOk.setName("btnOk");
 			ivjbtnOk.setText(NCLangRes.getInstance().getStrByID("common",
-					"UC001-0000044")/* @res "确定" */);
+			"UC001-0000044")/* @res "确定" */);
 		}
 		return ivjbtnOk;
+	}
+
+	// 添加绑定按钮
+	private UIButton getbtnLock() {
+		if (ivjbtnLock == null) {
+			ivjbtnLock = new UIButton();
+			ivjbtnLock.setName("ivjbtnLock");
+			ivjbtnLock.setText("解除绑定");
+		}
+		return ivjbtnLock;
 	}
 
 	// 添加取消按钮
@@ -189,7 +217,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			ivjbtnCancel = new UIButton();
 			ivjbtnCancel.setName("btnCancel");
 			ivjbtnCancel.setText(NCLangRes.getInstance().getStrByID("common",
-					"UC001-0000008")/* @res "取消" */);
+			"UC001-0000008")/* @res "取消" */);
 		}
 		return ivjbtnCancel;
 	}
@@ -199,6 +227,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			AggregatedValueObject billvo = null;
 			OutPubClientUI ui = (OutPubClientUI)myClientUI;
 			pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+			pk_ware = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("srl_pk").getValueObject());
 			billvo =ui.getVOFromUI();
 			if(billvo!=null){
 				getbillListPanel().setHeaderValueVO(billvo.getChildrenVO());
@@ -212,6 +241,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	// 监听
 	public void addListenerEvent() {
 		getbtnOk().addActionListener(this);
+		getbtnLock().addActionListener(this);
 		getbtnCancel().addActionListener(this);
 		getAddLine().addActionListener(this);
 		getDeline().addActionListener(this);
@@ -219,8 +249,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		getbillListPanel().addEditListener(this);
 		getbillListPanel().addBodyEditListener(this); // 表体编辑后事件监听
 		getbillListPanel().getBodyScrollPane("tb_outgeneral_t").addEditListener2(this);//表头编辑前监听
-		}
-	
+	}
+
 	public UIPanel getIvjPanlCmd() {
 		return ivjPanlCmd;
 	}
@@ -233,14 +263,14 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		// 判断是否为确定按钮
 		if (e.getSource().equals(getbtnOk())) {
-//			int rowcount = getbillListPanel().getBodyBillModel().getRowCount();
-//			int[] rows = new int[rowcount];
-//			for(int i=0;i<rowcount;i++){
-//				rows[i] = 0;
-//			}
-//			boolean flag  = getbillListPanel().getBodyBillModel().execValidateForumlas(null, new String[]{"shengyuliang"}, rows);
-//			if(!flag)
-//				return;
+			//			int rowcount = getbillListPanel().getBodyBillModel().getRowCount();
+			//			int[] rows = new int[rowcount];
+			//			for(int i=0;i<rowcount;i++){
+			//				rows[i] = 0;
+			//			}
+			//			boolean flag  = getbillListPanel().getBodyBillModel().execValidateForumlas(null, new String[]{"shengyuliang"}, rows);
+			//			if(!flag)
+			//				return;
 			try{
 				//确定前数据合法行校验
 				validute();
@@ -257,6 +287,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			onLineAdd();
 		}else if (e.getSource().equals(getDeline())) {
 			onLineDel();
+		}else if(e.getSource().equals(getbtnLock())){
+			onReLock();
 		}
 	}		
 	/**
@@ -282,6 +314,25 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
         }	
 	}
 
+	private void validateTrayInfor(TbOutgeneralTVO[] bvos) throws BusinessException{
+		CircularlyAccessibleValueObject[][] os = SplitBillVOs.getSplitVOs(bvos, TbOutgeneralTVO.combin_fields);
+		if(os == null || os.length ==0)
+			throw new BusinessException("数据处理异常");
+		int len = os.length;
+
+		TbOutgeneralTVO[] tmpvos = null;
+		//		 List<TbOutgeneralTVO> ldata = new ArrayList<TbOutgeneralTVO>();
+		for(int i=0;i<len;i++){
+			tmpvos = (TbOutgeneralTVO[])os[i];
+			if(tmpvos.length>1){
+				throw new BusinessException("同一托盘同一批次存在多行,请重新操作");
+			}
+		}
+
+		for(TbOutgeneralTVO bb:bvos)
+			bb.validateOnTP();
+	}
+
 	public void saveCurrentData(int row) throws BusinessException{
 		if(row<0){
 			return;
@@ -292,23 +343,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
         if(bvos==null || bvos.length==0){
           throw new BusinessException("表体数据不允许为空");	
         }
-//		zhf  add 
-		 CircularlyAccessibleValueObject[][] os = SplitBillVOs.getSplitVOs(bvos, TbOutgeneralTVO.combin_fields);
-		 if(os == null || os.length ==0)
-			 throw new BusinessException("数据处理异常");
-		 int len = os.length;
-		
-		 TbOutgeneralTVO[] tmpvos = null;
-//		 List<TbOutgeneralTVO> ldata = new ArrayList<TbOutgeneralTVO>();
-		 for(int i=0;i<len;i++){
-			 tmpvos = (TbOutgeneralTVO[])os[i];
-			 if(tmpvos.length>1){
-				 throw new BusinessException("同一托盘同一批次存在多行,请重新操作");
-			 }
-		 }
-
-		for(TbOutgeneralTVO bb:bvos)
-			bb.validateOnTP();
+		//		zhf  add 
+		validateTrayInfor(bvos);
 
 		if(bvos!=null && bvos.length>0){
 			getBufferData().put(key, arrayToList(bvos));
@@ -316,7 +352,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			getBufferData().remove(key);
 		}
 	}
-	
+
 	public ArrayList<TbOutgeneralTVO> arrayToList(TbOutgeneralTVO[] o){
 		if(o == null || o.length == 0)
 			return null;
@@ -333,8 +369,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		while(it.hasNext()){
 			String key = it.next();
 			List<TbOutgeneralTVO> list  = map.get(key);
-			UFDouble v = new UFDouble(0);//实出数量
-			UFDouble v1 = new UFDouble(0);//实出辅数量
+			UFDouble v = WdsWlPubTool.DOUBLE_ZERO;//实出数量
+			UFDouble v1 = WdsWlPubTool.DOUBLE_ZERO;//实出辅数量
 			for(TbOutgeneralTVO l :list ){
 				UFDouble b = l.getNoutnum();//实出数量
 				if(b==null || b.doubleValue() == 0)
@@ -351,7 +387,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			}
 		}
 	}
-	
+
 	//根据行号找VO
 	public TbOutgeneralBVO getGenBVO(String crowno){
 		TbOutgeneralBVO bvo = null;
@@ -383,15 +419,15 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		int row = getbillListPanel().getHeadTable().getSelectedRow();
 		return row;
 	}
-		
+
 	//增行，孙表默认值
 	public void setBodyDefaultValue(int row){
 		TbOutgeneralBVO child = getHeadBVO(getHeadCurrentRow());
 		if(child != null){
 			TbOutgeneralTVO bbvo = new TbOutgeneralTVO();
-//				tbGeneralBBVO.setCdt_pk(cdtvo[0].toString());//指定托盘
-//				bbvo.setGebb_rowno(String.valueOf((i+1)*10));//行号
-//				bbvo.setPwb_pk(child.getGeb_cgeneralbid());
+			//				tbGeneralBBVO.setCdt_pk(cdtvo[0].toString());//指定托盘
+			//				bbvo.setGebb_rowno(String.valueOf((i+1)*10));//行号
+			//				bbvo.setPwb_pk(child.getGeb_cgeneralbid());
 			bbvo.setGeneral_b_pk(child.getGeneral_b_pk());//子表主键
 			bbvo.setGeneral_pk(child.getGeneral_pk());//主表主键
 			bbvo.setPk_invbasdoc(child.getCinvbasid());//存货基本ID
@@ -427,17 +463,17 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbatchcode");	
 				//编辑后事件，从托盘参照中取来源批次号，给表体赋值
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");
-//				库存状态表ID
+				//				库存状态表ID
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_pk"), row, "whs_pk");
-				
+
 			}
 		}else if("noutassistnum".equalsIgnoreCase(e.getKey())){
 			UFDouble nshengyu = PuPubVO.getUFDouble_NullAsZero(getbillListPanel().getBodyBillModel().getValueAt(e.getRow(), "shengyuliang"));
-			if(nshengyu.compareTo(new UFDouble(0))<0){
+			if(nshengyu.compareTo(WdsWlPubTool.DOUBLE_ZERO)<0){
 				MessageDialog.showErrorDlg(this, "错误", "托盘存量不足");
 			}
 		}
-}
+	}
 
 	public void bodyRowChange(BillEditEvent e) {
 		if(e.getSource() == getbillListPanel().getParentListPanel().getTable()){
@@ -447,6 +483,15 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				TbOutgeneralBVO bvo = getHeadBVO(oldrow);
 				String key = bvo.getCrowno();
 				TbOutgeneralTVO[] bvos = (TbOutgeneralTVO[])getbillListPanel().getBodyBillModel().getBodyValueVOs(TbOutgeneralTVO.class.getName());
+				try {
+					validateTrayInfor(bvos);//zhf
+				} catch (BusinessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					getbillListPanel().getHeadTable().getSelectionModel().setSelectionInterval(e.getOldRow(), e.getOldRow());
+					myClientUI.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e1.getMessage()));
+					return;
+				}
 				getBufferData().put(key, arrayToList(bvos));
 			}
 			//清空表体数据
@@ -462,7 +507,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			}
 		}
 	}
-	
+
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		int row = e.getRow();
@@ -483,13 +528,13 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 "+
 					" and tb_warehousestock.whs_stocktonnage > 0"+
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
-					" and bd_cargdoc_tray.cdt_traycode like 'XN%'"+
+					" and bd_cargdoc_tray.cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'"+
 					" and isnull(bd_cargdoc_tray.dr,0)=0 "+
-	    	        " and isnull(tb_warehousestock.dr,0)=0 "+	    	
-	    	        " and isnull(bd_invmandoc.dr,0)=0 "+
-	                " and isnull(bd_invbasdoc.dr,0)=0 "+	    	
-	    	        " and tb_warehousestock.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
-		
+					" and isnull(tb_warehousestock.dr,0)=0 "+	    	
+					" and isnull(bd_invmandoc.dr,0)=0 "+
+					" and isnull(bd_invbasdoc.dr,0)=0 "+	    	
+					" and tb_warehousestock.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
+
 		}
 		return true;
 	}
@@ -511,7 +556,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	}
 	//要过滤的虚拟托盘
 	private String getSubSql1(int curRow){
-		
+
 		StringBuffer sql = new StringBuffer();
 		sql.append("('aa'");
 		int rowCount = getbillListPanel().getBodyTable().getRowCount();
@@ -519,32 +564,33 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			if (i == curRow)
 				continue;
 			String cdt_id = PuPubVO
-					.getString_TrimZeroLenAsNull(getbillListPanel()
-							.getBodyBillModel().getValueAt(i, "cdt_pk"));// 托盘id
+			.getString_TrimZeroLenAsNull(getbillListPanel()
+					.getBodyBillModel().getValueAt(i, "cdt_pk"));// 托盘id
 			if (cdt_id == null)
 				continue;
 			sql.append(",'" + cdt_id + "'");
 		}
 		sql.append(")");
-		
+
 		return sql.toString();
-		
+
 	}
-	
-	
-//	public Map<String,List<TbOutgeneralTVO>> getBufferData(){
-//		map = ((OutPubClientUI)myClientUI).getTrayInfor();
-//		if(map == null){
-//			map = new HashMap<String,List<TbOutgeneralTVO>>();
-//		}
-//		return map;
-//	}
+
+
+	//	public Map<String,List<TbOutgeneralTVO>> getBufferData(){
+	//		map = ((OutPubClientUI)myClientUI).getTrayInfor();
+	//		if(map == null){
+	//			map = new HashMap<String,List<TbOutgeneralTVO>>();
+	//		}
+	//		return map;
+	//	}
 	public Map<String,List<TbOutgeneralTVO>> getBufferData(){
 		if(map == null){
 			map = cloneBufferData();
 		}
 		return map;
 	}
+	
 	public Map<String,List<TbOutgeneralTVO>> cloneBufferData(){
 		Map<String,List<TbOutgeneralTVO>> map1 = ((OutPubClientUI)myClientUI).getTrayInfor();
 		Map<String,List<TbOutgeneralTVO>> map2 = new HashMap<String, List<TbOutgeneralTVO>>();
@@ -567,7 +613,134 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		return list1;
 	}
+	
+	private String getkey(int row){
+		return WdsWlPubTool.getString_NullAsTrimZeroLen(getBodyValue(row, "cdt_pk"))+","+
+		WdsWlPubTool.getString_NullAsTrimZeroLen(getBodyValue(row, "vbatchcode"));
+	}
+	
+	private Object getBodyValue(int row,String fieldname){
+		return getbillListPanel().getBodyBillModel().getValueAt(row, fieldname);
+	}
 
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 手工拣货时  虚拟托盘入库 时 绑定 实际托盘
+	 * 绑定逻辑：必须选中  托盘行   选中的行的托盘必须是  虚拟托盘
+	 * @时间：2011-7-4下午05:07:43
+	 */
+	private void onReLock(){
+		//		判断是否选中行
+		int row = getbillListPanel().getBodyTable().getSelectedRow();
+		if(row < 0){
+			MessageDialog.showWarningDlg(this, "警告", "未选中表体行");
+			return;
+		}			
+		//		判断选中行是否为虚拟托盘
+		String traycode = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row,"ctuopanbianma"));
 
+		if(traycode == null){
+			MessageDialog.showWarningDlg(this, "警告", "托盘编码不能为空");
+			return;
+		}
+		if(!traycode.substring(0,2).equalsIgnoreCase(WdsWlPubConst.XN_CARGDOC_TRAY_NAME)){
+			MessageDialog.showWarningDlg(this, "警告", "不是虚拟托盘");
+			return;
+		}
+
+		String trayid = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row, "cdt_pk"));
+		String cinvmanid = PuPubVO.getString_TrimZeroLenAsNull(getHeadValue("cinventoryid"));
+		String vbatchcode = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row,"vbatchcode"));
+		if(trayid == null || cinvmanid == null || vbatchcode == null){
+			myClientUI.showErrorMessage("选中行数据异常,请刷新数据重新操作");
+			return;
+		}
+
+		//		校验是否绑定了  实际托盘  如果没有 不需要该操作
+		try{
+			if(!LockTrayHelper.isLock(trayid,cinvmanid,vbatchcode).booleanValue()){
+				myClientUI.showWarningMessage("该虚拟托盘未进行实际托盘的绑定");
+				return;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			myClientUI.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+			return;
+		}		
+
+		//		将数据绑定信息 缓存下
+		int retFlag = getLockTrayDialog().showModal();
+		if(retFlag != UIDialog.ID_OK)
+			return;
+
+		SmallTrayVO[] trays = getLockTrayDialog().getRetVos();
+
+		String key = getkey(row);
+		getTrayLockInfor(false).put(key, trays);
+
+		clearReLockDialog();
+	}
+	
+	private Object getHeadValue(String fieldname){
+		if(PuPubVO.getString_TrimZeroLenAsNull(fieldname)==null)
+			return null;
+		int row = getbillListPanel().getHeadTable().getSelectedRow();
+		if(row < 0)
+			return null;
+		return getbillListPanel().getHeadBillModel().getValueAt(row, fieldname);
+	}
+	
+//	private void checkTrayVolume(SmallTrayVO[] trays) throws ValidationException{
+//		if(trays == null || trays.length == 0)
+//			return;
+////		存货单位托盘容量
+//		UFDouble nunitvolume = PuPubVO.getUFDouble_NullAsZero(getHeadValue("tray_volume"));
+//		int len = trays.length;
+//		UFDouble nallvolume = nunitvolume.multiply(len);
+//		int row = getbillListPanel().getBodyTable().getSelectedRow();
+//		if(row<0)
+//			throw new ValidationException("未选中表体托盘信息行");
+//		UFDouble nactnum = PuPubVO.getUFDouble_NullAsZero(getBodyValue(row, "noutassistnum"));
+//		if(nactnum.compareTo(nallvolume)>0)
+//			throw new ValidationException("实际入库数量超出选择托盘的总容量");
+//	}
+	
+	private Map<String,SmallTrayVO[]> trayLockInfor = null;
+	public Map<String,SmallTrayVO[]> getTrayLockInfor(boolean isclear){
+		if(trayLockInfor == null){
+			trayLockInfor = new HashMap<String, SmallTrayVO[]>();
+		}
+		if(isclear)
+			trayLockInfor.clear();
+		return trayLockInfor;
+	}
+	
+	private ReLockTrayDialog lockDlg = null;
+	private ReLockTrayDialog getLockTrayDialog(){	
+		if(lockDlg == null){
+			int row = getbillListPanel().getBodyTable().getSelectedRow();
+			if(row<0){
+				myClientUI.showErrorMessage("请选中表体行");
+				return null;
+			}
+			String bbid = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row, "cdt_pk"));
+			String invmanid = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row, "pk_invmandoc"));
+			String batchcode = PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row, "vbatchcode"));
+			if(bbid == null||invmanid == null || batchcode == null){
+				myClientUI.showErrorMessage("选中行数据异常,请刷新数据重新操作");
+				return null;
+			}
+			ReLockTrayDialog.xntrayid = bbid;
+			ReLockTrayDialog.invmanid = invmanid;
+			ReLockTrayDialog.batchcode = batchcode;
+			lockDlg = new ReLockTrayDialog(myClientUI,getbillListPanel(),pk_ware,isEdit);
+		}
+		return lockDlg;
+	}
+	
+	private void clearReLockDialog(){
+		lockDlg = null;
+	}
 
 }
