@@ -3,6 +3,7 @@ package nc.ui.wds.invcl;
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.pub.IVOTreeData;
 import nc.ui.trade.treecard.BillTreeCardUI;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.wds.invcl.checkClassInterface;
 
 public class InvClClientUI extends BillTreeCardUI {
@@ -11,6 +12,24 @@ public class InvClClientUI extends BillTreeCardUI {
 	protected IVOTreeData createTableTreeData() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private String cwarehouseid;//登陆人员所属仓库
+	
+	public InvClClientUI(){
+		super();
+		init();
+	}
+	private void init(){
+		getBillTreeData().modifyRootNodeShowName("存货分类");
+		LoginInforHelper login = new LoginInforHelper();
+		try {
+			cwarehouseid = login.getCwhid(_getOperator());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cwarehouseid = null;
+		}
 	}
 
 	@Override
@@ -31,6 +50,7 @@ public class InvClClientUI extends BillTreeCardUI {
 
 		setPanelValue("coperator", _getOperator());
 		setPanelValue("dmakedate", _getDate());
+		setPanelValue("cwarehouseid", cwarehouseid);
 	}
 	
 	public java.lang.Object getUserObject() {

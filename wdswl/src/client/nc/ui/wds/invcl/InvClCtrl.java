@@ -21,7 +21,7 @@ public class InvClCtrl implements ITreeCardController,ISingleController {
 
 	public boolean isTableTree() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public String[] getCardBodyHideCol() {
@@ -36,6 +36,7 @@ public class InvClCtrl implements ITreeCardController,ISingleController {
 				IBillButton.Edit,
 				IBillButton.Save,
 				IBillButton.Cancel,
+				IBillButton.Delete,
 				IBillButton.Refresh
 		};
 	}
