@@ -30,6 +30,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public abstract class InPubEventHandler extends WdsPubEnventHandler {
@@ -175,6 +176,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		if(tdpDlg.showModal() == UIDialog.ID_OK){
 			Map<String,List<TbGeneralBBVO>> map = tdpDlg.getBufferData();
 			ui.setTrayInfor(map);
+			
+			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
+			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
 		}
 		setBackGround();

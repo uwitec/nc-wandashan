@@ -27,6 +27,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -454,6 +455,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		if (tdpDlg.showModal() == UIDialog.ID_OK) {
 			Map<String, List<TbOutgeneralTVO>> map2 = tdpDlg.getBufferData();
 			ui.setTrayInfor(map2);
+			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
+			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
 		}
 		chaneColor();

@@ -26,6 +26,7 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.field.IBillField;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
 public class OutPubClientUI extends WdsBillManagUI {
 	
@@ -42,6 +43,13 @@ public class OutPubClientUI extends WdsBillManagUI {
 		if(trayInfor == null)
 			trayInfor = new HashMap<String, List<TbOutgeneralTVO>>();
 		return trayInfor;
+	}
+	private Map<String,SmallTrayVO[]> lockTrayInfor = null;//虚拟托盘绑定的实际托盘信息 zhf add
+	public Map<String,SmallTrayVO[]> getLockTrayInfor(){
+		return lockTrayInfor;
+	}
+	public void setLockTrayInfor(Map<String,SmallTrayVO[]>  newInfor){
+		lockTrayInfor = newInfor;
 	}
 	public OutPubClientUI(){
 		super();
@@ -166,6 +174,7 @@ public class OutPubClientUI extends WdsBillManagUI {
 				body.setTrayInfor(trayInfor.get(key));
 			}
 		}
+		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘解除绑定信息
 		return billvo;
 	}
 	
