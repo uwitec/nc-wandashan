@@ -1,12 +1,18 @@
 package nc.bs.ic.pub;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nc.bs.pub.SuperDMO;
 import nc.bs.trade.comsave.BillSave;
+import nc.bs.wds.ic.stock.StockInvOnHandBO;
+import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
@@ -16,11 +22,15 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.trade.voutils.IFilter;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
+import nc.vo.wds.xn.XnRelationVO;
 import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsIcInPubBillSave extends BillSave {
 	
@@ -36,6 +46,14 @@ public class WdsIcInPubBillSave extends BillSave {
 		if(dao == null)
 			dao = new IcInPubBO();
 		return dao;
+	}
+	
+	private TempTableUtil ttutil = null;
+	private TempTableUtil getTtutil(){
+		if(ttutil == null){
+			ttutil = new TempTableUtil();
+		}
+		return ttutil;
 	}
 	
 	class filterDelLine implements IFilter{
@@ -69,6 +87,7 @@ public class WdsIcInPubBillSave extends BillSave {
 		boolean bodyChanged = false;
 		AggregatedValueObject oldbillVo = VOTool.aggregateVOClone(billVo);
 		TbGeneralHVO head = (TbGeneralHVO)billVo.getParentVO();
+		Map<String, SmallTrayVO[]> lockTrayInfor = (Map<String, SmallTrayVO[]>)((OtherInBillVO)billVo).getOUserObj();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
 		TbGeneralBVO[] obodys = (TbGeneralBVO[])billVo.getChildrenVO();
@@ -104,10 +123,22 @@ public class WdsIcInPubBillSave extends BillSave {
 			//插入库存存量状态表  更新托盘状态为已占用
 			TbGeneralBVO[] newbodys = (TbGeneralBVO[])newBillVo.getChildrenVO();
 			getOutBO().insertInvBatchState(newbodys, head.getPk_cargdoc());
-		}
-	
+		}	
+		
+//		zhf add
+		if(lockTrayInfor != null && lockTrayInfor.size() > 0){
+			//如果存在绑定实际托盘信息   保存绑定关系
+			LockTrayBO lockbo = new LockTrayBO();
+			lockbo.doSaveLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)),newBillVo.getHeaderVo().getGeh_cwarehouseid(),lockTrayInfor);
+		}	
 		return retAry;
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	

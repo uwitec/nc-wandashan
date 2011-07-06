@@ -23,8 +23,10 @@ public class InvClBO implements IBDBusiCheck {
 //			校验编码是否和父类保持一致性  编码位数  必须为  两位  两位
 			String code = head.getVinvclcode();
 			String fathercode = getInvclCodeByKey(head.getPk_father(), head.getPk_corp());
-			if(fathercode == null)
-				throw new BusinessException("数据异常，获取父类编码为空");
+			if(fathercode == null){
+				fathercode = "root";
+			}
+				
 			checkCode(code, fathercode, head.getPrimaryKey(),head.getPk_corp());
 		}else if(intBdAction == IBDACTION.DELETE){
 //			校验如果存在下级节点 不能删除
@@ -44,6 +46,17 @@ public class InvClBO implements IBDBusiCheck {
 		if(PuPubVO.getString_TrimZeroLenAsNull(key)!=null){
 			str.append(" pk_invcl <> '"+key+"'");
 		}
+		
+		if(PuPubVO.getInteger_NullAs(getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0)>0)
+			throw new BusinessException("分类编码已存在");
+		
+		if(fathercode.equalsIgnoreCase("root")){
+			if(code.length()!=2){
+				throw new BusinessException("分类编码不符合规则，XX--XX--XX");
+			}
+			return;
+		}
+		
 		double a = code.length()/2;
 		int b = code.length()/2;
 		if(Math.abs(a-b)>0)
@@ -69,6 +82,8 @@ public class InvClBO implements IBDBusiCheck {
 	private String getInvclCodeByKey(String key,String logcorp) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(key)==null)
 			return null;
+//		if(key.trim().equalsIgnoreCase("root"))
+//			return "root";
 		String sql = "select vinvclcode from wds_invcl where isnull(dr,0) = 0 and pk_corp = '"+logcorp+"' and pk_invcl = '"+key+"'";
 		
 		return PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));

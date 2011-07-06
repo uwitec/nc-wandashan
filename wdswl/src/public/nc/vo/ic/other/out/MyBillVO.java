@@ -26,8 +26,15 @@ public class  MyBillVO extends HYBillVO {
 	private String sLogCorp = null;
 	private UFDate uLogDate = null;
 	private Integer itype = 8;//运单来源类别 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-	
-	
+	private Object oUserObj = null;//用户数据
+
+	public Object getOUserObj() {
+		return oUserObj;
+	}
+
+	public void setOUserObj(Object userObj) {
+		oUserObj = userObj;
+	}
 
 	public String getSLogUser() {
 		return sLogUser;

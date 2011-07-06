@@ -8,6 +8,7 @@ import java.util.Map;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
+import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
@@ -357,8 +358,18 @@ public class IcInPubBO {
 					throw (BusinessException)e;
 				else
 					throw new BusinessException(e);
+			}			
+			
+//			存在虚拟托盘  入库的话  校验是否 绑定了 实际托盘 如果绑定  进行解锁
+			
+			List<String> lbbid = new ArrayList<String>();
+			for(TbGeneralBBVO bb:ltray){
+				lbbid.add(bb.getPrimaryKey());
 			}
+			LockTrayBO lockbo = new LockTrayBO(getDao(),getStockBO());
+			lockbo.reLockTray(lbbid.toArray(new String[0]));
 		}
+		
 //		删除托盘明细流水表
 		if(bvos!=null && bvos.length>0){
 			for(TbGeneralBVO bvo:bvos){

@@ -19,6 +19,21 @@ public class  OtherInBillVO extends HYBillVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private Object oUserObj = null;
+	
+
+	public Object getOUserObj() {
+		return oUserObj;
+	}
+
+	public void setOUserObj(Object userObj) {
+		oUserObj = userObj;
+	}
+	
+	public TbGeneralHVO getHeaderVo(){
+		return (TbGeneralHVO)getParentVO();
+	}
 
 	public CircularlyAccessibleValueObject[] getChildrenVO() {
 		return super.getChildrenVO();

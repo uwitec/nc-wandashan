@@ -1,7 +1,9 @@
 package nc.bs.wds.ic.stock;
 
+import java.util.ArrayList;
 import java.util.List;
 import nc.bs.dao.BaseDAO;
+import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
@@ -43,6 +45,34 @@ public class StockInvOnHandBO {
 	/**
 	 * 
 	 * @作者：zhf
+	 * @说明：完达山物流项目 托盘状态校验  可用于 对托盘占用的并发校验
+	 * @时间：2011-7-5下午08:57:09
+	 * @param state
+	 * @param ltray
+	 * @param tt
+	 * @throws BusinessException
+	 */
+	public void checkTray(int state,List<String> ltray,TempTableUtil tt) throws BusinessException{
+		if(ltray == null || ltray.size() ==0)
+			return;
+		String sql = "select count(0) from bd_cargdoc_tray where isnull(dr,0) = 0 and cdt_pk in "+ tt.getSubSql((ArrayList)ltray)
+		+" and cdt_traystatus = "+state;
+		int num = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR),WdsWlPubTool.INTEGER_ZERO_VALUE);
+		if(num!=ltray.size()){
+			String error = null;
+			if(state == StockInvOnHandVO.stock_state_lock){
+				error = "出现并发操作绑定的托盘已被释放";
+			}else if(state == StockInvOnHandVO.stock_state_null){
+				error = "出现并发操作托盘已被占用";
+			}
+			throw new BusinessException(error);
+		}
+			
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
 	 * @说明：完达山物流项目 获取库存状态数据
 	 * @时间：2011-6-28下午04:20:27
 	 * @param corp 公司
@@ -78,6 +108,29 @@ public class StockInvOnHandBO {
 			return null;
 		return linv.toArray(new StockInvOnHandVO[0]);
 
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 货物托盘的当前存量
+	 * @时间：2011-7-6下午01:16:22
+	 * @param trayid 托盘id
+	 * @param isass 是否辅数量
+	 * @return
+	 * @throws BusinessException
+	 */
+	public UFDouble getTrayNum(String trayid,boolean isass) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(trayid)==null)
+			return null;
+		StringBuffer sql = new StringBuffer("select ");
+		if(isass)
+			sql.append("whs_stockpieces");
+		else
+			sql.append("whs_stocktonnage");
+		sql.append(" from tb_warehousestock where isnull(dr,0) = 0 and pplpt_pk = '"+trayid+"'");
+		
+		return PuPubVO.getUFDouble_NullAsZero(getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR));
 	}
 	
 	

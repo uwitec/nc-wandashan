@@ -2,7 +2,9 @@ package nc.bo.other.out;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import nc.bs.pub.SuperDMO;
+import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.SQLParameter;
 import nc.vo.ic.other.out.MyBillVO;
@@ -14,6 +16,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
+import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.VOTool;
 
 /**
@@ -50,6 +53,15 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 		if(billVo==null)
 			throw new BusinessException("传入数据为空");
 		MyBillVO old_billVo = (MyBillVO)VOTool.aggregateVOClone(billVo);
+		
+//		zhf add
+		Map<String, SmallTrayVO[]> trayInfor = (Map<String,SmallTrayVO[]>)((MyBillVO)billVo).getOUserObj();
+		
+//		校验  进行了 绑定实际托盘的虚拟托盘 必须  指定  解除绑定信息
+		LockTrayBO lockbo = new LockTrayBO();
+		lockbo.checkIsLock((MyBillVO)billVo);
+//		zhf end
+		
 		boolean isAdd = false;
 		boolean bodyChanged = false;
 		TbOutgeneralHVO head = (TbOutgeneralHVO)billVo.getParentVO();
@@ -103,6 +115,11 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				}
 				throw new BusinessException(e);
 			}		
+		}
+		
+		if(trayInfor != null && trayInfor.size()>0){
+//			解锁  实际托盘
+			lockbo.doDelLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)), head.getSrl_pk(), trayInfor);
 		}
 		
 		return retAry;
