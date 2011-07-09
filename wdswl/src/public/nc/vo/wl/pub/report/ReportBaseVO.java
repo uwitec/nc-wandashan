@@ -17,8 +17,7 @@ import nc.vo.pub.lang.UFDouble;
  * 创建日期：(2004-2-5 11:43:07)
  * @author：liujb 
  */
-public class ReportBaseVO
-	extends nc.vo.pub.CircularlyAccessibleValueObject
+public class ReportBaseVO extends nc.vo.pub.CircularlyAccessibleValueObject
 	implements IReportVO {
 	private boolean m_isSubtotal = false;
 	private boolean m_isTotal = false;

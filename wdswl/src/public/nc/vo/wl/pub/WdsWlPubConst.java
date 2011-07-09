@@ -101,7 +101,7 @@ public class WdsWlPubConst {
 	/**原料粉收发存汇总表--报表*/
 	public static String  REPORT04="80100204";
 	/**非正常箱粉报表--报表*/
-	public static String  REPORT06="80100206";
+	public static String  REPORT06="80100205";
 	/**出入库流水账--报表*/
 	public static String  REPORT08="80100208";
 	/**箱粉待发运台账--报表*/
