@@ -33,8 +33,8 @@ public class TbStockstateVO extends SuperVO {
 	public String ss_custom5;
 	public Integer dr;
 	public String ss_custom4;
-	public Integer ss_isout;//是否可出库
-
+	public Integer ss_isout;//是否可出库	
+	public  UFBoolean isok ;//是否正常 报表用该字段 mlr
 	public static final String SS_ISOUT = "ss_isout";
 	public static final String SS_CUSTOM2 = "ss_custom2";
 	public static final String SS_REMARK = "ss_remark";
@@ -47,6 +47,13 @@ public class TbStockstateVO extends SuperVO {
 	public static final String SS_CUSTOM5 = "ss_custom5";
 	public static final String DR = "dr";
 	public static final String SS_CUSTOM4 = "ss_custom4";
+	public UFBoolean getIsok() {
+		return isok;
+	}
+
+	public void setIsok(UFBoolean isok) {
+		this.isok = isok;
+	}
 
 	/**
 	 * 属性ss_custom2的Getter方法.
