@@ -20,8 +20,7 @@ import nc.vo.pub.lang.*;
  * @author author
  * @version Your Project 1.0
  */
-public class StortranscorpBVO extends SuperVO {
-	
+public class StortranscorpBVO extends SuperVO {	
 	public String pk_stordoc;//主键
 	public Integer dr;
 	public String vmemo;
@@ -60,44 +59,6 @@ public class StortranscorpBVO extends SuperVO {
 	public String vdef8;
 	public String vdef9;
 	public String vdef10;	
-
-	public static final String CAREAID = "careaid";
-	public static final String ISMALLTYPE = "ismalltype";
-	public static final String ISMALLPRICE = "ismallprice";
-	public static final String RESERVE5 = "reserve5";
-	public static final String PK_STORDOC = "pk_stordoc";
-	public static final String RESERVE4 = "reserve4";
-	public static final String VDEF4 = "vdef4";
-	public static final String VDEF7 = "vdef7";
-	public static final String DR = "dr";
-	public static final String VDEF2 = "vdef2";
-	public static final String RESERVE11 = "reserve11";
-	public static final String RESERVE12 = "reserve12";
-	public static final String VMEMO = "vmemo";
-	public static final String TS = "ts";
-	public static final String RESERVE6 = "reserve6";
-	public static final String VDEF1 = "vdef1";
-	public static final String PK_WDS_TANSCORP_H = "pk_wds_tanscorp_h";
-	public static final String RESERVE3 = "reserve3";
-	public static final String RESERVE14 = "reserve14";
-	public static final String RESERVE10 = "reserve10";
-	public static final String RESERVE13 = "reserve13";
-	public static final String NSMALLNUM = "nsmallnum";
-	public static final String RESERVE8 = "reserve8";
-	public static final String RESERVE9 = "reserve9";
-	public static final String VDEF3 = "vdef3";
-	public static final String VDEF9 = "vdef9";
-	public static final String VDEF8 = "vdef8";
-	public static final String RESERVE1 = "reserve1";
-	public static final String RESERVE16 = "reserve16";
-	public static final String RESERVE7 = "reserve7";
-	public static final String RESERVE15 = "reserve15";
-	public static final String VDEF6 = "vdef6";
-	public static final String RESERVE2 = "reserve2";
-	public static final String VDEF10 = "vdef10";
-	public static final String VDEF5 = "vdef5";
-	public static final String PK_STORETRANSCORP = "pk_storetranscorp";
-
 	/**
 	 * 属性reserve5的Getter方法.
 	 * 
