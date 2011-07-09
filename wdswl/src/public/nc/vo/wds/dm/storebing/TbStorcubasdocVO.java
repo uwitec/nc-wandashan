@@ -35,8 +35,8 @@ public class TbStorcubasdocVO extends SuperVO {
 	
 	public String pk_stordoc1;//其他分仓id
 	public String vnote;
-
-	public String pk_custom1;//预留字段
+	//预留字段
+	public String pk_custom1;
 	public String pk_custom2;
 	public String pk_custom3;
 	public String pk_custom4;
@@ -45,7 +45,8 @@ public class TbStorcubasdocVO extends SuperVO {
 	public String pk_custom7;	
 	public String pk_custom8;
 	public String pk_custom9;
-	public String scb_customize1;//预留字段
+	//预留字段
+	public String scb_customize1;
 	public String scb_customize2;
 	public String scb_customize3;
 	public String scb_customize4;
@@ -54,40 +55,49 @@ public class TbStorcubasdocVO extends SuperVO {
 	public String scb_customize7;
 	public String scb_customize8;
 	public String scb_customize9;
+//	zhf 扩展
+	private UFDouble ndef1;  //最小发货量
+	private UFDouble ndef2;
+	
+	private UFBoolean bdef1;
+	private UFBoolean bdef2;
 	
 	public Integer dr;
 	public UFTime ts;
 	
 
-	public static final String PK_DEFDOC = "pk_defdoc";
-	public static final String PK_CUSTOM9 = "pk_custom9";
-	public static final String PK_STORDOC = "pk_stordoc";
-	public static final String PK_STORDOC1 = "pk_stordoc1";
-	public static final String DR = "dr";
-	public static final String CONADDR = "conaddr";
-	public static final String PK_CUSTOM6 = "pk_custom6";
-	public static final String SCB_PK = "scb_pk";
-	public static final String CUSTNAME = "custname";
-	public static final String SCB_CUSTOMIZE6 = "scb_customize6";
-	public static final String PK_CUSTOM2 = "pk_custom2";
-	public static final String TS = "ts";
-	public static final String SCB_CUSTOMIZE7 = "scb_customize7";
-	public static final String PK_CUSTOM3 = "pk_custom3";
-	public static final String SCB_CUSTOMIZE5 = "scb_customize5";
-	public static final String SCB_CUSTOMIZE9 = "scb_customize9";
-	public static final String PK_CUSTOM1 = "pk_custom1";
-	public static final String SCB_CUSTOMIZE8 = "scb_customize8";
-	public static final String SCB_CUSTOMIZE2 = "scb_customize2";
-	public static final String PK_CUSTOM4 = "pk_custom4";
-	public static final String PK_CUMANDOC="pk_cumandoc";
-	public static final String PK_CUBASDOC = "pk_cubasdoc";
-	public static final String VNOTE = "vnote";
-	public static final String SCB_CUSTOMIZE3 = "scb_customize3";
-	public static final String SCB_CUSTOMIZE4 = "scb_customize4";
-	public static final String PK_CUSTOM7 = "pk_custom7";
-	public static final String PK_CUSTOM8 = "pk_custom8";
-	public static final String SCB_CUSTOMIZE1 = "scb_customize1";
-	public static final String PK_CUSTOM5 = "pk_custom5";
+
+	public UFDouble getNdef1() {
+		return ndef1;
+	}
+
+	public void setNdef1(UFDouble ndef1) {
+		this.ndef1 = ndef1;
+	}
+
+	public UFDouble getNdef2() {
+		return ndef2;
+	}
+
+	public void setNdef2(UFDouble ndef2) {
+		this.ndef2 = ndef2;
+	}
+
+	public UFBoolean getBdef1() {
+		return bdef1;
+	}
+
+	public void setBdef1(UFBoolean bdef1) {
+		this.bdef1 = bdef1;
+	}
+
+	public UFBoolean getBdef2() {
+		return bdef2;
+	}
+
+	public void setBdef2(UFBoolean bdef2) {
+		this.bdef2 = bdef2;
+	}
 
 	/**
 	 * 属性pk_custom9的Getter方法.

@@ -1,7 +1,11 @@
 package nc.bs.wds.ic.stock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
@@ -321,6 +325,141 @@ public class StockInvOnHandBO {
 			sql = sql + " and cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'";
 		}
 		getDao().executeUpdate(sql);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取现存量
+	 * @时间：2011-7-7下午07:18:34
+	 * @param corp
+	 * @param cwarehouseid
+	 * @param pk_cargdoc
+	 * @param cinvbasid
+	 * @param vbatchcode
+	 * @param ctrayid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public UFDouble[] getInvStockNum(String corp,String cwarehouseid,
+			String pk_cargdoc,String cinvbasid,String vbatchcode,String ctrayid) throws BusinessException{
+		StringBuffer sql = new StringBuffer();
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)==null){
+			throw new BusinessException("仓库不能为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull("cinvbasid")==null)
+			throw new BusinessException("存货为空");
+		
+		sql.append("select sum(whs_stocktonnage) nnum,sum(whs_stockpieces) nassnum ");
+		sql.append(" from tb_warehousestock");
+		sql.append(" where isnull(dr,0) = 0");
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
+			sql.append(" pk_corp = '"+corp+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null){
+			sql.append(" pk_customize1 = '"+cwarehouseid+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)!=null){
+			sql.append(" pk_cargdoc = '"+pk_cargdoc+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(vbatchcode)!=null){
+			sql.append(" whs_batchcode = '"+vbatchcode+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null)
+			sql.append(" pplpt_pk = '"+ctrayid+"'");
+		
+		sql.append(" pk_invbasdoc = '"+cinvbasid+"'");
+		sql.append(" group by ");
+		
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
+			sql.append(" pk_corp");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null){
+			sql.append(",pk_customize1");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)!=null){
+			sql.append(",pk_cargdoc");
+		}
+		sql.append(",pk_invbasdoc");
+		if(PuPubVO.getString_TrimZeroLenAsNull(vbatchcode)!=null){
+			sql.append(",whs_batchcode");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null)
+			sql.append(",pplpt_pk");
+		/**
+		 * zhf  托盘和 批次的先后位置  可能存在问题 
+		 * 因为  实际托盘为 一个批次放多个托盘  但对于虚拟托盘 却是 一个托盘对多个批次
+		 */
+		
+		
+		Object o =  getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.ARRAYROCESSOR);
+        if(o == null)
+        	return null;
+        return (UFDouble[])o;
+	}
+	
+	private void dealResultSet(Map<String,UFDouble[]> invNumInfor,List ldata){
+		if(ldata == null || ldata.size() ==0)
+			return;
+		//		if(ldata != null && ldata.size()!=0){
+		if(invNumInfor == null){
+			invNumInfor = new HashMap<String, UFDouble[]>();
+		}
+
+		String key = null;
+		Map oMap = null;
+		int len = ldata.size();
+		UFDouble[] nums = null;
+		for(int i=0;i<len;i++){
+			oMap = (Map)ldata.get(i);
+			key =// WdsWlPubTool.getString_NullAsTrimZeroLen(oMap.get("store"))
+//			+
+			WdsWlPubTool.getString_NullAsTrimZeroLen(oMap.get("inv"));
+
+			if(invNumInfor.containsKey(key)){
+				nums = invNumInfor.get(key);
+			}else{
+				nums = new UFDouble[]{WdsWlPubTool.DOUBLE_ZERO,WdsWlPubTool.DOUBLE_ZERO};
+			}
+			nums[0] = nums[0].add(PuPubVO.getUFDouble_NullAsZero(oMap.get("nnum")));
+			nums[1] = nums[1].add(PuPubVO.getUFDouble_NullAsZero(oMap.get("nassnum")));
+			
+			invNumInfor.put(key, nums);
+		}
+		//		}
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 获取仓库内已安排未出库的存货量   该处 需要  处理 关闭的运单
+	 * @时间：2011-7-7下午07:51:37
+	 * @param corp
+	 * @param cstoreid
+	 * @param cinvids
+	 * @return
+	 * @throws BusinessException
+	 */
+	public Map<String, UFDouble[]> getNdealNumInfor(String corp,String cstoreid,String[] cinvids,
+			TempTableUtil tt) throws BusinessException{
+
+		Map<String,UFDouble[]> retInfor = null;
+		String sql = null;
+		//		1、销售运单占用量
+		sql = " select b.pk_invbasdoc inv,coalesce(narrangnmu,0.0)-coalesce(noutnum,0) nnum ,coalesce(nassarrangnum,0.0)-coalesce(nassoutnum,0.0) nassnum" +
+		" from wds_soorder_b b inner join wds_soorder h on h.pk_soorder = b.pk_soorder " +
+		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
+		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
+		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
+		dealResultSet(retInfor, ldata);
+		//		2、发运运单占用量
+		sql = " select b.pk_invbasdoc inv,coalesce(ndealnum,0.0)-coalesce(noutnum,0) nnum ,coalesce(nassdealnum,0.0)-coalesce(nassoutnum,0.0) nassnum" +
+		" from wds_sendorder_b b inner join wds_sendorder h on h.pk_sendorder = b.pk_sendorder " +
+		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
+		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
+		ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
+		dealResultSet(retInfor, ldata);
+		return retInfor;
 	}
 
 }

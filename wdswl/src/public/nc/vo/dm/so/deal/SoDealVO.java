@@ -11,6 +11,8 @@ import nc.vo.wl.pub.WdsWlPubTool;
 
 public class SoDealVO extends SuperVO{
 	
+	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum","ntaldcnum"};
+	
 	private UFDouble nnum = null;//本次安排数量
 	private UFDouble nassnum = null;
 	private UFBoolean isonsell;
@@ -116,6 +118,20 @@ public class SoDealVO extends SuperVO{
 	private UFDouble nsummny; // 本币价税合计
 	private UFDouble ndiscountmny;
 	private String crowno;
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 表体合并
+	 * @时间：2011-7-8下午09:53:42
+	 * @param body2
+	 */
+	public void combin(SoDealVO body2){
+		for(String name:num_fields){
+			setAttributeValue(name, PuPubVO.getUFDouble_NullAsZero(getAttributeValue(name)).
+					add(PuPubVO.getUFDouble_NullAsZero(body2.getAttributeValue(name))));
+		}
+	}
 	
 	public transient static String[] m_headNames = new String[]{
 		"h.vreceiptcode",
@@ -808,6 +824,12 @@ public class SoDealVO extends SuperVO{
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(getCcustomerid())==null){
 			throw new ValidationException("客户不能为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(getCinvbasdocid())==null || PuPubVO.getString_TrimZeroLenAsNull(getCinventoryid()) == null){
+			throw new ValidationException("存货为空");
+		}
+		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+			throw new ValidationException("待安排量为空或0");
 		}
 //		if(getPk_outwhouse().equalsIgnoreCase(getPk_inwhouse())){
 //			throw new ValidationException("发货站不能和收获站相同");

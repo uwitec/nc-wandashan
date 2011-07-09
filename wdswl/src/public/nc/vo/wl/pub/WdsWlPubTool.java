@@ -423,4 +423,27 @@ public class WdsWlPubTool {
 
 		return showvalues;
 	}
+	
+	private static final List<CircularlyAccessibleValueObject> tempVoList = new ArrayList<CircularlyAccessibleValueObject>();
+	/**
+	 * 
+	 * @author zhf
+	 * @说明：（鹤岗矿业）公用组件 返回传入单据vo 的表头vo
+	 * 2011-5-5上午10:17:20
+	 * @param billvos  单据vo 数组
+	 * @return
+	 */
+	public static CircularlyAccessibleValueObject[] getParentVOFromAggBillVo(AggregatedValueObject[] billvos,Class parentClass){
+		if(billvos == null || billvos.length ==0)
+			return null;
+		tempVoList.clear();
+		for(AggregatedValueObject bill:billvos){
+			if(bill.getParentVO() == null)
+				continue;
+			tempVoList.add(bill.getParentVO());
+		}
+		if(tempVoList.size() == 0)
+			return null;
+		return tempVoList.toArray((CircularlyAccessibleValueObject[])java.lang.reflect.Array.newInstance(parentClass, billvos.length));
+	}
 }

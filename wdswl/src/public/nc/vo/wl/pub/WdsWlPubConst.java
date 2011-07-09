@@ -144,7 +144,7 @@ public class WdsWlPubConst {
 	
 	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};//"vbillno",
 
-	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vreceiptcode","cbodywarehouseid","ccustomerid"};//"vbillno",
+	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid"};//"vbillno",
 	
 	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 	public static String DM_PLAN_TO_ORDER_SAVE="SAVE";
@@ -160,7 +160,10 @@ public class WdsWlPubConst {
 	/**发运订单 */
 	public static String WDS3="WDS3";
 	/**销售运单安排 */
-	public static String WDS4 = "WDS4";
+	public static String WDS4 = "WDS4";//销售计划安排  原版
+	public static String WDS4_2 = "WDS42";//销售计划安排2
+	public static String WDS4_2_1 = "cust";//销售计划安排2
+	public static String WDS4_2_2 = "deal";//销售计划安排2
 	/**销售运单 */
 	public static String WDS5="WDS5";
 	/**其他出库 */
@@ -243,4 +246,8 @@ public class WdsWlPubConst {
 	
 	
 	public static String default_inv_state = "1021S31000000009FS98";//入库时设置默认库存状态=====+++++select * from tb_stockstate
+	//wds模块日志记录
+	public static String wds_logger_name = "wds-log";
+//	销售安排时  过滤 客户的最小发货量  是辅计量 还是  主计量
+	public static boolean sale_send_isass = true; 
 }
