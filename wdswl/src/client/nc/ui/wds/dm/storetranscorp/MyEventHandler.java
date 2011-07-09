@@ -61,7 +61,6 @@ public class MyEventHandler extends WdsPubEnventHandler {
 	protected void onBoSave() throws Exception {
 		WdsWlPubTool.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(), 
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), new String[]{"pk_wds_tanscorp_h","careaid"}, new String[]{"承运商","收货地区"});
-
 		super.onBoSave();
 		onBoRefresh();
 	}

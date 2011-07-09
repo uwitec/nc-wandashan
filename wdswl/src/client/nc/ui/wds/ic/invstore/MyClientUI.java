@@ -26,8 +26,10 @@ import nc.vo.wl.pub.LoginInforVO;
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private LoginInforVO login=null;
 	
 	protected ManageEventHandler createEventHandler() {
+		
 		return new MyEventHandler(this, getUIControl());
 	}
     
@@ -53,13 +55,13 @@ import nc.vo.wl.pub.LoginInforVO;
 	 btn.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
 	 btn.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 	 btn.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
-		
+	
 		
 	}
 
 	public void setDefaultData() throws Exception {
 	     //按照 当前操作人绑定的仓库和货位赋值
-		LoginInforVO login=getLoginInforHelper().getLogInfor(_getOperator());
+		login=getLoginInforHelper().getLogInfor(_getOperator());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_stordoc").setValue(login.getWhid());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setValue(login.getSpaceid());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_psndoc").setValue(_getOperator());		
@@ -68,16 +70,29 @@ import nc.vo.wl.pub.LoginInforVO;
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		if("sgcode".equalsIgnoreCase(key)){
+			if(login==null){
+				try {
+					login=getLoginInforHelper().getLogInfor(_getOperator());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 			Object pk_stordoc = getBillCardPanel().getHeadItem("pk_stordoc").getValueObject();
+			Object pk_cargdoc=getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
 			if(pk_stordoc == null ){
 				showWarningMessage("请先绑定仓库货位");
 				return false;
 			}
+			if(pk_cargdoc == null ){
+				showWarningMessage("请先绑定仓库货位");
+				return false;
+			}	
 			JComponent jc = getBillCardPanel().getBodyItem("sgcode").getComponent();
 			if(jc instanceof UIRefPane){
 				UIRefPane ref =(UIRefPane)jc;
 				ref.getRefModel().addWherePart(" and wds_invbasdoc.pk_invmandoc not in ( select pk_invmandoc from tb_spacegoods " +
-						" where isnull(dr,0)=0 and pk_storedoc ='"+pk_stordoc+" ' and pk_invmandoc is not null)");
+						" where isnull(dr,0)=0 and pk_storedoc ='"+pk_stordoc+" ' and pk_invmandoc is not null" +
+						" and tb_spacegoods.pk_cargdoc <>'"+pk_cargdoc+"')");
 			}
 		}
 		return super.beforeEdit(e);

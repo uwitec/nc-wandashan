@@ -9,6 +9,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
@@ -66,8 +67,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	
 	@Override
 	protected void onBoSave() throws Exception {
-		beforeSaveCheck();
-		
+		beforeSaveCheck();		
 		try {
 			dataNotNullValidate();
 		} catch (ValidationException e) {
@@ -161,12 +161,24 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 					getBillUI().getVOFromUI().getChildrenVO().length==0	){
 				throw new BusinessException("表体不允许为空");
 			}
-			
+		AggregatedValueObject vo=getBillUI().getVOFromUI();
+		//只对追加计划校验 计划数量不允许都为空
+		if(vo.getParentVO()==null){
+			return;
+		}
+		Integer planType=PuPubVO.getInteger_NullAs(vo.getParentVO().getAttributeValue("iplantype"),new Integer(3));
+		if(planType.intValue()==1){
+		BeforeSaveValudate.checkNotAllNulls(getBillUI().getVOFromUI(),new String[]{"nplannum","nassplannum"}, new String[]{"计划数量","计划辅数量"});	
+		}
 //			}else{
 //				super.beforeSaveBodyUnique(new String[]{"pk_invbasdoc"});
 //			}
 		};
 	}
+	
+	
+	
+	
 	@Override
 	protected void onBoLineAdd() throws Exception {
 		// TODO Auto-generated method stub

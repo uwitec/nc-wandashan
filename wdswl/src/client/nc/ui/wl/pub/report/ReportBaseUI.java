@@ -80,7 +80,8 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
 
     public ButtonObject[] m_buttons = null;
 
-    public int[] m_buttonArray = null;
+    public int[] m_buttonArray = null;   
+  
 
     public Boolean unlockSortListener = false;// 代表是否开启排序监听
 

@@ -1,33 +1,21 @@
 package nc.ui.wds.dm.storetranscorp;
-
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-
-/**
- * <b> 在此处简要描述此类的功能 </b>
- * 
+/** 
  * <p>
  * 分仓承运商绑定
  * </p>
- * 
- * 
  * @author author
  * @version tempProject version
  */
 public class MyClientUI extends BillManageUI {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 
@@ -88,10 +76,13 @@ public class MyClientUI extends BillManageUI {
 		// TODO Auto-generated method stub
 		super.bodyRowChange(e);
 	}
-//	@Override
-//	protected BusinessDelegator createBusinessDelegator() {
-//		// TODO Auto-generated method stub
-//		return new nc.ui.wds.dm.storetranscorp.BusinessDelegator();
-//	}
+
+	@Override
+	public Object getUserObject() {
+		
+		return new GetCheckClass();
+	}
+	
+
 
 }

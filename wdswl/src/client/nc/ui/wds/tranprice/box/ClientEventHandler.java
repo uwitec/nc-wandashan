@@ -1,9 +1,12 @@
 package nc.ui.wds.tranprice.box;
 
+import nc.bs.wl.pub.BsBeforeSaveValudate;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -68,6 +71,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 				throw new Exception(i+"行,[最小距离] 不能大于  [最大距离]");
 			}
 		}
+		AggregatedValueObject vo=getBillUI().getVOFromUI();
+		//校验 收获地区 在最小距离和最大距离不能出现交叉
+		BeforeSaveValudate.beforeSaveBodyUniqueInmet((SuperVO[])vo.getChildrenVO(),
+				new String[]{"pk_replace"}, "nmindistance", "nmaxdistance", 
+				new String[]{"收获地区"}, "最小距离","最大距离");
 	}
 	
 	@Override
