@@ -16,9 +16,12 @@ import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.VOTool;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * @作者：lyf
@@ -26,9 +29,15 @@ import nc.vo.wl.pub.VOTool;
  * 发运计划录入（WDS1）后台类
  */
 public class PlanCheckinBO {
-	
-	BaseDAO dao = null;
-	
+	//计划主数量
+	private String planNum="nplannum";
+	//计划辅数量
+	private String planBnum="nassplannum";	
+	//入库仓库
+	private String pk_inwhouse="pk_inwhouse";
+	//出库仓库
+	private String pk_outwhouse="pk_outwhouse";
+	BaseDAO dao = null;	
 	private BaseDAO getBaseDAO(){
 		if(dao==null){
 			dao = new BaseDAO();
@@ -85,7 +94,7 @@ public class PlanCheckinBO {
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();
 		String pk_sendplanin = parent.getPk_sendplanin();
 		StringBuffer sql = new StringBuffer();	
-		sql.append(" select count(*) ");
+		sql.append(" select count(0) ");
 		sql.append(" from wds_sendorder ");
 		sql.append(" join wds_sendorder_b ");
 		sql.append(" on wds_sendorder.pk_sendorder= wds_sendorder_b.pk_sendorder");
@@ -164,7 +173,70 @@ public class PlanCheckinBO {
 	    getBaseDAO().insertVOWithPK(adds.get(i));
 	  }	  
 		  getBaseDAO().updateVOList(mods); 
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *      检查发运计划的计划数量不允许都为空
+	 * @时间：2011-7-8下午07:18:43
+	 * @param vo
+	 * @throws BusinessException
+	 */
+	public void checkNotAllNull(AggregatedValueObject vo)throws BusinessException{
+	    if(vo.getChildrenVO()==null || vo.getChildrenVO().length==0){
+	        return;	
+	    }
+		SuperVO[] vos=(SuperVO[]) vo.getChildrenVO();
+		UFDouble  znum=new UFDouble("0.0");
+		UFDouble  bznum=new UFDouble("0.0");
+		int size=vos.length;
+		for(int i=0;i<size;i++){
+			UFDouble num=PuPubVO.getUFDouble_NullAsZero(vos[i].getAttributeValue(planNum));
+			UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos[i].getAttributeValue(planBnum));
+			znum=znum.add(num);
+			bznum=bznum.add(bnum);
+		}
+		if(znum.doubleValue()<=0 || bznum.doubleValue()<=0){
+			throw new BusinessException("发运计划[月计划]的计划数量不允许都为空");
+		}		
 	}	
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *      检查发运计划追加计划 如果计划数量都为空 不允许保存
+	 *            如果没有月计划 追加计划不允许保存              
+	 * @时间：2011-7-8下午07:18:43
+	 * @param vo
+	 * @throws BusinessException
+	 */
+	public void checkForBplan(AggregatedValueObject vo)throws BusinessException{
+		//保存追加计划时  计划数量不允许为空
+		checkNotAllNull(vo);
+		//校验是否存在月计划,如果不存在月计划不允许保存
+		SuperVO hvo=(SuperVO) vo.getParentVO();
+		AccountCalendar calendar = AccountCalendar.getInstance();
+		UFDate beginDate = calendar.getMonthVO().getBegindate();
+		UFDate endDate = calendar.getMonthVO().getEnddate();
+		//入库仓库主键
+		String pk_in=PuPubVO.getString_TrimZeroLenAsNull( hvo.getAttributeValue(pk_inwhouse));
+		//出库仓库主键
+		String pk_out=PuPubVO.getString_TrimZeroLenAsNull( hvo.getAttributeValue(pk_outwhouse));
+		StringBuffer sql=new StringBuffer();
+		sql.append(" select pk_sendplanin  from");
+		sql.append(" wds_sendplanin where ");
+		sql.append(" isnull(wds_sendplanin.dr,0)=0");
+		sql.append(" and dmakedate between '");
+		sql.append(beginDate+"' and '" + endDate);
+		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
+		sql.append("  and pk_outwhouse='"+pk_outwhouse+"'");
+		String pk=PuPubVO.getString_TrimZeroLenAsNull(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR));
+	    if(pk==null ||pk.trim().length()==0){
+	    	throw new BusinessException(" 该月还没有月计划不能添加追加计划");
+	    }
+	}
+	
 	
 	//将 追加计划    从  月计划 拆分出来
 	public void unplanStats(AggregatedValueObject obj2) throws BusinessException{

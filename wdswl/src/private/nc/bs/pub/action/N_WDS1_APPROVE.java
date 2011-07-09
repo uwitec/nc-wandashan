@@ -31,14 +31,18 @@ public class N_WDS1_APPROVE extends AbstractCompiler2 {
 			if (m_sysflowObj != null) {
 				return m_sysflowObj;
 			}
-			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
+			//审批前的校验 计划数量 和计划辅数量不能都为 空  只对月计划校验
+			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
+			if(iplantype!=null && 0==(Integer)iplantype){
+				runClass("nc.bs.wl.plan.PlanCheckinBO","checkNotAllNull","&currentVo:nc.vo.pub.AggregatedValueObject",vo, m_keyHas,m_methodReturnHas);		
+			}
+			// ####该组件为单动作工作流处理结束...不能进行修改####	
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);			
 			//审批后，将审批后的追加计划，合并到月计划
-
 //			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
 //			if(iplantype!=null && 1==(Integer)iplantype){
 //				runClass("nc.bs.wl.plan.PlanCheckinBO","planStats","&currentVo:nc.vo.pub.AggregatedValueObject",vo, m_keyHas,m_methodReturnHas);		

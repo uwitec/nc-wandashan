@@ -71,12 +71,8 @@ public class TonKilometerBs implements Serializable {
 	}
 	public void beforeSaveCheck(AggregatedValueObject vo) throws Exception{
 		//必须项校验
-		BsNotNullCheck.FieldNotNull(new SuperVO[]{(SuperVO)vo.getParentVO()}, 
-				new String[]{"vbillno","pk_billtype","reserve1","carriersid","dstartdate","denddate"},
-				new String[]{"单据号","单据类型","发货仓库","承运商","开始日期","结束日期"});
-		BsNotNullCheck.FieldNotNull((SuperVO[])vo.getChildrenVO(),
-				new String[]{"ntransprice","pk_replace"},
-				new String[]{"运价","收获地区"});
+		BsNotNullCheck.FieldNotNull(new SuperVO[]{(SuperVO)vo.getParentVO()},new String[]{"vbillno","pk_billtype","reserve1","carriersid","dstartdate","denddate"},new String[]{"单据号","单据类型","发货仓库","承运商","开始日期","结束日期"});
+		BsNotNullCheck.FieldNotNull((SuperVO[])vo.getChildrenVO(),new String[]{"ntransprice","pk_replace"},new String[]{"运价","收获地区"});
 		// 唯一性的校验 
 	    //单据号公司级唯一
 		BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.getParentVO(), new String[]{"vbillno","pk_billtype","pk_corp"}, "[  单据号  ] 在数据库中已经存在");			
@@ -87,9 +83,11 @@ public class TonKilometerBs implements Serializable {
 				throw new BusinessException("开始日期不能大于截止日期");
 			}
 		}
+		//发货仓库 承运商 单据类型 是否原料粉 组合唯一  
+		//  外加 开始日期 到 截止日期不能交叉
+		BsUniqueCheck.FieldUniqueCheckInment((SuperVO)vo.getParentVO(),new String[]{"reserve1","carriersid","pk_billtype"}, "dstartdate","denddate"," 已经定义 了该 [发货仓库]  [承运商] 下的这个期间段的运价表 ");		
 		//收获地区应用范围表体唯一性校验
-		validateBodyRePlace(vo.getChildrenVO(),new String[]{"pk_replace","ifw"},new String[]{"收获地区","应用范围"});
-		
+		validateBodyRePlace(vo.getChildrenVO(),new String[]{"pk_replace","ifw"},new String[]{"收获地区","应用范围"});	
 	}
 	/*
 	 * 收获地区 应用范围表体唯一性校验

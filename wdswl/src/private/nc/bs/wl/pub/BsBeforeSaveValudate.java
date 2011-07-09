@@ -6,15 +6,16 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pub.vosplit.SplitBillVOs;
 	/**
 	 * author:mlr
 	 * 该类为保存前的 后台校验类 
 	 * 
 	 * */
-	public  class BsBeforeSaveValudate{
-		
-	/**
-	 * 	
+	public  class BsBeforeSaveValudate{		
+	/**	
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 *        表体的几个字段构成唯一性，每一行的记录的几个字段构成行唯一性记录，与其它行比较 ，进行唯一性校验
@@ -50,9 +51,112 @@ import nc.vo.pub.SuperVO;
 					list.add(key);
 				}
 			}
-
 		}
+	  }
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       组合字段的区间交叉的唯一性校验
+	 *       即校验某个维度下，在最小值 和 最大值 之间只存在 一条记录
+	 *       
+	 * @时间：2011-7-6上午09:50:30
+	 * @param vo
+	 * @param checkFields 校验的字段名字
+	 * @param minField    最小值
+	 * @param maxField    最大值
+	 * @param errorMessage 错误提示信息
+	 * @throws Exception
+	 */
+	public static void beforeSaveBodyUniqueInmet(SuperVO[] vos,String[] fields,String minField,
+			String maxField,String[] displays,String minDisplay,String maxDisplay)throws Exception{
+		if(isEmpty(vos)){
+			return;
+		}
+		SuperVO[][] voss=(SuperVO[][]) SplitBillVOs.getSplitVOs(vos,fields);
+		if(isEmpty(voss)){
+			return;
+		}
+		if(isEmpty(fields)){
+			throw new Exception("校验的字段不允许为空");
+		}
+		if(isNULL(minField)|| isNULL(maxField)){
+			throw new Exception("校验区间最小值 或 最大值不允许为空");
+		}
+		if(isEmpty(displays)){
+			throw new Exception("校验错误提示字段不允许为空");
+		}
+		//错误提示字段
+		String dis = "";
+		for (int j = 0; j < displays.length; j++) {
+			dis = dis + "[ " + displays[j] + " ]";
+		}
+		int size=voss.length;
+		for(int i=0;i<size;i++){
+			int size1=voss[i].length;
+			for(int j=0;j<size1;j++){
+				SuperVO vo=voss[i][j];
+				for(int k=j+1;k<size1;k++){
+					Object voMin=vo.getAttributeValue(minField);
+					Object voMax=vo.getAttributeValue(maxField);
+					Object svoMin=voss[i][k].getAttributeValue(minField);
+					Object svoMax=voss[i][k].getAttributeValue(maxField);
+					if(compareInto(voMax, svoMin)==-1 || compareInto(voMin, svoMax)==1){
+						continue;
+					}else{
+						throw new BusinessException("表体字段  "+ dis +"相同的情况下  "+"["+
+								minDisplay+"] 到 ["+maxDisplay +"] 区间存在交叉");
+					} 
+				}
+			}			
+		}
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *        比较两个对象之间的大小
+	 *        如果 o1>o2 返回 1
+	 *        如果 o1=o2 返回 0
+	 *        如果 o1<o2 返回 -1
+	 *        如果 非法数据不能比较返回 -2 
+	 * @时间：2011-7-6上午10:21:21
+	 * @param o1
+	 * @param o2
+	 */
+	 private static int compareInto(Object o1,Object o2) {
+	   if(isEmpty(o1)|| isEmpty(o2)){
+		   return -2;
 	   }
+	   if(o1 instanceof Integer && o2 instanceof Integer){
+		  Integer i1=(Integer) o1;
+		  Integer i2=(Integer) o2;
+		  return  i1.compareTo(i2);	  
+	   }
+	   if(o1 instanceof UFDouble && o2 instanceof UFDouble){
+		      UFDouble i1=(UFDouble) o1;
+		      UFDouble i2=(UFDouble) o2;
+			  return  i1.compareTo(i2);	  
+	   }
+	   if(o1 instanceof String && o2 instanceof String){
+		      String i1=(String) o1;
+		      String i2=(String) o2;
+			  return  i1.compareTo(i2);	  
+	   }
+	   if(o1 instanceof UFDate && o2 instanceof UFDate){
+		     UFDate i1=(UFDate) o1;
+		     UFDate i2=(UFDate) o2;
+		     if(i1.before(i2)){
+		    	 return -1;
+		     }else if(i1.after(i2)){
+		    	 return 1;
+		     }else{
+		    	 return 0;
+		     } 
+	   }	 
+	    return -2;
+	 }
+	
 	/**
 	 * 
 	 * @作者：mlr
@@ -154,7 +258,7 @@ import nc.vo.pub.SuperVO;
 		 * 
 		 * @作者：mlr
 		 * @说明：完达山物流项目 
-		 *       判断对象是否为空
+		 *       判断字符串是否为空
 		 * @时间：2011-7-5下午08:44:48
 		 * @param o
 		 * @return

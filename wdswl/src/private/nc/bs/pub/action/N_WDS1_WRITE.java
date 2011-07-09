@@ -28,6 +28,7 @@ try{
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
+			setParameter("currentVo", vo.m_preValueVo);
 			/**begin-------如果是月计划，则校验当前调入仓库在当前月是否已经有月计划---------begin */
 			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
 			if(iplantype !=null && 0==(Integer)iplantype){
@@ -36,6 +37,10 @@ try{
 				setParameter("Date", vo.m_currentDate);//SPF ADD
 				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&InWhouse:String,&Pk:String,&Date:String", vo, m_keyHas,	m_methodReturnHas);
 			}
+			//保存前的校验 追加计划保存时,如果没有月计划,追加计划不允许保存  追加计划没有存量不允许保存 
+			if(iplantype!=null && 1==(Integer)iplantype){
+				runClass("nc.bs.wl.plan.PlanCheckinBO","checkForBplan","&currentVo:nc.vo.pub.AggregatedValueObject",vo, m_keyHas,m_methodReturnHas);		
+			}		
 			/**begin-------如果是月计划，则校验当前调入仓库在当前月是否已经有月计划---------end */
 			
 			/**begin-------如果是追加计划，则校验当前调入仓库在当前月是否已经追加计划---------begin */
