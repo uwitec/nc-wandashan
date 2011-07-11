@@ -247,7 +247,7 @@ public class WdsWlPubConst {
 	
 	public static String default_inv_state = "1021S31000000009FS98";//入库时设置默认库存状态=====+++++select * from tb_stockstate
 	//wds模块日志记录
-	public static String wds_logger_name = "wds-log";
+	public static String wds_logger_name = "wds";
 //	销售安排时  过滤 客户的最小发货量  是辅计量 还是  主计量
 	public static boolean sale_send_isass = true; 
 }

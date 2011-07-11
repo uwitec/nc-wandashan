@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillTabbedPane;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
+import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -52,8 +53,8 @@ public class HandDealDataPanel extends BillTabbedPane {
 	}
 
 	private void initData(){
-		addTab("安排界面", getCustPane());
-		addTab("客户待发货信息", getDealPane());		
+		addTab("客户待发货信息", getCustPane());
+		addTab("安排界面", getDealPane());		
 	}
 
 	public void setDataToUI(){
@@ -61,7 +62,7 @@ public class HandDealDataPanel extends BillTabbedPane {
 		//		客户页签数据设置
 		if(!ui.getBuffer().isCustEmpty()){
 			SoDealBillVO[] bills = ui.getBuffer().getLcust().toArray(new SoDealBillVO[0]);
-			getCustPane().getHeadBillModel().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(bills, SoDealHealper.class));
+			getCustPane().getHeadBillModel().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(bills, SoDealHeaderVo.class));
 			getCustPane().getBodyBillModel().setBodyDataVO(bills[0].getChildrenVO());
 			getCustPane().getHeadBillModel().execLoadFormula();
 			getCustPane().getBodyBillModel().execLoadFormula();

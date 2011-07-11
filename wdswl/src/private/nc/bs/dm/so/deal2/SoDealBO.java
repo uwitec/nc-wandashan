@@ -121,6 +121,11 @@ public class SoDealBO {
 	}
 	
 	class FielterMinNum implements IFilter{
+		private SoDealCol col = null;
+		public FielterMinNum(SoDealCol col){
+			super();
+			this.col = col;
+		}
 
 		public boolean accept(Object o) {
 			// TODO Auto-generated method stub
@@ -137,7 +142,7 @@ public class SoDealBO {
 			    return false;
 			UFDouble nminnum = null;
 			try {
-				nminnum = getMinSendNumForCust(ccustid,pk_store);
+				nminnum = col.getMinSendNumForCust(ccustid,pk_store);
 			} catch (BusinessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -154,7 +159,7 @@ public class SoDealBO {
 			}
 				
 			for(SoDealVO body:bodys){
-				nallnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNnumber())).sub(PuPubVO.getUFDouble_NullAsZero(body.getNtaldcnum()));
+				nallnum = nallnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNnumber())).sub(PuPubVO.getUFDouble_NullAsZero(body.getNtaldcnum()));
 			}
 			
 			if(WdsWlPubConst.sale_send_isass){
@@ -167,24 +172,7 @@ public class SoDealBO {
 		}		
 	}
 	
-	/**
-	 * 
-	 * @作者：zhf
-	 * @说明：完达山物流项目 通过分仓客商绑定获取  分仓客商的最小发货量设置
-	 * @时间：2011-7-7下午04:09:28
-	 * @param ccustid
-	 * @param pk_store
-	 * @return
-	 * @throws BusinessException
-	 */
-	private UFDouble getMinSendNumForCust(String ccustid,String pk_store) throws BusinessException{
-		if(PuPubVO.getString_TrimZeroLenAsNull(ccustid)==null)
-			return null;
-		String sql = " select ndef1 from tb_storcubasdoc where isnull(dr,0)=0 and " +
-				" pk_cumandoc = '"+ccustid+"' and pk_stordoc = '"+pk_store+"'";// (select pk_stordoc from bd_stordoc where " +
-//						"isnull(dr,0)=0 and )";
-		return PuPubVO.getUFDouble_NullAsZero(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
-	}
+	
 	
 	/**
 	 * 
@@ -202,10 +190,12 @@ public class SoDealBO {
 		
 		Logger.init(WdsWlPubConst.wds_logger_name);
 //		过滤最小发货量  
-		UFDateTime time = new UFDateTime(System.currentTimeMillis());
-		Logger.info(time+"销售计划安排，待安排客户数量"+bills.length+"--------------");
+//		UFDateTime time = new UFDateTime(System.currentTimeMillis());
+		Logger.info("##########################################################");
+		Logger.info("销售计划安排，待安排客户数量"+bills.length+"--------------");
 //		过滤最小发货量  分仓客商绑定  节点 维护了  每个客户的最小发货量
-		SoDealBillVO[] newbills = (SoDealBillVO[])VOUtil.filter(bills, new FielterMinNum());
+		SoDealCol dealCol = new SoDealCol();
+		SoDealBillVO[] newbills = (SoDealBillVO[])VOUtil.filter(bills, new FielterMinNum(dealCol));
 		if(newbills==null || newbills.length == 0)
 			return null;
 		Logger.info("待安排客户数量为"+newbills.length);
@@ -213,7 +203,7 @@ public class SoDealBO {
 		
 //		对表体同一客户同一个货品的量再次进行合并
 				
-		SoDealCol dealCol = new SoDealCol(newbills,lpara);
+		dealCol.setData(newbills, lpara);
 		return dealCol.col();		
 	}
 	

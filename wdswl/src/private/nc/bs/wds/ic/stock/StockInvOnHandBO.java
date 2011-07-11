@@ -354,21 +354,21 @@ public class StockInvOnHandBO {
 		sql.append(" from tb_warehousestock");
 		sql.append(" where isnull(dr,0) = 0");
 		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
-			sql.append(" pk_corp = '"+corp+"'");
+			sql.append(" and pk_corp = '"+corp+"'");
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null){
-			sql.append(" pk_customize1 = '"+cwarehouseid+"'");
+			sql.append(" and pk_customize1 = '"+cwarehouseid+"'");
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)!=null){
-			sql.append(" pk_cargdoc = '"+pk_cargdoc+"'");
+			sql.append(" and pk_cargdoc = '"+pk_cargdoc+"'");
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(vbatchcode)!=null){
-			sql.append(" whs_batchcode = '"+vbatchcode+"'");
+			sql.append(" and whs_batchcode = '"+vbatchcode+"'");
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null)
-			sql.append(" pplpt_pk = '"+ctrayid+"'");
+			sql.append(" and pplpt_pk = '"+ctrayid+"'");
 		
-		sql.append(" pk_invbasdoc = '"+cinvbasid+"'");
+		sql.append(" and pk_invbasdoc = '"+cinvbasid+"'");
 		sql.append(" group by ");
 		
 		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
@@ -395,7 +395,11 @@ public class StockInvOnHandBO {
 		Object o =  getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.ARRAYROCESSOR);
         if(o == null)
         	return null;
-        return (UFDouble[])o;
+        Object[] os = (Object[])o;
+        UFDouble[] us = new UFDouble[2];
+        us[0] = PuPubVO.getUFDouble_NullAsZero(os[0]);
+        us[1] = PuPubVO.getUFDouble_NullAsZero(os[1]);
+        return us;
 	}
 	
 	private void dealResultSet(Map<String,UFDouble[]> invNumInfor,List ldata){
@@ -432,7 +436,7 @@ public class StockInvOnHandBO {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 获取仓库内已安排未出库的存货量   该处 需要  处理 关闭的运单
+	 * @说明：完达山物流项目 获取仓库内已安排未出库的存货量   该处 需要  处理 关闭的运单 运单不存在关闭
 	 * @时间：2011-7-7下午07:51:37
 	 * @param corp
 	 * @param cstoreid
@@ -446,14 +450,14 @@ public class StockInvOnHandBO {
 		Map<String,UFDouble[]> retInfor = null;
 		String sql = null;
 		//		1、销售运单占用量
-		sql = " select b.pk_invbasdoc inv,coalesce(narrangnmu,0.0)-coalesce(noutnum,0) nnum ,coalesce(nassarrangnum,0.0)-coalesce(nassoutnum,0.0) nassnum" +
+		sql = " select b.pk_invbasdoc inv,coalesce(b.narrangnmu,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassarrangnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_soorder_b b inner join wds_soorder h on h.pk_soorder = b.pk_soorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
 		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
 		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);
 		//		2、发运运单占用量
-		sql = " select b.pk_invbasdoc inv,coalesce(ndealnum,0.0)-coalesce(noutnum,0) nnum ,coalesce(nassdealnum,0.0)-coalesce(nassoutnum,0.0) nassnum" +
+		sql = " select b.pk_invbasdoc inv,coalesce(b.ndealnum,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassdealnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_sendorder_b b inner join wds_sendorder h on h.pk_sendorder = b.pk_sendorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
 		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);

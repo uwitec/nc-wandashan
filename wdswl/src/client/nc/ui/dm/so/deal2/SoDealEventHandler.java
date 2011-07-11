@@ -1,10 +1,7 @@
 package nc.ui.dm.so.deal2;
 
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
 import nc.ui.wl.pub.FilterNullBody;
@@ -19,23 +16,16 @@ import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-public class SoDealEventHandler implements BillEditListener{
-
+public class SoDealEventHandler{
 
 	private SoDealClientUI ui = null;
-	private SoDealQryDlg m_qrypanel = null;
-	//数据缓存
-//	private SoDealVO[] m_billdatas = null;
-	
+	private SoDealQryDlg m_qrypanel = null;	
 	private SoDealBillVO[] m_buffer = null;
-	
-//	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
+
 	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
-		ui = parent;
-//		getDataPane().addSortRelaObjectListener2(this);
-		
+		ui = parent;		
 	}
 
 	private BillModel getDataPane(){
@@ -65,7 +55,7 @@ public class SoDealEventHandler implements BillEditListener{
 		}
 	}
 	
-	private SoDealBillVO[] getDataBuffer(){
+	public SoDealBillVO[] getDataBuffer(){
 		return m_buffer;
 	}
 	
@@ -339,7 +329,8 @@ public class SoDealEventHandler implements BillEditListener{
 //		调用手工安排界面  供用户 手工安排  存量不足货品
 		getHandDealDlg().setLcust(lcust);
 		getHandDealDlg().setLnum(lnum);
-		int retFlag = getHandDealDlg().showModal();
+		getHandDealDlg().getDataPanel().setDataToUI();
+		int retFlag = getHandDealDlg().showModal();		
 		if(retFlag != UIDialog.ID_OK){
 			return;
 		}
@@ -356,59 +347,8 @@ public class SoDealEventHandler implements BillEditListener{
 		return m_handDlg;
 	}
 	
-//	private void getLeftDate(List<SuperVO> ldata){
-//		List<SoDealVO> leftDate = new ArrayList<SoDealVO>();
-//		if(m_billdatas == null || m_billdatas.length==0){
-//			ui.showWarningMessage("获取缓存数据出错，请重新查询");
-//		}
-//		for(SoDealVO dealVO:m_billdatas){
-//			if(ldata.contains(dealVO))
-//				continue;
-//			leftDate.add(dealVO);
-//		}
-//		getDataPane().setBodyDataVO(leftDate.toArray(new SoDealVO[0]));
-//		getDataPane().execLoadFormula();
-//		setDataBuffer(leftDate.toArray(new SoDealVO[0]));	
-//	}
+	
 
-	public void afterEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
-//		int row = e.getRow();
-//		String key = e.getKey();
-//		if(row < 0)
-//			return;
-//		if(key.equalsIgnoreCase("isonsell")){
-//			UFBoolean onsell = PuPubVO.getUFBoolean_NullAs(getDataPane().getValueAt(row, "isonsell"), UFBoolean.FALSE);
-//			
-//			getDataBuffer()[row].setIsonsell(onsell);		
-//		}
-//		if(key.equalsIgnoreCase("bsel")){
-//			UFBoolean bsel = PuPubVO.getUFBoolean_NullAs(getDataPane().getValueAt(row, "bsel"), UFBoolean.FALSE);
-//			if(bsel.booleanValue()){
-//			    lseldata.add(getDataBuffer()[row]);
-//			}else{
-//				lseldata.remove(getDataBuffer()[row]);
-//			}   
-//		}else if("nnum".equalsIgnoreCase(key)){
-//			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
-//			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nassnum")));
-//		}else if("nassnum".equalsIgnoreCase(key)){
-//			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
-//			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nnum")));
-//		}else if("warehousename".equalsIgnoreCase(key)){
-//			getDataBuffer()[row].setCbodywarehouseid(PuPubVO.getString_TrimZeroLenAsNull(getDataPane().getValueAt(row, "cbodywarehouseid")));
-//		}
-	}
-
-	public void bodyRowChange(BillEditEvent e) {
-		// TODO Auto-generated method stub
-		int row = e.getRow();
-		if(row<0)
-			return;
-		getBodyDataPane().clearBodyData();
-		getBodyDataPane().setBodyDataVO(getDataBuffer()[row].getBodyVos());
-		getBodyDataPane().execLoadFormula();
-	}
 	
 	private void showErrorMessage(String msg){
 		ui.showErrorMessage(msg);

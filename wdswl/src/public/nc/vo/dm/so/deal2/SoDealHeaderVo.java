@@ -1,6 +1,5 @@
 package nc.vo.dm.so.deal2;
 
-import nc.ui.sp.sp005.GetCustomerClass;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;

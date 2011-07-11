@@ -8,8 +8,11 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillEditListener2;
+import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillListPanel;
+import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
+import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
@@ -21,7 +24,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author Administrator
  * 
  */
-public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
+public class SoDealClientUI extends ToftPanel implements BillEditListener {
 
 	/**
 	 * 
@@ -44,17 +47,17 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO, 2,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
-//	private ButtonObject m_btnXnDeal = new ButtonObject(
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL);
+	//	private ButtonObject m_btnXnDeal = new ButtonObject(
+	//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
+	//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
+	//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL);
 
 	protected ClientEnvironment m_ce = null;
 	protected ClientLink cl = null;
 	private SoDealEventHandler m_handler = null;
-	
+
 	private String cwhid;//当前登录客户所属仓库
-	
+
 	public String getWhid(){
 		return cwhid;
 	}
@@ -80,15 +83,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 		cl = new ClientLink(m_ce);
 		init();
 	}
-
-//	public SoDealClientUI(String pk_corp, String pk_billType,
-//			String pk_busitype, String operater, String billId) {
-//		super();
-//		m_ce = ClientEnvironment.getInstance();
-//		cl = new ClientLink(m_ce);
-//		init();
-//		loadData(billId);
-//	}
 
 	protected BillListPanel getPanel() {
 		if (m_panel == null) {
@@ -122,11 +116,47 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 	}
 
 	private void initListener() {
-		// getPanel().addBodyEditListener(this);
-		getPanel().addEditListener(m_handler);
-		getPanel().getParentListPanel().addEditListener2(this);
-		// getPanel().addBodyEditListener(l)
-		// getPanel().addHeadEditListener(l)
+		getPanel().addEditListener(this);
+		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
+	}
+
+	public void headRowChange(int iNewRow) {
+		if (!getPanel().setBodyModelData(iNewRow)) {
+			//1.初次载入表体数据
+			loadBodyData(iNewRow);
+			//2.备份到模型中
+			getPanel().setBodyModelDataCopy(iNewRow);
+		}
+		getPanel().repaint();
+	}
+	
+	private void loadBodyData(int row){
+		getPanel().getBodyBillModel().clearBodyData();
+		getPanel().getBodyBillModel().setBodyDataVO(m_handler.getDataBuffer()[row].getBodyVos());
+		getPanel().getBodyBillModel().execLoadFormula();
+	}
+
+
+	private class HeadRowStateListener implements IBillModelRowStateChangeEventListener {
+
+		public void valueChanged(RowStateChangeEvent e) {
+			if (e.getRow() != getPanel().getHeadTable().getSelectedRow()) {
+				headRowChange(e.getRow());
+			}
+
+			BillModel model = getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+
+			if (e.isSelectState()) {
+				getPanel().getChildListPanel().selectAllTableRow();
+			} else {
+				getPanel().getChildListPanel().cancelSelectAllTableRow();
+			}
+			model.addRowStateChangeEventListener(l);
+
+			getPanel().updateUI();
+		}
 
 	}
 
@@ -142,21 +172,21 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 
 	}
 
-//	public void loadData(String billId) {
-//		try {
-//			SoDealVO[] billdatas = SoDealHealper.doQuery(" h.CSALEID = '"
-//					+ billId + "' ");
-//			if (billdatas == null || billdatas.length == 0) {
-//				showHintMessage("查询完成：没有满足条件的数据");
-//				return;
-//			}
-//			// 处理查询出的计划 缓存 界面
-//			getPanel().getHeadBillModel().setBodyDataVO(billdatas);
-//			getPanel().getHeadBillModel().execLoadFormula();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	//	public void loadData(String billId) {
+	//		try {
+	//			SoDealVO[] billdatas = SoDealHealper.doQuery(" h.CSALEID = '"
+	//					+ billId + "' ");
+	//			if (billdatas == null || billdatas.length == 0) {
+	//				showHintMessage("查询完成：没有满足条件的数据");
+	//				return;
+	//			}
+	//			// 处理查询出的计划 缓存 界面
+	//			getPanel().getHeadBillModel().setBodyDataVO(billdatas);
+	//			getPanel().getHeadBillModel().execLoadFormula();
+	//		} catch (Exception e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
 
 	@Override
 	public String getTitle() {
@@ -185,7 +215,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 			m_btnQry.setEnabled(flag);
 		}else if(btnTag
 				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)){
-//			m_btnXnDeal.setEnabled(flag);
+			//			m_btnXnDeal.setEnabled(flag);
 		}
 		updateButtons();
 	}
@@ -208,11 +238,11 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 					getPanel().getHeadItem("warehousename").setEnabled(true);
 					// 过滤直属于物流 的仓库
 					JComponent c = getPanel().getHeadItem("warehousename")
-							.getComponent();
+					.getComponent();
 					if (c instanceof UIRefPane) {
 						UIRefPane ref = (UIRefPane) c;
 						ref.getRefModel().addWherePart(
-								" and def1 = '1' and isnull(dr,0) = 0");
+						" and def1 = '1' and isnull(dr,0) = 0");
 					}
 					return true;
 				} else {
@@ -232,5 +262,18 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 
 	public void setCl(ClientLink cl) {
 		this.cl = cl;
+	}
+
+	public void afterEdit(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void bodyRowChange(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getRow()<0)
+			return;
+		headRowChange(e.getRow());
+		
 	}
 }

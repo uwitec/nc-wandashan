@@ -95,6 +95,7 @@ ActionListener, BillEditListener,BillEditListener2{
 		setSize(1000, 500);
 		setTitle("∑¢ªı∞≤≈≈");
 		setContentPane(getUIDialogContentPane());
+		createHandDataBuffer();
 	}
 	protected JPanel getUIDialogContentPane() {
 		if (ivjUIDialogContentPane == null) {

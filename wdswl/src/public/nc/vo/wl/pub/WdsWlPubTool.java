@@ -2,6 +2,7 @@ package nc.vo.wl.pub;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import nc.ui.pub.beans.UIRefPane;
@@ -335,18 +336,52 @@ public class WdsWlPubTool {
 		}
 	}
 	
+	private static Map<String,String> invCodeInfor = new HashMap<String, String>();
+	
 	public static String getInvCodeByInvid(String cinvid) {
-		String formu = "invcode->getColValue(bd_invbasdoc,invcode,pk_invbasdoc,cinvid)";
-		String[] names = new String[]{"cinvid"};
-		String[] values = new String[]{cinvid};
-		try {
-			String rets = getString_NullAsTrimZeroLen(execFomular(formu, names, values));
-			return rets;
-		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
+		if(!invCodeInfor.containsKey(cinvid)){
+			String formu = "invcode->getColValue(bd_invbasdoc,invcode,pk_invbasdoc,cinvid)";
+			String[] names = new String[]{"cinvid"};
+			String[] values = new String[]{cinvid};
+			String rets;
+			try {
+				rets = getString_NullAsTrimZeroLen(execFomular(formu, names, values));
+//				return rets;
+				if(rets == null)
+					rets = cinvid;
+			} catch (BusinessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return cinvid;
+			}
+			invCodeInfor.put(cinvid, rets);
 		}
+			
+		return invCodeInfor.get(cinvid);
+	}
+	
+private static Map<String,String> custNameInfor = new HashMap<String, String>();
+	
+	public static String getCustNameByid(String custmanid) {
+		if(!custNameInfor.containsKey(custmanid)){
+			String formu = "custname->getColValue(bd_cubasdoc,custname,pk_cubasdoc,getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,cumanid))";
+			String[] names = new String[]{"cumanid"};
+			String[] values = new String[]{custmanid};
+			String rets;
+			try {
+				rets = getString_NullAsTrimZeroLen(execFomular(formu, names, values));
+//				return rets;
+				if(rets == null)
+					rets = custmanid;
+			} catch (BusinessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return custmanid;
+			}
+			custNameInfor.put(custmanid, rets);
+		}
+			
+		return custNameInfor.get(custmanid);
 	}
 
 	/**
