@@ -202,7 +202,7 @@ public class ReportUI extends ReportBaseUI{
 					setReportBaseVO(combins);
 					setBodyVO(combins);	
 				    //设置默认的分组合计
-					setDefSubtotal(new String[]{"invcode"}, combinFields);	              
+					//setDefSubtotal(new String[]{"invcode"}, combinFields);	              
                 }                
 	          }
 		} catch (Exception e) {
