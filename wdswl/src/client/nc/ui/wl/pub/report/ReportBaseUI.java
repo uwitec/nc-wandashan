@@ -95,8 +95,18 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
 
     private LevelSubTotalAction subtotalAction = (LevelSubTotalAction) button_action_map
             .get(ButtonAssets.m_boLevelSubTotal);
-
-    private boolean needGroup = false;
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *       合计按钮事件处理类
+    * @时间：2011-7-12下午02:44:33
+    * @return
+    */
+    public LevelSubTotalAction getSubtotalAction() {
+		return subtotalAction;
+	}
+	private boolean needGroup = false;
 
     private IReportCtl m_uiCtl;
 
@@ -1580,6 +1590,34 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
         }
         getReportBase().setBody_Items(items);
     }
+    /**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *        设置分组合计的默认值
+	 *        并自动进行分组合计
+	 * @时间：2011-7-12下午03:10:29
+	 * @param strings 默认分组字段
+	 * @param combinFields 需要合计字段
+	 * @throws Exception 
+	 */
+	protected void setDefSubtotal(String[] strings, String[] combinFields) throws Exception{		
+		//设置分组合计默认值
+		getSubtotalAction().setIssub(true);
+		getSubtotalAction().setIssum(true);
+		if(strings==null || strings.length==0){
+			throw new BusinessException("分组字段不允许为空");
+		}
+		if(combinFields==null || combinFields.length==0){
+			throw new BusinessException("合计字段不允许为空");
+		}
+		TableField[] fs=TableField.create(strings);
+		TableField[] fs1=TableField.create(combinFields);		
+		getSubtotalAction().setSubTotalCurrentUsingGroupFields(fs);
+		getSubtotalAction().setSubTotalCurrentUsingTotalFields(fs1);
+		this.setBodyDataForSub();// 将表体数据中的合计 小计行去
+		getSubtotalAction().executeSubTotal();		
+	}
 
     /**
      * 从界面显示的字段中选择根据【type】相应类型的字段
