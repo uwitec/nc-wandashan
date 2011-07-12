@@ -105,6 +105,22 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 
 		}
 	}
+   
+	public boolean isIssub() {
+		return issub;
+	}
+
+	public void setIssub(boolean issub) {
+		this.issub = issub;
+	}
+
+	public boolean isIssum() {
+		return issum;
+	}
+
+	public void setIssum(boolean issum) {
+		this.issum = issum;
+	}
 
 	/**
 	 * 进行小计合计
