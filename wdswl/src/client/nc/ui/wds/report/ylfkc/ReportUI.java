@@ -50,25 +50,42 @@ public class ReportUI extends ReportBaseUI {
         TableColumnModel cardTcm = cardTable.getColumnModel();
         ColumnGroup[] card2 = new ColumnGroup[4];
         //
-        card2[0]=new ColumnGroup("期初结存");
-        card2[0].add(cardTcm.getColumn(9));
-        card2[0].add(cardTcm.getColumn(10));
+//        card2[0]=new ColumnGroup("期初结存");
+//        card2[0].add(cardTcm.getColumn(9));
+//        card2[0].add(cardTcm.getColumn(10));
+//        cardHeader.addColumnGroup(card2[0]);
+        //
+        card2[0]=new ColumnGroup("货龄");
+        ColumnGroup a1=new ColumnGroup("1-30天");
+        a1.add(cardTcm.getColumn(9));
+        a1.add(cardTcm.getColumn(10));
+        card2[0].add(a1);
+        ColumnGroup a2=new ColumnGroup("30-60天");
+        a2.add(cardTcm.getColumn(11));
+        a2.add(cardTcm.getColumn(12));
+        card2[0].add(a2);
+        ColumnGroup a3=new ColumnGroup("60-90天");
+        a3.add(cardTcm.getColumn(13));
+        a3.add(cardTcm.getColumn(14));
+        card2[0].add(a3);
         cardHeader.addColumnGroup(card2[0]);
-        //
-        card2[1]=new ColumnGroup("本期收入");
-        card2[1].add(cardTcm.getColumn(11));
-        card2[1].add(cardTcm.getColumn(12));
-        cardHeader.addColumnGroup(card2[1]);
-        //
-        card2[2]=new ColumnGroup("本期发出");
-        card2[2].add(cardTcm.getColumn(13));
-        card2[2].add(cardTcm.getColumn(14));
-        cardHeader.addColumnGroup(card2[2]);
-        //
-        card2[3]=new ColumnGroup("期末结存");
-        card2[3].add(cardTcm.getColumn(15));
-        card2[3].add(cardTcm.getColumn(16));
-        cardHeader.addColumnGroup(card2[3]);
+        
+        
+        
+//        card2[1]=new ColumnGroup("本期收入");
+//        card2[1].add(cardTcm.getColumn(11));
+//        card2[1].add(cardTcm.getColumn(12));
+//        cardHeader.addColumnGroup(card2[1]);
+//        //
+//        card2[2]=new ColumnGroup("本期发出");
+//        card2[2].add(cardTcm.getColumn(13));
+//        card2[2].add(cardTcm.getColumn(14));
+//        cardHeader.addColumnGroup(card2[2]);
+//        //
+//        card2[3]=new ColumnGroup("期末结存");
+//        card2[3].add(cardTcm.getColumn(15));
+//        card2[3].add(cardTcm.getColumn(16));
+//        cardHeader.addColumnGroup(card2[3]);
         getReportBase().getBillModel().updateValue();
     }
     @Override
