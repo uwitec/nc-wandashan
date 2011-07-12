@@ -23,7 +23,6 @@ import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -234,6 +233,7 @@ public class SoDealCol {
         	boolean isdeal = true;
         	boolean pass = false;
         	for(SoDealVO body:bodys){
+//        		body.setDbilldate(dbilldate)
         		tmpNumVO = invNumInfor.get(body.getCinvbasdocid());
         		if(tmpNumVO == null || PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
 //        			存在存货的可用量为空的     涉及该存货的客户  均不可安排 本次  该客户直接丢弃

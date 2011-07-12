@@ -10,6 +10,8 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubTool;
 	
 /**
  * <b> 销售运单子表 </b>
@@ -1354,6 +1356,31 @@ import nc.vo.pub.lang.UFDouble;
 //					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
 //			
 //		}
+	 }
+	 
+	 public void validateOnPushSave() throws ValidationException {
+		 if(PuPubVO.getString_TrimZeroLenAsNull(getPk_invbasdoc())==null||PuPubVO.getString_TrimZeroLenAsNull(getPk_invmandoc())==null)
+			 throw new ValidationException("存货为空");
+		 if(PuPubVO.getString_TrimZeroLenAsNull(getAssunit())==null){
+			 if(PuPubVO.getUFDouble_NullAsZero(getNassarrangnum()).doubleValue()>0){
+				 throw new ValidationException("辅计量单位为空");
+			 }
+		 }
+		 if(PuPubVO.getString_TrimZeroLenAsNull(getUint())==null){
+			 throw new ValidationException("计量单位为空");
+		 }
+		 if(PuPubVO.getUFDouble_NullAsZero(getNarrangnmu()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+			 throw new ValidationException("数量为空");
+		 }
+		 if(PuPubVO.getUFDouble_NullAsZero(getNassarrangnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
+			 if(PuPubVO.getString_TrimZeroLenAsNull(getAssunit())!=null)
+			 throw new ValidationException("辅数量为空");
+		 }
+		 if(PuPubVO.getString_TrimZeroLenAsNull(getCsourcetype())==null){
+			 throw new ValidationException("来源类型为空");
+		 }
+		 if(PuPubVO.getString_TrimZeroLenAsNull(getCsourcebillhid())==null || PuPubVO.getString_TrimZeroLenAsNull(getCsourcebillbid())==null)
+			 throw new ValidationException("来源信息为空");
 	 }
 			   
        

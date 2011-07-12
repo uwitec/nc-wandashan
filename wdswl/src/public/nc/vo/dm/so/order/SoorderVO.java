@@ -7,6 +7,7 @@ package nc.vo.dm.so.order;
 import java.util.ArrayList;
 import nc.vo.pub.*;
 import nc.vo.pub.lang.*;
+import nc.vo.scm.pu.PuPubVO;
 
 /**
  * <b> 销售运单 </b>
@@ -1634,6 +1635,15 @@ public class SoorderVO extends SuperVO {
 			}
 			throw new NullFieldException(message.toString());
 		}
+	}
+	
+	public void validateOnPushSave() throws ValidationException {
+//		客户不能为空
+		if(PuPubVO.getString_TrimZeroLenAsNull(getPk_cubasdoc())==null || PuPubVO.getString_TrimZeroLenAsNull(getPk_cumandoc())==null)
+			throw new ValidationException("客户不能为空");
+		if(PuPubVO.getString_TrimZeroLenAsNull(getPk_outwhouse())==null)
+			throw new ValidationException("发货站为空");
+		
 	}
 
 	/**

@@ -2,6 +2,8 @@ package nc.vo.dm.so.deal2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
@@ -35,16 +37,16 @@ public class StoreInvNumVO extends SuperVO{
 	
 	private UFBoolean bisok;//是否可发货  存量是否够
 	
-	private List<SoDealVO> ldeal = null;
+	private Set<SoDealVO> ldeal = null;
 	
-	public List<SoDealVO> getLdeal() {
+	public Set<SoDealVO> getLdeal() {
 		if(ldeal == null){
-			ldeal = new ArrayList<SoDealVO>();
+			ldeal = new TreeSet<SoDealVO>(new DateComparator());
 		}
 		return ldeal;
 	}
 
-	public void setLdeal(List<SoDealVO> ldeal) {
+	public void setLdeal(Set<SoDealVO> ldeal) {
 		this.ldeal = ldeal;
 	}
 

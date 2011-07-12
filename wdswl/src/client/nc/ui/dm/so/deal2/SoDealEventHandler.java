@@ -1,6 +1,9 @@
 package nc.ui.dm.so.deal2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
@@ -10,7 +13,7 @@ import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.ValidationException;
+import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -41,17 +44,26 @@ public class SoDealEventHandler{
 	}
 
 	public void onButtonClicked(String btnTag){
-		if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
-			onDeal();
-		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
-//			onNoSel();
-		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
-//			onAllSel();
-		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
-			onQuery();
-		}else if (btnTag
-				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)) {
-//			onXNDeal();
+		try {
+			if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
+
+				onDeal();
+
+			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
+				//			onNoSel();
+			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
+				//			onAllSel();
+			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
+				onQuery();
+			}else if (btnTag
+					.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)) {
+				//			onXNDeal();
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ui.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 		}
 	}
 	
@@ -117,6 +129,9 @@ public class SoDealEventHandler{
 		getDataPane().clearBodyData();
 		getBodyDataPane().clearBodyData();
 	}
+	
+	private String whereSql;//缓存上次查询条件  zhf add
+	
 	/**
 	 * 
 	 * @作者：lyf
@@ -124,7 +139,7 @@ public class SoDealEventHandler{
 	 * 查询动作相应方法
 	 * @时间：2011-3-25上午09:49:04
 	 */
-	public void onQuery(){		
+	public void onQuery() throws Exception{		
 		/**
 		 * 满足什么条件的计划呢？人员和仓库已经绑定了   登陆人只能查询他的权限仓库  总仓的人可以安排分仓的
 		 * 校验登录人是否为总仓库德人 如果是可以安排任何仓库的  转分仓  计划 
@@ -139,37 +154,63 @@ public class SoDealEventHandler{
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
-		SoDealVO[] billdatas = null; 
-		
-		try{
-			String whereSql = getSQL();
-			billdatas = SoDealHealper.doQuery(whereSql);
-		}catch(Exception e){
-			e.printStackTrace();
-			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
-			return;
-		}		
-		
+
+		whereSql = getSQL();
+		SoDealVO[] billdatas = billdatas = SoDealHealper.doQuery(whereSql);
+
+
 		if(billdatas == null||billdatas.length == 0){
-            clearData();
+			clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
-		
-//		对数据进行合并  按客户合并  订单日期取最小订单日期
+
+		//		对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
-		
+
 		//处理查询出的计划  缓存  界面
-		
+
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
 		getDataPane().execLoadFormula();
 		getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
 		getBodyDataPane().execLoadFormula();
-//		billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
+		//		billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
 		setDataBuffer(billvos);		
 		showHintMessage("查询完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 	}
+	
+	private void onRefresh() throws Exception{
+		SoDealVO[] billdatas = null;
+		clearData();
+		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
+
+			billdatas = SoDealHealper.doQuery(whereSql);
+
+
+			if(billdatas == null||billdatas.length == 0){
+//				clearData();
+				//				showHintMessage("查询完成：没有满足条件的数据");
+				return;
+			}
+
+			//			对数据进行合并  按客户合并  订单日期取最小订单日期
+			SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
+
+			//处理查询出的计划  缓存  界面
+
+			getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
+			getDataPane().execLoadFormula();
+			getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
+			getBodyDataPane().execLoadFormula();
+			//			billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
+			setDataBuffer(billvos);		
+
+			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
+		}
+		showHintMessage("操作完成");
+	}
+	
 	/**
 	 * 
 	 * @作者：lyf
@@ -278,55 +319,61 @@ public class SoDealEventHandler{
 	 * 发运计划  安排按钮处理方法
 	 * @时间：2011-3-25下午02:59:20
 	 */
-	public void onDeal(){
+	public void onDeal() throws Exception{
 		//安排  安排前   数据校验
 		/**
 		 * 考虑是否特殊安排  过滤最小发货量   考虑库存现存量是否满足   直接安排   手工安排界面
 		 * 安排日志
 		 */
-		
-//		获取选中的数据
+
+		//		获取选中的数据
 		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDealHeaderVo.class.getName(), SoDealVO.class.getName());
 		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
 		if(newVos == null || newVos.length == 0){
 			showWarnMessage("未选中数据");
 			return;
 		}
-		
-//		对数据进行一层严密校验
-		try {
-			SoDealBillVO.checkData((SoDealBillVO[])newVos);
-		} catch (ValidationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e1.getMessage()));
-			return;
-		}
-		
-		Object o = null;
-		try {
-		 o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			ui.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
-			return;
-		}
-		
-		if(o == null)
-			return;
-		Object[] os = (Object[])o;
-		if(os == null || os.length == 0)
-			return;
-		
-//		未安排的客户信息
-		List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[0];		
-//		库存存量信息
-		List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[1];
-		
-		if(lcust==null || lcust.size()<=0)
-			return;
-//		调用手工安排界面  供用户 手工安排  存量不足货品
+
+		//		对数据进行一层严密校验
+
+		SoDealBillVO.checkData((SoDealBillVO[])newVos);
+
+
+		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
+
+		if(o != null){
+			Object[] os = (Object[])o;
+			if(os == null || os.length == 0)
+				return;
+
+			//		未安排的客户信息
+			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[0];		
+			//		库存存量信息
+			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[1];
+
+			if(lcust==null || lcust.size()<=0)
+				return;
+
+			doHandDeal(lcust, lnum);
+		}		
+		onRefresh();
+		ui.showHintMessage("本次安排结束");
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目  手工安排
+	 * @时间：2011-7-11下午03:08:02
+	 * @param lcust
+	 * @param lnum
+	 * @throws Exception
+	 */
+	private void doHandDeal(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum) throws Exception{
+		//		对客户按订单日期  自动 分配  发运量
+		SoDealHealper.autoDealNum(lcust, lnum);		
+
+		//		调用手工安排界面  供用户 手工安排  存量不足货品
 		getHandDealDlg().setLcust(lcust);
 		getHandDealDlg().setLnum(lnum);
 		getHandDealDlg().getDataPanel().setDataToUI();
@@ -334,9 +381,28 @@ public class SoDealEventHandler{
 		if(retFlag != UIDialog.ID_OK){
 			return;
 		}
+
+		//		处理手工安排信息  生成运单
+		SoDealVO[] bodys = null;
+		List<SoDealBillVO> lcust2 = getHandDealDlg().getBuffer().getLcust();
+
+		if(lcust2 == null || lcust2.size() == 0)
+			return;
+		List<SoDealVO> ldeal = new ArrayList<SoDealVO>();
+		for(SoDealBillVO cust:lcust){
+			bodys = cust.getBodyVos();
+			for(SoDealVO body:bodys){
+				body.validataOnDeal();
+			}
+			ldeal.addAll(Arrays.asList(bodys));
+		}
+		if(ldeal.size() <= 0)
+			return;
 		
-//		处理手工安排信息  生成运单
-		
+//		过滤最小发货量   手工安排的  不过滤最小发货量   支持 人工 最大
+//		过滤零安排量得存货    
+//		VOUtil.filter(ldeal, iFilter);
+		SoDealHealper.doHandDeal(ldeal, ui);
 	}
 	
 	private HandDealDLG m_handDlg = null;

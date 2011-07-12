@@ -11,7 +11,14 @@ import nc.vo.wl.pub.WdsWlPubTool;
 
 public class SoDealVO extends SuperVO{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5056426465421488586L;
+
 	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum","ntaldcnum"};
+	
+	public static String[] sort_fields = new String[]{"dbilldate"};
 	
 	private UFDouble nnum = null;//本次安排数量
 	private UFDouble nassnum = null;

@@ -15,6 +15,7 @@ import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -464,6 +465,52 @@ public class StockInvOnHandBO {
 		ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);
 		return retInfor;
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-7-11下午08:12:07
+	 * @param corp
+	 * @param cstoreid
+	 * @param cinvids
+	 * @param tt
+	 * @throws BusinessException
+	 */
+	public void checkNumForOut(String corp,String cstoreid,Map<String,UFDouble[]> invNumInfor,
+			TempTableUtil tt) throws BusinessException{
+
+		//		可用量=现场量-占用量
+		//		1、获取占用量
+		if(invNumInfor == null || invNumInfor.size() == 0)
+			return;
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp)==null)
+			corp = SQLHelper.getCorpPk();
+		if(PuPubVO.getString_TrimZeroLenAsNull(cstoreid)==null){
+			throw new ValidationException("仓库为空");
+		}
+		String[] cinvids = invNumInfor.keySet().toArray(new String[0]);
+		Map<String, UFDouble[]> dealNumInfor = getNdealNumInfor(corp, cstoreid, cinvids, tt);
+		if(dealNumInfor == null)
+			dealNumInfor = new HashMap<String, UFDouble[]>();
+
+			UFDouble[] nnum = null;//待发货量
+			UFDouble[] nstocknum = null;//库存量
+			UFDouble[] ndealnum = null;//已占用量
+			for(String invid:cinvids){
+				nnum = invNumInfor.get(invid);
+				if(nnum == null || nnum.length == 0)
+					throw new ValidationException("发货量为空");
+				nstocknum = getInvStockNum(corp, cstoreid, null, invid, null, null);
+				ndealnum = dealNumInfor.get(invid);
+				for(int i=0;i<2;i++){
+					if(PuPubVO.getUFDouble_NullAsZero(nnum[i]).compareTo(
+							PuPubVO.getUFDouble_NullAsZero(nstocknum[i])
+							.sub(PuPubVO.getUFDouble_NullAsZero(ndealnum[i])))>0)
+						throw new ValidationException("存货["+WdsWlPubTool.getInvCodeByInvid(invid)+"]库存可用量不足");
+				}
+			}
 	}
 
 }

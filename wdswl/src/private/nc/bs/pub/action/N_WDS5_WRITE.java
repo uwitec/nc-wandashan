@@ -35,7 +35,8 @@ try{
 				vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 1);
 				vo.m_preValueVo.getParentVO().setAttributeValue("fisended", UFBoolean.TRUE);//‘Àµ•∂≥Ω·
 			}
-			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+//			zhf modify 
+			retObj = runClass("nc.bs.wl.so.order.SoOrderBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

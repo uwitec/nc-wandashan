@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
@@ -13,7 +14,6 @@ import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.voutils.IFilter;
@@ -151,6 +151,8 @@ public class SoDealBO {
 				return false;
 			}
 			
+			bill.getHeader().setNminnum(nminnum);//设置上最小发货量
+			
 			UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
 			SoDealVO[] bodys = bill.getBodyVos();
 			if(bodys == null || bodys.length ==0){
@@ -204,7 +206,26 @@ public class SoDealBO {
 //		对表体同一客户同一个货品的量再次进行合并
 				
 		dealCol.setData(newbills, lpara);
-		return dealCol.col();		
+		Object o = dealCol.col();
+		return o;
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目
+	 * @时间：2011-3-25下午03:58:14
+	 * @param ldata
+	 * @param infor
+	 *            :登录人，登录公司，登录日期
+	 * @throws Exception
+	 */
+	public void doHandDeal(List<SoDealVO> ldata, List<String> infor)
+			throws Exception {
+//		数据校验
+		
+		nc.bs.dm.so.SoDealBO dealbo = new nc.bs.dm.so.SoDealBO();
+		dealbo.doDeal(ldata, infor);		
 	}
 	
 	/**
