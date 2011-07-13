@@ -104,8 +104,10 @@ public class WdsWlPubConst {
 	public static String  REPORT06="80100205";
 	/**出入库流水账--报表*/
 	public static String  REPORT08="80100208";
-	/**箱粉待发运台账--报表*/
+	/**物流箱粉各仓库单品库存明细--报表*/
 	public static String  REPORT10="80100210";
+	/**物流箱粉总库存--报表*/
+	public static String  REPORT15="80100215";
 	/**运费月汇总表--报表*/
 	public static String  REPORT11="80080501";
 	/**运费明细表--报表*/

@@ -1,6 +1,5 @@
 package nc.ui.wds.report.xfzkc;
 import java.util.List;
-
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import nc.bd.accperiod.AccountCalendar;
@@ -25,7 +24,7 @@ import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
 import nc.vo.wl.pub.report.SubtotalVO;
 /**
- * 箱粉中库存报表
+ * 物流箱粉总库存报表
  * @author mlr
  */
 public class ReportUI extends ReportBaseUI{
@@ -57,14 +56,14 @@ public class ReportUI extends ReportBaseUI{
     //vo合并的条件
     private static String[] voCombinConds={"pk_stordoc","pk_invbasdoc"};
     //将要合并的求值的类型
-    private static int[] types={IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD
-    	                        ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD };
+    private static int[] types={IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD
+    	                        ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD};
     //将要合并的求值子段
-    private static String[] combinFields={"unit1","unit2","unit3","unit4","unit5","unit6","unit7","unit8","unit9",
-    	                                  "bunit1","bunit2","bunit3","bunit4","bunit5","bunit6","bunit7","bunit8","bunit9"  };
+    private static String[] combinFields={"unit1","unit2","unit3","unit4","unit5","unit6","unit7","unit8","unit9","unit10","unit11",
+    	                                  "bunit1","bunit2","bunit3","bunit4","bunit5","bunit6","bunit7","bunit8","bunit9","bunit10","bunit11",  };
 	@Override
 	public String _getModelCode() {	
-		return WdsWlPubConst.REPORT10;
+		return WdsWlPubConst.REPORT15;
 	}
 	public ReportUI() {
 		super();
@@ -108,30 +107,42 @@ public class ReportUI extends ReportBaseUI{
         zgroup.add(a4);      
         cardHeader.addColumnGroup(zgroup);
               
-        ColumnGroup zgroup2=new ColumnGroup("促销品");
+        ColumnGroup zgroup2=new ColumnGroup("小计");
         zgroup2.add(cardTcm.getColumn(12));
         zgroup2.add(cardTcm.getColumn(13));
         cardHeader.addColumnGroup(zgroup2);
                 
-        ColumnGroup zgroup3=new ColumnGroup("合计");
+        ColumnGroup zgroup3=new ColumnGroup("促销品");
         zgroup3.add(cardTcm.getColumn(14));
         zgroup3.add(cardTcm.getColumn(15));
         cardHeader.addColumnGroup(zgroup3);
         
-        ColumnGroup zgroup1=new ColumnGroup("其中");
-        ColumnGroup a11=new ColumnGroup("待检");
+        ColumnGroup a11=new ColumnGroup("在途");
         a11.add(cardTcm.getColumn(16));
         a11.add(cardTcm.getColumn(17));
-        zgroup1.add(a11);
-        ColumnGroup a22=new ColumnGroup("在途");
+        cardHeader.addColumnGroup(a11);
+        
+        
+        ColumnGroup a22=new ColumnGroup("待检");
         a22.add(cardTcm.getColumn(18));
         a22.add(cardTcm.getColumn(19));
-        zgroup1.add(a22);
+        cardHeader.addColumnGroup(a22);
+        
+        
+        ColumnGroup zgroup4=new ColumnGroup("合计");
+        zgroup4.add(cardTcm.getColumn(20));
+        zgroup4.add(cardTcm.getColumn(21));
+        cardHeader.addColumnGroup(zgroup4);
+        
         ColumnGroup a33=new ColumnGroup("待发");
-        a33.add(cardTcm.getColumn(20));
-        a33.add(cardTcm.getColumn(21));
-        zgroup1.add(a33);   
-        cardHeader.addColumnGroup(zgroup1);
+        a33.add(cardTcm.getColumn(22));
+        a33.add(cardTcm.getColumn(23));
+        cardHeader.addColumnGroup(a33); 
+        
+        ColumnGroup a5=new ColumnGroup("预发后库存");
+        a5.add(cardTcm.getColumn(24));
+        a5.add(cardTcm.getColumn(25));
+        cardHeader.addColumnGroup(a5);      
         getReportBase().getBillModel().updateValue();
     }
 	@Override
@@ -200,7 +211,7 @@ public class ReportUI extends ReportBaseUI{
 				    ReportBaseVO[] combins=CombinVO.combinVoByCondition(newVos,newVos1,voCombinConds,types,combinFields);
 					setReportBaseVO(combins);
 					setBodyVO(combins);	
-	           //     setTolal();	                
+					setDefSubtotal(new String[]{"invclname"}, combinFields);                
                 }                
 	          }
 		} catch (Exception e) {
@@ -318,19 +329,19 @@ public class ReportUI extends ReportBaseUI{
     	    //类型为   0   表示待发   类型为  1 表示已发
 		if(itype==0){
 			//待发主数量 表示字段unit9
-		    UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"9"));
-		    newVo.setAttributeValue(unit+"9", oldnum.add(planNum));
+		    UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"10"));
+		    newVo.setAttributeValue(unit+"10", oldnum.add(planNum));
 		     //待发辅数量 表示字段unit9
-		    UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"9"));
-		    newVo.setAttributeValue(bunit+"9", boldnum.add(bplanNum));			
+		    UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"10"));
+		    newVo.setAttributeValue(bunit+"10", boldnum.add(bplanNum));			
 		}else if(itype==1){
 		    //在途主数量表示字段 unit8
 			//待发主数量 表示字段unit9
-			UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"8"));
-			newVo.setAttributeValue(unit+"8", oldnum.add(planNum));
+			UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"7"));
+			newVo.setAttributeValue(unit+"7", oldnum.add(planNum));
 			//待发辅数量 表示字段unit9
-			UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"8"));
-			newVo.setAttributeValue(bunit+"8", boldnum.add(bplanNum));	
+			UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"7"));
+			newVo.setAttributeValue(bunit+"7", boldnum.add(bplanNum));	
 		}	
 	}
 	/**
@@ -346,11 +357,11 @@ public class ReportUI extends ReportBaseUI{
 	private void setDaiJian(ReportBaseVO newVo, UFDouble num,
 			UFDouble bnum) {
 		//获得原来的待检主数量 用unit7字段表示
-		UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"7"));
-		newVo.setAttributeValue(unit+"7",oldnum.add(num));
+		UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"8"));
+		newVo.setAttributeValue(unit+"8",oldnum.add(num));
 		//获得原来的待检辅数量 用unit7字段表示
-		UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"7"));
-		newVo.setAttributeValue(bunit+"7",boldnum.add(bnum));		
+		UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"8"));
+		newVo.setAttributeValue(bunit+"8",boldnum.add(bnum));		
 	}
 	/**
 	 * 
@@ -517,9 +528,9 @@ public class ReportUI extends ReportBaseUI{
         SubtotalVO svo = new SubtotalVO();
         svo.setGroupFldCanNUll(true);// 分组列的数据是否可以为空。
         svo.setAsLeafRs(new boolean[] { true });// 分组列合并后是否作为末级节点记录。    
-        svo.setValueFlds(new String[]{"",""});// 求值列:
-        svo.setValueFldTypes(new int[]{1,2});// 求值列的类型:
-        svo.setTotalDescOnFld("");// ----合计---字段 ---- 所在列
+//        svo.setValueFlds(new String[]{"",""});// 求值列:
+//        svo.setValueFldTypes(new int[]{1,2});// 求值列的类型:
+        svo.setTotalDescOnFld("invclname");// ----合计---字段 ---- 所在列
         setSubtotalVO(svo);
         doSubTotal();
     }

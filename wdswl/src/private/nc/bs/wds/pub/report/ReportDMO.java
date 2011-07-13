@@ -7,6 +7,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import nc.bs.pub.SystemException;
 import nc.vo.pub.lang.UFDate;
@@ -27,7 +29,28 @@ public class ReportDMO  extends DataManageObject{
             SystemException {
         super(dbName);
     }
-
+   /**
+    * 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *      报表批量查询类
+    * @时间：2011-7-12下午12:48:26
+    * @param sqls
+    * @return
+    * @throws SQLException
+    */
+    public List<ReportBaseVO[]> queryVOBySql(String[] sqls)throws SQLException{
+    	List<ReportBaseVO[]> list=new ArrayList<ReportBaseVO[]>();
+    	if(sqls==null ||sqls.length==0){
+    		throw new SQLException("查询语句不能为空");
+    	}
+    	int size=sqls.length;
+    	for(int i=0;i<size;i++){
+    		ReportBaseVO[] vos=queryVOBySql(sqls[i]);
+    		list.add(vos);
+    	}
+		return list; 	
+    }
     /*
      * 得到总计VO.
      */
