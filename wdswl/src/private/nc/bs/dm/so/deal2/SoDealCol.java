@@ -217,7 +217,7 @@ public class SoDealCol {
 		Map<String, StoreInvNumVO> invNumInfor = new HashMap<String, StoreInvNumVO>();
 		initInvNumInfor(invNumInfor);
         if(invNumInfor.size() == 0)
-        	throw new BusinessException("所有存货的存量均为空,无法安排，退出");
+        	throw new BusinessException("所有存货的存量均为空,无法安排,退出");
 //      根据存量过滤客户待安排的数据
 //        Logger.info("###########################################################");
         Logger.info("根据最小发货量过滤库存可用量偏低的存货");
@@ -278,12 +278,13 @@ public class SoDealCol {
         		lcust.add(bill);
         	}        	
         }
-        
+        UFBoolean isauto = UFBoolean.FALSE;//是否自动安排了
         if(ldeal == null || ldeal.size()==0){
         	Logger.info("本次安排未存在可直接安排的客户");
         }else{//直接安排
         	SoDealBO dealbo = new SoDealBO();
         	dealbo.doDeal(ldeal, lpara);
+        	isauto = UFBoolean.TRUE;
         	Logger.info("系统直接安排成功");
         }
         if(lnodeal!= null && lnodeal.size()>0){//过滤最小发货量后  手动安排
@@ -310,13 +311,13 @@ public class SoDealCol {
 //        	UFDateTime time2 = new UFDateTime(System.currentTimeMillis());
         	Logger.info("本次安排处理结束,返回界面手工安排");
         	Logger.info("#####################################################");
-        	return new Object[]{lcust,ltmp};
+        	return new Object[]{isauto,lcust,ltmp};
         } else{
         	Logger.info("本次安排未存在需要用户手工安排的数据");
         	Logger.info("本次安排处理结束");
         	Logger.info("#####################################################");
         }
-        return null;
+        return new Object[]{isauto,null,null};
 	}
 
 }

@@ -3,7 +3,6 @@ package nc.ui.dm.so.deal2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
@@ -13,7 +12,7 @@ import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -341,22 +340,25 @@ public class SoDealEventHandler{
 
 		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
 
+		boolean flag = false;
+		UFBoolean isauto = UFBoolean.FALSE;
 		if(o != null){
 			Object[] os = (Object[])o;
 			if(os == null || os.length == 0)
 				return;
 
+			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
 			//		未安排的客户信息
-			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[0];		
+			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[1];		
 			//		库存存量信息
-			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[1];
+			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
 
-			if(lcust==null || lcust.size()<=0)
-				return;
-
-			doHandDeal(lcust, lnum);
-		}		
-		onRefresh();
+			if(lcust!=null || lcust.size()>0){
+				flag = doHandDeal(lcust, lnum);
+			}
+		}
+		if(flag || isauto.booleanValue())
+			onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
 	
@@ -369,7 +371,7 @@ public class SoDealEventHandler{
 	 * @param lnum
 	 * @throws Exception
 	 */
-	private void doHandDeal(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum) throws Exception{
+	private boolean doHandDeal(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum) throws Exception{
 		//		对客户按订单日期  自动 分配  发运量
 		SoDealHealper.autoDealNum(lcust, lnum);		
 
@@ -379,7 +381,7 @@ public class SoDealEventHandler{
 		getHandDealDlg().getDataPanel().setDataToUI();
 		int retFlag = getHandDealDlg().showModal();		
 		if(retFlag != UIDialog.ID_OK){
-			return;
+			return false;
 		}
 
 		//		处理手工安排信息  生成运单
@@ -387,7 +389,7 @@ public class SoDealEventHandler{
 		List<SoDealBillVO> lcust2 = getHandDealDlg().getBuffer().getLcust();
 
 		if(lcust2 == null || lcust2.size() == 0)
-			return;
+			return false;
 		List<SoDealVO> ldeal = new ArrayList<SoDealVO>();
 		for(SoDealBillVO cust:lcust){
 			bodys = cust.getBodyVos();
@@ -397,12 +399,13 @@ public class SoDealEventHandler{
 			ldeal.addAll(Arrays.asList(bodys));
 		}
 		if(ldeal.size() <= 0)
-			return;
+			return false;
 		
 //		过滤最小发货量   手工安排的  不过滤最小发货量   支持 人工 最大
 //		过滤零安排量得存货    
 //		VOUtil.filter(ldeal, iFilter);
 		SoDealHealper.doHandDeal(ldeal, ui);
+		return true;
 	}
 	
 	private HandDealDLG m_handDlg = null;

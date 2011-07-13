@@ -448,7 +448,7 @@ public class StockInvOnHandBO {
 	public Map<String, UFDouble[]> getNdealNumInfor(String corp,String cstoreid,String[] cinvids,
 			TempTableUtil tt) throws BusinessException{
 
-		Map<String,UFDouble[]> retInfor = null;
+		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
 		String sql = null;
 		//		1、销售运单占用量
 		sql = " select b.pk_invbasdoc inv,coalesce(b.narrangnmu,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassarrangnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +

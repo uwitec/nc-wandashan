@@ -90,7 +90,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 			m_panel.loadTemplet(WdsWlPubConst.WDS4_2, null, m_ce.getUser()
 					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
 			m_panel.setEnabled(true);
-			m_panel.getParentListPanel().setTotalRowShow(true);
+//			m_panel.getParentListPanel().setTotalRowShow(true);
+			m_panel.getChildListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
 			m_panel.getHeadTable().removeSortListener();
 		}
@@ -161,7 +162,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 	}
 
 	private void setButton() {
-		ButtonObject[] m_objs = new ButtonObject[] { m_btnSelAll, m_btnSelno,
+		ButtonObject[] m_objs = new ButtonObject[] { //m_btnSelAll, m_btnSelno,
 				m_btnQry, m_btnDeal};
 		this.setButtons(m_objs);
 	}
