@@ -22,6 +22,7 @@ import nc.vo.pub.lang.*;
  */
 public class TbStockstateVO extends SuperVO {
 
+	private String pk_corp;//zhf add  后续增补的需要 支持
 	public String ss_custom2;
 	public String ss_remark;
 	public String ss_custom6;
@@ -35,20 +36,30 @@ public class TbStockstateVO extends SuperVO {
 	public String ss_custom4;
 	public Integer ss_isout;//是否可出库	
 	public  UFBoolean isok ;//是否正常 报表用该字段 mlr
-	public static final String SS_ISOUT = "ss_isout";
-	public static final String SS_CUSTOM2 = "ss_custom2";
-	public static final String SS_REMARK = "ss_remark";
-	public static final String SS_CUSTOM6 = "ss_custom6";
-	public static final String SS_CUSTOM3 = "ss_custom3";
-	public static final String SS_PK = "ss_pk";
-	public static final String SS_STATE = "ss_state";
-	public static final String TS = "ts";
-	public static final String SS_CUSTOM1 = "ss_custom1";
-	public static final String SS_CUSTOM5 = "ss_custom5";
-	public static final String DR = "dr";
-	public static final String SS_CUSTOM4 = "ss_custom4";
+//	public static final String SS_ISOUT = "ss_isout";
+//	public static final String SS_CUSTOM2 = "ss_custom2";
+//	public static final String SS_REMARK = "ss_remark";
+//	public static final String SS_CUSTOM6 = "ss_custom6";
+//	public static final String SS_CUSTOM3 = "ss_custom3";
+//	public static final String SS_PK = "ss_pk";
+//	public static final String SS_STATE = "ss_state";
+//	public static final String TS = "ts";
+//	public static final String SS_CUSTOM1 = "ss_custom1";
+//	public static final String SS_CUSTOM5 = "ss_custom5";
+//	public static final String DR = "dr";
+//	public static final String SS_CUSTOM4 = "ss_custom4";
+	
+	
 	public UFBoolean getIsok() {
 		return isok;
+	}
+
+	public String getPk_corp() {
+		return pk_corp;
+	}
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
 	}
 
 	public void setIsok(UFBoolean isok) {
