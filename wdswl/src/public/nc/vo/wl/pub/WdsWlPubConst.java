@@ -252,4 +252,6 @@ public class WdsWlPubConst {
 	public static String wds_logger_name = "wds";
 //	销售安排时  过滤 客户的最小发货量  是辅计量 还是  主计量
 	public static boolean sale_send_isass = true; 
+//	zhf   仓库档案自定义项2   转分仓入库时   实际入数量 低于 实际出 数量  是否自动 调整 补录
+	public static String wds_warehouse_sytz = "def2";
 }
