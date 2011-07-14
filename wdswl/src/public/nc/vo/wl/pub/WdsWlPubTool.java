@@ -481,4 +481,20 @@ private static Map<String,String> custNameInfor = new HashMap<String, String>();
 			return null;
 		return tempVoList.toArray((CircularlyAccessibleValueObject[])java.lang.reflect.Array.newInstance(parentClass, billvos.length));
 	}
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 分仓入库时是否自动调整 偏差量
+	 * @时间：2011-7-14上午11:11:24
+	 * @param cstoreid
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static boolean isAutoAdjustStore(String cstoreid)throws BusinessException {
+		String fomular = "def2->getColValue(bd_stordoc,"+WdsWlPubConst.wds_warehouse_sytz+",pk_stordoc,cwhid)";
+		String[] names = new String[]{"cwhid"};
+		String[] values = new String[]{cstoreid};
+		UFBoolean sytz = PuPubVO.getUFBoolean_NullAs(WdsWlPubTool.execFomular(fomular, names, values),UFBoolean.FALSE);
+		return sytz.booleanValue();
+	}
 }
