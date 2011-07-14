@@ -26,76 +26,33 @@ public class TbOutgeneralHVO extends SuperVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-
-	public String vuserdef9;
-	public String tmaketime;
-	public String ccustomerid;
-	public String vuserdef3;
-	public String cauditorid;
-	/**库管员 */
-	public String cwhsmanagerid;
-	public String coperatorid;
-	public Integer iprintcount;
-	public String vuserdef14;
-	public String pk_corp;//公司
-	public String pk_defdoc10;
-	public String pk_defdoc6;
 	/**业务类型 */
 	public String cbiztype;
-	public String pk_defdoc3;
-	public String general_pk;
-	/**入库仓库 */
-	public String srl_pkr;
-	public String vuserdef10;
-	public String pk_defdoc2;
-	/** 收货地址 */
-	public String vdiliveraddress;
-	public UFDate qianzidate;
-	public String pk_defdoc7;
-	public Integer state;
-	public String pk_cubasdocc;
+	public String pk_corp;//公司
 	/**单据号 */
 	public String vbillcode;
-	public String vuserdef12;
-	public UFDate dauditdate;
-	public String vuserdef11;
+	
+	/**单据类型 */
+	public String vbilltype;
+	/**单据日期 */
+	public UFDate dbilldate;
 	/**单据状态 */
 	public Integer vbillstatus;
-	public String vuserdef15;
-    /**部门 */
+	
+	
+	/**出库仓库 */
+	public String srl_pk;
+	/**入库仓库 */
+	public String srl_pkr;
+	/**库管员 */
+	public String cwhsmanagerid;
+	   /**部门 */
 	public String cdptid;
 	/**收发类别 */
 	public String cdispatcherid;
-	public String cbizid;
-	public String tlastmoditime;
-	public String pk_defdoc9;
-	public String vuserdef1;
-	public String clastmodiid;
-	public String pk_calbody;
-	public String pk_defdoc1;
-	/**单据日期 */
-	public UFDate dbilldate;
-	public String pk_defdoc4;
-	public String pk_defdoc5;
-	public String vuserdef2;
-	public String vuserdef5;
-	public String vnote;
-	/**出库仓库 */
-	public String srl_pk;
-	/**单据类型 */
-	public String vbilltype;
-	public String vuserdef8;
-	public String vuserdef4;
-	public String cregister;
-	public String pk_defdoc8;
-	public String vuserdef7;
-	public String pk_calbodyr;
-	public String taccounttime;
-	public String vuserdef13;
-	public String vuserdef6;
-	public UFTime ts;
-	public Integer dr;
+	/** 收货地址 */
+	public String vdiliveraddress;
+	
 	/**货位主键*/
 	public String pk_cargdoc;
 	public String pk_fcorp;// 分厂公司主键
@@ -114,77 +71,134 @@ public class TbOutgeneralHVO extends SuperVO {
 	public UFBoolean fistran;//是否运费计算完成
 	public UFBoolean 	iscaltrans;//是否计算运费
 	
-	public static final String FISLOAD = "fisload";
-	public static final String FISTRAN = "fistran";
-	public static final String IS_YUNDAN = "is_yundan";
-	public static final String CSOURCEBILLHID = "csourcebillhid";
-	public static final String VSOURCEBILLCODE = "vsourcebillcode";
-	public static final String FREIGHT = "freight";
-	public static final String UNITPRICE = "unitprice";
-	public static final String MILEAGE = "mileage";
-	public static final String PK_FSTORDOC = "pk_fstordoc";
-	public static final String PK_FCALBODY = "pk_fcalbody";
-	public static final String PK_FCORP = "pk_fcorp";
-	public static final String PK_CARGDOC = "pk_cargdoc";
+	public String vuserdef9;
+	public String tmaketime;
+	public String ccustomerid;
+	public String vuserdef3;
+	public String cauditorid;
 
-	public static final String DR = "dr";
-	public static final String TS = "ts";
+	public String coperatorid;
+	public Integer iprintcount;
+	public String vuserdef14;
+	
+	public String pk_defdoc10;
+	public String pk_defdoc6;
 
-	public static final String VUSERDEF9 = "vuserdef9";
-	public static final String TMAKETIME = "tmaketime";
-	public static final String CCUSTOMERID = "ccustomerid";
-	public static final String VUSERDEF3 = "vuserdef3";
-	public static final String CAUDITORID = "cauditorid";
-	public static final String CWHSMANAGERID = "cwhsmanagerid";
-	public static final String COPERATORID = "coperatorid";
-	public static final String IPRINTCOUNT = "iprintcount";
-	public static final String VUSERDEF14 = "vuserdef14";
-	public static final String COMP = "comp";
-	public static final String PK_DEFDOC10 = "pk_defdoc10";
-	public static final String PK_DEFDOC6 = "pk_defdoc6";
-	public static final String CBIZTYPE = "cbiztype";
-	public static final String PK_DEFDOC3 = "pk_defdoc3";
-	public static final String GENERAL_PK = "general_pk";
-	public static final String SRL_PKR = "srl_pkr";
-	public static final String VUSERDEF10 = "vuserdef10";
-	public static final String PK_DEFDOC2 = "pk_defdoc2";
-	public static final String VDILIVERADDRESS = "vdiliveraddress";
-	public static final String QIANZIDATE = "qianzidate";
-	public static final String PK_DEFDOC7 = "pk_defdoc7";
-	public static final String STATE = "state";
-	public static final String PK_CUBASDOCC = "pk_cubasdocc";
-	public static final String VBILLCODE = "vbillcode";
-	public static final String VUSERDEF12 = "vuserdef12";
-	public static final String DAUDITDATE = "dauditdate";
-	public static final String VUSERDEF11 = "vuserdef11";
-	public static final String VBILLSTATUS = "vbillstatus";
-	public static final String VUSERDEF15 = "vuserdef15";
-	public static final String CDPTID = "cdptid";
-	public static final String CDISPATCHERID = "cdispatcherid";
-	public static final String CBIZID = "cbizid";
-	public static final String TLASTMODITIME = "tlastmoditime";
-	public static final String PK_DEFDOC9 = "pk_defdoc9";
-	public static final String VUSERDEF1 = "vuserdef1";
-	public static final String CLASTMODIID = "clastmodiid";
-	public static final String PK_CALBODY = "pk_calbody";
-	public static final String PK_DEFDOC1 = "pk_defdoc1";
-	public static final String DBILLDATE = "dbilldate";
-	public static final String PK_DEFDOC4 = "pk_defdoc4";
-	public static final String PK_DEFDOC5 = "pk_defdoc5";
-	public static final String VUSERDEF2 = "vuserdef2";
-	public static final String VUSERDEF5 = "vuserdef5";
-	public static final String VNOTE = "vnote";
-	public static final String SRL_PK = "srl_pk";
-	public static final String VBILLTYPE = "vbilltype";
-	public static final String VUSERDEF8 = "vuserdef8";
-	public static final String VUSERDEF4 = "vuserdef4";
-	public static final String CREGISTER = "cregister";
-	public static final String PK_DEFDOC8 = "pk_defdoc8";
-	public static final String VUSERDEF7 = "vuserdef7";
-	public static final String PK_CALBODYR = "pk_calbodyr";
-	public static final String TACCOUNTTIME = "taccounttime";
-	public static final String VUSERDEF13 = "vuserdef13";
-	public static final String VUSERDEF6 = "vuserdef6";
+	public String pk_defdoc3;
+	public String general_pk;
+	
+	public String vuserdef10;
+	public String pk_defdoc2;
+
+	public UFDate qianzidate;
+	public String pk_defdoc7;
+	public Integer state;
+	public String pk_cubasdocc;
+
+	public String vuserdef12;
+	public UFDate dauditdate;
+	public String vuserdef11;
+
+	public String vuserdef15;//-------zhf 使用  是否调整 单据   转分仓时  存在如果其他入库数量小于出库数量 自动生成差值量得入库单  再自动出库
+ 
+	public String cbizid;
+	public String tlastmoditime;
+	public String pk_defdoc9;
+	public String vuserdef1;
+	public String clastmodiid;
+	public String pk_calbody;
+	public String pk_defdoc1;
+	
+	public String pk_defdoc4;
+	public String pk_defdoc5;
+	public String vuserdef2;
+	public String vuserdef5;
+	public String vnote;
+	
+	public String vuserdef8;
+	public String vuserdef4;
+	public String cregister;
+	public String pk_defdoc8;
+	public String vuserdef7;
+	public String pk_calbodyr;
+	public String taccounttime;
+	public String vuserdef13;
+	public String vuserdef6;
+	public UFTime ts;
+	public Integer dr;
+	
+	
+//	public static final String FISLOAD = "fisload";
+//	public static final String FISTRAN = "fistran";
+//	public static final String IS_YUNDAN = "is_yundan";
+//	public static final String CSOURCEBILLHID = "csourcebillhid";
+//	public static final String VSOURCEBILLCODE = "vsourcebillcode";
+//	public static final String FREIGHT = "freight";
+//	public static final String UNITPRICE = "unitprice";
+//	public static final String MILEAGE = "mileage";
+//	public static final String PK_FSTORDOC = "pk_fstordoc";
+//	public static final String PK_FCALBODY = "pk_fcalbody";
+//	public static final String PK_FCORP = "pk_fcorp";
+//	public static final String PK_CARGDOC = "pk_cargdoc";
+//
+//	public static final String DR = "dr";
+//	public static final String TS = "ts";
+//
+//	public static final String VUSERDEF9 = "vuserdef9";
+//	public static final String TMAKETIME = "tmaketime";
+//	public static final String CCUSTOMERID = "ccustomerid";
+//	public static final String VUSERDEF3 = "vuserdef3";
+//	public static final String CAUDITORID = "cauditorid";
+//	public static final String CWHSMANAGERID = "cwhsmanagerid";
+//	public static final String COPERATORID = "coperatorid";
+//	public static final String IPRINTCOUNT = "iprintcount";
+//	public static final String VUSERDEF14 = "vuserdef14";
+//	public static final String COMP = "comp";
+//	public static final String PK_DEFDOC10 = "pk_defdoc10";
+//	public static final String PK_DEFDOC6 = "pk_defdoc6";
+//	public static final String CBIZTYPE = "cbiztype";
+//	public static final String PK_DEFDOC3 = "pk_defdoc3";
+//	public static final String GENERAL_PK = "general_pk";
+//	public static final String SRL_PKR = "srl_pkr";
+//	public static final String VUSERDEF10 = "vuserdef10";
+//	public static final String PK_DEFDOC2 = "pk_defdoc2";
+//	public static final String VDILIVERADDRESS = "vdiliveraddress";
+//	public static final String QIANZIDATE = "qianzidate";
+//	public static final String PK_DEFDOC7 = "pk_defdoc7";
+//	public static final String STATE = "state";
+//	public static final String PK_CUBASDOCC = "pk_cubasdocc";
+//	public static final String VBILLCODE = "vbillcode";
+//	public static final String VUSERDEF12 = "vuserdef12";
+//	public static final String DAUDITDATE = "dauditdate";
+//	public static final String VUSERDEF11 = "vuserdef11";
+//	public static final String VBILLSTATUS = "vbillstatus";
+//	public static final String VUSERDEF15 = "vuserdef15";
+//	public static final String CDPTID = "cdptid";
+//	public static final String CDISPATCHERID = "cdispatcherid";
+//	public static final String CBIZID = "cbizid";
+//	public static final String TLASTMODITIME = "tlastmoditime";
+//	public static final String PK_DEFDOC9 = "pk_defdoc9";
+//	public static final String VUSERDEF1 = "vuserdef1";
+//	public static final String CLASTMODIID = "clastmodiid";
+//	public static final String PK_CALBODY = "pk_calbody";
+//	public static final String PK_DEFDOC1 = "pk_defdoc1";
+//	public static final String DBILLDATE = "dbilldate";
+//	public static final String PK_DEFDOC4 = "pk_defdoc4";
+//	public static final String PK_DEFDOC5 = "pk_defdoc5";
+//	public static final String VUSERDEF2 = "vuserdef2";
+//	public static final String VUSERDEF5 = "vuserdef5";
+//	public static final String VNOTE = "vnote";
+//	public static final String SRL_PK = "srl_pk";
+//	public static final String VBILLTYPE = "vbilltype";
+//	public static final String VUSERDEF8 = "vuserdef8";
+//	public static final String VUSERDEF4 = "vuserdef4";
+//	public static final String CREGISTER = "cregister";
+//	public static final String PK_DEFDOC8 = "pk_defdoc8";
+//	public static final String VUSERDEF7 = "vuserdef7";
+//	public static final String PK_CALBODYR = "pk_calbodyr";
+//	public static final String TACCOUNTTIME = "taccounttime";
+//	public static final String VUSERDEF13 = "vuserdef13";
+//	public static final String VUSERDEF6 = "vuserdef6";
 
 	public UFBoolean getIscaltrans() {
 		return iscaltrans;
