@@ -33,75 +33,48 @@ import nc.vo.pub.lang.UFTime;
 			public String geh_cgeneralhid;//上游 运单主表id
              public String geh_customize3;
              public String pk_customize3;
-             /** 库管员*/
-             public String geh_cwhsmanagerid;
+          
              public Integer dr;
              public String geh_customize6;
              public String cauditorid;
              public String pk_measware;
-             //单据日期
-             public UFDate geh_dbilldate;
-             /**库存组织*/
-             public String geh_calbody;
-             public String geh_customize5;
-             /**制单人Id */
-             public String coperatorid;
-             public String maxstock;
-             public String pk_customize1;
-             public UFTime ts;
-             public String geh_vbillcode;
-             public Integer iprintcount;
-             public String geh_customize4;
-             /**收发类型 */
-             public String geh_cdispatcherid;
-             public UFDate clastmodedate;
-             public String geh_pk;
-             public Integer geh_fallocflag;
-             public String pk_customize7;
-             /** 出库公司*/
-             public String geh_cothercorpid;
              /**单据号 */
              public String geh_billcode;
-             public String geh_storname;
-             /**部门id */
-             public String geh_cdptid;
-             public String safestock;
-             public UFDate geh_stordate;
-             public String geh_libname;
-             public String pk_customize4;
              /**单据状态 */
              public Integer pwb_fbillflag;
+             /**单据类型编码 */
+             public String geh_cbilltypecode;
              /**公司 */
              public String geh_corp;
              public String pk_corp;
-
-             public String geh_customize9;
-             public String pk_customize9;
-             public UFBoolean geh_freplenishflag;
-             public String pk_customize6;
-             /**出库仓库 */
-             public String geh_cotherwhid;
-             public String geh_libdate;
-             public String clastmodiid;
-             public String geh_customize8;
-             public String minstock;
+             /** 出库公司*/
+             public String geh_cothercorpid;
+            
+             public String geh_storname;
+             /**部门id */
+             public String geh_cdptid;
+             //单据日期
+             public UFDate geh_dbilldate;
+             
              public String geh_cbiztype;
-             public String pk_customize8;
-             public String vnote;
+             /**库存组织*/
+             public String geh_calbody;
+             /** 库管员*/
+             public String geh_cwhsmanagerid;
+           
+             /**收发类型 */
+             public String geh_cdispatcherid;
              /**出库库存组织 */
              public String geh_cothercalbodyid;
-             public String pk_customize2;
-             public String geh_customize2;
+             /**出库仓库 */
+             public String geh_cotherwhid;
              /**业务员 */
              public String geh_cbizid;
              /**入库仓库 */
              public String geh_cwarehouseid;
-             /**单据类型编码 */
-             public String geh_cbilltypecode;
-             public String geh_customize1;
-             public String geh_tranname;
-             public String geh_customize7;
-             public String pk_customize5;
+           
+             /**制单人Id */
+             public String coperatorid;
              /**制单日期 */
              public UFDate copetadate;
              public String pwb_pk;//生产倒入运单主键
@@ -111,6 +84,49 @@ import nc.vo.pub.lang.UFTime;
              public String clastmodetime;//最后修改时间
              /** 入库货位主键 */
              private String pk_cargdoc;
+             
+             public String geh_customize5;
+           
+             public String maxstock;
+             public String pk_customize1;
+             public UFTime ts;
+             public String geh_vbillcode;
+             public Integer iprintcount;
+             public String geh_customize4;
+          
+             public UFDate clastmodedate;
+             public String geh_pk;
+             public Integer geh_fallocflag;
+             public String pk_customize7;
+         
+             public String safestock;
+             public UFDate geh_stordate;
+             public String geh_libname;
+             public String pk_customize4;
+          
+            
+
+             public String geh_customize9;
+             public String pk_customize9;
+             public UFBoolean geh_freplenishflag;
+             public String pk_customize6;
+         
+             public String geh_libdate;
+             public String clastmodiid;
+             public String geh_customize8;
+             public String minstock;
+             
+             public String pk_customize8;
+             public String vnote;
+            
+             public String pk_customize2;
+             public String geh_customize2;
+             
+             public String geh_customize1;
+             public String geh_tranname;
+             public String geh_customize7;//-------zhf 使用 是否调整 单据   转分仓时  存在如果其他入库数量小于出库数量 自动生成差值量得入库单  再自动出库
+             public String pk_customize5;
+           
              
              private UFBoolean fisnewcode;//回写供应链是否使用参数设置的批次号
 

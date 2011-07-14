@@ -1438,7 +1438,7 @@ public class TbGeneralBVO extends SuperVO {
 		this.csourcebillbid = csourcebillbid;
 	}
 
-	public void validateOnZdrk() throws ValidationException{
+	public void validateOnZdrk(boolean isact) throws ValidationException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_cinvbasid())==null){
 			throw new ValidationException("存货不能为空");
 		}
@@ -1451,6 +1451,8 @@ public class TbGeneralBVO extends SuperVO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_vbatchcode())==null){
 			throw new ValidationException("批次号不能为空");
 		}
+		if(isact&&PuPubVO.getUFDouble_NullAsZero(getGeb_anum()).equals(WdsWlPubTool.DOUBLE_ZERO))
+			throw new ValidationException("实收数量不能为空");
 //		// 验证批次号是否正确
 //		if (getGeb_vbatchcode().trim().length() < 8) {
 //			throw new ValidationException("批次号不能小于8位!");
@@ -1473,10 +1475,8 @@ public class TbGeneralBVO extends SuperVO {
 	}
 
 	public void validateOnSave() throws ValidationException{
-		validateOnZdrk();
-		validateBodySave();
-		if(PuPubVO.getUFDouble_NullAsZero(getGeb_anum()).equals(WdsWlPubTool.DOUBLE_ZERO))
-			throw new ValidationException("实收数量不能为空");
+		validateOnZdrk(false);
+		validateBodySave();		
 	}
 	
 	public void validateBodySave()  throws ValidationException{
