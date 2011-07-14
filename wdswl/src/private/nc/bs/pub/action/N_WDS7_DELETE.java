@@ -58,6 +58,7 @@ public class N_WDS7_DELETE extends AbstractCompiler2 {
 //			}
 			// ##################################################
 			IcInPubBO bo = new IcInPubBO();
+			bo.deleteAdjustBill((OtherInBillVO)bill);
 			bo.writeBackForInBill((OtherInBillVO)bill, IBDACTION.DELETE, false); //参照情况，[回写本地其他出库]
 			// ##################################################
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",

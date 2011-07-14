@@ -79,7 +79,8 @@ public class InvmandocRefModel extends AbstractRefModel{
 	    @Override
 	    public String getWherePart() {
 	    	StringBuffer strWhere = new StringBuffer();
-	    	strWhere.append(" isnull(tb_spacegoods.dr,0)=0 ")   
+	    	strWhere.append(" isnull(tb_spacegoods.dr,0)=0 and isnull(wds_invbasdoc.dr,0) = 0 and isnull(bd_invbasdoc.dr,0) = 0" +
+	    			" and isnull(wds_invbasdoc.dr,0) = 0 ")   
 	    	        .append(" and bd_invmandoc.pk_corp='"+getPk_corp()+"'");
 	    	return strWhere.toString();
 	    }

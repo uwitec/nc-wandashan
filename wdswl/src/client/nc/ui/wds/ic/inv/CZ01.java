@@ -7,12 +7,12 @@ import nc.ui.bd.ref.AbstractRefModel;
  *  存货状态
  */
 public class CZ01 extends AbstractRefModel{
-	private int m_DefaultFieldCount= 2;
-	private String[] m_aryFieldCode= {  "ss_state","d"};
-	private String[] m_aryFieldName= { "订单号","订单号" };
+	private int m_DefaultFieldCount= 3;
+	private String[] m_aryFieldCode= {"ss_isout","ss_state","isok"};
+	private String[] m_aryFieldName= {"是否可出库","状态","是否正常"};
 	private String m_sPkFieldCode= "ss_pk";
-	private String m_sRefTitle= "订单信息";
-	private String m_sTableName= "(select ss_pk  ,ss_state,ss_state d from tb_stockstate where dr=0)tmp ";
+	private String m_sRefTitle= "存货库存状态";
+	private String m_sTableName= "tb_stockstate";
 	/**
 	 * RouteRefModel 构造子注解。
 	 */
@@ -72,6 +72,8 @@ public class CZ01 extends AbstractRefModel{
 	public String getTableName() {
 		return m_sTableName;
 	}
-	
+	public String getWherePart() {
+		return " isnull(dr,0) = 0";
+	}
 
 }

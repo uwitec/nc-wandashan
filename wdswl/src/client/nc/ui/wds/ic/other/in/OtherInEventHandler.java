@@ -10,6 +10,8 @@ import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -112,10 +114,27 @@ public class OtherInEventHandler extends InPubEventHandler {
 				_getCorp().getPk_corp(), getBillUI().getModuleCode()
 				, getBillUI()._getOperator(), null		
 		);
-
 	}
 
+	protected void onBoEdit() throws Exception {
+		if (getBufferData().getCurrentVO() == null)
+			return;
+		UFBoolean isadjust = PuPubVO.getUFBoolean_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("geh_customize7"), UFBoolean.FALSE);
+		if(isadjust.booleanValue()){
+			getBillUI().showHintMessage("用于调整的出库单不能修改");
+			return;
+		}
+		super.onBoEdit();
+	}
 	
-
-	
+	protected void onBoDel() throws Exception {
+		if (getBufferData().getCurrentVO() == null)
+			return;
+		UFBoolean isadjust = PuPubVO.getUFBoolean_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("geh_customize7"), UFBoolean.FALSE);
+		if(isadjust.booleanValue()){
+			getBillUI().showHintMessage("用于调整的出库单不能删除");
+			return;
+		}
+		super.onBoDel();	
+	}
 }

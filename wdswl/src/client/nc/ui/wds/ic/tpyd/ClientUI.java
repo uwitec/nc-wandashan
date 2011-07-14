@@ -12,6 +12,8 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -26,17 +28,35 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 
 	private static final long serialVersionUID = -3998675844592858916L;
 	
+	private String cwhid;//当前登录人所在仓库
+	private String cspaceid;//当前登录人所在的货位
+	
 	public ClientUI() {
 		super();
+		init();
 	}
 
 	public ClientUI(Boolean useBillSource) {
 		super(useBillSource);
+		init();
 	}
 
 	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+		init();
+	}
+	private void init(){
+		LoginInforHelper login = new LoginInforHelper();
+		try {
+			cwhid = login.getCwhid(_getOperator());
+			cspaceid = login.getLogInfor(_getOperator()).getSpaceid();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cwhid = null;
+			cspaceid = null;
+		}
 	}
 	@Override
 	protected AbstractManageController createController() {
@@ -79,7 +99,12 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSD);
-		getBillCardPanel().setTailItem("dmakedate", _getDate());		
+		getBillCardPanel().setTailItem("dmakedate", _getDate());	
+//		设置当前登录人所在的仓库  和 货位
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null)
+			getBillCardPanel().setHeadItem("pk_stordoc", cwhid);
+		if(PuPubVO.getString_TrimZeroLenAsNull(cspaceid)!=null)
+			getBillCardPanel().setHeadItem("pk_cargedoc", cspaceid);
 	}
 
 	protected ManageEventHandler createEventHandler() {
@@ -127,7 +152,9 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					JComponent jc = getBillCardPanel().getBodyItem("outtraycode").getComponent();
 					if( jc instanceof UIRefPane){
 						UIRefPane ref = (UIRefPane)jc;
-						ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)=1 and tb_warehousestock.pk_cargdoc='"+a+"'");//有货
+						ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)="+StockInvOnHandVO.stock_state_use+"" +
+								" and tb_warehousestock.pk_cargdoc='"+a+"'" +
+										" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//有货
 					}
 				}else{
 					showErrorMessage("请先选择表头货位信息!");
@@ -155,8 +182,9 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					UIRefPane ref = (UIRefPane)jc;
 					
 					ref.getRefModel().addWherePart(" and wds_cargdoc.pk_cargdoc='"+a
-							+"' and isnull(bd_cargdoc_tray.cdt_traystatus,0)=0 " +
-							" and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" );//当前货位下托盘为空且和移出托盘一样的存货
+							+"' and isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_null+
+							" and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
+									" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//当前货位下托盘为空且和移出托盘一样的存货
 				}
 			}
 			

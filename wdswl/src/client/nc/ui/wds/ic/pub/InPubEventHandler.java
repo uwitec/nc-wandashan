@@ -169,7 +169,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		if(bvo == null || bvo.length == 0)
 			throw new BusinessException("请先输入表体数据");
 		for(TbGeneralBVO vo : bvo){
-			vo.validateOnZdrk();
+			vo.validateOnZdrk(false);
 		}
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(WdsWlPubConst.DLG_IN_TRAY_APPOINT,_getOperator(), 
 				_getCorp().getPrimaryKey(), null,ui,true);
@@ -360,7 +360,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}
 		// 验证货品主键
 		for (TbGeneralBVO body:tbGeneralBVOs) {
-			body.validateOnZdrk();
+			body.validateOnZdrk(false);
 		}
 //		for(TbGeneralBVO body:tbGeneralBVOs){
 //			String key = body.getGeb_crowno();

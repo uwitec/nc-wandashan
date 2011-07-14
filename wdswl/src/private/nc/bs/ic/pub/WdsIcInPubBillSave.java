@@ -1,19 +1,18 @@
 package nc.bs.ic.pub;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.pub.SuperDMO;
+import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.trade.business.HYPubBO;
 import nc.bs.trade.comsave.BillSave;
-import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
-import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
@@ -22,12 +21,14 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
+import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
-import nc.vo.wds.xn.XnRelationVO;
 import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -57,7 +58,6 @@ public class WdsIcInPubBillSave extends BillSave {
 	}
 	
 	class filterDelLine implements IFilter{
-
 		public boolean accept(Object o) {
 			// TODO Auto-generated method stub
 			if(o == null)
@@ -131,6 +131,11 @@ public class WdsIcInPubBillSave extends BillSave {
 			LockTrayBO lockbo = new LockTrayBO();
 			lockbo.doSaveLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)),newBillVo.getHeaderVo().getGeh_cwarehouseid(),lockTrayInfor);
 		}	
+		
+//		转分仓流程入库时  是否自动调整 入库偏差量
+		if(head.getGeh_billtype().equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_IN)){
+			saveBillOnAdjust(newBillVo);
+		}
 		return retAry;
 	}
 	
@@ -324,4 +329,145 @@ public class WdsIcInPubBillSave extends BillSave {
 		
 	}
 	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-7-13上午10:10:34
+	 * @param billVo
+	 * @return
+	 * @throws BusinessException
+	 */
+	public void saveBillOnAdjust(nc.vo.pub.AggregatedValueObject billVo)
+	throws BusinessException {
+
+		if(billVo==null)
+			throw new BusinessException("传入数据为空");
+		
+		String cinstoreid = PuPubVO.getString_TrimZeroLenAsNull(((TbGeneralHVO)billVo.getParentVO()).getGeh_cwarehouseid());
+		if(cinstoreid == null){
+			throw new BusinessException("入库仓库为空");
+		}
+		boolean flag = WdsWlPubTool.isAutoAdjustStore(cinstoreid); 
+		if(!flag)
+			return;
+		
+//		生成调整入库单
+		OtherInBillVO inbill = creatAdjustInBill(billVo);
+		if(inbill == null)
+			return;
+//		保存调整入库单
+		List lret = super.saveBill(inbill);
+		getOutBO().writeBackForInBill(inbill,IBDACTION.SAVE,true);
+		OtherInBillVO newin = (OtherInBillVO)lret.get(1);
+//		生成调整出库单
+		MyBillVO outbillvo = creatAdjustOutBill(newin, inbill.getHeaderVo().getCoperatorid(), inbill.getHeaderVo().getCopetadate().toString(), inbill.getHeaderVo().getPk_corp());
+		
+		if(outbillvo == null){
+			throw new BusinessException("数据异常");
+		}
+//		保存调整出库单
+		super.saveBill(outbillvo);
+	}
+	
+	private HYPubBO hybo = null;
+	private HYPubBO getHyBO(){
+		if(hybo == null)
+			hybo = new HYPubBO();
+		return hybo;
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 转分仓入库单保存后  由于实入数量和应入数量不一致  对偏差量进行系统自动调整 （一入 一出）
+	 * @时间：2011-7-13上午10:50:08
+	 * @param billVo
+	 * @return
+	 * @throws BusinessException
+	 */
+	private OtherInBillVO creatAdjustInBill(nc.vo.pub.AggregatedValueObject billVo) throws BusinessException{
+		if(billVo == null)
+			return null;
+		TbGeneralHVO head = (TbGeneralHVO)billVo.getParentVO();
+		TbGeneralBVO[] bodys = (TbGeneralBVO[])billVo.getChildrenVO();
+		if(head == null || bodys == null||bodys.length ==0){			
+			throw new BusinessException("数据为空");			
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype())==null || !PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype()).equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_OUT)){
+			return null;
+		}
+		List<TbGeneralBVO> lnewbody = new ArrayList<TbGeneralBVO>();
+		UFDouble nnum = null;
+		UFDouble nassnum = null;
+		TbGeneralBVO newbody = null;
+		OtherInBillVO bill = null;
+//		HYPubBO hybo = new HYPubBO();
+		for(TbGeneralBVO body:bodys){
+			if(PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcetype())==null || !PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcetype()).equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_OUT)){
+				continue;
+			}
+			newbody = (TbGeneralBVO)body.clone();
+			newbody.validateOnZdrk(true);
+			nnum = PuPubVO.getUFDouble_NullAsZero(newbody.getGeb_snum()).sub(PuPubVO.getUFDouble_NullAsZero(newbody.getGeb_anum()));
+			nassnum = PuPubVO.getUFDouble_NullAsZero(newbody.getGeb_bsnum()).sub(PuPubVO.getUFDouble_NullAsZero(newbody.getGeb_banum()));
+			if(nnum.doubleValue()<=0)
+				continue;
+			if(nassnum.doubleValue()<=0)
+				continue;
+			newbody.setGeb_snum(nnum);
+			newbody.setGeb_bsnum(nassnum);
+			newbody.setGeb_anum(nnum);
+			newbody.setGeb_banum(nassnum);
+			newbody.setGeb_nmny(newbody.getGeb_anum().multiply(PuPubVO.getUFDouble_NullAsZero(newbody.getGeb_nprice())));
+			
+//			来源信息  补录  为了 回写 出库单  的累计出库数量  如此赋值  zhf
+			newbody.setCsourcebillbid(body.getCsourcebillbid());
+			newbody.setCsourcebillhid(body.getCsourcebillhid());
+			newbody.setCsourcetype(body.getCsourcetype());
+			
+			newbody.setCfirstbillbid(body.getPrimaryKey());
+			newbody.setCfirstbillhid(body.getGeh_pk());
+			newbody.setCfirsttype(WdsWlPubConst.BILLTYPE_OTHER_IN);
+			
+			newbody.setGeh_pk(null);
+			newbody.setGeb_pk(null);
+			
+			body.setStatus(VOStatus.NEW);
+			lnewbody.add(newbody);
+		}
+		
+		if(lnewbody.size()>0){
+			bill = new OtherInBillVO();
+			TbGeneralHVO newhead = (TbGeneralHVO)head.clone();
+			newhead.setGeh_pk(null);
+			newhead.setGeh_customize7("Y");
+			newhead.setGeh_billcode(getHyBO().getBillNo(WdsWlPubConst.BILLTYPE_OTHER_IN, head.getPk_corp(), null, null));
+			bill.setParentVO(newhead);
+			bill.setChildrenVO(lnewbody.toArray(new TbGeneralBVO[0]));
+			return bill;
+		}
+		return null;
+	}	
+	
+	private MyBillVO creatAdjustOutBill(OtherInBillVO inBillVo,
+			String coprator, String date, String corp) throws BusinessException {
+		if (inBillVo == null)
+			return null;
+		PfParameterVO paraVo = new PfParameterVO();
+		paraVo.m_operator = coprator;
+		paraVo.m_currentDate = date;
+		paraVo.m_coId = corp;
+		MyBillVO outbillvo = (MyBillVO) PfUtilTools.runChangeData(
+				WdsWlPubConst.BILLTYPE_OTHER_IN,
+				WdsWlPubConst.BILLTYPE_OTHER_OUT, inBillVo, paraVo);
+		if(outbillvo == null)
+			return null;
+		String vbillno = getHyBO().getBillNo(WdsWlPubConst.BILLTYPE_OTHER_OUT, corp, null, null);
+		if(vbillno == null){
+			throw new BusinessException("获取其他出库单单据号出错");
+		}
+		outbillvo.getParentVO().setAttributeValue("vbillcode", vbillno);
+		return outbillvo;
+	}
 }

@@ -252,5 +252,29 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
 	
 	}
+	
+	/**
+	 * zhf add  不支持修改时 行操作
+	 */
+	protected void onBoEdit() throws Exception {
+		if (getBufferData().getCurrentVO() == null)
+			return;
+		UFBoolean isadjust = PuPubVO.getUFBoolean_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("vuserdef15"), UFBoolean.FALSE);
+		if(isadjust.booleanValue()){
+			getBillUI().showHintMessage("用于调整的出库单不能修改");
+			return;
+		}
+		super.onBoEdit();
+	}
+	protected void onBoDel() throws Exception {
+		if (getBufferData().getCurrentVO() == null)
+			return;
+		UFBoolean isadjust = PuPubVO.getUFBoolean_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("vuserdef15"), UFBoolean.FALSE);
+		if(isadjust.booleanValue()){
+			getBillUI().showHintMessage("用于调整的出库单不能删除");
+			return;
+		}
+		super.onBoDel();
+	}
 
 }
