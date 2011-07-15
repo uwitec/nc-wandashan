@@ -3,11 +3,14 @@ package nc.bs.pub.action;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
@@ -39,6 +42,17 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 					 date = list.get(0);
 					 operate = list.get(1);
 				}
+				
+//				zhf add  2011 07 15  签字前 调整 保存时回写的来源erp调拨出库单的转出数量因为自动生成的erp调拨入保存时
+//				会再次 回写  避免重复
+				
+				OtherInBillVO bill = (OtherInBillVO)getVo();
+				if(bill == null||bill.getHeaderVo() == null||bill.getChildrenVO()==null||bill.getChildrenVO().length ==0)
+					throw new BusinessException("传入数据非法");
+				
+				IcInPubBO bo = new IcInPubBO();
+				bo.writeBackForInBill(bill, IBDACTION.DELETE, false);				
+				
 				// ##################################################数据交换
 				setParameter("AggObj",vo.m_preValueVo);
 				setParameter("date", date);

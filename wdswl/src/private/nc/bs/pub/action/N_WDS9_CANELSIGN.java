@@ -3,11 +3,14 @@ package nc.bs.pub.action;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
@@ -38,6 +41,11 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 				 date = list.get(0);
 				 operate = list.get(1);
 			}
+			
+			OtherInBillVO bill = (OtherInBillVO)getVo();
+			if(bill == null||bill.getHeaderVo() == null||bill.getChildrenVO()==null||bill.getChildrenVO().length ==0)
+				throw new BusinessException("传入数据非法");
+			
 			// ##################################################
 			setParameter("AggObj",vo.m_preValueVo);
 			setParameter("operate",operate);
@@ -53,6 +61,11 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 			setParameter("hvo", headvo);
 			runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "updateHVO",
 					"&hvo:nc.vo.ic.pub.TbGeneralHVO", vo, m_keyHas,m_methodReturnHas);
+			
+//			zhf add  取消签字后  erp的调拨入库单被删除  将清空对erp来源调拨出的转出数量的回写  由于物流系统的调拨入仍存在转出数量不能清空
+			IcInPubBO bo = new IcInPubBO();
+			bo.writeBackForInBill(bill, IBDACTION.SAVE, true);		
+			
 			return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

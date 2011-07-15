@@ -177,7 +177,7 @@ public class IcInPubBO {
 	 * @throws Exception
 	 */
 	public void writeBackForInBill(OtherInBillVO newBillVo,int  iBdAction,boolean isNew)
-			throws BusinessException {
+	throws BusinessException {
 		if(newBillVo == null || newBillVo.getParentVO() == null 
 				||newBillVo.getChildrenVO() == null 
 				|| newBillVo.getChildrenVO().length==0)
@@ -185,31 +185,39 @@ public class IcInPubBO {
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])newBillVo.getChildrenVO();
 		Map<String, UFDouble> numInfor = new HashMap<String, UFDouble>();
 		Map<String, UFDouble> numassInfor = new HashMap<String, UFDouble>();
+		String billtype = PuPubVO.getString_TrimZeroLenAsNull(newBillVo.getHeaderVo().getGeh_billtype());
+		if(billtype == null){
+			throw new BusinessException("单据类型为空");
+		}
+		String soubillidfield = billtype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_ALLO_IN)?"gylbillbid":"csourcebillbid";
 		String sourcetype = null;
 		String csourbillbid= null;
 		sourcetype = PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype());//一张单子上只有一种来源
+		if(billtype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_ALLO_IN)){
+			sourcetype = PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getGylbilltype());
+		}
+
 		if(sourcetype==null)
 			return;
 		if(iBdAction == IBDACTION.DELETE){
 			for(TbGeneralBVO body:bodys){
-				csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcebillbid());
+				csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getAttributeValue(soubillidfield));
 				if(csourbillbid == null)
 					continue;
 				if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
-						numInfor.put(body.getCsourcebillbid(),PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)); 
-						numassInfor.put(body.getCsourcebillbid(),PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
-
+					numInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)); 
+					numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
 				}
 			}
 		}else if(iBdAction == IBDACTION.SAVE){
 			if(isNew){
 				for(TbGeneralBVO body:bodys){
-					csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcebillbid());
+					csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getAttributeValue(soubillidfield));
 					if(csourbillbid == null)
 						continue;
 					if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
-							numInfor.put(body.getCsourcebillbid(),PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum())); 
-							numassInfor.put(body.getCsourcebillbid(),PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum())); 
+						numInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum())); 
+						numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum())); 
 					}
 				}
 			}else{
@@ -217,15 +225,16 @@ public class IcInPubBO {
 				UFDouble noldoutnum = null;
 				UFDouble noutassistnum = null;
 				SQLParameter para = null;
+				String soubillid = billtype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_ALLO_IN)?"gylbillbid":"csourcebillbid";
 				for(TbGeneralBVO body:bodys){
-					csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getCsourcebillbid());
+					csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getAttributeValue(soubillid));
 					if(csourbillbid == null)
 						continue;
 					if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
 						if( VOStatus.DELETED==body.getStatus()){
-							numInfor.put(body.getCsourcebillbid(), 
+							numInfor.put(csourbillbid, 
 									PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1));
-							numassInfor.put(body.getCsourcebillbid(),PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
+							numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
 						}else if(VOStatus.UPDATED== body.getStatus()){
 							//取出原来的数量
 							if(para == null)
@@ -240,45 +249,43 @@ public class IcInPubBO {
 									throw new BusinessException("获取原实入数量异常");
 								}
 								Object[] colum =(Object[]) list.get(0);
-								 noldoutnum =PuPubVO.getUFDouble_NullAsZero(colum[0]);
-								 noutassistnum =PuPubVO.getUFDouble_NullAsZero(colum[1]);
+								noldoutnum =PuPubVO.getUFDouble_NullAsZero(colum[0]);
+								noutassistnum =PuPubVO.getUFDouble_NullAsZero(colum[1]);
 							}	
-							
-							numInfor.put(body.getCsourcebillbid(), 
+							numInfor.put(csourbillbid, 
 									PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).sub(noldoutnum));
-							numassInfor.put(body.getCsourcebillbid(), 
+							numassInfor.put(csourbillbid, 
 									PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).sub(noutassistnum));
 						}
 					}
 				}
 			}
 		}
-			if(numInfor.size()>0){
-				String sql = null;
-				if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)){		
-					sql = " update tb_outgeneral_b set nacceptnum=coalesce(nacceptnum,0)+? ,nassacceptnum=coalesce(nassacceptnum,0)+?" +
-					" where general_b_pk=? ";
-				}else if(ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){
-					sql = " update ic_general_b set ntranoutnum = coalesce(ntranoutnum,0)+? ,ntranoutastnum=coalesce(ntranoutastnum,0)+? where cgeneralbid = ?";
-				}
-				//				BaseDAO dao = new BaseDAO();
-				SQLParameter para = null;
-				for(String key:numInfor.keySet()){
-					if(para == null)
-						para = new SQLParameter();
-					else
-						para.clearParams();
-					para.addParam(numInfor.get(key));
-					para.addParam(numassInfor.get(key));
-					para.addParam(key);
-					getDao().executeUpdate(sql, para);
-					para.clearParams();
-				}			
-	
-				//			控制不能超数量发货
-				checkNoutNumByOrderNum(sourcetype, numInfor.keySet().toArray(new String[0]));
+		if(numInfor.size()>0){
+			String sql = null;
+			if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)){		
+				sql = " update tb_outgeneral_b set nacceptnum=coalesce(nacceptnum,0)+? ,nassacceptnum=coalesce(nassacceptnum,0)+?" +
+				" where general_b_pk=? ";
+			}else if(ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){
+				sql = " update ic_general_b set ntranoutnum = coalesce(ntranoutnum,0)+? ,ntranoutastnum=coalesce(ntranoutastnum,0)+? where cgeneralbid = ?";
 			}
+			//				BaseDAO dao = new BaseDAO();
+			SQLParameter para = null;
+			for(String key:numInfor.keySet()){
+				if(para == null)
+					para = new SQLParameter();
+				else
+					para.clearParams();
+				para.addParam(numInfor.get(key));
+				para.addParam(numassInfor.get(key));
+				para.addParam(key);
+				getDao().executeUpdate(sql, para);
+				para.clearParams();
+			}			
+			//			控制不能超数量发货
+			checkNoutNumByOrderNum(sourcetype, numInfor.keySet().toArray(new String[0]));
 		}
+	}
 	
 	public void checkNoutNumByOrderNum(String sourcetype,String[] ids) throws BusinessException{
 		String sql = null;
