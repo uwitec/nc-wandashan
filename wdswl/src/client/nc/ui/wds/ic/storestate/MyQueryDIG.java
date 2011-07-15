@@ -16,7 +16,4 @@ public class MyQueryDIG extends HYQueryDLG{
 	public void init(){
 		setDefaultValue("tb_stockstate.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());
 	}
-
-	
-
 }

@@ -8,7 +8,7 @@ public class PpRefer extends AbstractRefModel {
 	private String[] m_aryFieldName= { "分仓编码","分仓名称"  };
 	private String m_sPkFieldCode= "pk_stordoc";
 	private String m_sRefTitle= "分仓信息";
-	private String m_sTableName= "(select pk_stordoc, storcode ,storname from bd_stordoc  where  def1='1'  and dr=0)tmp ";
+	private String m_sTableName= "bd_stordoc";
 	/**
 	 * RouteRefModel 构造子注解。
 	 */
@@ -68,5 +68,7 @@ public class PpRefer extends AbstractRefModel {
 	public String getTableName() {
 		return m_sTableName;
 	}
-	
+	public String getWherePart() {
+		return " def1 = '1' and isnull(dr,0)=0";
+	}
 }

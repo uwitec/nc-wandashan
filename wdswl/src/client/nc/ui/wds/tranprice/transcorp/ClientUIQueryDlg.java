@@ -1,8 +1,6 @@
 package nc.ui.wds.tranprice.transcorp;
 
 import java.awt.Container;
-
-import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.trade.query.HYQueryDLG;
 
