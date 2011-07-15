@@ -2,11 +2,39 @@ package nc.ui.wds.ref;
 
 import nc.ui.bd.ref.AbstractRefModel;
 
+//public class WdsInvClRefModel extends AbstractRefTreeModel {
+//
+//	public WdsInvClRefModel(String refNodeName) {
+//		setRefNodeName(refNodeName);
+//		// TODO 自动生成构造函数存根
+//	}
+//	public void setRefNodeName(String refNodeName) {
+//		m_strRefNodeName = refNodeName;
+//		// *根据需求设置相应参数
+//		setFieldCode(new String[] { "vinvclcode", "vinvclname",
+//				"invclasslev", "pk_invcl" });
+//		setFieldName(new String[] {
+//				NCLangRes4VoTransl.getNCLangRes().getStrByID("common",
+//						"UC000-0001480")/* @res "存货编码" */,
+//				NCLangRes4VoTransl.getNCLangRes().getStrByID("common",
+//						"UC000-0001453") /* @res "存货名称" */});
+//		setPkFieldCode("pk_invcl");
+//		setRefCodeField("vinvclcode");
+//		setRefNameField("vinvclname");
+//		setTableName("wds_invcl");
+//		setCodingRule(UFRefManage.getCodeRuleFromPara("BD101"));
+//		// sxj 2003-02-20
+//		setWherePart(" pk_corp='" + getPk_corp() + "' or pk_corp= '" + "0001"
+//				+ "'");
+//		resetFieldName();
+//	}
+//}
+
 public class WdsInvClRefModel extends AbstractRefModel {
 
  private String m_sRefTitle = "存货分类";
 	 
-	 private String tablename=" wds_specbusi";
+	 private String tablename=" wds_invcl";
 	
 	 private String[] fieldcode={"vinvclcode","vinvclname","pk_invcl"};
 	 

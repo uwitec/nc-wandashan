@@ -1,17 +1,15 @@
 package nc.ui.wds.report.xffzc;
-import javax.swing.ListSelectionModel;
-import nc.bd.accperiod.AccountCalendar;
+import java.util.HashMap;
+import java.util.Map;
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
-import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.ui.wl.pub.report.ReportPubTool;
+import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
@@ -27,70 +25,37 @@ import nc.vo.wl.pub.report.SubtotalVO;
  * 非正常箱粉报表
  * @author mlr
  */
-public class ReportUI extends ReportBaseUI{
+public class ReportUI extends WDSReportBaseUI{
 	private static final long serialVersionUID = 1L;
-    private String ddatefrom =null;
-    private String ddateto = null;
-    //仓库,货位,生产日期,存货 
-    private static String[] splitFields=new String[]{"PK_CUSTOMIZE1","pk_cargdoc","dstartdate","pk_invbasdoc"};   	
+	
+    //存货分类箱粉编码
+	private String invclcodec = "00";   	
    //报表vo中存货状态主键
-    private static String ss_pk="pk_storestate";
-    //库存状态基础信息表的主键
-    private static String pk="ss_pk";
+    private  String ss_pk="pk_storestate";
+    
+   //存货分类箱粉编码
+	private   String invclcode = "00";
     //库存辅数量对应字段
-    private static String bnum="bnum";
+    private  String bnum="bnum";
     //非正常分类字段的对应前缀
-    private static String num="num";
-    //存货状态动态列,显示字段
-    private static String displayName="ss_state";
+    private  String num="num";
+    
     //动态列从原有列的哪个位置  开始插入 动态列       该字段记录动态列开始插入的位置
-    private static int location=3;
+    private  int location=3;
     //设置总吨数是换算率字段
-    private static String hsl="hsl";
+    private  String hsl="hsl";
     //总吨数对应字段
-    private static String zton="sumnum";
+    private  String zton="sumnum";
     //合计行所在字段
-    private static String total="invname";
-    //存货状态主键 数组   箱粉非正常库存报表 所用字段  
-    protected  String[] pk_storestates=null;  
+    private  String total="invname";  
+    
 	@Override
 	public String _getModelCode() {	
 		return WdsWlPubConst.REPORT06;
 	}
 	public ReportUI() {
 		super();
-		initReportUI();
-	}
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目
-	 *        完成ui初始化设置 
-	 * @时间：2011-7-8下午03:20:53
-	 */
-	private void initReportUI() {		
-		setDynamicColumn();			
-	}
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 *        设置动态列
-	 * @时间：2011-7-8下午03:22:30
-	 */	
-	private void setDynamicColumn() {
-		 //-----------------------处理 模板  支持动态列      
-		 getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	               
-	        ReportItem[] olditems = getReportBase().getBody_Items();       
-	        ReportItem[] newitems;
-			try {
-			        newitems = getNewItems();
-				    ReportItem[] allitems = combin(olditems,newitems);        
-			        getReportBase().setBody_Items(allitems);
-			        updateUI();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}            		
+		
 	}
 	@Override
 	public void setUIAfterLoadTemplate() {
@@ -100,35 +65,29 @@ public class ReportUI extends ReportBaseUI{
 	 * 
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
-	 *       将动态列与静态列 合并
-	 * @时间：2011-7-8下午03:30:07
-	 * @param olditems
-	 * @param newitems
-	 * @return
-	 */
-	private ReportItem[] combin(ReportItem[] olditems, ReportItem[] newitems) {
-		ReportItem[] its=new ReportItem[olditems.length+newitems.length];
-		System.arraycopy(olditems, 0, its, 0, location);
-	    System.arraycopy(newitems, 0, its,location,newitems.length);
-	    System.arraycopy(olditems, location, its, location+newitems.length, olditems.length-location);
-		return its;
-	}
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 
 	 *        从存货状态表中获得要组装动态列的数据
+	 *        父类调用该方法
 	 * @时间：2011-7-8上午09:54:00
 	 * @return
 	 * @throws Exception 
 	 */
-	private ReportItem[] getNewItems() throws Exception {
+	@Override
+	public Map getNewItems() throws Exception {
+		HashMap<String, Object> map=new HashMap<String, Object>();
+		//设置动态列插入位置
+	    map.put("location", new Integer(3));
 		//过滤库存状态为非正常的
 		String wheresql=" isnull(tb_stockstate.dr,0)=0 and upper(coalesce(tb_stockstate.isok,'N'))='N'";
 		SuperVO[] vos= HYPubBO_Client.queryByCondition(TbStockstateVO.class, wheresql);
 		if(vos==null || vos.length==0){
 			return null;
 		}
+		//存货状态动态列,显示字段
+	     String displayName="ss_state";
+	     //库存状态基础信息表的主键      
+	     String pk="ss_pk";  
+	    //用于设置库龄存货数量数对应的主数量字段名  
+	     String num="num";   	     
 		//动态列的元素
 		ReportItem[] res=new ReportItem[vos.length];
 		//动态列对应的库存状态表的主键
@@ -139,7 +98,9 @@ public class ReportUI extends ReportBaseUI{
 		  res[i]=it;
 		  pk_storestates[i]=(String) vos[i].getAttributeValue(pk);
 		}	
-		return res;
+		map.put("items",res);
+		
+		return map;
 	}	
 	@Override
 	public ReportBaseVO[] getReportVO(String sql) throws BusinessException {
@@ -161,49 +122,32 @@ public class ReportUI extends ReportBaseUI{
 	}
 	@Override
 	public void onQuery() {
-		try{
-		  	//设置查询模板默认查询条件
-	        AccountCalendar  accCal = AccountCalendar.getInstance();     
-	        getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
-	        getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
-			getQueryDlg().showModal();
-		     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		  
-            	//校验开始日期，截止日期
-            	UIRefPane obj1 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddatefrom");
-            	UIRefPane obj2 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddateto");
-            	ddatefrom = obj1.getRefName();
-            	if(ddatefrom == null ||"".equalsIgnoreCase(ddatefrom)){
-            		showErrorMessage("请输入开始日期");
-            		return ;
-            	}
-            	//截止日期如果为空，则默认为当前日期
-            	ddateto = obj2.getRefName();
-            	if(ddateto == null || "".equalsIgnoreCase(ddateto)){
-            		ddateto = _getCurrDate().toString();
-            	}
-            	//中文的查询条件
-            	String qryconditons = getQueryDlg().getChText();
-            	if(!qryconditons.contains("截止日期")){
-            		qryconditons = qryconditons+"并且(截止日期 小于等于 '"+ddateto+"')";
-            	}
-            	getReportBase().setHeadItem("ddatefrom", ddatefrom);
-            	getReportBase().setHeadItem("ddateto", ddateto);
-            	getReportBase().getHeadItem("qryconditons").setWidth(2);
-            	getReportBase().setHeadItem("qryconditons", qryconditons);
+		try{		
+			    super.onQuery();
             	//得到自定义查询条件
                 //得到查询结果
                 ReportBaseVO[] vos = getReportVO(getQuerySQL());
-                if(vos != null){                	
-                	//List<ReportBaseVO> list= Arrays.asList(vos);
-                	//ReportBaseVO subTotal1 = new ReportBaseVO();
-                	//subTotal1.setAttributeValue("", "");
-					super.updateBodyDigits();
-					ReportBaseVO[] voss=setVoByInvState(vos);
-					setReportBaseVO(voss);
-					setBodyVO(voss);				
-	                setTolal();	                
+                if(vos != null && vos.length>0){                	
+					//super.updateBodyDigits();					
+					//根据是否货位展开 和 是否批次展开  合并查询出来的报表vo
+                	 ReportBaseVO[] newVos=null;
+					if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==true){
+						newVos=setVoByInvState(vos, fields3);
+					     			
+					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
+						newVos=setVoByInvState(vos, fields);
+					    			
+					}else if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
+					   newVos=setVoByInvState(vos, fields1);
+					    							
+					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==true){
+					   newVos=setVoByInvState(vos, fields2);	
+					} 
+					setReportBaseVO(newVos);
+				    setBodyVO(newVos);	
+				    setTolal();
                 }                
-	          }
+	          
 		} catch (Exception e) {
             e.printStackTrace();
             showWarningMessage(e.getMessage());
@@ -216,9 +160,10 @@ public class ReportUI extends ReportBaseUI{
 	 *        将vos 按仓库,货位,生产日期,存货 进行分组
 	 *        然后存货状态类型 将各个组的数据进行合并
 	 * @时间：2011-7-7下午04:46:33
-	 * @param vos
+	 * @param vos  vo数组
+	 * @param splitFields 分组的维度条件
 	 */
-	private ReportBaseVO[] setVoByInvState(ReportBaseVO[] vos) {
+	private ReportBaseVO[] setVoByInvState(ReportBaseVO[] vos,String[] splitFields) {
 		if(vos==null || vos.length==0){
 			return vos;
 		}
@@ -297,8 +242,7 @@ public class ReportUI extends ReportBaseUI{
 		sql.append(" min(i.invcode) invcode,");//物料编码
 		sql.append(" min(i.invname) invname,");//物料名称
 		sql.append(" min(i.invspec) invspec,");//型号
-		sql.append(" w.creadate dstartdate,");//生产日期
-		sql.append(" min(c.csname) cmanager,");//保管员 -->货位
+		sql.append(" w.creadate dstartdate,");//生产日期		
 		sql.append(" min(r.storname) cstore,");//仓库
 		sql.append(" sum(w.whs_stocktonnage) num,");//库存主数量  不在模板显示
 		sql.append(" sum(w.whs_stockpieces) bnum,");//库存辅数量   不在模板显示
@@ -306,8 +250,14 @@ public class ReportUI extends ReportBaseUI{
 		sql.append(" w.pk_invbasdoc pk_invbasdoc,");//存货基本档案主键
 		sql.append(" min(w.pk_corp) pk_corp,");//公司
 		sql.append(" min(bc.mainmeasrate) "+hsl+",");//换算率
-		sql.append(" w.PK_CUSTOMIZE1 PK_CUSTOMIZE1,");//仓库主键
-		sql.append(" w.pk_cargdoc pk_cargdoc");//货位主键
+		if(iscargdoc.booleanValue()==true){
+		sql.append(" w.pk_cargdoc pk_cargdoc,");//货位主键
+		sql.append(" min(c.csname) "+cargdoc+",");//保管员 -->货位
+	    }
+		if(isvbanchcode.booleanValue()==true){
+		sql.append(" w.whs_batchcode "+banchcode+",");//批次
+		}
+		sql.append(" w.PK_CUSTOMIZE1 PK_CUSTOMIZE1");//仓库主键		
 //		sql.append(" f.cuserid");//库管员
 		sql.append(" from  tb_warehousestock w ");//存货状态表
 		sql.append(" join  tb_stockstate s");//关联库存状态表
@@ -324,6 +274,10 @@ public class ReportUI extends ReportBaseUI{
 		sql.append(" on w.pk_cargdoc =c.pk_cargdoc");
 		sql.append(" join bd_convert bc");//关联换算率
 		sql.append(" on bc.pk_invbasdoc=w.pk_invbasdoc");
+		sql.append(" join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on w.pk_invbasdoc=iv.pk_invbasdoc");
+		sql.append(" join wds_invcl cl");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl");
 		sql.append(" where isnull(w.dr,0)=0");
 		sql.append(" and isnull(s.dr,0)=0");
 //		sql.append(" and isnull(f.dr,0)=0");
@@ -331,10 +285,22 @@ public class ReportUI extends ReportBaseUI{
 //		sql.append(" and isnull(u.dr,0)=0");
 		sql.append(" and isnull(r.dr,0)=0");
 		sql.append(" and isnull(c.dr,0)=0");
+		sql.append(" and isnull(iv.dr,0)=0");
+		sql.append(" and isnull(cl.dr,0)=0");
+		sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 		sql.append(" and w.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");		
 		sql.append(" and upper(coalesce(s.isok,'N'))='N'");//过滤非正常库存的
+		if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
+			sql.append(" and w.PK_CUSTOMIZE1='"+pk_stordoc+"'");	
+		}
 		sql.append(" and  w.creadate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤会计期间段内的
-		sql.append(" group by w.PK_CUSTOMIZE1,w.creadate,w.pk_cargdoc,w.pk_invbasdoc,w.ss_pk");//按照仓库  生产日期 库管员 存货 存货状态进行分组汇总	
+		sql.append(" group by w.PK_CUSTOMIZE1,w.creadate,w.pk_invbasdoc,w.ss_pk");//按照仓库  生产日期 库管员 存货 存货状态进行分组汇总
+		if(iscargdoc.booleanValue()==true){
+			sql.append(" ,w.pk_cargdoc");//货位主键
+		}
+		if(isvbanchcode.booleanValue()==true){
+			sql.append(" ,w.whs_batchcode ");//批次
+	    }
 		return sql.toString();
 	}
 	 /**
@@ -377,4 +343,9 @@ public class ReportUI extends ReportBaseUI{
         setSubtotalVO(svo);
         doSubTotal();
     }
+	@Override
+	public void initReportUI() {
+		
+		
+	}
 }

@@ -1,7 +1,9 @@
 package nc.ui.wds.report.xfzkc;
 import java.util.List;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
+
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
@@ -29,14 +31,24 @@ import nc.vo.wl.pub.report.SubtotalVO;
  */
 public class ReportUI extends ReportBaseUI{
 	private static final long serialVersionUID = 1L;
+	//存货分类箱粉编码
+	private static  String invclcode = "00";
+	//常用存货显示字段
+	private static String  invcommon="常用存货";
+	//不常用存货显示字段
+	private static String  uninvcommon="不常用存货";
+	//存货类型字段   0表示常用     1表示不常用
+	private static String  invtype="invtype";
     private String ddatefrom =null;
     private String ddateto = null;
+    //存货类型名字
+	private static String invtypename="invatypename";
     //主单位 数量前缀
     private static String unit="unit";
     //辅单位 数量前缀
     private static String bunit="bunit";  
-    //按仓库 存货维度分组的字段数组
-    private static String[] fields=new String[]{"pk_stordoc","pk_invbasdoc"};
+    //按 存货类型  存货分类   存货维度分组的字段数组
+    private static String[] fields=new String[]{"invtype","pk_invcl","pk_invbasdoc"};
     //库龄字段名字
     private static String  days="days";
     //用于设置库龄存货数量数对应的主数量字段名
@@ -54,7 +66,7 @@ public class ReportUI extends ReportBaseUI{
     //计划辅数量字段值名字
     private static String bnumplan="bplannum";
     //vo合并的条件
-    private static String[] voCombinConds={"pk_stordoc","pk_invbasdoc"};
+    private static String[] voCombinConds={"invtype","pk_invcl","pk_invbasdoc"};
     //将要合并的求值的类型
     private static int[] types={IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD
     	                        ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD};
@@ -90,58 +102,58 @@ public class ReportUI extends ReportBaseUI{
         
         ColumnGroup zgroup=new ColumnGroup("货龄");
         ColumnGroup a1=new ColumnGroup("30天以内");
-        a1.add(cardTcm.getColumn(4));
         a1.add(cardTcm.getColumn(5));
+        a1.add(cardTcm.getColumn(6));
         zgroup.add(a1);
         ColumnGroup a2=new ColumnGroup("30-60天");
-        a2.add(cardTcm.getColumn(6));
         a2.add(cardTcm.getColumn(7));
+        a2.add(cardTcm.getColumn(8));
         zgroup.add(a2);
         ColumnGroup a3=new ColumnGroup("60-90天");
-        a3.add(cardTcm.getColumn(8));
         a3.add(cardTcm.getColumn(9));
+        a3.add(cardTcm.getColumn(10));
         zgroup.add(a3);
         ColumnGroup a4=new ColumnGroup("90天以后");
-        a4.add(cardTcm.getColumn(10));
         a4.add(cardTcm.getColumn(11));
+        a4.add(cardTcm.getColumn(12));
         zgroup.add(a4);      
         cardHeader.addColumnGroup(zgroup);
               
         ColumnGroup zgroup2=new ColumnGroup("小计");
-        zgroup2.add(cardTcm.getColumn(12));
         zgroup2.add(cardTcm.getColumn(13));
+        zgroup2.add(cardTcm.getColumn(14));
         cardHeader.addColumnGroup(zgroup2);
                 
         ColumnGroup zgroup3=new ColumnGroup("促销品");
-        zgroup3.add(cardTcm.getColumn(14));
         zgroup3.add(cardTcm.getColumn(15));
+        zgroup3.add(cardTcm.getColumn(16));
         cardHeader.addColumnGroup(zgroup3);
         
         ColumnGroup a11=new ColumnGroup("在途");
-        a11.add(cardTcm.getColumn(16));
         a11.add(cardTcm.getColumn(17));
+        a11.add(cardTcm.getColumn(18));
         cardHeader.addColumnGroup(a11);
         
         
         ColumnGroup a22=new ColumnGroup("待检");
-        a22.add(cardTcm.getColumn(18));
         a22.add(cardTcm.getColumn(19));
+        a22.add(cardTcm.getColumn(20));
         cardHeader.addColumnGroup(a22);
         
         
         ColumnGroup zgroup4=new ColumnGroup("合计");
-        zgroup4.add(cardTcm.getColumn(20));
         zgroup4.add(cardTcm.getColumn(21));
+        zgroup4.add(cardTcm.getColumn(22));
         cardHeader.addColumnGroup(zgroup4);
         
         ColumnGroup a33=new ColumnGroup("待发");
-        a33.add(cardTcm.getColumn(22));
         a33.add(cardTcm.getColumn(23));
+        a33.add(cardTcm.getColumn(24));
         cardHeader.addColumnGroup(a33); 
         
         ColumnGroup a5=new ColumnGroup("预发后库存");
-        a5.add(cardTcm.getColumn(24));
         a5.add(cardTcm.getColumn(25));
+        a5.add(cardTcm.getColumn(26));
         cardHeader.addColumnGroup(a5);      
         getReportBase().getBillModel().updateValue();
     }
@@ -204,14 +216,15 @@ public class ReportUI extends ReportBaseUI{
                 List<ReportBaseVO[]> list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1()});
                 ReportBaseVO[] vos1= list.get(1);
                 ReportBaseVO[] vos=list.get(0);            
-                if(vos1 != null || vos!=null){                	
+                if(vos1 != null&&vos1.length>0 || vos!=null&&vos1.length>0){                	
 					super.updateBodyDigits();
 				    ReportBaseVO[]newVos=setVoByContion(vos);
 				    ReportBaseVO[]newVos1=setVoByContion(vos1);
 				    ReportBaseVO[] combins=CombinVO.combinVoByCondition(newVos,newVos1,voCombinConds,types,combinFields);
-					setReportBaseVO(combins);
+				    setAfterQuery(combins);
+				    setReportBaseVO(combins);
 					setBodyVO(combins);	
-					setDefSubtotal(new String[]{"invclname"}, combinFields);                
+					setDefSubtotal(new String[]{"invclname"}, combinFields);  
                 }                
 	          }
 		} catch (Exception e) {
@@ -223,9 +236,31 @@ public class ReportUI extends ReportBaseUI{
 	 * 
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
+	 *       查询结束后,对vo的后续处理
+	 * @时间：2011-7-13下午03:07:52
+	 * @param combins
+	 */
+	private void setAfterQuery(ReportBaseVO[] combins) {
+		if (combins == null || combins.length == 0) {
+			return;
+		}
+		int size = combins.length;
+		for (int i = 0; i < size; i++) {
+			Integer type = PuPubVO.getInteger_NullAs(combins[i].getAttributeValue(invtype), new Integer(0));
+			if (type == 0) {
+				combins[i].setAttributeValue(invtypename, invcommon);
+			} else if (type == 1) {
+				combins[i].setAttributeValue(invtypename, uninvcommon);
+			}
+		}	
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
 	 *      按照报表需求,加工初次查询形成的报表vo
 	 *      加工条件：
-	 *      首先 按 仓库 存货 进行分组,然后对每组vo进行合并,将每组vo合并按要求合并成一个vo
+	 *      首先 按 存货类型 存货分类 存货 进行分组,然后对每组vo进行合并,将每组vo合并按要求合并成一个vo
 	 *      按什么条件合并呢？
 	 *      首先判断货龄:  如果是30天以内 将该vo的库存数量加到表示30天以内的字段上
 	 *                    如果是30-60天  将该vo的库存数量加到表示30-60天的字段上
@@ -242,11 +277,11 @@ public class ReportUI extends ReportBaseUI{
 	 * @return
 	 */
 	private ReportBaseVO[]  setVoByContion(ReportBaseVO[] vos) {
-		if(vos==null && vos.length==0){
+		if(vos==null || vos.length==0){
 			return vos;
 		}
 		CircularlyAccessibleValueObject[][]voss =SplitBillVOs.getSplitVOs(vos,fields);
-		if(voss==null && voss.length==0){
+		if(voss==null || voss.length==0){
 			return vos;
 		}
 		//new 开头的vo为重新组装放入界面的vo
@@ -427,8 +462,12 @@ public class ReportUI extends ReportBaseUI{
 	private String getQuerySQL(){
 		StringBuffer sql = new StringBuffer();		
 		        sql.append(" select ");//仓库主键	
-		        sql.append(" t.pk_customize1 pk_stordoc,");
+//		        sql.append(" t.pk_customize1 pk_stordoc,");
 		        sql.append(" t.pk_invbasdoc pk_invbasdoc,");
+		        sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		        sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+		        sql.append(" min(cl.vinvclcode) invclcode,");//存货分类编码
+		        sql.append(" min(cl.vinvclname) invclname,");//存货分类名称		        
 		        sql.append(" min(s.storname) storename,");//仓库名称
 		        sql.append(" min(i.invcode) invcode,");//存货编码
 		        sql.append(" min(i.invname) invname,");//存货名字
@@ -444,13 +483,20 @@ public class ReportUI extends ReportBaseUI{
 				sql.append(" on t.pk_customize1=s.pk_stordoc");
 				sql.append(" join bd_invbasdoc i");//关联存货基本档案
 				sql.append(" on t.pk_invbasdoc=i.pk_invbasdoc");	
+				sql.append(" join wds_invbasdoc iv");//关联存货档案
+				sql.append(" on t.pk_invbasdoc=iv.pk_invbasdoc");
+				sql.append(" join wds_invcl cl");//关联存货分类
+				sql.append(" on iv.vdef1=cl.pk_invcl");
 				sql.append(" where isnull(t.dr,0)=0");//
 				sql.append(" and isnull(s.dr,0)=0");//
 				sql.append(" and isnull(i.dr,0)=0");
+				sql.append(" and isnull(iv.dr,0)=0");//
+				sql.append(" and isnull(cl.dr,0)=0");
 				sql.append(" and t.creadate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤入库日期
+				sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 				sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
-				//按仓库  存货   存货状态  以及入库天数来分组合并
-				sql.append(" group by t.pk_customize1,t.pk_invbasdoc,t.ss_pk,t.creadate");				
+				//按存货类型  存货分类  存货   存货状态  以及入库天数来分组合并
+				sql.append(" group by iv.fuesed,cl.pk_invcl,t.pk_invbasdoc,t.ss_pk,t.creadate");				
 				return sql.toString();
 	}
 	/**
@@ -466,8 +512,12 @@ public class ReportUI extends ReportBaseUI{
 		    StringBuffer sql = new StringBuffer();	
 		    sql.append(" select ");
 		    sql.append(" w.type "+type+",");//在途或待发类型
-		    sql.append(" w.pk_outwhouse pk_stordoc,");
+		    sql.append(" w.pk_invcl pk_invcl,");//存货分类主键
+	        sql.append(" min(w.invclcode) invclcode,");//存货分类编码
+	        sql.append(" min(w.invclname) invclname,");//存货分类名称		
+		//    sql.append(" w.pk_outwhouse pk_stordoc,");
 //		    sql.append(" w.pk_invmandoc pk_invmandoc,");
+		    sql.append(" w.invtype invtype,");//常用 或不常用类型
 		    sql.append(" w.pk_invbasdoc pk_invbasdoc,");
 		    sql.append(" sum(w.plannum)   plannum,"); //计划 主数量 
 			sql.append(" sum(w.bplannum)  bplannum,") ; //计划辅数量
@@ -480,31 +530,53 @@ public class ReportUI extends ReportBaseUI{
 			sql.append("  h.pk_outwhouse pk_outwhouse,"); 
 			sql.append("  b.pk_invmandoc pk_invmandoc,");     
 			sql.append("  b.pk_invbasdoc pk_invbasdoc,");   
+			sql.append("  cl.pk_invcl pk_invcl,");//存货分类主键
+		    sql.append("  cl.vinvclcode invclcode,");//存货分类编码
+		    sql.append("  cl.vinvclname invclname,");//存货分类名称	
+		    sql.append("  iv.fuesed invtype,");//存货类型 常用0  不常用1
 			sql.append("  b.narrangnmu plannum,");   
 			sql.append("  b.nassarrangnum bplannum") ;  
 			sql.append("  from wds_soorder h");
 			sql.append("  join wds_soorder_b b on h.pk_soorder = b.pk_soorder");
+			sql.append("  join wds_invbasdoc iv");//关联存货档案
+			sql.append("  on b.pk_invbasdoc=iv.pk_invbasdoc");
+			sql.append("  join wds_invcl cl");//关联存货分类
+			sql.append("  on iv.vdef1=cl.pk_invcl");
 			sql.append("  where isnull(h.dr, 0) = 0");
+			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
+			sql.append("  and isnull(iv.dr,0)=0");//
+			sql.append("  and isnull(cl.dr,0)=0");
 			sql.append("  and isnull(b.dr, 0) = 0 )");
 			sql.append("  union all ");
 			sql.append("   (select  h1.itransstatus "+type+",");
 			sql.append("  h1.pk_outwhouse pk_outwhouse,");     
 			sql.append("  b1.pk_invmandoc pk_invmandoc,");  
 			sql.append("  b1.pk_invbasdoc pk_invbasdoc,") ;
+			sql.append("  cl.pk_invcl pk_invcl,");//存货分类主键
+		    sql.append("  cl.vinvclcode invclcode,");//存货分类编码		   
+		    sql.append("  cl.vinvclname invclname,");//存货分类名称		
+		    sql.append("  iv.fuesed invtype,");//存货类型 常用0  不常用1
 			sql.append("  b1.ndealnum "+numplan+",");
 			sql.append("  b1.nassdealnum "+bnumplan); 
 			sql.append("  from wds_sendorder h1"); 
 			sql.append("  join wds_sendorder_b b1 on h1.pk_sendorder = b1.pk_sendorder");
+			sql.append("  join wds_invbasdoc iv");//关联存货档案
+			sql.append("  on b1.pk_invbasdoc=iv.pk_invbasdoc");
+			sql.append("  join wds_invcl cl");//关联存货分类
+			sql.append("  on iv.vdef1=cl.pk_invcl");
 			sql.append("  where isnull(h1.dr, 0) = 0");
+			sql.append("  and isnull(iv.dr,0)=0");//
+			sql.append("  and isnull(cl.dr,0)=0");
+			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h1.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
 			sql.append("  and isnull(b1.dr, 0) = 0 ))w");
 			sql.append("  join bd_stordoc s");//仓库档案
 			sql.append("  on w.pk_outwhouse=s.pk_stordoc");
 			sql.append("  join bd_invbasdoc i");
 			sql.append("  on w.pk_invbasdoc=i.pk_invbasdoc");
-			//按仓库 存货 在途或待发类型来分组
-			sql.append("  group by w.pk_outwhouse,w.pk_invbasdoc,w.type");			
+			//按存货类型  存货分类  存货 在途或待发类型来分组
+			sql.append("  group by w.invtype,w.pk_invcl,w.pk_invbasdoc,w.type");			
 			return sql.toString();
 	}
 	 /**
