@@ -19,13 +19,13 @@ public class LockTrayHelper {
 	 * @param lockTrayInfor 虚拟托盘实际托盘对应关系   key：托盘id，存货id    value：实际托盘信息数组
 	 * @throws Exception
 	 */
-	public static void lockTray(ToftPanel tp,String chid,String cwareid,java.util.Map lockTrayInfor) throws Exception{
+	public static void lockTray(ToftPanel tp,String chid,String cwareid,String gebbid,java.util.Map lockTrayInfor) throws Exception{
 		if(PuPubVO.getString_TrimZeroLenAsNull(chid)==null)
 			return;
 		if(lockTrayInfor == null || lockTrayInfor.size() == 0)
 			return;
-		Class[] ParameterTypes = new Class[]{String.class,String.class,java.util.Map.class};
-		Object[] ParameterValues = new Object[]{chid,cwareid,lockTrayInfor};
+		Class[] ParameterTypes = new Class[]{String.class,String.class,String.class,java.util.Map.class};
+		Object[] ParameterValues = new Object[]{chid,cwareid,gebbid,lockTrayInfor};
 		LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "lockTray", ParameterTypes, ParameterValues, 2);
 
 	}

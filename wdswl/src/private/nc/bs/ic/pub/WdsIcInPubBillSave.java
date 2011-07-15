@@ -57,6 +57,13 @@ public class WdsIcInPubBillSave extends BillSave {
 		return ttutil;
 	}
 	
+	private LockTrayBO lockbo = null;
+	private LockTrayBO getLockTrayBO(){
+		if(lockbo == null)
+			lockbo = new LockTrayBO(getOutBO().getDao(),getOutBO().getStockBO(),getSuperDMO(),getTtutil());
+		return lockbo;
+	}
+	
 	class filterDelLine implements IFilter{
 		public boolean accept(Object o) {
 			// TODO Auto-generated method stub
@@ -102,7 +109,11 @@ public class WdsIcInPubBillSave extends BillSave {
 		bodyChanged = true;
 		for(TbGeneralBVO body:bodys){
 			body.validateOnSave();
-			}
+		}
+		
+//		zhf add  校验  虚拟托盘的绑定关系
+		getLockTrayBO().checkInBillOnSave(lockTrayInfor, bodys, head.getGeh_cwarehouseid(), head.getPk_cargdoc());
+		
 		if(!isAdd && bodyChanged){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
 			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),bodys);
 		}
@@ -128,8 +139,8 @@ public class WdsIcInPubBillSave extends BillSave {
 //		zhf add
 		if(lockTrayInfor != null && lockTrayInfor.size() > 0){
 			//如果存在绑定实际托盘信息   保存绑定关系
-			LockTrayBO lockbo = new LockTrayBO();
-			lockbo.doSaveLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)),newBillVo.getHeaderVo().getGeh_cwarehouseid(),lockTrayInfor);
+//			LockTrayBO lockbo = new LockTrayBO();
+			getLockTrayBO().doSaveLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)),newBillVo.getHeaderVo().getGeh_cwarehouseid(),lockTrayInfor);
 		}	
 		
 //		转分仓流程入库时  是否自动调整 入库偏差量

@@ -43,7 +43,7 @@ public class IcInPubBO {
 	}
 	
 	private StockInvOnHandBO stockBO = null;
-	private StockInvOnHandBO getStockBO(){
+	public StockInvOnHandBO getStockBO(){
 		if(stockBO == null)
 			stockBO = new StockInvOnHandBO(getDao());
 		return stockBO;

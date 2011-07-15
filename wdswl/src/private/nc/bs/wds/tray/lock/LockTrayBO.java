@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.SuperDMO;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
+import nc.jdbc.framework.SQLParameter;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
@@ -22,6 +25,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wds.xn.XnRelationVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class LockTrayBO {
@@ -35,6 +39,14 @@ public class LockTrayBO {
 		super();
 		this.dao = dao;
 		this.stockbo = stockbo2;
+	}
+	
+	public LockTrayBO(BaseDAO dao,StockInvOnHandBO stockbo2,SuperDMO dmo,TempTableUtil tt){
+		super();
+		this.dao = dao;
+		this.stockbo = stockbo2;
+		this.dmo = dmo;
+		ttutil = tt;
 	}
 	
 	public LockTrayBO(){
@@ -65,11 +77,25 @@ public class LockTrayBO {
 		return ttutil;
 	}
 	
-	public void lockTray(String chid,String cwareid,java.util.Map lockTrayInfor) throws BusinessException{
+	public void lockTray(String chid,String cwareid,String gebbid,java.util.Map lockTrayInfor) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(chid)==null)
-			return;
+			throw new BusinessException("数据异常");
 		if(lockTrayInfor == null || lockTrayInfor.size() == 0)
 			return;
+		if(PuPubVO.getString_TrimZeroLenAsNull(gebbid)==null)
+			throw new BusinessException("数据异常");
+		TbGeneralBBVO bb = (TbGeneralBBVO)getSuperDMO().queryByPrimaryKey(TbGeneralBBVO.class, gebbid);
+		if(bb == null)
+			throw new BusinessException("数据异常");
+		String bid = bb.getGeb_pk();
+		TbGeneralBVO b = (TbGeneralBVO)getSuperDMO().queryByPrimaryKey(TbGeneralBVO.class, bid);
+		if(b == null)
+			throw new BusinessException("数据异常");
+		List<TbGeneralBBVO> ltray = new ArrayList<TbGeneralBBVO>();
+		ltray.add(bb);
+		b.setTrayInfor(ltray);
+		
+		checkInBillOnSave(lockTrayInfor, new TbGeneralBVO[]{b}, cwareid, null);
 		//		WdsIcInPubBillSave save = new WdsIcInPubBillSave();
 		doSaveLockTrayInfor(chid, cwareid, lockTrayInfor);
 	}
@@ -244,7 +270,7 @@ public class LockTrayBO {
 
 //		调整关系表数量
 		if(relaNumInfor != null && relaNumInfor.length > 0){
-			sql = "update wds_xnrelation set nassisnum = '"+PuPubVO.getUFDouble_NullAsZero(relaNumInfor[0]).toBigDecimal()+"' where ctrayid = '"+relaNumInfor[1].toString()+"'";
+			sql = "update wds_xnrelation set nassisnum = '"+PuPubVO.getUFDouble_NullAsZero(relaNumInfor[1]).toBigDecimal()+"' where ctrayid = '"+relaNumInfor[1].toString()+"'";
 			getDao().executeUpdate(sql);
 		}
 	}
@@ -320,7 +346,7 @@ public class LockTrayBO {
 			}
 
 //			int index = 1;
-			boolean flag = false;
+//			boolean flag = false;
 			for(SmallTrayVO traylock:traylocks){				
 				relation = new XnRelationVO();
 				relation.setPk_corp(pk_corp);
@@ -436,5 +462,78 @@ public class LockTrayBO {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 校验入库单据  存放在虚拟托盘的存货 
+	 * 同一仓库同一货位同一虚拟托盘同一批次的存货   要绑定了实际托盘必须都绑定 要没有绑定必须都没有绑定
+	 * @时间：2011-7-18下午08:56:54
+	 * @param bill
+	 * @throws BusinessException
+	 */
+	public void checkInBillOnSave(Map<String, SmallTrayVO[]> lockTrayInfor,TbGeneralBVO[] allbodys,String cwhid,String pk_cargdoc) throws BusinessException{
+		if(allbodys == null || allbodys.length == 0)
+			return;
+		List<TbGeneralBBVO> ltray = null;
+		List<String> ltrayid = new ArrayList<String>();
+		for(TbGeneralBVO body:allbodys){
+			ltray = body.getTrayInfor();
+			for(TbGeneralBBVO tray:ltray){
+				if(ltrayid.contains(tray.getCdt_pk()))
+					continue;
+				ltrayid.add(tray.getCdt_pk());
+			}			
+		}
+		
+		String sql = "select cdt_pk from bd_cargdoc_tray where isnull(dr,o)=0 and cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
+				" and cdt_pk in "+getTtutil().getSubSql((ArrayList<String>)ltrayid);
+		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
+		boolean flag1 = ldata==null||ldata.size()==0;
+		boolean flag2 = lockTrayInfor==null||lockTrayInfor.size()==0;
+		if(flag1&&flag2)
+			return;
+		if(flag1&&!flag2)
+			throw new BusinessException("不存在虚拟推盘,不需要进行绑定");
+		
+//		Set<String> sxntrayid = new HashSet<String>();
+		
+//		if(flag2&&!flag1){
+//			return;
+//		}
+//		查询同一虚拟托盘 同一存货  同一批次  若存在绑定信息  本次也需要存在绑定信息  若不存在绑定信息本次也不能存在绑定
+		sql = "select count(0) from wds_xnrelation where isnull(dr,0)=0 and cxntrayid = ?" +
+				" and pk_invmandoc = ? and vbatchcode = ?";
+		
+		String corp = SQLHelper.getCorpPk();
+		
+		SQLParameter para = new SQLParameter();
+		int iflag = 0;
+		String key = null;
+		for(TbGeneralBVO body:allbodys){
+			ltray = body.getTrayInfor();
+			for(TbGeneralBBVO tray:ltray){
+				if(!ldata.contains(tray.getCdt_pk()))
+					continue;
+				para.addParam(tray.getCdt_pk());
+				para.addParam(tray.getPk_invmandoc());
+				para.addParam(body.getGeb_vbatchcode());
+				iflag = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+				key = WdsWlPubTool.getString_NullAsTrimZeroLen(tray.getCdt_pk())+","+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getGeb_vbatchcode());
+				if(iflag>0){//存在绑定关系
+					if(!lockTrayInfor.containsKey(key))
+						throw new BusinessException("该托盘上该批次存货进行了绑定实际托盘,本次入库也必须绑定实际托盘");
+				}else{//不存在绑定关系  如果是该批次的第一次  存入  可以绑定 否则不能绑定
+//					判断  该批存货 是否  已存在
+					UFDouble[] nums = getStockBO().getInvStockNum(corp, cwhid, pk_cargdoc, body.getGeb_cinvbasid(), body.getGeb_vbatchcode(), tray.getCdt_pk());
+					boolean isexit = nums!=null && nums.length>0 && nums[0].doubleValue()>0;
+					if(lockTrayInfor.containsKey(key)&&isexit){
+						throw new BusinessException("该托盘上该批次存货未进行绑定,本次入库也不能绑定实际托盘");
+					}
+				}
+			}			
+		}
+		
 	}
 }

@@ -1,6 +1,5 @@
 package nc.ui.wds.tray.lock;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -214,10 +213,13 @@ public class LockTrayDialog extends UIDialog implements ActionListener{
 		String key = getkey(row);
 		Map<String, SmallTrayVO[]> lockTrayInfor = new HashMap<String, SmallTrayVO[]>();
 		lockTrayInfor.put(key, trays);
+		
 		LockTrayHelper.lockTray(parent,
 				PuPubVO.getString_TrimZeroLenAsNull(getHeadValue("geh_pk")),
 				PuPubVO.getString_TrimZeroLenAsNull(getHeadValue("geh_cwarehouseid")),
-				lockTrayInfor);
+				PuPubVO.getString_TrimZeroLenAsNull(getBodyValue(row, "gebb_pk")),
+				lockTrayInfor
+				);
 		closeOK();
 	}
     private Object getHeadValue(String fieldname){

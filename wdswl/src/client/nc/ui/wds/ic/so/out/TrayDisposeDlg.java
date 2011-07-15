@@ -464,7 +464,7 @@ ActionListener, BillEditListener,BillEditListener2{
 				//编辑后事件，从托盘参照中取来源批次号，给表体赋值
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");
 				//				库存状态表ID
-				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_pk"), row, "whs_pk");
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("bd_cargdoc_tray.cdt_pk"), row, "cdt_pk");
 
 			}
 		}else if("noutassistnum".equalsIgnoreCase(e.getKey())){

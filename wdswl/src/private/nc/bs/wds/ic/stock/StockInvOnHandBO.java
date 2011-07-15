@@ -2,10 +2,8 @@ package nc.bs.wds.ic.stock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
@@ -66,9 +64,9 @@ public class StockInvOnHandBO {
 		if(num!=ltray.size()){
 			String error = null;
 			if(state == StockInvOnHandVO.stock_state_lock){
-				error = "出现并发操作绑定的托盘已被释放";
+				error = "绑定的托盘已被释放";
 			}else if(state == StockInvOnHandVO.stock_state_null){
-				error = "出现并发操作托盘已被占用";
+				error = "指定托盘已被占用";
 			}
 			throw new BusinessException(error);
 		}
