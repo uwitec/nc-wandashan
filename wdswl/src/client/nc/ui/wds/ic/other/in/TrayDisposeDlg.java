@@ -30,6 +30,7 @@ import nc.ui.pub.bill.BillListPanel;
 import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.tray.lock.LockTrayDialog;
 import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
@@ -498,27 +499,39 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			TbGeneralBBVO bvo = getBodyVO(row);
 			String subSql = getSubSql(row);
 			UIRefPane ref = (UIRefPane) getbillListPanel().getBodyItem(
-					"trayname").getComponent();
-			ref.getRefModel().addWherePart(
-							" and bd_cargdoc_tray.cdt_invmandoc = '"
-									+ bvo.getPk_invmandoc()
-									+ "'  and  bd_cargdoc_tray.cdt_traystatus = 0 and bd_cargdoc_tray.pk_cargdoc = '"
-									+ bvo.getPk_cargdoc()
-									+ "'  and bd_cargdoc_tray.cdt_pk not in"
-									+ subSql
-									+ "   or bd_cargdoc_tray.cdt_invmandoc = '"
-									+ bvo.getPk_invmandoc()
-									+ " '"
-									+ "   and bd_cargdoc_tray.pk_cargdoc = '"
-									+ bvo.getPk_cargdoc()
-									+ " '"
-									+ "   and upper(bd_cargdoc_tray.cdt_traycode) like 'XN%'"
-									+"    and isnull(bd_cargdoc_tray.dr,0)=0"
-									+ "   and bd_cargdoc_tray.cdt_pk not in"
-									+ subSql
+			"trayname").getComponent();
+			if(!WdsWlPubTool.isZc(pk_ware)){
+				//zhf add  ∑÷≤÷ ¥¶¿Ì
+				ref.getRefModel().addWherePart(
+								//" and  bd_cargdoc_tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_null
+								" and bd_cargdoc_tray.pk_cargdoc = '"
+										+ bvo.getPk_cargdoc()
+										+ "'  and bd_cargdoc_tray.cdt_pk not in"
+										+ subSql										
 
-					);
+						);
+			}else{
+				ref.getRefModel().addWherePart(
+						" and bd_cargdoc_tray.cdt_invmandoc = '"
+								+ bvo.getPk_invmandoc()
+								+ "'  and  bd_cargdoc_tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_null
+								+" and bd_cargdoc_tray.pk_cargdoc = '"
+								+ bvo.getPk_cargdoc()
+								+ "'  and bd_cargdoc_tray.cdt_pk not in"
+								+ subSql
+								+ "   or bd_cargdoc_tray.cdt_invmandoc = '"
+								+ bvo.getPk_invmandoc()
+								+ " '"
+								+ "   and bd_cargdoc_tray.pk_cargdoc = '"
+								+ bvo.getPk_cargdoc()
+								+ " '"
+								+ "   and upper(bd_cargdoc_tray.cdt_traycode) like 'XN%'"
+								+"    and isnull(bd_cargdoc_tray.dr,0)=0"
+								+ "   and bd_cargdoc_tray.cdt_pk not in"
+								+ subSql
 
+				);
+			}
 		}
 		if ("ninassistnum".equalsIgnoreCase(key)) {
 			String cdt_id = PuPubVO

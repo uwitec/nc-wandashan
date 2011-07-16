@@ -31,6 +31,7 @@ import nc.ui.wds.tray.lock.LockTrayHelper;
 import nc.ui.wds.tray.relock.ReLockTrayDialog;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -510,10 +511,10 @@ ActionListener, BillEditListener,BillEditListener2{
 
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
-		int row = e.getRow();
+//		int row = e.getRow();
 		TbOutgeneralBVO child = getHeadBVO(getHeadCurrentRow());
 		String invtoryid = child.getCinventoryid();
-		String vbatchcode = child.getVbatchcode();
+//		String vbatchcode = child.getVbatchcode();
 		String subsql=getSubSql(e.getRow());
 		if("ctuopanbianma".equals(key)){//托盘指定，增加托盘过滤，
 			if (pk_cargdoc == null){
@@ -521,11 +522,11 @@ ActionListener, BillEditListener,BillEditListener2{
 				return false;
 			}
 			UIRefPane ref = (UIRefPane)getbillListPanel().getBodyItem("ctuopanbianma").getComponent();			
-			ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 and" +
+			ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) ="+StockInvOnHandVO.stock_state_use+" and" +
 					" tb_warehousestock.whs_stocktonnage > 0" +
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
 					" and bd_cargdoc_tray.cdt_pk not in "+subsql +
-					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) =1 "+
+					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) = "+StockInvOnHandVO.stock_state_use+
 					" and tb_warehousestock.whs_stocktonnage > 0"+
 					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
 					" and bd_cargdoc_tray.cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'"+
@@ -555,26 +556,26 @@ ActionListener, BillEditListener,BillEditListener2{
 		return sql.toString();
 	}
 	//要过滤的虚拟托盘
-	private String getSubSql1(int curRow){
-
-		StringBuffer sql = new StringBuffer();
-		sql.append("('aa'");
-		int rowCount = getbillListPanel().getBodyTable().getRowCount();
-		for (int i = 0; i < rowCount; i++) {
-			if (i == curRow)
-				continue;
-			String cdt_id = PuPubVO
-			.getString_TrimZeroLenAsNull(getbillListPanel()
-					.getBodyBillModel().getValueAt(i, "cdt_pk"));// 托盘id
-			if (cdt_id == null)
-				continue;
-			sql.append(",'" + cdt_id + "'");
-		}
-		sql.append(")");
-
-		return sql.toString();
-
-	}
+//	private String getSubSql1(int curRow){
+//
+//		StringBuffer sql = new StringBuffer();
+//		sql.append("('aa'");
+//		int rowCount = getbillListPanel().getBodyTable().getRowCount();
+//		for (int i = 0; i < rowCount; i++) {
+//			if (i == curRow)
+//				continue;
+//			String cdt_id = PuPubVO
+//			.getString_TrimZeroLenAsNull(getbillListPanel()
+//					.getBodyBillModel().getValueAt(i, "cdt_pk"));// 托盘id
+//			if (cdt_id == null)
+//				continue;
+//			sql.append(",'" + cdt_id + "'");
+//		}
+//		sql.append(")");
+//
+//		return sql.toString();
+//
+//	}
 
 
 	//	public Map<String,List<TbOutgeneralTVO>> getBufferData(){

@@ -276,7 +276,12 @@ public class WdsIcInPubBillSave extends BillSave {
 		}
 		TbGeneralBVO[] newbodys = (TbGeneralBVO[])newBillVo.getChildrenVO();
 		TbGeneralBVO[] oldbodys = (TbGeneralBVO[])oldBillVo.getChildrenVO();
-		checkTrayUsed(oldbodys);
+		//		分厂 的  入库保存 不受该校验约束
+		String cware = newBillVo.getHeaderVo().getGeh_cwarehouseid();
+		if(PuPubVO.getString_TrimZeroLenAsNull(cware)==null)
+			throw new BusinessException("入库仓库为空");
+		if(WdsWlPubTool.isZc(cware))
+			checkTrayUsed(oldbodys);
 		for(TbGeneralBVO old : oldbodys ){
 			String oldno = old.getGeb_crowno();//行号
 			for(TbGeneralBVO newbody:newbodys){
@@ -289,17 +294,17 @@ public class WdsIcInPubBillSave extends BillSave {
 					}
 					getSuperDMO().insertList(ltraytmp);
 					TbGeneralBBVO[] bvo = (TbGeneralBBVO[])getSuperDMO().queryByWhereClause(TbGeneralBBVO.class, " geb_pk = '"+newbody.getPrimaryKey()+"' and isnull(dr,0) = 0 ");
-//					if(ltraytmp==null||tmps.length==0||tmps.length!=ltraytmp.size()){
-//						throw new BusinessException("保存托盘信息失败");
-//					}
-//					int index2 = 0;
-//					for(String tmp:tmps){
-//						ltraytmp.get(index2).setPrimaryKey(tmp);
-//						index2++;
-//					}
-					
+					//					if(ltraytmp==null||tmps.length==0||tmps.length!=ltraytmp.size()){
+					//						throw new BusinessException("保存托盘信息失败");
+					//					}
+					//					int index2 = 0;
+					//					for(String tmp:tmps){
+					//						ltraytmp.get(index2).setPrimaryKey(tmp);
+					//						index2++;
+					//					}
+
 					newbody.setTrayInfor(arrayTolist(bvo));
-//					index++;
+					//					index++;
 				}
 			}
 		}

@@ -353,7 +353,7 @@ public class SoDealEventHandler{
 			//		ø‚¥Ê¥Ê¡ø–≈œ¢
 			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
 
-			if(lcust!=null || lcust.size()>0){
+			if(lcust!=null && lcust.size()>0){
 				flag = doHandDeal(lcust, lnum);
 			}
 		}
