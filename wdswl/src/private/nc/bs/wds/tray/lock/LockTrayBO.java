@@ -487,7 +487,7 @@ public class LockTrayBO {
 			}			
 		}
 		
-		String sql = "select cdt_pk from bd_cargdoc_tray where isnull(dr,o)=0 and cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
+		String sql = "select cdt_pk from bd_cargdoc_tray where isnull(dr,0)=0 and cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
 				" and cdt_pk in "+getTtutil().getSubSql((ArrayList<String>)ltrayid);
 		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
 		boolean flag1 = ldata==null||ldata.size()==0;
