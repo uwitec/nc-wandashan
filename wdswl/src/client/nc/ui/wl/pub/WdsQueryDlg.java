@@ -15,8 +15,8 @@ public class WdsQueryDlg extends HYQueryDLG {
 	protected String cwhid = null;//仓库
 	protected String ccargdoc = null;//货位
 	
-	private String cwh_fieldname;//仓库字段名称
-	private String ccarg_fieldname;//货位字段名称
+	protected String cwh_fieldname;//仓库字段名称
+	protected String ccarg_fieldname;//货位字段名称
 	public WdsQueryDlg(Container parent, UIPanel normalPnl, String pk_corp,
 			String moduleCode, String operator, String busiType,String whfield,String cargfield) {
 		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
@@ -73,7 +73,7 @@ public class WdsQueryDlg extends HYQueryDLG {
 		}
 	}
 	
-	private Component getComponent(String filedcode){
+	protected Component getComponent(String filedcode){
 		Object o = getValueRefObjectByFieldCode(filedcode);
 		Component jb  = null;
 		if(o instanceof UIRefCellEditor){

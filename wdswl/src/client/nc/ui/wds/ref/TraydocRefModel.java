@@ -1,6 +1,7 @@
 package nc.ui.wds.ref;
 
 import nc.ui.bd.ref.AbstractRefModel;
+import nc.vo.scm.pu.PuPubVO;
 
 public class TraydocRefModel extends AbstractRefModel{
 
@@ -8,10 +9,10 @@ public class TraydocRefModel extends AbstractRefModel{
 	 
 	 private String tablename=" bd_cargdoc_tray";
 	
-	 private String[] fieldcode={"bd_cargdoc_tray.cdt_traycode","bd_cargdoc_tray.cdt_pk"};
+	 private String[] fieldcode={"bd_cargdoc_tray.cdt_traycode","bd_cargdoc_tray.cdt_traycode"};
 	 
 	 
-	 private String[] fieldname={"托盘编码"};
+	 private String[] fieldname={"托盘编码","托盘编码"};
 	
 	 private String[] hidecode={"bd_cargdoc_tray.cdt_pk"};
 	 
@@ -19,6 +20,12 @@ public class TraydocRefModel extends AbstractRefModel{
 	 
 	 
 	 private String sqlWherePart=" isnull(dr,0)=0";
+	 
+	 private String pk_cargdoc = null;//货位ID
+	 
+	 public void setCargDocID(String cargdoc){
+		 pk_cargdoc = cargdoc;
+	 }
 	 
 	 private int defaultFieldCount=1;
 	    /**
@@ -79,9 +86,10 @@ public class TraydocRefModel extends AbstractRefModel{
 	    }
 	    @Override
 	    public String getWherePart() {
-	    	
-	    	        
-	    	return sqlWherePart;
+	    	if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)==null)
+	    		return sqlWherePart;
+	    	else
+	    		return sqlWherePart + " and pk_cargdoc = '"+pk_cargdoc+"'";
 	    }
 	    /**
 	     * 参照数据库表或者视图名 创建日期：(01-4-4 0:57:23)
