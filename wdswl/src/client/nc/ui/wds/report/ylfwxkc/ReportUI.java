@@ -61,7 +61,7 @@ public class ReportUI extends ReportBaseUI {
     //存货状态动态列,显示字段
     private static String displayName="ss_state";
     //动态列从原有列的哪个位置  开始插入 动态列       该字段记录动态列开始插入的位置
-    private static int location=5;
+    private static int location=4;
     //设置总吨数是换算率字段
     private static String hsl="hsl";
     //总吨数对应字段
@@ -76,7 +76,7 @@ public class ReportUI extends ReportBaseUI {
     private String[] displaynames = null;
     
     private String pk_stordoc=null;
-  //存货分类箱粉编码
+  //存货分类原料粉编码
 	private   String invclcode = "01";
     
 	private void setCustomColumns() {
@@ -235,6 +235,7 @@ public class ReportUI extends ReportBaseUI {
 	@Override
 	public void onQuery() {
 		try{
+			
 		  	//设置查询模板默认查询条件
 	        AccountCalendar  accCal = AccountCalendar.getInstance();     
 	        getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
@@ -278,6 +279,8 @@ public class ReportUI extends ReportBaseUI {
             		}        		
             	}	
             	 //得到sql查询结果
+            	
+            	clearBody();
                 ReportBaseVO[] vos = getReportVO(getQuerySQL());
                 
                 if(vos != null){                	
@@ -293,6 +296,11 @@ public class ReportUI extends ReportBaseUI {
             showWarningMessage(e.getMessage());
         }
 	}
+	private void clearBody() {
+		setBodyVO(null);
+		updateUI();
+	}
+
 	/**
 	 * 
 	 * @作者：mlr
@@ -386,7 +394,7 @@ public class ReportUI extends ReportBaseUI {
 		sql.append(" select");
 		sql.append(" min(i.invcode) invcode,");//物料编码
 		sql.append(" min(i.invname) invname,");//物料名称
-		sql.append(" min(i.invspec) invspec,");//型号
+		sql.append(" min(i.invspec) invspec,");//规格
 		sql.append(" w.creadate dstartdate,");//生产日期		
 		sql.append(" min(r.storname) cstore,");//仓库
 		sql.append(" sum(w.whs_stocktonnage) num,");//库存主数量  不在模板显示
@@ -432,7 +440,7 @@ public class ReportUI extends ReportBaseUI {
 		sql.append(" and isnull(c.dr,0)=0");
 		sql.append(" and isnull(iv.dr,0)=0");
 		sql.append(" and isnull(cl.dr,0)=0");
-		sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
+		sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于原料粉的存货分类
 		sql.append(" and w.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");		
 		sql.append(" and upper(coalesce(s.isok,'N'))='N'");//过滤非正常库存的
 		if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
@@ -496,3 +504,4 @@ public class ReportUI extends ReportBaseUI {
     }
 
 }
+
