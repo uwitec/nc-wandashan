@@ -140,6 +140,33 @@ public class LockTrayBO {
 	/**
 	 * 
 	 * @作者：zhf
+	 * @说明：完达山物流项目 解除锁定
+	 * @时间：2011-7-5下午08:05:04
+	 * @param cgebbids
+	 * @throws BusinessException
+	 */
+	public void reLockTray2(XnRelationVO[] revos) throws BusinessException{
+		if(revos == null || revos.length == 0)
+			return;
+//      查询绑定的实际托盘
+        List<String> ldata = new ArrayList<String>();
+        for(XnRelationVO revo:revos){
+        	ldata.add(revo.getCtrayid());
+        }
+		if(ldata == null || ldata.size() == 0)
+			return;
+//		校验托盘状态必须是锁定态
+		getStockBO().checkTray(StockInvOnHandVO.stock_state_lock, ldata, getTtutil());
+//		修改托盘状态为空盘
+		getStockBO().updateTrayState(StockInvOnHandVO.stock_state_null, ldata, getTtutil());
+//		删除锁定关系表
+		String sql = "update wds_xnrelation set dr = 1 where cxntrayid = '"+revos[0].getCxntrayid()+"'";
+		getDao().executeUpdate(sql);
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
 	 * @说明：完达山物流项目 获取绑定的实际托盘上的存量
 	 * @时间：2011-7-6下午02:48:54
 	 * @param trayid
