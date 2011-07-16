@@ -116,9 +116,13 @@ public class WdsWlPubConst {
 	public static String  REPORT13="80080502";
 	/**装卸运费明细表--报表*/
 	public static String  REPORT14="80080504";
+	/**箱粉库存明细--报表*/
+	public static String  REPORT16="80100211";
+	/**箱粉库存明细--报表*/
+	public static String  REPORT17="80100212";
 	
 	
-	
+		
 	public static String IC_INV_SALE_ALERT_DAYNO = "def16";//存货销售警戒天数字段
 	/**虚拟托盘 开头命名方式*/
 	public static String XN_CARGDOC_TRAY_NAME="XN";

@@ -220,7 +220,7 @@ public class ReportUI extends ReportBaseUI{
 					super.updateBodyDigits();
 				    ReportBaseVO[]newVos=setVoByContion(vos);
 				    ReportBaseVO[]newVos1=setVoByContion(vos1);
-				    ReportBaseVO[] combins=CombinVO.combinVoByCondition(newVos,newVos1,voCombinConds,types,combinFields);
+				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,voCombinConds,types,combinFields);
 				    setAfterQuery(combins);
 				    setReportBaseVO(combins);
 					setBodyVO(combins);	
@@ -317,7 +317,7 @@ public class ReportUI extends ReportBaseUI{
 	 */
 	private void setDayNum(ReportBaseVO newVo, ReportBaseVO oldVo) {
 		//获得存货的库龄
-    	Integer daynum=PuPubVO.getInteger_NullAs(oldVo.getAttributeValue(days), new Integer(0));	
+    	Integer daynum=PuPubVO.getInteger_NullAs(oldVo.getAttributeValue(days), new Integer(-1));	
     	//获得主数量
     	UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(oldVo.getAttributeValue(num));
     	//获得辅数量
@@ -414,7 +414,7 @@ public class ReportUI extends ReportBaseUI{
 	 * @param daynum
 	 */
 	private void setDayNum(ReportBaseVO newVo, Integer daynum,UFDouble num,UFDouble bnum) {
-		if(daynum==0){
+		if(daynum<0){
 			return;
 		}
 		if(daynum<=30){

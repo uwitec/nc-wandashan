@@ -1,8 +1,10 @@
-package nc.ui.wds.report.kcdpmxb;
+package nc.ui.wds.report.xfkcmib;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
@@ -21,7 +23,7 @@ import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
 import nc.vo.wl.pub.report.SubtotalVO;
 /**
- * 物流箱粉各仓库单品库存明细报表
+ * 箱粉库存明细报表
  * @author mlr
  */
 public class ReportUI extends WDSReportBaseUI{
@@ -48,22 +50,55 @@ public class ReportUI extends WDSReportBaseUI{
     private  String numplan="plannum";
     //计划辅数量字段值名字
     private  String bnumplan="bplannum";
-    //动态列插入位置
-    private  Integer location=4;
+    //常用存货显示字段
+	private static String  invcommon="常用存货";
+	//不常用存货显示字段
+	private static String  uninvcommon="不常用存货";
+	//存货类型名字
+	private static String invtypename="invatypename";
+	//存货类型字段   0表示常用     1表示不常用
+	private static String  invtype="invtype";
     //将要合并的求值的类型
+	
+    
     private  int[] types={IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD
-    	                        ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD };
+    	                  ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD };
     //将要合并的求值子段
     private  String[] combinFields={"unit1","unit2","unit3","unit4","unit5","unit6","unit7","unit8","unit9",
-    	                                  "bunit1","bunit2","bunit3","bunit4","bunit5","bunit6","bunit7","bunit8","bunit9"  };
+    	                            "bunit1","bunit2","bunit3","bunit4","bunit5","bunit6","bunit7","bunit8","bunit9"  };
+ 
 	@Override
 	public String _getModelCode() {	
-		return WdsWlPubConst.REPORT10;
+		return WdsWlPubConst.REPORT16;
 	}
 	public ReportUI() {
 		super();
-		initReportUI();
-		 setColumn();
+		//查询动态列插入位置
+		setLocation1(4);
+		getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
+		setColumn();
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       查询结束后,对vo的后续处理
+	 * @时间：2011-7-13下午03:07:52
+	 * @param combins
+	 */
+	private void setAfterQuery(ReportBaseVO[] combins) {
+		if (combins == null || combins.length == 0) {
+			return;
+		}
+		int size = combins.length;
+		for (int i = 0; i < size; i++) {
+			Integer type = PuPubVO.getInteger_NullAs(combins[i].getAttributeValue(invtype), new Integer(0));
+			if (type == 0) {
+				combins[i].setAttributeValue(invtypename, invcommon);
+			} else if (type == 1) {
+				combins[i].setAttributeValue(invtypename, uninvcommon);
+			}
+		}	
 	}
 	 /**
      * 基本列合并
@@ -80,7 +115,7 @@ public class ReportUI extends WDSReportBaseUI{
         }
         if(isvbanchcode!=null&&isvbanchcode.booleanValue()==true){
            i=i+1;	
-        }        
+        }  
         ColumnGroup zgroup=new ColumnGroup("货龄");
         ColumnGroup a1=new ColumnGroup("30天以内");
         a1.add(cardTcm.getColumn(4+i));
@@ -128,7 +163,6 @@ public class ReportUI extends WDSReportBaseUI{
     }
 	@Override
 	public void setUIAfterLoadTemplate() {
-		 getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
 		
 	}
 	
@@ -173,7 +207,8 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields3,types,combinFields);
 						 ReportBaseVO[] newVos2=setVoByContion(vos3,fields3);
 						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
-					     setReportBaseVO(combins1);
+						 setAfterQuery(combins1);
+						 setReportBaseVO(combins1);
 						 setBodyVO(combins1);	
 						 
 					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
@@ -182,7 +217,8 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields,types,combinFields);
 						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
 						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
-					     setReportBaseVO(combins1);
+						 setAfterQuery(combins1);
+						 setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
 					}else if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
@@ -191,7 +227,8 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields1,types,combinFields);
 						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
 						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
-					     setReportBaseVO(combins1);
+						 setAfterQuery(combins1);
+						 setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
 					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==true){
@@ -200,10 +237,13 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields2,types,combinFields);
 						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
 						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
-					     setReportBaseVO(combins1);
+						 setAfterQuery(combins1);
+						 setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
-					}	
+					}
+					setDefSubtotal(new String[]{"invclname"}, combinFields);  
+					//setTolal();
 					
                 }                
 	          
@@ -444,6 +484,10 @@ public class ReportUI extends WDSReportBaseUI{
 		        sql.append(" t.pk_cargdoc pk_cargdoc,");
 		        sql.append(" min(bc.csname) csname,");
 		        }
+		        sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		        sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+		        sql.append(" min(cl.vinvclcode) invclcode,");//存货分类编码
+		        sql.append(" min(cl.vinvclname) invclname,");//存货分类名称	
 		        if(isvbanchcode.booleanValue()==true){
 		        sql.append(" t.whs_batchcode vbatchcode,");		
 		        }
@@ -482,7 +526,7 @@ public class ReportUI extends WDSReportBaseUI{
 				}
 				sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
 				//按仓库  存货   存货状态  以及入库天数来分组合并
-				sql.append(" group by t.pk_customize1,t.pk_invbasdoc,t.ss_pk,t.creadate");
+				sql.append(" group by iv.fuesed,cl.pk_invcl,t.pk_customize1,t.pk_invbasdoc,t.ss_pk,t.creadate");
 			    if(iscargdoc.booleanValue()==true){
 				sql.append(" ,t.pk_cargdoc");	
 				}
@@ -509,6 +553,10 @@ public class ReportUI extends WDSReportBaseUI{
 		    sql.append(" w.pk_cargdoc pk_cargdoc,");
 		    sql.append(" min(bc.csname) csname,");
 		    }
+		    sql.append(" w.pk_invcl pk_invcl,");//存货分类主键
+	        sql.append(" w.invtype invtype,");//存货类型 常用0  不常用1
+	        sql.append(" min(w.invclcode) invclcode,");//存货分类编码
+	        sql.append(" min(w.invclname) invclname,");//存货分类名称	
 //		    sql.append(" w.pk_invmandoc pk_invmandoc,");
 		    sql.append(" w.pk_invbasdoc pk_invbasdoc,");
 		    sql.append(" sum(w.plannum)   plannum,"); //计划 主数量 
@@ -521,6 +569,10 @@ public class ReportUI extends WDSReportBaseUI{
 	        sql.append("  ((select h.itransstatus "+type+",");
 			sql.append("  h.pk_outwhouse pk_outwhouse,"); 
 			sql.append("  cg.pk_cargdoc pk_cargdoc,");
+		    sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		    sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+		    sql.append(" cl.vinvclcode invclcode,");//存货分类编码
+		    sql.append(" cl.vinvclname invclname,");//存货分类名称	
 			sql.append("  b.pk_invmandoc pk_invmandoc,");     
 			sql.append("  b.pk_invbasdoc pk_invbasdoc,");   
 			sql.append("  b.narrangnmu plannum,");   
@@ -548,6 +600,10 @@ public class ReportUI extends WDSReportBaseUI{
 			sql.append("   (select  h1.itransstatus "+type+",");
 			sql.append("  h1.pk_outwhouse pk_outwhouse,");   
 			sql.append("  cg.pk_cargdoc pk_cargdoc,");
+			sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+			sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+			sql.append(" cl.vinvclcode invclcode,");//存货分类编码
+			sql.append(" cl.vinvclname invclname,");//存货分类名称	
 			sql.append("  b1.pk_invmandoc pk_invmandoc,");  
 			sql.append("  b1.pk_invbasdoc pk_invbasdoc,") ;
 			sql.append("  b1.ndealnum "+numplan+",");
@@ -586,7 +642,7 @@ public class ReportUI extends WDSReportBaseUI{
 			  sql.append(" and  w.pk_outwhouse='"+pk_stordoc+"'");	
 		    }
 			//按仓库 存货 在途或待发类型来分组
-			sql.append("  group by w.pk_outwhouse,w.pk_invbasdoc,w.type");	
+			sql.append("  group by w.invtype,w.pk_invcl,w.pk_outwhouse,w.pk_invbasdoc,w.type");	
 			if(iscargdoc.booleanValue()==true){
 		      sql.append(",w.pk_cargdoc ");	
 		    }
@@ -611,6 +667,10 @@ public class ReportUI extends WDSReportBaseUI{
 		    sql.append(" w.pk_cargdoc pk_cargdoc,");
 		    sql.append(" min(bc.csname) csname,");
 		    }
+		    sql.append(" w.pk_invcl pk_invcl,");//存货分类主键
+	        sql.append(" w.invtype invtype,");//存货类型 常用0  不常用1
+	        sql.append(" min(w.invclcode) invclcode,");//存货分类编码
+	        sql.append(" min(w.invclname) invclname,");//存货分类名称	
 		    if(isvbanchcode.booleanValue()==true){
 		    sql.append(" w.vbatchcode vbatchcode,");		
 		    }
@@ -625,6 +685,10 @@ public class ReportUI extends WDSReportBaseUI{
 	        sql.append("  ((select h.itransstatus "+type+",");
 			sql.append("  h.pk_outwhouse pk_outwhouse,"); 
 			sql.append("  cg.pk_cargdoc pk_cargdoc,");
+			sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+			sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+			sql.append(" cl.vinvclcode invclcode,");//存货分类编码
+			sql.append(" cl.vinvclname invclname,");//存货分类名称	
 			sql.append("  b.pk_invmandoc pk_invmandoc,");     
 			sql.append("  b.pk_invbasdoc pk_invbasdoc,");  
 			sql.append("  lb.vbatchcode vbatchcode,");//获得批次
@@ -658,6 +722,10 @@ public class ReportUI extends WDSReportBaseUI{
 			sql.append("   (select  h1.itransstatus "+type+",");
 			sql.append("  h1.pk_outwhouse pk_outwhouse,");   
 			sql.append("  cg.pk_cargdoc pk_cargdoc,");
+			sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+			sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
+			sql.append(" cl.vinvclcode invclcode,");//存货分类编码
+			sql.append(" cl.vinvclname invclname,");//存货分类名称	
 			sql.append("  b1.pk_invmandoc pk_invmandoc,");  
 			sql.append("  b1.pk_invbasdoc pk_invbasdoc,") ;
 			sql.append("  lb.vbatchcode vbatchcode,");//获得批次
@@ -702,7 +770,7 @@ public class ReportUI extends WDSReportBaseUI{
 			  sql.append(" and  w.pk_outwhouse='"+pk_stordoc+"'");	
 		    }
 			//按仓库 存货 在途或待发类型来分组
-			sql.append("  group by w.pk_outwhouse,w.pk_invbasdoc,w.type");	
+			sql.append("  group by w.invtype,w.pk_invcl,w.pk_outwhouse,w.pk_invbasdoc,w.type");	
 			if(iscargdoc.booleanValue()==true){
 		      sql.append(",w.pk_cargdoc ");	
 		    }
@@ -732,9 +800,9 @@ public class ReportUI extends WDSReportBaseUI{
         SubtotalVO svo = new SubtotalVO();
         svo.setGroupFldCanNUll(true);// 分组列的数据是否可以为空。
         svo.setAsLeafRs(new boolean[] { true });// 分组列合并后是否作为末级节点记录。    
-        svo.setValueFlds(new String[]{"",""});// 求值列:
-        svo.setValueFldTypes(new int[]{1,2});// 求值列的类型:
-        svo.setTotalDescOnFld("");// ----合计---字段 ---- 所在列
+        svo.setValueFlds(combinFields);// 求值列:
+        svo.setValueFldTypes(types);// 求值列的类型:
+        svo.setTotalDescOnFld("invclname");// ----合计---字段 ---- 所在列
         setSubtotalVO(svo);
         doSubTotal();
     }

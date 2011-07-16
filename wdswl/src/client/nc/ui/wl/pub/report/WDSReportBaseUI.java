@@ -64,7 +64,17 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 	 */
 	public abstract void initReportUI();
 	
-	
+    /**
+     * 
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     *        设置查询动态列位置
+     * @时间：2011-7-15下午08:08:09
+     * @param location1
+     */
+	public void setLocation1(Integer location1) {
+		this.location1 = location1;
+	}
 	@Override
 	public ReportBaseVO[] getReportVO(String wheresql) throws BusinessException {
 		
@@ -190,6 +200,7 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
         	//设置动态列
         	setDynamicColumn1();
         	//中文的查询条件
+            
         	String qryconditons = getQueryDlg().getChText();
         	if(!qryconditons.contains("截止日期")){
         		qryconditons = qryconditons+"并且(截止日期 小于等于 '"+ddateto+"')";
@@ -216,11 +227,13 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 		 //-----------------------处理 模板  支持动态列      
 		 getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	               
 	        olditems = getReportBase().getBody_Items();       
-	        ReportItem[] newitems;
+	        ReportItem[] newitems=null;
 			try {
 			        Map map = getNewItems();
+			        if(map !=null){
 			        location=PuPubVO.getInteger_NullAs(map.get("location"), new Integer(0));
 			        newitems=(ReportItem[])map.get("items");
+			        }
 				    ReportItem[] allitems = combin(olditems,newitems,location);   
 				    olditems=allitems;
 			        getReportBase().setBody_Items(allitems);
