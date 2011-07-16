@@ -258,4 +258,7 @@ public class WdsWlPubConst {
 	public static boolean sale_send_isass = true; 
 //	zhf   仓库档案自定义项2   转分仓入库时   实际入数量 低于 实际出 数量  是否自动 调整 补录
 	public static String wds_warehouse_sytz = "def2";
+	
+//	zhf 存货状态 浏览绑定关系 对话框 模板类型
+	public static String INV_VIEW_LOCK_TEMPLET_TYPE = "lock";
 }
