@@ -4,6 +4,7 @@ import nc.ui.pub.ToftPanel;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.xn.XnRelationVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class LockTrayHelper {
@@ -28,6 +29,23 @@ public class LockTrayHelper {
 		Object[] ParameterValues = new Object[]{chid,cwareid,gebbid,lockTrayInfor};
 		LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "lockTray", ParameterTypes, ParameterValues, 2);
 
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 存货状态处调用的解锁处理
+	 * @时间：2011-7-19下午12:18:08
+	 * @param tp
+	 * @param revos
+	 * @throws Exception
+	 */
+	public static void reLockTray(ToftPanel tp,XnRelationVO[] revos) throws Exception{
+		if(revos == null || revos.length == 0)
+			return;
+		Class[] ParameterTypes = new Class[]{XnRelationVO[].class};
+		Object[] ParameterValues = new Object[]{revos};
+		LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "reLockTray2", ParameterTypes, ParameterValues, 2);
 	}
 	
 	/**

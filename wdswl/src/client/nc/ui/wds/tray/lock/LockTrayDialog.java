@@ -102,6 +102,11 @@ public class LockTrayDialog extends UIDialog implements ActionListener{
 		return listPane;
 	}
 	
+	public void reset(){
+		if(listPane!=null)
+			listPane = null;
+	}
+	
 	
 	
 	/**

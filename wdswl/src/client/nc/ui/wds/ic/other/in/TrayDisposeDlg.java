@@ -36,6 +36,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -82,6 +83,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 	private boolean isEdit = true;
 	
 	private String pk_ware = null;//仓库
+	
+	private boolean isSign = false;//是否签字通过
 
 	public TrayDisposeDlg(String m_billType, String m_operator,
 			String m_pkcorp, String m_nodeKey, InPubClientUI myClientUI,
@@ -126,6 +129,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		getbtnOk().setEnabled(isEdit);
 		getAddLine().setEnabled(isEdit);
 		getDeline().setEnabled(isEdit);
+		
+		getbtnLock().setEnabled(isEdit||!isSign);
 	}
 
 	public void loadHeadData() {
@@ -135,6 +140,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 				getbillListPanel().setHeaderValueVO(billvo.getChildrenVO());
 				getbillListPanel().getHeadBillModel().execLoadFormula();
 				pk_ware = PuPubVO.getString_TrimZeroLenAsNull(billvo.getParentVO().getAttributeValue("geh_cwarehouseid"));
+				isSign = PuPubVO.getInteger_NullAs(billvo.getParentVO().getAttributeValue("pwb_fbillflag"),IBillStatus.FREE)==IBillStatus.CHECKPASS;
 			}
 		} catch (Exception e) {
 			Logger.error(e);
@@ -673,6 +679,8 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 		if(isEdit){
 			SmallTrayVO[] trays = getLockTrayDialog().getRetVos();			String key = getkey(row);			getTrayLockInfor(false).put(key, trays);
 		}
+//		复位 保证 下次 加载时  重新加载数据
+		getLockTrayDialog().reset();
 	}
 	
 	private LockTrayDialog lockDlg = null;

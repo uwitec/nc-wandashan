@@ -2,8 +2,12 @@ package nc.ui.wds.ic.inv;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.WdsSelfButton;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
 
 
 /**
@@ -42,6 +46,17 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 		 
 	}
 	
-
+	protected void initPrivateButton() {
+		super.initPrivateButton();
+		
+		ButtonVO view = new ButtonVO();
+		view.setBtnNo(WdsSelfButton.view_lock);
+		view.setBtnCode(null);
+		view.setBtnName("绑定查看");
+		view.setBtnChinaName("绑定查看");
+		view.setOperateStatus(new int[]{IBillOperate.OP_NOTEDIT});
+		addPrivateButton(view);
+		
+	}
 
 }

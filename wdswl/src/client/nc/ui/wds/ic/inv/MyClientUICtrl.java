@@ -7,6 +7,7 @@ import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.wds.ic.inv.MyBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.ui.trade.button.IBillButton;
+import nc.ui.wl.pub.WdsSelfButton;
 
 
 
@@ -24,7 +25,8 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	                              IBillButton.Cancel,
 	 	           	              IBillButton.Return,                                                                                    
 	                              IBillButton.Refresh
-	                              ,IBillButton.Print
+	                              ,IBillButton.Print,
+	                              WdsSelfButton.view_lock
 	                              };
   
 	}
@@ -38,6 +40,8 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	           	         	           	 IBillButton.Card,
 	           	         	           	 IBillButton.Refresh
 	           	         	           	 ,IBillButton.Print
+	           	         	         ,
+		                              WdsSelfButton.view_lock
 	           	         	        
 	        };
 	
