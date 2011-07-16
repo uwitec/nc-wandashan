@@ -10,48 +10,48 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 public class MyClientController extends AbstractManageController implements ISingleController {
 
-	public String[] getCardBodyHideCol() {
+	public String[] getCardBodyHideCol() {//等到卡片式隐藏主体
 		
 		return null;
 	}
 
 	
 
-	public boolean isShowCardRowNo() {
+	public boolean isShowCardRowNo() {//是否显示行
 		
 		return true;
 	}
 
-	public boolean isShowCardTotal() {
+	public boolean isShowCardTotal() {//是否显示表体
 		
 		return true;
 	}
 
-	public String getBillType() {
+	public String getBillType() {//返回账单类型
 		
 		return WdsWlPubConst.DM_PLAN_BASDOC_NODECODE;
 	}
 
-	public String[] getBillVoName() {
+	public String[] getBillVoName() {//得到账单名字
 		
 		return new String[]{
-			HYBillVO.class.getName(),
-			SendinvdocVO.class.getName(),			
-			SendinvdocVO.class.getName()				
+			HYBillVO.class.getName(),//聚合VO名
+			SendinvdocVO.class.getName(),	//主表类名		
+			SendinvdocVO.class.getName()	//字表类名			
 		};
 	}
 
-	public String getBodyCondition() {
+	public String getBodyCondition() {//得到主体条件
 		
 		return null;
 	}
 
-	public String getBodyZYXKey() {
+	public String getBodyZYXKey() {//得到主体KEY值
 		
 		return null;
 	}
 
-	public int getBusinessActionType() {
+	public int getBusinessActionType() {//得到事物活动类型
 		
 		return IBusinessActionType.BD;
 	}
@@ -96,7 +96,7 @@ public class MyClientController extends AbstractManageController implements ISin
 		return null;
 	}
 
-	public int[] getListButtonAry() {
+	public int[] getListButtonAry() {//等到按钮
 		
 
 		return new int[]{
