@@ -59,7 +59,7 @@ public class CombinVO {
 				}
 			}
 			if (vos1 == null || vos1.length == 0) {
-				if (vos != null && vos.length > 1) {
+				if (vos != null && vos.length > 0) {
 					return vos;
 				}
 			}
@@ -165,6 +165,12 @@ public class CombinVO {
 					}
 				}
 			}
+			//如果list 长度为0 说明vos 和vos1 没有一个匹配上的
+			if(list.size()==0){
+				for(int i=0;i<vos1.length;i++){
+					list1.add(vos1[i]);
+				}				
+			}		
 			//将没有匹配上的vo合并上
 			if(list1.size()>0){
 			  for(int i=0;i<vos.length;i++){

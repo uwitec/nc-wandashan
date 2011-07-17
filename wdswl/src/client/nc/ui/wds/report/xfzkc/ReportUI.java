@@ -1,12 +1,9 @@
 package nc.ui.wds.report.xfzkc;
 import java.util.List;
-
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
-
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
-import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
@@ -16,9 +13,12 @@ import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.CombinVO;
 import nc.ui.wl.pub.report.ReportBaseUI;
+import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -38,7 +38,8 @@ public class ReportUI extends ReportBaseUI{
 	//不常用存货显示字段
 	private static String  uninvcommon="不常用存货";
 	//存货类型字段   0表示常用     1表示不常用
-	private static String  invtype="invtype";
+	private static String  invtype="invtype";	
+	private String pk_stordoc=null;
     private String ddatefrom =null;
     private String ddateto = null;
     //存货类型名字
@@ -91,6 +92,26 @@ public class ReportUI extends ReportBaseUI{
 	private void initReportUI() {		
 	  		
 	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *      设置查询条件
+	 * @时间：2011-7-15下午01:08:49
+	 */
+	private void setQueryCondition() {
+		ConditionVO[] vos=getQueryDlg().getConditionVO();
+    	//从查询对话框,获取仓库主键
+    	int size=vos.length;
+    	//从查询对话框,获取是否货位展开
+    
+    	pk_stordoc=null;
+    	for(int i=0;i<size;i++){
+    		if(vos[i].getFieldCode().equalsIgnoreCase("pk_stordoc")){
+    			pk_stordoc=vos[i].getValue();
+    		} 		
+    	}		
+	}	
 	 /**
      * 基本列合并
      */
@@ -188,7 +209,8 @@ public class ReportUI extends ReportBaseUI{
 	        getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
 	        getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
 			getQueryDlg().showModal();
-		     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		  
+		     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		
+		    	 setQueryCondition();
             	//校验开始日期，截止日期
             	UIRefPane obj1 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddatefrom");
             	UIRefPane obj2 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddateto");
@@ -213,17 +235,20 @@ public class ReportUI extends ReportBaseUI{
             	getReportBase().setHeadItem("qryconditons", qryconditons);
             	//得到自定义查询条件
                 //得到查询结果
-                List<ReportBaseVO[]> list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1()});
+                List<ReportBaseVO[]> list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1(),getQuerySQL2()});
                 ReportBaseVO[] vos1= list.get(1);
-                ReportBaseVO[] vos=list.get(0);            
-                if(vos1 != null&&vos1.length>0 || vos!=null&&vos1.length>0){                	
+                ReportBaseVO[] vos=list.get(0);  
+                ReportBaseVO[] vos2= list.get(2); 
+                if(vos1 != null&&vos1.length>0 || vos!=null&&vos1.length>0 || vos2!=null&&vos2.length>0 ){                	
 					super.updateBodyDigits();
 				    ReportBaseVO[]newVos=setVoByContion(vos);
 				    ReportBaseVO[]newVos1=setVoByContion(vos1);
 				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,voCombinConds,types,combinFields);
-				    setAfterQuery(combins);
-				    setReportBaseVO(combins);
-					setBodyVO(combins);	
+				    ReportBaseVO[]newVos2=setVoByContion(vos2);
+				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,voCombinConds,types,combinFields);		    
+				    setAfterQuery(combins1);
+				    setReportBaseVO(combins1);
+					setBodyVO(combins1);	
 					setDefSubtotal(new String[]{"invclname"}, combinFields);  
                 }                
 	          }
@@ -370,11 +395,10 @@ public class ReportUI extends ReportBaseUI{
 		    UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"10"));
 		    newVo.setAttributeValue(bunit+"10", boldnum.add(bplanNum));			
 		}else if(itype==1){
-		    //在途主数量表示字段 unit8
-			//待发主数量 表示字段unit9
+		    //在途主数量表示字段 unit7
 			UFDouble oldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(unit+"7"));
 			newVo.setAttributeValue(unit+"7", oldnum.add(planNum));
-			//待发辅数量 表示字段unit9
+			//待发辅数量 表示字段unit7
 			UFDouble boldnum=PuPubVO.getUFDouble_NullAsZero(newVo.getAttributeValue(bunit+"7"));
 			newVo.setAttributeValue(bunit+"7", boldnum.add(bplanNum));	
 		}	
@@ -450,134 +474,43 @@ public class ReportUI extends ReportBaseUI{
 			newVo.setAttributeValue(bunit+"4",bnum.add(boldnum));			
 		}		
 	}
+	
 	/**
      * 
      * @作者：mlr
      * @说明：完达山物流项目  
-     * 根据自定义条件得到查询报表数据的SQL
+     * 根据自定义条件得到查询报表数据的SQL 只查询库存
+     * 
      * @时间：2011-5-10上午09:41:31
      * @param wheresql
      * @return
      */
-	private String getQuerySQL(){
-		StringBuffer sql = new StringBuffer();		
-		        sql.append(" select ");//仓库主键	
-//		        sql.append(" t.pk_customize1 pk_stordoc,");
-		        sql.append(" t.pk_invbasdoc pk_invbasdoc,");
-		        sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
-		        sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1
-		        sql.append(" min(cl.vinvclcode) invclcode,");//存货分类编码
-		        sql.append(" min(cl.vinvclname) invclname,");//存货分类名称		        
-		        sql.append(" min(s.storname) storename,");//仓库名称
-		        sql.append(" min(i.invcode) invcode,");//存货编码
-		        sql.append(" min(i.invname) invname,");//存货名字
-		        sql.append(" min(i.invspec) invspec,");//规格
-		        sql.append(" round(sysdate-to_date(t.creadate,'YYYY-MM-DD HH24-MI-SS'),0) "+days+",");//入库天数
-		        sql.append(" t.creadate creadate,");//入库日期
-		        sql.append(" t.ss_pk "+stockstate+",");//存货状态主键    
-		        sql.append(" sum(t.whs_stocktonnage) "+num+",");//库存中的单品的主数量 主要用来设置库龄主数量
-		        sql.append(" sum(t.whs_stockpieces) "+bnum); //库存中的单品的辅数量 主要用来设置库龄辅数量 
-		        sql.append(" from ");	        	 
-				sql.append(" tb_warehousestock t");
-				sql.append(" join bd_stordoc s");//关联仓库
-				sql.append(" on t.pk_customize1=s.pk_stordoc");
-				sql.append(" join bd_invbasdoc i");//关联存货基本档案
-				sql.append(" on t.pk_invbasdoc=i.pk_invbasdoc");	
-				sql.append(" join wds_invbasdoc iv");//关联存货档案
-				sql.append(" on t.pk_invbasdoc=iv.pk_invbasdoc");
-				sql.append(" join wds_invcl cl");//关联存货分类
-				sql.append(" on iv.vdef1=cl.pk_invcl");
-				sql.append(" where isnull(t.dr,0)=0");//
-				sql.append(" and isnull(s.dr,0)=0");//
-				sql.append(" and isnull(i.dr,0)=0");
-				sql.append(" and isnull(iv.dr,0)=0");//
-				sql.append(" and isnull(cl.dr,0)=0");
-				sql.append(" and t.creadate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤入库日期
-				sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
-				sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
-				//按存货类型  存货分类  存货   存货状态  以及入库天数来分组合并
-				sql.append(" group by iv.fuesed,cl.pk_invcl,t.pk_invbasdoc,t.ss_pk,t.creadate");				
-				return sql.toString();
+	private String getQuerySQL(){		
+	 return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
 	}
 	/**
      * 
      * @作者：mlr
      * @说明：完达山物流项目  
-     * 根据自定义条件得到查询报表数据的SQL
+     * 根据自定义条件得到查询报表数据的SQL 只查询待发的
      * @时间：2011-5-10上午09:41:31
      * @param wheresql
      * @return
      */
-	private String getQuerySQL1(){
-		    StringBuffer sql = new StringBuffer();	
-		    sql.append(" select ");
-		    sql.append(" w.type "+type+",");//在途或待发类型
-		    sql.append(" w.pk_invcl pk_invcl,");//存货分类主键
-	        sql.append(" min(w.invclcode) invclcode,");//存货分类编码
-	        sql.append(" min(w.invclname) invclname,");//存货分类名称		
-		//    sql.append(" w.pk_outwhouse pk_stordoc,");
-//		    sql.append(" w.pk_invmandoc pk_invmandoc,");
-		    sql.append(" w.invtype invtype,");//常用 或不常用类型
-		    sql.append(" w.pk_invbasdoc pk_invbasdoc,");
-		    sql.append(" sum(w.plannum)   plannum,"); //计划 主数量 
-			sql.append(" sum(w.bplannum)  bplannum,") ; //计划辅数量
-			sql.append(" min(s.storname) storename,");//仓库名称
-	        sql.append(" min(i.invcode) invcode,");//存货编码
-	        sql.append(" min(i.invname) invname,");//存货名字
-	        sql.append(" min(i.invspec) invspec");//规格
-		    sql.append("  from");
-	        sql.append("  ((select h.itransstatus "+type+",");
-			sql.append("  h.pk_outwhouse pk_outwhouse,"); 
-			sql.append("  b.pk_invmandoc pk_invmandoc,");     
-			sql.append("  b.pk_invbasdoc pk_invbasdoc,");   
-			sql.append("  cl.pk_invcl pk_invcl,");//存货分类主键
-		    sql.append("  cl.vinvclcode invclcode,");//存货分类编码
-		    sql.append("  cl.vinvclname invclname,");//存货分类名称	
-		    sql.append("  iv.fuesed invtype,");//存货类型 常用0  不常用1
-			sql.append("  b.narrangnmu plannum,");   
-			sql.append("  b.nassarrangnum bplannum") ;  
-			sql.append("  from wds_soorder h");
-			sql.append("  join wds_soorder_b b on h.pk_soorder = b.pk_soorder");
-			sql.append("  join wds_invbasdoc iv");//关联存货档案
-			sql.append("  on b.pk_invbasdoc=iv.pk_invbasdoc");
-			sql.append("  join wds_invcl cl");//关联存货分类
-			sql.append("  on iv.vdef1=cl.pk_invcl");
-			sql.append("  where isnull(h.dr, 0) = 0");
-			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
-			sql.append("  and h.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
-			sql.append("  and isnull(iv.dr,0)=0");//
-			sql.append("  and isnull(cl.dr,0)=0");
-			sql.append("  and isnull(b.dr, 0) = 0 )");
-			sql.append("  union all ");
-			sql.append("   (select  h1.itransstatus "+type+",");
-			sql.append("  h1.pk_outwhouse pk_outwhouse,");     
-			sql.append("  b1.pk_invmandoc pk_invmandoc,");  
-			sql.append("  b1.pk_invbasdoc pk_invbasdoc,") ;
-			sql.append("  cl.pk_invcl pk_invcl,");//存货分类主键
-		    sql.append("  cl.vinvclcode invclcode,");//存货分类编码		   
-		    sql.append("  cl.vinvclname invclname,");//存货分类名称		
-		    sql.append("  iv.fuesed invtype,");//存货类型 常用0  不常用1
-			sql.append("  b1.ndealnum "+numplan+",");
-			sql.append("  b1.nassdealnum "+bnumplan); 
-			sql.append("  from wds_sendorder h1"); 
-			sql.append("  join wds_sendorder_b b1 on h1.pk_sendorder = b1.pk_sendorder");
-			sql.append("  join wds_invbasdoc iv");//关联存货档案
-			sql.append("  on b1.pk_invbasdoc=iv.pk_invbasdoc");
-			sql.append("  join wds_invcl cl");//关联存货分类
-			sql.append("  on iv.vdef1=cl.pk_invcl");
-			sql.append("  where isnull(h1.dr, 0) = 0");
-			sql.append("  and isnull(iv.dr,0)=0");//
-			sql.append("  and isnull(cl.dr,0)=0");
-			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
-			sql.append("  and h1.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
-			sql.append("  and isnull(b1.dr, 0) = 0 ))w");
-			sql.append("  join bd_stordoc s");//仓库档案
-			sql.append("  on w.pk_outwhouse=s.pk_stordoc");
-			sql.append("  join bd_invbasdoc i");
-			sql.append("  on w.pk_invbasdoc=i.pk_invbasdoc");
-			//按存货类型  存货分类  存货 在途或待发类型来分组
-			sql.append("  group by w.invtype,w.pk_invcl,w.pk_invbasdoc,w.type");			
-			return sql.toString();
+	private String getQuerySQL1(){		
+	  return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
+	}
+	/**
+     * 
+     * @作者：mlr
+     * @说明：完达山物流项目  
+     * 根据自定义条件得到查询报表数据的SQL,只查询在途
+     * @时间：2011-5-10上午09:41:31
+     * @param wheresql
+     * @return
+     */
+	private String getQuerySQL2(){	
+	 return WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
 	}
 	 /**
 	  * 

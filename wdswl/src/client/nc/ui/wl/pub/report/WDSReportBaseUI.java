@@ -22,29 +22,29 @@ import nc.vo.wl.pub.report.ReportBaseVO;
 abstract public class WDSReportBaseUI extends ReportBaseUI{	
 	private static final long serialVersionUID = -8293771841532487812L;
 	//查询条件开始日期
-	protected String ddatefrom =null;
+	protected static String ddatefrom =null;
 	//查询条件结束日期
-	protected String ddateto = null;
+	protected static String ddateto = null;
 	//查询仓库主键
-    protected String pk_stordoc=null;
+    protected static String pk_stordoc=null;
     //是否按货位展开
     protected UFBoolean iscargdoc=new UFBoolean(false);
 	//是否按批次展开
     protected UFBoolean isvbanchcode=new UFBoolean(false);
 	//货位字段名
-    protected  String cargdoc="csname";
+    protected static String cargdoc="csname";
     //批次字段名
-    protected  String banchcode="vbatchcode";
-    //记录初次加载的表体元素
-    protected static ReportItem[]olditems=null;
+    protected static  String banchcode="vbatchcode";
+    //记录初次加载的表体元素  
+    protected  ReportItem[]olditems=null;
     //按仓库 存货维度分组的字段数组
-    protected  String[] fields=new String[]{"pk_stordoc","pk_invbasdoc"};
+    protected static String[] fields=new String[]{"pk_stordoc","pk_invbasdoc"};
     //按仓库 货位  存货维度分组的字段数组
-    protected  String[] fields1=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc"};
+    protected static String[] fields1=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc"};
     //按仓库 货位  存货维度分组的字段数组
-    protected  String[] fields2=new String[]{"pk_stordoc","pk_invbasdoc","vbatchcode"};
+    protected static String[] fields2=new String[]{"pk_stordoc","pk_invbasdoc","vbatchcode"};
     //按仓库 货位  存货 批次维度分组的字段数组
-    protected  String[] fields3=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc","vbatchcode"};
+    protected static String[] fields3=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc","vbatchcode"};
     //查询动态列的插入位置 默认插入第0列
     private  Integer location1=0;
     //报表模板初次加载时 动态列插入位置
@@ -182,6 +182,8 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
         getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
 		getQueryDlg().showModal();
 	     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		  
+	    	//清空表体数据
+	    	 clearBody();	    	
         	//校验开始日期，截止日期
         	UIRefPane obj1 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddatefrom");
         	UIRefPane obj2 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddateto");
@@ -210,6 +212,17 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
         	getReportBase().getHeadItem("qryconditons").setWidth(2);
         	getReportBase().setHeadItem("qryconditons", qryconditons);
 	    }	
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *        每次查询前清空表体数据
+	 * @时间：2011-7-16下午02:38:27
+	 */
+	private void clearBody() {
+		 setBodyVO(null);
+    	 updateUI();		
 	}
 	@Override
 	public void setUIAfterLoadTemplate() {
