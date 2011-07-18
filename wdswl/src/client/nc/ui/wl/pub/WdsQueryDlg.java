@@ -66,6 +66,8 @@ public class WdsQueryDlg extends HYQueryDLG {
 			if(PuPubVO.getString_TrimZeroLenAsNull(value)==null)
 				return;
 			Object o = getValueRefObjectByFieldCode(ccarg_fieldname);
+			if(o == null)
+				return;
 			if(o instanceof UIRefPane){
 				UIRefPane ref = (UIRefPane)o;
 				ref.getRefModel().addWherePart(" and bd_cargdoc.pk_stordoc = '"+value+"'");
