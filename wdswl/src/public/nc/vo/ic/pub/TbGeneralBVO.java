@@ -1494,6 +1494,12 @@ public class TbGeneralBVO extends SuperVO {
 				throw new ValidationException("托盘指定实入辅数量为0或者为空!");
 //			v = v.add(b);
 			v1 = v1.add(b1);
+//			zhf   add---------------
+			if(PuPubVO.getString_TrimZeroLenAsNull(l.getGebb_vbatchcode())==null)
+				throw new ValidationException("批次号为空");
+			if(!l.getGebb_vbatchcode().equalsIgnoreCase(getGeb_vbatchcode())){
+				throw new ValidationException("拣货出错,批次号不一致");
+			}
 		}
 		if(v1.sub(getGeb_bsnum()).doubleValue() > 0){
 			throw new ValidationException("托盘指定实入数量大于应收数量!");

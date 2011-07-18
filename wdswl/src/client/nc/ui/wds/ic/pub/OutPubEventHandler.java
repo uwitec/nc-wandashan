@@ -1,6 +1,5 @@
 package nc.ui.wds.ic.pub;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,10 +91,11 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			throw e;
 		}
 		if (null == trayInfor || trayInfor.size() == 0) {
-			chaneColor();
+//			chaneColor();
 			return;
 		}
 		trayInfor = splitLine(trayInfor);
+		Map<String, List<TbOutgeneralTVO>> oldInfor = ui.getTrayInfor();
 		ui.setTrayInfor(trayInfor);
 		if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
 			// 将信息同步到缓存
@@ -109,9 +109,15 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				}
 			}
 		}
-		chaneColor();
+		
+		int ret = ontpzd();
+		if(ret != UIDialog.ID_OK){
+			ui.setTrayInfor(oldInfor);
+			return;
+		}	
+//		chaneColor();
 		setBodyModelState();
-		ontpzd();
+//		ontpzd();
 	}
 
 	/**
@@ -319,43 +325,43 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 * @时间：2011-6-14下午09:43:54
 	 * @throws Exception
 	 */
-	public void chaneColor() throws Exception {
-		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
-				.getVOFromUI().getChildrenVO();
-
-		// 获取并判断表体是否有值，进行循环
-		if (null != generalbVO && generalbVO.length > 0) {
-			for (int i = 0; i < generalbVO.length; i++) {
-				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
-				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
-				UFDouble num = PuPubVO
-						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-								.getBillCardPanel().getBodyValueAt(i,
-										"nshouldoutassistnum"));// 应发辅数量
-				UFDouble tatonum = PuPubVO
-						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-								.getBillCardPanel().getBodyValueAt(i,
-										"noutassistnum"));// 实发辅数量
-				if (tatonum.doubleValue() == 0) {
-					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-							.setCellBackGround(i, "ccunhuobianma", Color.red);
-				} else {
-					if (tatonum.sub(num, 8).doubleValue() == 0) {
-						getBillCardPanelWrapper().getBillCardPanel()
-								.getBodyPanel().setCellBackGround(i,
-										"ccunhuobianma", Color.white);
-					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
-						getBillCardPanelWrapper().getBillCardPanel()
-								.getBodyPanel().setCellBackGround(i,
-										"ccunhuobianma", Color.blue);
-					}
-				}
-
-			}
-
-		}
-
-	}
+//	public void chaneColor() throws Exception {
+//		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
+//				.getVOFromUI().getChildrenVO();
+//
+//		// 获取并判断表体是否有值，进行循环
+//		if (null != generalbVO && generalbVO.length > 0) {
+//			for (int i = 0; i < generalbVO.length; i++) {
+//				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
+//				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
+//				UFDouble num = PuPubVO
+//						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
+//								.getBillCardPanel().getBodyValueAt(i,
+//										"nshouldoutassistnum"));// 应发辅数量
+//				UFDouble tatonum = PuPubVO
+//						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
+//								.getBillCardPanel().getBodyValueAt(i,
+//										"noutassistnum"));// 实发辅数量
+//				if (tatonum.doubleValue() == 0) {
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+//							.setCellBackGround(i, "ccunhuobianma", Color.red);
+//				} else {
+//					if (tatonum.sub(num, 8).doubleValue() == 0) {
+//						getBillCardPanelWrapper().getBillCardPanel()
+//								.getBodyPanel().setCellBackGround(i,
+//										"ccunhuobianma", Color.white);
+//					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
+//						getBillCardPanelWrapper().getBillCardPanel()
+//								.getBodyPanel().setCellBackGround(i,
+//										"ccunhuobianma", Color.blue);
+//					}
+//				}
+//
+//			}
+//
+//		}
+//
+//	}
 
 	protected void onBoCancel() throws Exception {
 		super.onBoCancel();
@@ -438,7 +444,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 * 
 	 * @see nc.ui.wds.w8004040208.AbstractMyEventHandler#ontpzd()
 	 */
-	protected void ontpzd() throws Exception {
+	protected int ontpzd() throws Exception {
 		String pk_cargdoc = getPk_cargDoc();// 货位
 		if (pk_cargdoc == null || "".equals(pk_cargdoc))
 			throw new BusinessException("请指定货位信息");
@@ -452,15 +458,18 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
 				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
 						._getCorp().getPrimaryKey(), ui, true);
+		int retflag = UIDialog.ID_CANCEL;
 		if (tdpDlg.showModal() == UIDialog.ID_OK) {
 			Map<String, List<TbOutgeneralTVO>> map2 = tdpDlg.getBufferData();
 			ui.setTrayInfor(map2);
 			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
 			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
+			retflag = UIDialog.ID_OK;
 		}
-		chaneColor();
+//		chaneColor();
 		setBodyModelState();
+		return retflag;
 	}
 
 	public void setBodyValueToft() {

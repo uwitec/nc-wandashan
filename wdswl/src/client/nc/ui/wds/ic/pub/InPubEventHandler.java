@@ -1,6 +1,5 @@
 package nc.ui.wds.ic.pub;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -156,7 +154,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	/**
 	 * 指定托盘
 	 */
-	protected void onZdtp() throws Exception {
+	protected int onZdtp() throws Exception {
 		//校验批次号
 		if(! validateBachCode()){
 		   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
@@ -173,6 +171,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(WdsWlPubConst.DLG_IN_TRAY_APPOINT,_getOperator(), 
 				_getCorp().getPrimaryKey(), null,ui,true);
+		int retflag = UIDialog.ID_CANCEL;
 		if(tdpDlg.showModal() == UIDialog.ID_OK){
 			Map<String,List<TbGeneralBBVO>> map = tdpDlg.getBufferData();
 			ui.setTrayInfor(map);
@@ -180,9 +179,11 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
 			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
+			retflag = UIDialog.ID_OK;
 		}
-		setBackGround();
+//		setBackGround();
 		setBodyModelState();
+		return retflag;
 	}
 	protected String getPk_cargDoc(){
 		String pk_cargdoc = (String)getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
@@ -292,30 +293,30 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	//红色：没有实发数量；
 	//灰色：有实发数量但是数量不够；
 	//白色：实发数量与应发数量相等
-	protected void setBackGround(){
-		int row  = getBodyRowCount();
-		if(row > 0){
-			for(int i = 0 ;i < row;i++){
-				UFDouble b1 = PuPubVO.getUFDouble_NullAsZero(//应发主数量
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_snum"));
-				UFDouble b2 = PuPubVO.getUFDouble_NullAsZero(//实发主数量
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_anum"));
-				if(b1.sub(b2).doubleValue() > 0 ){
-					//灰色
-					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-					.setCellBackGround(i, "invcode", Color.blue);	
-				}else if(b1.sub(b2).doubleValue() == b1.doubleValue()){
-					//红色
-					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-					.setCellBackGround(i, "invcode", Color.red);	
-				}else if(b1.sub(b2).doubleValue() == 0){
-					//白色
-					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-					.setCellBackGround(i, "invcode", Color.white);	
-				}
-			}
-		}
-	}
+//	protected void setBackGround(){
+//		int row  = getBodyRowCount();
+//		if(row > 0){
+//			for(int i = 0 ;i < row;i++){
+//				UFDouble b1 = PuPubVO.getUFDouble_NullAsZero(//应发主数量
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_snum"));
+//				UFDouble b2 = PuPubVO.getUFDouble_NullAsZero(//实发主数量
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_anum"));
+//				if(b1.sub(b2).doubleValue() > 0 ){
+//					//灰色
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+//					.setCellBackGround(i, "invcode", Color.blue);	
+//				}else if(b1.sub(b2).doubleValue() == b1.doubleValue()){
+//					//红色
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+//					.setCellBackGround(i, "invcode", Color.red);	
+//				}else if(b1.sub(b2).doubleValue() == 0){
+//					//白色
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+//					.setCellBackGround(i, "invcode", Color.white);	
+//				}
+//			}
+//		}
+//	}
 
 	/**tT
 	 * 
@@ -346,7 +347,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	 */
 	protected void onZdrk() throws Exception {
 		if(! validateBachCode()){
-			   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+			throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
 		}
 		String cwid = getCwhid();//仓库
 		if(cwid == null || "".equals(cwid))
@@ -362,12 +363,12 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		for (TbGeneralBVO body:tbGeneralBVOs) {
 			body.validateOnZdrk(false);
 		}
-//		for(TbGeneralBVO body:tbGeneralBVOs){
-//			String key = body.getGeb_crowno();
-//			if(ui.getTrayInfor().containsKey(key)){
-//				body.setTrayInfor(ui.getTrayInfor().get(key));
-//			}
-//		}
+		//		for(TbGeneralBVO body:tbGeneralBVOs){
+		//			String key = body.getGeb_crowno();
+		//			if(ui.getTrayInfor().containsKey(key)){
+		//				body.setTrayInfor(ui.getTrayInfor().get(key));
+		//			}
+		//		}
 		ui.showProgressBar(true);
 		Object o = null;
 		try{
@@ -377,69 +378,73 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}finally{
 			ui.showProgressBar(false);
 		}	
-		
+
 		if(o == null){
 			ui.showErrorMessage("数据处理异常，请重新操作");
 			return;
 		}
-		
-//		解析返回值
+
+		//		解析返回值
 		Object[] os = (Object[])o;
 		if(os == null || os.length==0){
 			ui.showErrorMessage("数据处理异常，请重新操作");
 			return;
 		}
-//		if(os[0]==null)
-//			return;
-			if(os[1]!=null&&((Map)os[1]).size()>0){
-				StringBuffer msg =new StringBuffer("自动入库操作失败:\n");
-				Map<String,Integer> om = (Map<String,Integer>)os[1];
-				for(String key:om.keySet()){
-					if(om.get(key)==0){
-						msg.append(key+"行，货位存放该存货的托盘托盘均已占用;\n");
-					}else if(om.get(key)==1){
-						msg.append(key+"行，超出货位当前可容纳量;\n");
-					}
+		//		if(os[0]==null)
+		//			return;
+		if(os[1]!=null&&((Map)os[1]).size()>0){
+			StringBuffer msg =new StringBuffer("自动入库操作失败:\n");
+			Map<String,Integer> om = (Map<String,Integer>)os[1];
+			for(String key:om.keySet()){
+				if(om.get(key)==0){
+					msg.append(key+"行，货位存放该存货的托盘托盘均已占用;\n");
+				}else if(om.get(key)==1){
+					msg.append(key+"行，超出货位当前可容纳量;\n");
 				}
-				ui.showErrorMessage(msg.toString());
-				return;
 			}
+			ui.showErrorMessage(msg.toString());
+			return;
+		}
 		// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
 		// 红色：没有实发数量-1；灰色：有实发数量但是数量不够1；白色：实发数量与应发数量相等0
 		Map<String,List<TbGeneralBBVO>> trayInfor = (Map<String,List<TbGeneralBBVO>>) os[0];
 		if(trayInfor!=null&&trayInfor.size()==0)
 			trayInfor = null;
 		Map<String, Integer> retInfor = (Map<String, Integer>)os[1];
-		
+		Map<String,List<TbGeneralBBVO>> oldInfor = ui.getTrayInfor();
 		ui.setTrayInfor(trayInfor);
-		
-		changeColor(tbGeneralBVOs, retInfor);
+		int ret = onZdtp();
+		if(ret != UIDialog.ID_OK){
+			ui.setTrayInfor(oldInfor);
+			return;
+		}		
+
+//		changeColor(tbGeneralBVOs, retInfor);
 		setBodyModelState();
-		onZdtp();
 	}
 	
-	private void changeColor(TbGeneralBVO[] bodys,Map<String, Integer> retInfor){
-		int row = 0;
-		for(TbGeneralBVO body:bodys){
-			int flag = PuPubVO.getInteger_NullAs(retInfor.get(body.getGeb_cinvbasid()), 0);
-			if(flag == -1){
-				getBillCardPanelWrapper().getBillCardPanel()
-				.getBodyPanel().setCellBackGround(row,
-						"invcode", Color.red);
-			}else if(flag == 0){
-				getBillCardPanelWrapper().getBillCardPanel()
-				.getBodyPanel().setCellBackGround(row,
-						"invcode", Color.white);
-				setCardPanelBodyValue(row, "geb_banum", getCardPanelBodyValue(row, "geb_bsnum"));
-				setCardPanelBodyValue(row, "geb_anum", getCardPanelBodyValue(row, "geb_snum"));
-			}else{
-				getBillCardPanelWrapper().getBillCardPanel()
-				.getBodyPanel().setCellBackGround(row,
-						"invcode", Color.white);
-			}
-			row ++;
-		}
-	}
+//	private void changeColor(TbGeneralBVO[] bodys,Map<String, Integer> retInfor){
+//		int row = 0;
+//		for(TbGeneralBVO body:bodys){
+//			int flag = PuPubVO.getInteger_NullAs(retInfor.get(body.getGeb_cinvbasid()), 0);
+//			if(flag == -1){
+//				getBillCardPanelWrapper().getBillCardPanel()
+//				.getBodyPanel().setCellBackGround(row,
+//						"invcode", Color.red);
+//			}else if(flag == 0){
+//				getBillCardPanelWrapper().getBillCardPanel()
+//				.getBodyPanel().setCellBackGround(row,
+//						"invcode", Color.white);
+//				setCardPanelBodyValue(row, "geb_banum", getCardPanelBodyValue(row, "geb_bsnum"));
+//				setCardPanelBodyValue(row, "geb_anum", getCardPanelBodyValue(row, "geb_snum"));
+//			}else{
+//				getBillCardPanelWrapper().getBillCardPanel()
+//				.getBodyPanel().setCellBackGround(row,
+//						"invcode", Color.white);
+//			}
+//			row ++;
+//		}
+//	}
 	
 	
 	private Object getCardPanelBodyValue(int rowIndex, String strKey){

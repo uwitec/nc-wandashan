@@ -34,7 +34,6 @@ import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -136,7 +135,13 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 
 	public void loadHeadData() {
 		try {
-			OtherInBillVO billvo = (OtherInBillVO) myClientUI.getBillVOFromUI();
+			OtherInBillVO billvo = null;
+			if(isEdit){
+				billvo = (OtherInBillVO) myClientUI.getBillVOFromUI();
+			}else{
+				billvo = (OtherInBillVO)myClientUI.getBufferData().getCurrentVO();
+			}
+			
 			if (billvo != null) {
 				getbillListPanel().setHeaderValueVO(billvo.getChildrenVO());
 				getbillListPanel().getHeadBillModel().execLoadFormula();
@@ -171,7 +176,7 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 			bbvo.setGebb_nmny(child.getGeb_nmny());// ½ð¶î
 			getbillListPanel().getBodyBillModel().setBodyRowVO(bbvo, row);
 			getbillListPanel().getBodyBillModel().execLoadFormula();
-			CircularlyAccessibleValueObject[] bvos = getbillListPanel().getBodyBillModel().getBodyValueVOs(TbGeneralBBVO.class.getName());
+//			CircularlyAccessibleValueObject[] bvos = getbillListPanel().getBodyBillModel().getBodyValueVOs(TbGeneralBBVO.class.getName());
 		}
 	}
 

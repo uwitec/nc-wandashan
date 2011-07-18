@@ -53,8 +53,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 //			zhf  参照新增时 不能增行
 			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 			getBillUI().updateButtons();
-			break;
-		
+			break;		
 		}
 	}
 

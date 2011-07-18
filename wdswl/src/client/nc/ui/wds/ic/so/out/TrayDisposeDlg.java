@@ -30,6 +30,7 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.tray.lock.LockTrayHelper;
 import nc.ui.wds.tray.relock.ReLockTrayDialog;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -227,9 +228,21 @@ ActionListener, BillEditListener,BillEditListener2{
 		try{
 			AggregatedValueObject billvo = null;
 			OutPubClientUI ui = (OutPubClientUI)myClientUI;
-			pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
-			pk_ware = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("srl_pk").getValueObject());
-			billvo =ui.getVOFromUI();
+			if(isEdit){
+				pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+				pk_ware = PuPubVO.getString_TrimZeroLenAsNull(ui.getBillCardPanel().getHeadItem("srl_pk").getValueObject());
+				billvo =ui.getVOFromUI();
+			}else{
+				billvo = ui.getBufferData().getCurrentVO();
+				if(billvo == null){
+					ui.showHintMessage("ÎÞÊý¾Ý");
+					return;
+				}
+				TbOutgeneralHVO head = (TbOutgeneralHVO)billvo.getParentVO();
+				pk_cargdoc = head.getPk_cargdoc();
+				pk_ware = head.getCwhsmanagerid();
+			}
+			
 			if(billvo!=null){
 				getbillListPanel().setHeaderValueVO(billvo.getChildrenVO());
 				getbillListPanel().getHeadBillModel().execLoadFormula();

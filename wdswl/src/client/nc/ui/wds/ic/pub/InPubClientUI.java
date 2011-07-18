@@ -319,4 +319,13 @@ public class InPubClientUI extends WdsBillManagUI {
 		}
 	}
 	
+	public boolean beforeEdit(BillEditEvent e) {
+		if(e.getKey().equalsIgnoreCase("geb_vbatchcode")){
+			if(getBillOperate() == IBillOperate.OP_EDIT){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }
