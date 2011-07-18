@@ -4,6 +4,7 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.InPubClientUI;
@@ -49,6 +50,9 @@ public class OtherInEventHandler extends InPubEventHandler {
 			break;
 		case  nc.ui.wds.w80020206.buttun0206.ISsButtun.Ref4I:
 			onBillRef();
+//			zhf  参照新增时 不能增行
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getBillUI().updateButtons();
 			break;
 		
 		}
