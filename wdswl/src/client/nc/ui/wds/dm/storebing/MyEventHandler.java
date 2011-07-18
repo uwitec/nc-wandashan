@@ -3,6 +3,7 @@ package nc.ui.wds.dm.storebing;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.ui.wds.dm.storetranscorp.MyQueryDIG;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
