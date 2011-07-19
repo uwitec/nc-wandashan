@@ -5,7 +5,6 @@ import javax.swing.table.TableColumnModel;
 
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
-import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
@@ -77,7 +76,7 @@ public class ReportUI extends ReportBaseUI {
     private String[] displaynames = null;
     
     private String pk_stordoc=null;
-  //存货分类原料粉编码
+   //存货分类原料粉编码
 	private   String invclcode = "00";
     
 	private void setCustomColumns() {
@@ -391,72 +390,9 @@ public class ReportUI extends ReportBaseUI {
      * @return
      */
 	private String getQuerySQL(){
-//		StringBuffer sql = new StringBuffer();
-//		sql.append(" select");
-//		sql.append(" min(i.invcode) invcode,");//物料编码
-//		sql.append(" min(i.invname) invname,");//物料名称
-//		sql.append(" min(i.invspec) invspec,");//规格
-//		sql.append(" w.creadate dstartdate,");//生产日期		
-//		sql.append(" min(r.storname) cstore,");//仓库
-//		sql.append(" sum(w.whs_stocktonnage) num,");//库存主数量  不在模板显示
-//		sql.append(" sum(w.whs_stockpieces) bnum,");//库存辅数量   不在模板显示
-//		sql.append(" w.ss_pk  pk_storestate,");//存货状态主键
-//		sql.append(" w.pk_invbasdoc pk_invbasdoc,");//存货基本档案主键
-//		sql.append(" min(w.pk_corp) pk_corp,");//公司
-//		sql.append(" min(bc.mainmeasrate) "+hsl+",");//换算率
-////		if(iscargdoc.booleanValue()==true){
-////		sql.append(" w.pk_cargdoc pk_cargdoc,");//货位主键
-////		sql.append(" min(c.csname) "+cargdoc+",");//保管员 -->货位
-////	    }
-////		if(isvbanchcode.booleanValue()==true){
-////		sql.append(" w.whs_batchcode "+banchcode+",");//批次
-////		}
-//		sql.append(" w.PK_CUSTOMIZE1 PK_CUSTOMIZE1");//仓库主键		
-////		sql.append(" f.cuserid");//库管员
-//		sql.append(" from  tb_warehousestock w ");//存货状态表
-//		sql.append(" join  tb_stockstate s");//关联库存状态表
-//		sql.append(" on w.ss_pk=s.ss_pk");
-////		sql.append(" join tb_stockstaff f");//关联仓库人员绑定表
-////		sql.append(" on w.PK_CUSTOMIZE1=f.pk_stordoc");
-//		sql.append(" join bd_invbasdoc i");//存货基本档案
-//		sql.append(" on w.pk_invbasdoc=i.pk_invbasdoc");
-////		sql.append(" join sm_user u");//关联操作员表
-////		sql.append(" on f.cuserid=u.cuserid");
-//		sql.append(" join bd_stordoc r");//关联仓库
-//		sql.append(" on w.PK_CUSTOMIZE1=r.pk_stordoc");
-//		sql.append(" join bd_cargdoc c");//关联货位
-//		sql.append(" on w.pk_cargdoc =c.pk_cargdoc");
-//		sql.append(" join bd_convert bc");//关联换算率
-//		sql.append(" on bc.pk_invbasdoc=w.pk_invbasdoc");
-//		sql.append(" join wds_invbasdoc iv");//关联存货档案
-//		sql.append(" on w.pk_invbasdoc=iv.pk_invbasdoc");
-//		sql.append(" join wds_invcl cl");//关联存货分类
-//		sql.append(" on iv.vdef1=cl.pk_invcl");
-//		sql.append(" where isnull(w.dr,0)=0");
-//		sql.append(" and isnull(s.dr,0)=0");
-////		sql.append(" and isnull(f.dr,0)=0");
-//		sql.append(" and isnull(i.dr,0)=0");
-////		sql.append(" and isnull(u.dr,0)=0");
-//		sql.append(" and isnull(r.dr,0)=0");
-//		sql.append(" and isnull(c.dr,0)=0");
-//		sql.append(" and isnull(iv.dr,0)=0");
-//		sql.append(" and isnull(cl.dr,0)=0");
-//		sql.append(" and cl.vinvclcode like '"+invclcode+"%'");//过率属于原料粉的存货分类
-//		sql.append(" and w.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");		
-//		sql.append(" and upper(coalesce(s.isok,'N'))='N'");//过滤非正常库存的
-//		if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
-//			sql.append(" and w.PK_CUSTOMIZE1='"+pk_stordoc+"'");	
-//		}
-//		sql.append(" and  w.creadate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤会计期间段内的
-//		sql.append(" group by w.PK_CUSTOMIZE1,w.creadate,w.pk_invbasdoc,w.ss_pk");//按照仓库  生产日期 库管员 存货 存货状态进行分组汇总
-////		if(iscargdoc.booleanValue()==true){
-////			sql.append(" ,w.pk_cargdoc");//货位主键
-////		}
-////		if(isvbanchcode.booleanValue()==true){
-////			sql.append(" ,w.whs_batchcode ");//批次
-////	    }
-//		return sql.toString();
-		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(false),pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true), new UFBoolean(false), new UFBoolean(true), ddatefrom, ddateto);
+		//String invclcode,UFBoolean isNormal,String pk_stordoc,String pk_invbasdoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
+
+		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(false),pk_stordoc,null,new UFBoolean(false),new UFBoolean(false),new UFBoolean(false), new UFBoolean(false), new UFBoolean(true), ddatefrom, ddateto);
 	}
 	 /**
 	  * 
