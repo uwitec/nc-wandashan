@@ -414,7 +414,7 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
         return item;
     }
 
-    public QueryDLG getQueryDlg() {
+   public QueryDLG getQueryDlg() {
         if (m_qryDlg == null) {
             m_qryDlg = new QueryDLG(this);
             m_qryDlg.setTempletID(_getCorpID(), _getModelCode(), _getUserID(), null);
@@ -422,7 +422,7 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
         }
         return m_qryDlg;
     }
-
+ 
     public ReportBaseClass getReportBase() {
         if (m_report == null) {
             try {

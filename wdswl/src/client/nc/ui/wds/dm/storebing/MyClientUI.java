@@ -1,22 +1,12 @@
 package nc.ui.wds.dm.storebing;
 
-import java.util.ArrayList;
-
 import javax.swing.JComponent;
-
-import nc.bs.framework.common.NCLocator;
-import nc.itf.uap.IUAPQueryBS;
-import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.wds.dm.storebing.BdStordocVO;
-import nc.vo.wds.dm.storebing.TbStorcubasdocVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>

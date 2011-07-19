@@ -5,12 +5,13 @@ import java.awt.Container;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.trade.query.HYQueryDLG;
+import nc.ui.wl.pub.WdsQueryDlg;
 
 /**²éÑ¯¶Ô»°¿ò
  * @author Administrator
  *
  */
-public class ClientUIQueryDlg extends HYQueryDLG {
+public class ClientUIQueryDlg extends WdsQueryDlg {
 	/**
 	 * 
 	 */
@@ -19,8 +20,8 @@ public class ClientUIQueryDlg extends HYQueryDLG {
 
 	public ClientUIQueryDlg(Container parent, UIPanel normalPnl,
 			String pk_corp, String moduleCode, String operator,
-			String busiType, String nodeKey) {
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType, nodeKey);
+			String busiType, String nodeKey) {//wds_sendplanin.pk_outwhouse
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_sendplanin.pk_outwhouse",null);
 		init();
 	}
 	public void init(){
