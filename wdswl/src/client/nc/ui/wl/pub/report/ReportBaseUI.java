@@ -607,9 +607,10 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,IAdjustC
 
     public int[] getReportButtonAry() {
         m_buttonArray = new int[] { IReportButton.QueryBtn,
-                IReportButton.ColumnFilterBtn, IReportButton.CrossBtn,
-                IReportButton.FilterBtn, IReportButton.SortBtn,
-                IReportButton.SubTotalBtn, IReportButton.PrintBtn,
+//                IReportButton.ColumnFilterBtn, IReportButton.CrossBtn,
+//                IReportButton.FilterBtn, IReportButton.SortBtn,
+ //               IReportButton.SubTotalBtn, 
+        		IReportButton.PrintBtn,
                 IReportButton.RefreshBtn, };
         return m_buttonArray;
     }
