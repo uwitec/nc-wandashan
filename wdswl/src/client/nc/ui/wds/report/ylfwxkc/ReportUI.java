@@ -37,7 +37,6 @@ import nc.vo.wl.pub.report.SubtotalVO;
  *
  */
 public class ReportUI extends ReportBaseUI {
-
 	/**
 	 * 
 	 */
