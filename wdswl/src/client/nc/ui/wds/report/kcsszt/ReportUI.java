@@ -1,14 +1,8 @@
 package nc.ui.wds.report.kcsszt;
-
 import javax.swing.ListSelectionModel;
-import javax.swing.table.TableColumnModel;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UITable;
-import nc.ui.pub.beans.table.ColumnGroup;
-import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.ui.wl.pub.report.buttonaction.IReportButton;

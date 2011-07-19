@@ -1,24 +1,21 @@
 package nc.ui.wds.report.xfzkc;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
-import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
-import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.CombinVO;
-import nc.ui.wl.pub.report.ReportBaseUI;
+import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -29,7 +26,7 @@ import nc.vo.wl.pub.report.SubtotalVO;
  * 物流箱粉总库存报表
  * @author mlr
  */
-public class ReportUI extends ReportBaseUI{
+public class ReportUI extends WDSReportBaseUI{
 	private static final long serialVersionUID = 1L;
 	//存货分类箱粉编码
 	private static  String invclcode = "00";
@@ -39,17 +36,12 @@ public class ReportUI extends ReportBaseUI{
 	private static String  uninvcommon="不常用存货";
 	//存货类型字段   0表示常用     1表示不常用
 	private static String  invtype="invtype";	
-	private String pk_stordoc=null;
-    private String ddatefrom =null;
-    private String ddateto = null;
     //存货类型名字
 	private static String invtypename="invatypename";
     //主单位 数量前缀
     private static String unit="unit";
     //辅单位 数量前缀
     private static String bunit="bunit";  
-    //按 存货类型  存货分类   存货维度分组的字段数组
-    private static String[] fields=new String[]{"invtype","pk_invcl","pk_invbasdoc"};
     //库龄字段名字
     private static String  days="days";
     //用于设置库龄存货数量数对应的主数量字段名
@@ -66,8 +58,8 @@ public class ReportUI extends ReportBaseUI{
     private static String numplan="plannum";
     //计划辅数量字段值名字
     private static String bnumplan="bplannum";
-    //vo合并的条件
-    private static String[] voCombinConds={"invtype","pk_invcl","pk_invbasdoc"};
+//    //vo合并的条件
+//    private static String[] voCombinConds={"invtype","pk_invcl","pk_invbasdoc"};
     //将要合并的求值的类型
     private static int[] types={IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD
     	                        ,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD};
@@ -80,38 +72,10 @@ public class ReportUI extends ReportBaseUI{
 	}
 	public ReportUI() {
 		super();
-		initReportUI();
+		setLocation1(2);
+		getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
+		setColumn();
 	}
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目
-	 *        完成ui初始化设置 
-	 * @时间：2011-7-8下午03:20:53
-	 */
-	private void initReportUI() {		
-	  		
-	}
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 *      设置查询条件
-	 * @时间：2011-7-15下午01:08:49
-	 */
-	private void setQueryCondition() {
-		ConditionVO[] vos=getQueryDlg().getConditionVO();
-    	//从查询对话框,获取仓库主键
-    	int size=vos.length;
-    	//从查询对话框,获取是否货位展开
-    
-    	pk_stordoc=null;
-    	for(int i=0;i<size;i++){
-    		if(vos[i].getFieldCode().equalsIgnoreCase("pk_stordoc")){
-    			pk_stordoc=vos[i].getValue();
-    		} 		
-    	}		
-	}	
 	 /**
      * 基本列合并
      */
@@ -120,68 +84,70 @@ public class ReportUI extends ReportBaseUI{
         UITable cardTable = getReportBase().getBillTable();
         GroupableTableHeader cardHeader = (GroupableTableHeader) cardTable.getTableHeader();
         TableColumnModel cardTcm = cardTable.getColumnModel();
-        
+        int i=0;
+        if(isstordoc.booleanValue()==true){
+        	i=i+1;
+        }
         ColumnGroup zgroup=new ColumnGroup("货龄");
         ColumnGroup a1=new ColumnGroup("30天以内");
-        a1.add(cardTcm.getColumn(5));
-        a1.add(cardTcm.getColumn(6));
+        a1.add(cardTcm.getColumn(i+5));
+        a1.add(cardTcm.getColumn(i+6));
         zgroup.add(a1);
         ColumnGroup a2=new ColumnGroup("30-60天");
-        a2.add(cardTcm.getColumn(7));
-        a2.add(cardTcm.getColumn(8));
+        a2.add(cardTcm.getColumn(i+7));
+        a2.add(cardTcm.getColumn(i+8));
         zgroup.add(a2);
         ColumnGroup a3=new ColumnGroup("60-90天");
-        a3.add(cardTcm.getColumn(9));
-        a3.add(cardTcm.getColumn(10));
+        a3.add(cardTcm.getColumn(i+9));
+        a3.add(cardTcm.getColumn(i+10));
         zgroup.add(a3);
         ColumnGroup a4=new ColumnGroup("90天以后");
-        a4.add(cardTcm.getColumn(11));
-        a4.add(cardTcm.getColumn(12));
+        a4.add(cardTcm.getColumn(i+11));
+        a4.add(cardTcm.getColumn(i+12));
         zgroup.add(a4);      
         cardHeader.addColumnGroup(zgroup);
               
         ColumnGroup zgroup2=new ColumnGroup("小计");
-        zgroup2.add(cardTcm.getColumn(13));
-        zgroup2.add(cardTcm.getColumn(14));
+        zgroup2.add(cardTcm.getColumn(i+13));
+        zgroup2.add(cardTcm.getColumn(i+14));
         cardHeader.addColumnGroup(zgroup2);
                 
         ColumnGroup zgroup3=new ColumnGroup("促销品");
-        zgroup3.add(cardTcm.getColumn(15));
-        zgroup3.add(cardTcm.getColumn(16));
+        zgroup3.add(cardTcm.getColumn(i+15));
+        zgroup3.add(cardTcm.getColumn(i+16));
         cardHeader.addColumnGroup(zgroup3);
         
         ColumnGroup a11=new ColumnGroup("在途");
-        a11.add(cardTcm.getColumn(17));
-        a11.add(cardTcm.getColumn(18));
+        a11.add(cardTcm.getColumn(i+17));
+        a11.add(cardTcm.getColumn(i+18));
         cardHeader.addColumnGroup(a11);
         
         
         ColumnGroup a22=new ColumnGroup("待检");
-        a22.add(cardTcm.getColumn(19));
-        a22.add(cardTcm.getColumn(20));
+        a22.add(cardTcm.getColumn(i+19));
+        a22.add(cardTcm.getColumn(i+20));
         cardHeader.addColumnGroup(a22);
         
         
         ColumnGroup zgroup4=new ColumnGroup("合计");
-        zgroup4.add(cardTcm.getColumn(21));
-        zgroup4.add(cardTcm.getColumn(22));
+        zgroup4.add(cardTcm.getColumn(i+21));
+        zgroup4.add(cardTcm.getColumn(i+22));
         cardHeader.addColumnGroup(zgroup4);
         
         ColumnGroup a33=new ColumnGroup("待发");
-        a33.add(cardTcm.getColumn(23));
-        a33.add(cardTcm.getColumn(24));
+        a33.add(cardTcm.getColumn(i+23));
+        a33.add(cardTcm.getColumn(i+24));
         cardHeader.addColumnGroup(a33); 
         
         ColumnGroup a5=new ColumnGroup("预发后库存");
-        a5.add(cardTcm.getColumn(25));
-        a5.add(cardTcm.getColumn(26));
+        a5.add(cardTcm.getColumn(i+25));
+        a5.add(cardTcm.getColumn(i+26));
         cardHeader.addColumnGroup(a5);      
         getReportBase().getBillModel().updateValue();
     }
 	@Override
 	public void setUIAfterLoadTemplate() {
-		 getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
-		 setColumn();
+		
 	}
 	
 	public List<ReportBaseVO[]> getReportVO(String[] sqls) throws BusinessException {
@@ -204,54 +170,41 @@ public class ReportUI extends ReportBaseUI{
 	@Override
 	public void onQuery() {
 		try{
-		  	//设置查询模板默认查询条件
-	        AccountCalendar  accCal = AccountCalendar.getInstance();     
-	        getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
-	        getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
-			getQueryDlg().showModal();
-		     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		
-		    	 setQueryCondition();
-            	//校验开始日期，截止日期
-            	UIRefPane obj1 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddatefrom");
-            	UIRefPane obj2 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddateto");
-            	ddatefrom = obj1.getRefName();
-            	if(ddatefrom == null ||"".equalsIgnoreCase(ddatefrom)){
-            		showErrorMessage("请输入开始日期");
-            		return ;
-            	}
-            	//截止日期如果为空，则默认为当前日期
-            	ddateto = obj2.getRefName();
-            	if(ddateto == null || "".equalsIgnoreCase(ddateto)){
-            		ddateto = _getCurrDate().toString();
-            	}
-            	//中文的查询条件
-            	String qryconditons = getQueryDlg().getChText();
-            	if(!qryconditons.contains("截止日期")){
-            		qryconditons = qryconditons+"并且(截止日期 小于等于 '"+ddateto+"')";
-            	}
-            	getReportBase().setHeadItem("ddatefrom", ddatefrom);
-            	getReportBase().setHeadItem("ddateto", ddateto);
-            	getReportBase().getHeadItem("qryconditons").setWidth(2);
-            	getReportBase().setHeadItem("qryconditons", qryconditons);
+		        super.onQuery();
             	//得到自定义查询条件
                 //得到查询结果
+		        //设置基本列合并
+              	 setColumn();
                 List<ReportBaseVO[]> list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1(),getQuerySQL2()});
                 ReportBaseVO[] vos1= list.get(1);
                 ReportBaseVO[] vos=list.get(0);  
                 ReportBaseVO[] vos2= list.get(2); 
                 if(vos1 != null&&vos1.length>0 || vos!=null&&vos1.length>0 || vos2!=null&&vos2.length>0 ){                	
 					super.updateBodyDigits();
-				    ReportBaseVO[]newVos=setVoByContion(vos);
-				    ReportBaseVO[]newVos1=setVoByContion(vos1);
-				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,voCombinConds,types,combinFields);
-				    ReportBaseVO[]newVos2=setVoByContion(vos2);
-				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,voCombinConds,types,combinFields);		    
+					if(isstordoc.booleanValue()==true){
+				    ReportBaseVO[]newVos=setVoByContion(vos,fields4);
+				    ReportBaseVO[]newVos1=setVoByContion(vos1,fields4);
+				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields4,types,combinFields);
+				    ReportBaseVO[]newVos2=setVoByContion(vos2,fields4);
+				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields4,types,combinFields);		    
 				    setAfterQuery(combins1);
 				    setReportBaseVO(combins1);
 					setBodyVO(combins1);	
 					setDefSubtotal(new String[]{"invclname"}, combinFields);  
-                }                
-	          }
+					}else{
+					super.updateBodyDigits();			
+					ReportBaseVO[]newVos=setVoByContion(vos,fields7);
+					ReportBaseVO[]newVos1=setVoByContion(vos1,fields7);
+					ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields7,types,combinFields);
+					ReportBaseVO[]newVos2=setVoByContion(vos2,fields7);
+					ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields7,types,combinFields);		    
+					setAfterQuery(combins1);
+					setReportBaseVO(combins1);
+				    setBodyVO(combins1);	
+				    setDefSubtotal(new String[]{"invclname"}, combinFields);  											
+				  }
+              }                
+	          
 		} catch (Exception e) {
             e.printStackTrace();
             showWarningMessage(e.getMessage());
@@ -301,7 +254,7 @@ public class ReportUI extends ReportBaseUI{
 	 * @param vos
 	 * @return
 	 */
-	private ReportBaseVO[]  setVoByContion(ReportBaseVO[] vos) {
+	private ReportBaseVO[]  setVoByContion(ReportBaseVO[] vos,String[] fields) {
 		if(vos==null || vos.length==0){
 			return vos;
 		}
@@ -486,7 +439,7 @@ public class ReportUI extends ReportBaseUI{
      * @return
      */
 	private String getQuerySQL(){		
-	 return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
+	   return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc, iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	/**
      * 
@@ -498,7 +451,7 @@ public class ReportUI extends ReportBaseUI{
      * @return
      */
 	private String getQuerySQL1(){		
-	  return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
+		return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc, iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	/**
      * 
@@ -510,7 +463,7 @@ public class ReportUI extends ReportBaseUI{
      * @return
      */
 	private String getQuerySQL2(){	
-	 return WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,new UFBoolean(true),new UFBoolean(true),new UFBoolean(false), new UFBoolean(false), new UFBoolean(false), ddatefrom, ddateto);
+	   return WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc, iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	 /**
 	  * 
@@ -544,4 +497,13 @@ public class ReportUI extends ReportBaseUI{
 	   
 		return null;
 	}
+	@Override
+	public Map getNewItems() throws Exception {
+		
+		return null;
+	}
+	@Override
+	public void initReportUI() {
+				
+	}	
 }

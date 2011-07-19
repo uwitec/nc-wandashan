@@ -130,8 +130,7 @@ public class ReportUI extends WDSReportBaseUI{
     }
 	@Override
 	public void setUIAfterLoadTemplate() {
-		 getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
-		
+		getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 		
 	}
 	
 	public List<ReportBaseVO[]> getReportVO(String[] sqls) throws BusinessException {
@@ -170,20 +169,20 @@ public class ReportUI extends WDSReportBaseUI{
 					//super.updateBodyDigits();
 					//根据是否货位展开 和 是否批次展开  合并查询出来的报表vo
 					if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==true){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields3);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields3);					
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields3,types,combinFields);
-						 ReportBaseVO[] newVos2=setVoByContion(vos3,fields3);
-						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
+						 ReportBaseVO[]newVos=setVoByContion(vos2,fields0);
+						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields0);					
+						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields0,types,combinFields);
+						 ReportBaseVO[] newVos2=setVoByContion(vos3,fields0);
+						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields0,types,combinFields);			 
 					     setReportBaseVO(combins1);
 						 setBodyVO(combins1);	
 						 
 					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields);
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields,types,combinFields);
-						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
-						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
+						 ReportBaseVO[]newVos=setVoByContion(vos2,fields4);
+						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields4);
+						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields4,types,combinFields);
+						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields4);
+						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields4,types,combinFields);			 
 					     setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
@@ -191,8 +190,8 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[]newVos=setVoByContion(vos2,fields1);
 						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields1);
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields1,types,combinFields);
-						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
-						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
+						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields1);
+						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields1,types,combinFields);			 
 					     setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
@@ -200,8 +199,8 @@ public class ReportUI extends WDSReportBaseUI{
 						 ReportBaseVO[]newVos=setVoByContion(vos2,fields2);
 						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields2);
 						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields2,types,combinFields);
-						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields3);
-						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields3,types,combinFields);			 
+						 ReportBaseVO[] newVos2=setVoByContion(vos3, fields2);
+						 ReportBaseVO[] combins1=combinVoByFields(newVos2,combins,fields2,types,combinFields);			 
 					     setReportBaseVO(combins1);
 						 setBodyVO(combins1);
 						
@@ -440,7 +439,7 @@ public class ReportUI extends WDSReportBaseUI{
      */
 	private String getQuerySQL(){
 		StringBuffer sql = new StringBuffer();		
-		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
+		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,pk_invbasdoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	/**
      * 
@@ -452,7 +451,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL1(){
-	   return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
+	   return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,pk_invbasdoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	/**
      * 
@@ -465,7 +464,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL2(){
-	    return WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
+	    return WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,pk_invbasdoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true),iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	 /**
 	  * 

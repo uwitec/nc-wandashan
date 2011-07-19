@@ -130,10 +130,10 @@ public class ReportUI extends WDSReportBaseUI{
 					//根据是否货位展开 和 是否批次展开  合并查询出来的报表vo
                 	 ReportBaseVO[] newVos=null;
 					if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==true){
-						newVos=setVoByInvState(vos, fields3);
+						newVos=setVoByInvState(vos, fields0);
 					     			
 					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
-						newVos=setVoByInvState(vos, fields);
+						newVos=setVoByInvState(vos, fields4);
 					    			
 					}else if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
 					   newVos=setVoByInvState(vos, fields1);
@@ -235,7 +235,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL(){
-		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(false),pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true), iscargdoc, isvbanchcode, ddatefrom, ddateto);
+		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(false),pk_stordoc,null,new UFBoolean(false),new UFBoolean(false),new UFBoolean(true), iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	 /**
 	  * 

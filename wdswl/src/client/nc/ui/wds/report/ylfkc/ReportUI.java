@@ -9,6 +9,7 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.wl.pub.report.CombinVO;
 import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
@@ -84,6 +85,9 @@ public class ReportUI extends WDSReportBaseUI{
         if(isvbanchcode!=null&&isvbanchcode.booleanValue()==true){
            i=i+1;	
         }  
+        if(isstordoc!=null&&isstordoc.booleanValue()==true){
+            i=i+1;	
+        }  
         ColumnGroup zgroup=new ColumnGroup("货龄");
         ColumnGroup a1=new ColumnGroup("30天以内");
         a1.add(cardTcm.getColumn(2+i));
@@ -158,45 +162,95 @@ public class ReportUI extends WDSReportBaseUI{
             	//设置基本列合并
             	 setColumn();
             	//根据是否货位展开  是否批次展开 选择生成报表vo的查询语句             	            
-            	list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1()});        	
-                ReportBaseVO[] vos1= list.get(1);
-                setVbachCode(vos1);
-                ReportBaseVO[] vos2=list.get(0);   
-                if(vos1 != null&&vos1.length>0 || vos2!=null&&vos2.length>0){                	
-					//super.updateBodyDigits();
-					//根据是否货位展开 和 是否批次展开  合并查询出来的报表vo
-					if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==true){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields3);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields3);					
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields3,types,combinFields);						
-						 setReportBaseVO(combins);
-						 setBodyVO(combins);	
-						 
-					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields);					
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields,types,combinFields);						
-						 setReportBaseVO(combins);
-						 setBodyVO(combins);	
-					
-					}else if(iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields1);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields1);					
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields1,types,combinFields);						
-						 setReportBaseVO(combins);
-						 setBodyVO(combins);							
-					}else if(iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==true){
-						 ReportBaseVO[]newVos=setVoByContion(vos2,fields2);
-						 ReportBaseVO[]newVos1=setVoByContion(vos1,fields2);					
-						 ReportBaseVO[] combins=combinVoByFields(newVos,newVos1,fields2,types,combinFields);						
-						 setReportBaseVO(combins);
-						 setBodyVO(combins);	
-						
-					}
-					//updateUI();					
-					//setDefSubtotal(new String[]{"invclname"}, combinFields);  
-					//setTolal();					
-                }                
+             	list=getReportVO(new String[]{getQuerySQL(),getQuerySQL1()});        	
+                 ReportBaseVO[] vos1= list.get(1);
+                 setVbachCode(vos1);
+                 ReportBaseVO[] vos2=list.get(0);   
+                 if(vos1 != null&&vos1.length>0 || vos2!=null&&vos2.length>0 ){                	
+                 	//三个全选
+                     //存货    仓库  货位  批次
+                 	if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==true && isvbanchcode.booleanValue()==true){
+                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields0);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields0);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields0,types,combinFields);
+      				  
+      				   
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                 	 //三个选两个
+                     //存货   仓库  货位
+                     //存货   仓库  批次
+                     //存货   货位  批次
+                 	if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
+                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields1);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields1);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields1,types,combinFields);
+      				 
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                     if(isstordoc.booleanValue()==true && isvbanchcode.booleanValue()==true&&iscargdoc.booleanValue()==false){
+                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields2);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields2);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields2,types,combinFields);
+      				  
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                 	if(iscargdoc.booleanValue()==true && isvbanchcode.booleanValue()==true&&isstordoc.booleanValue()==false){
+                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields3);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields3);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields3,types,combinFields);
+      				
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                 	//三个只选一个
+                     //三种情况
+                     if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
+                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields4);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields4);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields4,types,combinFields);
+      				  
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                     if(iscargdoc.booleanValue()==true&&isstordoc.booleanValue()==false && isvbanchcode.booleanValue()==false){
+                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields5);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields5);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields5,types,combinFields);
+      				
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					
+                 	}
+                 	if(isvbanchcode.booleanValue()==true&& iscargdoc.booleanValue()==false &&isstordoc.booleanValue()==false){
+                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields6);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields6);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields6,types,combinFields);
+      			
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					  
+                 	}
+                 	
+                 	//三个都不选
+                     if(iscargdoc.booleanValue()==false && isvbanchcode.booleanValue()==false&&isstordoc.booleanValue()==false){
+                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields7);
+      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields7);
+      				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields7,types,combinFields);
+      			
+      				    setReportBaseVO(combins);
+      					setBodyVO(combins);	
+      					 
+                 	}
+                 }                
 	          
 		} catch (Exception e) {
             e.printStackTrace();
@@ -213,7 +267,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL() {		
-		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true), pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(false), iscargdoc, isvbanchcode, ddatefrom, ddateto);
+		return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true), pk_stordoc,null,new UFBoolean(false),new UFBoolean(false),isstordoc, iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	/**
      * 
@@ -225,7 +279,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL1() {		
-	   return WDSWLReportSql.getQuerySQL1(invclcode, pk_stordoc,new UFBoolean(false),new UFBoolean(false),new UFBoolean(false), iscargdoc, isvbanchcode, ddatefrom, ddateto);
+	   return WDSWLReportSql.getQuerySQL1(invclcode, pk_stordoc,null,new UFBoolean(false),new UFBoolean(false),isstordoc, iscargdoc, isvbanchcode, ddatefrom, ddateto);
 	}
 	/**
 	 * 
