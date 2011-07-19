@@ -11,7 +11,7 @@ public class MyQueryDIG extends WdsQueryDlg{
 	private static final long serialVersionUID = -7460088213752355190L;
 	
 	public MyQueryDIG(Container parent, UIPanel normalPnl, String pk_corp,
-			String moduleCode, String operator, String busiType) {//tb_general_h.geh_cwarehouseid
+			String moduleCode, String operator, String busiType) {
 		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"tb_general_h.geh_cwarehouseid",null);
 		init();
 	}
