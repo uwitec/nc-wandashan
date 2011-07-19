@@ -1,4 +1,6 @@
 package nc.ui.wl.pub.report;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ListSelectionModel;
 import nc.bd.accperiod.AccountCalendar;
@@ -27,24 +29,57 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 	protected static String ddateto = null;
 	//查询仓库主键
     protected static String pk_stordoc=null;
+    //查询存货主键
+    protected static String pk_invbasdoc=null;
+    //是否按仓库展开
+    protected UFBoolean isstordoc=new UFBoolean(false);
     //是否按货位展开
     protected UFBoolean iscargdoc=new UFBoolean(false);
 	//是否按批次展开
     protected UFBoolean isvbanchcode=new UFBoolean(false);
+    //仓库字段名
+    protected static String store="storename";
 	//货位字段名
     protected static String cargdoc="csname";
     //批次字段名
     protected static  String banchcode="vbatchcode";
     //记录初次加载的表体元素  
     protected  ReportItem[]olditems=null;
-    //按仓库 存货维度分组的字段数组
-    protected static String[] fields=new String[]{"pk_stordoc","pk_invbasdoc"};
+    
+    //三个全选
+    //存货    仓库  货位  批次
+    
+    //按仓库 货位  存货 批次维度分组的字段数组
+    protected static String[] fields0=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc","vbatchcode"};
+    
+    //三个选两个
+    //存货   仓库  货位
+    //存货   仓库  批次
+    //存货   货位  批次
+    
     //按仓库 货位  存货维度分组的字段数组
     protected static String[] fields1=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc"};
-    //按仓库 货位  存货维度分组的字段数组
+    //按仓库 货位  批次维度分组的字段数组
     protected static String[] fields2=new String[]{"pk_stordoc","pk_invbasdoc","vbatchcode"};
-    //按仓库 货位  存货 批次维度分组的字段数组
-    protected static String[] fields3=new String[]{"pk_stordoc","pk_cargdoc","pk_invbasdoc","vbatchcode"};
+    //按 存货  货位 批次维度分组的字段数组
+    protected static String[] fields3=new String[]{"pk_cargdoc","pk_invbasdoc","vbatchcode"};
+       
+    //三个只选一个
+    //三种情况
+    
+    //按仓库 存货维度分组的字段数组
+    protected static String[] fields4=new String[]{"pk_stordoc","pk_invbasdoc"};
+    //按货位 存货维度分组的字段数组
+    protected static String[] fields5=new String[]{"pk_cargdoc","pk_invbasdoc"};
+    //按批次 存货维度分组的字段数组
+    protected static String[] fields6=new String[]{"pk_invbasdoc","vbatchcode"};
+    
+    
+    //三个都不选
+    
+    //按  存货维度分组的字段数组
+    protected static String[] fields7=new String[]{"pk_invbasdoc"};
+    
     //查询动态列的插入位置 默认插入第0列
     private  Integer location1=0;
     //报表模板初次加载时 动态列插入位置
@@ -152,26 +187,21 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 	 * @throws Exception 
 	 */
 	private ReportItem[] getNewItems1() throws Exception {
-	 ReportItem it=null;
-	 ReportItem it1=null;
+	 List<ReportItem> list=new ArrayList<ReportItem>();
+	 if(isstordoc.booleanValue()==true){
+	  list.add(ReportPubTool.getItem(store,"仓库",IBillItem.STRING,1, 80));
+	 }
      if(iscargdoc.booleanValue()==true){
-	   it=ReportPubTool.getItem(cargdoc,"货位",IBillItem.STRING,1, 80);
+	  list.add(ReportPubTool.getItem(cargdoc,"货位",IBillItem.STRING,1, 80));
      }
      if(isvbanchcode.booleanValue()==true){
-    	 it1=ReportPubTool.getItem(banchcode,"批次",IBillItem.STRING,2, 80);
+      list.add(ReportPubTool.getItem(banchcode,"批次",IBillItem.STRING,2, 80));
      } 
-     if(it==null && it1==null){
-    	 return null;
-     }else if(it!=null && it1!=null){
-    	 return new ReportItem[]{it,it1};
-     }else if(it ==null && it1!=null){
-    	 return new ReportItem[]{it1};
-     }else if(it!=null && it1==null){
-    	 return new ReportItem[]{it};
+     if(list.size()==0){
+    	 return null; 
      }else{
-    	 return null;
-     }
-	
+    	return list.toArray(new ReportItem[0]); 
+     }	
 	}	
 
 	@Override
@@ -277,21 +307,31 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 		ConditionVO[] vos=getQueryDlg().getConditionVO();
     	//从查询对话框,获取仓库主键
     	int size=vos.length;
+    	//从查询对话框,获取是否仓库展开
+    	isstordoc=new UFBoolean(false);
     	//从查询对话框,获取是否货位展开
     	iscargdoc=new UFBoolean(false);
     	//从查询对话框,获取是批次展开
     	isvbanchcode=new UFBoolean(false);
     	pk_stordoc=null;
+    	pk_invbasdoc=null;
     	for(int i=0;i<size;i++){
     		if(vos[i].getFieldCode().equalsIgnoreCase("pk_stordoc")){
     			pk_stordoc=vos[i].getValue();
     		}
+    		if(vos[i].getFieldCode().equalsIgnoreCase("pk_invbasdoc")){
+    			pk_invbasdoc=vos[i].getValue();
+    		}
+    		
     		if(vos[i].getFieldCode().equalsIgnoreCase("iscargdoc")){
     			iscargdoc=PuPubVO.getUFBoolean_NullAs(vos[i].getValue(), new UFBoolean(false));           			
     		}
             if(vos[i].getFieldCode().equalsIgnoreCase("isvbanchcode")){
             	isvbanchcode=PuPubVO.getUFBoolean_NullAs(vos[i].getValue(), new UFBoolean(false));
-    		}         		
+    		} 
+            if(vos[i].getFieldCode().equalsIgnoreCase("isstordoc")){
+            	isstordoc=PuPubVO.getUFBoolean_NullAs(vos[i].getValue(), new UFBoolean(false));           			
+    		}
     	}		
 	}	
 

@@ -21,7 +21,7 @@ public class WDSWLReportSql {
 	 * @param ddateto     查询结束日期
 	 * @return
 	 */
-	public static String getQuerySQL(String invclcode,UFBoolean isNormal,String pk_stordoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
+	public static String getQuerySQL(String invclcode,UFBoolean isNormal,String pk_stordoc,String pk_invbasdoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
 		StringBuffer sql = new StringBuffer();	
 		        String isnorm=null;
 		        if(isNormal.booleanValue()==true){
@@ -91,8 +91,11 @@ public class WDSWLReportSql {
 				sql.append(" and upper(coalesce(ss.isok,'N'))='"+isnorm+"'");//过滤是否正常
 				sql.append(" and t.creadate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤入库日期
 				if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
-				sql.append(" and t.pk_customize1='"+pk_stordoc+"'");	
+				sql.append(" and t.pk_customize1='"+pk_stordoc+"'");//过滤仓库	
 				}
+				if(pk_invbasdoc!=null && !pk_invbasdoc.equalsIgnoreCase("")){
+				sql.append(" and t.pk_invmandoc='"+pk_invbasdoc+"'");//过滤存货	
+			    }
 				sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
 				sql.append(" group by ");	
 			    if(isType.booleanValue()==true){
@@ -122,7 +125,7 @@ public class WDSWLReportSql {
      * @param wheresql
      * @return
      */
-	public static String getQuerySQL1(String invclcode,String pk_stordoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
+	public static String getQuerySQL1(String invclcode,String pk_stordoc,String pk_invbasdoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
 		    StringBuffer sql = new StringBuffer();	
 		    sql.append(" select ");
 		    sql.append(" w.type type,");//在途或待发类型
@@ -227,6 +230,9 @@ public class WDSWLReportSql {
 			if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
 			  sql.append(" and  w.pk_outwhouse='"+pk_stordoc+"'");	
 		    }
+			if(pk_invbasdoc!=null && !pk_invbasdoc.equalsIgnoreCase("")){
+				sql.append(" and w.pk_invmandoc='"+pk_invbasdoc+"'");//过滤存货	
+	        }
 			//按仓库 存货 在途或待发类型来分组
 			sql.append("  group by ");
 		    if(isType.booleanValue()==true){
@@ -254,7 +260,7 @@ public class WDSWLReportSql {
      * @param wheresql
      * @return
      */
-	public static String getQuerySQL2(String invclcode,String pk_stordoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
+	public static String getQuerySQL2(String invclcode,String pk_stordoc,String pk_invbasdoc,UFBoolean isType,UFBoolean isInvcl,UFBoolean isShowStore,UFBoolean iscargdoc,UFBoolean isvbanchcode,String ddatefrom,String ddateto){
 		    StringBuffer sql = new StringBuffer();	
 		    sql.append(" select ");
 		    sql.append(" w.type type,");//在途或待发类型
@@ -370,6 +376,9 @@ public class WDSWLReportSql {
 			if(pk_stordoc!=null && !pk_stordoc.equalsIgnoreCase("")){
 			  sql.append(" and  w.pk_outwhouse='"+pk_stordoc+"'");	
 		    }
+			if(pk_invbasdoc!=null && !pk_invbasdoc.equalsIgnoreCase("")){
+				sql.append(" and w.pk_invmandoc='"+pk_invbasdoc+"'");//过滤存货	
+	        }
 			//按仓库 存货 在途或待发类型来分组
 			sql.append("  group by ");
 			if(isType.booleanValue()==true){
