@@ -6,6 +6,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -65,7 +66,13 @@ public class ClientUI extends WdsBillManagUI {
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSC);
-		getBillCardPanel().setTailItem("dmakedate", _getDate());		
+		getBillCardPanel().setTailItem("dmakedate", _getDate());	
+		
+//		为 仓库  和 货位 赋值
+		String cwhid = PuPubVO.getString_TrimZeroLenAsNull(getLoginInforHelper().getCwhid(_getOperator()));
+		getBillCardPanel().setHeadItem("reserve3", cwhid);
+		String cspaceid = PuPubVO.getString_TrimZeroLenAsNull(getLoginInforHelper().getLogInfor(_getOperator()).getSpaceid());
+		getBillCardPanel().setHeadItem("reserve2", cspaceid);
 	}
 
 	protected ManageEventHandler createEventHandler() {
