@@ -1,0 +1,6 @@
+
+一、各MODEL文件说明
+
+	1、标书自定义参照（现场招标类）   nc.ui.zb.pub.refmodel.BiddingRefModel  ----- zhw
+	2、标书自定义参照（不分招标类型）   nc.ui.zb.pub.refmodel.BiddingRefModelAll  ----- zhw
+	2、标书自定义参照（网上招标类）   nc.ui.zb.pub.refmodel.BiddingRefModelForWeb  ----- zhf
