@@ -8,6 +8,7 @@
 	import nc.vo.pub.*;
 import nc.vo.pub.lang.*;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.invcl.WdsInvClVO;
 	
 /**
  * 
@@ -463,4 +464,6 @@ import nc.vo.scm.pu.PuPubVO;
 	public void setFuesed(Integer fuesed) {
 		this.fuesed = fuesed;
 	} 
+	
+	
 } 
