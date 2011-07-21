@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="gb2312"?>
+<module name="pu">
+	<public>
+		<component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.zb.pub.IJoinTableQry</interface>
+			<implementation>nc.bs.zb.pub.JoinTableQryImpl</implementation>
+		</component>
+		
+		<component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+			<interface>nc.itf.zb.pub.IMedDataOperate</interface>
+			<implementation>nc.bs.zb.pub.MedDataOperateImpl</implementation>
+		</component>
+		
+	</public>
+</module>
