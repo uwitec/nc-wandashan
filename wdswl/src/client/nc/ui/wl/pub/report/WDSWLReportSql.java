@@ -187,6 +187,8 @@ public class WDSWLReportSql {
 		
 			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
+			sql.append("  and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");//过滤 公司
+
 			sql.append("  and isnull(b.dr, 0) = 0 )");
 			sql.append("  union all ");
 			sql.append("   (select  h1.itransstatus type,");
@@ -215,6 +217,8 @@ public class WDSWLReportSql {
 		
 			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h1.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
+			sql.append("  and h1.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");//过滤 公司
+
 			sql.append("  and isnull(b1.dr, 0) = 0 ))w");
 			sql.append("  join bd_stordoc s");//仓库档案
 			sql.append("  on w.pk_outwhouse=s.pk_stordoc");
@@ -326,6 +330,7 @@ public class WDSWLReportSql {
 			sql.append("  and lb.csourcetype='WDS5'");//过滤销售单据
 			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
+			sql.append("  and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");//过滤 公司
 			sql.append("  and isnull(b.dr, 0) = 0 )");
 			sql.append("  union all ");
 			sql.append("   (select  h1.itransstatus type,");
@@ -361,6 +366,7 @@ public class WDSWLReportSql {
 			sql.append("  and lb.csourcetype='WDS3'");//过滤销售单据
 			sql.append("  and cl.vinvclcode like '"+invclcode+"%'");//过率属于箱粉的存货分类
 			sql.append("  and h1.dmakedate between '"+ddatefrom+"' and '"+ddateto+"'");//过滤制单日期
+			sql.append("  and h1.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");//过滤 公司
 			sql.append("  and isnull(b1.dr, 0) = 0 ))w");
 			sql.append("  join bd_stordoc s");//仓库档案
 			sql.append("  on w.pk_outwhouse=s.pk_stordoc");
