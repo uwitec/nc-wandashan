@@ -43,11 +43,11 @@
              public String pk_busitype;
              public String reserve6;
              public String vdef1;
-             public String reserve3;
+             public String reserve3;//仓库
              public UFBoolean reserve14;
              public UFDate dbilldate;
              public String vbillno;
-             public UFDate reserve13;
+             public UFDate reserve13;//...
              public UFDouble reserve10;
              public String pk_deptdoc;
              public UFDouble reserve9;
@@ -62,7 +62,7 @@
              public String reserve7;
              public String vapproveid;
              public UFBoolean reserve15;
-             public String reserve2;
+             public String reserve2;//货位
              public String vdef6;
              public String vdef10;
              public String pk_cusmandoc;//取货单位
