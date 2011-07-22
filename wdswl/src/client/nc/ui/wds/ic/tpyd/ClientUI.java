@@ -15,6 +15,7 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -207,7 +208,8 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "noutassnum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "nmovenum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "nmoveassnum");
-				
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbanchcode");
+
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.pk_invmandoc"), row, "pk_invmandoc");
 					getBillCardPanel().getBillModel().execLoadFormulaByKey("pk_invmandoc");
 					getBillCardPanel().setBodyValueAt(null, row, "pk_trayin");
@@ -223,7 +225,30 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
 					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
 					return;
+				}else{
+					//计算换算率
+					//移出托盘主数量
+				     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutnum"));
+					//移出托盘辅数量
+				     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutassnum"));
+					
+				     UFDouble hsl=new UFDouble(0); 
+				     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
+				    	return; 
+				     }
+				     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
+				    	showWarningMessage("移出托盘主辅数量不一致");
+					 }
+				     if(bnum.doubleValue()<=0){
+				    	 return;
+				     }
+				     hsl=num.div(bnum);
+				     if(hsl.doubleValue()>0){
+				    	 getBillCardPanel().setBodyValueAt(value/hsl.doubleValue(), row, "nmoveassnum");
+				     }				
 				}
+				
+				
 			}
 			if("nmoveassnum".equalsIgnoreCase(key)){
 				double nmoveassnum =PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "nmoveassnum")).doubleValue();
@@ -233,6 +258,27 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
 					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
 					return;
+				}else{
+					//计算换算率
+					//移出托盘主数量
+				     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutnum"));
+					//移出托盘辅数量
+				     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutassnum"));
+					
+				     UFDouble hsl=new UFDouble(0); 
+				     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
+				    	return; 
+				     }
+				     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
+				    	showWarningMessage("移出托盘主辅数量不一致");
+					 }
+				     if(bnum.doubleValue()<=0){
+				    	 return;
+				     }
+				     hsl=num.div(bnum);
+				     if(hsl.doubleValue()>0){
+				    	 getBillCardPanel().setBodyValueAt(value*hsl.doubleValue(), row, "nmovenum");
+				     }				
 				}
 			}
 		
