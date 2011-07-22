@@ -74,8 +74,10 @@ public class ReportUI extends WDSReportBaseUI{
 	public ReportUI() {
 		super();
 		//查询动态列插入位置
-		setLocation1(4);
+		setLocation1(4);		
 		getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
+		//去除字段自动排序的功能
+		getReportBase().getBillTable().removeSortListener();
 		setColumn();
 	}
 	/**
@@ -166,7 +168,7 @@ public class ReportUI extends WDSReportBaseUI{
     }
 	@Override
 	public void setUIAfterLoadTemplate() {
-		
+		getReportBase().getBillTable().removeSortListener();
 	}
 	
 	public List<ReportBaseVO[]> getReportVO(String[] sqls) throws BusinessException {
@@ -532,7 +534,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL(){
-	 return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
+	 return WDSWLReportSql.getQuerySQL(invclcode,new UFBoolean(true),pk_stordoc,pk_invbasdoc,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	/**
      * 
@@ -544,7 +546,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL1(){
-	 return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
+	 return WDSWLReportSql.getQuerySQL1(invclcode,pk_stordoc,pk_invbasdoc,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	/**
      * 
@@ -557,7 +559,7 @@ public class ReportUI extends WDSReportBaseUI{
      * @return
      */
 	private String getQuerySQL2(){
-	 return  WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,null,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
+	 return  WDSWLReportSql.getQuerySQL2(invclcode,pk_stordoc,pk_invbasdoc,new UFBoolean(true),new UFBoolean(true),isstordoc,iscargdoc,isvbanchcode,ddatefrom,ddateto);
 	}
 	 /**
 	  * 

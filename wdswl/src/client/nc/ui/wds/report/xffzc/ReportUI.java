@@ -53,7 +53,8 @@ public class ReportUI extends WDSReportBaseUI{
 	}
 	public ReportUI() {
 		super();
-		
+		//去除字段自动排序的功能
+		getReportBase().getBillTable().removeSortListener();
 	}
 	@Override
 	public void setUIAfterLoadTemplate() {

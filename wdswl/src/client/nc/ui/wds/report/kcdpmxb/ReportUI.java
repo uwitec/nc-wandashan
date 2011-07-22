@@ -65,6 +65,8 @@ public class ReportUI extends WDSReportBaseUI{
 		super();
 		initReportUI();
 		setLocation1(4);
+		//去除字段自动排序的功能
+		getReportBase().getBillTable().removeSortListener();
 		setColumn();
 	}
 	 /**

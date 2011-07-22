@@ -118,8 +118,10 @@ public class ReportUI extends ReportBaseUI {
 	}
 
 	public ReportUI() {
-		super();
+		super();	
 		initReportUI();
+		//去除字段自动排序的功能
+		getReportBase().getBillTable().removeSortListener();
 	}
 	/**
 	 * 

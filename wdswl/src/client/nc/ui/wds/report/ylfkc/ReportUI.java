@@ -67,6 +67,8 @@ public class ReportUI extends WDSReportBaseUI{
 		//查询动态列插入位置
 		setLocation1(2);
 		getReportBase().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
+		//去除字段自动排序的功能
+		getReportBase().getBillTable().removeSortListener();
 	    setColumn();
 	}
 	 /**
