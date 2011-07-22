@@ -229,8 +229,9 @@ public class PlanCheckinBO {
 		sql.append(" isnull(wds_sendplanin.dr,0)=0");
 		sql.append(" and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
-		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
-		sql.append("  and pk_outwhouse='"+pk_outwhouse+"'");
+		sql.append("' and pk_inwhouse ='"+pk_in+"'");
+		sql.append("  and pk_outwhouse='"+pk_out+"'");
+		sql.append("  and wds_sendplanin.iplantype=0 ");
 		String pk=PuPubVO.getString_TrimZeroLenAsNull(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR));
 	    if(pk==null ||pk.trim().length()==0){
 	    	throw new BusinessException(" 该月还没有月计划不能添加追加计划");
