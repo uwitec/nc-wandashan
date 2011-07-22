@@ -11,11 +11,11 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.pub.print.ScmPrintTool;
 import nc.ui.trade.pub.CardPanelPRTS;
+import nc.ui.zb.pub.LongTimeTask;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.zb.pub.ZbPubConst;
 import nc.vo.zb.pub.ZbPubTool;
 import nc.vo.zb.query.ZbNmny.ZbNmnyVO;
-import nc.vo.zb.query.ZbSitua.ZbSituaVO;
 
 /**
  * 中标金额报表
@@ -143,7 +143,7 @@ public class ZbNmnyUI extends ToftPanel {
 		Object[] ParameterValues = new Object[]{sql,getZbType()};
 		Object o = null;
 		try {
-			o = nc.ui.hg.pu.pub.LongTimeTask.
+			o = LongTimeTask.
 			calllongTimeService("pu", this, "正在获取数据...", 1, "nc.bs.zb.query.pub.ZbQueryPubBO", null, "queryDatas", ParameterTypes, ParameterValues);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
