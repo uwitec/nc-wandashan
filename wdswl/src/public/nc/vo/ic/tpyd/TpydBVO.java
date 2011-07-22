@@ -20,8 +20,39 @@
  * @version Your Project 1.0
  */
      public class TpydBVO extends SuperVO {
+    	 
+    	   
+    	     public String outtraycode;//ÒÆ³öÍĞÅÌ±àÂë  -mlr
+    	     public String intarycode;//ÒÆÈëÍĞÅÌ±àÂë  -mlr
+    	     public String vbanchcode;//Åú´Î 
            
-             public String reserve5;
+             public String getOuttraycode() {
+				return outtraycode;
+			}
+
+			public void setOuttraycode(String outtraycode) {
+				this.outtraycode = outtraycode;
+			}
+
+			public String getIntarycode() {
+				return intarycode;
+			}
+
+			public void setIntarycode(String intarycode) {
+				this.intarycode = intarycode;
+			}
+
+
+			public String getVbanchcode() {
+				return vbanchcode;
+			}
+
+			public void setVbanchcode(String vbanchcode) {
+				this.vbanchcode = vbanchcode;
+			}
+
+
+			public String reserve5;
              public String pk_tpyd_b;
              public String reserve4;
              public String vdef4;
