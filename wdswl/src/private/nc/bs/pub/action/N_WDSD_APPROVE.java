@@ -35,7 +35,7 @@ public class N_WDSD_APPROVE extends AbstractCompiler2 {
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
-			TpydBO bo = new TpydBO();
+    		TpydBO bo = new TpydBO();
 			bo.writeBack(vo.m_preValueVo);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
