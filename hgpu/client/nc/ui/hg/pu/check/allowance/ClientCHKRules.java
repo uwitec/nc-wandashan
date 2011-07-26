@@ -1,6 +1,5 @@
 package nc.ui.hg.pu.check.allowance;
 
-import nc.vo.trade.checkrule.CheckRule;
 import nc.vo.trade.checkrule.ICheckRule;
 import nc.vo.trade.checkrule.ICheckRules;
 import nc.vo.trade.checkrule.ICheckRules2;
