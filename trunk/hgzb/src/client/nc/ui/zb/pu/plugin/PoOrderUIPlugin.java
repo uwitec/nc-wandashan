@@ -63,30 +63,33 @@ public class PoOrderUIPlugin  implements IScmUIPlugin {
 	public void beforeButtonClicked(ButtonObject bo, SCMUIContext ctx)
 			throws BusinessException {
 		// TODO Auto-generated method stub\getPoCardPanel().setBodyMenuShow("table",false);
-		String sourceType = PuPubVO.getString_TrimZeroLenAsNull(
-				ctx.getBillCardPanel().getBillModel().getValueAt(0,"cupsourcebilltype"));
-		if (bo.getCode().equals(IButtonConstInv.BTN_LINE_ADD)||bo.getCode().equals(IButtonConstInv.BTN_LINE_DELETE)
-				||bo.getCode().equals(IButtonConstInv.BTN_LINE_COPY)||bo.getCode().equals(IButtonConstInv.BTN_LINE_INSERT)
-				||bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE)|| bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE_TAIL)
-				||bo.getCode().equals(IButtonConstInv.BTN_ADD_NEWROWNO) || bo.getCode().equals(IButtonConstInv.BTN_CARDEDIT)) {
-			
-			if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(sourceType))
-				throw new BusinessException("不能进行行操作");
-		}else if(bo.getCode().equalsIgnoreCase(IButtonConstInv.BTN_BILL_EDIT)){
-			if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(sourceType))
-				ctx.getBillCardPanel().getHeadItem("cvendormangid").setEnabled(false);
-		}
-		
+
+			String sourceType = PuPubVO.getString_TrimZeroLenAsNull(
+					ctx.getBillCardPanel().getBillModel().getValueAt(0,"cupsourcebilltype"));
+			if (bo.getCode().equals(IButtonConstInv.BTN_LINE_ADD)||bo.getCode().equals(IButtonConstInv.BTN_LINE_DELETE)
+					||bo.getCode().equals(IButtonConstInv.BTN_LINE_COPY)||bo.getCode().equals(IButtonConstInv.BTN_LINE_INSERT)
+					||bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE)|| bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE_TAIL)
+					||bo.getCode().equals(IButtonConstInv.BTN_ADD_NEWROWNO) || bo.getCode().equals(IButtonConstInv.BTN_CARDEDIT)) {
+				
+				if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(sourceType))
+					throw new BusinessException("不能进行行操作");
+			}else if(bo.getCode().equalsIgnoreCase(IButtonConstInv.BTN_BILL_EDIT)){
+				if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(sourceType))
+					ctx.getBillCardPanel().getHeadItem("cvendormangid").setEnabled(false);
+			}
 	}
 
 	public boolean beforeEdit(BillEditEvent e, SCMUIContext ctx) {
 		// TODO Auto-generated method stub
 		String key = e.getKey();
+//		UFDouble nversion = PuPubVO.getUFDouble_NullAsZero((ctx.getBillCardPanel().getHeadItem("nversion").getValueObject()));
 		String sourceType = PuPubVO.getString_TrimZeroLenAsNull(
 				ctx.getBillCardPanel().getBillModel().getValueAt(0,"cupsourcebilltype"));
 		if(e.getPos()==BillItem.BODY){
-			if("nordernum".equalsIgnoreCase(key)||"cinventorycode".equalsIgnoreCase(key) ||"norgtaxprice".equalsIgnoreCase(key)
-					||"noriginalcurprice".equalsIgnoreCase(key)||"noriginalcurmny".equalsIgnoreCase(key)||"idiscounttaxtype".equalsIgnoreCase(key)
+//			if(nversion.compareTo(UFDouble.ONE_DBL)!=0)
+//				return true;
+			if("nordernum".equalsIgnoreCase(key)||"cinventorycode".equalsIgnoreCase(key)
+					||"noriginalcurmny".equalsIgnoreCase(key)||"idiscounttaxtype".equalsIgnoreCase(key)
 					||"ntaxrate".equalsIgnoreCase(key)||"noriginaltaxmny".equalsIgnoreCase(key)||"noriginaltaxpricemny".equalsIgnoreCase(key)){
 				if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(sourceType))
 					return false;

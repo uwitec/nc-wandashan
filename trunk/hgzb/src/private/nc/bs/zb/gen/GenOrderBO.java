@@ -12,6 +12,7 @@ import nc.bs.zb.pub.ZbBsPubTool;
 import nc.jdbc.framework.SQLParameter;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
+import nc.vo.po.OrderHeaderVO;
 import nc.vo.po.OrderItemVO;
 import nc.vo.po.OrderVO;
 import nc.vo.pub.BusinessException;
@@ -205,27 +206,30 @@ public class GenOrderBO {
 		return os;
 	}
 	
-	//校验是否超过中标结果数量
+	//校验是否超过中标结果数量  
 	public void checkOrderNum(OrderVO order) throws BusinessException{
 		if(order !=null){
-			OrderItemVO[] items = order.getBodyVO();
-			for(OrderItemVO item:items){
-				String csourcerowid = item.getCupsourcebillrowid();
-				String type =item.getCupsourcebilltype();
-				if(PuPubVO.getString_TrimZeroLenAsNull(csourcerowid)==null ||(PuPubVO.getString_TrimZeroLenAsNull(csourcerowid)!=null &&
-						!PuPubVO.getString_TrimZeroLenAsNull(type).equals(ZbPubConst.ZB_Result_BILLTYPE)))
-					continue;
-				String sql = "select coalesce(b.nzbnum,0)-coalesce(b.reserve10,0) from zb_result_b b where b.czbresultbid = '"+csourcerowid+"' and  isnull(b.dr,0)=0 ";
-				String sql1 = "select b.nordernum from po_order_b b where isnull(b.dr,0)=0 and b.corder_bid='"+item.getPrimaryKey()+"'";
-				
-				Object o = getBaseDao().executeQuery(sql, new ColumnProcessor());
-				Object o1 = getBaseDao().executeQuery(sql1, new ColumnProcessor());
-				BigDecimal oder =PuPubVO.getUFDouble_NullAsZero(item.getNordernum().sub(PuPubVO.getUFDouble_NullAsZero(o1))).toBigDecimal().setScale(4, RoundingMode.HALF_UP);
-				BigDecimal num =PuPubVO.getUFDouble_NullAsZero(o).toBigDecimal().setScale(4, RoundingMode.HALF_UP);
-				if(oder.doubleValue()-num.doubleValue()>0)
-					throw new BusinessException("第"+item.getCrowno()+"合同数量超过中标结果数量");
+			OrderHeaderVO head = order.getHeadVO();
+			if(PuPubVO.getUFDouble_NullAsZero(head.getNversion()).compareTo(UFDouble.ONE_DBL)==0){
+				OrderItemVO[] items = order.getBodyVO();
+				for(OrderItemVO item:items){
+					String csourcerowid = item.getCupsourcebillrowid();
+					String type =item.getCupsourcebilltype();
+					if(PuPubVO.getString_TrimZeroLenAsNull(csourcerowid)==null ||(PuPubVO.getString_TrimZeroLenAsNull(csourcerowid)!=null &&
+							!PuPubVO.getString_TrimZeroLenAsNull(type).equals(ZbPubConst.ZB_Result_BILLTYPE)))
+						continue;
+					String sql = "select coalesce(b.nzbnum,0)-coalesce(b.reserve10,0) from zb_result_b b where b.czbresultbid = '"+csourcerowid+"' and  isnull(b.dr,0)=0 ";
+					String sql1 = "select b.nordernum from po_order_b b where isnull(b.dr,0)=0 and b.corder_bid='"+item.getPrimaryKey()+"'";
+					
+					Object o = getBaseDao().executeQuery(sql, new ColumnProcessor());
+					Object o1 = getBaseDao().executeQuery(sql1, new ColumnProcessor());
+					BigDecimal oder =PuPubVO.getUFDouble_NullAsZero(item.getNordernum().sub(PuPubVO.getUFDouble_NullAsZero(o1))).toBigDecimal().setScale(4, RoundingMode.HALF_UP);
+					BigDecimal num =PuPubVO.getUFDouble_NullAsZero(o).toBigDecimal().setScale(4, RoundingMode.HALF_UP);
+//					  modify by 数量字段不可编辑 不需要校验   若要校验  注意订单修订的情况
+//					if(oder.doubleValue()-num.doubleValue()>0)
+//						throw new BusinessException("第"+item.getCrowno()+"合同数量超过中标结果数量");
+				}
 			}
 		}
-		
 	}
 }
