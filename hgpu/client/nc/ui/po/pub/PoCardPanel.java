@@ -7119,6 +7119,9 @@ public class PoCardPanel extends BillCardPanel implements BillEditListener,
       getHeadItem("bsocooptome").setEnabled(false);
     }
 
+    if (getHeadItem("ntaxrate") != null) {
+        getHeadItem("ntaxrate").setEnabled(true);
+      }
   }
 
   /**
