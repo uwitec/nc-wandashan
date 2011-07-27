@@ -159,7 +159,7 @@ public class ZbEntryHelper {
 		
 		isComplete(headvo.getPrimaryKey());
 		
-		Object o = getnOrderTaxRate(headvo.getCcustbasid());
+		Object o = getnOrderTaxRate(head.getCvendorbaseid());
 		if(PuPubVO.getUFDouble_NullAsZero(o).equals(UFDouble.ZERO_DBL))
 			throw new BusinessException("供应商税率为空,请维护税率");
 		for (int i = 0; i < len; i++) {
@@ -213,6 +213,7 @@ public class ZbEntryHelper {
 			// 价税合计=金额+税额
 			item.setNoriginaltaxpricemny(item.getNoriginalcurmny().add(item.getNoriginaltaxmny()));
 			item.setForderrowstatus(new Integer(0)); //自由态
+			item.setNdiscountrate(new UFDouble(100));
 			
 			al.add(item);
 			
