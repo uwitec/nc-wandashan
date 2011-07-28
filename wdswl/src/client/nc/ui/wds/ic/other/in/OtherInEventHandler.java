@@ -2,6 +2,7 @@ package nc.ui.wds.ic.other.in;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.button.IBillButton;
@@ -10,6 +11,7 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
@@ -26,14 +28,23 @@ public class OtherInEventHandler extends InPubEventHandler {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
 
-		case ISsButtun.Zdtp:
-		
+		case ISsButtun.Zdtp://手动拣货
+			//拣货 存货唯一校验
+			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+					new String[]{"invcode","geb_vbatchcode"},
+					new String[]{"存货编码","批次号"});
 			onZdtp();
 			break;
 		case ISsButtun.Ckmx:
 			onCkmx();
 			break;
-		case ISsButtun.Zdrk:
+		case ISsButtun.Zdrk://自动拣货
+			//拣货 存货唯一校验
+			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+					new String[]{"invcode","geb_vbatchcode"},
+					new String[]{"存货编码","批次号"});
 			onZdrk();
 			break;
 		case ISsButtun.Zzdj:
@@ -52,7 +63,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 			onBillRef();
 //			zhf  参照新增时 不能增行
 			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-			getBillUI().updateButtons();
+			setInitWarehouse("geh_cwarehouseid");
 			break;		
 		}
 	}

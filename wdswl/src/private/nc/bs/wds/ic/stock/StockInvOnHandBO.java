@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.util.SQLHelper;
@@ -15,6 +16,8 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.pub.query.ConditionVO;
+import nc.vo.pub.rs.ResultSetBase;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -509,6 +512,35 @@ public class StockInvOnHandBO {
 						throw new ValidationException("存货["+WdsWlPubTool.getInvCodeByInvid(invid)+"]库存可用量不足");
 				}
 			}
+	}	
+	
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目 
+	 * 			库存状态表 清理 按钮 处理方法
+	 * @时间：2011-7-17下午05:49:57
+	 * @return
+	 * @throws DAOException 
+	 */
+	public Integer cleanStockZero(ConditionVO[] vos) throws BusinessException{		
+		//whs_stocktonnage;库存主数量
+		//whs_stockpieces; 辅数量
+		StringBuffer sql = new StringBuffer();
+		sql.append( " update tb_warehousestock set dr = 1 where isnull(dr,0)=0 and coalesce(whs_stocktonnage,0) = 0" +
+				" and coalesce(whs_stockpieces,0) = 0 ");	
+		int size = vos.length;
+		for(int i=0; i <size; i ++){
+			ConditionVO vo = vos[i];
+			if("wds_invcl".equals(vo.getFieldCode())){
+				
+				sql.append(" and pk_invbasdoc in " +
+						"(select pk_invbasdoc from wds_invbasdoc where vdef2 like '"+vo.getValue()+"%')");
+			}else{
+				sql.append(vo.getSQLStr());
+			}
+		}
+		return getDao().executeUpdate(sql.toString());
 	}
 
 }

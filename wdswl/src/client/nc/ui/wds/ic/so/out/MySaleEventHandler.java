@@ -4,13 +4,17 @@ import java.util.ArrayList;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
@@ -24,6 +28,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 
@@ -69,10 +74,22 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
 			case ISsButtun.tpzd://托盘指定(手动拣货)
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"ccunhuobianma","batchcode"},
+						new String[]{"存货编码","批次号"});
 				ontpzd();
+				
 				break;
 			case ISsButtun.zdqh://自动取货
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"ccunhuobianma","batchcode"},
+						new String[]{"存货编码","批次号"});
 				onzdqh();
+				
 				break;
 			case ISsButtun.ckmx://查看明细
 				onckmx();
@@ -86,13 +103,21 @@ public class MySaleEventHandler extends OutPubEventHandler {
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefSoOrder://参照销售运单
 				((MyClientUI) getBillUI()).setRefBillType(WdsWlPubConst.WDS5);
 					onBillRef();
+					setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+					//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
+					setInitWarehouse("srl_pk");
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefRedSoOrder://参照销售运单
 				((MyClientUI) getBillUI()).setRefBillType("30");
 					onBillRef();
+					setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+					//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
+					setInitWarehouse("srl_pk");
 				break;
 		}
 	}
+
+	
 	@Override
 	public void onBillRef() throws Exception {
 		super.onBillRef();
@@ -219,6 +244,12 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
 		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
 	}
-
+	protected void onBoEdit() throws Exception {
+		super.onBoEdit();
+		
+		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+	}
+	
+	//
 	
 }

@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.other.out;
 
 import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -99,13 +100,32 @@ public class MyClientUI extends OutPubClientUI implements
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
-	
+		
 		int row = e.getRow();
+		
+		/**
+		 * @author 
+		 * 如果fistag == true  选中返回 true
+		 */
+		
+		if("ntagnum".equalsIgnoreCase(key)){
+			Object s =getBillCardPanel().getBodyValueAt(row, "fistag");
+			if("true".equals(s.toString())){
+				return true;
+			}
+			return false;
+		}
+		
+		
 		if (e.getPos() == BillItem.BODY) {
-		String csourcetype = PuPubVO
+			
+			String csourcetype = PuPubVO
 				.getString_TrimZeroLenAsNull(getBillCardPanel()
 						.getBodyValueAt(row, "csourcetype"));
-		   //如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
+			
+			
+			
+			//如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
 			if ("ccunhuobianma".equalsIgnoreCase(key)) {
 //				编辑是不可修改  zhf add 20110624
 				if(getBillOperate() == IBillOperate.OP_EDIT)
@@ -188,6 +208,7 @@ public class MyClientUI extends OutPubClientUI implements
 
 			e.printStackTrace();
 		}
+		
 	}
 
 	public void setDefaultDataOnRef() throws Exception {
@@ -208,6 +229,7 @@ public class MyClientUI extends OutPubClientUI implements
 			e.printStackTrace();// zhf 异常不处理
 		}
 		// 制单人 制单日期
+		
 		getBillCardPanel().setTailItem("tmaketime", _getServerTime());
 		getBillCardPanel().setHeadItem("dbilldate", _getDate());
 		getBillCardPanel().setTailItem("coperatorid", _getOperator());
@@ -227,11 +249,33 @@ public class MyClientUI extends OutPubClientUI implements
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
 		String key=e.getKey();
+		   //修改仓库 清空货位
+		   if("srl_pk".equalsIgnoreCase(key)){
+			   //仓库 为空 则 货位禁止编辑；反之 货位可编辑
+			   boolean isEditable = true;
+			   if(PuPubVO.getString_TrimZeroLenAsNull(e.getValue()) == null){
+				   isEditable = false;
+			   }
+			   getBillCardPanel().getHeadItem("pk_cargdoc").setEnabled(isEditable);
+			   getBillCardPanel().getHeadItem("pk_cargdoc").setValue(null);
+		   }
 		if("cdptid".equalsIgnoreCase(key)){
 		getBillCardPanel().getHeadItem("cbizid").setValue(null);	
 		}else if(key.equalsIgnoreCase("cbizid")){		
 			getBillCardPanel().execHeadTailLoadFormulas();
-		}	
+		}
+		/**
+		 * @author yf
+		 * 当fistag != true ，ntagnum清空
+		 */
+		if("fistag".equalsIgnoreCase(key)){
+			int row = e.getRow();
+			Object o = e.getValue();
+			if( null == o || "".equals(o) || "false" == o.toString()){
+				getBillCardPanel().setBodyValueAt(null,row, "ntagnum");
+			}
+		}
+		
 	}
 
 	@Override
@@ -249,6 +293,19 @@ public class MyClientUI extends OutPubClientUI implements
 	
 	public boolean beforeEdit(BillItemEvent e) {
 		String key = e.getItem().getKey();
+		if("pk_cargdoc".equals(key)){//出库货位
+			//仓库id
+			Object a = getBillCardPanel().getHeadItem("srl_pk").getValueObject();
+			if(a==null){
+				showWarningMessage("请选择仓库");
+				return false;
+			}
+			UIRefPane panel = (UIRefPane) this.getBillCardPanel().getHeadItem("pk_cargdoc").getComponent();
+			if (null != a && !"".equals(a)) {
+				//修改参照 条件 增加条件 指定仓库id
+				panel.getRefModel().addWherePart(" and bd_stordoc.pk_stordoc = '"+a+"' ");
+			}
+		}
 		if (e.getItem().getPos() == BillItem.HEAD) {
 			// 仓库过滤，只属于物流系统的
 			// srl_pkr 为入库仓库
@@ -271,6 +328,8 @@ public class MyClientUI extends OutPubClientUI implements
 				}
 			}
 		}
+		
+		
 
 		// 对当前货位下的管理员进行过滤
 		if ("cwhsmanagerid".equalsIgnoreCase(key)) {
@@ -386,4 +445,6 @@ public class MyClientUI extends OutPubClientUI implements
 	protected void setRefBillType(String curRefBilltype) {
 		this.curRefBilltype = curRefBilltype;
 	}
+	
+	
 }

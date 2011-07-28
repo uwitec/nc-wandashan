@@ -23,6 +23,7 @@ import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -74,6 +75,7 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 		getBillListPanel().getHeadTable().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);//单选
 		getBillListPanel().getBodyTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		getBillCardPanel().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
 
 	}
 
@@ -196,7 +198,9 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 	}
 	
 	public boolean beforeEdit(BillItemEvent e) {
-		if("pk_cargdoc".equals(e.getItem().getKey())){//出库货位
+		String key=e.getItem().getKey();
+		if("pk_cargdoc".equals(key)){//出库货位
+			//仓库id
 			Object a = getBillCardPanel().getHeadItem("srl_pk").getValueObject();
 			if(a==null){
 				showWarningMessage("请选择仓库");
@@ -204,15 +208,16 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 			}
 			UIRefPane panel = (UIRefPane) this.getBillCardPanel().getHeadItem("pk_cargdoc").getComponent();
 			if (null != a && !"".equals(a)) {
+				//修改参照 条件 增加条件 指定仓库id
 				panel.getRefModel().addWherePart(" and bd_stordoc.pk_stordoc = '"+a+"' ");
 			}
 		}
 		//
-		String key=e.getItem().getKey();
+		
 		if(e.getItem().getPos()==BillItem.HEAD){
-			if("srl_pk".equalsIgnoreCase(e.getItem().getKey())){
+			if("srl_pk".equalsIgnoreCase(key)){
 				UIRefPane panel=(UIRefPane) getBillCardPanel().getHeadItem("srl_pk").getComponent();
-				
+				//参照过滤
 				panel.getRefModel().addWherePart(" and def1 = '1' and  isnull(dr,0) = 0");
 			}			
 		}
@@ -242,6 +247,16 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
 	   String key=e.getKey();
+	   //修改仓库 清空货位
+	   if("srl_pk".equalsIgnoreCase(key)){
+		   //仓库 为空 则 货位禁止编辑；反之 货位可编辑
+		   boolean isEditable = true;
+		   if(PuPubVO.getString_TrimZeroLenAsNull(e.getValue()) == null){
+			   isEditable = false;
+		   }
+		   getBillCardPanel().getHeadItem("pk_cargdoc").setEnabled(isEditable);
+		   getBillCardPanel().getHeadItem("pk_cargdoc").setValue(null);
+	   }
 	   if("cdptid".equalsIgnoreCase(key)){
 		  getBillCardPanel().getHeadItem("cbizid").setValue(null);
 	   }

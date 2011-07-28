@@ -34,16 +34,18 @@ public class ClientUI extends BillCardUI{
 	@Override
 	protected void initSelfData() {
 		
-		
 	}	
 	@Override
 	public Object getUserObject() {
 		
 		return new GetCheckClass();
 	}
+	/**
+	 * @author yf
+	 * 默认 价格单位priceunit = 0
+	 */
 	@Override
 	public void setDefaultData() throws Exception {
-		
-		
+
 	}
 }

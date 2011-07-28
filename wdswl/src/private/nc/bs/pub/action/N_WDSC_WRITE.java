@@ -3,7 +3,10 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wl.pub.BsUniqueCheck;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
 /**
@@ -28,6 +31,9 @@ try{
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
+			AggregatedValueObject avo = vo.m_preValueVo;
+			SuperVO[] vos = (SuperVO[]) avo.getChildrenVO();
+			BsUniqueCheck.FieldUniqueCheck(vos, "pk_invmandoc", "±‡¬Î÷ÿ∏¥");
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

@@ -8,12 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
@@ -28,6 +30,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.BillRowNo;
+import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -571,10 +574,44 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 */
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
-		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-		getBillUI().updateButtons();
-		setHeadPartEdit();
+		if(null != getButtonManager().getButton(IBillButton.Line)){
+			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+			getBillUI().updateButtons();
+			setHeadPartEdit();
+		}
 		
 	}
-
+	/**
+	 * @author yf
+	 * 出入库 对当前用户进行权限校验
+	 * 总仓 管理员 isMaster = true 
+	 * 分仓 管理员
+	 * 设置字段是否可以编辑，不是总仓管理员不能编辑
+	 * @throws Exception 
+	 */
+	protected void setInitByWhid(String[] fields) throws Exception{
+		//进行权限校验
+		//校验登陆人 的仓库权限，总仓管理员，分仓管理员
+		boolean isMaster = false;
+		String whid = "";
+		LoginInforVO liv = new LoginInforHelper().getLogInfor(_getOperator());
+		whid = liv.getWhid();
+		if(WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(whid)){
+			isMaster = true;
+		}
+		//设置仓库，货位是否可编辑，是主仓管理员则可以编辑，否则不可以编辑
+		for (String field : fields) {
+			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(field).setEnabled(isMaster);
+		}
+		
+	}
+	
+	//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
+	protected void setInitWarehouse(String warehouseid) throws Exception{
+		BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(warehouseid);
+		if(null != item && item.getValueObject() == null){
+			String  geh_cwarehouseid = ((InPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
+			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
+		}
+	}
 }

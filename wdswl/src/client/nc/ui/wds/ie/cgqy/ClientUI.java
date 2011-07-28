@@ -1,5 +1,6 @@
 package nc.ui.wds.ie.cgqy;
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
@@ -31,6 +32,26 @@ public class ClientUI extends WdsBillManagUI {
 			String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
 	}
+	
+	
+	
+	/**
+	 * @author yf
+	 * 存货清空或修改后，该行内容初始化
+	 */
+	@Override
+	public void afterEdit(BillEditEvent e) {
+		//过滤 invcode字段修改时才进行判定
+		//通过 行号 和 字段名 设置数据为空
+		if("invcode".equals(e.getKey())){
+			int row = e.getRow();
+			getBillCardPanel().setBodyValueAt(null, row, "nassplannum");
+			getBillCardPanel().setBodyValueAt(null, row, "nplannum");
+		}
+		
+		super.afterEdit(e);
+	}
+
 	@Override
 	protected AbstractManageController createController() {
 		return new ClientController();

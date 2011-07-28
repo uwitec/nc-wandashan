@@ -186,8 +186,11 @@ public class ClientUI extends MutilChildUI {
 		
 	}
 
+
 	protected void setRefBillType(String curRefBilltype) {
 		this.curRefBilltype = curRefBilltype;
 	}
+	
+	
 
 }

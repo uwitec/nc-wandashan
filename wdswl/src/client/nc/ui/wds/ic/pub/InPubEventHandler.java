@@ -563,6 +563,13 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		getBillUI().updateButtons();
 	}	
 		
-	
+	//如果 参照的入库仓库为空 设置默认仓库为当前保管员仓库
+	protected void setInitWarehouse(String warehouseid) throws Exception{
+		BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(warehouseid);
+		if(null != item && item.getValueObject() == null){
+			String  geh_cwarehouseid = ((InPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
+			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
+		}
+	}
 
 }

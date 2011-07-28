@@ -1,16 +1,27 @@
 package nc.ui.wds.ic.inv;
 
+import java.util.List;
+
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.tray.lock.LockTrayHelper;
+import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.wl.pub.WdsQueryDlg;
 import nc.ui.wl.pub.WdsSelfButton;
+import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.xn.XnRelationVO;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 
 /**
@@ -85,6 +96,10 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		if(intBtn == WdsSelfButton.view_lock){
 			onViewLock();
 		}
+		//库存状态 清理
+		if(intBtn == WdsSelfButton.clean_zero){
+			onCleanZero();
+		}
  	}
 	/**
 	 * 
@@ -109,7 +124,50 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		getViewLockDlg().showModal();
 	}
 	
+	//库存状态 清理()
+	private CleanQueryDlg m_cleanQueryDlg = null;
+	
+	private CleanQueryDlg getCleanQueryDlg(){
+		if(m_cleanQueryDlg == null){
+			//parent, normalPnl, pk_corp, moduleCode, operator, busiType
+			//moduleCode = 800404060201
+			m_cleanQueryDlg = new CleanQueryDlg(getBillUI());
+			m_cleanQueryDlg.setTempletID(WdsWlPubConst.INV_STATE_QRY_TEMPLET_ID);
+			m_cleanQueryDlg.hideNormal();
+			m_cleanQueryDlg.hideUnitButton();
+		}
+		return m_cleanQueryDlg;
+	}
+		
+	private void onCleanZero() throws Exception{
+		//如果有无效数据，弹出查询对话框--自定义查询模板CleanQueryDlg		 
+		//忽略 确定 以外的事件
+		if(getCleanQueryDlg().showModal()!=UIDialog.ID_OK){
+			return;
+		}
+		//确定获得条件语句 模板编号=800404060201	模板id=0001S3100000000L231C	
+		ConditionVO[] vos =getCleanQueryDlg().getConditionVO();
+		try {			
+			getBillUI().showWarningMessage("成功清理" + cleanZero(vos) + "条无效数据");
+		} catch (Exception e) {
+			throw new BusinessException(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+		}
+	}	
+		
+	
+	private Integer cleanZero(ConditionVO[] vos) throws Exception {		
+		
+		Class[] ParameterTypes = new Class[] { ConditionVO[].class };
+		Object[] ParameterValues = new Object[] { vos};
+		//远程调用- 等待提示框- 后台bo类- cleanStockZero 方法 
+		Object os = LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, getBillUI(),
+				"正在清理无效库存...", 2, "nc.bs.wds.ic.stock.StockInvOnHandBO", null, "cleanStockZero", ParameterTypes,
+				ParameterValues);
+		return Integer.parseInt(os.toString());
+	}
+	
 	private ViewLockDLG m_viewLockDlg = null;
+	
 	private ViewLockDLG getViewLockDlg(){
 		if(m_viewLockDlg ==  null)
 			m_viewLockDlg = new ViewLockDLG(getBillUI(),getBillUI()._getOperator(),getBillUI()._getCorp().getPrimaryKey());

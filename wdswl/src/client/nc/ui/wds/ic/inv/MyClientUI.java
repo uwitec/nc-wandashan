@@ -8,6 +8,7 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsSelfButton;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.button.ButtonVO;
+import nc.vo.trade.pub.IBillStatus;
 
 
 /**
@@ -56,6 +57,22 @@ import nc.vo.trade.button.ButtonVO;
 		view.setBtnChinaName("绑定查看");
 		view.setOperateStatus(new int[]{IBillOperate.OP_NOTEDIT});
 		addPrivateButton(view);
+		
+		
+		//清理 无效库存
+		ButtonVO btnVo = new ButtonVO();
+		btnVo.setBtnNo(WdsSelfButton.clean_zero);
+		btnVo.setBtnCode(null);
+		btnVo.setBtnName("辅助功能");
+		btnVo.setBtnChinaName("清理");
+		btnVo.setBtnName("清理库存");
+		btnVo.setHintStr("清理无效库存");
+		btnVo.setOperateStatus(new 
+				int[]{IBillOperate.OP_NOTEDIT,
+						IBillOperate.OP_INIT});
+		btnVo.setBusinessStatus(new 
+				int[]{IBillStatus.FREE});
+		addPrivateButton(btnVo);
 		
 	}
 

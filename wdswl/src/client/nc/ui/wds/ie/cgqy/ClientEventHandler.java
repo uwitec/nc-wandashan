@@ -2,6 +2,7 @@ package nc.ui.wds.ie.cgqy;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.BusinessException;
 
@@ -27,6 +28,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		return queryDialog;
 	}
 	
+	
+	
 	@Override
 	protected void onBoSave() throws Exception {
 		beforeSaveCheck();
@@ -46,6 +49,15 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 					getBillUI().getVOFromUI().getChildrenVO().length==0	){
 				throw new BusinessException("表体不允许为空");
 			}
+			/**
+			 * @author yf
+			 * 存货 唯一校验
+			 */
+			String[] fields = new String[]{"invcode"};
+			String[] displays = new String[]{"存货编码"};
+			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),getBillCardPanelWrapper().getBillCardPanel().getBillModel(),fields,displays);
+			
+			
 //			else{
 //				super.beforeSaveBodyUnique(new String[]{"pk_invbasdoc"});
 //				CgqyBVO[] bodys =(CgqyBVO[] )getBillUI().getVOFromUI().getChildrenVO();
@@ -53,6 +65,6 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 //					body.validateOnsave();
 //				}
 //			}
-		};
+		}
 	}
 }

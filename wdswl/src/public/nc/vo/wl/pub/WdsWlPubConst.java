@@ -261,4 +261,7 @@ public class WdsWlPubConst {
 	
 //	zhf 存货状态 浏览绑定关系 对话框 模板类型
 	public static String INV_VIEW_LOCK_TEMPLET_TYPE = "lock";
+	
+//	库存状态  清理 查询对话框  模板ID
+	public static String INV_STATE_QRY_TEMPLET_ID = "0001S3100000000L231C";
 }

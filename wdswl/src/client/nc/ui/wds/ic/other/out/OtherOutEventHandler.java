@@ -13,6 +13,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -48,10 +49,22 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				onzzdj(null);
 				break;
 			case ISsButtun.tpzd:
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"ccunhuobianma","batchcode"},
+						new String[]{"存货编码","批次号"});
 				ontpzd();
+				
 				break;
 			case ISsButtun.zdqh:
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"ccunhuobianma","batchcode"},
+						new String[]{"存货编码","批次号"});
 				onzdqh();
+				
 				break;
 			case ISsButtun.ckmx:
 				onckmx();
@@ -65,10 +78,16 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefSendOrder:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDS3);
 				onBillRef();
+				//设置 仓库和货位的是否可编辑，总仓可以，分仓不可以
+				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+				//设置参照出库中出库仓库为空，则赋值默认仓库为当前操作员仓库
+				setInitWarehouse("srl_pk");
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefWDSC:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSC);
 				onBillRef();
+				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+				setInitWarehouse("srl_pk");
 				break;
 			}
 	}
@@ -235,6 +254,15 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		super.onBoAdd(bo);
 	}
 	
+	
+	
+	@Override
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoAdd(bo);
+		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+	}
+
 	private  EventHandlerTools getEventHanderTools(){
 		if(tools == null){
 			return new EventHandlerTools();
@@ -265,7 +293,12 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			return;
 		}
 		super.onBoEdit();
+		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+		
 	}
+	
+	
+	
 	protected void onBoDel() throws Exception {
 		if (getBufferData().getCurrentVO() == null)
 			return;
@@ -275,6 +308,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			return;
 		}
 		super.onBoDel();
+		
 	}
 
 }

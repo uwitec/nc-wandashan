@@ -184,9 +184,18 @@ private LoginInforHelper helper = null;
 					._getModuleCode(),((BillManageUI) getBillUI()).getBillListPanel());
 
 			int[] rows = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRows();
-			
-			if(rows == null || rows.length <= 1)
+			int rowstart = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRow();
+			if(rows == null || rows.length <= 1){				
 				super.onBoPrint();
+				if(rows.length == 1){
+				//单行打印 打印数量处理
+				Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
+				iprintcount=iprintcount+1;
+				getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+				HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+				onBoRefresh();	
+				}
+			}		
 			else{
 				nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(null,
 						dataSource);
@@ -203,21 +212,28 @@ private LoginInforHelper helper = null;
 						//					bm.execLoadFormula();
 
 						//					如果表体打印不正常玉石可  把上面两句话打开 试试
-						bt.getSelectionModel().setSelectionInterval(i, i);
+						bt.getSelectionModel().setSelectionInterval(rowstart+i, rowstart+i);
 						print.print(true, false);
+						Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
+						iprintcount=iprintcount+1;
+						getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+						HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+						onBoRefresh();	
 					}				
 			}
 
 		}// 如果是卡片界面，使用CardPanelPRTS数据源
+//		else{
+//			super.onBoPrint();
+//		}
 		else{
 			super.onBoPrint();
-		}
-//		super.onBoPrint();
-		Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
-		iprintcount=iprintcount+1;
-		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
-		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-		onBoRefresh();	
+			Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
+			iprintcount=iprintcount+1;
+			getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+			HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+			onBoRefresh();
+		}	
 	}
 	/**
 	 * 

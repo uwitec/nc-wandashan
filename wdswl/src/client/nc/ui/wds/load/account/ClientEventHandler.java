@@ -1,8 +1,10 @@
 package nc.ui.wds.load.account;
 
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
@@ -38,17 +40,52 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		}
 		return queryDialog;
 	}
-	
+	/**
+	 * @author yf
+	 * 加行之前进行表体判定
+	 * 如果是来源明细表体便签 = 0，不增行
+	 * int tab = getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex();
+	 */
+	@Override
+	protected void onBoLineAdd() throws Exception {
+		int tab = getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex();
+		if(0 == tab){
+			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "不能在此新增来源明细");
+			return;
+		}
+		super.onBoLineAdd();
+	}
+
 	@Override
 	protected void onBoSave() throws Exception {
 		//对总费用  分配给班组的费用校验
 		ExaggLoadPricVO   billvo= (ExaggLoadPricVO) getBillUI().getVOFromUI();
 		LoadpriceHVO h= (LoadpriceHVO) billvo.getParentVO();
 		LoadpriceB2VO[] b= (LoadpriceB2VO[]) billvo.getTableVO("wds_loadprice_b2");
+		/**
+		 * @author yf
+		 * 校验 录入时表体数据不能为空
+		 */
+		if(b.length <= 0){
+			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "保存前请先分配班组");
+			return;
+		}
 	    UFDouble zfee=h.getVzfee();
 	    if(h !=null){
 	    	UFDouble zbz=new UFDouble();
 	    	for(int i=0;i<b.length;i++){
+	    		/**
+	    		 * @author yf
+	    		 * 校验 班组编码不能为空 同时 避免空指针异常
+	    		 */
+	    		if(BeforeSaveValudate.isEmpty(b[i].getPk_wds_teamdoc_h())){
+	    			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "班组编码不能为空");
+	    			return;
+	    		}
+	    		if(BeforeSaveValudate.isEmpty(b[i].getNloadprice())){
+	    			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "班组费用不能为空");
+	    			return;
+	    		}
 	    		zbz=zbz.add(b[i].getNloadprice());
 	    	}
 	    	if(zbz!=null){
@@ -86,6 +123,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 				break;
 		}
 	}
+	
+	
+	
 	@Override
 	protected boolean isDataChange() {
 		// TODO Auto-generated method stub
