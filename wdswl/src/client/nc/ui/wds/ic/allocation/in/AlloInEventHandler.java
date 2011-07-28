@@ -5,6 +5,7 @@ import java.util.List;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.InPubClientUI;
@@ -34,15 +35,31 @@ public class AlloInEventHandler extends InPubEventHandler {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
 			case ISsButtun.Zdtp:
+
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"invcode","geb_vbatchcode"},
+						new String[]{"存货编码","批次号"});
+
 				valuteRowNum();
+
 				onZdtp();
 				break;
 			case ISsButtun.Ckmx:
 				onCkmx();
 				break;
 			case ISsButtun.Zdrk:
+
+				//拣货 存货唯一校验
+				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+						new String[]{"invcode","geb_vbatchcode"},
+						new String[]{"存货编码","批次号"});
+
 				valuteRowNum();
 				setTrayCatNUll();
+
 				onZdrk();
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz:
@@ -53,7 +70,12 @@ public class AlloInEventHandler extends InPubEventHandler {
 				break;
 			case  nc.ui.wds.w80020206.buttun0206.ISsButtun.Ref4I:
 				onBillRef();
+
+				//如果 参照的入库仓库为空 设置默认仓库为当前保管员仓库
+				setInitWarehouse("geh_cwarehouseid");
+
 				
+
 				break;
 		}
 	}
