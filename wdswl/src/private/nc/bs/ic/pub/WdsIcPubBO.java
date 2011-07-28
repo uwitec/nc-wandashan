@@ -140,8 +140,8 @@ public class WdsIcPubBO {
 		if(iszc){
 			while (geb_bsnumd.doubleValue() > iVolumn) {
 				tbgbbvo = new TbGeneralBBVO();
-				//生产日期
-				tbgbbvo.setCreadate(body.getGeb_dbizdate());
+				//生产日期		
+				tbgbbvo.setCreadate(body.getGeb_proddate());
 				//失效日期
 				tbgbbvo.setExpdate(body.getGeb_dvalidate());
 				// 批次
@@ -185,7 +185,7 @@ public class WdsIcPubBO {
 		TbGeneralBBVO tbgbbvo1 = new TbGeneralBBVO();
 		
 		//生产日期
-		tbgbbvo1.setCreadate(body.getGeb_dbizdate());
+		tbgbbvo1.setCreadate(body.getGeb_proddate());
 		//失效日期
 		tbgbbvo1.setExpdate(body.getGeb_dvalidate());
 		// 批次

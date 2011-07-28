@@ -11,6 +11,7 @@ import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.pub.print.WdsWlPrintTool;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
@@ -33,12 +34,15 @@ public class AlloInEventHandler extends InPubEventHandler {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
 			case ISsButtun.Zdtp:
+				valuteRowNum();
 				onZdtp();
 				break;
 			case ISsButtun.Ckmx:
 				onCkmx();
 				break;
 			case ISsButtun.Zdrk:
+				valuteRowNum();
+				setTrayCatNUll();
 				onZdrk();
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz:
@@ -49,15 +53,39 @@ public class AlloInEventHandler extends InPubEventHandler {
 				break;
 			case  nc.ui.wds.w80020206.buttun0206.ISsButtun.Ref4I:
 				onBillRef();
+				
 				break;
 		}
 	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       自动拣货前设定托盘信息为空    
+	 * @时间：2011-7-26下午12:58:02
+	 */
+	private void setTrayCatNUll() {		
+	  if(getBillInPubUI()==null){
+		  return;
+	  }
+	  getBillInPubUI().setTrayInfor(null);
+	}
+
 	@Override
 	protected UIDialog createQueryUI() {
 		return new QueryDIG(getBillUI(), null, _getCorp().getPk_corp(), getBillUI().getModuleCode(), getBillUI()._getOperator(), null		
 		);
 	}
-
+	/**
+	 * 
+	 * @作者  mlr 
+	 * @说明：完达山物流项目
+	 *       校验表体行号不允许重复 
+	 * @时间：2011-7-26下午12:46:08
+	 */
+    public void valuteRowNum()throws Exception{  	
+       BeforeSaveValudate.FieldBodyUnique(getBodyRowCount(),getBillCardPanelWrapper().getBillCardPanel().getBillModel(), "geb_crowno", "单据行号");
+    }
 
 	@Override
 	protected String getHeadCondition() {

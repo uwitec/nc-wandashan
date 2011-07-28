@@ -200,8 +200,8 @@ public class PlanDealEventHandler implements BillEditListener,
 		whereSql.append(" and coalesce(wds_sendplanin_b.reserve14,'N')='N' and coalesce(wds_sendplanin.reserve14,'N') = 'N' ");
 		String cwhid = getLoginInforHelper().getLogInfor(
 				ui.m_ce.getUser().getPrimaryKey()).getWhid();
-		if (!WdsWlPubTool.isZc(cwhid)) {//只有总仓才有发运计划
-			whereSql.append(" and wds_sendplanin.pk_inwhouse = '" + cwhid
+		if (!WdsWlPubTool.isZc(cwhid)) {
+			whereSql.append(" and wds_sendplanin.pk_outwhouse = '" + cwhid
 					+ "' ");
 		}
 		return whereSql.toString();

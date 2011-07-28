@@ -117,7 +117,7 @@ public class WdsIcInPubBillSave extends BillSave {
 		if(!isAdd && bodyChanged){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
 			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),bodys);
 		}
-		//回写必须在保存之前，保存之后再在同一事务中新数据和就数据会完全一样，并且保存之后vo的状态不再是修改状态
+		//回写必须在保存之前，保存之后再在同一事务中新数据和旧数据会完全一样，并且保存之后vo的状态不再是修改状态
 		getOutBO().writeBackForInBill((OtherInBillVO)oldbillVo,IBDACTION.SAVE,isAdd);
 		java.util.ArrayList retAry = super.saveBill(billVo);
 

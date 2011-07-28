@@ -33,9 +33,10 @@ try{
 			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
 			if(iplantype !=null && 0==(Integer)iplantype){
 				setParameter("InWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_inwhouse"));
+				setParameter("OutWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_outwhouse"));
 				setParameter("Pk", vo.m_preValueVo.getParentVO().getAttributeValue("pk_sendplanin"));
 				setParameter("Date", vo.m_currentDate);//SPF ADD
-				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&InWhouse:String,&Pk:String,&Date:String", vo, m_keyHas,	m_methodReturnHas);
+				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&OutWhouse:String,&InWhouse:String,&Pk:String,&Date:String", vo, m_keyHas,	m_methodReturnHas);
 			}
 			//保存前的校验 追加计划保存时,如果没有月计划,追加计划不允许保存  追加计划没有存量不允许保存 
 			if(iplantype!=null && 1==(Integer)iplantype){

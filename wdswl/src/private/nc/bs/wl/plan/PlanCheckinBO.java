@@ -53,7 +53,7 @@ public class PlanCheckinBO {
 	 * @时间：2011-3-23下午09:14:56
 	 * @param pk_inwhouse =调入仓库p主键，pk=主表主键
 	 */
-	public void beforeCheck(String  pk_inwhouse,String pk,String date) throws BusinessException{
+	public void beforeCheck(String pk_outwhouse,String  pk_inwhouse,String pk,String date) throws BusinessException{
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		calendar.setDate(new UFDate(date));//spf add
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
@@ -63,6 +63,7 @@ public class PlanCheckinBO {
 		sql.append(" where wds_sendplanin.iplantype=0 and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"' ");
+		sql.append("  and pk_outwhouse='"+pk_outwhouse+"'");
 		sql.append(" and isnull(dr,0)=0");
 
 		

@@ -22,7 +22,6 @@ import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.ValidationException;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
@@ -205,8 +204,10 @@ public class IcInPubBO {
 				if(csourbillbid == null)
 					continue;
 				if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
-					numInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)); 
-					numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
+//					numInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)); 
+//					numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
+                    numInfor.put(csourbillbid,(PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)).add(PuPubVO.getUFDouble_NullAsZero(numInfor.get(csourbillbid))));
+					numassInfor.put(csourbillbid,(PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)).add(PuPubVO.getUFDouble_NullAsZero(numassInfor.get(csourbillbid)))); 
 				}
 			}
 		}else if(iBdAction == IBDACTION.SAVE){
@@ -215,9 +216,9 @@ public class IcInPubBO {
 					csourbillbid = PuPubVO.getString_TrimZeroLenAsNull(body.getAttributeValue(soubillidfield));
 					if(csourbillbid == null)
 						continue;
-					if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
-						numInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum())); 
-						numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum())); 
+					if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){							
+						numInfor.put(csourbillbid,(PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum())).add(PuPubVO.getUFDouble_NullAsZero(numInfor.get(csourbillbid)))); 
+						numassInfor.put(csourbillbid,(PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum())).add(PuPubVO.getUFDouble_NullAsZero(numassInfor.get(csourbillbid)))); 
 					}
 				}
 			}else{
@@ -233,8 +234,8 @@ public class IcInPubBO {
 					if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)||ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){		
 						if( VOStatus.DELETED==body.getStatus()){
 							numInfor.put(csourbillbid, 
-									PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1));
-							numassInfor.put(csourbillbid,PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)); 
+									(PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).multiply(-1)).add(PuPubVO.getUFDouble_NullAsZero(numInfor.get(csourbillbid))));
+							numassInfor.put(csourbillbid,(PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).multiply(-1)).add(PuPubVO.getUFDouble_NullAsZero(numassInfor.get(csourbillbid)))); 
 						}else if(VOStatus.UPDATED== body.getStatus()){
 							//取出原来的数量
 							if(para == null)
@@ -251,11 +252,18 @@ public class IcInPubBO {
 								Object[] colum =(Object[]) list.get(0);
 								noldoutnum =PuPubVO.getUFDouble_NullAsZero(colum[0]);
 								noutassistnum =PuPubVO.getUFDouble_NullAsZero(colum[1]);
-							}	
+							}
+							//update for mlr
+							if(PuPubVO.getUFDouble_NullAsZero(numInfor.get(csourbillbid)).doubleValue()==0){
 							numInfor.put(csourbillbid, 
 									PuPubVO.getUFDouble_NullAsZero(body.getGeb_anum()).sub(noldoutnum));
 							numassInfor.put(csourbillbid, 
 									PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()).sub(noutassistnum));
+							}else{
+								numInfor.put(csourbillbid, (PuPubVO.getUFDouble_NullAsZero(numInfor.get(csourbillbid))).add(noldoutnum));
+								numassInfor.put(csourbillbid, (PuPubVO.getUFDouble_NullAsZero(numassInfor.get(csourbillbid))).add(noutassistnum));
+								
+							}
 						}
 					}
 				}

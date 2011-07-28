@@ -67,8 +67,7 @@ public class MyClientUI extends InPubClientUI implements  BillCardBeforeEditList
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
 		}
-	}
-	
+	}	
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		return true;

@@ -10,10 +10,9 @@ import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- * <b> 在此处简要描述此类的功能 </b>
  * 
  * <p>
- * 在此处添加此类的描述信息
+ *    调拨入库
  * </p>
  * 
  * Create on 2006-4-6 16:00:51
@@ -38,6 +37,8 @@ public class AlloInClientUICtrl extends AbstractManageController {
 				IBillButton.Del,
 				IBillButton.Save, 
 				IBillButton.Line,
+//				IBillButton.CopyLine,
+//				IBillButton.PasteLine,
 				IBillButton.Cancel,
 				IBillButton.Return,
 				IBillButton.Refresh,
@@ -53,7 +54,7 @@ public class AlloInClientUICtrl extends AbstractManageController {
 	public int[] getListButtonAry() {
 		return new int[] {
 				IBillButton.Refbill,
-		
+		    
 				
 				IBillButton.Edit,
 				IBillButton.Query, 
@@ -61,6 +62,7 @@ public class AlloInClientUICtrl extends AbstractManageController {
 				IBillButton.Save, 
 				IBillButton.Cancel,
 				IBillButton.Line,
+
 				IBillButton.Card,
 				IBillButton.Refresh,
 				IBillButton.Print,

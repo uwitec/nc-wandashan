@@ -11,7 +11,6 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.trade.checkrule.ICompareRule;
 /**
  * author:mlr
  * 该类为保存前的 前台校验类 
@@ -262,6 +261,34 @@ public  class BeforeSaveValudate{
 	 */
 	public static void  FieldBodyUnique(UITable table,BillModel model,String checkField,String displayName) throws Exception{
 		int num =table.getRowCount();	
+		if(checkField == null || "".equalsIgnoreCase(checkField)){
+			return;
+		}
+		if(num>0){
+			ArrayList<String> list = new ArrayList<String>();
+			for(int i = 0 ;i<num; i++){
+				    String key = "";			
+					Object o1 = model.getValueAt(i,checkField);
+					key = String.valueOf(o1);					
+				if(list.contains(key)){
+					throw new BusinessException("表体第["+(i+1)+"]行字段"+"[ "+displayName+" ]"+"存在重复!");
+				}else{
+					list.add(key);
+				}
+			}
+		}
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       表体某个字段的唯一性校验
+	 * @时间：2011-7-5下午09:00:23
+	 * @param table
+	 * @throws Exception
+	 */
+	public static void  FieldBodyUnique(int counts,BillModel model,String checkField,String displayName) throws Exception{
+		int num =counts;	
 		if(checkField == null || "".equalsIgnoreCase(checkField)){
 			return;
 		}

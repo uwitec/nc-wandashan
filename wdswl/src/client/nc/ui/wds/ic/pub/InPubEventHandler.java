@@ -331,11 +331,25 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			 getBillCardPanelWrapper().getBillCardPanel().getBillModel().setRowState(i, BillModel.MODIFICATION);
 		 }
 	 }
-	
+	  
+	 
+	 
+	 
+	@Override
+	protected void onBoLineCopy() throws Exception {
+		
+		super.onBoLineCopy();
+	}
+
+	@Override
+	protected void onBoLinePaste() throws Exception {
+		super.onBoLinePaste();
+	}
+
 	/**
 	 * ²é¿´Ã÷Ï¸
 	 */
-
+   
 	protected void onCkmx() throws Exception {
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(WdsWlPubConst.DLG_IN_TRAY_APPOINT,
 				_getOperator(), _getCorp().getPrimaryKey(), null,ui,false);

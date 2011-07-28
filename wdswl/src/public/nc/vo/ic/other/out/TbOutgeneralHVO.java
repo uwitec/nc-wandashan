@@ -70,6 +70,8 @@ public class TbOutgeneralHVO extends SuperVO {
 	public UFBoolean fisload;//是否装卸费计算完成
 	public UFBoolean fistran;//是否运费计算完成
 	public UFBoolean 	iscaltrans;//是否计算运费
+    public UFDate cshengchanriqi;//生产日期
+    public UFDate cshixiaoriqi;//失效日期
 	
 	public String vuserdef9;
 	public String tmaketime;
@@ -200,8 +202,31 @@ public class TbOutgeneralHVO extends SuperVO {
 //	public static final String VUSERDEF13 = "vuserdef13";
 //	public static final String VUSERDEF6 = "vuserdef6";
 
+	
+	
+	
 	public UFBoolean getIscaltrans() {
 		return iscaltrans;
+	}
+
+
+	public UFDate getCshengchanriqi() {
+		return cshengchanriqi;
+	}
+
+
+	public void setCshengchanriqi(UFDate cshengchanriqi) {
+		this.cshengchanriqi = cshengchanriqi;
+	}
+
+
+	public UFDate getCshixiaoriqi() {
+		return cshixiaoriqi;
+	}
+
+
+	public void setCshixiaoriqi(UFDate cshixiaoriqi) {
+		this.cshixiaoriqi = cshixiaoriqi;
 	}
 
 
