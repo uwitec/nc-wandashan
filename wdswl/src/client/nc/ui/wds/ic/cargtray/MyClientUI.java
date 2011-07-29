@@ -70,6 +70,7 @@ public class MyClientUI extends WdsBillManagUI implements
 		LoginInforVO login=getLoginInforHelper().getLogInfor(_getOperator());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_stordoc").setValue(login.getWhid());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setValue(login.getSpaceid());
+		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_corp").setValue(getCorpPrimaryKey());
 		
 	}
 

@@ -9,9 +9,8 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
  * @author Administrator
  *
  */
- public class MyClientUI extends AbstractMyClientUI{
-       
-       /**
+ public class MyClientUI extends AbstractMyClientUI{      
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -32,8 +31,6 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 	protected void initSelfData() {	}
 
 	public void setDefaultData() throws Exception {
+	   getBillCardWrapper().getBillCardPanel().getHeadItem("pk_corp").setValue(getCorpPrimaryKey());
 	}
-	
-
-
 }

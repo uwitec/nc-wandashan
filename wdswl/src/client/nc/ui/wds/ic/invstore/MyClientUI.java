@@ -64,7 +64,8 @@ import nc.vo.wl.pub.LoginInforVO;
 		login=getLoginInforHelper().getLogInfor(_getOperator());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_stordoc").setValue(login.getWhid());
 		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setValue(login.getSpaceid());
-		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_psndoc").setValue(_getOperator());		
+		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_psndoc").setValue(_getOperator());
+		getBillCardWrapper().getBillCardPanel().getHeadItem("pk_corp").setValue(getCorpPrimaryKey());
 	}
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
