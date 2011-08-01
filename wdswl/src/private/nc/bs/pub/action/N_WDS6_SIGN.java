@@ -39,12 +39,17 @@ public class N_WDS6_SIGN extends AbstractCompiler2 {
 					 date = list.get(0);
 					 operate = list.get(1);
 				}
-				// ##################################################数据交换
+				
+				//数据交换前  按存货批次进行合并  for add mlr
 				setParameter("AggObj",vo.m_preValueVo);
+				AggregatedValueObject billvo=(AggregatedValueObject) runClass("nc.bs.wds.ic.other.out.OtherOutBO", "combinVO",
+						"&AggObj:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);	
+				// ##################################################数据交换
+				setParameter("billvo", billvo);
 				setParameter("date", date);
 				setParameter("operator", operate);
 				AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.other.out.ChangeTo4I", "signQueryGenBillVO",
-						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+						"&billvo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################推式保存、签字
 				setParameter("AggObject",icBillVO);
 				runClass("nc.bs.wds.ic.other.out.OtherOutBO", "pushSign4I",

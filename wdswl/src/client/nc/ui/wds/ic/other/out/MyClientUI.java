@@ -437,12 +437,11 @@ public class MyClientUI extends OutPubClientUI implements
 	}
 
 	@Override
-	public String getRefBillType() {
-		// TODO Auto-generated method stub
+	public String getRefBillType() {		
 		return curRefBilltype;
 	}
 
-	protected void setRefBillType(String curRefBilltype) {
+	public void setRefBillType(String curRefBilltype) {
 		this.curRefBilltype = curRefBilltype;
 	}
 	

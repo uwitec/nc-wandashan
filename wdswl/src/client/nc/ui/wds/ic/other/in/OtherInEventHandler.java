@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.other.in;
 
 import nc.bs.logging.Logger;
+import nc.bs.pub.install.UFDate;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
@@ -13,6 +14,7 @@ import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.hbbb.meetaccount.GetDataCondVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
@@ -60,14 +62,35 @@ public class OtherInEventHandler extends InPubEventHandler {
 			onQzqr();
 			break;
 		case  nc.ui.wds.w80020206.buttun0206.ISsButtun.Ref4I:
+			((MyClientUI)getBillUI()).setRefBillType("4I");
 			onBillRef();
 //			zhf  参照新增时 不能增行
 			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 			setInitWarehouse("geh_cwarehouseid");
+			break;	
+		case  nc.ui.wds.w80020206.buttun0206.ISsButtun.refwds6:
+		   ((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.BILLTYPE_OTHER_OUT);
+			onBillRef();
+			setBusidate();//设置业务日期
+//			zhf  参照新增时 不能增行
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getBillUI().updateButtons();
 			break;		
 		}
 	}
-
+    /**
+     * 
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     *        表体行设置业务日期 默认为当前日期
+     * @时间：2011-8-1下午03:57:14
+     */
+	private void setBusidate() {
+	 int legth=getBillCardPanelWrapper().getBillCardPanel().getRowCount();
+	 for(int i=0;i<legth;i++){
+		 getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getDate(), i, "geb_dbizdate"); 
+	 }
+	}
 	/**
 	 * 自制单据
 	 */

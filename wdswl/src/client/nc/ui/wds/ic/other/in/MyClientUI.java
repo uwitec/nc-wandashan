@@ -37,6 +37,7 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String curRefBilltype = null;
 
 	protected ManageEventHandler createEventHandler() {
 		return new OtherInEventHandler(this, getUIControl());
@@ -218,18 +219,27 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 		ref4i.setBtnName("供应链其他出库");
 		ref4i.setBtnChinaName("供应链其他出库");
 		addPrivateButton(ref4i);
-	
+		
+		//添加参照   其他出库 按钮    for add mlr
+		ButtonVO refwds6 = new ButtonVO();
+		refwds6.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.refwds6);
+		refwds6.setBtnCode(null);
+		refwds6.setBtnName("其他出库");
+		refwds6.setBtnChinaName("其他出库");
+		addPrivateButton(refwds6);
+		
 		ButtonVO refbill =ButtonVOFactory.getInstance().build(IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT, IBillOperate.OP_INIT });
-		refbill.setChildAry(new int[]{ref4i.getBtnNo()});
-		
+		refbill.setChildAry(new int[]{ref4i.getBtnNo(),refwds6.getBtnNo()});		
 		addPrivateButton(refbill);
 	}
 	@Override
 	public String getRefBillType() {
-		return "4I";
+		return curRefBilltype;
 	}
-	
+	protected void setRefBillType(String curRefBilltype) {
+		this.curRefBilltype = curRefBilltype;
+	}
 	public boolean beforeEdit(BillItemEvent e) {
 		String key=e.getItem().getKey();
 		//对入库仓库过滤，过滤只属于物流的仓库
