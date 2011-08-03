@@ -3,7 +3,6 @@ package nc.ui.zb.price.grade;
 import java.util.HashMap;
 import java.util.Map;
 
-import nc.ui.am.inventory.command.ShowEqualCommand;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
 import nc.ui.trade.business.HYPubBO_Client;
