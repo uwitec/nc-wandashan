@@ -5,12 +5,10 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import nc.ui.am.inventory.command.ShowEqualCommand;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.trade.business.HYPubBO_Client;
