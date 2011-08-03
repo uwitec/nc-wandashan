@@ -3,6 +3,7 @@ package nc.ui.zb.entry;
 import java.util.ArrayList;
 
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.zb.pub.LongTimeTask;
 import nc.vo.po.OrderHeaderVO;
@@ -160,7 +161,7 @@ public class ZbEntryHelper {
 		isComplete(headvo.getPrimaryKey());
 		
 		Object o = getnOrderTaxRate(head.getCvendorbaseid());
-		if(PuPubVO.getUFDouble_NullAsZero(o).equals(UFDouble.ZERO_DBL))
+		if(o==null)
 			throw new BusinessException("供应商税率为空,请维护税率");
 		for (int i = 0; i < len; i++) {
 			// 校验是否存在下游单据
@@ -214,6 +215,7 @@ public class ZbEntryHelper {
 			item.setNoriginaltaxpricemny(item.getNoriginalcurmny().add(item.getNoriginaltaxmny()));
 			item.setForderrowstatus(new Integer(0)); //自由态
 			item.setNdiscountrate(new UFDouble(100));
+			item.setStatus(BillModel.ADD);
 			
 			al.add(item);
 			
