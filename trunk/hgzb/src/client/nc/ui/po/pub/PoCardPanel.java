@@ -120,6 +120,7 @@ import nc.vo.scm.pub.CustomerConfigVO;
 import nc.vo.scm.pub.SCMEnv;
 import nc.vo.scm.service.ServcallVO;
 import nc.vo.sp.service.SalePriceVO;
+import nc.vo.zb.pub.ZbPubConst;
 
 public class PoCardPanel extends BillCardPanel implements BillEditListener,
     BillEditListener2, ActionListener, BillBodyMenuListener,
@@ -6586,6 +6587,12 @@ public class PoCardPanel extends BillCardPanel implements BillEditListener,
    * 需计算默认价格信息的表体所有行数组 返回：无 例外：无 日期：(2003-10-29 11:39:21) 修改日期，修改人，修改原因，注释标志：
    */
   private void setDefaultPrice(Integer[] iaRow) {
+	  
+	  // add by zhw 2011-08-03   招标生成的合同  在修改时 不询价
+	  String csourcetype = PuPubVO.getString_TrimZeroLenAsNull(getBillModel().getValueAt(0,"cupsourcebilltype"));
+	  String nversion = PuPubVO.getString_TrimZeroLenAsNull(getHeadItem("nversion").getValueObject());
+	  if(ZbPubConst.ZB_Result_BILLTYPE.equalsIgnoreCase(csourcetype)&&"1.0".equalsIgnoreCase(nversion))
+		  return;
 
     if (iaRow == null) {
       return;
@@ -7118,9 +7125,6 @@ public class PoCardPanel extends BillCardPanel implements BillEditListener,
     if (getHeadItem("bsocooptome") != null) {
       getHeadItem("bsocooptome").setEnabled(false);
     }
-    if (getHeadItem("ntaxrate") != null) {
-        getHeadItem("ntaxrate").setEnabled(true);
-      }
 
   }
 

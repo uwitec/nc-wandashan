@@ -66,6 +66,9 @@ public class PoOrderUIPlugin  implements IScmUIPlugin {
 
 			String sourceType = PuPubVO.getString_TrimZeroLenAsNull(
 					ctx.getBillCardPanel().getBillModel().getValueAt(0,"cupsourcebilltype"));
+			if(sourceType==null)
+				sourceType= PuPubVO.getString_TrimZeroLenAsNull(ctx.getBillListPanel().getBodyBillModel().getValueAt(0, "cupsourcebilltype"));
+				
 			if (bo.getCode().equals(IButtonConstInv.BTN_LINE_ADD)||bo.getCode().equals(IButtonConstInv.BTN_LINE_DELETE)
 					||bo.getCode().equals(IButtonConstInv.BTN_LINE_COPY)||bo.getCode().equals(IButtonConstInv.BTN_LINE_INSERT)
 					||bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE)|| bo.getCode().equals(IButtonConstInv.BTN_LINE_PASTE_TAIL)
@@ -85,6 +88,9 @@ public class PoOrderUIPlugin  implements IScmUIPlugin {
 //		UFDouble nversion = PuPubVO.getUFDouble_NullAsZero((ctx.getBillCardPanel().getHeadItem("nversion").getValueObject()));
 		String sourceType = PuPubVO.getString_TrimZeroLenAsNull(
 				ctx.getBillCardPanel().getBillModel().getValueAt(0,"cupsourcebilltype"));
+		if(sourceType==null)
+			sourceType= PuPubVO.getString_TrimZeroLenAsNull(ctx.getBillListPanel().getBodyBillModel().getValueAt(0, "cupsourcebilltype"));
+		
 		if(e.getPos()==BillItem.BODY){
 //			if(nversion.compareTo(UFDouble.ONE_DBL)!=0)
 //				return true;
