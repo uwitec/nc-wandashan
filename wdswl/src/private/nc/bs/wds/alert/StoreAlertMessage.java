@@ -10,78 +10,68 @@ import nc.jdbc.framework.processor.ArrayListProcessor;
  * 预警消息格式
  */
 public class StoreAlertMessage implements IAlertMessage2{
-
 	private static final long serialVersionUID = 1932855774969661891L;
 	private BaseDAO dao=null;
-	
+	private String pk_corp=null;
 	private BaseDAO getDao(){
 		if(dao==null){
 			dao=new BaseDAO();
 		}
 		return dao;	   
 	}
-	
-	public StoreAlertMessage() {
+	public StoreAlertMessage(String pk_corp) {
 		super();
-		
+		this.pk_corp=pk_corp;
 	}
-
-	public int[] getBodyColumnType() {
-		
+	public int[] getBodyColumnType() {		
 		return new int[]{
 		  IAlertMessage.TYPE_STRING,
 		  IAlertMessage.TYPE_STRING,
+		  IAlertMessage.TYPE_STRING,
+		  IAlertMessage.TYPE_STRING,
+		  IAlertMessage.TYPE_STRING,
 		  IAlertMessage.TYPE_FLOAT,
 		  IAlertMessage.TYPE_FLOAT,
-		  IAlertMessage.TYPE_DATE,
 		};
 	}
-
-	public String getNullPresent() {
-	
+	public String getNullPresent() {	
 		return "";
 	}
-
-	public String getOmitPresent() {
-		
+	public String getOmitPresent() {		
 		return "omitted";
 	}
-
 	public String[] getBodyFields() {
-		
+		// 仓库 货位 存货 存货编码  批次  库存主数量 库存辅数量	
 		return new String[]{
-		 "托盘编码",
-		 "托盘名称",
+		 "仓库",
+		 "货位",
+		 "存货",
+		 "存货编码",
+		 "批次",
 		 "库存主数量",
-		 "库存辅数量",
-		 "入库日期"
+		 "库存辅数量"
 		};
 	}
-
-	public Object[][] getBodyValue() {
-		
+	public Object[][] getBodyValue() {		
+		try {
+			return queryOverDateStore(pk_corp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
-
 	public float[] getBodyWidths() {
 		
-		return new float[]{0.2f,0.2f,0.2f,0.2f,0.2f};
+		return new float[]{0.1f,0.1f,0.1f,0.2f,0.1f,0.2f,0.2f};
 	}
-
-	public String[] getBottom() {
-		
-		return new String[]{ "AAAAAAAAA", "", "BBBBB", "CCCCC", "DDDDD", "EEEE", "FFF", "GGGG", "HHHH",
-				"II", "JJJJJJJJJ" };
-
+	public String[] getBottom() {		
+		return null;
 	}
-
 	public String getTitle() {		
 		 return NCLangResOnserver.getInstance().getStrByID("101502", "UPP101502-000261");
 	}
-
-	public String[] getTop() {
-		
-		return new String[] { "AAAAA", "PPPPPPP", "BBBBB", "CCCC", "DDDDD", "EEEEEE", "FFFFFFFFF","GGGGGGGGMMMMM", "NN" };
+	public String[] getTop() {		
+		return null;
 	}
 	/**
 	 * 
@@ -91,8 +81,8 @@ public class StoreAlertMessage implements IAlertMessage2{
 	 * @时间：2011-8-2上午10:52:47
 	 * @return
 	 */
-   private Object[][] queryOverDateStore() throws Exception{
-	  Object o=getDao().executeQuery(getSql(),new ArrayListProcessor());
+   private Object[][] queryOverDateStore(String pk_corp) throws Exception{
+	  Object o=getDao().executeQuery(getSql(pk_corp),new ArrayListProcessor());
 	  if(o==null){
 		  return null;
 	  }  
@@ -101,7 +91,7 @@ public class StoreAlertMessage implements IAlertMessage2{
 		  return null;
 	  } 
 	  int size=list.size();
-	  Object[][] arr=new Object[size][];//符合条件的数据
+	  Object[][] arr=new Object[size][getBodyFields().length];//符合条件的数据
 	  Object[] arr1=null;//临时数组
 	  int size1=0;//临时数组的长度
 	  for(int i=0;i<size;i++){
@@ -121,20 +111,38 @@ public class StoreAlertMessage implements IAlertMessage2{
     * @时间：2011-8-2上午11:13:20
     * @return
     */
-   private String getSql(){
+   private String getSql(String pk_corp){
+	   // 仓库 货位 存货 存货编码  批次  库存主数量 库存辅数量
 	   StringBuffer sql=new StringBuffer();
-	   sql.append(" select t.pplpt_pk,");
-	   sql.append(" 	t.pplpt_pk ,");
-	   sql.append(" 	t.whs_stocktonnage ,");
-	   sql.append(" 	t.whs_stockpieces ,");
-	   sql.append(" 	t.creadate");
-	   sql.append("  from ");
-	   sql.append("  tb_warehousestock t ");
-	   sql.append("  join wds_invbasdoc w  ");
-	   sql.append("  on t.pk_invmandoc = w.pk_invmandoc");
-//	   sql.append("  where isnull(t.dr, 0) = 0 ");
-//	   sql.append("  and isnull(w.dr, 0) = 0 ");   
-
+	   sql.append(" select min(s.storname),");
+	   sql.append(" min(c.csname),");
+	   sql.append(" min(bs.invcode),");
+	   sql.append(" min(bs.invname),");
+	   sql.append(" t.whs_batchcode,");	   
+	   sql.append(" sum(t.whs_stocktonnage) ,");
+	   sql.append(" sum(t.whs_stockpieces) ");	 
+	   sql.append(" from ");
+	   sql.append(" tb_warehousestock t ");
+	   sql.append(" join wds_invbasdoc w  ");
+	   sql.append(" on t.pk_invmandoc = w.pk_invmandoc");
+	   sql.append(" join bd_stordoc s");
+	   sql.append(" on t.pk_customize1=s.pk_stordoc");
+	   sql.append(" join bd_cargdoc c");
+	   sql.append(" on t.pk_cargdoc=c.pk_cargdoc");
+	   sql.append(" join bd_invbasdoc bs");
+	   sql.append(" on t.pk_invbasdoc =bs.pk_invbasdoc");
+	   sql.append(" where");
+	   sql.append(" t.pk_corp='"+pk_corp+"'");
+	   sql.append(" and isnull(t.dr,0)=0");
+	   sql.append(" and isnull(w.dr,0)=0");   
+	   sql.append(" and isnull(s.dr,0)=0");	   
+	   sql.append(" and isnull(c.dr,0)=0");	   
+	   sql.append(" and isnull(bs.dr,0)=0");
+	   sql.append(" and sysdate-to_date(t.creadate,'yyyy-mm-dd')>=w.so_ywaring_days ");
+	   sql.append(" group by ");
+	   sql.append(" s.pk_stordoc,c.pk_cargdoc,bs.pk_invbasdoc,t.whs_batchcode");
+	   sql.append(" having ");
+	   sql.append(" sum(t.whs_stocktonnage)>0");      
 	   return sql.toString();   
    }
 }

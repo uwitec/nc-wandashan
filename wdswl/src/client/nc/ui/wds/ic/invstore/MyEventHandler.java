@@ -28,11 +28,6 @@ public class MyEventHandler extends ManageEventHandler {
 		}
 		return helper;
 	}
-	
-	@Override
-	protected String getHeadCondition() {		
-		return " isnull(dr,0) = 0 ";
-	}
 	@Override
 	protected UIDialog createQueryUI() {
 		return new MyQueryDIG(
