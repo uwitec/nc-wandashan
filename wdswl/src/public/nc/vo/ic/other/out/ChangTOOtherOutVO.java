@@ -3,7 +3,9 @@ package nc.vo.ic.other.out;
 import nc.vo.pf.change.IchangeVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.ie.cgqy.CgqyHVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 
  * @author Administrator
@@ -41,11 +43,53 @@ public class ChangTOOtherOutVO implements IchangeVO{
 			TbOutgeneralBVO[] bodyvos = (TbOutgeneralBVO[])nowVos[j].getChildrenVO();
 			if(bodyvos !=null && bodyvos.length>0){
 				for(int i =0 ;i<bodyvos.length;i++){
-					bodyvos[i].setCrowno(String.valueOf((i+1)*10));
+					bodyvos[i].setCrowno(String.valueOf((i+1)*10));								
 				}
 			}
 		}
+		addNoteForWDSC(preVos,nowVos);
 		return nowVos;
 	}
-
+   /** 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    *  其他出库 参照 采购取样时
+    *   将采购取样的 取货单位 和 取货人  赋值给  其他出库的 备注字段     
+    * @时间：2011-8-4下午06:05:02
+    * @param preVos
+    * @param nowVos
+    */
+	private void addNoteForWDSC(AggregatedValueObject[] preVos,
+			AggregatedValueObject[] nowVos) {
+		if(preVos==null || preVos.length==0){
+			return;
+		}
+		if(nowVos==null || nowVos.length==0){
+			return;
+		}
+		int size=preVos.length;
+		int size1=nowVos.length;
+		if(size !=size1){
+			return;
+		}
+		for(int i=0;i<size;i++){
+			if(preVos[i].getParentVO()==null || nowVos[i].getParentVO()==null)
+				continue;
+			if(preVos[i].getParentVO().getAttributeValue("pk_billtype")==null){
+				continue;
+			}
+			if(!preVos[i].getParentVO().getAttributeValue("pk_billtype").equals(WdsWlPubConst.WDSC)){
+				continue;
+			}	
+			String corp=PuPubVO.getString_TrimZeroLenAsNull(preVos[i].getParentVO().getAttributeValue("ccusmandoc"));
+			if(corp==null){
+				corp="";
+			}
+			String psnren=PuPubVO.getString_TrimZeroLenAsNull(preVos[i].getParentVO().getAttributeValue("ccustomer"));	
+			if(psnren==null){
+				psnren="";
+			}
+		       nowVos[i].getParentVO().setAttributeValue("vnote",corp+"  "+psnren);
+			}		
+		}
 }
