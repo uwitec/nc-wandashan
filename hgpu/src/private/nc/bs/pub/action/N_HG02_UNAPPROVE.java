@@ -14,15 +14,15 @@ import nc.vo.trade.pub.HYBillVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
- * 物资需求计划
+ *月计划
  * @author Administrator
  *
  */
-public class N_HG01_UNAPPROVE extends AbstractCompiler2 {
+public class N_HG02_UNAPPROVE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
 
-	public N_HG01_UNAPPROVE() {
+	public N_HG02_UNAPPROVE() {
 		super();
 	}
 
@@ -32,26 +32,18 @@ public class N_HG01_UNAPPROVE extends AbstractCompiler2 {
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
 		try {
 			super.m_tmpVo = vo;
-			
+			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			AggregatedValueObject billvo = getVo();
 			if(billvo == null){
 				throw new BusinessException("传入数据为空");
 			}
-			
-			HYBillVO planvo = (HYBillVO)billvo;
-			
-			//校验是否可以弃审
-			PlanPubBO bo = new PlanPubBO();
-			bo.checkPlanOnUnApprove(PuPubVO.getString_TrimZeroLenAsNull(getUserObj()), vo.m_coId, new UFDate(vo.m_currentDate), billvo);
-			
-			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
+			 PlanPubBO bo = new PlanPubBO();
+			 bo.checkMonPlan(billvo);
 			procUnApproveFlow(vo);
 			Object retObj = runClass("nc.bs.hg.pu.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
 					vo, m_keyHas, m_methodReturnHas);
 			
-//			//弃审完成后回写   删除生成的对应月计划
-//			bo.reWriteNextBillOnUnapprove(planvo);
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

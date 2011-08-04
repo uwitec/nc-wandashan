@@ -25,26 +25,48 @@ public class ClientController extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 		return new int[] {
+				IBillButton.Refbill,
+				IBillButton.Add,
+				HgPuBtnConst.Editor,
+				IBillButton.Save,
+				IBillButton.Cancel,
 				IBillButton.Query,
+				IBillButton.Audit,
+				IBillButton.Action,
+				IBillButton.Del,
+				IBillButton.Line,
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Return,
+				IBillButton.Copy,
 				HgPuBtnConst.OPEN,
 				HgPuBtnConst.CLOSE,
-				IBillButton.Print,
-				
+				HgPuBtnConst.FZGN,
+				HgPuBtnConst.ASSQUERY,
+				HgPuBtnConst.ASSPRINT
 		};
 	}
 	
 	public int[] getListButtonAry() {
 		return new int[] { 
+				IBillButton.Refbill,
+				IBillButton.Add,
+				HgPuBtnConst.Editor,
+				IBillButton.Cancel,
 				IBillButton.Query,
+				IBillButton.Audit,
+				IBillButton.Action,
+				IBillButton.Line,
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Card,
 				HgPuBtnConst.OPEN,
 				HgPuBtnConst.CLOSE,
-				IBillButton.Print,
+				IBillButton.Copy,
+				HgPuBtnConst.FZGN,
+				HgPuBtnConst.ASSQUERY,
+				HgPuBtnConst.ASSPRINT
+				
 		};
 	}
 
@@ -77,7 +99,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public int getBusinessActionType() {
-		return IBusinessActionType.BD;
+		return IBusinessActionType.PLATFORM;
 	}
 
 	public String getChildPkField() {

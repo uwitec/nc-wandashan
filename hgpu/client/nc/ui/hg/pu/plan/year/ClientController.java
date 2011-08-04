@@ -39,7 +39,6 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Copy,
 				HgPuBtnConst.FZGN,
-				HgPuBtnConst.ASSQUERY,
 				HgPuBtnConst.ASSPRINT,
 				HgPuBtnConst.IMPROT
 				
@@ -60,9 +59,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Card,
 				IBillButton.Copy,
 				HgPuBtnConst.FZGN,
-				HgPuBtnConst.ASSQUERY,
-				HgPuBtnConst.ASSPRINT,
-				HgPuBtnConst.IMPROT
+				HgPuBtnConst.ASSPRINT
 		};
 	}
 
