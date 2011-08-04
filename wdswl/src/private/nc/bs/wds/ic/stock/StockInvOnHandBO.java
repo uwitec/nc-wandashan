@@ -246,6 +246,7 @@ public class StockInvOnHandBO {
 			if (noutassistnum.equals(nhandassnum)							
 					&& noutnum.equals(nhandnum)){
 				stock.setWhs_status(1);
+				if(warehousid.equalsIgnoreCase(WdsWlPubConst.WDS_WL_ZC))//只有总仓  维护托盘状态  for add mlr
 				updateBdcargdocTray(stock.getPplpt_pk(),StockInvOnHandVO.stock_state_null);//将托盘状态更新为  空盘  
 			}
 			stock.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
