@@ -73,7 +73,7 @@ public class SoSendUI extends ReportBaseUI {
 		ConditionVO[] cons = getQueryDlg().getConditionVO();
 		setHeadData(cons);
 		String sql = getQueryDlg().getWhereSQL();
-		sql = sql + "  and pk_corp = '"+_getCorpID()+"' and pk_outwhouse = '"+cstoreid+"'";
+		sql = sql + "  and h.pk_corp = '"+_getCorpID()+"' and pk_outwhouse = '"+cstoreid+"'";
 		ReportBaseVO[] vos;
 		try {
 			vos = getReportVO(sql);
