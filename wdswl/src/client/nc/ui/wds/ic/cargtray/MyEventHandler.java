@@ -36,20 +36,20 @@ public class MyEventHandler extends ManageEventHandler {
 	}	
 	
 	
-	@Override
-	protected String getHeadCondition() {
-		
-//		StringBuffer strWhere = new StringBuffer();
-//		String cargdocPK = null;
-//		try {
-//			cargdocPK = getCargdocPK(_getOperator());
-//		} catch (BusinessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		strWhere.append(" pk_cargdoc='"+cargdocPK+"'");	
-		return null;
-	}
+//	@Override
+//	protected String getHeadCondition() {
+//		
+////		StringBuffer strWhere = new StringBuffer();
+////		String cargdocPK = null;
+////		try {
+////			cargdocPK = getCargdocPK(_getOperator());
+////		} catch (BusinessException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		strWhere.append(" pk_cargdoc='"+cargdocPK+"'");	
+//		return null;
+//	}
 
 	public LoginInforHelper getLoginInforHelper(){
 		if(helper == null){

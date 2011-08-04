@@ -51,8 +51,10 @@ private LoginInforHelper helper = null;
 
 	@Override
 	protected String getHeadCondition() {
+		StringBuffer strWhere = new StringBuffer();
 		boolean isStock = true;
 		String pk_stordoc =WdsWlPubConst.WDS_WL_ZC;
+		strWhere.append(" isnull(dr,0) = 0 and pk_corp = '"+_getCorp().getPrimaryKey()+"' ");
 		try {
 			pk_stordoc = getLoginInforHelper().getCwhid(_getOperator());
 			isStock = WdsWlPubTool.isZc(pk_stordoc);
@@ -60,11 +62,10 @@ private LoginInforHelper helper = null;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//ÊÇ·ñÊÇ×Ü²Ö
-		if(isStock){
-			return null;
-		}else{
-			return " wds_soorder.pk_outwhouse='"+pk_stordoc+"'";
+		if(!isStock){
+			strWhere.append(" and wds_soorder.pk_outwhouse='"+pk_stordoc+"'");
 		}
+		return strWhere.toString();
 		
 	}
 

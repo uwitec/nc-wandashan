@@ -33,7 +33,6 @@ public class ClientUIQueryDlg extends WdsQueryDlg {
 		if(sql==null){
 	      return null;
 		}
-		sql += "and pk_corp ='"+ClientEnvironment.getInstance().getCorporation().getPk_corp()+"'";
 		if(sql.contains("wds_soorder.vbillstatus = 0")){
 			
 		  return sql.replace("wds_soorder.vbillstatus = 0", "wds_soorder.vbillstatus = 8");

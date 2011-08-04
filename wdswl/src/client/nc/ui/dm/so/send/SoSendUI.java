@@ -8,6 +8,7 @@ import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.query.ConditionVO;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 import nc.vo.wl.pub.report.ReportBaseVO;
@@ -73,7 +74,14 @@ public class SoSendUI extends ReportBaseUI {
 		ConditionVO[] cons = getQueryDlg().getConditionVO();
 		setHeadData(cons);
 		String sql = getQueryDlg().getWhereSQL();
+
+		if(PuPubVO.getString_TrimZeroLenAsNull(cstoreid)!=null){
+			sql += "and pk_outwhouse = '"+cstoreid+"'";
+		}
+		
+
 		sql = sql + "  and h.pk_corp = '"+_getCorpID()+"' and pk_outwhouse = '"+cstoreid+"'";
+
 		ReportBaseVO[] vos;
 		try {
 			vos = getReportVO(sql);

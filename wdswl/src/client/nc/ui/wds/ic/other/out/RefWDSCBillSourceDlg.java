@@ -94,7 +94,9 @@ public class RefWDSCBillSourceDlg  extends WdsBillSourceDLG {
 
 		hsql.append(" isnull(wds_cgqy_h.dr,0)=0 and wds_cgqy_h.vbillstatus =1 ");
 		if(!isStock){
-			hsql.append("and wds_cgqy_h.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
+			//wds_cgqy_h.reserve3是仓库
+//			hsql.append("and wds_cgqy_h.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
+			hsql.append("and wds_cgqy_h.reserve3='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
 		hsql.append("and wds_cgqy_h.pk_cgqy_h in");//只能看到包含当前登录人绑定货位下存货的单据
 	    //if(inv_Pks !=null && inv_Pks.length>0){

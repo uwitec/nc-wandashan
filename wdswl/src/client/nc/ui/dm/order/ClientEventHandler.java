@@ -42,10 +42,10 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		return queryDialog;
 	}
 
-	@Override
-	protected String getHeadCondition() {
-		return null;
-	}
+//	@Override
+//	protected String getHeadCondition() {
+//		return null;
+//	}
 	
 	@Override
 	protected void onBoSave() throws Exception {
