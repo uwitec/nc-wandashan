@@ -18,7 +18,7 @@ public class InvmandocRefModel extends AbstractRefModel {
 	private String[] fieldname = { "存货编码", "存货名称", "规格", "型号", "托盘容量", "存货层数",
 			"销售预警天数", "销售警戒天数", "调拨警戒天数1", "调拨警戒天数2" };
 
-	private String strWhere = " isnull(wds_invbasdoc.dr,0)=0 and isnull(bd_invbasdoc.dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
+	private String strWhere = " isnull(wds_invbasdoc.dr,0)=0 and isnull(bd_invbasdoc.dr,0)=0 and wds_invbasdoc.pk_corp = '"+getPk_corp()+"'";
 	private String[] hidecode = { "wds_invbasdoc.pk_invbasdoc",
 			"wds_invbasdoc.pk_invmandoc", "wds_invbasdoc.pk_wds_invbasdoc" };
 
