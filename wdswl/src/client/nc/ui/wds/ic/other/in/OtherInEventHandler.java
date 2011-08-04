@@ -1,9 +1,7 @@
 package nc.ui.wds.ic.other.in;
 
 import nc.bs.logging.Logger;
-import nc.bs.pub.install.UFDate;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.button.IBillButton;
@@ -14,7 +12,6 @@ import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
-import nc.vo.hbbb.meetaccount.GetDataCondVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
@@ -130,15 +127,17 @@ public class OtherInEventHandler extends InPubEventHandler {
 		LoginInforHelper lo=new LoginInforHelper();
 		try{
 			strWhere.append(" geh_billtype ='"+WdsWlPubConst.BILLTYPE_OTHER_IN+"' ");
+			strWhere.append(" and isnull(dr,0) = 0 and pk_corp = '"+_getCorp().getPrimaryKey()+"' ");
 			String pk_stordoc = lo.getCwhid(_getOperator());
 			strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
 			String cargdocid = lo.getSpaceByLogUserForStore(ui._getOperator());
 			if(cargdocid != null){//不是保管员登录 可以查看所有入库单
 				strWhere.append(" and pk_cargdoc = '"+cargdocid+"'");
 			}
-			strWhere.append(" and isnull(dr,0) = 0 and pk_corp = '"+_getCorp().getPrimaryKey()+"' ");
+			
 		} catch (Exception e) {
 			Logger.info(e);
+			System.out.print(e);
 		}
 		return strWhere.toString();
 
