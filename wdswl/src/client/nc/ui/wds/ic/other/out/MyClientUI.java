@@ -24,6 +24,7 @@ import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -271,7 +272,7 @@ public class MyClientUI extends OutPubClientUI implements
 		if("fistag".equalsIgnoreCase(key)){
 			int row = e.getRow();
 			Object o = e.getValue();
-			if( null == o || "".equals(o) || "false" == o.toString()){
+			if( UFBoolean.FALSE.equals(o) ){
 				getBillCardPanel().setBodyValueAt(null,row, "ntagnum");
 			}
 		}

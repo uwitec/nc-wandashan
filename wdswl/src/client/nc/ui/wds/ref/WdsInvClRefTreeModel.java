@@ -10,7 +10,7 @@ public class WdsInvClRefTreeModel extends AbstractRefTreeModel {
 	private String[] hidecode = {"pk_invcl","pk_father"};
 	private String pkFieldCode = "pk_invcl";
 	private String pkFatherfield = "pk_father";
-	private String sqlWherePart = " isnull(dr,0)=0";
+	private String sqlWherePart = " isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
 
 	/**
 	 * RouteRefModel 构造子注解。

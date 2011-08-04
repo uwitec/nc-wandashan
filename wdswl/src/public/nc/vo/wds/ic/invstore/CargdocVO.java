@@ -21,6 +21,9 @@
  */
      public class CargdocVO extends SuperVO {
            
+    	 	//公司主键
+    	 	 private String pk_corp;
+    	 	 
              public String reserve5;
              //仓库主键
              public String pk_stordoc;
@@ -529,5 +532,13 @@
 				
 	   return "wds_cargdoc1"; 
 				
-	 } 
+	 }
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
+
+	public String getPk_corp() {
+		return pk_corp;
+	} 
 } 

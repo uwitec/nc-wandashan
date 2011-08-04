@@ -3,6 +3,7 @@ package nc.ui.wl.pub;
 import java.util.HashMap;
 import java.util.Map;
 
+import nc.ui.pub.ClientEnvironment;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
@@ -24,16 +25,40 @@ public class LoginInforHelper {
 	 * @return
 	 * @throws Exception
 	 */
+//	public  LoginInforVO getLogInfor(String userid)
+//			throws Exception {
+//		if (m_loginInfor == null
+//				|| PuPubVO.getString_TrimZeroLenAsNull(m_loginInfor
+//						.getLoguser()) == null
+//				|| !m_loginInfor.getLoguser().equalsIgnoreCase(userid)) {
+//			Class[] ParameterTypes = new Class[]{String.class};
+//			Object[] ParameterValues = new Object[]{userid};
+//			Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getLogInfor", ParameterTypes, ParameterValues, 2);
+//      if ( os == null){
+//				throw new BusinessException("当前登录人员没有绑定仓库");
+//			}
+//			m_loginInfor = (LoginInforVO)os;
+//		}
+//		return m_loginInfor;
+//	}
+	
+	/**
+	 * @author yf
+	 * 当前登陆信息 采用pk_corp过滤条件 原bo中重载登陆方法 双字符串参数userid，pk_corp
+	 */
 	public  LoginInforVO getLogInfor(String userid)
 			throws Exception {
 		if (m_loginInfor == null
 				|| PuPubVO.getString_TrimZeroLenAsNull(m_loginInfor
 						.getLoguser()) == null
 				|| !m_loginInfor.getLoguser().equalsIgnoreCase(userid)) {
-			Class[] ParameterTypes = new Class[]{String.class};
-			Object[] ParameterValues = new Object[]{userid};
+			//当前登陆公司
+			String pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();
+			
+			Class[] ParameterTypes = new Class[]{String.class,String.class};
+			Object[] ParameterValues = new Object[]{userid,pk_corp};
 			Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getLogInfor", ParameterTypes, ParameterValues, 2);
-      if ( os == null){
+			if ( os == null){	
 				throw new BusinessException("当前登录人员没有绑定仓库");
 			}
 			m_loginInfor = (LoginInforVO)os;

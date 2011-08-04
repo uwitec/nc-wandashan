@@ -18,7 +18,7 @@ public class TeamDocRefModel extends AbstractRefModel{
 	 private String pkFieldCode="pk_wds_teamdoc_h";
 	 
 	 
-	 private String sqlWherePart=" isnull(dr,0)=0";
+	 private String sqlWherePart=" isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
 	 
 	 private int defaultFieldCount=3;
 	    /**

@@ -206,8 +206,8 @@ public class SingleBodyEventHandler extends CardEventHandler{
 		sWhere = strWhere.toString();
 		if(getBillCardPanelWrapper()!=null)
 			if(getBillCardPanelWrapper().getBillCardPanel().getBodyItem("bodypk_corp")!=null)
-				sWhere=sWhere+" and bodypk_corp='"+_getCorp().getPrimaryKey()+"'";	
-		doBodyQuery(strWhere.toString());
+				sWhere += " and bodypk_corp='"+_getCorp().getPrimaryKey()+"'";	
+		doBodyQuery(sWhere);
 	}
 	@Override
 	protected void onBoRefresh() throws Exception {

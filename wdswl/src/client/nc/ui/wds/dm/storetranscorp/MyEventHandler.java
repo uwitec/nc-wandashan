@@ -65,4 +65,20 @@ public class MyEventHandler extends WdsPubEnventHandler {
 		onBoRefresh();
 	}
 
+	/**
+	 * @author yf
+	 * ±íÌåpk_corp×Ö¶Î¸³Öµ
+	 */
+	@Override
+	protected void onBoLineAdd() throws Exception {
+		super.onBoLineAdd();
+		int row = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
+		if (row == -1)//
+			row = getBillCardPanelWrapper().getBillCardPanel()
+					.getBillModel().getRowCount() - 1;
+		if (row < 0)
+			throw new RuntimeException("cann't get selected row");
+		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getCorp(), row, "pk_corp");
+	}
+
 }

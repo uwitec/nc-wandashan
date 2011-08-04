@@ -8,7 +8,7 @@ public class CZ02 extends AbstractRefModel {
 	private String[] m_aryFieldName = { "仓库编码", "仓库名称" };
 	private String m_sPkFieldCode = "pk_stordoc";
 	private String m_sRefTitle = "仓库信息";
-	private String m_sTableName = "(select pk_stordoc,storcode , storname  from bd_stordoc where def1 = '1' and dr = 0)tmp ";
+	private String m_sTableName = "(select pk_stordoc,storcode , storname  from bd_stordoc where def1 = '1' and dr = 0  and pk_corp = '"+getPk_corp()+"')tmp ";
 
 	/**
 	 * RouteRefModel 构造子注解。

@@ -56,9 +56,7 @@ public class MyClient extends BillManageUI {
 	
 	@Override
 	public void setDefaultData() throws Exception {
-		// TODO Auto-generated method stub
-	
-		
+		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		
 	}
 	@Override

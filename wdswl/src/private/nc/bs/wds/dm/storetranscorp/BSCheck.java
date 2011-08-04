@@ -36,7 +36,8 @@ public class BSCheck implements IBDBusiCheck {
 			return;
 		}
 		SuperVO[] vos=(SuperVO[]) vo.getChildrenVO();		
-		BsUniqueCheck.FieldUniqueChecks(vos,new String[]{"pk_wds_tanscorp_h"}," and pk_stordoc <> '"+vo.getParentVO().getAttributeValue("pk_stordoc")+"'", "该[承运商]在其他仓库已经存在");	
+//		BsUniqueCheck.FieldUniqueChecks(vos,new String[]{"pk_wds_tanscorp_h"}," and pk_stordoc <> '"+vo.getParentVO().getAttributeValue("pk_stordoc")+"'", "该[承运商]在其他仓库已经存在");	
+		BsUniqueCheck.FieldUniqueChecks(vos,new String[]{"pk_wds_tanscorp_h,pk_corp"}," and pk_stordoc <> '"+vo.getParentVO().getAttributeValue("pk_stordoc")+"'", "该[承运商]在其他仓库已经存在");
 	}
 	/**
 	 * @作者：mlr

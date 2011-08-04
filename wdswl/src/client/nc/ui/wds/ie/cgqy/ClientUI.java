@@ -1,6 +1,11 @@
 package nc.ui.wds.ie.cgqy;
+import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
@@ -16,7 +21,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author Administrator
  * 
  */
-public class ClientUI extends WdsBillManagUI {
+public class ClientUI extends WdsBillManagUI implements  BillCardBeforeEditListener{
 
 	private static final long serialVersionUID = -3998675844592858916L;
 	
@@ -35,6 +40,46 @@ public class ClientUI extends WdsBillManagUI {
 	
 	
 	
+	
+	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		return super.beforeEdit(e);
+	}
+
+	/**
+	 * @author yf
+	 * 仓库修改过滤 货位
+	 */
+	public boolean beforeEdit(BillItemEvent e) {
+		String key=e.getItem().getKey();
+		//对仓库过滤，过滤只属于当前公司的仓库
+		if("reserve3".equalsIgnoreCase(key)){
+			JComponent c =getBillCardPanel().getHeadItem("reserve3").getComponent();
+			if( c instanceof UIRefPane){
+				UIRefPane ref = (UIRefPane)c;
+				ref.getRefModel().addWherePart("  and def1 = '1' and isnull(dr,0) = 0");
+			}
+			return true;
+		}
+		
+		//对入库货位过滤，过滤只属于对应的入库仓库下面的货位
+		if("reserve2".equalsIgnoreCase(key)){
+			String pk_store=(String) getBillCardPanel().getHeadItem("reserve3").getValueObject();
+			if(null==pk_store || "".equalsIgnoreCase(pk_store)){
+				showWarningMessage("请选择入库仓库");
+				return false;
+			}			
+			JComponent c =getBillCardPanel().getHeadItem("reserve2").getComponent();
+			if( c instanceof UIRefPane){
+				UIRefPane ref = (UIRefPane)c;
+				ref.getRefModel().addWherePart("  and bd_cargdoc.pk_stordoc='"+pk_store+"' and isnull(bd_cargdoc.dr,0) = 0");
+			}
+			return true;			
+		}
+		return true;
+	}
+
 	/**
 	 * @author yf
 	 * 存货清空或修改后，该行内容初始化
@@ -124,5 +169,12 @@ public class ClientUI extends WdsBillManagUI {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void initEventListener() {
+		super.initEventListener();
+		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
+	}
+
 
 }

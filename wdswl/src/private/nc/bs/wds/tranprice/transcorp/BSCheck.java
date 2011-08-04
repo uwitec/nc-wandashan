@@ -40,7 +40,7 @@ public class BSCheck implements IBDBusiCheck {
 			throw new BusinessException("运输公司代码和运输公司名称不能为空"); 
 	    }
 		//校验 运输公司代码唯一性
-		BsUniqueCheck.FieldUniqueCheck(voparent, "ctranscorpcode", "[运输公司代码] 在数据库中已经存在");
+		BsUniqueCheck.FieldUniqueCheck(voparent, new String[]{"ctranscorpcode","pk_corp"}, "[运输公司代码] 在数据库中已经存在");
 	}
 	
 	public void dealAfter(int intBdAction, AggregatedValueObject billVo,

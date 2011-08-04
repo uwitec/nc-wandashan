@@ -3,6 +3,7 @@ package nc.vo.ic.other.out;
 import nc.vo.pf.change.IchangeVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.wds.ie.cgqy.CgqyHVO;
 /**
  * 
  * @author Administrator
@@ -15,9 +16,16 @@ public class ChangTOOtherOutVO implements IchangeVO{
 		if(nowVo == null)
 			return nowVo;
 		TbOutgeneralHVO hvo = (TbOutgeneralHVO)nowVo.getParentVO();
+		//在 其他出库参照采购取样时  将取货单位  和 取货人 拼接一个字符串  放到备注里面
+		CgqyHVO cgqyHVO = (CgqyHVO) preVo.getParentVO();
+		if(null != cgqyHVO){
+			hvo.setVnote(cgqyHVO.getCcusmandoc()+cgqyHVO.getCcustomer());
+		}
+		
+		//end
 		TbOutgeneralBVO[] bodyvos = (TbOutgeneralBVO[])nowVo.getChildrenVO();
 		if(bodyvos !=null && bodyvos.length>0){
-			for(int i =0 ;i<bodyvos.length;i++){
+			for(int i =0 ;i<bodyvos.length;i++){				
 				bodyvos[i].setCrowno(String.valueOf((i+1)*10));
 			}
 		}

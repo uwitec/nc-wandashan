@@ -21,6 +21,7 @@ import nc.vo.pub.lang.*;
  * @version Your Project 1.0
  */
 public class StortranscorpBVO extends SuperVO {	
+	private String pk_corp;
 	public String pk_stordoc;//Ö÷¼ü
 	public Integer dr;
 	public String vmemo;
@@ -1009,5 +1010,13 @@ public class StortranscorpBVO extends SuperVO {
 
 	public void setIsmallprice(Integer ismallprice) {
 		this.ismallprice = ismallprice;
+	}
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
+
+	public String getPk_corp() {
+		return pk_corp;
 	}
 }

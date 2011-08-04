@@ -33,7 +33,6 @@ try{
 			Object retObj = null;
 			AggregatedValueObject avo = vo.m_preValueVo;
 			SuperVO[] vos = (SuperVO[]) avo.getChildrenVO();
-			BsUniqueCheck.FieldUniqueCheck(vos, "pk_invmandoc", "±‡¬Î÷ÿ∏¥");
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

@@ -346,7 +346,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	
 	@Override
 	public void onBoAdd(ButtonObject bo) throws Exception {	
-	 SuperVO[] vos= HYPubBO_Client.queryByCondition(SendinvdocVO.class, "  isnull(dr,0)=0  order by crow");	
+		//Ôö¼Ópk_corp
+	 SuperVO[] vos= HYPubBO_Client.queryByCondition(SendinvdocVO.class, "pk_corp = '"+_getCorp()+"' and  isnull(dr,0)=0  order by crow");	
 	 super.onBoAdd(bo);	 	 	 
 	 getBillCardPanelWrapper().getBillCardPanel().getBillData().setBodyValueVO(vos);
 	 getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();

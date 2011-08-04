@@ -89,6 +89,9 @@ public class RefWDSCBillSourceDlg  extends WdsBillSourceDLG {
 	@Override
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
+		//表单参照交换vo添加pk_corp
+		hsql.append("wds_cgqy_h.pk_corp = '"+getPkCorp()+"' and");
+
 		hsql.append(" isnull(wds_cgqy_h.dr,0)=0 and wds_cgqy_h.vbillstatus =1 ");
 		if(!isStock){
 			hsql.append("and wds_cgqy_h.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的

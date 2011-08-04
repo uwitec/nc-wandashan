@@ -35,17 +35,15 @@ public class ClientUI extends BillCardUI{
 	protected void initSelfData() {
 		
 	}	
+	
 	@Override
 	public Object getUserObject() {
 		
 		return new GetCheckClass();
 	}
-	/**
-	 * @author yf
-	 * 默认 价格单位priceunit = 0
-	 */
+	
 	@Override
 	public void setDefaultData() throws Exception {
-
+		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 	}
 }

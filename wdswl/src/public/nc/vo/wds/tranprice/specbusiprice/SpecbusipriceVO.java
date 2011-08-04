@@ -26,6 +26,8 @@
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	//¹«Ë¾Ö÷¼ü
+	private String pk_corp;
 			public String reserve5;
              public String vdef4;
              public String reserve4;
@@ -946,5 +948,13 @@
 				
 	   return "wds_specbusiprice"; 
 				
-	 } 
+	 }
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
+
+	public String getPk_corp() {
+		return pk_corp;
+	} 
 } 

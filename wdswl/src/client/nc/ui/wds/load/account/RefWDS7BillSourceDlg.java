@@ -52,6 +52,9 @@ public class RefWDS7BillSourceDlg  extends WdsBillSourceDLG {
 	@Override
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
+		//表单参照交换vo添加pk_corp
+		hsql.append("tb_general_h.pk_corp = '"+getPkCorp()+"' and");
+
 		hsql.append(" isnull(tb_general_h.dr,0)=0 and tb_general_h.pwb_fbillflag = 1 ");
 		hsql.append(" and tb_general_h.geh_billtype='"+WdsWlPubConst.BILLTYPE_OTHER_IN+"'");
 		hsql.append(" and upper(isnull(tb_general_h.fisload,'N'))='N'");

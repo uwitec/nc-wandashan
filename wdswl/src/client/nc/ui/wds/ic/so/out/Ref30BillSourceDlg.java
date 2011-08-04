@@ -94,6 +94,9 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
+		//表单参照交换vo添加pk_corp
+		hsql.append(" so_sale.pk_corp = '"+getPkCorp()+"' and");
+
 		hsql.append(" isnull(so_sale.dr,0)=0 and so_sale.fstatus = 2 ");
 		hsql.append(" and isnull(so_sale.bretinvflag,'N')='N'");
 		if(!isStock){

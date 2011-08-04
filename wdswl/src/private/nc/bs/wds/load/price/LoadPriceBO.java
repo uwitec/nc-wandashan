@@ -38,8 +38,8 @@ public class LoadPriceBO implements IBDBusiCheck {
 			throw new BusinessException("请输入存货");
 		} 
 		
-		BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"pk_invmandoc","cwarehouseid"},"该仓库下已经有该存货");
-		
+//		BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"pk_invmandoc","cwarehouseid"},"该仓库下已经有该存货");
+		BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"pk_invmandoc","cwarehouseid","pk_corp"},"该仓库下已经有该存货");
 //		String condition = " pk_invmandoc='" + ivo.getPk_invmandoc()
 //				+ "' and  isnull(dr,0)=0";
 //		if (ivo.getPrimaryKey() == null

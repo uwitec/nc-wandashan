@@ -115,7 +115,7 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String pk_defdoc5;
 	public String vuserdef2;
 	public String vuserdef5;
-	public String vnote;
+	public String vnote;//--备注 参照采购取样时，将取货单位  和 取货人 拼接一个字符串  放到备注里面
 	
 	public String vuserdef8;
 	public String vuserdef4;

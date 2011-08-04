@@ -9,6 +9,7 @@ public class PpRefer extends AbstractRefModel {
 	private String m_sPkFieldCode= "pk_stordoc";
 	private String m_sRefTitle= "分仓信息";
 	private String m_sTableName= "bd_stordoc";
+	private String sqlWherePart = " def1 = '1' and isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
 	/**
 	 * RouteRefModel 构造子注解。
 	 */
@@ -69,6 +70,6 @@ public class PpRefer extends AbstractRefModel {
 		return m_sTableName;
 	}
 	public String getWherePart() {
-		return " def1 = '1' and isnull(dr,0)=0";
+		return sqlWherePart;
 	}
 }

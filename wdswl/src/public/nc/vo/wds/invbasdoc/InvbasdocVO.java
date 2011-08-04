@@ -22,7 +22,8 @@ import nc.vo.wds.invcl.WdsInvClVO;
  * @version Your Project 1.0
  */
      public class InvbasdocVO extends SuperVO {
-           
+           //公司主键
+    	 private String pk_corp;
              public String pk_invbasdoc;
              public String vdef2;//------zhf 20110627  所属存货分类编码
              public String vdef4;
@@ -463,6 +464,16 @@ import nc.vo.wds.invcl.WdsInvClVO;
 
 	public void setFuesed(Integer fuesed) {
 		this.fuesed = fuesed;
+	}
+
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
+
+
+	public String getPk_corp() {
+		return pk_corp;
 	} 
 	
 	

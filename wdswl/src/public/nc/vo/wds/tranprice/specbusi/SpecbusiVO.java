@@ -20,7 +20,9 @@ import nc.vo.pub.lang.*;
  * @version Your Project 1.0
  */
      public class SpecbusiVO extends SuperVO {
-           
+           //¹«Ë¾Ö÷¼ü
+    	 private String pk_corp;
+    	 
              public String reserve5;
              public String reserve4;
              public String vdef4;
@@ -918,4 +920,12 @@ import nc.vo.pub.lang.*;
 	 return pk_wds_specbusi;
   
   }
+
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
+
+	public String getPk_corp() {
+		return pk_corp;
+	}
 }

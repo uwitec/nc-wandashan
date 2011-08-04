@@ -17,6 +17,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.wl.pub.WdsBillManagUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
@@ -610,7 +611,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void setInitWarehouse(String warehouseid) throws Exception{
 		BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(warehouseid);
 		if(null != item && item.getValueObject() == null){
-			String  geh_cwarehouseid = ((InPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
+			String  geh_cwarehouseid = ((WdsBillManagUI) getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
 	}

@@ -46,7 +46,7 @@ public class WdsInvClRefModel extends AbstractRefModel {
 	 private String pkFieldCode="pk_invcl";
 	 
 	 
-	 private String sqlWherePart=" isnull(dr,0)=0";
+	 private String sqlWherePart=" isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
 	 
 	 private int defaultFieldCount=2;
 	    /**

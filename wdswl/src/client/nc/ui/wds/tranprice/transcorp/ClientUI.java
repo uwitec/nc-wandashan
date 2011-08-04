@@ -72,7 +72,7 @@ public class ClientUI extends MutilChildUI {
 
 	@Override
 	public void setDefaultData() throws Exception {
-	
+	//pk_corp×Ö¶Î¸³Ä¬ÈÏÖµ
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		
 	}

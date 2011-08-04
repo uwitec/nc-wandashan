@@ -94,6 +94,8 @@ public class RefWDS3BillSourceDlg  extends WdsBillSourceDLG {
 	@Override
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
+		//表单参照交换vo添加pk_corp
+		hsql.append(" wds_sendorder.pk_corp = '"+getPkCorp()+"' and");
 		hsql.append(" isnull(wds_sendorder.dr,0)=0 and wds_sendorder.vbillstatus =8 and isnull(iprintcount,0)>0");//自由态，并且打印过的 
 		hsql.append(" and isnull(wds_sendorder.fisended,'N')='N'");
 		//hsql.append(" isnull(wds_sendorder.dr,0)=0 and wds_sendorder.vbillstatus =1 ");

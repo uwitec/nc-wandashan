@@ -7,9 +7,10 @@ public class InvmandocRefModel extends AbstractRefModel{
 	
 	 private String m_sRefTitle = "当前货位下存货";
 	 
-	 private String tablename="tb_spacegoods join wds_invbasdoc on tb_spacegoods.pk_invmandoc=wds_invbasdoc.pk_invmandoc  join bd_invmandoc on tb_spacegoods.pk_invmandoc" +
-	 		"=bd_invmandoc.pk_invmandoc  join  bd_invbasdoc " +
-	 		"on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc ";
+	 private String tablename="tb_spacegoods join " +
+	 		"wds_invbasdoc on tb_spacegoods.pk_invmandoc=wds_invbasdoc.pk_invmandoc  join " +
+	 		"bd_invmandoc on tb_spacegoods.pk_invmandoc=bd_invmandoc.pk_invmandoc  join  " +
+	 		"bd_invbasdoc on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc ";
 	
 	 private String[] fieldcode={"invcode","invname","invspec","invtype",
 			 "tb_spacegoods.pk_invbasdoc","tb_spacegoods.pk_invmandoc"};

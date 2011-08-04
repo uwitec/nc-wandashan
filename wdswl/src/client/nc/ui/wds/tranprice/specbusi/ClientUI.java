@@ -53,7 +53,7 @@ public class ClientUI extends BillCardUI{
 
 	@Override
 	public void setDefaultData() throws Exception {
-		
+		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		
 	}
 

@@ -81,7 +81,7 @@ public class MyEventHandler extends ManageEventHandler {
 	
 		LoginInforVO login=getLoginInforHelper().getLogInfor(_getOperator());
 		
-	  SuperVO[] vos=HYPubBO_Client.queryByCondition(CargdocVO.class, " wds_cargdoc.pk_cargdoc='"+login.getSpaceid()+"' and isnull(wds_cargdoc.dr,0)=0");
+	  SuperVO[] vos=HYPubBO_Client.queryByCondition(CargdocVO.class, " wds_cargdoc.pk_cargdoc='"+login.getSpaceid()+"' and isnull(wds_cargdoc.dr,0)=0 and pk_corp = '"+_getCorp().getPrimaryKey()+"'");
 		 if(vos !=null && vos.length>0){
 			 throw new Exception("该货位已经存在，请执行查询操作");
 		 }

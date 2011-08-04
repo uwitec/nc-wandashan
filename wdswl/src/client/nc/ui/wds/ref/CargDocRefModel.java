@@ -25,7 +25,7 @@ public class CargDocRefModel extends AbstractRefModel {
 	 private String pkFieldCode="pk_cargdoc";
 	 
 	 
-//	 private String sqlWherePart=" isnull(dr,0)=0 ";
+	 private String sqlWherePart=" isnull(dr,0)=0 and pk_corp ='"+getPk_corp()+"' ";
 	 
 	 private int defaultFieldCount=1;
 	 
@@ -95,12 +95,11 @@ public class CargDocRefModel extends AbstractRefModel {
 		return m_sRefTitle;
 	    }
 	    @Override
-	    public String getWherePart() {	    	        
-	    	String sql =  "isnull(dr,0) = 0 ";
+	    public String getWherePart() {	    	
 	    	if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null)
-	    		sql = sql + " and pk_stordoc = '"+cwarehouseid+"'";
+	    		sqlWherePart = sqlWherePart + " and pk_stordoc = '"+cwarehouseid+"'";
 	    	
-	    	return sql;
+	    	return sqlWherePart;
 	    }
 	    /**
 	     * 参照数据库表或者视图名 创建日期：(01-4-4 0:57:23)

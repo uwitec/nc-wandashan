@@ -19,7 +19,7 @@ public class TraydocRefModel extends AbstractRefModel{
 	 private String pkFieldCode="bd_cargdoc_tray.cdt_pk";
 	 
 	 
-	 private String sqlWherePart=" isnull(dr,0)=0";
+	 private String sqlWherePart=" isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"'";
 	 
 	 private String pk_cargdoc = null;//»õÎ»ID
 	 

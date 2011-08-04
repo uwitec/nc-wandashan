@@ -32,7 +32,7 @@ public class BSCheck implements IBDBusiCheck {
 			return;
 		}
   
-		BsUniqueCheck.FieldUniqueCheck((SuperVO[])vo.getChildrenVO(), "pk_wds_specbusi", "该特殊运价编码在数据库中已经存在");
+		BsUniqueCheck.FieldUniqueCheck((SuperVO[])vo.getChildrenVO(), new String[]{"pk_wds_specbusi","pk_corp"}, "该特殊运价编码在数据库中已经存在");
 		
 	}
 	

@@ -23,6 +23,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wds.ie.cgqy.CgqyHVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -96,7 +97,14 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		super.onBillRef();
 		//设置单据号
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vbillno", ((MyClientUI)getBillUI()).getBillNo());
-	
+//		AggregatedValueObject[] vos = PfUtilClient.getRetOldVos();
+//		AggregatedValueObject vo = vos[0];
+//		CgqyHVO headVO = (CgqyHVO) vo.getParentVO();
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vnote", "取货单位："+
+				//headVO.getAttributeValue("ccusmandoc")+
+				";取货人："
+				//+vo.getParentVO().getAttributeValue("ccustomer")
+				);
 		//增行按钮去掉
 		ButtonObject btnobj = getBillUI().getButtonManager().getButton(IBillButton.AddLine);
 		if (btnobj != null) {

@@ -25,7 +25,7 @@ public class BSCheck implements IBDBusiCheck {
 		if (vo == null || vo.getChildrenVO() == null || vo.getChildrenVO().length==0) {
 			return;
 		}
-		BsUniqueCheck.FieldUniqueCheck((SuperVO[])(vo.getChildrenVO()), "speccode", "该特殊业务编码在数据库中已经存在");		
+		BsUniqueCheck.FieldUniqueCheck((SuperVO[])(vo.getChildrenVO()), new String[]{"speccode","pk_corp"}, "该特殊业务编码在数据库中已经存在");		
 		
 	}
 	

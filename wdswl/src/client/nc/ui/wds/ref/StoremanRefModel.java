@@ -15,6 +15,8 @@ public class StoremanRefModel extends AbstractRefModel {
 
 	private String[] fieldname = {  "保管员编号","保管员名称","仓库名称", "货位名称",  };
 
+	private String strWhere = " isnull(tb_stockstaff.dr,0)=0 and tb_stockstaff.st_type=0 and pk_corp = '"+getPk_corp()+"'";
+	
 	private String[] hidecode = { "tb_stockstaff.st_pk",
 			"tb_stockstaff.pk_stordoc", "tb_stockstaff.pk_cargdoc",
 			"tb_stockstaff.cuserid" };
@@ -80,11 +82,7 @@ public class StoremanRefModel extends AbstractRefModel {
 
 	@Override
 	public String getWherePart() {
-		StringBuffer strWhere = new StringBuffer();
-		strWhere
-				.append(" isnull(tb_stockstaff.dr,0)=0 and tb_stockstaff.st_type=0");
-
-		return strWhere.toString();
+		return strWhere;
 	}
 
 	/**

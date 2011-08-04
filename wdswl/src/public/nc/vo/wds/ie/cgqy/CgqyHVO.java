@@ -21,6 +21,10 @@
  */
      public class CgqyHVO extends SuperVO {
            
+    	 //添加char（128）取货人，取货单位，原有字段隐藏8.2日添加
+    	 private String ccustomer;//新定义取货人
+    	 private String ccusmandoc;//新定义取货单位
+    	 
              public String pk_corp;
              public String reserve5;
              public String reserve4;
@@ -1206,5 +1210,21 @@
 				
 	   return "wds_cgqy_h"; 
 				
-	 } 
+	 }
+
+	public void setCcustomer(String ccustomer) {
+		this.ccustomer = ccustomer;
+	}
+
+	public String getCcustomer() {
+		return ccustomer;
+	}
+
+	public void setCcusmandoc(String ccusmandoc) {
+		this.ccusmandoc = ccusmandoc;
+	}
+
+	public String getCcusmandoc() {
+		return ccusmandoc;
+	} 
 } 

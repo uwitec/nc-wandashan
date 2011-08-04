@@ -5,6 +5,7 @@ import java.util.List;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.trade.business.IBDBusiCheck;
+import nc.bs.wl.pub.BsUniqueCheck;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.trade.pub.IBDACTION;
@@ -40,18 +41,19 @@ public class BSCheck implements IBDBusiCheck {
 		TeamdocHVO ivo = (TeamdocHVO) vo.getParentVO();
 		// 如果是新增后的保存执行下面的代码
 		if (ivo.getPrimaryKey() == null	|| ivo.getPrimaryKey().trim().equals("")) {
-
-			String condition = " teamcode='" + ivo.getTeamcode()
-					+ "' and  isnull(dr,0)=0";
-			List list = (List) getDao().retrieveByClause(TeamdocHVO.class,
-					condition);
-			if (list == null || list.size() == 0) {
-				//对表体人员编码唯一性的校验
+			// 表头 班组编号唯一校验
+			BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"teamcode","pk_corp"}, " 该班组编码在数据库中已经存在 ");
+//			String condition = " teamcode='" + ivo.getTeamcode()
+//					+ "' and  isnull(dr,0)=0";
+//			List list = (List) getDao().retrieveByClause(TeamdocHVO.class,
+//					condition);
+//			if (list == null || list.size() == 0) {
+//				//对表体人员编码唯一性的校验
 				validatePsn(vo);
-				
-			}else{
-				throw new BusinessException(" 该班组编码在数据库中已经存在 ");
-			}
+//				
+//			}else{
+//				throw new BusinessException(" 该班组编码在数据库中已经存在 ");
+//			}
 		}else{
 			// 否则执行下面的代码
 			String condition = " pk_wds_teamdoc_h='" + ivo.getPrimaryKey()
@@ -70,18 +72,18 @@ public class BSCheck implements IBDBusiCheck {
 				validatePsn(vo);
 
 			}else{
-
-				String condition1 = " teamcode='" + ivo.getTeamcode()
-						+ "' and  isnull(dr,0)=0";
-				List list1 = (List) getDao().retrieveByClause(TeamdocHVO.class,
-						condition1);
-				if (list1 == null || list1.size() == 0) {
-					//判断人员编码是否在数据库中存在
+				BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"teamcode","pk_corp"}, " 该班组编码在数据库中已经存在 ");
+//				String condition = " teamcode='" + ivo.getTeamcode()
+//						+ "' and  isnull(dr,0)=0";
+//				List list = (List) getDao().retrieveByClause(TeamdocHVO.class,
+//						condition);
+//				if (list == null || list.size() == 0) {
+//					//对表体人员编码唯一性的校验
 					validatePsn(vo);
-
-				} else {
-					throw new BusinessException(" 该班组编码在数据库中已经存在 ");
-				}
+//					
+//				}else{
+//					throw new BusinessException(" 该班组编码在数据库中已经存在 ");
+//				}
 			}
 		}
 		
