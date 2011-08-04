@@ -1,28 +1,24 @@
 package nc.bs.pub.action;
 
-
 import java.util.Hashtable;
 
-import nc.bs.hg.pu.plan.pub.PlanPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFDate;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
- * 物资需求计划
+ * 月计划审批
  * @author Administrator
  *
  */
-public class N_HG01_UNAPPROVE extends AbstractCompiler2 {
+public class N_HG02_APPROVE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
 
-	public N_HG01_UNAPPROVE() {
+	public N_HG02_APPROVE() {
 		super();
 	}
 
@@ -36,22 +32,21 @@ public class N_HG01_UNAPPROVE extends AbstractCompiler2 {
 			AggregatedValueObject billvo = getVo();
 			if(billvo == null){
 				throw new BusinessException("传入数据为空");
-			}
-			
+			}			
 			HYBillVO planvo = (HYBillVO)billvo;
+		
 			
-			//校验是否可以弃审
-			PlanPubBO bo = new PlanPubBO();
-			bo.checkPlanOnUnApprove(PuPubVO.getString_TrimZeroLenAsNull(getUserObj()), vo.m_coId, new UFDate(vo.m_currentDate), billvo);
-			
-			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
-			procUnApproveFlow(vo);
-			Object retObj = runClass("nc.bs.hg.pu.pub.HYBillUnApprove",
-					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
-					vo, m_keyHas, m_methodReturnHas);
-			
-//			//弃审完成后回写   删除生成的对应月计划
-//			bo.reWriteNextBillOnUnapprove(planvo);
+			// ####该组件为单动作工作流处理开始...不能进行修改####
+			Object m_sysflowObj = procActionFlow(vo);
+			if (m_sysflowObj != null) {
+				return m_sysflowObj;
+			}
+			// ####该组件为单动作工作流处理结束...不能进行修改####
+			Object retObj = null;
+			setParameter("currentVo", vo.m_preValueVo);
+			retObj = runClass("nc.bs.hg.pu.pub.HYBillApprove", "approveHYBill",
+					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
+					m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)
@@ -65,7 +60,7 @@ public class N_HG01_UNAPPROVE extends AbstractCompiler2 {
 	 * 备注：平台编写原始脚本
 	 */
 	public String getCodeRemark() {
-		return "	//####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####\n procUnApproveFlow (vo); \nObject retObj=runClassCom@ \"nc.bs.pp.pub.comstatus.HYBillUnApprove\", \"unApproveHYBill\", \"nc.vo.pub.AggregatedValueObject:01\"@;\nreturn retObj;\n";
+		return "	//####该组件为单动作工作流处理开始...不能进行修改####\nprocActionFlow@@;\n//####该组件为单动作工作流处理结束...不能进行修改####\nObject  retObj  =null;\n setParameter(\"currentVo\",vo.m_preValueVo);           \nretObj =runClassCom@ \"nc.bs.pp.pp0201.ApproveAction\", \"approveHYBill\", \"nc.vo.pub.AggregatedValueObject:01\"@;\n            ArrayList ls = (ArrayList)getUserObj();\n       \n        setParameter(\"userOpt\",ls.get(1));               \n            runClassCom@ \"nc.bs.pp.pp0201.ApproveAction\", \"afterApprove\", \"&userOpt:java.lang.Integer,nc.vo.pub.AggregatedValueObject:01\"@;               \nreturn retObj;\n";
 	}
 
 	/*

@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import nc.bs.hg.pu.plan.year.YearPlanBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.hg.pu.pub.HgPubConst;
-import nc.vo.hg.pu.pub.PlanBVO;
 import nc.vo.pr.pray.PraybillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -93,11 +92,13 @@ public class N_HG01_APPROVE extends AbstractCompiler2 {
 //				Object[] oPrayBillRet  = (Object[])runClass( "nc.bs.pub.pf.PfUtilBO", "processBatch", "&ACTIONNAME:String,&BILLTYPE:String,&BILLDATE:String,&BILLVOS:nc.vo.pub.AggregatedValueObject[],&P4:Object[],&P5:nc.vo.pub.pf.PfUtilWorkFlowVO",vo,m_keyHas,m_methodReturnHas);
 				runClass( "nc.bs.pub.pf.PfUtilBO", "processBatch", "&ACTIONNAME:String,&BILLTYPE:String,&BILLDATE:String,&BILLVOS:nc.vo.pub.AggregatedValueObject[],&P4:Object[],&P5:nc.vo.pub.pf.PfUtilWorkFlowVO",vo,m_keyHas,m_methodReturnHas);
 //				mapVirtualIDAndPrayBill  = (HashMap)oPrayBillRet[0];
-			}else{
-				//拆分成月计划
-				YearPlanBO bo = new YearPlanBO();
-				bo.splitYearPlan2MonthPlan(planvo, vo.m_coId);
 			}
+			// modify by zhw 年计划不需要拆分生成月计划
+//			else{
+//				//拆分成月计划
+//				YearPlanBO bo = new YearPlanBO();
+//				bo.splitYearPlan2MonthPlan(planvo, vo.m_coId);
+//			}
 			
 			
 			return retObj;

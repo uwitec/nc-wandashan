@@ -1,6 +1,6 @@
 package nc.ui.hg.pu.plan.month;
 
-import nc.ui.hg.pu.pub.CHManageEventHandler;
+import nc.ui.hg.pu.pub.PlanPubEventHandler;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -12,7 +12,7 @@ import nc.vo.hg.pu.pub.PlanVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 
-public class ClientEventHandler extends CHManageEventHandler {
+public class ClientEventHandler extends PlanPubEventHandler {
 
 	public ClientEventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
@@ -112,6 +112,12 @@ public class ClientEventHandler extends CHManageEventHandler {
 	@Override
 	protected void onBoRefresh() throws Exception {
 		super.onBoRefresh();
+	}
+
+	@Override
+	protected void beforeSave() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

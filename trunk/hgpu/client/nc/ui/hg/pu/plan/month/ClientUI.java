@@ -1,13 +1,14 @@
 package nc.ui.hg.pu.plan.month;
 
-import nc.ui.hg.pu.pub.DefBillManageUI;
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.scm.pub.panel.RelationsCal;
+
+import nc.ui.hg.pu.pub.PlanPubClientUI;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
+import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.button.ButtonVO;
 /**
@@ -15,22 +16,20 @@ import nc.vo.trade.button.ButtonVO;
  * @author zhw
  *
  */
-public class ClientUI extends DefBillManageUI  {
+public class ClientUI extends PlanPubClientUI  {
 	
 	public ClientUI() {
 		super();
 	}
+	
 	@Override
 	protected void initSelfData() {
 
 	}
 
-	@Override
-	public void setDefaultData() throws Exception {
-	}
-
 	// 添加自定义按钮
 	public void initPrivateButton() {
+		super.initPrivateButton();
 		//打开
 		ButtonVO btnvo1 = new ButtonVO();
 		btnvo1.setBtnNo(HgPuBtnConst.OPEN);
@@ -51,6 +50,7 @@ public class ClientUI extends DefBillManageUI  {
 		addPrivateButton(btnvo2);
 
 	}
+	
 
 	@Override
 	protected ManageEventHandler createEventHandler() {
@@ -64,34 +64,28 @@ public class ClientUI extends DefBillManageUI  {
 
 	@Override
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
-	throws Exception {
+			throws Exception {
 
 	}
 
 	@Override
-	protected void setHeadSpecialData(CircularlyAccessibleValueObject vo,
-			int intRow) throws Exception {
-	}
-
-	@Override
-	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
-	throws Exception {
-
+	protected String getBillNo() throws Exception {
+		return HYPubBO_Client.getBillNo(HgPubConst.PLAN_MONTH_BILLTYPE,
+				_getCorp().getPrimaryKey(), null, null);
 	}
 
 	@Override
 	protected BusinessDelegator createBusinessDelegator() {
 		return new ClientBusinessDelegator(this);
 	}
-
 	@Override
-	public boolean beforeEdit(BillEditEvent e) {
-		return super.beforeEdit(e);	
-	}
-
-	@Override
-	public void afterEdit(BillEditEvent e) {
-		super.afterEdit(e);
+	public void setDefaultData() throws Exception {		
+		 setHeadItemValue("pk_billtype", HgPubConst.PLAN_MONTH_BILLTYPE);
+		
+		super.setDefaultData();
 	}
 	
+	public String getRefBillType() {
+		return "HG01";
+	}
 }
