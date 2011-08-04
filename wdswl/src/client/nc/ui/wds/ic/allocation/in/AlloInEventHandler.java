@@ -112,7 +112,11 @@ public class AlloInEventHandler extends InPubEventHandler {
 	@Override
 	protected String getHeadCondition() {
 		StringBuffer strWhere = new StringBuffer();
-		return   strWhere.append( "  geh_cbilltypecode").append(" ='"+WdsWlPubConst.BILLTYPE_ALLO_IN+"'").toString();
+		strWhere.append( "  geh_cbilltypecode");
+		strWhere.append(" ='"+WdsWlPubConst.BILLTYPE_ALLO_IN+"'");
+		strWhere.append(" and pk_corp = '"+_getCorp().getPrimaryKey()+"'");
+		
+		return   strWhere.toString();	
 	
 	}
 

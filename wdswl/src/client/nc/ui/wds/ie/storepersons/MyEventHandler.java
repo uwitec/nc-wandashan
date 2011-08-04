@@ -25,11 +25,11 @@ public class MyEventHandler extends GManageEventHandler {
 	}
 
 
-	@Override
-	protected String getHeadCondition() {
-		String where = " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 ";
-		return where;
-	}
+//	@Override
+//	protected String getHeadCondition() {
+//		String where = " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 ";
+//		return where;
+//	}
 
 	@Override
 	protected void onBoSave() throws Exception {

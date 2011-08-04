@@ -100,11 +100,11 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 //		AggregatedValueObject[] vos = PfUtilClient.getRetOldVos();
 //		AggregatedValueObject vo = vos[0];
 //		CgqyHVO headVO = (CgqyHVO) vo.getParentVO();
-		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vnote", "取货单位："+
-				//headVO.getAttributeValue("ccusmandoc")+
-				";取货人："
-				//+vo.getParentVO().getAttributeValue("ccustomer")
-				);
+//		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vnote", "取货单位："+
+//				//headVO.getAttributeValue("ccusmandoc")+
+//				";取货人："
+//				//+vo.getParentVO().getAttributeValue("ccustomer")
+//				);
 		//增行按钮去掉
 		ButtonObject btnobj = getBillUI().getButtonManager().getButton(IBillButton.AddLine);
 		if (btnobj != null) {
