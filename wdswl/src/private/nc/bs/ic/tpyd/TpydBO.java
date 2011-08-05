@@ -58,7 +58,7 @@ public class TpydBO {
 	private synchronized void afterValute(SuperVO[] vos) throws Exception{
 	 if(vos==null ||vos.length==0)
 		 throw new Exception("表体数据为空");
-	 SuperVO[] newVos = CombinVO.combinVoByFields(vos,new String[] {"pk_trayout" }, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
+	 SuperVO[] newVos = (SuperVO[])CombinVO.combinVoByFields(vos,new String[] {"pk_trayout" }, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
 	 int size1=newVos.length;
 	 String pk_trayout=null;//移出托盘主键
 	 UFDouble dnum=null;// 获取当前托盘的库存主数量
@@ -94,7 +94,7 @@ public class TpydBO {
 	 * @throws Exception
 	 */
 	private void valuteInCdt(SuperVO[] vos) throws Exception {	
-		SuperVO[] newVos1 = CombinVO.combinVoByFields(vos,new String[] {"pk_trayin"}, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
+		SuperVO[] newVos1 =(SuperVO[]) CombinVO.combinVoByFields(vos,new String[] {"pk_trayin"}, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
 		int size1 = newVos1.length;
 		UFDouble rnum =null;//移入托盘总量(主数量)
 		UFDouble rbnum =null;//移入托盘总量(辅数量)
@@ -161,7 +161,7 @@ public class TpydBO {
 	 */
 	private void valuteOutCdt(SuperVO[] vos) throws Exception{
 		// 将移出托盘编码相同的合并到一起 将移入数量 求和
-		SuperVO[] newVos = CombinVO.combinVoByFields(vos,new String[] {"pk_trayout" }, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
+		SuperVO[] newVos = (SuperVO[])CombinVO.combinVoByFields(vos,new String[] {"pk_trayout" }, new int[] {nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },new String[] { "nmovenum", "nmoveassnum" });
 		
 		UFDouble rnum =null;//移动数量(主数量)
 		UFDouble rbnum=null;//移动数量(辅数量)

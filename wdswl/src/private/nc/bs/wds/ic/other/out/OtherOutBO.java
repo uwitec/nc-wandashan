@@ -79,7 +79,7 @@ public class OtherOutBO  {
 			 return billvo;
 		 }
 	   	 SuperVO[] vos=(SuperVO[]) billvo.getChildrenVO();
-		 SuperVO[] svos=CombinVO.combinVoByFields(vos,new String[]{"cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"noutnum","noutassistnum","nacceptnum","nassacceptnum","nshouldoutnum","nshouldoutassistnum","ntagnum"});
+		 SuperVO[] svos=(SuperVO[])CombinVO.combinVoByFields(vos,new String[]{"cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"noutnum","noutassistnum","nacceptnum","nassacceptnum","nshouldoutnum","nshouldoutassistnum","ntagnum"});
 		 setSpaceAllon(svos);
 		 billvo.setChildrenVO(svos);
 		 return billvo;				

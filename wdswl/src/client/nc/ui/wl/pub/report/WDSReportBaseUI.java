@@ -2,7 +2,9 @@ package nc.ui.wl.pub.report;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.ListSelectionModel;
+
 import nc.bd.accperiod.AccountCalendar;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
@@ -157,7 +159,8 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 	 */
 	public  ReportBaseVO[] combinVoByFields(ReportBaseVO[] vos, ReportBaseVO[] vos1,
 			String[] voCombinConds, int[] types,String[] combinFields) {
-		return CombinVO.combinVoByFields(vos, vos1, voCombinConds, types, combinFields);
+		    ReportBaseVO[] combins= (ReportBaseVO[]) nc.vo.wl.pub.CombinVO.combinVoByFields(vos, vos1, voCombinConds, types, combinFields);
+		return combins;
 	}
 	/**
 	 * 

@@ -8,7 +8,6 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 /**
- * 
  * 后台字段唯一性校验
  * author:mlr
  * */
@@ -152,7 +151,7 @@ public class BsUniqueCheck {
 	}
 	/**
 	 * 
-	 * @作者：zhf
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 *       在某个条件下 
 	 *       校验某个字段的数据库唯一性
@@ -426,7 +425,7 @@ public class BsUniqueCheck {
      }
 	/**
 	 * 
-	 * @作者：zhf
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 *       根据主键查询一个vo
 	 * @时间：2011-7-6下午12:40:17

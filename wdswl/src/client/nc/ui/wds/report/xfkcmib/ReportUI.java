@@ -9,7 +9,7 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.CombinVO;
+import nc.vo.wl.pub.CombinVO;
 import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
@@ -209,9 +209,9 @@ public class ReportUI extends WDSReportBaseUI{
                 	if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==true && isvbanchcode.booleanValue()==true){
                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields0);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields0);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields0,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos,newVos1,fields0,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields0);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields0,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos2,combins,fields0,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -224,9 +224,9 @@ public class ReportUI extends WDSReportBaseUI{
                 	if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==true&&isvbanchcode.booleanValue()==false){
                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields1);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields1);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields1,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos,newVos1,fields1,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields1);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields1,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos2,combins,fields1,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -235,9 +235,9 @@ public class ReportUI extends WDSReportBaseUI{
                     if(isstordoc.booleanValue()==true && isvbanchcode.booleanValue()==true&&iscargdoc.booleanValue()==false){
                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields2);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields2);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields2,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos,newVos1,fields2,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields2);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields2,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos2,combins,fields2,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -246,9 +246,9 @@ public class ReportUI extends WDSReportBaseUI{
                 	if(iscargdoc.booleanValue()==true && isvbanchcode.booleanValue()==true&&isstordoc.booleanValue()==false){
                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields3);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields3);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields3,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos,newVos1,fields3,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields3);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields3,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[]) CombinVO.combinVoByFields(newVos2,combins,fields3,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -259,9 +259,9 @@ public class ReportUI extends WDSReportBaseUI{
                     if(isstordoc.booleanValue()==true && iscargdoc.booleanValue()==false&&isvbanchcode.booleanValue()==false){
                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields4);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields4);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields4,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[])CombinVO.combinVoByFields(newVos,newVos1,fields4,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields4);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields4,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[])CombinVO.combinVoByFields(newVos2,combins,fields4,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -270,9 +270,9 @@ public class ReportUI extends WDSReportBaseUI{
                     if(iscargdoc.booleanValue()==true&&isstordoc.booleanValue()==false && isvbanchcode.booleanValue()==false){
                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields5);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields5);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields5,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[])CombinVO.combinVoByFields(newVos,newVos1,fields5,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields5);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields5,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[])CombinVO.combinVoByFields(newVos2,combins,fields5,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -281,9 +281,9 @@ public class ReportUI extends WDSReportBaseUI{
                 	if(isvbanchcode.booleanValue()==true&& iscargdoc.booleanValue()==false &&isstordoc.booleanValue()==false){
                 		ReportBaseVO[]newVos=setVoByContion(vos1,fields6);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields6);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields6,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[])CombinVO.combinVoByFields(newVos,newVos1,fields6,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields6);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields6,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[])CombinVO.combinVoByFields(newVos2,combins,fields6,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	
@@ -294,9 +294,9 @@ public class ReportUI extends WDSReportBaseUI{
                     if(iscargdoc.booleanValue()==false && isvbanchcode.booleanValue()==false&&isstordoc.booleanValue()==false){
                     	ReportBaseVO[]newVos=setVoByContion(vos1,fields7);
      				    ReportBaseVO[]newVos1=setVoByContion(vos2,fields7);
-     				    ReportBaseVO[] combins=CombinVO.combinVoByFields(newVos,newVos1,fields7,types,combinFields);
+     				    ReportBaseVO[] combins=(ReportBaseVO[])CombinVO.combinVoByFields(newVos,newVos1,fields7,types,combinFields);
      				    ReportBaseVO[]newVos2=setVoByContion(vos3,fields7);
-     				    ReportBaseVO[] combins1=CombinVO.combinVoByFields(newVos2,combins,fields7,types,combinFields);		    
+     				    ReportBaseVO[] combins1=(ReportBaseVO[])CombinVO.combinVoByFields(newVos2,combins,fields7,types,combinFields);		    
      				    setAfterQuery(combins1);
      				    setReportBaseVO(combins1);
      					setBodyVO(combins1);	

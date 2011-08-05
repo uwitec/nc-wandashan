@@ -1,7 +1,5 @@
 package nc.vo.wl.pub;
-
 /**
- * 
  * @author  mlr 
  */
 public interface IUFTypes {

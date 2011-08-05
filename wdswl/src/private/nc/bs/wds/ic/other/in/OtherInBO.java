@@ -79,8 +79,8 @@ public class OtherInBO  {
 			 return billvo;
 		 }
 	   	 SuperVO[] vos=(SuperVO[]) billvo.getChildrenVO();
-		 SuperVO[] svos=CombinVO.combinVoByFields(vos,new String[]{"geb_cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"geb_snum","geb_bsnum","geb_anum","geb_banum"});
-		 setSpaceAllon(svos);
+	   	SuperVO[] svos=(SuperVO[])CombinVO.combinVoByFields(vos,new String[]{"geb_cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"geb_snum","geb_bsnum","geb_anum","geb_banum"});		
+	   	setSpaceAllon(svos);
 		 billvo.setChildrenVO(svos);
 		 return billvo;				
 	}
