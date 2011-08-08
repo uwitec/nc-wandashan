@@ -78,8 +78,8 @@ public class OtherOutBO  {
 		 if(billvo.getChildrenVO()==null){
 			 return billvo;
 		 }
-	   	 SuperVO[] vos=(SuperVO[]) billvo.getChildrenVO();
-		 SuperVO[] svos=(SuperVO[])CombinVO.combinVoByFields(vos,new String[]{"cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"noutnum","noutassistnum","nacceptnum","nassacceptnum","nshouldoutnum","nshouldoutassistnum","ntagnum"});
+		 CircularlyAccessibleValueObject[] vos=billvo.getChildrenVO();
+		 CircularlyAccessibleValueObject[] svos=CombinVO.combinVoByFields(vos,new String[]{"cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"noutnum","noutassistnum","nacceptnum","nassacceptnum","nshouldoutnum","nshouldoutassistnum","ntagnum"});
 		 setSpaceAllon(svos);
 		 billvo.setChildrenVO(svos);
 		 return billvo;				
@@ -92,7 +92,7 @@ public class OtherOutBO  {
 	 * @Ê±¼ä£º2011-7-30ÏÂÎç02:07:38
 	 * @param svos
 	 */
-	private void setSpaceAllon(SuperVO[] svos) throws Exception{
+	private void setSpaceAllon(CircularlyAccessibleValueObject[] svos) throws Exception{
 		if(svos==null ||svos.length==0){
 			return;
 		}
