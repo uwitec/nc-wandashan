@@ -78,9 +78,9 @@ public class OtherInBO  {
 		 if(billvo.getChildrenVO()==null){
 			 return billvo;
 		 }
-	   	 SuperVO[] vos=(SuperVO[]) billvo.getChildrenVO();
-	   	SuperVO[] svos=(SuperVO[])CombinVO.combinVoByFields(vos,new String[]{"geb_cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"geb_snum","geb_bsnum","geb_anum","geb_banum"});		
-	   	setSpaceAllon(svos);
+		 CircularlyAccessibleValueObject[] vos= billvo.getChildrenVO();
+		 CircularlyAccessibleValueObject[] svos=CombinVO.combinVoByFields(vos,new String[]{"geb_cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"geb_snum","geb_bsnum","geb_anum","geb_banum"});		
+	   	  setSpaceAllon((CircularlyAccessibleValueObject[])svos);
 		 billvo.setChildrenVO(svos);
 		 return billvo;				
 	}
@@ -92,7 +92,7 @@ public class OtherInBO  {
 	 * @时间：2011-7-30下午02:07:38
 	 * @param svos
 	 */
-	private void setSpaceAllon(SuperVO[] svos) throws Exception{
+	private void setSpaceAllon(CircularlyAccessibleValueObject[] svos) throws Exception{
 		if(svos==null ||svos.length==0){
 			return;
 		}
@@ -104,7 +104,7 @@ public class OtherInBO  {
 		   List<TbGeneralBBVO>  trayInfor=vo.getTrayInfor();
 		   if(trayInfor==null || trayInfor.size()==0)
 			   throw new Exception("没有分配货位");
-		   TbGeneralBBVO tvo=trayInfor.get(i);
+		   TbGeneralBBVO tvo=trayInfor.get(0);
 		   tvo.setGebb_num(PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("geb_anum")));
 		   tvo.setNinassistnum(PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("geb_banum")));
 		   trayInfor.clear();
