@@ -9,7 +9,7 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.wl.pub.CombinVO;
+import nc.ui.wl.pub.report.CombinVO;
 import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;

@@ -17,7 +17,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.wl.pub.CombinVO;
+import nc.ui.wl.pub.report.CombinVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;

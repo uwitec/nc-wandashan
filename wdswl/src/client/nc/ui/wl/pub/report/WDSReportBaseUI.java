@@ -159,7 +159,7 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
 	 */
 	public  ReportBaseVO[] combinVoByFields(ReportBaseVO[] vos, ReportBaseVO[] vos1,
 			String[] voCombinConds, int[] types,String[] combinFields) {
-		    ReportBaseVO[] combins= (ReportBaseVO[]) nc.vo.wl.pub.CombinVO.combinVoByFields(vos, vos1, voCombinConds, types, combinFields);
+		    ReportBaseVO[] combins= (ReportBaseVO[]) nc.ui.wl.pub.report.CombinVO.combinVoByFields(vos, vos1, voCombinConds, types, combinFields);
 		return combins;
 	}
 	/**

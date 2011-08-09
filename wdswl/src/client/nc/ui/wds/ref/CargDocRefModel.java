@@ -13,21 +13,21 @@ public class CargDocRefModel extends AbstractRefModel {
 	
 	 private String m_sRefTitle = "货位档案";
 	 
-	 private String tablename=" bd_cargdoc";
+	 private String tablename=" bd_cargdoc join bd_stordoc on bd_cargdoc.pk_stordoc=bd_stordoc.pk_stordoc";
 	
-	 private String[] fieldcode={"cscode","csname"};
+	 private String[] fieldcode={"bd_cargdoc.cscode","bd_cargdoc.csname"};
 	 
 	 
 	 private String[] fieldname={"货位编码","货位名称"};
 	
-	 private String[] hidecode={"pk_cargdoc"};
+	 private String[] hidecode={"bd_cargdoc.pk_cargdoc"};
 	 
-	 private String pkFieldCode="pk_cargdoc";
+	 private String pkFieldCode="bd_cargdoc.pk_cargdoc";
 	 
 	 
-	 private String sqlWherePart=" isnull(dr,0)=0 and pk_corp ='"+getPk_corp()+"' ";
+	 private String sqlWherePart=" isnull(bd_cargdoc.dr,0)=0 and isnull(bd_stordoc.dr,0)=0 and bd_stordoc.pk_corp ='"+getPk_corp()+"' ";
 	 
-	 private int defaultFieldCount=1;
+	 private int defaultFieldCount=3;
 	 
 	 private String cwarehouseid = null;
 	 public void setStordocID(String stordocid){
@@ -97,7 +97,7 @@ public class CargDocRefModel extends AbstractRefModel {
 	    @Override
 	    public String getWherePart() {	    	
 	    	if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null)
-	    		sqlWherePart = sqlWherePart + " and pk_stordoc = '"+cwarehouseid+"'";
+	    		sqlWherePart = sqlWherePart + " and bd_cargdoc.pk_stordoc = '"+cwarehouseid+"'";
 	    	
 	    	return sqlWherePart;
 	    }
