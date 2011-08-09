@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.List;
+
+
+
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
@@ -193,7 +197,11 @@ public class CombinVO {
 			    for(int j=0;j<size1;j++){
 			    	CircularlyAccessibleValueObject oldVo=(CircularlyAccessibleValueObject) voss[i][j];
 			    	if(newVo==null){
-			    	   newVo=(CircularlyAccessibleValueObject) oldVo.clone();
+			    		try {
+							newVo=(CircularlyAccessibleValueObject) ObjectUtils.serializableClone(oldVo);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}				
 			        }else{
 						int csize = combinFields.length;
 						for (int n = 0; n < csize; n++) {
