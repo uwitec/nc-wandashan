@@ -26,6 +26,12 @@ public class ClientHandler extends SingleBodyEventHandler{
 		
 		return new HYQueryDLG(getBillUI(), null, getBillUI()._getCorp().getPrimaryKey(), WdsWlPubConst.TRANS_SPECBUSI_NODECODE, getBillUI()._getOperator(), null);
 	}
+
+	@Override
+	protected void onBoSave() throws Exception {
+		super.onBoSave();
+		onBoRefresh();
+	}
 	
 	
 

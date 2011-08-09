@@ -103,7 +103,8 @@ public class SingleBodyEventHandler extends CardEventHandler{
 		}catch (Exception e) {
 			throw new BusinessException(e.getMessage());
 		}
-		super.onBoSave();
+		onBoRefresh();
+//		super.onBoSave();
 	}
 	//如果要做保存前的校验重写该方法
 	protected void beforeSaveValudate() throws Exception{

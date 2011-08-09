@@ -138,7 +138,13 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		}
 		return m_cleanQueryDlg;
 	}
-		
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-8-4下午06:09:23
+	 * @throws Exception
+	 */
 	private void onCleanZero() throws Exception{
 		//如果有无效数据，弹出查询对话框--自定义查询模板CleanQueryDlg		 
 		//忽略 确定 以外的事件
@@ -147,11 +153,17 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		}
 		//确定获得条件语句 模板编号=800404060201	模板id=0001S3100000000L231C	
 		ConditionVO[] vos =getCleanQueryDlg().getConditionVO();
-		try {			
-			getBillUI().showWarningMessage("成功清理" + cleanZero(vos) + "条无效数据");
+		try {		
+			int i = cleanZero(vos);
+			getBillUI().showWarningMessage("成功清理" + i + "条无效数据");
+			if(i > 0){
+				doRefresh();
+			}
+				
 		} catch (Exception e) {
 			throw new BusinessException(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 		}
+		
 	}	
 		
 	

@@ -78,7 +78,7 @@ public class MyEventHandler extends WdsPubEnventHandler {
 					.getBillModel().getRowCount() - 1;
 		if (row < 0)
 			throw new RuntimeException("cann't get selected row");
-		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getCorp(), row, "pk_corp");
+		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getCorp().getPrimaryKey(), row, "pk_corp");
 	}
 
 }

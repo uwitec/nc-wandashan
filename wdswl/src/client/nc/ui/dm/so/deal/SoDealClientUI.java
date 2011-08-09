@@ -117,8 +117,11 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 	}
 
 	private void setButton() {
+		//yf去掉模拟安排按钮
+//		ButtonObject[] m_objs = new ButtonObject[] { m_btnSelAll, m_btnSelno,
+//				m_btnQry, m_btnDeal ,m_btnXnDeal};
 		ButtonObject[] m_objs = new ButtonObject[] { m_btnSelAll, m_btnSelno,
-				m_btnQry, m_btnDeal ,m_btnXnDeal};
+				m_btnQry, m_btnDeal};
 		this.setButtons(m_objs);
 	}
 
