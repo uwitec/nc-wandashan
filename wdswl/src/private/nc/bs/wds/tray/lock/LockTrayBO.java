@@ -547,8 +547,8 @@ public class LockTrayBO {
 					continue;
 				para.addParam(tray.getCdt_pk());
 				para.addParam(tray.getPk_invmandoc());
-				para.addParam(body.getGeb_vbatchcode());
-				iflag = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+				para.addParam(body.getGeb_vbatchcode());			
+				iflag = PuPubVO.getInteger_NullAs(getDao().executeQuery(sql,para, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
 				key = WdsWlPubTool.getString_NullAsTrimZeroLen(tray.getCdt_pk())+","+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getGeb_vbatchcode());
 				if(iflag>0){//存在绑定关系
 					if(!lockTrayInfor.containsKey(key))
