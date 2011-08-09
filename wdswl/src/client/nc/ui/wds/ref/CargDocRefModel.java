@@ -15,7 +15,7 @@ public class CargDocRefModel extends AbstractRefModel {
 	 
 	 private String tablename=" bd_cargdoc join bd_stordoc on bd_cargdoc.pk_stordoc=bd_stordoc.pk_stordoc";
 	
-	 private String[] fieldcode={"bd_cargdoc.cscode","bd_cargdoc.csname"};
+	 private String[] fieldcode={"cscode","csname","bd_cargdoc.pk_cargdoc"};
 	 
 	 
 	 private String[] fieldname={"货位编码","货位名称"};
@@ -27,7 +27,7 @@ public class CargDocRefModel extends AbstractRefModel {
 	 
 	 private String sqlWherePart=" isnull(bd_cargdoc.dr,0)=0 and isnull(bd_stordoc.dr,0)=0 and bd_stordoc.pk_corp ='"+getPk_corp()+"' ";
 	 
-	 private int defaultFieldCount=3;
+	 private int defaultFieldCount=2;
 	 
 	 private String cwarehouseid = null;
 	 public void setStordocID(String stordocid){
