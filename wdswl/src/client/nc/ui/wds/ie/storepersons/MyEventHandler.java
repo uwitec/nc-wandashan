@@ -30,6 +30,7 @@ public class MyEventHandler extends GManageEventHandler {
 //		String where = " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 ";
 //		return where;
 //	}
+	
 
 	@Override
 	protected void onBoSave() throws Exception {
@@ -43,4 +44,5 @@ public class MyEventHandler extends GManageEventHandler {
 		
 		super.onBoSave();
 	}
+
 }

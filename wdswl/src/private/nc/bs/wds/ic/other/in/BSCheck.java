@@ -1,4 +1,4 @@
-package nc.bs.wds.ie.storepersons;
+package nc.bs.wds.ic.other.in;
 import nc.bs.dao.BaseDAO;
 import nc.bs.trade.business.IBDBusiCheck;
 import nc.bs.wl.pub.BsUniqueCheck;
@@ -29,10 +29,7 @@ public class BSCheck implements IBDBusiCheck{
 			if(vo==null){
 				return;
 			}
-			TbStockstaffVO head=(TbStockstaffVO)vo.getParentVO();
-			if(head ==null)
-				return;
-			BsUniqueCheck.FieldUniqueCheck((SuperVO)head, new String[]{"cuserid","pk_corp"},"该人员已经和仓库绑定");
+			vo.getParentVO();
 		}
 	}
 

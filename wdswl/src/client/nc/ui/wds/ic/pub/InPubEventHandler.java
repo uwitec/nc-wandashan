@@ -232,7 +232,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		TbGeneralBVO[] vos = (TbGeneralBVO[])vo.getChildrenVO();
 //		TbGeneralBVO[] vos = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(ovos, new filterDelLine());
 		if(vos == null || vos.length ==0){
-			throw new BusinessException("表体不允许为空");
+			//throw new BusinessException("表体不允许为空");
 		}
 //		if(vos != null && vos.length > 0 ){
 			for(TbGeneralBVO v : vos){

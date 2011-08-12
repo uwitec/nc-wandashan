@@ -290,4 +290,8 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 		}
 		return true;
 	}
+	@Override
+	public Object getUserObject() {
+		return new GetCheck();
+	}	
 }

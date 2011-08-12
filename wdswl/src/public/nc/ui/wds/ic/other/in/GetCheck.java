@@ -1,4 +1,4 @@
-package nc.ui.wds.ie.storepersons;
+package nc.ui.wds.ic.other.in;
 import java.io.Serializable;
 import nc.vo.trade.pub.IBDGetCheckClass2;
 /**
@@ -13,12 +13,12 @@ public class GetCheck implements Serializable, IBDGetCheckClass2 {
 	 * 后台校验类路径
 	 */
 	public String getCheckClass() {
-		return "nc.bs.wds.ie.storepersons.BSCheck";
+		return "nc.bs.wds.ic.other.in.BSCheck";
 	}
 	/**
 	 * 前台校验类路径
 	 */
 	public String getUICheckClass() {		
-		return "nc.ui.wds.ie.storepersons.UICheck";
+		return "nc.ui.wds.ic.other.in.UICheck";
 	}
 }

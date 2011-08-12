@@ -103,7 +103,7 @@ public class WdsIcInPubBillSave extends BillSave {
 		billVo.setChildrenVO(bodys);
 //		UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
 		if(bodys == null||bodys.length ==0){			
-			throw new BusinessException("表体数据为空");
+		//	throw new BusinessException("表体数据为空");
 			
 		}
 		bodyChanged = true;
