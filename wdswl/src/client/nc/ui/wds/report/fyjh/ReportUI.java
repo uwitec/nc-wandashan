@@ -8,6 +8,7 @@ import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.query.ConditionVO;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -19,7 +20,7 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  *
  */
 public class ReportUI extends ReportBaseUI {
-	private String cstoreid = null;
+	private String cwhid = null;//仓库
 	public ReportUI(){
 		super();
 		init2();
@@ -28,12 +29,12 @@ public class ReportUI extends ReportBaseUI {
 	private void init2(){
 		LoginInforHelper login = new LoginInforHelper();
 		try {
-			cstoreid = login.getCwhid(_getUserID());
+			cwhid = login.getCwhid(_getUserID());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			cstoreid = null;
-		}		
+			cwhid = null;
+		}	
 	}
 	
 	@Override
@@ -68,6 +69,9 @@ public class ReportUI extends ReportBaseUI {
 //		if(PuPubVO.getString_TrimZeroLenAsNull(cstoreid) != null){
 //			getQueryDlg().setDefaultValue("pk_outwhouse", null, cstoreid);
 //		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null){
+			getQueryDlg().setDefaultValue("pk_outwhouse",cwhid,cwhid);
+		}
 		getQueryDlg().setDefaultValue("month", null, _getCurrDate().toString());
 		int ret = getQueryDlg().showModal();
 		if(ret!=UIDialog.ID_OK)
@@ -82,7 +86,7 @@ public class ReportUI extends ReportBaseUI {
 			String op = cvo.getOperaCode();
 			//当条件vo为月份统计的时候 修改键值，以匹配月份比较 2011-01
 			if("month".equalsIgnoreCase(key)){
-				key = "substr(sp.dmakedate, 1, 7)";
+				key = "substr(wds_sendplanin.dmakedate, 1, 7)";
 				value = value.substring(0, 7);
 				getReportBase().setHeadItem("month", value);
 			}
@@ -102,10 +106,9 @@ public class ReportUI extends ReportBaseUI {
 //			}
 //			whereSql.append(where + " and");
 //		}		
-		whereSql.append(" sp.pk_corp = '"+_getCorpID()+"'");			//按公司过滤
+		whereSql.append(" wds_sendplanin.pk_corp = '"+_getCorpID()+"'");			//按公司过滤
 //		whereSql.append(" and substr(sp.dmakedate, 1, 7) = '2011-07' ");//按月份过滤
-		whereSql.append(" and vbillstatus= " + IBillStatus.CHECKPASS);	//行业的单据状态:审批通过
-//		whereSql.append("and sp.pk_outwhouse = '"+cstoreid+"'");
+		whereSql.append(" and wds_sendplanin.vbillstatus= " + IBillStatus.CHECKPASS);	//行业的单据状态:审批通过
 		ReportBaseVO[] vos;
 		try {
 			vos = getReportVO(whereSql.toString());

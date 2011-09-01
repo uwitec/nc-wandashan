@@ -1,4 +1,6 @@
 package nc.ui.wl.pub.report;
+import java.awt.Component;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -6,14 +8,21 @@ import java.util.Map;
 import javax.swing.ListSelectionModel;
 
 import nc.bd.accperiod.AccountCalendar;
+import nc.ui.bd.manage.UIRefCellEditor;
+import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
+import nc.ui.trade.report.query.QueryDLG;
+import nc.ui.wl.pub.LoginInforHelper;
+import nc.ui.wl.pub.WdsQueryDlg;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubTool;
 import nc.vo.wl.pub.report.ReportBaseVO;
 /**
  * 
@@ -86,9 +95,22 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
     private  Integer location1=0;
     //报表模板初次加载时 动态列插入位置
     protected  Integer location=0;  
-    protected  String[] pk_storestates=null;//存货状态主键 数组   箱粉非正常库存报表 专用字段   ---mlr  
+    protected  String[] pk_storestates=null;//存货状态主键 数组   箱粉非正常库存报表 专用字段   ---mlr
+    
 	public WDSReportBaseUI() {
-		super();
+		super();		
+		//yf add
+		LoginInforHelper login = new LoginInforHelper();
+		try {
+			cwhid = login.getCwhid(_getUserID());
+			ccargdoc = login.getLogInfor(_getUserID()).getSpaceid();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cwhid = null;
+			ccargdoc = null;
+		}
+		//yf end
 		initReportUI();
 		setDynamicColumn();
 	}
@@ -213,6 +235,16 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
         AccountCalendar  accCal = AccountCalendar.getInstance();     
         getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
         getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
+        //yf add
+        
+		getQueryDlg().setDefaultValue("pk_stordoc", cwhid, cwhid);
+		getQueryDlg().initData();
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null){
+			if(!WdsWlPubTool.isZc(cwhid)){
+				getComponent("pk_stordoc").setEnabled(false);
+			}
+		}
+		//yf end
 		getQueryDlg().showModal();
 	     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		  
 	    	//清空表体数据
@@ -337,5 +369,25 @@ abstract public class WDSReportBaseUI extends ReportBaseUI{
     		}
     	}		
 	}	
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-9-1下午01:58:46
+	 * @param filedcode
+	 * @return
+	 */
+	protected String cwhid = null;//仓库
+	protected String ccargdoc = null;//货位
+	protected Component getComponent(String filedcode){
+		Object o = getQueryDlg().getValueRefObjectByFieldCode(filedcode);
+		Component jb  = null;
+		if(o instanceof UIRefCellEditor){
+			jb = ((UIRefCellEditor)o).getComponent();//getUITabInput().getCellEditor(1, 4);
+		}else{
+			jb = (Component)o;
+		}
 
+		return jb;
+	}
 }
