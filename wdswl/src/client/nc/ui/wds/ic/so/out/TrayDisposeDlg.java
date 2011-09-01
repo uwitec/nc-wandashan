@@ -477,9 +477,12 @@ ActionListener, BillEditListener,BillEditListener2{
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbatchcode");	
 				//编辑后事件，从托盘参照中取来源批次号，给表体赋值
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_lbatchcode"), row, "lvbatchcode");
-				//				库存状态表ID
+				//库存状态表ID
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("bd_cargdoc_tray.cdt_pk"), row, "cdt_pk");
-
+				//带出存货状态主键
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_stockstate.pk_state"), row, "pk_state");
+				//带出存货状态
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_stockstate.ss_state"), row, "ss_state");
 			}
 		}else if("noutassistnum".equalsIgnoreCase(e.getKey())){
 			UFDouble nshengyu = PuPubVO.getUFDouble_NullAsZero(getbillListPanel().getBodyBillModel().getValueAt(e.getRow(), "shengyuliang"));

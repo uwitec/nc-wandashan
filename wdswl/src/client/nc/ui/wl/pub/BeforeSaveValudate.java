@@ -3,10 +3,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
 import nc.ui.pub.beans.UITable;
+import nc.ui.pub.bill.BillCardPanel;
+import nc.ui.pub.bill.BillData;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -344,4 +349,97 @@ public  class BeforeSaveValudate{
 			return true;
 		return false;
 	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 *       必输项校验
+	 * @时间：2011-6-7下午04:24:33
+	 * @throws ValidationException
+	 */
+	public static void dataNotNullValidate(BillCardPanel panel) throws ValidationException {
+		StringBuffer message = null;
+		BillItem[] headtailitems = panel.getBillData().getHeadTailItems();
+		if (headtailitems != null) {
+			for (int i = 0; i < headtailitems.length; i++) {
+				if (headtailitems[i].isNull())
+					if (isNULL(headtailitems[i].getValueObject())
+							&& headtailitems[i].isShow()) {
+						if (message == null)
+							message = new StringBuffer();
+						message.append("[");
+						message.append(headtailitems[i].getName());
+						message.append("]");
+						message.append(",");
+					}
+			}
+		}
+		if (message != null) {
+			message.deleteCharAt(message.length() - 1);
+			throw new NullFieldException(message.toString());
+		}
+		// 增加多子表的循环
+		String[] tableCodes = panel
+				.getBillData().getTableCodes(BillData.BODY);
+		if (tableCodes != null) {
+			for (int t = 0; t < tableCodes.length; t++) {
+				String tablecode = tableCodes[t];
+				for (int i = 0; i < panel.getBillModel(tablecode).getRowCount(); i++) {
+					StringBuffer rowmessage = new StringBuffer();
+
+					rowmessage.append(" ");
+					if (tableCodes.length > 1) {
+						rowmessage.append(panel.getBillData().getTableName(
+										BillData.BODY, tablecode));
+						rowmessage.append("(");
+						// "页签"
+						rowmessage.append(nc.ui.ml.NCLangRes.getInstance()
+								.getStrByID("_Bill", "UPP_Bill-000003"));
+						rowmessage.append(") ");
+					}
+					rowmessage.append(i + 1);
+					rowmessage.append("(");
+					// "行"
+					rowmessage.append(nc.ui.ml.NCLangRes.getInstance()
+							.getStrByID("_Bill", "UPP_Bill-000002"));
+					rowmessage.append(") ");
+
+					StringBuffer errormessage = null;
+					BillItem[] items = panel.getBillData()
+							.getBodyItemsForTable(tablecode);
+					for (int j = 0; j < items.length; j++) {
+						BillItem item = items[j];
+						if (item.isShow() && item.isNull()) {// 如果卡片显示，并且为空，才非空校验
+							Object aValue = panel.getBillModel(tablecode)
+									.getValueAt(i, item.getKey());
+							if (isNULL(aValue)) {
+								errormessage = new StringBuffer();
+								errormessage.append("[");
+								errormessage.append(item.getName());
+								errormessage.append("]");
+								errormessage.append(",");
+							}
+						}
+					}
+					if (errormessage != null) {
+
+						errormessage.deleteCharAt(errormessage.length() - 1);
+						rowmessage.append(errormessage);
+						if (message == null)
+							message = new StringBuffer(rowmessage);
+						else
+							message.append(rowmessage);
+						break;
+					}
+				}
+				if (message != null)
+					break;
+			}
+		}
+		if (message != null) {
+			throw new NullFieldException(message.toString());
+		}
+
+	}
+	
 }

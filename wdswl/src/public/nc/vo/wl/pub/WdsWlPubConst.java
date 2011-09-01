@@ -54,7 +54,14 @@ public class WdsWlPubConst {
 	public static String DM_PLAN_BASDOC_NODECODE="80060801";
 	/** 分仓承运商绑定*/
 	public static String DM_STORE_TRANSCORP_NODECODE="8006080202";
-
+	
+	/** 学生成绩*/
+	public static String LM_CHENGJI_NODECODE="802005";
+	/**
+	   单据类型
+	 */
+	public static String LM_CHENGJI_BILLTYPE="CHJI";
+	/**
 	/**班组档案*/
     public static String LOAD_TEAM_DOC="8008010101";
    /**装卸费价格设置*/
@@ -69,6 +76,8 @@ public class WdsWlPubConst {
 	public static String LOAD_ACCOUNT_REFWDS8="80080201WDS8";
 	/** 装卸费核算单 参照调拨人库节点标示*/
 	public static String LOAD_ACCOUNT_REFWDS9="80080201WDS9";
+	
+	
 	
 
 	/** 运输里程表档案 节点号*/
@@ -199,6 +208,8 @@ public class WdsWlPubConst {
 	/**存货状态*/
 	public static String BILLTYPE_IC_INV_STATUS="8004040602";
 	/**采购取样 */
+	public static String BILLTYPE_LM_CLASSINFOR="802003";
+	
 
 
 	public static String WDSC="WDSC";

@@ -242,10 +242,8 @@ public class SoDealCol {
         			
         			pass = true;
         			break;
-        		}
-        		
+        		}       		
 //        		若果库存可用量 低于该客户的最小发货量  过滤  掉该客户
-
         		if(PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNassnum())
         				.compareTo(
         						getMinSendNumForCust(bill.getHeader().getCcustomerid(), 
@@ -259,9 +257,7 @@ public class SoDealCol {
 //        			Logger.info("存货"+WdsWlPubTool.getInvCodeByInvid(body.getCinvbasdocid())+"可用量低于本次待安排总量,客户["+WdsWlPubTool.getCustNameByid(bill.getHeader().getCcustomerid())+"]需手工安排");
         			continue;
         		}
-        	}
-        	
-        	
+        	}       	
         	if(pass)//该客户的本次发货要求 由于  库存量 过低  而  放弃
         		continue;
         	if(isdeal){

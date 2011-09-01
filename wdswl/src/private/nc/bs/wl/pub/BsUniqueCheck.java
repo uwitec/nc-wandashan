@@ -3,6 +3,8 @@ import java.util.Collection;
 import java.util.Dictionary;
 import java.util.List;
 import nc.bs.dao.BaseDAO;
+import nc.jdbc.framework.processor.ColumnProcessor;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
@@ -35,7 +37,7 @@ public class BsUniqueCheck {
 			   throw new BusinessException("传入的VO数组不能为空");
 		   }
 		for(int i=0;i<vos.length;i++){		
-	      	BsUniqueCheck.FieldUniqueCheck(vos[i], checkField, errorMessage);
+	      	BsUniqueCheck.FieldUniqueCheck(vos[i], checkField,null, errorMessage);
 		}	
 	}
 	/**
@@ -64,45 +66,137 @@ public class BsUniqueCheck {
 	 * 
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
-	 *       校验数据库中某个字段的唯一性
-	 * @时间：2011-7-5下午08:46:12
-	 * @param vo  校验的vo
-	 * @param checkField  校验的字段的名字 
+	 *       在某个条件下：
+	 *       校验某个字段组合的唯一性
+	 *       条件 即 condition
+	 * @时间：2011-7-6下午12:36:25
+	 * @param vos 校验的vo数组
+	 * @param checkField  校验的字段
 	 * @param errorMessage 错误提示信息
+	 * @param condition 校验条件
 	 * @throws Exception
-	 */
-	public static void FieldUniqueCheck(SuperVO vo,String checkField,String errorMessage) throws Exception{			
-		if(isEmpty(vo)){
-			return;
-		}
-		if(isEmpty(checkField)){
-			throw new BusinessException("检验唯一性的的字段名字不能为口空");
-		}
-		if(isEmpty(errorMessage)){
-			throw new BusinessException("错误提示信息不能为口空");
-		}	
-		// 判断是修改后的保存还是新增后的保存
-		if (isEmpty(vo.getPrimaryKey())){
-			queryByCheckField(vo,checkField,errorMessage);
-		}else{		
-			List list=queryByPrimaryKey(vo);
-			// 判断修改后的记录，是否改变了值（即拿数据库中的记录和ui中的当前记录进行比较）
-			SuperVO vo1=(SuperVO) list.get(0);
-			if(isEmpty(vo.getAttributeValue(checkField)) && isEmpty(vo1.getAttributeValue(checkField))){
-                 return;			
-			}	
-			if(!isEmpty(vo.getAttributeValue(checkField)) && !isEmpty(vo1.getAttributeValue(checkField))){
-				if(vo.getAttributeValue(checkField).equals(vo1.getAttributeValue(checkField))){
-					return;
-				}else{
-				  queryByCheckField(vo,checkField,errorMessage);
-				}
-			}
-			if(isEmpty(vo.getAttributeValue(checkField)) || isEmpty(vo.getAttributeValue(checkField))){			   				
-				  queryByCheckField(vo,checkField,errorMessage);
-			}
-		}			
+	 */	
+	public static void FieldUniqueChecks1(AggregatedValueObject billvo,String[] checkFields,String headcontion,String bodycontion,String errorMessage)throws Exception{	
+		 if(isEmpty(billvo)){
+			   throw new BusinessException("传入的聚合vo不能为空");
+		   }
+		 FieldUniqueChecks(billvo,checkFields,headcontion,bodycontion,errorMessage);
+		 
 	}
+	/**
+	    * 
+	    * @作者：mlr
+	    * @说明：完达山物流项目
+	    *     在某个条件下 
+	    *     校验表体组合字段的唯一性  
+	    * @时间：2011-7-5下午08:49:35
+	    * @param vo 校验vo
+	    * @param checkFields 校验字段数组的名字
+	    * @param errorMessage 返回错误提示信息
+	    * @param headconditon  表头过滤条件
+	    * @param bodyconditon  表体过滤条件
+	    * @throws Exception
+	    */
+		public static void FieldUniqueChecks(AggregatedValueObject billvo, String[] checkFields,String headconditon,String bodyconditon,String errorMessage) throws Exception {
+			if(isEmpty(billvo)){
+				return;
+			}
+		    if(isEmpty(billvo.getParentVO())){
+		    	return;
+		    }
+		    if(isEmpty(billvo.getChildrenVO())){
+		    	return;
+		    }
+			if(isEmpty(checkFields)){
+				throw new BusinessException("检验唯一性的的字段名字不能为空");
+			}
+			if(isEmpty(errorMessage)){
+				throw new BusinessException("错误提示信息不能为空");
+			}	
+		    SuperVO headVo=(SuperVO) billvo.getParentVO();
+		    SuperVO[] bodyVos=(SuperVO[]) billvo.getChildrenVO();
+		    int size=bodyVos.length;
+		    for(int j=0;j<size;j++){
+			// 判断是修改后的保存还是新增后的保存
+			if (isEmpty(bodyVos[j].getPrimaryKey())) {
+				queryByCheckFields(headVo,bodyVos[j], checkFields,headconditon,bodyconditon,errorMessage);
+			} else {
+	            List list=queryByPrimaryKey(bodyVos[j]);
+				// 判断修改后的记录，是否改变了值（即拿数据库中的记录和ui中的当前记录进行比较）
+				SuperVO vo1 = (SuperVO) list.get(0);
+				//判断是否修改了要校验字段的值
+				boolean ismodrec = false;			
+				//校验是否修改了要校验的字段的值
+				for (int i = 0; i < checkFields.length; i++) {				
+					if(isEmpty(bodyVos[j].getAttributeValue(checkFields[i]))&& isEmpty(vo1.getAttributeValue(checkFields[i]))){
+						continue;
+					}
+					if(isEmpty(bodyVos[j].getAttributeValue(checkFields[i]))|| isEmpty(vo1.getAttributeValue(checkFields[i]))){
+						ismodrec=true;
+						break;
+					}
+					if (!bodyVos[j].getAttributeValue(checkFields[i]).equals(vo1.getAttributeValue(checkFields[i]))) {
+						ismodrec = true;
+						break;
+					}
+				}	
+				if (ismodrec) {
+					queryByCheckFields(headVo,bodyVos[j],checkFields,headconditon,bodyconditon,errorMessage);
+				}
+			 }
+		    }
+		}	
+		/**
+		    * 
+		    * @作者：mlr
+		    * @说明：完达山物流项目 
+		    *       校验 表体组合字段的唯一性
+		    * @时间：2011-7-5下午08:49:35
+		    * @param vo 校验vo
+		    * @param checkFields 校验字段数组的名字
+		    * @param headconditon 表头条件
+		    * @param bodyconditon 表体条件
+		    * @param errorMessage 返回错误提示信息
+		    * @throws Exception
+		    */
+	   private static void queryByCheckFields(SuperVO headVo,SuperVO bodyVo,String[] checkFields,String headconditon,String bodyconditon,String errorMessage) throws Exception{
+			  if(isEmpty(headVo))
+				  return;
+			  if(isEmpty(bodyVo))
+				  return;		  
+		       StringBuffer cond = new StringBuffer();
+				for (int i = 0; i < checkFields.length; i++) {
+					String sign=" = ";
+					if(isEmpty(bodyVo.getAttributeValue(checkFields[i]))){				
+						if(!(bodyVo.getAttributeValue(checkFields[i]) instanceof String)&&!"".equalsIgnoreCase((String) bodyVo.getAttributeValue(checkFields[i]))){
+							sign=" is ";
+						}			
+					}					
+					if(isChar(bodyVo.getAttributeValue(checkFields[i]))&& sign.equalsIgnoreCase(" = ")){
+						cond.append(" " + checkFields[i] +sign+"'"+ bodyVo.getAttributeValue(checkFields[i])+"'"+ " and");
+						}else{
+						cond.append(" " + checkFields[i] +sign+ bodyVo.getAttributeValue(checkFields[i])+" and");
+						}
+				}
+				int length=cond.toString().length();
+				String condition = cond.toString().substring(0,length-4) + " and  isNull("+ bodyVo.getEntityName() + ".dr,0)=0";
+				List list = (List) getDao().retrieveByClause(bodyVo.getClass(),condition);
+				String sql=" select count(*) from "+bodyVo.getEntityName()+" join "+headVo.getEntityName()+" on "+bodyVo.getEntityName()+"."+bodyVo.getParentPKFieldName()+"="+
+				headVo.getEntityName()+"."+headVo.getPKFieldName()+" where "+condition+headconditon+bodyconditon;
+				Object o=getDao().executeQuery(sql,new ColumnProcessor());
+				if(o==null){
+					return;
+				}
+				Integer num=(Integer)o;
+				if (num.intValue()==0) {
+					return;
+				} else {
+					throw new BusinessException(errorMessage);
+				}			 
+	     }
+	
+	
+	
 	/**
 	 * 
 	 * @作者：mlr

@@ -19,7 +19,7 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 	 * getDefaultFieldCount 方法注解。
 	 */
 	public int getDefaultFieldCount() {
-		return 7;
+		return 8;
 	}
 
 	/**
@@ -36,10 +36,13 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 				"tb_warehousestock.whs_stockpieces",
 				"tb_warehousestock.whs_batchcode",
 				"tb_warehousestock.whs_lbatchcode",
+				"tb_stockstate.ss_state",
 				"tb_warehousestock.pk_invmandoc",
 				"tb_warehousestock.pk_invbasdoc",
 //				"tb_warehousestock.whs_pk",//zhf add  库存状态表ID
 				"bd_cargdoc_tray.cdt_pk",
+				"tb_warehousestock.ss_pk",
+				"tb_stockstate.ss_pk"
 		};
 	}
 
@@ -57,11 +60,7 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 				"库存辅数量",
 				"批次号",
 				"来源批次号",
-				"存货管理ID",
-				"存货基本ID",
-//				"库存状态ID",
-				"托盘ID"
-				
+				"状态"
 		};
 	}
 
@@ -70,9 +69,11 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 	 */
 	public String[] getHiddenFieldCode() {
 		return new String[] { 
-				//    			"tb_warehousestock.pk_invmandoc",
-				//    			"tb_warehousestock.pk_invbasdoc",
-		"tb_warehousestock.whs_pk"};
+				"tb_warehousestock.pk_invmandoc",
+				"tb_warehousestock.pk_invbasdoc",
+				"bd_cargdoc_tray.cdt_pk",
+				"tb_warehousestock.ss_pk",
+				"tb_stockstate.ss_pk"};
 	}
 
 	/**
@@ -100,6 +101,7 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 
 		strWhere.append(" and isnull(bd_invmandoc.dr,0)=0 ");
 		strWhere.append(" and isnull(bd_invbasdoc.dr,0)=0 ");
+		strWhere.append(" and isnull(tb_stockstate.dr,0)=0");
 
 		strWhere.append(" and tb_warehousestock.pk_corp='"+getPk_corp()+"'");
 		return strWhere.toString();
@@ -118,6 +120,8 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 		m_sTableName.append(" on tb_warehousestock.pk_invmandoc =bd_invmandoc.pk_invmandoc ");
 		m_sTableName.append(" join bd_invbasdoc ");
 		m_sTableName.append(" on tb_warehousestock.pk_invbasdoc =bd_invbasdoc.pk_invbasdoc ");
+		m_sTableName.append(" join tb_stockstate ");
+		m_sTableName.append(" on tb_warehousestock.ss_pk=tb_stockstate.ss_pk");
 		return m_sTableName.toString();
 	}
 	@Override
