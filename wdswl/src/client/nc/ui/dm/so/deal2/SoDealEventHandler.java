@@ -6,6 +6,7 @@ import java.util.List;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
+import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.wl.pub.FilterNullBody;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
@@ -23,7 +24,6 @@ public class SoDealEventHandler{
 	private SoDealClientUI ui = null;
 	private SoDealQryDlg m_qrypanel = null;	
 	private SoDealBillVO[] m_buffer = null;
-
 	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
@@ -49,9 +49,9 @@ public class SoDealEventHandler{
 				onDeal();
 
 			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
-				//			onNoSel();
+							onNoSel();
 			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
-				//			onAllSel();
+							onAllSel();
 			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)){
 				onQuery();
 			}else if (btnTag
@@ -70,24 +70,32 @@ public class SoDealEventHandler{
 		return m_buffer;
 	}
 	
-//	public void onNoSel(){
-//		int rowcount = getDataPane().getRowCount();
-//		if(rowcount <= 0)
-//			return;
-//		for(int i=0;i<rowcount;i++){
-//			getDataPane().setValueAt(UFBoolean.FALSE, i, "bsel");
-//		}
+	public void onNoSel(){
+		int rowcount = getDataPane().getRowCount();
+		if(rowcount <= 0)
+			return;
+		//yf add
+		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
+			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.UNSTATE);
+			ui.headRowChange(i);
+			BillModel model = ui.getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+			ui.getPanel().getChildListPanel().cancelSelectAllTableRow();
+			model.addRowStateChangeEventListener(l);
+			ui.getPanel().updateUI();
+		}
 //		clearCache();
-//	}
+	}
 	
 //	private void clearCache(){
 //		lseldata.clear();
 ////		tsInfor.clear();
 //	}
 
-//	public void onAllSel(){
-//		if(getDataBuffer() == null||getDataBuffer().length == 0)
-//			return;
+	public void onAllSel(){
+		if(getDataBuffer() == null||getDataBuffer().length == 0)
+			return;
 //		SoDealVO[] datas = getDataBuffer();
 //		clearCache();
 //		for(SoDealVO data:datas){
@@ -99,7 +107,19 @@ public class SoDealEventHandler{
 //		for(int i=0;i<rowcount;i++){
 //			getDataPane().setValueAt(UFBoolean.TRUE, i, "bsel");
 //		}
-//	}
+		//yf add
+		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
+			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.SELECTED);
+			ui.headRowChange(i);
+			BillModel model = ui.getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+			ui.getPanel().getChildListPanel().selectAllTableRow();
+			model.addRowStateChangeEventListener(l);
+			ui.getPanel().updateUI();
+		}
+		
+	}
 	
 	
 	private SoDealQryDlg getQryDlg(){
@@ -353,7 +373,7 @@ public class SoDealEventHandler{
 			//		¿â´æ´æÁ¿ÐÅÏ¢
 			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
 
-			if(lcust!=null && lcust.size()>0){
+			if(lcust!=null || lcust.size()>0){
 				flag = doHandDeal(lcust, lnum);
 			}
 		}

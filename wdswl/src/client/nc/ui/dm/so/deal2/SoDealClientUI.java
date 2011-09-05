@@ -14,6 +14,7 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -118,7 +119,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 
 	private void initListener() {
 		getPanel().addEditListener(this);
-		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
+//		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
 	}
 
 	public void headRowChange(int iNewRow) {
@@ -162,7 +163,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 	}
 
 	private void setButton() {
-		ButtonObject[] m_objs = new ButtonObject[] { //m_btnSelAll, m_btnSelno,
+		ButtonObject[] m_objs = new ButtonObject[] { 
+				m_btnSelAll, m_btnSelno,
 				m_btnQry, m_btnDeal};
 		this.setButtons(m_objs);
 	}
