@@ -1,10 +1,13 @@
 package nc.ui.wds.report.ylfwxkc;
 
+import java.awt.Component;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
+import nc.ui.bd.manage.UIRefCellEditor;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
@@ -14,6 +17,7 @@ import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.ui.wl.pub.report.ReportPubTool;
@@ -28,6 +32,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wds.ic.storestate.TbStockstateVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
 import nc.vo.wl.pub.report.SubtotalVO;
@@ -119,6 +124,16 @@ public class ReportUI extends ReportBaseUI {
 
 	public ReportUI() {
 		super();	
+		LoginInforHelper login = new LoginInforHelper();
+		try {
+			cwhid = login.getCwhid(_getUserID());
+			ccargdoc = login.getLogInfor(_getUserID()).getSpaceid();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cwhid = null;
+			ccargdoc = null;
+		}
 		initReportUI();
 		//去除字段自动排序的功能
 		getReportBase().getBillTable().removeSortListener();
@@ -241,7 +256,16 @@ public class ReportUI extends ReportBaseUI {
 	        AccountCalendar  accCal = AccountCalendar.getInstance();     
 	        getQueryDlg().setDefaultValue("ddatefrom", accCal.getMonthVO().getBegindate().toString(), "");
 	        getQueryDlg().setDefaultValue("ddateto", accCal.getMonthVO().getEnddate().toString(), "");
-			getQueryDlg().showModal();
+			
+	        getQueryDlg().setDefaultValue("pk_stordoc", cwhid, cwhid);
+			getQueryDlg().initData();
+			if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null){
+				if(!WdsWlPubTool.isZc(cwhid)){
+					getComponent("pk_stordoc").setEnabled(false);
+				}
+			}
+	        
+	        getQueryDlg().showModal();
 		     if (getQueryDlg().getResult() == UIDialog.ID_OK) {		  
             	//校验开始日期，截止日期
             	UIRefPane obj1 = (UIRefPane)getQueryDlg().getValueRefObjectByFieldCode("ddatefrom");
@@ -441,6 +465,18 @@ public class ReportUI extends ReportBaseUI {
         setSubtotalVO(svo);
         doSubTotal();
     }
+	protected String cwhid = null;//仓库
+	protected String ccargdoc = null;//货位
+	protected Component getComponent(String filedcode){
+		Object o = getQueryDlg().getValueRefObjectByFieldCode(filedcode);
+		Component jb  = null;
+		if(o instanceof UIRefCellEditor){
+			jb = ((UIRefCellEditor)o).getComponent();//getUITabInput().getCellEditor(1, 4);
+		}else{
+			jb = (Component)o;
+		}
 
+		return jb;
+	}
 }
 
