@@ -19,7 +19,8 @@ public class RefBillQueryDlg extends WdsBillQueryDlg {
 	private static String userid = ClientEnvironment.getInstance().getUser().getPrimaryKey();
 	
 	public RefBillQueryDlg(Container parent) {
-		super(parent,null,pk_corp,WdsWlPubConst.SO_OUT_FUNCODE,userid,null,WdsWlPubConst.SO_OUT_REFWDS5_NODECODE);
+//		super(parent,null,pk_corp,WdsWlPubConst.SO_OUT_FUNCODE,userid,null,WdsWlPubConst.SO_OUT_REFWDS5_NODECODE);
+		super(parent,null,pk_corp,WdsWlPubConst.SO_OUT_REFWDS5_NODECODE,userid,null,null);
 	}
 
 
