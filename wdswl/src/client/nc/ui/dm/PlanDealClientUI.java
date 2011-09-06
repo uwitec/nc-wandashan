@@ -75,7 +75,9 @@ public class PlanDealClientUI extends ToftPanel{
 	}
 	
 	private void setButton(){
-		ButtonObject[] m_objs = new ButtonObject[]{m_btnSelAll,m_btnSelno,m_btnQry,m_btnDeal,m_btnXnDeal};
+		ButtonObject[] m_objs = new ButtonObject[]{m_btnSelAll,m_btnSelno,m_btnQry,m_btnDeal
+//				,m_btnXnDeal
+				};
 		this.setButtons(m_objs);
 	}
 	private void createEventHandler(){
