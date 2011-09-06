@@ -102,14 +102,19 @@ public class WdsIcInPubBillSave extends BillSave {
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(obodys, new filterDelLine());
 		billVo.setChildrenVO(bodys);
 //		UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
-		if(bodys == null||bodys.length ==0){			
-		//	throw new BusinessException("表体数据为空");
-			
+//		if(bodys == null||bodys.length ==0){	
+//			throw new BusinessException("表体数据为空");
+//			
+//		}
+//		bodyChanged = true;
+		if(null != bodys && bodys.length > 0){
+			//yf记录表体是否有改动
+			bodyChanged = true;
+			for(TbGeneralBVO body:bodys){
+				body.validateOnSave();
+			}
 		}
-		bodyChanged = true;
-		for(TbGeneralBVO body:bodys){
-			body.validateOnSave();
-		}
+		
 		
 //		zhf add  校验  虚拟托盘的绑定关系
 		getLockTrayBO().checkInBillOnSave(lockTrayInfor, bodys, head.getGeh_cwarehouseid(), head.getPk_cargdoc());
@@ -144,7 +149,8 @@ public class WdsIcInPubBillSave extends BillSave {
 		}	
 		
 //		转分仓流程入库时  是否自动调整 入库偏差量
-		if(head.getGeh_billtype().equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_IN)){
+		//yf表体没有改动则不进行判定
+		if(head.getGeh_billtype().equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_IN) && bodyChanged){
 			saveBillOnAdjust(newBillVo);
 		}
 		return retAry;
