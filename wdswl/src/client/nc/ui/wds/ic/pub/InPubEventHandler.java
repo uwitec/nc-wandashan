@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ufsoft.script.expression.Operator;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
@@ -27,6 +29,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -231,10 +234,11 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		
 		TbGeneralBVO[] vos = (TbGeneralBVO[])vo.getChildrenVO();
 //		TbGeneralBVO[] vos = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(ovos, new filterDelLine());
-		if(vos == null || vos.length ==0){
+
+		if(vos == null || vos.length ==0 && null == PuPubVO.getString_TrimZeroLenAsNull(hvo.getPrimaryKey())){
 			//throw new BusinessException("表体不允许为空");
 		}
-//		if(vos != null && vos.length > 0 ){
+		if(vos != null && vos.length > 0 ){
 			for(TbGeneralBVO v : vos){
 				v.validateOnSave();
 				List<TbGeneralBBVO> list = v.getTrayInfor();
@@ -242,7 +246,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 					b.validateOnSave();
 				}
 			}
-//		}
+		}
 		super.onBoSave();
 //		onBoRefresh();
 	}
