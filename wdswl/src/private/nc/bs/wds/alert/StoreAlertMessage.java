@@ -5,6 +5,7 @@ import nc.bs.ml.NCLangResOnserver;
 import nc.bs.pub.pa.html.IAlertMessage;
 import nc.bs.pub.pa.html.IAlertMessage2;
 import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.ui.wl.pub.LoginInforHelper;
 /**
  * @author mlr
  * 预警消息格式
@@ -12,16 +13,21 @@ import nc.jdbc.framework.processor.ArrayListProcessor;
 public class StoreAlertMessage implements IAlertMessage2{
 	private static final long serialVersionUID = 1932855774969661891L;
 	private BaseDAO dao=null;
-	private String pk_corp=null;
+	private String pk_corp;
+	private String userid;
+	private LoginInforHelper login=new LoginInforHelper();
+	
+	
 	private BaseDAO getDao(){
 		if(dao==null){
 			dao=new BaseDAO();
 		}
 		return dao;	   
 	}
-	public StoreAlertMessage(String pk_corp) {
+	public StoreAlertMessage(String pk_corp,String userid) {
 		super();
 		this.pk_corp=pk_corp;
+		this.userid=userid;
 	}
 	public int[] getBodyColumnType() {		
 		return new int[]{
@@ -54,7 +60,7 @@ public class StoreAlertMessage implements IAlertMessage2{
 	}
 	public Object[][] getBodyValue() {		
 		try {
-			return queryOverDateStore(pk_corp);
+			return queryOverDateStore(pk_corp,userid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,8 +87,8 @@ public class StoreAlertMessage implements IAlertMessage2{
 	 * @时间：2011-8-2上午10:52:47
 	 * @return
 	 */
-   private Object[][] queryOverDateStore(String pk_corp) throws Exception{
-	  Object o=getDao().executeQuery(getSql(pk_corp),new ArrayListProcessor());
+   private Object[][] queryOverDateStore(String pk_corp,String userid) throws Exception{
+	  Object o=getDao().executeQuery(getSql(pk_corp,userid),new ArrayListProcessor());
 	  if(o==null){
 		  return null;
 	  }  
@@ -111,7 +117,7 @@ public class StoreAlertMessage implements IAlertMessage2{
     * @时间：2011-8-2上午11:13:20
     * @return
     */
-   private String getSql(String pk_corp){
+   private String getSql(String pk_corp,String userid){
 	   // 仓库 货位 存货 存货编码  批次  库存主数量 库存辅数量
 	   StringBuffer sql=new StringBuffer();
 	   sql.append(" select min(s.storname),");
@@ -131,9 +137,13 @@ public class StoreAlertMessage implements IAlertMessage2{
 	   sql.append(" on t.pk_cargdoc=c.pk_cargdoc");
 	   sql.append(" join bd_invbasdoc bs");
 	   sql.append(" on t.pk_invbasdoc =bs.pk_invbasdoc");
+	   sql.append(" join tb_stockstaff ff ");
+	   sql.append(" on t.pk_customize1=ff.pk_stordoc and t.pk_cargdoc=ff.pk_cargdoc");
 	   sql.append(" where");
 	   sql.append(" t.pk_corp='"+pk_corp+"'");
+	   sql.append(" and ff.cuserid='"+userid+"'");
 	   sql.append(" and isnull(t.dr,0)=0");
+	   sql.append(" and isnull(ff.dr,0)=0");
 	   sql.append(" and isnull(w.dr,0)=0");   
 	   sql.append(" and isnull(s.dr,0)=0");	   
 	   sql.append(" and isnull(c.dr,0)=0");	   
