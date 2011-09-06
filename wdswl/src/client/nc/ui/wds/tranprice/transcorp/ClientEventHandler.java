@@ -42,6 +42,9 @@ public class ClientEventHandler extends BaseManageEventHandler {
 	protected void onBoSave() throws Exception {
 		beforeSaveCheck();
 		super.onBoSave();
+		//数据改变后不执行Delegator.loadChildDataAry
+		//执行手动刷新
+		onBoRefresh();
 	}
 	
 	/**
