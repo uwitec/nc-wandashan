@@ -30,28 +30,37 @@ public class ReportFyjhBO {
 		StringBuffer str = new StringBuffer();
 		
 		str.append(" select ");
-		str.append(" sp.pk_outwhouse pk_outwhouse, ");
-		str.append(" sp.pk_inwhouse pk_inwhouse, ");
-		str.append(" win.pk_invbasdoc pk_invbasdoc, ");
-		str.append(" sum(sb.nplannum) nplannum, ");
-		str.append(" sum(sb.nassplannum) nassplannum, ");
-		str.append(" sum(sb.ndealnum) ndealnum, ");
-		str.append(" sum(sb.ndealnum / bc.mainmeasrate) nassdealnum ");
+		str.append(" wds_sendplanin.pk_outwhouse pk_outwhouse, ");
+		str.append(" wds_sendplanin.pk_inwhouse pk_inwhouse, ");
+		str.append(" wds_sendplanin_b.pk_invbasdoc pk_invbasdoc, ");
+		str.append(" sum(wds_sendplanin_b.nplannum) nplannum, ");
+		str.append(" sum(wds_sendplanin_b.nassplannum) nassplannum, ");
+		str.append(" sum(wds_sendplanin_b.ndealnum) ndealnum, ");
+		str.append(" sum(wds_sendplanin_b.ndealnum / bd_convert.mainmeasrate) nassdealnum ");
+//		str.append(" sum( " +
+//				" CASE " +
+//				" WHEN bc.mainmeasrate is null then null " +
+//				" else (sb.ndealnum / bc.mainmeasrate) " +
+//				" end " +
+//				" ) nassdealnum ");
 
-		str.append(" from wds_sendplanin sp ");
-		str.append(" inner join wds_sendplanin_b sb on sb.pk_sendplanin = sp.pk_sendplanin ");
-		str.append(" inner join wds_invbasdoc win on sb.pk_invbasdoc = win.pk_invbasdoc ");
-		str.append(" inner join bd_convert bc on bc.pk_invbasdoc = sb.pk_invbasdoc ");
+		str.append(" from wds_sendplanin ");
+		str.append(" inner join wds_sendplanin_b on wds_sendplanin_b.pk_sendplanin = wds_sendplanin.pk_sendplanin ");
+//		str.append(" inner join wds_invbasdoc win on sb.pk_invbasdoc = win.pk_invbasdoc ");
+		str.append(" inner join bd_convert on bd_convert.pk_invbasdoc = wds_sendplanin_b.pk_invbasdoc ");
 		
 		str.append(" where ");
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 			str.append(whereSql);
 		}
-		str.append(" and isnull(sp.dr, 0) = 0 and isnull(win.dr, 0) = 0 and isnull(sb.dr, 0) = 0");
+		str.append(" and isnull(wds_sendplanin.dr, 0) = 0 and " +
+//				"isnull(win.dr, 0) = 0 and " +
+				"isnull(wds_sendplanin_b.dr, 0) = 0 and " +
+				"isnull(bd_convert.dr, 0) = 0");
 
 		
-		str.append(" group by sp.pk_outwhouse, sp.pk_inwhouse, win.pk_invbasdoc ");
-		str.append(" order by sp.pk_outwhouse, sp.pk_inwhouse, win.pk_invbasdoc ");
+		str.append(" group by wds_sendplanin.pk_outwhouse, wds_sendplanin.pk_inwhouse, wds_sendplanin_b.pk_invbasdoc ");
+		str.append(" order by wds_sendplanin.pk_outwhouse, wds_sendplanin.pk_inwhouse, wds_sendplanin_b.pk_invbasdoc ");
 		List ldata = (List)getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		if(ldata == null || ldata.size() == 0){
 			return null;
