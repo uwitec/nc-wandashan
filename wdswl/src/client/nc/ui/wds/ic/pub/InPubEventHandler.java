@@ -1,5 +1,6 @@
 package nc.ui.wds.ic.pub;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -184,7 +185,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			setBodyValueToft();
 			retflag = UIDialog.ID_OK;
 		}
-//		setBackGround();
+		setBackGround();
 		setBodyModelState();
 		return retflag;
 	}
@@ -297,14 +298,23 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	//红色：没有实发数量；
 	//灰色：有实发数量但是数量不够；
 	//白色：实发数量与应发数量相等
-//	protected void setBackGround(){
-//		int row  = getBodyRowCount();
-//		if(row > 0){
-//			for(int i = 0 ;i < row;i++){
-//				UFDouble b1 = PuPubVO.getUFDouble_NullAsZero(//应发主数量
-//						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_snum"));
-//				UFDouble b2 = PuPubVO.getUFDouble_NullAsZero(//实发主数量
-//						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_anum"));
+	protected void setBackGround(){
+		int row  = getBodyRowCount();
+		if(row > 0){
+			for(int i = 0 ;i < row;i++){
+				UFDouble b1 = PuPubVO.getUFDouble_NullAsZero(//应发主数量
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_snum"));
+				UFDouble b2 = PuPubVO.getUFDouble_NullAsZero(//实发主数量
+						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_anum"));
+				//yf add
+				//实入小于应入:红色
+				if(b1.sub(b2).doubleValue() > 0 ){
+					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+					.setCellBackGround(i, "invcode", Color.red);	
+				}
+				//yf end
+				
+				
 //				if(b1.sub(b2).doubleValue() > 0 ){
 //					//灰色
 //					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
@@ -318,9 +328,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 //					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
 //					.setCellBackGround(i, "invcode", Color.white);	
 //				}
-//			}
-//		}
-//	}
+			}
+		}
+	}
 
 	/**tT
 	 * 
