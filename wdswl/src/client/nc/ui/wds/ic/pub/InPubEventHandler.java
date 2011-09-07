@@ -310,7 +310,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				//实入小于应入:红色
 				if(b1.sub(b2).doubleValue() > 0 ){
 					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-					.setCellBackGround(i, "invcode", Color.red);	
+					.setCellForeGround(i, "geb_anum", Color.red);	
 				}
 				//yf end
 				
