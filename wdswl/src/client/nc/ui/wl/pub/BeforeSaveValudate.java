@@ -150,7 +150,7 @@ public  class BeforeSaveValudate{
 	 * @param display 字段中文提示名字
 	 * @throws BusinessException
 	 */
-	private static void checkNotAllNull(AggregatedValueObject vo,String checkField,String display)throws BusinessException{
+	public static void checkNotAllNull(AggregatedValueObject vo,String checkField,String display)throws BusinessException{
 	    if(vo.getChildrenVO()==null || vo.getChildrenVO().length==0){
 	        return;	
 	    }
