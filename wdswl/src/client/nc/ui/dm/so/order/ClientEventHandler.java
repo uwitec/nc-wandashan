@@ -9,6 +9,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.pub.ListPanelPRTS;
+import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.so.order.SoorderBVO;
@@ -248,12 +249,14 @@ private LoginInforHelper helper = null;
 		if(billVo == null){
 			getBillUI().showWarningMessage("请选择要操作的数据");
 		}
+	    BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
 		SoorderVO head = (SoorderVO)billVo.getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
 		if(fisended == UFBoolean.TRUE ){
 			return ;
 		}
 		head.setFisended(UFBoolean.TRUE);
+		head.setItransstatus(new Integer(1));
 		HYPubBO_Client.update(head);
 		onBoRefresh();
 	}
