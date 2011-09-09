@@ -841,7 +841,7 @@ public class CommonUnit {
 		}
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from ");
-		sql.append("(select o.* from tb_warehousestock o ,");//存货状态
+		sql.append("(select o.*,t.cdt_traycode from tb_warehousestock o ,");//存货状态
 		sql.append(" tb_stockstaff s,");//仓库人员绑定
 		sql.append(" tb_stockstate k,");//库存状态
 		sql.append(" bd_cargdoc_tray t");//托盘信息
@@ -865,7 +865,7 @@ public class CommonUnit {
 			sql.append(" wds_invbasdoc.so_ywaring_days");
 		}
 		sql.append(">=sysdate");
-		sql.append(" order by tmp.whs_batchcode");
+		sql.append(" order by tmp.whs_batchcode,tmp.cdt_traycode,substr(tmp.cdt_traycode,length(tmp.cdt_traycode),1) desc, substr(tmp.cdt_traycode,length(tmp.cdt_traycode)-1,1) ");//由外向里，由下向上
 		ArrayList<StockInvOnHandVO> list = (ArrayList<StockInvOnHandVO>)getbaseDao().executeQuery(sql.toString(), new BeanListProcessor(StockInvOnHandVO.class));
 		
 		return list;

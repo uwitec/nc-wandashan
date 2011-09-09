@@ -208,7 +208,8 @@ public class WdsWlPubBO {
 		sql.append(" where pk_cargdoc='"+cspaceid+"'");
 		sql.append(" and cdt_invbasdoc='"+cinvbasid+"'");
 		sql.append(" and isnull(dr,0)=0  ");
-		sql.append(" and ((cdt_traystatus=0 "+notIn+")"+oldCdt+") order by cdt_traycode");
+		sql.append(" and ((cdt_traystatus=0 "+notIn+")"+oldCdt+") order by  cdt_traycode," +
+				" substr(cdt_traycode,length(cdt_traycode),1),substr(cdt_traycode,length(cdt_traycode)-1,1) desc");//由里到外，由上到下选择托盘
 		ldata = (List)getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNLISTROCESSOR);	
 		if(ldata == null || ldata.size() == 0)
 			return null;
