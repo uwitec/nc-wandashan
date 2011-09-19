@@ -5,6 +5,7 @@ import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.ic.other.out.MyBillVO;
+import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.wl.pub.ButtonCommon;
@@ -32,7 +33,9 @@ public class MyClientUICtrl extends AbstractManageController {
 	public int[] getCardButtonAry() {
 
 		return new int[] { IBillButton.Refbill,IBillButton.Query, 
-				IBillButton.Edit, IBillButton.Save, IBillButton.Del,IBillButton.Cancel,
+				IBillButton.Edit, IBillButton.Save,
+				IBillButton.Line,// 增加 班组分配的行操作
+				IBillButton.Del,IBillButton.Cancel,
 				IBillButton.Return, IBillButton.Refresh,ButtonCommon.joinup,
 				nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn, ISsButtun.Qzqr,
 				ISsButtun.Qxqz,IBillButton.Print };
@@ -62,7 +65,10 @@ public class MyClientUICtrl extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[] { MyBillVO.class.getName(),
 				TbOutgeneralHVO.class.getName(),
-				TbOutgeneralBVO.class.getName() };
+				TbOutgeneralBVO.class.getName(),
+				//增加多字表
+				TbOutgeneralB2VO.class.getName(),
+				};
 	}
 
 	public String getBodyCondition() {

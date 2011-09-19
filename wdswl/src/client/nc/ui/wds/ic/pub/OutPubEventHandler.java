@@ -350,10 +350,14 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 										"noutassistnum"));// 实发辅数量
 				//yf add
 				//实发小于应发：红色
-				if(tatonum.sub(num, 8).doubleValue() < 0) {
-					getBillCardPanelWrapper().getBillCardPanel()
-							.getBodyPanel().setCellForeGround(i,
-									"noutassistnum", Color.red);
+				if(tatonum.sub(num, 8).doubleValue() > 0) {
+					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
+					for (String field : changFields) {
+						getBillCardPanelWrapper().getBillCardPanel()
+						.getBodyPanel().setCellForeGround(i,
+								field, Color.red);
+					}
+					
 				}
 				//大日期:蓝色
 //				if(){
@@ -625,11 +629,11 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 */
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
-		if(null != getButtonManager().getButton(IBillButton.Line)){
-			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-			getBillUI().updateButtons();
-			setHeadPartEdit();
-		}
+//		if(null != getButtonManager().getButton(IBillButton.Line)){
+//			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//			getBillUI().updateButtons();
+//			setHeadPartEdit();
+//		}
 		
 	}
 	/**

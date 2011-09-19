@@ -300,5 +300,10 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 //		return trayInfor;
 //	}
 	
-	
+	/**
+	 * 获取所有的TableCode 多字表
+	 */
+	public String[] getTableCodes() {
+		return new String[]{"tb_outgeneral_b","tb_outgeneral_b2"};
+	}
 }

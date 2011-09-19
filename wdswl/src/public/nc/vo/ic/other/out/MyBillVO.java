@@ -1,11 +1,16 @@
 package nc.vo.ic.other.out;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.trade.pub.IExAggVO;
 
 
 /**
@@ -16,11 +21,15 @@ import nc.vo.trade.pub.HYBillVO;
  * @author Your Author Name
  * @version Your Project 1.0
  */
-public class  MyBillVO extends HYBillVO {
+public class  MyBillVO extends HYBillVO implements IExAggVO{
 	
 	/**
 	 * 
 	 */
+	private HashMap hmChildVOs = new HashMap();
+	
+	
+	
 	private static final long serialVersionUID = 1L;
 	private String sLogUser = null;
 	private String sLogCorp = null;
@@ -69,7 +78,7 @@ public class  MyBillVO extends HYBillVO {
 	}
 
 	public CircularlyAccessibleValueObject[] getChildrenVO() {
-		return (TbOutgeneralBVO[]) super.getChildrenVO();
+		return getTableVO(getDefaultTableCode());
 	}
 
 	public CircularlyAccessibleValueObject getParentVO() {
@@ -83,10 +92,69 @@ public class  MyBillVO extends HYBillVO {
 		else{
 			super.setChildrenVO((CircularlyAccessibleValueObject[]) Arrays.asList(children).toArray(new TbOutgeneralBVO[0]));
 		}
+		
+		setTableVO(getDefaultTableCode(), children);
 	}
 
 	public void setParentVO(CircularlyAccessibleValueObject parent) {
 		super.setParentVO((TbOutgeneralHVO)parent);
+	}
+
+	public CircularlyAccessibleValueObject[] getAllChildrenVO() {
+		// TODO Auto-generated method stub
+		ArrayList al = new ArrayList();
+		for (int i = 0; i < getTableCodes().length; i++) {
+			CircularlyAccessibleValueObject[] cvos
+			= getTableVO(getTableCodes()[i]);
+			if (cvos != null)
+				al.addAll(Arrays.asList(cvos));
+		}
+		return (SuperVO[]) al.toArray(new SuperVO[0]);
+	}
+
+	public SuperVO[] getChildVOsByParentId(String tableCode, String parentid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDefaultTableCode() {
+		return getTableCodes()[0];
+	}
+
+	public HashMap getHmEditingVOs() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getParentId(SuperVO item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String[] getTableCodes() {
+		// TODO Auto-generated method stub
+		return new String[]{"tb_outgeneral_b","tb_outgeneral_b2"};
+	}
+
+	public String[] getTableNames() {
+		// TODO Auto-generated method stub
+		return new String[]{"存货设置","班组设置"};
+	}
+
+	public CircularlyAccessibleValueObject[] getTableVO(String tableCode) {
+		// TODO Auto-generated method stub
+		return (CircularlyAccessibleValueObject[])
+		hmChildVOs.get(tableCode);
+	}
+
+	public void setParentId(SuperVO item, String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTableVO(String tableCode,
+			CircularlyAccessibleValueObject[] values) {
+		hmChildVOs.put(tableCode, values);
 	}
 
 }

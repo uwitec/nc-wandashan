@@ -123,7 +123,14 @@ public class WdsIcInPubBillSave extends BillSave {
 			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),bodys);
 		}
 		//回写必须在保存之前，保存之后再在同一事务中新数据和旧数据会完全一样，并且保存之后vo的状态不再是修改状态
+		try {
+			WriteBackTool.writeBack((SuperVO[])(billVo.getChildrenVO()), "tb_outgeneral_b", "general_b_pk", new String[]{"geb_nmny"}, new String[]{"ntagnum"});
+		} catch (Exception e) {
+			
+			throw new BusinessException(e.getMessage());
+		}
 		getOutBO().writeBackForInBill((OtherInBillVO)oldbillVo,IBDACTION.SAVE,isAdd);
+		
 		java.util.ArrayList retAry = super.saveBill(billVo);
 
 		if(retAry == null || retAry.size() == 0){

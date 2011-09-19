@@ -9,6 +9,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
@@ -178,13 +179,40 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		//库管理员赋值
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("cwhsmanagerid").setValue(_getOperator());	
 		//给表体业务日期赋值
-		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable().getRowCount();
+		MyClientUI ui = (MyClientUI) getBillUI();
+		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
 		for(int i=0;i<rowCounts;i++){			
-			getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getDate(), i, "dbizdate");
-	    	getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt(getPk_cargDoc(), i, "cspaceid");
-
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(_getDate(), i, "dbizdate");
+	    	getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(getPk_cargDoc(), i, "cspaceid");
 		}	
+		getBillUI().updateUI();
 	}
+	
+//	protected void setRefData(AggregatedValueObject[] vos)
+//	throws java.lang.Exception {
+//		// 设置单据状态
+//		getBillUI().setCardUIState();
+//
+//		AggregatedValueObject vo = refVOChange(vos);
+//		if (vo == null)
+//			throw new BusinessException(nc.ui.ml.NCLangRes.getInstance()
+//					.getStrByID("uifactory", "UPPuifactory-000084")/*
+//					 * @res
+//					 * "未选择参照单据"
+//					 */);
+//		// 设置为新增处理
+//		getBillUI().setBillOperate(IBillOperate.OP_REFADD);
+//		// 填充界面
+////		getBillCardPanelWrapper().setCardData(vo);
+//		
+//		if(vo==null)
+//			getBillCardPanelWrapper().getBillCardPanel().getBillData().clearViewData();
+//		else
+//		{
+//			getBillCardPanelWrapper().getBillCardPanel().setBillValueVO(vo);
+//			getBillCardPanelWrapper().getBillCardPanel().getBillModel("").execLoadFormula();
+//		}
+//}
 
 	@Override
 	protected void onBoSave() throws Exception {

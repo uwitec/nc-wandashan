@@ -164,8 +164,11 @@ public class StockInvOnHandBO {
 		for(StockInvOnHandVO stock:stocks){
 			naAllAssNum = naAllAssNum.add(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces()));
 		}
-		if(nassnum.doubleValue()>naAllAssNum.doubleValue())
-			throw new  BusinessException("货位存量不足");
+		if(nassnum.doubleValue()>naAllAssNum.doubleValue()){
+			
+		}
+			
+			//throw new  BusinessException("货位存量不足");
 	}
 	
 	/**
@@ -293,7 +296,7 @@ public class StockInvOnHandBO {
 		// TODO Auto-generated method stub
 		if (null != item) {
 			if(PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces()).doubleValue()<0|| PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage()).doubleValue()<0){
-				throw new BusinessException("出现负结存");
+			//	throw new BusinessException("出现负结存");
 			}
 //			this.getIvo().updateVO(item);
 			getDao().updateVO(item);

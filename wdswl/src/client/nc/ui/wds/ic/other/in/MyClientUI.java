@@ -294,4 +294,5 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 	public Object getUserObject() {
 		return new GetCheck();
 	}	
+
 }

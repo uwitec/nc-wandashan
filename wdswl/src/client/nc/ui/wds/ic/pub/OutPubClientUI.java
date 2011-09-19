@@ -1,5 +1,7 @@
 package nc.ui.wds.ic.pub;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,14 +10,19 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.table.TableColumn;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
+import nc.ui.pub.bill.BillCellEditor;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wds.ic.other.out.BillField;
+import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.MyBillVO;
@@ -28,7 +35,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
-public class OutPubClientUI extends WdsBillManagUI {
+public class OutPubClientUI extends MutiChildForOutInUI {
 	
 	/**
 	 * 
@@ -305,4 +312,61 @@ public class OutPubClientUI extends WdsBillManagUI {
 		getTrayInfor().clear();
 		getBillCardPanel().getBillModel().execLoadFormula();
 	}
+	/**
+	 * @author yf
+	 * @说明 根据表体 tableCode,清空页签数据
+	 * @时间 2011-04-29下午02:06:02
+	 * @param tableCodes
+	 */
+	protected void clearTable(String[] tableCodes) {
+		if (tableCodes != null && tableCodes.length > 0) {
+			for (int i = 0; i < tableCodes.length; i++) {
+				int count = getBillCardPanel().getBillModel(tableCodes[i])
+						.getRowCount();
+				int[] array = new int[count];
+				for (int j = 0; j < count; j++) {
+					array[j] = j;
+				}
+				getBillCardPanel().getBillData().getBillModel(tableCodes[i])
+						.delLine(array);
+			}
+		}
+	}
+	protected nc.ui.pub.beans.UITabbedPane getUITabbedPane(Component c) {
+		if (c instanceof UITabbedPane)
+			return (UITabbedPane) c;
+		if (c instanceof Container) {
+			Component[] comps = ((Container) c).getComponents();
+			for (int i = 0; i < comps.length; i++) {
+				Component cc = getUITabbedPane(comps[i]);
+				if (cc instanceof UITabbedPane)
+					return (UITabbedPane) cc;
+			}
+		}
+		return null;
+	}
+//	private void setUITimeTextField(String tablecode,String cellcode){
+//		 TableColumn tablecol = null;
+//	     BillItem dsendtime = getBillCardPanel().getBodyItem(tablecode,cellcode);
+//	     if (null != dsendtime) {
+//	       // 设置时间编辑器
+//	       try {
+//	         //计划发货时间
+//	         tablecol = getBillCardPanel().getBodyPanel(tablecode).getTable().getColumn(dsendtime.getName());
+//	         if (null != tablecol) {
+//	           BillCellEditor timecelledit = new BillCellEditor(new nc.ui.scm.pattern.pub.UITimeTextField());
+//	           tablecol.setCellEditor(timecelledit);
+//	         }
+//	       } catch (Exception e) {
+//	    	   nc.vo.scm.pub.SCMEnv.out(e);
+//	       }
+//	     }
+//	}
+
+	
+//	public boolean onClosing() {
+//		boolean flag = super.onClosing();
+//		MakeBiddingHelper.clear();//销毁 静态变量
+//		return flag;
+//	}
 }
