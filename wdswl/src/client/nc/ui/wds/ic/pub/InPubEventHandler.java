@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ufsoft.script.expression.Operator;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
