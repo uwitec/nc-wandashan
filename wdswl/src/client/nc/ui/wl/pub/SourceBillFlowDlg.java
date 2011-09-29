@@ -16,8 +16,8 @@ import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIScrollPane;
 import nc.ui.scm.sourcebill.BillFlowViewer;
 import nc.ui.scm.sourcebill.BillNodePanel;
-import nc.ui.scm.sourcebill.SourceBillHelper;
 import nc.vo.scm.sourcebill.LightBillVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 
@@ -37,6 +37,8 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 	String bizType = null;
 
 	BillFlowViewer m_panelBillFlowView = null;
+	
+	private String billFinderClassname = "nc.bs.wds.finder.WdsBillFinder";
 
 	UIMenuBar mainMenuBar = new UIMenuBar();
 
@@ -169,24 +171,52 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 	 * 
 	 * 异常处理: 日期:
 	 */
-	private LightBillVO querySourceBillVO(LightBillVO voBillInfo) {
-		LightBillVO voRet = null;
-		try {
-      // ServcallVO[] scd = new ServcallVO[1];
-      // scd[0] = new ServcallVO();
-      // scd[0].setBeanName("nc.itf.scm.sourcebill.ISourceBill");
-      // scd[0].setMethodName("querySourceBillGraph");
-      // scd[0].setParameterTypes(new Class[] { LightBillVO.class });
-      // scd[0].setParameter(new Object[] { voBillInfo });
-      // Object[] rerObjs = LocalCallService.callService(scd);
-      // if (rerObjs != null && rerObjs[0] != null)
-      // voRet = (LightBillVO) rerObjs[0];
-      
-      voRet=SourceBillHelper.querySourceBillGraph(voBillInfo);
-		} catch (Exception e) {
+//	private LightBillVO querySourceBillVO(LightBillVO voBillInfo) {
+//		LightBillVO voRet = null;
+//		try {
+//      // ServcallVO[] scd = new ServcallVO[1];
+//      // scd[0] = new ServcallVO();
+//      // scd[0].setBeanName("nc.itf.scm.sourcebill.ISourceBill");
+//      // scd[0].setMethodName("querySourceBillGraph");
+//      // scd[0].setParameterTypes(new Class[] { LightBillVO.class });
+//      // scd[0].setParameter(new Object[] { voBillInfo });
+//      // Object[] rerObjs = LocalCallService.callService(scd);
+//      // if (rerObjs != null && rerObjs[0] != null)
+//      // voRet = (LightBillVO) rerObjs[0];
+//      
+//      voRet=SourceBillHelper.querySourceBillGraph(voBillInfo);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//    
+//		return voRet;
+//	}
+	public LightBillVO querySourceBillVO(LightBillVO voBillInfo){
+		LightBillVO vo = null;
+		try
+		{
+			//查询
+			String id = voBillInfo.getID();
+			String type = voBillInfo.getType();
+			Class[] ParameterTypes = new Class[]{String.class,String.class,String.class};
+			Object[] ParameterValues = new Object[]{getBillFinderClassname(), id, type};
+			vo = (LightBillVO)LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.wl.pub.WdsWlPubDMO", "queryBillGraph", ParameterTypes, ParameterValues, 2);
+
+//			vo = nc.ui.trade.business.HYPubBO_Client.queryBillGraph(getBillFinderClassname(), id, type);
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
-    
-		return voRet;
+		return vo;
+	}
+	
+	public void setBillFinderClassname(String string)
+	{
+		billFinderClassname = string;
+	}
+
+	protected String getBillFinderClassname() {
+		return billFinderClassname;
 	}
 }
