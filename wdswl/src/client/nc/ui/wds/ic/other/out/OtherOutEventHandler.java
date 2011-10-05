@@ -49,6 +49,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				onzzdj(null);
 				break;
 			case ISsButtun.tpzd:
+				valudateWhereYeqian();
 				//拣货 存货唯一校验
 				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
@@ -58,6 +59,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				
 				break;
 			case ISsButtun.zdqh:
+				valudateWhereYeqian();
 				//拣货 存货唯一校验
 				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
@@ -82,14 +84,29 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 				//设置参照出库中出库仓库为空，则赋值默认仓库为当前操作员仓库
 				setInitWarehouse("srl_pk");
+				
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefWDSC:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSC);
 				onBillRef();
+				
 				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 				setInitWarehouse("srl_pk");
 				break;
 			}
+	}
+	/**
+	 * 拣货对应的页签
+	 * 必须在出库子表页签
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-9-22下午02:56:45
+	 */
+    private void valudateWhereYeqian()throws Exception{
+	   String tablecode=getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().getTableCode();
+	   if(!"tb_outgeneral_b".equalsIgnoreCase(tablecode)){
+		 throw new Exception("请选择表体存货页签");   
+	   }
 	}
 	@Override
 	public void onBillRef() throws Exception {

@@ -1,15 +1,12 @@
 package nc.ui.wds.ic.allocation.in;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.controller.IControllerBase;
-import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.InPubEventHandler;
+import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.pub.print.WdsWlPrintTool;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
@@ -23,11 +20,8 @@ import nc.vo.wds.ic.allo.in.AlloInHeadPrintVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-
 public class AlloInEventHandler extends InPubEventHandler {
-	
-
-	public AlloInEventHandler(InPubClientUI billUI, IControllerBase control) {
+	public AlloInEventHandler(MutiInPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
 	

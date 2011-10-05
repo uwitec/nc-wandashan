@@ -3,6 +3,8 @@ package nc.bs.pub.action;
 import java.util.Date;
 import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -38,6 +40,8 @@ try{
 			billVo.setULogDate(new UFDate(System.currentTimeMillis()));
 			Object retObj = null;
 			retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			pushSaveWDSF pu=new pushSaveWDSF();
+			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate.substring(0,vo.m_currentDate.length()-8), LoadAccountBS.LOADFEE);
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

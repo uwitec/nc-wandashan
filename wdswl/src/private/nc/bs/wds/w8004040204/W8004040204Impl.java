@@ -354,57 +354,39 @@ public class W8004040204Impl implements Iw8004040204 {
 					usedNum.put(warevo.getWhs_pk(), tmpsum);
 				} else {
 					// 如果剩余数量小于0 当前托盘存货量不够出，当前托盘存货量为出货量
-					trayVo.setNoutassistnum(warevo
-							.getWhs_stockpieces());
+					trayVo.setNoutassistnum(warevo.getWhs_stockpieces());
 					trayVo.setNoutnum(trayVo.getNoutassistnum().multiply(PuPubVO.getUFDouble_NullAsZero(body.getHsl())));
 					usedNum.put(warevo.getWhs_pk(), warevo.getWhs_stockpieces());
 				}
-				trayVo
-				.setCfirstbillhid(body
-						.getCsourcebillhid()); // 源头主表
+				trayVo.setCfirstbillhid(body.getCsourcebillhid()); // 源头主表
 				// 源头子表
-				trayVo
-				.setCfirstbillbid(body
-						.getCsourcebillbid());
-				trayVo.setVsourcebillcode(body
-						.getVsourcebillcode()); // 来源单据号
-				trayVo.setCdt_pk(warevo
-						.getPplpt_pk()); // 托盘主键
+				trayVo.setCfirstbillbid(body.getCsourcebillbid());
+				trayVo.setVsourcebillcode(body.getVsourcebillcode()); // 来源单据号
+				trayVo.setCdt_pk(warevo.getPplpt_pk()); // 托盘主键
 //				usedTary.add(warevo.getPplpt_pk());
-				trayVo.setStockpieces(warevo
-						.getWhs_stockpieces()); // 库存数量
-				trayVo.setStocktonnage(warevo
-						.getWhs_stocktonnage()); // 库存辅数量
-				trayVo.setPk_invbasdoc(warevo
-						.getPk_invbasdoc()); // 存货基本id
+				trayVo.setStockpieces(warevo.getWhs_stockpieces()); // 库存数量
+				trayVo.setStocktonnage(warevo.getWhs_stocktonnage()); // 库存辅数量
+				trayVo.setPk_invbasdoc(warevo.getPk_invbasdoc()); // 存货基本id
 				trayVo.setPk_invmandoc(warevo.getPk_invmandoc());// 存货管理id
-				trayVo.setVbatchcode(warevo
-						.getWhs_batchcode()); // 批次
-				trayVo.setWhs_pk(warevo
-						.getWhs_pk()); // 库存表主键
-				trayVo.setLvbatchcode(warevo
-						.getWhs_lbatchcode()); // 来源批次
-				trayVo.setNprice(warevo
-						.getWhs_nprice()); // 单价
-				trayVo.setNmny(warevo
-						.getWhs_nmny()); // 金额
+				trayVo.setVbatchcode(warevo.getWhs_batchcode()); // 批次
+				trayVo.setWhs_pk(warevo.getWhs_pk()); // 库存表主键
+				trayVo.setLvbatchcode(warevo.getWhs_lbatchcode()); // 来源批次
+				trayVo.setNprice(warevo.getWhs_nprice()); // 单价
+				trayVo.setNmny(warevo.getWhs_nmny()); // 金额
 				trayVo.setDr(0); // 删除标志
-				
+				trayVo.setPk_cargdoc(warevo.getPk_cargdoc());				
 				trayVo.setAunit(body.getCastunitid());//辅单位
 				trayVo.setUnitid(body.getUnitid());//主单位
 				trayVo.setPk_cargdoc(body.getCspaceid());//货位
-				trayVo.setHsl(body.getHsl());// 换算
-				
-	
-			
+				trayVo.setHsl(body.getHsl());// 换算			
 				// 缓存表插入
 //				body.addTray(trayVo);
 				if(trayInfor.containsKey(body.getCrowno())){
 					ltray = trayInfor.get(body.getCrowno());
 				}else
 					ltray = new ArrayList<TbOutgeneralTVO>();
-				ltray.add(trayVo);
-				trayInfor.put(body.getCrowno(), ltray);
+			     	ltray.add(trayVo);
+				    trayInfor.put(body.getCrowno(), ltray);
 				if (asum.doubleValue() >= 0) 
 					break;
 				asum = PuPubVO.getUFDouble_NullAsZero(Math.abs(asum.doubleValue()));

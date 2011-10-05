@@ -48,7 +48,7 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				// ##################################################推式保存、签字
 				setParameter("AggObject",icBillVO);
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "pushSign4C",
-						"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
+						"&date:String,&operator:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[销售出库]签字内容
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);

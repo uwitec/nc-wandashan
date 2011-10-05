@@ -127,6 +127,8 @@ public class WdsWlPubDMO extends DataManageObject {
 				sessionManager.release();
 		}
 	}
+	//nc.bs.wl.pub.WdsWlPubDMO
+	//nc.vo.scm.sourcebill.LightBillVO
 	public LightBillVO queryBillGraph(
 			String billFinderClassName,
 			String id,

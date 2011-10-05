@@ -1,15 +1,12 @@
 package nc.ui.wds.ic.so.out;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
-import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
@@ -33,50 +30,41 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
-/**
- * 
- *  0 保管员 1 信息科 2 发运科 3内勤
- *  
+/** 
+ *  0 保管员 1 信息科 2 发运科 3内勤 
  * 	用户类型0---------可以进行出库
 	用户类型1---------为可以签字的用户
 	用户类型2---------修改操作
 	用户类型3---------所有权限
  */
-
 public class MySaleEventHandler extends OutPubEventHandler {
-
 	private LoginInforHelper login=null;
-	protected nc.ui.pub.print.PrintEntry m_print = null;
-	
+	protected nc.ui.pub.print.PrintEntry m_print = null;	
 	protected ScaleValue m_ScaleValue=new ScaleValue();
 	protected ScaleKey m_ScaleKey=new ScaleKey();
 	public MySaleEventHandler(OutPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
-
 	@Override
 	protected UIDialog createQueryUI() {
 		return new MyQueryDIG(
 				getBillUI(),null,_getCorp().getPk_corp(),getBillUI().getModuleCode(),_getOperator(),null);
 	}
-
 	@Override
 	protected String getHeadCondition() {
 		return " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 and vbilltype = '"+WdsWlPubConst.BILLTYPE_SALE_OUT+"' ";
 	}
-
-
 	private LoginInforHelper getLoginInfoHelper(){
 		if(login==null){
 			login=new LoginInforHelper();
 		}
 		return login;
 	}
-	
 	protected void onBoElse(int intBtn) throws Exception {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
 			case ISsButtun.tpzd://托盘指定(手动拣货)
+				valudateWhereYeqian();
 				//拣货 存货唯一校验
 				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
@@ -86,6 +74,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 				onBatchCodeChange();
 				break;
 			case ISsButtun.zdqh://自动取货
+				valudateWhereYeqian();
 				//拣货 存货唯一校验
 				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
@@ -106,20 +95,61 @@ public class MySaleEventHandler extends OutPubEventHandler {
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefSoOrder://参照销售运单
 				((MyClientUI) getBillUI()).setRefBillType(WdsWlPubConst.WDS5);
 					onBillRef();
-					setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
-					//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
-					setInitWarehouse("srl_pk");
+					
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefRedSoOrder://参照销售运单
 				((MyClientUI) getBillUI()).setRefBillType("30");
 					onBillRef();
-					setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
-					//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
-					setInitWarehouse("srl_pk");
 				break;
 		}
 	}
-
+	
+	/**
+	 * 拣货对应的页签
+	 * 必须在出库子表页签
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-9-22下午02:56:45
+	 */
+    private void valudateWhereYeqian()throws Exception{
+	   String tablecode=getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().getTableCode();
+	   if(!"tb_outgeneral_b".equalsIgnoreCase(tablecode)){
+		 throw new Exception("请选择表体存货页签");   
+	   }
+	}
+    /**
+     * 参照后设置默认值
+     * @throws Exception 
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2011-9-22下午04:10:24
+     */
+    @Override
+ 	protected void setRefData() throws Exception {
+    	setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+		//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
+		setInitWarehouse("srl_pk");
+		setPk_cargdoc();//设置货位
+ 	}
+	/**
+     * 设置货位信息
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2011-9-22下午02:17:50
+     */
+	private void setPk_cargdoc() throws Exception{
+	  String pk_cargdoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+	  if(pk_cargdoc==null || pk_cargdoc.length()==0){
+		   throw new Exception("请选择表头货位");
+	  } 	  
+	  int count=getBillCardPanelWrapper().getBillCardPanel().getRowCount();
+	  if(count==0){
+		  return;
+	  }
+	  for(int i=0;i<count;i++){
+		  getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(pk_cargdoc, i, "cspaceid");
+	  }
+	}
 	/**
 	 * @author yf
 	 * 手动拣货、自动拣货后执行
@@ -173,9 +203,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 	
 	@Override
 	public void onBillRef() throws Exception {
-		super.onBillRef();
-		//当前库管员绑定的货位
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setValue(getLoginInfoHelper().getSpaceByLogUserForStore(_getOperator()));
+		super.onBillRef();	
 		//库管理员赋值
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("cwhsmanagerid").setValue(_getOperator());	
 		//给表体业务日期赋值

@@ -14,7 +14,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.ButtonVOFactory;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wds.ic.pub.InPubClientUI;
+import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
@@ -31,26 +31,20 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  ∆‰À˚»Îø‚
  */
-public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditListener{
-
+public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEditListener{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private String curRefBilltype = null;
-
 	protected ManageEventHandler createEventHandler() {
 		return new OtherInEventHandler(this, getUIControl());
 	}
+	
 	public MyClientUI() {
 		super();
 	}
-	
-	public MyClientUI(String pk_corp, String pk_billType, String pk_busitype,
-			String operater, String billId) {
-		super(pk_corp, pk_billType, pk_busitype, operater, billId);
-	}
-	
+
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}
@@ -74,6 +68,9 @@ public class MyClientUI extends InPubClientUI  implements  BillCardBeforeEditLis
 		
 		super.initEventListener();
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
+	}
+	public MyClientUI(String pk_corp, String pk_billType,String pk_busitype, String operater, String billId) {
+		super(pk_corp, pk_billType, pk_busitype, operater, billId);
 	}
 
 	protected void initSelfData() {

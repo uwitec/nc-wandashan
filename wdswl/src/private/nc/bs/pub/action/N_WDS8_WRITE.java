@@ -2,6 +2,9 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.so.out.SoOutBO;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -30,7 +33,9 @@ try{
 //			runClass("nc.bs.wds.ic.so.out.SoOutBO", "insertFyd","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 //			// ##################################################
 			Object retObj = null;
-			retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);		
+			pushSaveWDSF pu=new pushSaveWDSF();
+			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

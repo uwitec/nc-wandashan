@@ -29,11 +29,10 @@ try{
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
-			String pk = getVo().getParentVO().getPrimaryKey();
+			String pk =vo.m_preValueVo.getParentVO().getPrimaryKey();
 			//参照第一次保存需要回写装卸费完成标志
 			if(pk==null || "".equals(pk)){
 				runClass("nc.bs.wds.load.account.LoadAccountBS", "writeBack","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
-
 			}
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;

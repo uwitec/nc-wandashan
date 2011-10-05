@@ -1,5 +1,4 @@
 package nc.ui.wds.ic.other.in;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
@@ -7,8 +6,8 @@ import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.InPubEventHandler;
+import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -16,11 +15,8 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
-
-
 public class OtherInEventHandler extends InPubEventHandler {
-
-	public OtherInEventHandler(InPubClientUI billUI, IControllerBase control) {
+	public OtherInEventHandler(MutiInPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
 	protected void onBoElse(int intBtn) throws Exception {
@@ -29,6 +25,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 
 		case ISsButtun.Zdtp://手动拣货
 			//拣货 存货唯一校验
+			valudateWhereYeqian();
 			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 					new String[]{"invcode","geb_vbatchcode"},
@@ -39,6 +36,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 			onCkmx();
 			break;
 		case ISsButtun.Zdrk://自动拣货
+			valudateWhereYeqian();
 			//拣货 存货唯一校验
 			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
@@ -87,6 +85,19 @@ public class OtherInEventHandler extends InPubEventHandler {
 	 for(int i=0;i<legth;i++){
 		 getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(_getDate(), i, "geb_dbizdate"); 
 	 }
+	}
+	/**
+	 * 拣货对应的页签
+	 * 必须在出库子表页签
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-9-22下午02:56:45
+	 */
+    private void valudateWhereYeqian()throws Exception{
+	   String tablecode=getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().getTableCode();
+	   if(!"tb_general_b".equalsIgnoreCase(tablecode)){
+		 throw new Exception("请选择表体存货页签");   
+	   }
 	}
 	/**
 	 * 自制单据

@@ -14,7 +14,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.ButtonVOFactory;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wds.ic.pub.InPubClientUI;
+import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
@@ -30,7 +30,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * µ÷²¦Èë¿â
  */
-public class MyClientUI extends InPubClientUI implements  BillCardBeforeEditListener {
+public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEditListener {
 
 	/**
 	 * 

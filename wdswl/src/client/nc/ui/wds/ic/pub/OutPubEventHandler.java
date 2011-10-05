@@ -1,5 +1,4 @@
 package nc.ui.wds.ic.pub;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +12,11 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.WdsBillManagUI;
+import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
@@ -39,10 +37,18 @@ import nc.vo.wl.pub.WdsWlPubTool;
 public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	public OutPubClientUI ui = null;
+	private LoginInforHelper login=null;
 
 	public OutPubEventHandler(OutPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 		ui = billUI;
+	}
+
+	private LoginInforHelper getLoginInfoHelper(){
+		if(login==null){
+			login=new LoginInforHelper();
+		}
+		return login;
 	}
 	
 	//当前行应发数量--拆行使用
@@ -60,24 +66,15 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		if (results != 1) {
 			return;
 		}
-		if (getBillUI().getVOFromUI() == null
-				|| getBillUI().getVOFromUI().getChildrenVO() == null
-				|| getBillUI().getVOFromUI().getChildrenVO().length == 0) {
-			ui.showErrorMessage("获取当前界面数据出错.");
+		if (getBillUI().getVOFromUI() == null|| getBillUI().getVOFromUI().getChildrenVO() == null|| getBillUI().getVOFromUI().getChildrenVO().length == 0) {ui.showErrorMessage("获取当前界面数据出错.");
 			return;
 		}
 		AggregatedValueObject billvo = getBillUI().getVOFromUI();
-		TbOutgeneralBVO[] generalbVOs = (TbOutgeneralBVO[]) billvo
-				.getChildrenVO();
-
+		TbOutgeneralBVO[] generalbVOs = (TbOutgeneralBVO[]) billvo.getChildrenVO();
 		// 数据校验 begin
-		WdsWlPubTool.validationOnPickAction(getBillCardPanelWrapper()
-				.getBillCardPanel(), generalbVOs);
+		WdsWlPubTool.validationOnPickAction(getBillCardPanelWrapper().getBillCardPanel(), generalbVOs);
 		// 数据校验end
-		String pk_stordoc = PuPubVO
-				.getString_TrimZeroLenAsNull(getBillCardPanelWrapper()
-						.getBillCardPanel().getHeadItem("srl_pk")
-						.getValueObject());
+		String pk_stordoc = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
 		Map<String, List<TbOutgeneralTVO>> trayInfor = null;
 		// ui.showProgressBar(true);
 		try {
@@ -654,18 +651,27 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		if(WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(whid)){
 			isMaster = true;
 		}
-		//设置仓库，货位是否可编辑，是主仓管理员则可以编辑，否则不可以编辑
-		for (String field : fields) {
-			getBillCardPanelWrapper().getBillCardPanel().getHeadItem(field).setEnabled(isMaster);
-		}
-		
+		String  pk_stordoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
+	    if(pk_stordoc==null ||pk_stordoc.length()==0){
+	    	throw new Exception("仓库为空");
+	    }
+		if(!pk_stordoc.equalsIgnoreCase(getLoginInfoHelper().getCwhid(_getOperator()))){
+	    	 throw new Exception("当前保管员  未绑定 当前 被参照的销售运单的出库仓库");
+	    }else{
+	         //当前库管员绑定的货位
+    	     getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setValue(getLoginInfoHelper().getSpaceByLogUserForStore(_getOperator()));
+		    //设置仓库，货位是否可编辑，是主仓管理员则可以编辑，否则不可以编辑
+		    for(String field : fields){
+			 getBillCardPanelWrapper().getBillCardPanel().getHeadItem(field).setEnabled(isMaster);
+		    }
+	    }	
 	}
 	
 	//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
 	protected void setInitWarehouse(String warehouseid) throws Exception{
 		BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(warehouseid);
 		if(null != item && item.getValueObject() == null){
-			String  geh_cwarehouseid = ((WdsBillManagUI) getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
+			String  geh_cwarehouseid = ((MutiChildForOutInUI) getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
 	}

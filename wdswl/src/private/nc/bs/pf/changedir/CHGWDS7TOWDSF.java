@@ -16,7 +16,7 @@ public class CHGWDS7TOWDSF extends VOConversion {
 	* @return java.lang.String[]
 	*/
 	public String getAfterClassName() {
-		return null;
+		return "nc.bs.pub.chgafter.WDS7TOWDSFAfterDeal";
 	}
 	/**
 	* 获得另一个后续类的全录径名称。
@@ -27,9 +27,10 @@ public class CHGWDS7TOWDSF extends VOConversion {
 	}
 	@Override
 	public String[] getField() {
-		// TODO Auto-generated method stub
+		
 		return new String[]{
-				"B_csourcebillhid->B_B_geh_pk",
+				"H_pk_corp->H_pk_corp",//公司	
+				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",
 				"B_csourcetype->H_geh_billtype",

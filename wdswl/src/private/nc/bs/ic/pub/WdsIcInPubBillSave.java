@@ -1,8 +1,8 @@
 package nc.bs.ic.pub;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.pub.SuperDMO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
@@ -22,9 +22,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.trade.voutils.IFilter;
@@ -32,9 +30,7 @@ import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-
 public class WdsIcInPubBillSave extends BillSave {
-	
 	private SuperDMO dmo = new SuperDMO();
 	private SuperDMO getSuperDMO(){
 		if(dmo == null){
@@ -345,6 +341,7 @@ public class WdsIcInPubBillSave extends BillSave {
 		SQLParameter para = new SQLParameter();
 		for(TbGeneralBVO bvo:bodys){
 			List<TbGeneralBBVO> tray = bvo.getTrayInfor();
+		if(bvo.getPrimaryKey()==null || bvo.getPrimaryKey().length()==0){
 			for(int i=0;i<tray.size();i++){
 				String cdp_pk =tray.get(i).getCdt_pk();
 				para.addParam(cdp_pk);
@@ -354,6 +351,7 @@ public class WdsIcInPubBillSave extends BillSave {
 				}
 				para.clearParams();
 			}
+		  }
 		}
 		
 	}

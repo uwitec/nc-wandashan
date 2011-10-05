@@ -225,7 +225,7 @@ public class TbGeneralBBVO extends SuperVO {
 	 */
 	public java.lang.String getParentPKFieldName() {
 
-		return null;
+		return "geb_pk";
 
 	}
 	

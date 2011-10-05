@@ -1,29 +1,23 @@
 package nc.bs.wds.finder;
-
 import java.util.Hashtable;
-
 import nc.bs.pf.pub.PfDataCache;
 import nc.bs.trade.billsource.IBillDataFinder;
 import nc.bs.trade.billsource.IBillFinder;
 import nc.vo.trade.billsource.LightBillVO;
-
-
+import nc.vo.wl.pub.IBillFinder2;
+/**
+ * 单据查找器默认类
+ * @author mlr
+ */
 public abstract class AbstractBillFinder implements IBillFinder {
 	private Hashtable m_finderHas = new Hashtable();
 
-	/**
-	 * AbstractBillFinder 构造子注解。
-	 */
 	public AbstractBillFinder() {
 		super();
 	}
-
 	/**
-	 * 返回具体的单据数据查找器。 该处返回默认的数据查找器。 创建日期：(2004-6-21 20:02:15)
-	 * 
-	 * @return nc.bs.trade.billsource.IBillDataFinder
-	 * @exception java.lang.Exception
-	 *                异常说明。
+	 * 返回具体的单据数据查找器。该处返回默认的数据查找器。
+	 * 如果不重写就返回默认的查找器 
 	 */
 	public IBillDataFinder createBillDataFinder(String billType)
 			throws Exception {
@@ -98,10 +92,8 @@ public abstract class AbstractBillFinder implements IBillFinder {
 			vo = new LightBillVO();
 			vo.setID(id);
 			vo.setType(type);
-
 			findSourceBillsForBill(vo);
 			findForwardBillsForBill(vo);
-
 		} catch (Exception e) {
 			throw new nc.vo.pub.BusinessException(nc.bs.ml.NCLangResOnserver
 					.getInstance().getStrByID("uifactory",

@@ -77,7 +77,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public String getPkField() {
-		return "";
+		return "pk_loadprice";
 	}
 
 	public Boolean isEditInGoing() throws Exception {

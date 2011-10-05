@@ -1,22 +1,18 @@
 package nc.bs.pf.changedir;
-
 import nc.bs.pf.change.VOConversion;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
  * 调拨入->装卸费结算
- * @author Administrator
- *
+ * @author mlr
  */
 public class CHGWDS9TOWDSF extends VOConversion{
-	
 	/**
 	* 获得后续类的全录经名称。
 	* @return java.lang.String[]
 	*/
 	public String getAfterClassName() {
-		return null;
+		return "nc.bs.pub.chgafter.WDS9TOWDSFAfterDeal";
 	}
 	/**
 	* 获得另一个后续类的全录径名称。
@@ -29,6 +25,7 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	public String[] getField() {
 		// TODO Auto-generated method stub
 		return new String[]{
+				"H_pk_corp->H_pk_corp",//公司	
 				"B_csourcebillhid->B_B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",

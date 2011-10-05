@@ -6,14 +6,13 @@ import nc.bs.pf.change.VOConversion;
  * @author Administrator
  *
  */
-public class CHGWDS8TOWDSF extends VOConversion {
-	
+public class CHGWDS8TOWDSF extends VOConversion{
 	/**
 	* 获得后续类的全录经名称。
 	* @return java.lang.String[]
 	*/
 	public String getAfterClassName() {
-		return null;
+		return "nc.bs.pub.chgafter.WDS8TOWDSFAfterDeal";
 	}
 	/**
 	* 获得另一个后续类的全录径名称。
@@ -21,19 +20,15 @@ public class CHGWDS8TOWDSF extends VOConversion {
 	*/
 	public String getOtherClassName() {
 		return null;
-	}
-
-	
-	
+	}	
 	@Override
-	public String[] getField() {
-		// TODO Auto-generated method stub
+	public String[] getField() {	
 		return new String[]{
+				"H_pk_corp->H_pk_corp",//公司				
 				"B_csourcebillhid->B_general_pk",
 				"B_csourcebillbid->B_general_b_pk",
 				"B_vsourcebillcode->H_vbillcode",
-				"B_csourcetype->H_vbilltype",
-				
+				"B_csourcetype->H_vbilltype",				
 				"B_cfirstbillhid->B_cfirstbillhid",
 				"B_cfirstbillbid->B_cfirstbillbid",
 				"B_vfirstbillcode->B_vfirstbillcode",
@@ -45,7 +40,9 @@ public class CHGWDS8TOWDSF extends VOConversion {
 				"B_noutnum->B_noutnum",//实出数量
 				"B_nassoutnum->B_noutassistnum",//实出辅数量
 				"B_nshouldoutnum->B_nshouldoutnum",//应出数量
-				"B_nassshouldoutnum->B_nshouldoutassistnum",//应出辅数量
+				"B_ntagnum->B_ntagnum",
+				"B_nassshouldoutnum->B_nshouldoutassistnum",//应出辅数	
+				"B_fistag->B_fistag"
 		};
 	}
 

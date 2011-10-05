@@ -36,10 +36,10 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 public abstract class InPubEventHandler extends WdsPubEnventHandler {
 
-	public InPubClientUI ui = null;
+	public MutiInPubClientUI ui = null;
 	
 	
-	public InPubEventHandler(InPubClientUI billUI, IControllerBase control) {
+	public InPubEventHandler(MutiInPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 		ui = billUI;
 	}
@@ -240,11 +240,13 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}
 		if(vos != null && vos.length > 0 ){
 			for(TbGeneralBVO v : vos){
+			//	if(v.getPrimaryKey() !=null && v.getPrimaryKey().length()!=0){
 				v.validateOnSave();
 				List<TbGeneralBBVO> list = v.getTrayInfor();
 				for(TbGeneralBBVO b : list){
 					b.validateOnSave();
 				}
+		//		}
 			}
 		}
 		super.onBoSave();

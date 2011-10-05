@@ -1,9 +1,10 @@
 package nc.bs.wds.ic.so.out;
-
 import java.util.ArrayList;
 
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.itf.uap.pf.IPFBusiAction;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -16,11 +17,15 @@ import nc.vo.pub.VOStatus;
  * @author Administrator
  */
 public class SoOutBO  {
-	
-	private SuperDMO dmo = new SuperDMO();
-	
-	private String s_billtype = "4C";
-	
+	private SuperDMO dmo = new SuperDMO();	
+	private String s_billtype = "4C";	
+	private pushSaveWDSF puf=null;
+	public pushSaveWDSF getPuf(){
+		if(puf==null){
+			puf=new pushSaveWDSF();
+		}
+		return puf;
+	}
 	public void updateHVO(TbOutgeneralHVO hvo) throws BusinessException{
 		if(hvo == null){
 			return;
@@ -31,9 +36,7 @@ public class SoOutBO  {
 			hvo.setStatus(VOStatus.NEW);
 		dmo.update(hvo);
 	}
-
-	
-	public void pushSign4C(String date, AggregatedValueObject billvo) throws Exception {
+	public void pushSign4C(String date,String coperator,AggregatedValueObject billvo) throws Exception {
 		// 销售出库签字
 		if(billvo != null && billvo instanceof GeneralBillVO){
 			GeneralBillVO billVO = (GeneralBillVO)billvo;
@@ -45,11 +48,11 @@ public class SoOutBO  {
 			//签字检查 <->[签字日期和表体业务日期]
 			//当前操作人<->[业务加锁，锁定当前操作人员]
 			//空货位检查 bb1表
-
 			bsBusiAction.processAction("SIGN", s_billtype,date,null,billVO, null,null);
+			//推式保存形成装卸费核算单
+		//	getPuf().pushSaveWDSF(smbillvo, coperator, date, LoadAccountBS.LOADFEE);
 		}		
 	}
-	
 	public void canelPushSign4C(String date, AggregatedValueObject[] billvo) throws Exception {
 		//取消销售出库签字
 		if(billvo != null && billvo[0]!= null && billvo[0] instanceof GeneralBillVO){

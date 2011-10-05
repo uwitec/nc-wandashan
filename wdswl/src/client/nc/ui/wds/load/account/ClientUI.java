@@ -10,6 +10,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.MutilChildUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;
@@ -34,10 +35,35 @@ public class ClientUI extends MutilChildUI {
 	public ClientUI(Boolean useBillSource) {
 		super(useBillSource);
 	}
-
 	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
-		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+		super();
+		init(billId);
+	}
+	
+	public void init(String id){
+		if(id == null || "".equals(id))
+			return;
+//		//查询主表数据
+//		SuperVO headvo = (SuperVO)getHeadClass().newInstance();
+//		//查询主表数据
+//		SuperVO[] queryVos = getBusiDelegator().queryHeadAllData(
+//				getHeadClass(),
+//				getUIControl().getBillType(), " "+headvo.getTableName()+"."+getUIControl().getPkField()+" = '"+id+"' ");
+//
+//		//查询子表数据
+//		if(queryVos != null && queryVos.length > 0){
+//				setCurrentPanel(BillTemplateWrapper.CARDPANEL);
+//				AggregatedValueObject aggvo = (AggregatedValueObject)getAggVOClass().newInstance();
+//				aggvo.setParentVO(queryVos[0]);
+//				getBusiDelegator().setChildData(
+//							aggvo,
+//							getBodyVOClass(),
+//							getUIControl().getBillType(),
+//							queryVos[0].getPrimaryKey(),null);
+//				getBufferData().addVOToBuffer(aggvo);
+//				getBufferData().setCurrentRow(getBufferData().getCurrentRow());
+//		}
 	}
 	@Override
 	protected AbstractManageController createController() {

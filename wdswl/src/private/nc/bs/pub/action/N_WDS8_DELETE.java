@@ -4,6 +4,9 @@ import java.util.Hashtable;
 
 import nc.bo.other.out.OtherOutBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.CanelDeleteWDF;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -51,6 +54,8 @@ public class N_WDS8_DELETE extends AbstractCompiler2 {
 					m_methodReturnHas);
 			OtherOutBO bo = new OtherOutBO();
 			bo.deleteOutBill(billVo2);
+			CanelDeleteWDF pu=new CanelDeleteWDF();
+			pu.canelDeleteWDF(vo.m_preValueVo, vo.m_operator,  vo.m_currentDate);
 			
 			// ##################################################
 			return retObj;

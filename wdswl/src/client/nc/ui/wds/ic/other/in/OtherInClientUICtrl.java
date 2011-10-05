@@ -6,6 +6,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
+import nc.vo.ic.pub.TbgeneralB2VO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -75,7 +76,7 @@ public class OtherInClientUICtrl extends AbstractManageController {
 
 	public String[] getBillVoName() {
 		return new String[] { OtherInBillVO.class.getName(),
-				TbGeneralHVO.class.getName(), TbGeneralBVO.class.getName() };
+				TbGeneralHVO.class.getName(), TbGeneralBVO.class.getName(), TbgeneralB2VO.class.getName()};
 	}
 
 	public String getBodyCondition() {
@@ -99,7 +100,7 @@ public class OtherInClientUICtrl extends AbstractManageController {
 	}
 
 	public String getPkField() {
-		return null;
+		return "pk_loadprice";
 	}
 
 	public Boolean isEditInGoing() throws Exception {

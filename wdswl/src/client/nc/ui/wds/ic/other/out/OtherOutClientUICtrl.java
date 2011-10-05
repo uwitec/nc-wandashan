@@ -4,6 +4,7 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.ic.other.out.MyBillVO;
+import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.wl.pub.ButtonCommon;
@@ -62,7 +63,9 @@ public class OtherOutClientUICtrl extends AbstractManageController {
 	public String[] getBillVoName() {
 		return new String[] { MyBillVO.class.getName(),
 				TbOutgeneralHVO.class.getName(),
-				TbOutgeneralBVO.class.getName() };
+				TbOutgeneralBVO.class.getName(),
+				TbOutgeneralB2VO.class.getName()
+				};
 	}
 
 	public String getBodyCondition() {

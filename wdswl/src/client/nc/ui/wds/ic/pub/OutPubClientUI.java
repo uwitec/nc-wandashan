@@ -10,12 +10,9 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.table.TableColumn;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
-import nc.ui.pub.bill.BillCellEditor;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
@@ -23,7 +20,6 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wds.ic.other.out.BillField;
 import nc.ui.wl.pub.MutiChildForOutInUI;
-import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
@@ -35,12 +31,10 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
-public class OutPubClientUI extends MutiChildForOutInUI {
-	
+public class OutPubClientUI extends MutiChildForOutInUI{
 	/**
 	 * 
 	 */
-
 	private static final long serialVersionUID = 1L;
 	private Map<String,List<TbOutgeneralTVO>> trayInfor = null;//缓存下  保存后更新到 buffer 行号+托盘流水表信息
 	public void setTrayInfor(Map<String,List<TbOutgeneralTVO>> trayInfor2){

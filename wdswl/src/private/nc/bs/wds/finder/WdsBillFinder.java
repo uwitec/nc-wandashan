@@ -1,5 +1,4 @@
 package nc.bs.wds.finder;
-
 import nc.bs.trade.billsource.IBillDataFinder;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**

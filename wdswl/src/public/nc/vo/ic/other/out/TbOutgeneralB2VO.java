@@ -2,6 +2,7 @@ package nc.vo.ic.other.out;
 
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
 
@@ -17,7 +18,7 @@ public class TbOutgeneralB2VO extends SuperVO{
 	public String vmemo;//±¸×¢
 	public String pk_wds_teamdoc_h;//°à×éid
 	public UFDouble nloadprice;
-	public UFTime ts;
+	public UFDateTime ts;
 	public Integer dr;
 	
 	public String reserve1;
@@ -108,11 +109,12 @@ public class TbOutgeneralB2VO extends SuperVO{
 		this.nloadprice = nloadprice;
 	}
 
-	public UFTime getTs() {
+
+	public UFDateTime getTs() {
 		return ts;
 	}
 
-	public void setTs(UFTime ts) {
+	public void setTs(UFDateTime ts) {
 		this.ts = ts;
 	}
 

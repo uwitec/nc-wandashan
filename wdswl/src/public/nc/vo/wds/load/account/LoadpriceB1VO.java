@@ -37,6 +37,7 @@
              public UFDouble nhsl;//换算率
              public String reserve1;
              public UFBoolean reserve16;
+             public UFBoolean fistag;//是否贴签
            
              public UFBoolean reserve15;
              public String reserve2;
@@ -144,7 +145,24 @@
 		 return reserve5;
 	  }   
 	  
-     /**
+	 
+	 
+	 
+     public UFBoolean getFistag() {
+			return fistag;
+		}
+
+
+
+
+		public void setFistag(UFBoolean fistag) {
+			this.fistag = fistag;
+		}
+
+
+
+
+	/**
 	   * 属性reserve5的Setter方法.
 	   *
 	   * 创建日期:2011-5-3

@@ -1,5 +1,4 @@
 package nc.ui.wl.pub;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.linkoperate.ILinkQuery;
@@ -9,18 +8,26 @@ import nc.ui.trade.button.IBillButton;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
-
 /**
- * 多子表UI,加自定义项
- * 
+ * 多字表ui(实现了联查)
+ * @author mlr
+ *
  */
-public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBillManageUI implements ILinkQuery {
-		
-	private Class bodyVOClass;
+public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBillManageUI implements ILinkQuery{
+
 	
 	private Class aggBillVOClass;
 	
-	private Class bodyVO1Class;
+	private Class headVOClass;
+	
+	private LoginInforHelper helper = null;
+	
+	public LoginInforHelper getLoginInforHelper(){
+		if(helper == null){
+			helper = new LoginInforHelper();
+		}
+		return helper;
+	}
 
 	public MutilChildUI() {
 		super();
@@ -73,29 +80,24 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 			if(id == null || "".equals(id))
 				return;
 			//查询主表数据
-			SuperVO headvo = (SuperVO)getBodyB1Class().newInstance();
+			SuperVO headvo = (SuperVO)getHeadClass().newInstance();
 			//查询主表数据
 			SuperVO[] queryVos = getBusiDelegator().queryHeadAllData(
-					getBodyB1Class(),
+					getHeadClass(),
 					getUIControl().getBillType(), " "+headvo.getTableName()+"."+getUIControl().getPkField()+" = '"+id+"' ");
-
+			
 			//查询子表数据
 			if(queryVos != null && queryVos.length > 0){
 					setCurrentPanel(BillTemplateWrapper.CARDPANEL);
 					AggregatedValueObject aggvo = (AggregatedValueObject)getAggVOClass().newInstance();
 					aggvo.setParentVO(queryVos[0]);
-					getBusiDelegator().setChildData(
-								aggvo,
-								getBodyVOClass(),
-								getUIControl().getBillType(),
-								queryVos[0].getPrimaryKey(),null);
+					getBufferData().clear();
 					getBufferData().addVOToBuffer(aggvo);
-					getBufferData().setCurrentRow(getBufferData().getCurrentRow());
+					getBufferData().setCurrentRow(0);
 			}
-			//
 			ButtonObject[] btns = getButtons();
 			for (ButtonObject btn : btns) {
-				if (("" + (IBillButton.Card)).equals(btn.getTag()) || ("" + (IBillButton.Return)).equals(btn.getTag())) {
+				if (("" + (IBillButton.Print)).equals(btn.getTag())) {
 					btn.setEnabled(true);
 					btn.setVisible(true);
 				} else {
@@ -104,26 +106,21 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 				}
 			}
 			updateButtons();
+			
 		}  catch (Exception e) {
 			Logger.error(e);
 		}
-		//
-	}
-	private Class getBodyVOClass() throws Exception{
-		if(bodyVOClass==null)
-			bodyVOClass = Class.forName(getUIControl().getBillVoName()[2]);
-		return bodyVOClass;
-	}
 	
+	}
 	private Class getAggVOClass()  throws Exception{
 		if(aggBillVOClass == null)
 				aggBillVOClass = Class.forName(getUIControl().getBillVoName()[0]);
 			return aggBillVOClass;
 	}
-	private Class getBodyB1Class()  throws Exception{
-		if( bodyVO1Class == null)
-			bodyVO1Class = Class.forName(getUIControl().getBillVoName()[1]);
-			return bodyVO1Class ;
+	private Class getHeadClass()  throws Exception{
+		if( headVOClass == null)
+			headVOClass = Class.forName(getUIControl().getBillVoName()[1]);
+			return headVOClass ;
 	}
 	/**
 	 * 千分位处理

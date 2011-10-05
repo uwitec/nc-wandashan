@@ -1,14 +1,11 @@
 package nc.vo.wds.load.account;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.trade.pub.IExAggVO;
-
 @SuppressWarnings( { "unchecked" })
 public class ExaggLoadPricVO extends HYBillVO implements IExAggVO {
 	/**
@@ -31,7 +28,7 @@ public class ExaggLoadPricVO extends HYBillVO implements IExAggVO {
 	public java.lang.String[] getTableNames() {
 		return new String[] { "来源明细", "班组分配" };
 	}
-
+  
 	/**
 	 * 取得所有子表的所有VO对象
 	 */

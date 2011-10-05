@@ -1,11 +1,16 @@
 package nc.ui.wds.ic.so.out;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Hashtable;
 
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -19,22 +24,19 @@ import nc.vo.wl.pub.WdsWlPubConst;
   */
 public class MyDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 
-	/**
-	 * queryBodyVOs 方法注解。
-	 */
-	public nc.vo.pub.CircularlyAccessibleValueObject[] queryBodyAllData(
-			Class voClass, String billType, String key, String strWhere)
-	throws Exception {
-		if(PuPubVO.getString_TrimZeroLenAsNull(strWhere)==null)
-			strWhere = " general_pk = '"+key+"'";
-		else
-			strWhere = strWhere +=" and general_pk = '"+key+"'";
-		Class[] ParameterTypes = new Class[]{String.class};
-		Object[] ParameterValues = new Object[]{strWhere};
-		SuperVO[] os = (SuperVO[])LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.ic.pub.WdsIcPubBO", "queryIcOutBodyInfor", ParameterTypes, ParameterValues, 2);
-
-		return os;
-	}
+//	/**
+//	 * queryBodyVOs 方法注解。
+//	 */
+//	public nc.vo.pub.CircularlyAccessibleValueObject[] queryBodyAllData(Class voClass, String billType, String key, String strWhere)throws Exception {
+//		if(PuPubVO.getString_TrimZeroLenAsNull(strWhere)==null)
+//			strWhere = " general_pk = '"+key+"'";
+//		else
+//			strWhere = strWhere +=" and general_pk = '"+key+"'";
+//		Class[] ParameterTypes = new Class[]{String.class};
+//		Object[] ParameterValues = new Object[]{strWhere};
+//		SuperVO[] os = (SuperVO[])LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.ic.pub.WdsIcPubBO", "queryIcOutBodyInfor", ParameterTypes, ParameterValues, 2);
+//		return os;
+//	}
 
 	public MyDelegator() {
 		super();
@@ -43,12 +45,16 @@ public class MyDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 	@Override
 	public Hashtable loadChildDataAry(String[] tableCodes, String key) throws Exception {
 		// 根据主表主键，取得子表的数据
-		TbOutgeneralBVO[] b1vos = (TbOutgeneralBVO[]) this.queryByCondition(TbOutgeneralBVO.class, "general_pk='" + key + "' and isnull(dr,0)=0");
-	
+		TbOutgeneralBVO[] b1vos = (TbOutgeneralBVO[]) this.queryByCondition(TbOutgeneralBVO.class, "general_pk='" + key + "' and isnull(dr,0)=0");	
+		for(TbOutgeneralBVO body:b1vos){
+			TbOutgeneralTVO[] ctmps=(TbOutgeneralTVO[]) this.queryByCondition(TbOutgeneralTVO.class, " general_b_pk = '"+body.getPrimaryKey()+"'");
+			if(ctmps == null||ctmps.length==0)
+				continue;
+			body.setTrayInfor(Arrays.asList(ctmps));
+		}
+		
 		// 根据主表主键，取得子的数据
 		TbOutgeneralB2VO[] b2vos = (TbOutgeneralB2VO[]) this.queryByCondition(TbOutgeneralB2VO.class, "general_pk='" + key + "' and isnull(dr,0)=0");
-	
-
 		// 查询数据放Hashtable并返回
 		Hashtable<String, SuperVO[]> dataHT = new Hashtable<String, SuperVO[]>();
 		if (b1vos != null && b1vos.length > 0) {
