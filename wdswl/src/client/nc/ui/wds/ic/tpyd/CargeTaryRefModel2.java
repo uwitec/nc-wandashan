@@ -65,6 +65,16 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 	}
 
 	/**
+	 * Order子句。
+	 * 
+	 * @return java.lang.String
+	 */
+	public String getOrderPart() {
+		StringBuffer strWhere = new StringBuffer();
+		strWhere.append(" cdt_traycode,substr(cdt_traycode,length(cdt_traycode),1) desc, substr(cdt_traycode,length(cdt_traycode)-1,1) ");
+		return strWhere.toString();
+	}
+	/**
 	 * 此处插入方法说明。 创建日期：(2001-9-6 10:56:48)
 	 */
 	public String[] getHiddenFieldCode() {
@@ -98,11 +108,9 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 		StringBuffer strWhere = new StringBuffer();
 		strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
 		strWhere.append(" and isnull(tb_warehousestock.dr,0)=0 ");
-
 		strWhere.append(" and isnull(bd_invmandoc.dr,0)=0 ");
 		strWhere.append(" and isnull(bd_invbasdoc.dr,0)=0 ");
 		strWhere.append(" and isnull(tb_stockstate.dr,0)=0");
-
 		strWhere.append(" and tb_warehousestock.pk_corp='"+getPk_corp()+"'");
 		return strWhere.toString();
 	}

@@ -4,7 +4,10 @@ public class WdsWlPubConst {
 	
 	
 	public static String WDS_WL_MODULENAME = "wds";
-
+	/**
+	 *库存状态表   大日期状态主键
+	 */
+	public static String WDS_STORSTATE_PK="1021S31000000009FS9A";
 	/**发运计划录入节点号 */
 	public static String DM_PLAN_LURU_NODECODE="80060405";
 	/**发运计划处理节点号  */

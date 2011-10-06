@@ -34,9 +34,7 @@ try{
 //			// ##################################################
 			Object retObj = null;
 			retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);		
-			pushSaveWDSF pu=new pushSaveWDSF();
-			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
-			return retObj;
+					return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)
 				throw (BusinessException) ex;

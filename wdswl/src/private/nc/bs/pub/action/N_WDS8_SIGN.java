@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -48,12 +50,16 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				// ##################################################推式保存、签字
 				setParameter("AggObject",icBillVO);
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "pushSign4C",
-						"&date:String,&operator:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
+						"&date:String,&operator:String,&AggObject:nc.vmo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[销售出库]签字内容
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",
 						"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
+				//生成装卸费核算单
+				pushSaveWDSF pu=new pushSaveWDSF();
+				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
+
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

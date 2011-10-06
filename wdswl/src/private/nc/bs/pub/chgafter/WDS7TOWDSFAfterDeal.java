@@ -23,7 +23,7 @@ public class WDS7TOWDSFAfterDeal  implements IchangeVO{
        }
        OtherInBillVO pvo=(OtherInBillVO) preVo;
        ExaggLoadPricVO nvo=(ExaggLoadPricVO) nowVo;
-       if(pvo.getTableVO(pvo.getTableCodes()[1])!=null || pvo.getTableVO(pvo.getTableCodes()[1]).length!=0){
+       if(pvo.getTableVO(pvo.getTableCodes()[1])!=null && pvo.getTableVO(pvo.getTableCodes()[1]).length!=0){
     	   SuperVO[] vos=(SuperVO[]) pvo.getTableVO(pvo.getTableCodes()[1]);
     	   LoadpriceB2VO[] newvos=null;
     	   if(vos.length>0){

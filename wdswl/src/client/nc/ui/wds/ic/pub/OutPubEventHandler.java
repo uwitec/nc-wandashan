@@ -329,37 +329,48 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	 * @throws Exception
 	 */
 	public void chaneColor() throws Exception {
-		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
-				.getVOFromUI().getChildrenVO();
-
+		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
+		OutPubClientUI ui= (OutPubClientUI)getBillUI();
+		Map<String,List<TbOutgeneralTVO>> tmap=ui.getTrayInfor();//行号  托盘信息
 		// 获取并判断表体是否有值，进行循环
 		if (null != generalbVO && generalbVO.length > 0) {
 			for (int i = 0; i < generalbVO.length; i++) {
 				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
 				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
-				UFDouble num = PuPubVO
-						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-								.getBillCardPanel().getBodyValueAt(i,
-										"nshouldoutassistnum"));// 应发辅数量
-				UFDouble tatonum = PuPubVO
-						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-								.getBillCardPanel().getBodyValueAt(i,
-										"noutassistnum"));// 实发辅数量
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"nshouldoutassistnum"));// 应发辅数量
+				UFDouble tatonum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"noutassistnum"));// 实发辅数量
 				//yf add
 				//实发小于应发：红色
-				if(tatonum.sub(num, 8).doubleValue() > 0) {
+				if(tatonum.sub(num, 8).doubleValue() < 0) {
 					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
-					for (String field : changFields) {
-						getBillCardPanelWrapper().getBillCardPanel()
-						.getBodyPanel().setCellForeGround(i,
-								field, Color.red);
-					}
-					
+					for (String field : changFields) {getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.red);
+					}					
 				}
-				//大日期:蓝色
-//				if(){
-//					
-//				}
+				if(tmap.containsKey(generalbVO[i].getCrowno())){
+					generalbVO[i].setTrayInfor(tmap.get(generalbVO[i].getCrowno()));
+				}			
+				//大日期:蓝色 add mlr
+ 				List<TbOutgeneralTVO>  trays=generalbVO[i].getTrayInfor();//获取托盘信息
+ 				if(trays==null || trays.size()==0){
+ 					return;
+ 				}
+ 			
+// 				for(TbOutgeneralTVO body:trays){
+// 					key = body.getCrowno();
+// 					if(trayInfor.containsKey(key)){
+// 						body.setTrayInfor(trayInfor.get(key));
+// 					}
+// 				}
+ 				for(TbOutgeneralTVO tvo:trays){
+ 					//查询大日期状态的主键
+ 	 				String whs_pk= PuPubVO.getString_TrimZeroLenAsNull(WdsWlPubTool.execFomularClient("ss_pk->getColValue(tb_warehousestock,ss_pk,pplpt_pk,pk)", new String[]{"pk"}, new String[]{tvo.getCdt_pk()}));		
+ 					if(WdsWlPubConst.WDS_STORSTATE_PK.equalsIgnoreCase(whs_pk)){
+ 						String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
+ 						for (String field : changFields) {
+ 						  getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.BLUE);
+ 						}		
+ 					}
+ 				}				
 				//yf end 
 //				if (tatonum.doubleValue() == 0) {
 //					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().

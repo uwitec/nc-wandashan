@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
@@ -185,6 +184,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			retflag = UIDialog.ID_OK;
 		}
 		setBackGround();
+//		chaneColor();
 		setBodyModelState();
 		return retflag;
 	}
@@ -309,7 +309,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel().getValueAt(i, "geb_anum"));
 				//yf add
 				//实入小于应入:红色
-				if(b1.sub(b2).doubleValue() < 0 ){
+				if(b2.sub(b1).doubleValue() < 0 ){
 					String[] changFields = {"geb_anum","geb_snum","geb_bsnum","geb_banum"};
 					for (String field : changFields) {
 						getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
@@ -453,9 +453,50 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}		
 
 //		changeColor(tbGeneralBVOs, retInfor);
+		setBackGround();
 		setBodyModelState();
 	}
 	
+	
+	public void chaneColor() throws Exception {
+		TbGeneralBVO[] generalbVO = (TbGeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
+		// 获取并判断表体是否有值，进行循环
+		if (null != generalbVO && generalbVO.length > 0) {
+			for (int i = 0; i < generalbVO.length; i++) {
+				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
+				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"nshouldoutassistnum"));// 应发辅数量
+				UFDouble tatonum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"noutassistnum"));// 实发辅数量
+				//yf add
+				//实发小于应发：红色
+				if(tatonum.sub(num, 8).doubleValue() > 0) {
+					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
+					for (String field : changFields) {getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.red);
+					}					
+				}
+ 				}				
+				//yf end 
+//				if (tatonum.doubleValue() == 0) {
+//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().
+//							.setCellBackGround(i, "ccunhuobianma", Color.red);
+//				} else {
+//					if (tatonum.sub(num, 8).doubleValue() == 0) {
+//						getBillCardPanelWrapper().getBillCardPanel()
+//								.getBodyPanel().setCellBackGround(i,
+//										"ccunhuobianma", Color.white);
+//					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
+//						getBillCardPanelWrapper().getBillCardPanel()
+//								.getBodyPanel().setCellBackGround(i,
+//										"ccunhuobianma", Color.blue);
+//					}
+//				}
+
+			}
+
+		}
+
+	
+
 //	private void changeColor(TbGeneralBVO[] bodys,Map<String, Integer> retInfor){
 //		int row = 0;
 //		for(TbGeneralBVO body:bodys){

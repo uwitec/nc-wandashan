@@ -135,11 +135,11 @@ public class BillQueryTool {
 		String hTable = headAttrVo.getVotable();
 		String hPkField = headAttrVo.getPkfield();
 		String hTableCodeField = headAttrVo.getBillno();
-		String hTableBillTypeField = paraVo.getBillType();
+		String hTableBillTypeField = paraVo.getBillType();//单据类型 --> 对应votable 的 def1      默认 pk_billtype
 		String bTable = itemAttrVo.getVotable();
 		String bFkField = itemAttrVo.getPkfield();
-		String bTableSourceTypeField = paraVo.getLastBillType();
-		String bTableSourceIDField = paraVo.getLastBillID();
+		String bTableSourceTypeField = paraVo.getLastBillType();//上层单据类型-->对应votable 的def2  默认vlastbilltype
+		String bTableSourceIDField = paraVo.getLastBillID();//上层单据id -->对应votable 的def3  
 		//如果单据没有来源单据类型字段,则返回空.即如果该类型单据没有标识来源单据
 		//类型,就无法定位它是否是后单据.
 		//通常该情况是:它是某种固定类型单据的后续单据.
@@ -242,8 +242,10 @@ public class BillQueryTool {
 		{ 
 			sessionManager = PersistenceManager.getInstance ();
 			JdbcSession session = sessionManager. getJdbcSession ();
-			SQLParameter para = new SQLParameter();
-			para.addParam(curBillID);		
+			SQLParameter para = new SQLParameter();			
+			para.addParam(curBillID);	
+			para.addParam(curBillType);
+			para.addParam(forwardBillType);
 			ResultSetProcessor p = new ResultSetProcessor() {
 				public Object handleResultSet(ResultSet rs) throws SQLException {
 					ArrayList al = new ArrayList();

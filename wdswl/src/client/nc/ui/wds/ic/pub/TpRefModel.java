@@ -61,6 +61,7 @@ public class TpRefModel  extends AbstractRefModel {
 	    public String getWherePart() {
 	    	StringBuffer strWhere = new StringBuffer();
 	    	strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
+
 	    	return strWhere.toString();
 	    }
 	//@Override
@@ -68,6 +69,11 @@ public class TpRefModel  extends AbstractRefModel {
 		String[][] str = {{"cdt_traystatus","cdt_traystatus->iif(cdt_traystatus == \"0\" ,\"未占用\",\"占用\")"}};
 		return str;
 	}
+    public java.lang.String getOrderPart(){
+    	StringBuffer strWhere = new StringBuffer();
+        strWhere.append("  cdt_traycode,substr(cdt_traycode,length(cdt_traycode),1),substr(cdt_traycode,length(cdt_traycode)-1,1) desc");
+        return strWhere.toString();
+    }
 	@Override
 	public void setCacheEnabled(boolean cacheEnabled) {
 		

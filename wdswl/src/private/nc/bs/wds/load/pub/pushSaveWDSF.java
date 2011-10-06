@@ -81,8 +81,7 @@ public class pushSaveWDSF {
 	public void  pushSaveWDSF(AggregatedValueObject billVO,String coperator,String date,int lodytype)throws Exception{
 		AggregatedValueObject bill=getPushSaveWDSF(billVO,coperator,date,lodytype);	   
 		IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());		
-		ArrayList retList = (ArrayList)bsBusiAction.processAction("SAVE",WdsWlPubConst.WDSF,date,null,bill, null,null);	
-		
+		ArrayList retList = (ArrayList)bsBusiAction.processAction("SAVE",WdsWlPubConst.WDSF,date,null,bill, null,null);		
 	}
 	/**
 	 * 设置推式保存形成的核算单的vo信息

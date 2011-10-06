@@ -40,8 +40,6 @@ try{
 			billVo.setULogDate(new UFDate(System.currentTimeMillis()));
 			Object retObj = null;
 			retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
-			pushSaveWDSF pu=new pushSaveWDSF();
-			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate.substring(0,vo.m_currentDate.length()-8), LoadAccountBS.LOADFEE);
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

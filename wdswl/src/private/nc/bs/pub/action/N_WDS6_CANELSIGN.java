@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -53,6 +54,9 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 			setParameter("hvo", headvo);
 			runClass("nc.bs.wds.ic.other.out.OtherOutBO", "updateHVO",
 					"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
+			//删除下游装卸费核算单
+			CanelDeleteWDF cw=new CanelDeleteWDF();
+			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
 			return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

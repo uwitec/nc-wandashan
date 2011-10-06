@@ -18,7 +18,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * 出入库 取消签字 删除装卸费核算单
  * 如果要删除的装卸费核算单已经被审批
  * 则 不允许取消签字
- * @author Administrator
+ * @author mlr
  */
 public class CanelDeleteWDF {
 	private BaseDAO dao=null;
@@ -28,13 +28,14 @@ public class CanelDeleteWDF {
 		}
 		return dao;
 	}	
-	
 	public void canelDeleteWDF(AggregatedValueObject value,String coperator,String date) throws Exception {
 		if(value == null ){
 			return ;
 		}
 		String currbilltype = (String)value.getParentVO().getAttributeValue("vbilltype");
 		if(currbilltype == null || "".equals(currbilltype)){
+			currbilltype=(String)value.getParentVO().getAttributeValue("geh_billtype");
+		    if(currbilltype == null || "".equals(currbilltype))
 			return ;
 		}
 		SuperVO vo = (SuperVO) value.getParentVO();
@@ -46,7 +47,7 @@ public class CanelDeleteWDF {
 		//一张出入库单子  只能生成一张下游核算单
 		String billid=lvos[0].getID();
 		ExaggLoadPricVO[] billvos = null;//装卸费核算单聚合vo
-		String where  = " pk_loadprice = '"+vo.getPrimaryKey()+"' ";
+		String where  = " pk_loadprice = '"+billid+"' ";
 	    billvos=queryWDSF(where);
 	    if(billvos!=null && billvos.length!=0){
 	    	for(int i=0;i<billvos.length;i++){
@@ -55,10 +56,9 @@ public class CanelDeleteWDF {
 	    		 throw new Exception(" 下游装卸费核算单已经审批，不能取消签字");
 	    	 }		 		
 			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());		
-			ArrayList retList = (ArrayList)bsBusiAction.processAction("DELETE",WdsWlPubConst.WDSF,date,null,billvos[i], null,null);			    		
+			bsBusiAction.processAction("DELETE",WdsWlPubConst.WDSF,date,null,billvos[i], null,null);			    		
 	    	}
-	    }
-	    throw new Exception("不解释");
+	    }	  
 	}
  
 	private ExaggLoadPricVO[] queryWDSF(String where) throws Exception {
@@ -67,19 +67,21 @@ public class CanelDeleteWDF {
 		if(list ==null || list.size()==0)
 			return null;
 		SuperVO[] hvos=(SuperVO[]) list.toArray(new LoadpriceHVO[0]);
+		billvos=new ExaggLoadPricVO[hvos.length];
 		if(hvos==null || hvos.length==0){
 			return null;
 		}	
 		 billvos=new ExaggLoadPricVO[hvos.length];
 		for(int i=0;i<hvos.length;i++){
+			billvos[i]=new ExaggLoadPricVO();
 			List list1=(List) getDao().retrieveByClause(LoadpriceB1VO.class," pk_loadprice='"+hvos[i].getPrimaryKey()+"'");
 			SuperVO[] bvos1=null;
 			if(list1 !=null && list1.size()!=0)
-			bvos1=(SuperVO[]) list.toArray(new LoadpriceB1VO[0]);
+			bvos1=(SuperVO[]) list1.toArray(new LoadpriceB1VO[0]);
 			List list2=(List) getDao().retrieveByClause(LoadpriceB2VO.class," pk_loadprice='"+hvos[i].getPrimaryKey()+"'");
 			SuperVO[] bvos2=null;
 			if(list2 !=null && list2.size()!=0)
-			bvos2=(SuperVO[]) list.toArray(new LoadpriceB2VO[0]);	
+			bvos2=(SuperVO[]) list2.toArray(new LoadpriceB2VO[0]);	
 			billvos[i].setParentVO(hvos[i]);
 			billvos[i].setChildrenVO(bvos1);
 			billvos[i].setTableVO(billvos[i].getTableCodes()[0],bvos1);

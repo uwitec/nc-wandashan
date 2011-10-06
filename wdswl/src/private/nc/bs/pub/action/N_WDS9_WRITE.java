@@ -28,6 +28,7 @@ try{
 		super.m_tmpVo = vo;
 		Object retObj = null;
 		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+		
 		return retObj;
 	} catch (Exception ex) {
 			if (ex instanceof BusinessException)
