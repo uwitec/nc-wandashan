@@ -45,6 +45,9 @@ public class N_WDS7_SIGN extends AbstractCompiler2 {
 				setParameter("AggObj",vo.m_preValueVo);
 				AggregatedValueObject billvo=(AggregatedValueObject) runClass("nc.bs.wds.ic.other.in.OtherInBO", "combinVO",
 						"&AggObj:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);	
+				//生成装卸费核算单
+				pushSaveWDSF pu=new pushSaveWDSF();
+				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
 				// ##################################################数据交换
 				setParameter("AggObj",billvo);
 				setParameter("date", date);
@@ -60,9 +63,7 @@ public class N_WDS7_SIGN extends AbstractCompiler2 {
 				setParameter("hvo", headvo);
 				runClass("nc.bs.wds.ic.other.in.OtherInBO", "updateHVO",
 						"&hvo:nc.vo.ic.pub.TbGeneralHVO", vo, m_keyHas,m_methodReturnHas);
-				//生成装卸费核算单
-				pushSaveWDSF pu=new pushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
+			
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

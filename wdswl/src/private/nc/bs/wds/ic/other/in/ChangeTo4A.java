@@ -140,6 +140,7 @@ public class ChangeTo4A {
 				|| value.getChildrenVO() == null || value.getChildrenVO().length == 0){
 			return;
 		}
+		//nc.vo.ic.pub.TbGeneralBVO
 		TbGeneralHVO outhvo = (TbGeneralHVO) value.getParentVO();
 		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
 		isReturn = PuPubVO.getUFBoolean_NullAs(outhvo.getFisnewcode(),UFBoolean.FALSE).booleanValue();
