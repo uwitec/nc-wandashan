@@ -53,9 +53,7 @@ public class CombinVO {
 		 */
 		public static CircularlyAccessibleValueObject[] combinVoByFields(CircularlyAccessibleValueObject[] vos, CircularlyAccessibleValueObject[] vos1,
 				String[] voCombinConds, int[] types,String[] combinFields) {
-			//记录  vos1中已经被合并过的vo
-			List<CircularlyAccessibleValueObject> list=new ArrayList<CircularlyAccessibleValueObject>();
-			if (isEmpty(vos)) {
+				if (isEmpty(vos)) {
 				if (!isEmpty(vos1)) {
 					return vos1;
 				}
@@ -68,6 +66,8 @@ public class CombinVO {
 			if (isEmpty(vos) &&isEmpty(vos1)) {
 				return null;
 			}
+			//记录  vos1中已经被合并过的vo
+			List<CircularlyAccessibleValueObject> list=new ArrayList<CircularlyAccessibleValueObject>();
 			int size=vos.length;
 			int size1=vos1.length;
 			//拿 vos中的每个vo 按条件遍历vos1
@@ -163,7 +163,7 @@ public class CombinVO {
 			  for(int i=0;i<vos.length;i++){
 				 list1.add(vos[i]);  
 			  }
-			    return list1.toArray(new CircularlyAccessibleValueObject[0]);
+			    return list1.toArray((CircularlyAccessibleValueObject[]) java.lang.reflect.Array.newInstance(vos[0].getClass(), 0));
 			  }else{
 				return vos;
 			 }	
@@ -188,8 +188,8 @@ public class CombinVO {
 			  return vos;
 		  }
 		 CircularlyAccessibleValueObject[][] voss= SplitBillVOs.getSplitVOs(vos,voCombinConds);
-			//new 开头的vo为重新组装放入界面的vo
-			CircularlyAccessibleValueObject[] newVos=new CircularlyAccessibleValueObject[voss.length];
+			//new 开头的vo为重新组装放入界面的vo		    
+			CircularlyAccessibleValueObject[] newVos=(CircularlyAccessibleValueObject[]) java.lang.reflect.Array.newInstance(vos[0].getClass(),voss.length);
 			int size=voss.length;
 			for(int i=0;i<size;i++){
 				CircularlyAccessibleValueObject newVo=null;
