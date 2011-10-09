@@ -1,6 +1,9 @@
 package nc.ui.wds.ic.other.in;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
+
 import nc.ui.wds.ic.pub.WdsIcPubHelper;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
@@ -31,7 +34,9 @@ public class OtherInDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 			TbGeneralBBVO[] ctmps=(TbGeneralBBVO[]) this.queryByCondition(TbGeneralBBVO.class, " geb_pk = '"+body.getPrimaryKey()+"'");
 			if(ctmps == null||ctmps.length==0)
 				continue;
-			body.setTrayInfor(Arrays.asList(ctmps));
+			List<TbGeneralBBVO> list=new ArrayList<TbGeneralBBVO>();
+			list.addAll(Arrays.asList(ctmps));
+			body.setTrayInfor(list);
 		}		
 		// 根据主表主键，取得子的数据
 		TbgeneralB2VO[] b2vos = (TbgeneralB2VO[]) this.queryByCondition(TbgeneralB2VO.class, "geh_pk='" + key + "' and isnull(dr,0)=0");
