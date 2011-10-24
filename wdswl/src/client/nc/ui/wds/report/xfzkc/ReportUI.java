@@ -1,14 +1,17 @@
 package nc.ui.wds.report.xfzkc;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.wl.pub.report.CombinVO;
 import nc.ui.wl.pub.report.WDSReportBaseUI;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
@@ -17,7 +20,6 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.ui.wl.pub.report.CombinVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;

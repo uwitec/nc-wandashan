@@ -8,8 +8,6 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.trade.pub.CardPanelPRTS;
-import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsPubEnventHandler;

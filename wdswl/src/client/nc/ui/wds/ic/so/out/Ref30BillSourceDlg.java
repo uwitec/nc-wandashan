@@ -5,11 +5,9 @@ import java.awt.Container;
 import nc.bs.logging.Logger;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.ui.pub.ClientEnvironment;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.SuperVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 /**

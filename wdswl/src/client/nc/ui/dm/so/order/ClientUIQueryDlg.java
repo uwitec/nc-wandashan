@@ -3,7 +3,6 @@ import java.awt.Container;
 
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
-import nc.ui.trade.query.HYQueryDLG;
 import nc.ui.wl.pub.WdsQueryDlg;
 
 

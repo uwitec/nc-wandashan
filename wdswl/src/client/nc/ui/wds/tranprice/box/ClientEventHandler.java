@@ -1,6 +1,5 @@
 package nc.ui.wds.tranprice.box;
 
-import nc.bs.wl.pub.BsBeforeSaveValudate;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.BeforeSaveValudate;

@@ -6,7 +6,9 @@ package nc.ui.wl.pub;
 import java.awt.Container;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
 import javax.swing.SwingUtilities;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.scm.service.LocalCallService;
 import nc.vo.pub.AggregatedValueObject;

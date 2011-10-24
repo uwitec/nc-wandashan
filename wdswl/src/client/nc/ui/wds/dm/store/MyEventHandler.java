@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.IUAPQueryBS;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.vo.pub.BusinessRuntimeException;
 import nc.vo.wds.dm.store.MyBillVO;
 import nc.vo.wds.dm.store.TbStorareaclVO;
-import nc.vo.wds.w80060804.TbTranscompanyVO;
 
 /**
   *

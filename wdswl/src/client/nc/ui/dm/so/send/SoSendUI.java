@@ -20,6 +20,10 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  */
 
 public class SoSendUI extends ReportBaseUI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String cstoreid = null;
 	public SoSendUI(){
 		super();

@@ -8,6 +8,10 @@ import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsPubPrintDataSou extends CardPanelPRTS{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected AggregatedValueObject m_data = null;
 	
 	public WdsPubPrintDataSou(String moduleName, BillCardPanel billcardpanel,AggregatedValueObject bills) {

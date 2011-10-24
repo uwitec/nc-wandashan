@@ -34,7 +34,6 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.multichild.MultiChildBillManageUI;
 import nc.ui.uap.sf.SFClientUtil;
-import nc.vo.wl.pub.VOTool;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
@@ -45,6 +44,7 @@ import nc.vo.sm.funcreg.FuncRegisterVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.trade.summarize.Hashlize;
 import nc.vo.trade.summarize.VOHashKeyAdapter;
+import nc.vo.wl.pub.VOTool;
 
 /**
  * 

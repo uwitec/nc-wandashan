@@ -6,7 +6,6 @@ import nc.ui.wl.pub.BaseManageEventHandler;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 
 public class ClientEventHandler extends BaseManageEventHandler {

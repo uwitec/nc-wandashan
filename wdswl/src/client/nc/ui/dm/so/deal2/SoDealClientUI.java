@@ -14,7 +14,6 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
-import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;

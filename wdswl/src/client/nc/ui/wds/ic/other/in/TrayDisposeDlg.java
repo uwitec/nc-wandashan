@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIButton;
@@ -24,10 +26,8 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillListPanel;
-import nc.ui.wds.ic.pub.InPubClientUI;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.tray.lock.LockTrayDialog;
-import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBBVO;

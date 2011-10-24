@@ -2,9 +2,6 @@ package nc.ui.wds.tranprice.cardoc;
 
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bill.ICardController;
-import nc.ui.trade.card.BillCardUI;
-import nc.ui.trade.card.CardEventHandler;
 import nc.ui.trade.manage.BillManageUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 

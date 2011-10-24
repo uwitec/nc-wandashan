@@ -19,8 +19,6 @@ import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.ui.wl.pub.MutiChildForInUI;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.in.OtherInBillVO;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
-import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;

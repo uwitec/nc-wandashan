@@ -20,6 +20,10 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  *
  */
 public class ReportUI extends ReportBaseUI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String cwhid = null;//²Ö¿â
 	public ReportUI(){
 		super();

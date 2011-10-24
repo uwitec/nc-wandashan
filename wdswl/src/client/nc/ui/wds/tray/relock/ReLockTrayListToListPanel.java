@@ -11,6 +11,11 @@ import nc.ui.trade.pub.IVOTreeData;
  */
 public class ReLockTrayListToListPanel extends UIListToListPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ReLockTrayListToListPanel(){
 		super();
 	}

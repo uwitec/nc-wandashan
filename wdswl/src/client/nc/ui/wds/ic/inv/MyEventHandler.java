@@ -1,17 +1,11 @@
 package nc.ui.wds.ic.inv;
 
-import java.util.List;
-
-import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.tray.lock.LockTrayHelper;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.WdsQueryDlg;
 import nc.ui.wl.pub.WdsSelfButton;
-import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -19,7 +13,6 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.xn.XnRelationVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 

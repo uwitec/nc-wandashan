@@ -6,7 +6,6 @@ import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.tranprice.cartype.CartyedocVO;
-import nc.vo.wds.tranprice.specbusi.SpecbusiVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientController implements ICardController,ISingleController {

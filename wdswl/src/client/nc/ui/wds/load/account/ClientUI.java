@@ -10,7 +10,6 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.MutilChildUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.SuperVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;

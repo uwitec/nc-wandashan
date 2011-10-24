@@ -3,10 +3,7 @@ package nc.ui.wds.tranprice.transcorp;
 import java.util.Hashtable;
 
 import nc.ui.trade.bsdelegate.BDBusinessDelegator;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.vo.pub.SuperVO;
-import nc.vo.wds.load.account.LoadpriceB1VO;
-import nc.vo.wds.load.account.LoadpriceB2VO;
 import nc.vo.wds.tranprice.transcorp.TanscorpB1VO;
 import nc.vo.wds.tranprice.transcorp.TanscorpB2VO;
 

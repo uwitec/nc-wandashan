@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.invstore;
 
 import nc.ui.trade.bsdelegate.BDBusinessDelegator;
-import nc.vo.wds.ic.invstore.TbSpacegoodsVO;
 
 /**
  *

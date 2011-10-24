@@ -4,8 +4,6 @@ package nc.ui.wds.ie.storedetail;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import nc.ui.trade.bill.IListController;
-import nc.ui.trade.list.BillListUI;
 import nc.ui.trade.list.ListEventHandler;
 
 /**

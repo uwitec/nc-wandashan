@@ -2,8 +2,6 @@ package nc.ui.dm.so.deal2;
 
 import java.awt.Container;
 
-import javax.swing.plaf.PanelUI;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.trade.query.HYQueryDLG;

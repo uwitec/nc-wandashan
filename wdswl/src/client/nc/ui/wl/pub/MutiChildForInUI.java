@@ -1,7 +1,5 @@
 package nc.ui.wl.pub;
 
-import nc.ui.pub.linkoperate.ILinkQuery;
-import nc.ui.pub.linkoperate.ILinkQueryData;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.wl.pub.Button.CommonButtonDef;

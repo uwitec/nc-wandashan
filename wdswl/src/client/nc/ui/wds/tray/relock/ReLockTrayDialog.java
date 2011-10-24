@@ -18,6 +18,10 @@ public class ReLockTrayDialog extends UIDialog implements ActionListener{
 
 //	private static final long serialVersionUID = -39986234234258916L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private javax.swing.JPanel ivjUIDialogContentPane = null;
 	private ReLockTrayListToListPanel listPane = null;
 	

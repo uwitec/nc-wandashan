@@ -20,6 +20,10 @@ import nc.vo.wl.pub.IVOTreeData2;
  *
  */
 public class LockTrayListToListPanel extends UIListToListPanel2 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String  cwarehouseid = null;
 	public void setWarehouseID(String wareid){
 		cwarehouseid = wareid;

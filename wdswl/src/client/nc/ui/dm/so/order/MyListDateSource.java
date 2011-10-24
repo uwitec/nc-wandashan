@@ -18,7 +18,7 @@ public class MyListDateSource extends ListPanelPRTS implements IExDataSource {
 	 */
 	private static final long serialVersionUID = 1L;
 	public Object[] getObjectByExpress(String itemExpress){
-		if(itemExpress.equals("reserve7")){
+		if(itemExpress.equals("h_reserve7")){
 			Object[] pics = new Object[1];
 			for(int i = 0; i < pics.length; i++)
 				pics[i] = new ImageIcon("C:/images");
@@ -29,7 +29,7 @@ public class MyListDateSource extends ListPanelPRTS implements IExDataSource {
 	}
 
 	public int getObjectTypeByExpress(String itemExpress) {
-		if(itemExpress.equals("photo"))
+		if(itemExpress.equals("h_reserve7"))
 			return IExDataSource.IMAGE_TYPE;
 		
 		return 0;

@@ -195,21 +195,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
 			onBoRefresh();
 		}	
-	}	
-	
-//	@Override
-//	protected void onBoPrint() throws Exception {
-//		super.onBoPrint();
-//		Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
-//		iprintcount=iprintcount+1;
-//		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
-//		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-//		onBoRefresh();	
-//	}
-	
-	
-	
-	
+	}		
 	/**
 	 * 
 	 * @×÷Õß£ºlyf

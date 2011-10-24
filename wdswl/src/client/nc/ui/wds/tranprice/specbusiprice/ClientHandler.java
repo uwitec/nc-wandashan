@@ -7,7 +7,6 @@ import nc.ui.trade.card.BillCardUI;
 import nc.ui.trade.query.HYQueryDLG;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.SingleBodyEventHandler;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientHandler extends SingleBodyEventHandler{
