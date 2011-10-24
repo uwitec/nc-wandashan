@@ -9,7 +9,6 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.order.SendorderVO;
@@ -133,10 +132,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	protected void onBoPrint() throws Exception {
 		//　如果是列表界面，使用ListPanelPRTS数据源
 		if( getBillManageUI().isListPanelSelected() ){
-
-			nc.ui.pub.print.IDataSource dataSource = new ListPanelPRTS(getBillUI()
+			nc.ui.pub.print.IDataSource dataSource = new MyListDateSource(getBillUI()
 					._getModuleCode(),((BillManageUI) getBillUI()).getBillListPanel());
-
 			int[] rows = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRows();
 			int rowstart = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRow();
 			if(rows == null || rows.length <= 1){				
@@ -149,7 +146,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 				HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
 				onBoRefresh();	
 				}
-			}	
+			}		
 			else{
 				nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(null,
 						dataSource);
@@ -162,8 +159,8 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 				int len = rows.length;
 				if (print.selectTemplate() == 1)
 					for(int i = 0;i<len;i++){
-//											bm.setBodyDataVO(getBufferData().getVOByRowNo(i).getChildrenVO());
-//											bm.execLoadFormula();
+						//					bm.setBodyDataVO(getBufferData().getVOByRowNo(i).getChildrenVO());
+						//					bm.execLoadFormula();
 
 						//					如果表体打印不正常玉石可  把上面两句话打开 试试
 						bt.getSelectionModel().setSelectionInterval(rowstart+i, rowstart+i);
@@ -176,18 +173,28 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 					}				
 			}
 
-		}
-		// 如果是卡片界面，使用CardPanelPRTS数据源
+		}// 如果是卡片界面，使用CardPanelPRTS数据源
+//		else{
+//			super.onBoPrint();
+//		}
 		else{
-			super.onBoPrint();
+			//更改数据源，支持图片
+			nc.ui.pub.print.IDataSource dataSource = new MyCardDateSource(getBillUI()
+					._getModuleCode(), getBillCardPanelWrapper().getBillCardPanel());
+			nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(null,
+					dataSource);
+			print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(), getBillUI()
+					._getModuleCode(), getBillUI()._getOperator(), getBillUI()
+					.getBusinessType(), getBillUI().getNodeKey());
+			if (print.selectTemplate() == 1)
+				print.preview();
+			//更改数据源，支持图片
 			Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
 			iprintcount=iprintcount+1;
 			getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
 			HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-			onBoRefresh();	
-		}
-		
-		
+			onBoRefresh();
+		}	
 	}	
 	
 //	@Override

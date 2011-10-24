@@ -125,7 +125,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
      * @时间：2011-9-22下午04:10:24
      */
     @Override
- 	protected void setRefData() throws Exception {
+ 	protected void setRefData( AggregatedValueObject[] vos) throws Exception {
     	setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 		//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
 		setInitWarehouse("srl_pk");

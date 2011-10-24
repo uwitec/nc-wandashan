@@ -33,12 +33,9 @@ public class ClientCheckCHK extends BeforeActionCHK {
 			}
 			boolean isCheckPass = VOChecker.checkUniqueRule(vo.getChildrenVO(),
 					new IUniqueRule() {
-
 						public String[] getFields() {
-
 							return new String[] { "psncode" };
 						}
-
 						public String getHint() {
 
 							return "人员编码 不允许重复";

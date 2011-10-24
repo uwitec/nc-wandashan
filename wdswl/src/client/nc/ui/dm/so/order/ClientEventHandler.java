@@ -8,6 +8,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.pub.CardPanelPRTS;
 import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -181,10 +182,8 @@ private LoginInforHelper helper = null;
 	protected void onBoPrint() throws Exception {
 		//　如果是列表界面，使用ListPanelPRTS数据源
 		if( getBillManageUI().isListPanelSelected() ){
-
-			nc.ui.pub.print.IDataSource dataSource = new ListPanelPRTS(getBillUI()
+			nc.ui.pub.print.IDataSource dataSource = new MyListDateSource(getBillUI()
 					._getModuleCode(),((BillManageUI) getBillUI()).getBillListPanel());
-
 			int[] rows = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRows();
 			int rowstart = getBillManageUI().getBillListPanel().getHeadTable().getSelectedRow();
 			if(rows == null || rows.length <= 1){				
@@ -229,7 +228,17 @@ private LoginInforHelper helper = null;
 //			super.onBoPrint();
 //		}
 		else{
-			super.onBoPrint();
+			//更改数据源，支持图片
+			nc.ui.pub.print.IDataSource dataSource = new MyCardDateSource(getBillUI()
+					._getModuleCode(), getBillCardPanelWrapper().getBillCardPanel());
+			nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(null,
+					dataSource);
+			print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(), getBillUI()
+					._getModuleCode(), getBillUI()._getOperator(), getBillUI()
+					.getBusinessType(), getBillUI().getNodeKey());
+			if (print.selectTemplate() == 1)
+				print.preview();
+			//更改数据源，支持图片
 			Integer iprintcount =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO().getAttributeValue("iprintcount"), 0) ;
 			iprintcount=iprintcount+1;
 			getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);

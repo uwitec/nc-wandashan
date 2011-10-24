@@ -140,14 +140,39 @@ public class SendorderVO extends SuperVO {
 	public UFDate dacceptdate;
 	// 划价人签字：
 	public String vcolpersonid;
-	// 审批时间：
-	public UFDateTime vapprovetime;
+
 	//收货地
 	public String custareaid;
 	//发运状态
 	public Integer 	itransstatus;
 	//计算类型
 	public Integer icoltype;
+	
+	//----运单跟踪信息
+	public UFDate ddispachdate;//派车日期
+	public Integer idispachtime;//派车时间[0,23]整数，值当天派车小时
+	public UFDate dsenddate;//来车日期
+	public Integer isenttime;//来车时间[0,23]整数，值当天派车小时
+	public UFDate dtransferdate;//转调车日期
+	public Integer itransfertime;//转调车车时间[0,23]整数，值当天派车小时
+	public UFDate dreceiptdate;//回执日期
+	public Integer ireceipttime;//回执时间[0,23]整数，值当天派车小时
+	public UFDate darrivedate;//到货日期
+	public Integer iarrivetime;//到货时间[0,23]整数，值当天派车小时
+	public UFDouble nruntime;//正常运行时间
+	public UFBoolean fisSubstitute;//是否转承运商
+	public String vfirstsendcorp;//初始承运商
+	public UFBoolean fisnormal;//是否正常提货
+	public String vunnormalreason;//非正常提货原因
+	public UFBoolean fiscomplain;//是否投诉
+	public String vcomplainreason;//投诉原因
+	public String vlatearrivereason;//晚到货原因
+	public String vlatestartreason;//晚发货原因
+	public Integer iquality;//到货质量
+	public UFDouble ndestorynum;//损坏箱数
+	// 审批时间：
+	public UFDateTime vapprovetime;
+	//----运单跟踪信息
 	
 	public static final String ICOLTYPE ="icoltype";	
 	public static final String ITRANSSTATUS ="itransstatus";
@@ -1813,5 +1838,173 @@ public class SendorderVO extends SuperVO {
 
 	public void setIcoltype(Integer icoltype) {
 		this.icoltype = icoltype;
+	}
+
+	public UFDate getDdispachdate() {
+		return ddispachdate;
+	}
+
+	public void setDdispachdate(UFDate ddispachdate) {
+		this.ddispachdate = ddispachdate;
+	}
+
+	public Integer getIdispachtime() {
+		return idispachtime;
+	}
+
+	public void setIdispachtime(Integer idispachtime) {
+		this.idispachtime = idispachtime;
+	}
+
+	public UFDate getDsenddate() {
+		return dsenddate;
+	}
+
+	public void setDsenddate(UFDate dsenddate) {
+		this.dsenddate = dsenddate;
+	}
+
+	public Integer getIsenttime() {
+		return isenttime;
+	}
+
+	public void setIsenttime(Integer isenttime) {
+		this.isenttime = isenttime;
+	}
+
+	public UFDate getDtransferdate() {
+		return dtransferdate;
+	}
+
+	public void setDtransferdate(UFDate dtransferdate) {
+		this.dtransferdate = dtransferdate;
+	}
+
+	public Integer getItransfertime() {
+		return itransfertime;
+	}
+
+	public void setItransfertime(Integer itransfertime) {
+		this.itransfertime = itransfertime;
+	}
+
+	public UFDate getDreceiptdate() {
+		return dreceiptdate;
+	}
+
+	public void setDreceiptdate(UFDate dreceiptdate) {
+		this.dreceiptdate = dreceiptdate;
+	}
+
+	public Integer getIreceipttime() {
+		return ireceipttime;
+	}
+
+	public void setIreceipttime(Integer ireceipttime) {
+		this.ireceipttime = ireceipttime;
+	}
+
+	public UFDate getDarrivedate() {
+		return darrivedate;
+	}
+
+	public void setDarrivedate(UFDate darrivedate) {
+		this.darrivedate = darrivedate;
+	}
+
+	public Integer getIarrivetime() {
+		return iarrivetime;
+	}
+
+	public void setIarrivetime(Integer iarrivetime) {
+		this.iarrivetime = iarrivetime;
+	}
+
+	public UFDouble getNruntime() {
+		return nruntime;
+	}
+
+	public void setNruntime(UFDouble nruntime) {
+		this.nruntime = nruntime;
+	}
+
+	public UFBoolean getFisSubstitute() {
+		return fisSubstitute;
+	}
+
+	public void setFisSubstitute(UFBoolean fisSubstitute) {
+		this.fisSubstitute = fisSubstitute;
+	}
+
+	public String getVfirstsendcorp() {
+		return vfirstsendcorp;
+	}
+
+	public void setVfirstsendcorp(String vfirstsendcorp) {
+		this.vfirstsendcorp = vfirstsendcorp;
+	}
+
+	public UFBoolean getFisnormal() {
+		return fisnormal;
+	}
+
+	public void setFisnormal(UFBoolean fisnormal) {
+		this.fisnormal = fisnormal;
+	}
+
+	public String getVunnormalreason() {
+		return vunnormalreason;
+	}
+
+	public void setVunnormalreason(String vunnormalreason) {
+		this.vunnormalreason = vunnormalreason;
+	}
+
+	public UFBoolean getFiscomplain() {
+		return fiscomplain;
+	}
+
+	public void setFiscomplain(UFBoolean fiscomplain) {
+		this.fiscomplain = fiscomplain;
+	}
+
+	public String getVcomplainreason() {
+		return vcomplainreason;
+	}
+
+	public void setVcomplainreason(String vcomplainreason) {
+		this.vcomplainreason = vcomplainreason;
+	}
+
+	public String getVlatearrivereason() {
+		return vlatearrivereason;
+	}
+
+	public void setVlatearrivereason(String vlatearrivereason) {
+		this.vlatearrivereason = vlatearrivereason;
+	}
+
+	public String getVlatestartreason() {
+		return vlatestartreason;
+	}
+
+	public void setVlatestartreason(String vlatestartreason) {
+		this.vlatestartreason = vlatestartreason;
+	}
+
+	public Integer getIquality() {
+		return iquality;
+	}
+
+	public void setIquality(Integer iquality) {
+		this.iquality = iquality;
+	}
+
+	public UFDouble getNdestorynum() {
+		return ndestorynum;
+	}
+
+	public void setNdestorynum(UFDouble ndestorynum) {
+		this.ndestorynum = ndestorynum;
 	}
 }
