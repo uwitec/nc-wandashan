@@ -3,15 +3,18 @@ package nc.bs.wl.so.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import nc.bs.trade.business.HYPubBO;
 import nc.bs.trade.comsave.BillSave;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class SoOrderBillSave extends BillSave {
@@ -20,7 +23,10 @@ public class SoOrderBillSave extends BillSave {
 	throws BusinessException {
 		beforeSave(billVo);
 		java.util.ArrayList  ret = super.saveBill(billVo);
-		afterSave(billVo);
+		Object userObject = new String[]{HYBillVO.class.getName(),SoorderVO.class.getName(),SoorderBVO.class.getName()};
+		String whereStr = "wds_soorder.pk_soorder='"+billVo.getParentVO().getPrimaryKey()+"'";
+		AggregatedValueObject[] newBillvo = new HYPubBO().queryBillVOByCondition(userObject, whereStr);
+		afterSave(newBillvo[0]);
 		return ret;
 	}
 	

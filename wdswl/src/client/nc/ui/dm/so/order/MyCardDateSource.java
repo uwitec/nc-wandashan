@@ -19,9 +19,14 @@ public class MyCardDateSource extends CardPanelPRTS implements IExDataSource {
 	private static final long serialVersionUID = 1L;
 	public Object[] getObjectByExpress(String itemExpress){
 		if(itemExpress.equals("h_reserve7")){
+			String imageName = "";
+			String [] h_reserve7 = super.getItemValuesByExpress("h_reserve7");
+			if(h_reserve7 != null){
+				imageName = h_reserve7[0];
+			}
 			Object[] pics = new Object[1];
 			for(int i = 0; i < pics.length; i++)
-				pics[i] = new ImageIcon("C:/images/11.gif");
+				pics[i] = new ImageIcon("C:/images/"+imageName);
 			return pics;
 		}
 		return null;
