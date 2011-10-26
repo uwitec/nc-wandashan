@@ -25,7 +25,6 @@ public class ClientController extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 		return new int[] {
-				IBillButton.Refbill,
 				IBillButton.Add,
 				HgPuBtnConst.Editor,
 				IBillButton.Save,
@@ -39,8 +38,8 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Return,
 				IBillButton.Copy,
-				HgPuBtnConst.OPEN,
-				HgPuBtnConst.CLOSE,
+//				HgPuBtnConst.OPEN,
+//				HgPuBtnConst.CLOSE,
 				HgPuBtnConst.FZGN,
 				HgPuBtnConst.ASSQUERY,
 				HgPuBtnConst.ASSPRINT
@@ -48,8 +47,7 @@ public class ClientController extends AbstractManageController {
 	}
 	
 	public int[] getListButtonAry() {
-		return new int[] { 
-				IBillButton.Refbill,
+		return new int[] {
 				IBillButton.Add,
 				HgPuBtnConst.Editor,
 				IBillButton.Cancel,
@@ -60,8 +58,8 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Card,
-				HgPuBtnConst.OPEN,
-				HgPuBtnConst.CLOSE,
+//				HgPuBtnConst.OPEN,
+//				HgPuBtnConst.CLOSE,
 				IBillButton.Copy,
 				HgPuBtnConst.FZGN,
 				HgPuBtnConst.ASSQUERY,

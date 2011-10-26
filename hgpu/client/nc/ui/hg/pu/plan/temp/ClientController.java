@@ -3,7 +3,7 @@ package nc.ui.hg.pu.plan.temp;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
-import nc.vo.hg.pu.plan.month.PlanOtherBVO;
+import nc.vo.hg.pu.plan.temp.PlanOtherTempVO;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.PlanVO;
@@ -17,7 +17,7 @@ public class ClientController extends AbstractManageController {
 	private String[] m_billVoNames = new String[] { 
 			HYBillVO.class.getName(),
 			PlanVO.class.getName(),
-			PlanOtherBVO.class.getName() };
+			PlanOtherTempVO.class.getName() };
 
 	public String[] getListBodyHideCol() {
 		return null;

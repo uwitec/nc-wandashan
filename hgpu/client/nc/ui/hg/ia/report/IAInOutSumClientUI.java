@@ -231,19 +231,19 @@ public class IAInOutSumClientUI extends ToftPanel {
 		cardHeader.addColumnGroup(card[0]);
 		
 		card[1] = new ColumnGroup("本期收入");
-		for(int i=6;i<14;i++){
+		for(int i=6;i<16;i++){
 			card[1].add(cardTcm.getColumn(i));
 		}
 		cardHeader.addColumnGroup(card[1]);
 		
 		card[2] = new ColumnGroup("本期发出");
-		for(int i=16;i<22;i++){
+		for(int i=18;i<24;i++){
 			card[2].add(cardTcm.getColumn(i));
 		}
 		cardHeader.addColumnGroup(card[2]);
 		
 		card[3] = new ColumnGroup("期末");
-		for(int i=24;i<26;i++){
+		for(int i=26;i<28;i++){
 			card[3].add(cardTcm.getColumn(i));
 		}
 		cardHeader.addColumnGroup(card[3]);
@@ -259,13 +259,13 @@ public class IAInOutSumClientUI extends ToftPanel {
 		ColumnGroup[] card = new ColumnGroup[2];// 二级，
 		
 		card[0] = new ColumnGroup("本期收入");
-		for(int i=3;i<7;i++){
+		for(int i=3;i<8;i++){
 			card[0].add(cardTcm.getColumn(i));
 		}
 		cardHeader.addColumnGroup(card[0]);
 		
 		card[1] = new ColumnGroup("本期发出");
-		for(int i=8;i<11;i++){
+		for(int i=9;i<12;i++){
 			card[1].add(cardTcm.getColumn(i));
 		}
 		cardHeader.addColumnGroup(card[1]);

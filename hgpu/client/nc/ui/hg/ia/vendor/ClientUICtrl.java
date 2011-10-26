@@ -22,8 +22,8 @@ public class ClientUICtrl implements ICardController,ISingleController {
 
 	public int[] getCardButtonAry() {
 			return new int[]{
-					HgPuBtnConst.VIEW,
-//					IBillButton.Add,
+//					HgPuBtnConst.VIEW,
+					IBillButton.Add,
 					IBillButton.Edit,
 					IBillButton.Save,
 					IBillButton.Cancel,

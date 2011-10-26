@@ -92,7 +92,7 @@ public class PlanBVO extends SuperVO {
 	private String vfree5;	
 	private String vreserve2;//审批完成标志
 	private String vfree3;	
-	private String vreserve3;
+	private String vreserve3;//平衡后  上个月不在领用
 	private String vfree1;
 	private String pk_defdoc9;	
 	private UFDouble nreserve10;//平衡数量	

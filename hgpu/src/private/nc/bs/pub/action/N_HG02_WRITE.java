@@ -35,8 +35,9 @@ try{
 			
 			AggregatedValueObject billvo = getVo();
 
-			//只是执行了保存操作
-			retObj = runClass("nc.bs.hg.pu.pub.HYBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			retObj = runClass("nc.bs.hg.pu.plan.pub.MonPlanBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+//			//只是执行了保存操作
+//			retObj = runClass("nc.bs.hg.pu.pub.HYBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			
 			//modify zhw  注释  月计划不需调整净需求
 //			   PlanPubBO bo = new PlanPubBO();

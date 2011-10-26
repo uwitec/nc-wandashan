@@ -125,6 +125,11 @@ public class ClientEventHandler extends DBTManageEventHandler {
 		}else if(!isNULL(oldid) && !isNULL(newid)&& isNULL(deptname)){
 			 throw new BusinessException("{公司 部门 客户}不可同时存在");
 		}
+		String vdef5 =PuPubVO.getString_TrimZeroLenAsNull(getBodyCelValue(selectRow,"vdef5"));
+		if(!HgPubConst.GYC_CORPID.equalsIgnoreCase(_getCorp().getPrimaryKey())){
+		    if(vdef5 == null)
+		        throw new BusinessException("资金来源不能空");
+		}
 		UFDouble nfund =PuPubVO.getUFDouble_NullAsZero(getBodyCelValue(selectRow,"nfund"));//资金
 		UFDouble nlockfund =PuPubVO.getUFDouble_NullAsZero(getBodyCelValue(selectRow,"nlockfund"));//预扣
 		UFDouble nactfund =PuPubVO.getUFDouble_NullAsZero(getBodyCelValue(selectRow,"nactfund"));//实扣

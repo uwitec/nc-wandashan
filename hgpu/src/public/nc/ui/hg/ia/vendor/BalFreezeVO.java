@@ -38,7 +38,7 @@ public class BalFreezeVO extends SuperVO {
 	private UFDateTime ts;
 	private UFDouble ndef1;
 	private UFDouble idef2;
-	private String vdef1;
+	private String vdef1;//≤ø√≈
 	private UFDouble idef1;
 	private String vdef2;
 	private String vdef5;

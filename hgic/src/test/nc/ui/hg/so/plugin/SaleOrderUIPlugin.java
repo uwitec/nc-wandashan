@@ -75,10 +75,10 @@ public class SaleOrderUIPlugin implements IScmUIPlugin {
 			
 //			setCardPanelBodyValue(bm, "nexchangeotobrate", 1, row);//汇率设置为1
 			
-			UFDouble nrate = pricedouble[0];
+			//UFDouble nrate = pricedouble[0];
 			UFDouble ntaxprice = pricedouble[1].multiply(HgSoPubHealper.getSaleOrderPriceAddRate(), HgPubConst.PRICE_DIGIT);
 			
-			setCardPanelBodyValue(bm, "ntaxrate", nrate,row);
+			//setCardPanelBodyValue(bm, "ntaxrate", nrate,row);
 			setCardPanelBodyValue(bm, "noriginalcurprice", ntaxprice,row);	//原币无税单价
 			
 			//联动运算

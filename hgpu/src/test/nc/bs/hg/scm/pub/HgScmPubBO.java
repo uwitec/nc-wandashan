@@ -1721,6 +1721,8 @@ public class HgScmPubBO {
 		if(billtype.equalsIgnoreCase(HgPubConst.PLAN_MONTH_BILLTYPE)){
 			buffer.append(" and (coalesce(b.nreserve10,0.0)-coalesce(b.nouttotalnum,0.0))>0.0 ");
 			buffer.append(" and b.vreserve2 ='Y' ");
+			// modify by zhw  平衡后    上个月计划不可在领
+			buffer.append(" and b.vreserve3 ='N' ");
 		}
 		buffer.append(s);
 		// Collection c = getBaseDao().retrieveByClause(PlanOtherBVO.class,

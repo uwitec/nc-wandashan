@@ -24,6 +24,7 @@ public class ClientUI extends PlanPubClientUI  {
 	
 	@Override
 	protected void initSelfData() {
+	    super.initSelfData();
 
 	}
 
@@ -85,7 +86,7 @@ public class ClientUI extends PlanPubClientUI  {
 		super.setDefaultData();
 	}
 	
-	public String getRefBillType() {
-		return "HG01";
-	}
+//	public String getRefBillType() {
+//		return "HG01";
+//	}
 }

@@ -130,7 +130,7 @@ public abstract class PlanPubEventHandler extends FlowManageEventHandler {
 	private void setAdjustFlag(boolean flag){
 		m_isAdjust = flag;
 	}
-	boolean m_isAdjust = false;//控制增行删行不能使用
+	public boolean m_isAdjust = false;//控制增行删行不能使用
 	private Map<String, UFDouble> oldNumMap = null;
 	public Map<String,UFDouble> getOldNumMap(){
 		if(oldNumMap==null){

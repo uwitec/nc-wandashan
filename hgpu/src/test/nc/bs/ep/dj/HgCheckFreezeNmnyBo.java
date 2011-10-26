@@ -1,19 +1,14 @@
 package nc.bs.ep.dj;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.jdbc.framework.processor.ArrayListProcessor;
-import nc.jdbc.framework.processor.ArrayProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.ep.dj.DJZBHeaderVO;
-import nc.vo.ep.dj.DJZBItemVO;
 import nc.vo.ep.dj.DJZBVO;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -48,6 +43,7 @@ public class HgCheckFreezeNmnyBo {
 		String pk_corp = head.getDwbm();
 		String hbbmb = head.getHbbm();
 		String szxmid = head.getSzxmid();
+		String deptid = head.getDeptid();
 		UFDouble mny  = PuPubVO.getUFDouble_NullAsZero(head.getYbje());
 
 		if (!"fk".equalsIgnoreCase(djdl))
@@ -68,16 +64,16 @@ public class HgCheckFreezeNmnyBo {
 			}
 		}
 
-		v_seq1 = pro_qryMny("yf", hbbmb, szxmid, pk_corp);
-		v_seq2 = pro_qryMny("fk", hbbmb, szxmid, pk_corp);
-		v_seq3 = pro_qryFreezeMny(hbbmb, szxmid, pk_corp);
+		v_seq1 = pro_qryMny("yf", hbbmb, szxmid, pk_corp,deptid);
+		v_seq2 = pro_qryMny("fk", hbbmb, szxmid, pk_corp,deptid);
+		v_seq3 = pro_qryFreezeMny(hbbmb, szxmid, pk_corp,deptid);
 		v_seq4 = mny;
 		if (v_seq1.sub(v_seq2).sub(v_seq3).sub(v_seq4).doubleValue() < 0)
 			throw new BusinessException("³¬Ó¦¸¶Óà¶î");
 	}
 
 	private UFDouble pro_qryMny(String djdl, String ksbm_cl, String szxmid,
-			String pk_corp) throws DAOException {
+			String pk_corp,String deptid) throws DAOException {
 		UFDouble mny = UFDouble.ZERO_DBL;
 		String sql = null;
 		if ("yf".equals(djdl)) {
@@ -100,11 +96,11 @@ public class HgCheckFreezeNmnyBo {
 	}
 
 	private UFDouble pro_qryFreezeMny(String ksbm_cl, String szxmid,
-			String pk_corp) throws DAOException {
+			String pk_corp,String deptid) throws DAOException {
 		UFDouble mny = UFDouble.ZERO_DBL;
 
 		String sql = " select nfreamount from hg_balfreeze where isnull(dr,0)=0 and ccustbasid  ='"
-				+ ksbm_cl+ "' and pk_corp ='"+ pk_corp+ "' and fisrozen ='Y' ";
+				+ ksbm_cl+ "' and pk_corp ='"+ pk_corp+ "' and fisrozen ='Y' and vdef1 = '"+deptid+"'";
 		if (PuPubVO.getString_TrimZeroLenAsNull(szxmid) != null
 				&& !"null".equalsIgnoreCase(PuPubVO
 						.getString_TrimZeroLenAsNull(szxmid)))

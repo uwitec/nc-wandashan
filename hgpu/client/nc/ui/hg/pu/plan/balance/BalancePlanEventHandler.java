@@ -5,15 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nc.ui.hg.pu.pub.LongTimeTask;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.trade.business.HYPubBO_Client;
+import nc.uif.pub.exception.UifException;
 import nc.vo.hg.pu.plan.balance.PlanMonDealVO;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.HgPubTool;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
 public class BalancePlanEventHandler implements BillEditListener{
@@ -172,6 +175,7 @@ public class BalancePlanEventHandler implements BillEditListener{
 		
 		
 		try{
+			if(checkBalance())
 			BalancePlanHealper.commitBalancePlans(ui,lseldata,true);	
 		}catch(Exception e){
 			e.printStackTrace();
@@ -377,5 +381,68 @@ public class BalancePlanEventHandler implements BillEditListener{
 	private void showHintMessage(String msg){
 		ui.showHintMessage(msg);
 	}
+	
+	private boolean checkBalance() throws Exception{
+		Class[] ParameterTypes = new Class[]{List.class};
+		Object[] ParameterValues = new Object[]{lseldata};
+		Object o = LongTimeTask.callRemoteService("pu","nc.bs.hg.pu.plan.balance.BalancePlanBO", "checkBalance", ParameterTypes, ParameterValues, 2);
+		
+		if(o==null)
+			return true;
+		ArrayList<String> al = (ArrayList<String>)o;
+		
+		if(al==null || al.size()==0)
+			return true;
+		int size =al.size();
+		StringBuffer str = new StringBuffer();
+		for(int i=0;i<size;i++){
+ 			String err =al.get(i);
+			if(err!=null){
+				String [] strs =err.split("&");
+				if(strs !=null && strs.length!=0){
+					Object invcode =HYPubBO_Client.findColValue("bd_invbasdoc","invcode","pk_invbasdoc='"+strs[0]+"'");
+					str.append("存货"+invcode+strs[1]+"。");
+				}
+			}	
+		}
+		if(str==null ||str.length()==0)
+		    return true;
+		if(MessageDialog.showYesNoDlg(ui,"连锁提示校验",str.toString())==MessageDialog.ID_YES)
+			return true;
+		return false;
+	}
 
+	/**
+	 * 审批
+	 * @author zhw
+	 * @throws UifException 
+	 * @说明：（鹤岗矿业）
+	 * 2011-4-6下午08:15:03
+	 */
+	public void onView() {
+		if(lseldata.size() == 0){
+			showWarnMessage("请选中数据");
+			return;
+		}	
+		int size = lseldata.size();
+		ArrayList<String> al = new ArrayList<String>();
+		for(int i=0;i<size;i++){
+			PlanMonDealVO vo =lseldata.get(i);
+			String key = vo.getPk_invbasdoc();
+			String st=null;
+			try {
+			 st = PuPubVO.getString_TrimZeroLenAsNull(HYPubBO_Client.findColValue("bd_invmandoc", "pk_invmandoc", "pk_corp ='1002' and pk_invbasdoc ='" + key+ "'"));
+			} catch (UifException e) {
+				PuPubVO.getString_TrimZeroLenAsNull(e.getMessage());
+			}
+			if(st==null)
+				return;
+			if(!al.contains(st)){
+				al.add(st);
+			}
+			      
+		}
+		 ViewDetailDlg dlg=new ViewDetailDlg(ui,al);
+		   dlg.showModal();
+	}
 }

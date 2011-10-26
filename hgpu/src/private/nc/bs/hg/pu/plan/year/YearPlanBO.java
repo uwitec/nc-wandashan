@@ -1,6 +1,7 @@
 package nc.bs.hg.pu.plan.year;
 
 import java.util.List;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.hg.pu.pub.HgBsPubTool;
 import nc.bs.trade.comsave.BillSave;
@@ -15,6 +16,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.relacal.SCMRelationsCal;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.trade.pub.IBillStatus;
 
 public class YearPlanBO {
 	/**
@@ -76,6 +78,7 @@ public class YearPlanBO {
 			tmphead.setPrimaryKey(null);
 			tmphead.setVbillno(billcodes[i-1]);
 			tmphead.setCsourcebillno(PuPubVO.getString_TrimZeroLenAsNull(yearvo.getParentVO().getAttributeValue("vbillno")));
+			tmphead.setVbillstatus(IBillStatus.FREE);
 
 			tmpbodys = new PlanOtherBVO[bodys.length];
 			index = 0;
