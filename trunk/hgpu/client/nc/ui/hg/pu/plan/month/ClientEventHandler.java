@@ -1,5 +1,8 @@
 package nc.ui.hg.pu.plan.month;
 
+import java.util.ArrayList;
+
+import nc.ui.hg.pu.pub.LongTimeTask;
 import nc.ui.hg.pu.pub.PlanPubEventHandler;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
@@ -9,6 +12,8 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.PlanVO;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 
@@ -116,8 +121,48 @@ public class ClientEventHandler extends PlanPubEventHandler {
 
 	@Override
 	protected void beforeSave() throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 	}
+	@Override
+	protected void onBoSave() throws Exception {
+		AggregatedValueObject checkVO = getBillUI().getVOFromUI();
+		if (checkVO == null)
+			throw new BusinessException("传入数据为空");
+
+		saveBefore(checkVO);
+		super.onBoSave();
+	}
 	
+	private boolean saveBefore(AggregatedValueObject checkVO) throws Exception{
+
+		Class[] ParameterTypes = new Class[]{AggregatedValueObject.class};
+		Object[] ParameterValues = new Object[]{checkVO};
+		Object o = LongTimeTask.callRemoteService("pu","nc.bs.hg.pu.plan.pub.MonPlanBillSave", "onSaveCheck", ParameterTypes, ParameterValues, 2);
+		
+		if(o==null)
+			return true;
+		ArrayList<String> al = (ArrayList<String>)o;
+		
+		if(al==null || al.size()==0)
+			return true;
+		int size =al.size();
+		StringBuffer str = new StringBuffer();
+		for(int i=0;i<size;i++){
+ 			String err =al.get(i);
+			if(err!=null){
+				String [] strs =err.split("&");
+				if(strs !=null && strs.length!=0){
+					Object invcode =HYPubBO_Client.findColValue("bd_invbasdoc","invcode","pk_invbasdoc='"+strs[0]+"'");
+					str.append("存货"+invcode+strs[1]+"。");
+				}
+			}	
+		}
+		if(str==null ||str.length()==0)
+		    return true;
+		if(MessageDialog.showYesNoDlg((ClientUI)getBillManageUI(),"连锁提示校验",str.toString())==MessageDialog.ID_YES)
+			return true;
+		return false;
+		
+	}
 }

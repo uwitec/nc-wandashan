@@ -2,6 +2,7 @@ package nc.ui.hg.pu.plan.temp;
 
 import nc.ui.hg.pu.pub.PlanPubClientUI;
 import nc.ui.hg.pu.pub.PlanPubEventHandler;
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
@@ -52,6 +53,48 @@ public class ClientEventHandler extends PlanPubEventHandler {
 		
 		for(PlanOtherBVO item:items){
 			item.validata();
+		}
+	}
+	@Override
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoAdd(bo);
+		getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().setEnabledAt(1, false);
+	}
+	
+	@Override
+	protected void onBoEdit() throws Exception {
+		// TODO Auto-generated method stub
+		if(getBufferData().isVOBufferEmpty()){
+			return;
+		}
+		super.onBoEdit();
+		getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().setEnabledAt(1, false);
+	}
+	
+	@Override
+	protected void onBoSave() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoSave();
+		getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().setEnabledAt(1, true);
+		onBoRefresh();
+	}
+	@Override
+	protected void onBoCancel() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoCancel();
+		getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().setEnabledAt(1, true);
+	}
+	public void onButton(ButtonObject bo) {
+		setTabbedPane();
+		super.onButton(bo);
+	}
+	//调整表体业签
+	private void setTabbedPane(){
+		if (getBillManageUI().isListPanelSelected()) {
+			getBillListPanel().getBodyTabbedPane().setSelectedIndex(0);
+		} else {
+			getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().setSelectedIndex(0);
 		}
 	}
 }

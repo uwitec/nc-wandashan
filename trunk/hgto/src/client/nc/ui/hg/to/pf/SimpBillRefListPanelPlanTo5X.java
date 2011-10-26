@@ -4,6 +4,7 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.scm.pub.sourceref.DefaultSrcRefCtl;
 import nc.ui.scm.pub.sourceref.SimpBillRefListPanel;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.bill.BillTempletVO;
 
 public class SimpBillRefListPanelPlanTo5X extends SimpBillRefListPanel{
 	RefPlanQueryDlg queryDlg = null;
@@ -83,4 +84,5 @@ public class SimpBillRefListPanelPlanTo5X extends SimpBillRefListPanel{
   public String getRefNodeCode(){
     return "5A5Xsource";
   }
+  
 }

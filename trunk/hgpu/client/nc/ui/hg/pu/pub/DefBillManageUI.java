@@ -8,6 +8,7 @@ import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListData;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.IBillItem;
@@ -50,35 +51,35 @@ public abstract class DefBillManageUI extends BillManageUI implements ILinkQuery
 	protected static FreeItemRefPane ivjFreeItemRefPane = null;
 
 
-//	public DefBillManageUI() {
-//		super();
-//		initialize();
-//	}
+	public DefBillManageUI() {
+		super();
+		initialize();
+		init();
+	}
 	
-//	private void initialize() {
-//		// 初始化设置显示千分位
-//		initShowThMark(true);
-//	}
-//	
-//	/**
-//	 * 初始化设置显示千分位 作者：薛恩平 创建日期：2007-7-22 下午03:04:06
-//	 */
-//	protected void initShowThMark(boolean isShow) {
-//		try {
-//			// 卡片表头
-//			getBillCardPanel().setHeadTailShowThMark(getBillCardPanel().getHeadItems(), isShow);
-//			// 列表表头
-//			getBillListPanel().getParentListPanel().setShowThMark(isShow);
-//			// 卡片表体
-//			getBillCardPanel().setShowThMark(isShow);
-//			// 列表表体
-//			getBillListPanel().getChildListPanel().setShowThMark(isShow);
-//		} catch (Exception e) {
-//			// 列表表体为空时，会抛空指针异常
-//			System.out.println("千分位初始化时出现异常，但不是错误");
-//			e.printStackTrace();
-//		}
-//	}
+	private void initialize() {
+		// 初始化设置显示千分位
+		initShowThMark(true);
+	}
+	/**
+	 * 初始化设置显示千分位 作者：薛恩平 创建日期：2007-7-22 下午03:04:06
+	 */
+	protected void initShowThMark(boolean isShow) {
+		try {
+			// 卡片表头
+			getBillCardPanel().setHeadTailShowThMark(getBillCardPanel().getHeadItems(), isShow);
+			// 列表表头
+			getBillListPanel().getParentListPanel().setShowThMark(isShow);
+			// 卡片表体
+			getBillCardPanel().setShowThMark(isShow);
+			// 列表表体
+			getBillListPanel().getChildListPanel().setShowThMark(isShow);
+		} catch (Exception e) {
+			// 列表表体为空时，会抛空指针异常
+			System.out.println("千分位初始化时出现异常，但不是错误");
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		String sItemKey = e.getKey();
@@ -470,4 +471,20 @@ public abstract class DefBillManageUI extends BillManageUI implements ILinkQuery
 		btnvo1.setBusinessStatus(new int[]{IBillStatus.FREE});
 		addPrivateButton(btnvo1);
 	}
+	
+	//卡片界面不要设置0显示为空
+	private void init() {
+			//getBillCardPanel().setAutoExecHeadEditFormula(true);
+			//卡片界面不要设置0显示为空
+			BillItem[] items = getBillCardPanel().getBodyItems();
+			if ((items != null) && (items.length > 0)) {
+				for (int i = 0; i < items.length; i++) {
+					BillItem item = items[i];
+					if ((item.getDataType() == BillItem.INTEGER) || (item.getDataType() == BillItem.DECIMAL))
+						if (item.isShow() && item.getNumberFormat() != null) {
+							item.getNumberFormat().setShowZeroLikeNull(false);
+						}
+				}
+			}
+		}
 }

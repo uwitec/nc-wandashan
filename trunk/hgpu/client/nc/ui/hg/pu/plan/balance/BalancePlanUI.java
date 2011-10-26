@@ -1,16 +1,11 @@
 package nc.ui.hg.pu.plan.balance;
 
-import java.awt.CardLayout;
-
-import nc.bs.framework.core.Updatable;
-import nc.ui.hg.pu.pub.PlanPubHelper;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ToftPanel;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.vo.hg.pu.plan.balance.PlanMonDealVO;
 import nc.vo.hg.pu.pub.HgPubConst;
-import nc.vo.hg.pu.pub.PlanApplyInforVO;
 import nc.vo.scm.pub.session.ClientLink;
 
 public class BalancePlanUI extends ToftPanel implements IBillRelaSortListener2{
@@ -22,7 +17,7 @@ public class BalancePlanUI extends ToftPanel implements IBillRelaSortListener2{
 	private ButtonObject m_btnUnBalance = new ButtonObject("取消平衡","取消平衡",2,"取消平衡");
 	private ButtonObject m_btnADUT = new ButtonObject("审批","审批",2,"审批");
 	private ButtonObject m_btnUnAudit = new ButtonObject("取消审批","取消审批",2,"取消审批");
-//	private ButtonObject m_btnCommit = new ButtonObject("确定","确定",2,"确定");
+	private ButtonObject m_btnView = new ButtonObject("查看","查看",2,"查看");
 //	private ButtonObject m_btnCancel = new ButtonObject("取消","取消",2,"取消");
 	
 	private ButtonObject[] m_btnArray1 = null;
@@ -97,27 +92,11 @@ public class BalancePlanUI extends ToftPanel implements IBillRelaSortListener2{
 	}
 	
 	private void setButton(){
-		m_btnArray1 = new ButtonObject[]{m_btnAllSel,m_btnNoSel,m_btnQry,m_btnBalance,m_btnUnBalance,m_btnADUT,m_btnUnAudit};
-//		m_btnArray2 = new ButtonObject[]{m_btnCommit,m_btnCancel};
+		m_btnArray1 = new ButtonObject[]{m_btnAllSel,m_btnNoSel,m_btnQry,m_btnBalance,m_btnUnBalance,m_btnADUT,m_btnUnAudit,m_btnView};
 		setButtons(m_btnArray1);
 	}
-	
-//	private CardLayout getLayOut(){
-//		return (CardLayout)getLayout();
-//	}
-	
-//	public void switchUI(){
-//		if(op_type==0){
-//			getLayOut().show(this, HgPubConst.PLAN_Balance_BILLTYPE1);
-//			setButtons(m_btnArray2);
-//			op_type = 1;
-//		}else{
-//			getLayOut().show(this, HgPubConst.PLAN_Balance_BILLTYPE);
-//			setButtons(m_btnArray1);
-//			op_type = 0;
-//		}
-//		updateUI();
-//	}
+
+
 	
 	public BillCardPanel getBillPanel(){
 		if(m_panel == null){
@@ -165,9 +144,9 @@ public class BalancePlanUI extends ToftPanel implements IBillRelaSortListener2{
 		}else if(bo == m_btnUnAudit){
 			m_handler.onUnAduit();
 		}
-//		else if(bo == m_btnCommit){
-//			m_handler.onCommit();
-//		}
+		else if(bo == m_btnView){
+			m_handler.onView();
+		}
 //		else if(bo == m_btnCancel){
 //			m_handler.onCancel();
 //		}

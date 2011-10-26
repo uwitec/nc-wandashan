@@ -1,4 +1,5 @@
 package nc.bs.hg.pu.plan.balance;
+import java.util.ArrayList;
 import java.util.List;
 
 import nc.bs.dao.DAOException;
@@ -9,10 +10,14 @@ import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.hg.pu.plan.balance.PlanMonDealVO;
 import nc.vo.hg.pu.plan.month.PlanOtherBVO;
 import nc.vo.hg.pu.pub.HgPubTool;
+import nc.vo.hg.pu.pub.PlanVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.trade.voutils.VOUtil;
 
 
@@ -66,6 +71,7 @@ public class BalancePlanBO {
 		strb.append(" and coalesce(b.bisuse,'N')='N' "); // 应控制不能是临时物资行
 		//strb.append(" and h.cmonth = '"+cl.getAccountMonth()+"'"); //只能查出当前月的计划单
 		strb.append(" and h.cyear = '"+cl.getAccountYear()+"'"); //只能查出当前年的计划单
+		strb.append(" and h.vbillstatus = '"+IBillStatus.CHECKPASS+"'"); //只能查出审批通过的
 		strb.append(" and coalesce(b.nnum,0.0)>0.0");
 		if("deal".equalsIgnoreCase(str)){//如果选择已经平衡 
 			strb.append(" and coalesce(b.nreserve10,0.0)>0.0  and coalesce(b.vreserve2,'N')= 'N'");
@@ -96,8 +102,12 @@ public class BalancePlanBO {
 		if(aldata == null||aldata.size() == 0){
 			throw new BusinessException("传入计划数据为空");
 		}
-		SQLParameter param = new SQLParameter();;
+		SQLParameter param = new SQLParameter();
+		SQLParameter param1 = new SQLParameter();;;
 		String sql="update hg_planother_b set vreserve4 =?,vreserve5=?,nreserve10=? where pk_planother_b = ?";
+		String sql1 =" update hg_planother_b set vreserve3=? where pk_planother_b in (select b.pk_planother_b from hg_plan h, hg_planother_b b "+
+                      " where h.pk_plan = b.pk_plan  and nvl(h.dr, 0) = 0 and nvl(b.dr, 0) = 0 and h.cyear = ?  and h.pk_corp = ? and h.pk_billtype = 'HG02' "+
+                      " and h.cmonth =? and b.pk_invbasdoc = ? ) ";
 		int size= aldata.size();
 		for(int i=0;i<size;i++){
 			
@@ -106,24 +116,40 @@ public class BalancePlanBO {
 			String cnextbillid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillid());
 			String cnextbillbid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillbid());
 			String mon = PuPubVO.getString_TrimZeroLenAsNull(vo.getCmonth());
+			if(mon.compareTo("11")<0){
+				mon = "0"+(Integer.parseInt(mon)-1);
+			}else{
+				mon=PuPubVO.getString_TrimZeroLenAsNull((Integer.parseInt(mon)-1));
+			}
 			String year = PuPubVO.getString_TrimZeroLenAsNull(vo.getCyear());
-			
+			String corp = PuPubVO.getString_TrimZeroLenAsNull(vo.getPk_corp());
+			String pk_invbasdoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getPk_invbasdoc());
 			checkUpdateMon(inv,cnextbillid,cnextbillbid);
 			
 			if(isbalance){
 				if(vo.getNreserve10()==null)
 					throw new BusinessException("存货"+inv+"平衡数量为空");
-				if((PuPubVO.getUFDouble_NullAsZero(vo.getNreserve10()).compareTo(vo.getNnum()))>0)
-					throw new BusinessException("存货"+inv+"平衡数量大于计划领用数量");
+				//modify by  zhw   不在校验平衡数量与 计划量的关系   校验平衡数量与总剩余量的关系
+//				if((PuPubVO.getUFDouble_NullAsZero(vo.getNreserve10()).compareTo(vo.getNnum()))>0)
+//					throw new BusinessException("存货"+inv+"平衡数量大于计划领用数量");
+				param1.addParam("Y");
 			}else{
 				checkNouttotalnum(inv,cnextbillid,cnextbillbid,mon,year);
+				param1.addParam("N");
 			}
+			param1.addParam(year);
+			param1.addParam(corp);
+			param1.addParam(mon);
+			param1.addParam(pk_invbasdoc);
+			
 			param.addParam(vo.getVreserve4());
 			param.addParam(vo.getVreserve5());
 			param.addParam(vo.getNreserve10());
 			param.addParam(vo.getPk_plan_b());
 			getPubBO().executeUpdate(sql,param);
+			getPubBO().executeUpdate(sql1,param1);
 			param.clearParams();
+			param1.clearParams();
 		}
 		
 	}
@@ -193,6 +219,123 @@ public class BalancePlanBO {
 		if(Integer.parseInt(len)>0){
 			throw new BusinessException("存货"+invcode+"已经被领用的计划");
 		}
+	}
+	
+	/**
+	 * 
+	 * @author zhw
+	 * @说明：（中智医药）
+	 * 2011-8-4下午04:55:06
+	 * @param corp 公司
+	 * @param als存货iD集合
+	 * @param alu 当前计划量集合
+	 * @throws BusinessException 
+	 */
+	public ArrayList<String> checkBalance(List aldata) throws BusinessException {
+		
+		if(aldata == null||aldata.size() == 0){
+			throw new BusinessException("传入计划数据为空");
+		}
+		
+		int asize= aldata.size();
+		PlanMonDealVO[] vos =new PlanMonDealVO[asize];
+		for(int i=0;i<asize;i++){
+			PlanMonDealVO vo =(PlanMonDealVO)aldata.get(i);
+			vos[i]=vo;
+			
+		}
+		VOUtil.sort(vos, new String[] { "pk_invbasdoc" },new int[] { VOUtil.DESC });
+		
+		ArrayList<String> als = new ArrayList<String>();
+		ArrayList<UFDouble> alu = new ArrayList<UFDouble>();
+	
+		for (PlanMonDealVO bvo : vos) {
+			als.add(bvo.getPk_invbasdoc());//存货id
+			alu.add(bvo.getNnum());//当前存货月计划量
+		}
+		
+		if (als == null || als.size() == 0)
+			return null;
+
+		ArrayList aluy = getYearNum(vos[0].getPk_corp(), als);// 年计划总量
+		ArrayList alum = getMonUsedNum(vos[0].getPk_corp(), als);// 月计划累计量
+		ArrayList<String> al = new ArrayList<String>();
+
+		int size = als.size();
+		for (int i = 0; i < size; i++) {
+			if (aluy == null || aluy.size() == 0) {
+				throw new BusinessException("所有存货的年计划量不存在");
+			}
+
+			UFDouble ny = PuPubVO.getUFDouble_NullAsZero(aluy.get(i));
+
+			if (ny.equals(UFDouble.ZERO_DBL))
+				al.add(als.get(i) + "&年计划量不存在");
+			else {
+				UFDouble nre = UFDouble.ZERO_DBL;
+				
+				if (alum == null || alum.size() == 0)
+					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)));
+				else
+					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)))
+							.sub(PuPubVO.getUFDouble_NullAsZero(alum.get(i)));
+				if (nre.compareTo(UFDouble.ZERO_DBL) < 0)
+					al.add(als.get(i) + "&月计划量超出剩余计划量" + nre);
+			}
+		}
+		return al;
+	}
+
+	/**
+	 * 
+	 * @author zhw
+	 * @说明：（鹤岗矿业）//  年计划总量
+	 * 2011-8-4下午04:55:26
+	 * @param corp 公司
+	 * @param als存货ID集合
+	 * @return 年计划总量集合
+	 * @throws DAOException
+	 */
+	
+	@SuppressWarnings("unchecked")
+	private ArrayList getYearNum(String corp, ArrayList<String> als)
+			throws DAOException {
+
+		String sql = " select b.nnum from hg_plan h join hg_planyear_b b on h.pk_plan = b.pk_plan where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 "
+				+ " and h.pk_corp = '"+ corp+ "' and h.pk_billtype='HG01' and b.pk_invbasdoc in "
+				+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " order by  b.pk_invbasdoc desc";
+		
+		Object o = getPubBO().executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);
+		if(o==null)
+			return null;
+		ArrayList al =(ArrayList)o;
+
+		return al;
+	}
+
+	/**
+	 * 
+	 * @author zhw
+	 * @说明：（鹤岗矿业）//月计划累计量
+	 * 2011-8-4下午04:55:32
+	 * @param corp  公司
+	 * @param als 存货ID集合
+	 * @return 月计划累计量集合
+	 * @throws DAOException
+	 */
+	
+	@SuppressWarnings("unchecked")
+	private ArrayList getMonUsedNum(String corp, ArrayList<String> als)
+			throws DAOException {
+
+		String sql = " select sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "
+				+ " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '"+ corp+ "' and h.pk_billtype = 'HG02' and b.pk_invbasdoc in "
+				+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
+
+		ArrayList al = (ArrayList) getPubBO()
+				.executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);
+
+		return al;
 	}
 
 }

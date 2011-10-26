@@ -67,7 +67,7 @@
              <cbilltypecode>30</cbilltypecode><!--单据类型-->
              <nodecode>40060301</nodecode><!--节点号-->			 
              <uiplugin><!--UI插件描述-->
-                 <classname>nc.ui.hg.so.plugin.SaleOrderUIPlugin</classname><!--UI插件类名-->
+                 <classname>nc.ui.zz.so.plugin.SaleOrderUIPlugin</classname><!--UI插件类名-->
              </uiplugin>             
         </ui_extend>
     

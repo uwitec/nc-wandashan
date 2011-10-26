@@ -61,7 +61,7 @@ public class ClientCHKRules implements ICheckRules,ICheckRules2, IUniqueRules {
 		return new CheckRule[]{
 			new CheckRule("供应商", "ccustbasid", false, null, null),
 			new CheckRule("供应商", "ccustmanid", false, null, null),
-		//	new CheckRule("收支项目", "szxmid", false, null, null)
+			new CheckRule("部门", "vdef1", false, null, null)
 		};
 	}
 

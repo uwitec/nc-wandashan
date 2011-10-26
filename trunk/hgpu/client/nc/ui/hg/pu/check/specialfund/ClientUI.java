@@ -10,6 +10,7 @@ import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.card.BillCardUI;
 import nc.ui.trade.card.CardEventHandler;
 import nc.vo.hg.pu.check.fund.CritiCHK;
+import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.PlanApplyInforVO;
 import nc.vo.scm.pu.PuPubVO;
 
@@ -145,6 +146,13 @@ public class ClientUI extends BillCardUI {
 		if (m_appInfor == null) {
 			showWarningMessage("未获取到系统采购公司");
 			return false;
+		}
+		
+		if("fundsou".equals(key)){
+		    if(HgPubConst.GYC_CORPID.equalsIgnoreCase(_getCorp().getPrimaryKey())){
+		        showHintMessage("供应处下不用录入来源资金");
+		        return false;
+		    }   
 		}
 		if ("corp".equalsIgnoreCase(key) || "deptname".equalsIgnoreCase(key)) {
 			if (m_appInfor.getM_pocorp().equalsIgnoreCase(_getCorp().getPrimaryKey())) {// 过滤掉当前公司 物资供应不下有效

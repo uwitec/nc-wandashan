@@ -8,6 +8,7 @@ import nc.vo.trade.checkrule.ICompareRule;
 import nc.vo.trade.checkrule.ISpecialChecker;
 import nc.vo.trade.checkrule.IUniqueRule;
 import nc.vo.trade.checkrule.IUniqueRules;
+import nc.vo.trade.checkrule.UniqueRule;
 
 
 public class ClientCheckRules implements ICheckRules, ICheckRules2,IUniqueRules{
@@ -73,7 +74,7 @@ public class ClientCheckRules implements ICheckRules, ICheckRules2,IUniqueRules{
 		
 		return null;
 	}
-	// 不允许表体为空
+	// 不允许表体为空/
 	public boolean isAllowEmptyBody(String tablecode) {
 		
 		return false;
@@ -85,8 +86,9 @@ public class ClientCheckRules implements ICheckRules, ICheckRules2,IUniqueRules{
 	}
 
 	public IUniqueRule[] getItemUniqueRules(String tablecode) {
-		
-		return null;
+		return new UniqueRule[]{
+				new UniqueRule("存货不可重复",new String[]{"cinventoryid"})
+		};
 	}
 
 }

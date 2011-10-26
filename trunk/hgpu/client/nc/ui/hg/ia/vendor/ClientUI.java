@@ -2,6 +2,7 @@ package nc.ui.hg.ia.vendor;
 
 import javax.swing.ListSelectionModel;
 
+import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.card.BillCardUI;
@@ -21,6 +22,7 @@ public class ClientUI extends BillCardUI {
 
 	public ClientUI() {
 		super();
+		init();
 	}
 	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
@@ -94,5 +96,21 @@ public class ClientUI extends BillCardUI {
 		btnvo2.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT});
 		addPrivateButton(btnvo2);
 		super.initPrivateButton();
+	}
+	
+	private void init() {
+		// getBillCardPanel().setAutoExecHeadEditFormula(true);
+		// 卡片界面不要设置0显示为空
+		BillItem[] items = getBillCardPanel().getBodyItems();
+		if ((items != null) && (items.length > 0)) {
+			for (int i = 0; i < items.length; i++) {
+				BillItem item = items[i];
+				if ((item.getDataType() == BillItem.INTEGER)
+						|| (item.getDataType() == BillItem.DECIMAL))
+					if (item.isShow() && item.getNumberFormat() != null) {
+						item.getNumberFormat().setShowZeroLikeNull(false);
+					}
+			}
+		}
 	}
 }

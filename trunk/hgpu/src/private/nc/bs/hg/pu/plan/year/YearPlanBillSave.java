@@ -6,7 +6,6 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.hg.pu.pub.HYBillSave;
 import nc.bs.hg.pu.pub.HgBsPubTool;
 import nc.bs.scm.pub.TempTableDMO;
-import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.vo.hg.pu.pub.HgPubTool;
 import nc.vo.hg.pu.pub.PlanVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -46,8 +45,8 @@ public class YearPlanBillSave extends HYBillSave {
 		String pk_plan = head.getPrimaryKey();
 		ArrayList<String> cinventoryid = getArrayByParse(billVo,"cinventoryid");//存货管理ID
 		StringBuffer sql = new StringBuffer();
-		sql.append(" select count(*) cum from hg_plan h,hg_planyear_b b where h.pk_plan = b.pk_plan and isnull(h.dr,0)=0 and isnull(b.dr,0) = 0 ");
-		sql.append( " and h.cyear = '"+head.getCyear()+"' and h.pk_corp = '"+head.getPk_corp()+"' ");
+		sql.append(" select count(*) cum from hg_plan h,hg_planother_b b where h.pk_plan = b.pk_plan and isnull(h.dr,0)=0 and isnull(b.dr,0) = 0 ");
+		sql.append( " and h.cyear = '"+head.getCyear()+"' and h.pk_corp = '"+head.getPk_corp()+"'and h.pk_billtype ='HG02' ");
 		sql.append(" and h.capplydeptid = '"+head.getCapplydeptid()+"'");
 		if(pk_plan != null && !"".equals(pk_plan)){//修改时，不校验当前单据
 			sql.append("	and h.pk_plan <> '"+pk_plan+"' ");

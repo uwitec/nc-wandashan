@@ -534,25 +534,26 @@ public abstract class PlanPubClientUI extends DefBillManageUI implements
 				"creqcalbodyid");
 				getBillCardPanel().getBillModel().execLoadFormulaByKey(
 				"creqwarehouseid");
-			} else if ("capplydeptid".equalsIgnoreCase(key)) {// 申请部门
-				String[] aryAssistunit = new String[] { "creqcalbodyid->getColValue(bd_deptdoc,pk_calbody,pk_deptdoc,capplydeptid)" };
-				getBillCardPanel().execHeadFormulas(aryAssistunit);
-				getBillCardPanel().getHeadItem("capplypsnid").setValue(null);
-				getBillCardPanel().getHeadItem("creqwarehouseid")
-				.setValue(null);
-				int row = getBillCardPanel().getRowCount();
-				String creqcalbodyid = PuPubVO
-				.getString_TrimZeroLenAsNull(getHeadItemValue("creqcalbodyid"));// 需求组织
-				setBodyCelValue(row, "creqcalbodyid", creqcalbodyid);
-				if(creqcalbodyid==null){
-					setBodyCelValue(rowCount,"creqcalbodyid",null);
-					setBodyCelValue(rowCount,"calname",null);
-				}
-				setBodyCelValue(rowCount,"creqwarehouseid",null);
-				setBodyCelValue(rowCount,"rename",null);
-				getBillCardPanel().getBillModel().execLoadFormulaByKey(
-				"creqcalbodyid");
-			} else if ("capplypsnid".equalsIgnoreCase(key)) {// 申请人
+			} 
+//			else if ("capplydeptid".equalsIgnoreCase(key)) {// 申请部门
+//				String[] aryAssistunit = new String[] { "creqcalbodyid->getColValue(bd_deptdoc,pk_calbody,pk_deptdoc,capplydeptid)" };
+//				getBillCardPanel().execHeadFormulas(aryAssistunit);
+//				getBillCardPanel().getHeadItem("capplypsnid").setValue(null);
+//				getBillCardPanel().getHeadItem("creqwarehouseid").setValue(null);
+//				int row = getBillCardPanel().getRowCount();
+//				String creqcalbodyid = PuPubVO
+//				.getString_TrimZeroLenAsNull(getHeadItemValue("creqcalbodyid"));// 需求组织
+//				setBodyCelValue(row, "creqcalbodyid", creqcalbodyid);
+//				if(creqcalbodyid==null){
+//					setBodyCelValue(rowCount,"creqcalbodyid",null);
+//					setBodyCelValue(rowCount,"calname",null);
+//				}
+//				setBodyCelValue(rowCount,"creqwarehouseid",null);
+//				setBodyCelValue(rowCount,"rename",null);
+//				getBillCardPanel().getBillModel().execLoadFormulaByKey(
+//				"creqcalbodyid");
+//			} 
+			else if ("capplypsnid".equalsIgnoreCase(key)) {// 申请人
 				getBillCardPanel().execHeadTailEditFormulas(
 						getBillCardPanel().getHeadItem("capplypsnid"));
 			} else if ("csupplycorpid".equalsIgnoreCase(key)) {// 供货单位
@@ -697,6 +698,8 @@ public abstract class PlanPubClientUI extends DefBillManageUI implements
 	protected void clearTable(String[] tableCodes) {
 		if (tableCodes != null && tableCodes.length > 0) {
 			for (int i = 0; i < tableCodes.length; i++) {
+			    if(getBillCardPanel().getBillModel(tableCodes[i])==null)
+			        return;
 				int count = getBillCardPanel().getBillModel(tableCodes[i])
 						.getRowCount();
 				int[] array = new int[count];

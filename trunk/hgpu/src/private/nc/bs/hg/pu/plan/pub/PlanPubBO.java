@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.record.formula.functions.Int;
-
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
@@ -27,7 +23,6 @@ import nc.jdbc.framework.processor.ResultSetProcessor;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.hg.pu.pact.PactItemVO;
 import nc.vo.hg.pu.plan.detail.PlanBBVO;
-import nc.vo.hg.pu.plan.month.PlanOtherBVO;
 import nc.vo.hg.pu.plan.year.PlanYearBVO;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.HgPubTool;
@@ -44,7 +39,6 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
-import nc.vo.trade.voutils.VOUtil;
 
 /**
  * 
@@ -904,39 +898,4 @@ public class PlanPubBO {
 		throw new BusinessException("存货[" + str.toString() + "]已平衡，不能弃审");
 	}
 	
-	public void onSaveCheck(AggregatedValueObject billvo){
-		if(billvo == null)
-			return;
-		PlanVO head = (PlanVO)billvo.getParentVO();
-		if(head ==null)
-			return;
-		String corp =head.getPk_corp();
-		PlanOtherBVO[] bvos= (PlanOtherBVO[])billvo.getChildrenVO();
-		if(bvos==null || bvos.length==0)
-			return;
-		VOUtil.sort(bvos,new String[]{"pk_invbasdoc"},new int[]{VOUtil.DESC});
-		ArrayList<String> als =new ArrayList<String>();
-		ArrayList<UFDouble> alu = new ArrayList<UFDouble>();
-		for(PlanOtherBVO bvo:bvos){
-			als.add(bvo.getPk_invbasdoc());
-			alu.add(bvo.getNnum());
-		}
-	}
-	
-	private ArrayList<UFDouble> getYearNum(String corp,ArrayList<String> als){
-		if(als==null || als.size()==0)
-			return null;
-		String sql =" select b.pk_invbasdoc,b.nnum from hg_plan h join hg_planyear_b b on h.pk_plan = b.pk_plan where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 "+
-        " and h.pk_corp = '1003' and h.pk_billtype='HG01' and b.pk_invbasdoc in "+HgPubTool.getSubSql(als.toArray(new String[0]))+" order by  b.pk_invbasdoc desc";
-		
-		return null;
-	}
-	
-	private ArrayList<UFDouble> getMonUsedNum(String corp,ArrayList<String> als){
-		if(als==null || als.size()==0)
-			return null;
-		String sql =" select b.pk_invbasdoc,sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "+
-        " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '1003' and h.pk_billtype = 'HG02' and b.pk_invbasdoc in "+HgPubTool.getSubSql(als.toArray(new String[0]))+" group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
-		return null;
-	}
 }

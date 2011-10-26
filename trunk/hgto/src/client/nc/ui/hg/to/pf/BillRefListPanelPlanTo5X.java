@@ -83,4 +83,14 @@ public class BillRefListPanelPlanTo5X extends BillRefListPanel{
   public String getRefNodeCode(){
     return "5A5Xsource";
   }
+  /**
+	 * 初始化子表. 创建日期:(01-2-26 11:28:04)
+	 */
+	protected void initChildListPanel() {
+//  add by zhw 鹤岗项目  去除存量显示页签
+		super.initChildListPanel();
+		if(getBodyTabbedPane().getTabCount()>1)
+		    getBodyTabbedPane().remove(1);
+		
+	}
 }
