@@ -3,7 +3,6 @@ package nc.ui.wds.ic.other.out;
 import java.awt.Container;
 
 import nc.bs.logging.Logger;
-import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
@@ -42,13 +41,6 @@ public class RefWDS3BillSourceDlg  extends WdsBillSourceDLG {
 		}
 		return helper;
 	}
-	private TempTableUtil ttutil = null;
-	private TempTableUtil getTempTableUtil(){//如果  in  语句中超过上限 会报错  该类最好不要用在前台
-		if(ttutil == null)
-			ttutil = new TempTableUtil();
-		return ttutil;
-	}
-
 	
 	public RefWDS3BillSourceDlg(String pkField, String pkCorp, String operator,
 			String funNode, String queryWhere, String billType,
@@ -119,9 +111,26 @@ public class RefWDS3BillSourceDlg  extends WdsBillSourceDLG {
 	
 	@Override
 	public String getBodyCondition() {
-		String sub = getTempTableUtil().getSubSql(inv_Pks);
+		String sub = getInvSub(inv_Pks);
 		return " coalesce(wds_sendorder_b.ndealnum,0)-coalesce(wds_sendorder_b.noutnum,0)>0"+//安排数量-出库数量>0
 			" and wds_sendorder_b.pk_invmandoc in ";
+	}
+	
+	private String getInvSub(String [] inv_Pks){
+		if(inv_Pks == null ){
+			return "('')";
+		}
+		StringBuffer bur = new StringBuffer();
+		bur.append("( ");
+		for(int i=0;i<inv_Pks.length;i++){
+			String pk_invmandoc = inv_Pks[i]==null?" ":inv_Pks[i];
+			bur.append("'"+pk_invmandoc+"'");
+			if(i<inv_Pks.length-1){
+				bur.append(",");
+			}
+		}
+		bur.append(" )");
+		return bur.toString();
 	}
 	@Override
 	protected boolean isHeadCanMultiSelect() {

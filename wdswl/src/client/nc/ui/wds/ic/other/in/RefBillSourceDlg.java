@@ -3,7 +3,6 @@ package nc.ui.wds.ic.other.in;
 import java.awt.Container;
 
 import nc.bs.logging.Logger;
-import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
@@ -34,13 +33,7 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 			helper = new LoginInforHelper();
 		}
 		return helper;
-	}
-	private TempTableUtil ttutil = null;
-	private TempTableUtil getTempTableUtil(){
-		if(ttutil == null)
-			ttutil = new TempTableUtil();
-		return ttutil;
-	}		
+	}	
 
 	public RefBillSourceDlg(String pkField, String pkCorp, String operator,
 			String funNode, String queryWhere, String billType,
@@ -100,30 +93,28 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 		return hsql.toString();
 		//head.fbillflag=3 签字状态
 		}
-	/**
-	 * 
-	 * @作者：lyf---调用临时表出错
-	 * @说明：完达山物流项目 
-	 * @时间：2011-7-3上午09:43:58
-	 * @param inv_Pks
-	 * @return
-	 */
-	private String getIvnSubSql(String[] inv_Pks){
-		StringBuffer invSbuSql = new StringBuffer();
-		invSbuSql.append("('aa'");
-		if(inv_Pks != null && inv_Pks.length>0){
-			for(int i=0 ;i<inv_Pks.length;i++){
-				invSbuSql.append(",'"+inv_Pks[i]+"'");
-			}
-		}
-		invSbuSql.append(")");
-		return invSbuSql.toString();
-	}
 	@Override
 	public String getBodyCondition() {
-		String sub = getTempTableUtil().getSubSql(inv_Pks);
+		String sub =getInvSub(inv_Pks);
 	return " and body.cgeneralbid not in(select distinct gylbillbid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0) and body.cinventoryid in ";
 	
+	}
+	
+	private String getInvSub(String [] inv_Pks){
+		if(inv_Pks == null ){
+			return "('')";
+		}
+		StringBuffer bur = new StringBuffer();
+		bur.append("( ");
+		for(int i=0;i<inv_Pks.length;i++){
+			String pk_invmandoc = inv_Pks[i]==null?" ":inv_Pks[i];
+			bur.append("'"+pk_invmandoc+"'");
+			if(i<inv_Pks.length-1){
+				bur.append(",");
+			}
+		}
+		bur.append(" )");
+		return bur.toString();
 	}
 	@Override
 	public boolean isSelfLoadHead(){

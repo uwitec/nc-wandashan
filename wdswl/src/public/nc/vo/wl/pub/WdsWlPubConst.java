@@ -212,9 +212,6 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_IC_INV_STATUS="8004040602";
 	/**采购取样 */
 	public static String BILLTYPE_LM_CLASSINFOR="802003";
-	
-
-
 	public static String WDSC="WDSC";
 
 	/**托盘移动 */
@@ -246,27 +243,22 @@ public class WdsWlPubConst {
 	/**运费核算单 */
 	public static String WDSM="WDSM";	
 	/**特殊运费核算单 */
-	public static String WDSN="WDSN";
+	public static String WDSN="WDSN";	
+	/**销售出库回传 */
+	public static String WDSO="WDSO";
+	/**调拨入库回传 */
+	public static String WDSP="WDSP";
 	
 	//---------------仓储管理中涉及的 几个对话框注册模板类型
 //	出库单据  出库托盘指定
 	public static String DLG_OUT_TRAY_APPOINT = "OTA";
-
 //	入库单据  入库托盘指定
 	public static String DLG_IN_TRAY_APPOINT = "ITA";
-//	入库单据 入库托盘明细
-//	public static String DLG_IN_TRAY_LOOK = "ITL";
 //	发运订单 ，销售运单 安排
 	public static String XNAP = "XNAP";
-	
-	
 //	zhd   为打印定义的单据模板
 //	调拨入库单 
 	public static String PRINT_BILL_TEMPLET = "0001S3100000000KPO7G";
-
-	
-	
-	
 	public static String default_inv_state = "1021S31000000009FS98";//入库时设置默认库存状态=====+++++select * from tb_stockstate
 	//wds模块日志记录
 	public static String wds_logger_name = "wds";

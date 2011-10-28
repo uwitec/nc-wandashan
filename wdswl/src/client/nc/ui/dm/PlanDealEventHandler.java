@@ -190,12 +190,10 @@ public class PlanDealEventHandler implements BillEditListener,
 		}
 		whereSql.append("  nvl(wds_sendplanin.dr,0)=0");
 		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
-		whereSql
-				.append(" and wds_sendplanin.pk_corp='" + ui.cl.getCorp() + "'");
-
-		whereSql.append(" and wds_sendplanin.vbillstatus=1");
-		whereSql
-				.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
+		whereSql.append(" and wds_sendplanin.pk_corp='" + ui.cl.getCorp() + "'");
+		whereSql.append(" and wds_sendplanin.vbillstatus=1 ");
+		whereSql.append(" and wds_sendplanin.iplantype=0 ");
+		whereSql.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
 //		zhf 追加 支持过滤关闭 计划
 		whereSql.append(" and coalesce(wds_sendplanin_b.reserve14,'N')='N' and coalesce(wds_sendplanin.reserve14,'N') = 'N' ");
 		String cwhid = getLoginInforHelper().getLogInfor(

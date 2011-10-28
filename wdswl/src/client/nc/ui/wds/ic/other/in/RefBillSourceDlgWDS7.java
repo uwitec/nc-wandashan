@@ -2,7 +2,6 @@ package nc.ui.wds.ic.other.in;
 import java.awt.Container;
 
 import nc.bs.logging.Logger;
-import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
@@ -27,13 +26,7 @@ public class RefBillSourceDlgWDS7 extends WdsBillSourceDLG{
 			helper = new LoginInforHelper();
 		}
 		return helper;
-	}
-	private TempTableUtil ttutil = null;
-	private TempTableUtil getTempTableUtil(){
-		if(ttutil == null)
-			ttutil = new TempTableUtil();
-		return ttutil;
-	}		
+	}	
 	public RefBillSourceDlgWDS7(String pkField, String pkCorp, String operator,
 			String funNode, String queryWhere, String billType,
 			String businessType, String templateId, String currentBillType,
@@ -91,25 +84,6 @@ public class RefBillSourceDlgWDS7 extends WdsBillSourceDLG{
 		return hsql.toString();
 		//head.fbillflag=3 签字状态
 		}
-	/**
-	 * 
-	 * @作者：lyf---调用临时表出错
-	 * @说明：完达山物流项目 
-	 * @时间：2011-7-3上午09:43:58
-	 * @param inv_Pks
-	 * @return
-	 */
-	private String getIvnSubSql(String[] inv_Pks){
-		StringBuffer invSbuSql = new StringBuffer();
-		invSbuSql.append("('aa'");
-		if(inv_Pks != null && inv_Pks.length>0){
-			for(int i=0 ;i<inv_Pks.length;i++){
-				invSbuSql.append(",'"+inv_Pks[i]+"'");
-			}
-		}
-		invSbuSql.append(")");
-		return invSbuSql.toString();
-	}
 	@Override
 	public String getBodyCondition() {
 		

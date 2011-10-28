@@ -186,11 +186,6 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 	public Object getUserObject() {
 		return  null;
 	}
-	
-//	@Override
-//	public String getRefBillType() {
-//		return WdsWlPubConst.WDS5;
-//	}
 	@Override
 	protected void initEventListener() {
 		super.initEventListener();

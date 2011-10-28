@@ -354,13 +354,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
  				if(trays==null || trays.size()==0){
  					return;
  				}
- 			
-// 				for(TbOutgeneralTVO body:trays){
-// 					key = body.getCrowno();
-// 					if(trayInfor.containsKey(key)){
-// 						body.setTrayInfor(trayInfor.get(key));
-// 					}
-// 				}
  				for(TbOutgeneralTVO tvo:trays){
  					//查询大日期状态的主键
  	 				String whs_pk= PuPubVO.getString_TrimZeroLenAsNull(WdsWlPubTool.execFomularClient("ss_pk->getColValue(tb_warehousestock,ss_pk,pplpt_pk,pk)", new String[]{"pk"}, new String[]{tvo.getCdt_pk()}));		
@@ -370,65 +363,10 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
  						  getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.BLUE);
  						}		
  					}
- 				}				
-				//yf end 
-//				if (tatonum.doubleValue() == 0) {
-//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().
-//							.setCellBackGround(i, "ccunhuobianma", Color.red);
-//				} else {
-//					if (tatonum.sub(num, 8).doubleValue() == 0) {
-//						getBillCardPanelWrapper().getBillCardPanel()
-//								.getBodyPanel().setCellBackGround(i,
-//										"ccunhuobianma", Color.white);
-//					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
-//						getBillCardPanelWrapper().getBillCardPanel()
-//								.getBodyPanel().setCellBackGround(i,
-//										"ccunhuobianma", Color.blue);
-//					}
-//				}
-
+ 				}
 			}
-
 		}
-
 	}
-//	public void chaneColor() throws Exception {
-//		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI()
-//				.getVOFromUI().getChildrenVO();
-//		// 获取并判断表体是否有值，进行循环
-//		if (null != generalbVO && generalbVO.length > 0) {
-//			for (int i = 0; i < generalbVO.length; i++) {
-//				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
-//				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
-//				UFDouble num = PuPubVO
-//						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-//								.getBillCardPanel().getBodyValueAt(i,
-//										"nshouldoutassistnum"));// 应发辅数量
-//				UFDouble tatonum = PuPubVO
-//						.getUFDouble_NullAsZero(getBillCardPanelWrapper()
-//								.getBillCardPanel().getBodyValueAt(i,
-//										"noutassistnum"));// 实发辅数量
-//				if (tatonum.doubleValue() == 0) {
-//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-//							.setCellBackGround(i, "ccunhuobianma", Color.red);
-//				} else {
-//					if (tatonum.sub(num, 8).doubleValue() == 0) {
-//						getBillCardPanelWrapper().getBillCardPanel()
-//								.getBodyPanel().setCellBackGround(i,
-//										"ccunhuobianma", Color.white);
-//					} else if (tatonum.sub(num, 8).doubleValue() < 0) {
-//						getBillCardPanelWrapper().getBillCardPanel()
-//								.getBodyPanel().setCellBackGround(i,
-//										"ccunhuobianma", Color.blue);
-//					}
-//				}
-//
-//			}
-//
-//		}
-//
-//	}
-
 	protected void onBoCancel() throws Exception {
 		super.onBoCancel();
 		onBoRefresh();
@@ -626,24 +564,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			}
 		}
 		return d;
-	}
-	
-	private void setHeadPartEdit(){
-//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cwarehouseid").setEdit(false);
-	}
-	
-	/**
-	 * zhf add  不支持修改时 行操作
-	 */
-	protected void onBoEdit() throws Exception {
-		super.onBoEdit();
-//		if(null != getButtonManager().getButton(IBillButton.Line)){
-//			getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-//			getBillUI().updateButtons();
-//			setHeadPartEdit();
-//		}
-		
-	}
+	}	
 	/**
 	 * @author yf
 	 * 出入库 对当前用户进行权限校验

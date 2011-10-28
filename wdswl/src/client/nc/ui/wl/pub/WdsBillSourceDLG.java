@@ -1166,7 +1166,6 @@ public class WdsBillSourceDLG extends BillSourceDLG {
 
 	
 	public void loadHeadData() {
-
 		if(isSelfLoadHead()){
 			loadHeadDataSelf();
 			return;

@@ -7,7 +7,6 @@ import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
 import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -33,24 +32,15 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 		super.m_tmpVo=vo;
 		try {
 				super.m_tmpVo = vo;
-				Object retObj = null;
-				String date = null;
-				String operate = null;
-				ArrayList<String> list = (ArrayList<String>)vo.m_userObj;
-				if(list != null && list.size()>0){
-					 date = list.get(0);
-					 operate = list.get(1);
-				}
+				Object retObj = null;				
 				// ##################################################数据交换
 				setParameter("AggObj",vo.m_preValueVo);
-				setParameter("date", date);
-				setParameter("operator", operate);
-				AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "signQueryGenBillVO",
-						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-				// ##################################################推式保存、签字
-				setParameter("AggObject",icBillVO);
-				runClass("nc.bs.wds.ic.so.out.SoOutBO", "pushSign4C",
-						"&date:String,&operator:String,&AggObject:nc.vmo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
+				setParameter("date", vo.m_currentDate);
+				setParameter("operator", vo.m_operator);
+				setParameter("pk_corp",vo.m_coId);
+				// ##################################################推式保存生成销售出库回传
+				runClass("nc.bs.wds.ic.so.out.ChangToWDSO", "onSign",
+						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[销售出库]签字内容
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);

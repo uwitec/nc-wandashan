@@ -126,6 +126,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
      */
     @Override
  	protected void setRefData( AggregatedValueObject[] vos) throws Exception {
+    	super.setRefData(vos);
     	setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 		//如果 参照的出库仓库为空 设置默认仓库为当前保管员仓库
 		setInitWarehouse("srl_pk");
@@ -273,14 +274,14 @@ public class MySaleEventHandler extends OutPubEventHandler {
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();
 				TbOutgeneralHVO generalh = (TbOutgeneralHVO)aObject.getParentVO();
-				if(generalh.getFisload() != null &&generalh.getFisload().equals(UFBoolean.TRUE)){
-					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
-					return ;
-				}
-				if(generalh.getFistran() != null &&generalh.getFistran().equals(UFBoolean.TRUE)){
-					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
-					return ;
-				}
+//				if(generalh.getFisload() != null &&generalh.getFisload().equals(UFBoolean.TRUE)){
+//					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
+//					return ;
+//				}
+//				if(generalh.getFistran() != null &&generalh.getFistran().equals(UFBoolean.TRUE)){
+//					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
+//					return ;
+//				}
 				generalh.setVbillstatus(IBillStatus.FREE);// 自由状态
 				generalh.setCregister(null);// 签字人主键
 				generalh.setTaccounttime(null);// 签字时间

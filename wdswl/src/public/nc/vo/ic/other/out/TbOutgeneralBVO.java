@@ -20,12 +20,13 @@ public class TbOutgeneralBVO extends SuperVO {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
- 
+	public String cfirstbillhid;//销售订单表头id
+	public String vfirstbillcode;//源头单据号
+	public String cfirstbillbid;//销售订单表头id
+	public String cfirsttyp;//--销售订单 
 	public String vuserdef9;
 	public String castunitid;//辅单位
 	public String csourcebillhid;
-	public String cfirstbillhid;
 	public String vuserdef12;
 	public UFBoolean flargess;
 	public String csourcetype;
@@ -35,7 +36,6 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFDouble nmny;
 	public String cinvbasid;//存货基本ID
 	public String vuserdef15;
-	public String cfirsttyp;
 	public UFDouble noutnum;//实发数量
 	public UFDouble noutassistnum;//实发辅数量
 	public UFDouble nacceptnum;//已入库数量
@@ -69,7 +69,6 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String pk_defdoc2;
 	public String pk_defdoc7;
 	public String vuserdef7;
-	public String cfirstbillbid;
 	public UFDouble nshouldoutassistnum;//应发辅数量
 	public String vuserdef6;
 	public String vuserdef13;
@@ -80,7 +79,6 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFBoolean isoper; //是否进行操作
 	public String lvbatchcode; //源批次
 	public String cspaceid; //货位ID
-	public String vfirstbillcode;//源头单据号
 	public UFDate dbizdate;//业务日期
 	public UFDouble ntagnum;//贴签数量
 	public UFBoolean fistag;//是否贴签
