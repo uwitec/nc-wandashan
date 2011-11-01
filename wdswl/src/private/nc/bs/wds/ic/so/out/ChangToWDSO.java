@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.apache.tools.ant.BuildException;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.trade.business.HYPubBO;
 import nc.jdbc.framework.processor.BeanListProcessor;
-import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
@@ -29,6 +26,8 @@ import nc.vo.wds.ic.write.back4c.Writeback4cB1VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * 推式生成销售出库回传单据

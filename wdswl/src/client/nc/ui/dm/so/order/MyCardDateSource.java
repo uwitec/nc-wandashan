@@ -1,7 +1,12 @@
 package nc.ui.dm.so.order;
 
+import java.util.Properties;
+
 import javax.swing.ImageIcon;
 
+import nc.bs.framework.common.NCLocator;
+import nc.bs.framework.common.RuntimeEnv;
+import nc.itf.uap.busibean.IFileManager;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.print.IExDataSource;
 import nc.ui.trade.pub.CardPanelPRTS;
@@ -24,9 +29,20 @@ public class MyCardDateSource extends CardPanelPRTS implements IExDataSource {
 			if(h_reserve7 != null){
 				imageName = h_reserve7[0];
 			}
+			IFileManager fileManager = (IFileManager) NCLocator.getInstance().lookup(IFileManager.class.getName());
+			Properties p = RuntimeEnv.getInstance().getArbitraryProperties();
+			String[] url = p.getProperty("SERVICELOOKUP_URL").split(":");
+			String defaultDir = url[0]+":"+url[1]+":/"+RuntimeEnv.getInstance()
+			.getNCHome()
+			+ "/webapps/nc_web/ncupload/printimage/"+imageName;
 			Object[] pics = new Object[1];
-			for(int i = 0; i < pics.length; i++)
-				pics[i] = new ImageIcon("C:/images/"+imageName);
+			for(int i = 0; i < pics.length; i++){
+				try {
+					pics[0]= new ImageIcon(fileManager.readFile(defaultDir));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			return pics;
 		}
 		return null;

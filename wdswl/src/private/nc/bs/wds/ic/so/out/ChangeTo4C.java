@@ -88,7 +88,6 @@ public class ChangeTo4C {
 		if(billVO != null && billVO instanceof GeneralBillVO){
 			GeneralBillVO bill = (GeneralBillVO)billVO;
 			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
-//			bill.getHeaderVO().setCoperatorid(coperator);//制单人
 			bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 			bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
 			bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态

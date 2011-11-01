@@ -75,11 +75,7 @@ public class CHGWDS8TO4C  extends nc.bs.pf.change.VOConversion {
 				
 				"H_freplenishflag->H_freplenishflag",//是否退货
 				"H_boutretflag->H_boutretflag",//是否退回
-				
 				"B_dbizdate->B_dbizdate"//出库日期->业务日期-------------------------zpm
-				//nc.itf.pd.pd4010.IBomOperate报错
-				//nplannedprice计划单价，如果没有计划单价，则从单据的计划价应该取自相应的成本型型库存组织，转向生产制造
-				//正常销售出库，计划单价也为空
 		};
 	}
 
