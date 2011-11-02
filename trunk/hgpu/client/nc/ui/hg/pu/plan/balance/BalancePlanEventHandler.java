@@ -172,33 +172,33 @@ public class BalancePlanEventHandler implements BillEditListener{
 			vo.setVreserve4(ui.cl.getUser());
 			vo.setVreserve5(ui.cl.getLogonDate().toString());
 		}
-		
-		
-		try{
-			if(checkBalance())
-			BalancePlanHealper.commitBalancePlans(ui,lseldata,true);	
-		}catch(Exception e){
-			e.printStackTrace();
-			showErrorMessage(HgPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
-			return;
-		}
-		
-		//平衡成功后处理    1、缓存中需要清楚选中的数据  2、 按钮切换  3、数据切换
-		
-		List<PlanMonDealVO> ldata = new ArrayList<PlanMonDealVO>();
-		PlanMonDealVO[] buffers = getDataBuffer();
-		for(PlanMonDealVO buffer:buffers){
-			ldata.add(buffer);
-		}
-		
-		ldata.removeAll(lseldata);
-		lseldata.clear();
-		
-		if(ldata.size() == 0){
-			setDataBuffer(null);				
-		}else
-			setDataBuffer(ldata.toArray(new PlanMonDealVO[0]));
-		ui.update();	
+		  try {
+            if (checkBalance()) {
+
+                BalancePlanHealper.commitBalancePlans(ui, lseldata, true);
+
+                // 平衡成功后处理 1、缓存中需要清楚选中的数据 2、 按钮切换 3、数据切换
+
+                List<PlanMonDealVO> ldata = new ArrayList<PlanMonDealVO>();
+                PlanMonDealVO[] buffers = getDataBuffer();
+                for (PlanMonDealVO buffer : buffers) {
+                    ldata.add(buffer);
+                }
+
+                ldata.removeAll(lseldata);
+                lseldata.clear();
+
+                if (ldata.size() == 0) {
+                    setDataBuffer(null);
+                } else
+                    setDataBuffer(ldata.toArray(new PlanMonDealVO[0]));
+                ui.update();
+            }
+        }catch(Exception e){
+              e.printStackTrace();
+              showErrorMessage(HgPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+              return;
+          }
 	}
 	
 	public void onCancel(){
@@ -401,13 +401,13 @@ public class BalancePlanEventHandler implements BillEditListener{
 				String [] strs =err.split("&");
 				if(strs !=null && strs.length!=0){
 					Object invcode =HYPubBO_Client.findColValue("bd_invbasdoc","invcode","pk_invbasdoc='"+strs[0]+"'");
-					str.append("存货"+invcode+strs[1]+"。");
+					str.append("存货["+invcode+"]"+strs[1]);
 				}
 			}	
 		}
 		if(str==null ||str.length()==0)
 		    return true;
-		if(MessageDialog.showYesNoDlg(ui,"连锁提示校验",str.toString())==MessageDialog.ID_YES)
+		if(MessageDialog.showYesNoDlg(ui,"月计划可用量校验",str.toString())==MessageDialog.ID_YES)
 			return true;
 		return false;
 	}

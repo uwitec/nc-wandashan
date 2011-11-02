@@ -10,8 +10,6 @@ import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.hg.pu.plan.balance.PlanMonDealVO;
 import nc.vo.hg.pu.plan.month.PlanOtherBVO;
 import nc.vo.hg.pu.pub.HgPubTool;
-import nc.vo.hg.pu.pub.PlanVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
@@ -280,7 +278,7 @@ public class BalancePlanBO {
 					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)))
 							.sub(PuPubVO.getUFDouble_NullAsZero(alum.get(i)));
 				if (nre.compareTo(UFDouble.ZERO_DBL) < 0)
-					al.add(als.get(i) + "&月计划量超出剩余计划量" + nre);
+					al.add(als.get(i) + "&月计划量超出剩余计划量[" + nre+"]");
 			}
 		}
 		return al;
