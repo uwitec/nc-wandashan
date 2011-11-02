@@ -106,24 +106,5 @@ nc.ui.pub.pf.IinitQueryData{
 		  return null;
 	  }
   }
-  
-  
-//  /**
-//   * 此处插入方法说明。 创建日期：(2004-8-17 10:51:44)
-//   * 
-//   * @param voCnd
-//   *            nc.vo.pub.query.ConditionVO[]
-//   * @param sWhere
-//   *            java.lang.String
-//   * @return 
-//   * @throws Exception 
-//   */
-//  private HYBillVO[] queryData(String sWhere) throws Exception {
-//	  
-//	  HYBillVO[] billvos = null;
-//	  return billvos;
-//	  
-//  }
-  
 
 }
