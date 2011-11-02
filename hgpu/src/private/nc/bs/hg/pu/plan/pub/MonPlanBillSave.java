@@ -117,8 +117,8 @@ public class MonPlanBillSave extends HYBillSave {
 		if (als == null || als.size() == 0)
 			return null;
 
-		ArrayList aluy = getYearNum(head.getPk_corp(), als);// 年计划总量
-		ArrayList alum = getMonUsedNum(head.getPk_corp(), als);// 月计划累计量
+		ArrayList aluy = getYearNum(head, als);// 年计划总量
+		ArrayList alum = getMonUsedNum(head, als);// 月计划累计量
 		ArrayList<String> al = new ArrayList<String>();
 
 		int size = als.size();
@@ -158,12 +158,12 @@ public class MonPlanBillSave extends HYBillSave {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	private ArrayList getYearNum(String corp, ArrayList<String> als)
+	private ArrayList getYearNum(PlanVO head, ArrayList<String> als)
 			throws DAOException {
 
 		String sql = " select b.nnum from hg_plan h join hg_planyear_b b on h.pk_plan = b.pk_plan where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 "
-				+ " and h.pk_corp = '"+ corp+ "' and h.pk_billtype='HG01' and b.pk_invbasdoc in "
-				+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " order by  b.pk_invbasdoc desc";
+				+ " and h.pk_corp = '"+ head.getPk_corp()+ "' and h.pk_billtype='HG01' and h.cyear = '" + head.getCyear() + "'and h.capplydeptid = '" + head.getCapplydeptid()
+				+"' and b.pk_invbasdoc in "+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " order by  b.pk_invbasdoc desc";
 		
 		Object o =  getBaseDao().executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);
 		if(o==null)
@@ -185,12 +185,13 @@ public class MonPlanBillSave extends HYBillSave {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	private ArrayList getMonUsedNum(String corp, ArrayList<String> als)
+	private ArrayList getMonUsedNum(PlanVO head, ArrayList<String> als)
 			throws DAOException {
 
 		String sql = " select sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "
-				+ " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '"+ corp+ "' and h.pk_billtype = 'HG02' and b.pk_invbasdoc in "
-				+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
+				+ " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '"+ head.getPk_corp()+ "' and h.pk_billtype = 'HG02'" 
+				+ " and h.cyear = '" + head.getCyear() + "' and h.cmonth ='"+head.getCmonth()+"'and h.capplydeptid = '" + head.getCapplydeptid()
+				+ " ' and b.pk_invbasdoc in " + HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
 
 		ArrayList al = (ArrayList) getBaseDao()
 				.executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);

@@ -3,6 +3,7 @@ package nc.ui.hg.pu.plan.month;
 import java.util.ArrayList;
 
 import nc.ui.hg.pu.pub.LongTimeTask;
+import nc.ui.hg.pu.pub.PlanPubClientUI;
 import nc.ui.hg.pu.pub.PlanPubEventHandler;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
@@ -11,11 +12,13 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
 import nc.vo.hg.pu.pub.HgPubConst;
+import nc.vo.hg.pu.pub.PlanApplyInforVO;
 import nc.vo.hg.pu.pub.PlanVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 
 public class ClientEventHandler extends PlanPubEventHandler {
 
@@ -30,10 +33,23 @@ public class ClientEventHandler extends PlanPubEventHandler {
 				null, null);
 	}
 
-	protected String getHeadCondition() {
-		//修改字段
-		return " h.pk_corp = '"+_getCorp().getPrimaryKey()+"'  and  h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"' ";
-	}
+	   protected String getHeadCondition() {
+	        // 修改字段
+	        String sql = " h.pk_corp = '" + _getCorp().getPrimaryKey()
+	                + "'  and  h.pk_billtype = '" + HgPubConst.PLAN_MONTH_BILLTYPE
+	                + "' ";
+	        PlanApplyInforVO appInfor = ((PlanPubClientUI) getBillUI()).m_appInfor;
+	        if (appInfor != null) {
+	            String dept = ((PlanPubClientUI) getBillUI()).m_appInfor// 过滤部门
+	                    // 只能查询出自己部门的计划
+	                    .getCapplydeptid();
+	            if (PuPubVO.getString_TrimZeroLenAsNull(dept) != null) {
+	                sql = sql + " and h.capplydeptid = '" + dept + "'";
+	            }
+
+	        }
+	        return sql;
+	    }
 	
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {
