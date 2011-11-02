@@ -243,7 +243,7 @@ public abstract class PlanPubEventHandler extends FlowManageEventHandler {
 	public void onBoAdd(ButtonObject bo) throws Exception {
 		// TODO Auto-generated method stub
 		super.onBoAdd(bo);
-		setHeadEditEnableWhenAdjustNum(true);
+		//setHeadEditEnableWhenAdjustNum(true);
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public abstract class PlanPubEventHandler extends FlowManageEventHandler {
 			return;
 		}
 		super.onBoEdit();
-		setHeadEditEnableWhenAdjustNum(true);
+		//setHeadEditEnableWhenAdjustNum(true);
 		
 	}
 	
@@ -282,16 +282,16 @@ public abstract class PlanPubEventHandler extends FlowManageEventHandler {
 		}
 		setAdjustFlag(true);
 		//设置只有净需求可以编辑
-		setHeadEditEnableWhenAdjustNum(false);
+		//setHeadEditEnableWhenAdjustNum(false);
 	}
 	
-	private void setHeadEditEnableWhenAdjustNum(boolean flag){
-		String[] keys = HgPubConst.Plan_Head_EditItems;
-		BillCardPanel card = getBillCardPanelWrapper().getBillCardPanel();
-		for(String key:keys){
-			card.getHeadItem(key).setEdit(flag);
-		}
-	}
+//	private void setHeadEditEnableWhenAdjustNum(boolean flag){
+//		String[] keys = HgPubConst.Plan_Head_EditItems;
+//		BillCardPanel card = getBillCardPanelWrapper().getBillCardPanel();
+//		for(String key:keys){
+//			card.getHeadItem(key).setEdit(flag);
+//		}
+//	}
 
 	protected abstract void beforeSave() throws Exception;
 	

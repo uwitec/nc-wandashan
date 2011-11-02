@@ -54,6 +54,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Query,
 				IBillButton.Audit,
 				IBillButton.Action,
+				IBillButton.Del,
 				IBillButton.Line,
 				IBillButton.Brow,
 				IBillButton.Refresh,

@@ -81,6 +81,7 @@ public class ClientUI extends PlanPubClientUI {
     public void setDefaultData() throws Exception {
         setHeadItemValue("pk_billtype", HgPubConst.PLAN_MONTH_BILLTYPE);
         setHeadItemValue("cyear",ClientEnvironment.getInstance().getAccountYear());
+        setHeadItemValue("cmonth",ClientEnvironment.getInstance().getAccountMonth());
         super.setDefaultData();
     }
 }
