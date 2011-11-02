@@ -92,11 +92,12 @@ public class N_HG01_APPROVE extends AbstractCompiler2 {
 //				Object[] oPrayBillRet  = (Object[])runClass( "nc.bs.pub.pf.PfUtilBO", "processBatch", "&ACTIONNAME:String,&BILLTYPE:String,&BILLDATE:String,&BILLVOS:nc.vo.pub.AggregatedValueObject[],&P4:Object[],&P5:nc.vo.pub.pf.PfUtilWorkFlowVO",vo,m_keyHas,m_methodReturnHas);
 				runClass( "nc.bs.pub.pf.PfUtilBO", "processBatch", "&ACTIONNAME:String,&BILLTYPE:String,&BILLDATE:String,&BILLVOS:nc.vo.pub.AggregatedValueObject[],&P4:Object[],&P5:nc.vo.pub.pf.PfUtilWorkFlowVO",vo,m_keyHas,m_methodReturnHas);
 //				mapVirtualIDAndPrayBill  = (HashMap)oPrayBillRet[0];
-			}else{
-				//拆分成月计划
-				YearPlanBO bo = new YearPlanBO();
-				bo.splitYearPlan2MonthPlan(planvo, vo.m_coId);
 			}
+//			else{
+//				//拆分成月计划
+//				YearPlanBO bo = new YearPlanBO();
+//				bo.splitYearPlan2MonthPlan(planvo, vo.m_coId);
+//			}
 			
 			
 			return retObj;
