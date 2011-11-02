@@ -4,6 +4,7 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.scm.pub.sourceref.BillRefListPanel;
 import nc.ui.scm.pub.sourceref.DefaultSrcRefCtl;
 import nc.vo.pub.BusinessException;
+import nc.vo.trade.pub.BillStatus;
 
 public class BillRefListPanelPlanTo5X extends BillRefListPanel{
 	RefPlanQueryDlg queryDlg = null;
@@ -18,10 +19,35 @@ public class BillRefListPanelPlanTo5X extends BillRefListPanel{
       String biztype, String sourcetype, String targettype, String pk_corp,RefPlanQueryDlg Dlg) {
     super(biztype, sourcetype, targettype, pk_corp);
     queryDlg = Dlg;
+    
+  }
+  
+  /**
+  * 设置下拉框 创建日期：(2001-12-17 14:40:29)
+  */
+  private void initComboBox(BillItem billItem, Object[] values, boolean isWhithIndex) {
+
+    if (billItem != null && billItem.getDataType() == BillItem.COMBO) {
+
+        nc.ui.pub.beans.UIComboBox cmb = (nc.ui.pub.beans.UIComboBox) billItem.getComponent();
+
+        cmb.removeAllItems();
+
+        for (int i = 0; i < values.length; i++) {
+            cmb.addItem(values[i]);
+        }
+
+        billItem.setWithIndex(isWhithIndex);
+    }
+
   }
   
   @Override
   protected void initPrecition() {
+      // add  by  zhw  初始化单据状态
+      BillItem billItem = getBillListData().getHeadItem("vbillstatus");
+      initComboBox(billItem, new BillStatus().strStateRemark,true);
+      
     nc.ui.to.pub.TOEnvironment te = new nc.ui.to.pub.TOEnvironment();
     Integer[] pre = null;
     try {

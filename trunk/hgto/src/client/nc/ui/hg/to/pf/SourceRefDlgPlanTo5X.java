@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import nc.bd.accperiod.AccountCalendar;
 import nc.ui.hg.to.pub.StockNumParaHelper;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.change.PfChangeBO_Client;
 import nc.ui.pub.para.SysInitBO_Client;
 import nc.ui.scm.pub.sourceref.BillRefListPanel;
@@ -14,13 +15,13 @@ import nc.ui.scm.pub.sourceref.SourceRefDlg;
 import nc.vo.bd.period2.AccperiodmonthVO;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.HgPubTool;
-import nc.vo.hg.to.pub.StockNumParaVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.to.pub.BillHeaderVO;
 import nc.vo.to.pub.BillItemVO;
 import nc.vo.to.pub.BillVO;
 import nc.vo.to.pub.ConstVO;
+import nc.vo.trade.pub.BillStatus;
 import nc.vo.trade.pub.IBillStatus;
 
 public class SourceRefDlgPlanTo5X extends SourceRefDlg{
@@ -46,7 +47,6 @@ public class SourceRefDlgPlanTo5X extends SourceRefDlg{
     sLogCorp = pkCorp;
     initPara(pkCorp);
   }
-
   
   protected BillRefListPanel createDoubleTableListPanel() {
     if(doubleListPanel == null){
@@ -169,8 +169,11 @@ public class SourceRefDlgPlanTo5X extends SourceRefDlg{
 		   whereb.append(" and h.cyear = '"+iyear+"'");
 		   //zhf modify 2011 02 11  月计划 按平衡数量 发货
 		   whereb.append(" and (coalesce(b.nreserve10,0.0)-coalesce(b.nouttotalnum,0.0))>0.0 ");
-//		   whereb.append(" and coalesce(b.nnum,0.0)>0.0 "); 
-		   whereb.append(" and b.vreserve2 ='Y' ");
+		   whereb.append(" and nvl(b.vreserve2,'N') = 'Y' ");
+           // modify by zhw  平衡后    上个月计划不可在领
+		   whereb.append(" and nvl(b.vreserve3,'N') = 'N' ");     
+		   whereb.append(" and h.vbillstatus = "+IBillStatus.CHECKPASS);
+		   
 	   }else {
 		   whereb.append(" and (coalesce(b.nnum,0.0)-coalesce(b.nouttotalnum,0.0))>0.0 ");
 		   whereb.append(" and b.dreqdate >= '"+month.getBegindate().toString()+"'");
