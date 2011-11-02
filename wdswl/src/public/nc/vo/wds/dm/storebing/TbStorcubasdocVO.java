@@ -4,6 +4,7 @@
 \***************************************************************/
 package nc.vo.wds.dm.storebing;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import nc.vo.pub.*;
 import nc.vo.pub.lang.*;
@@ -31,8 +32,7 @@ public class TbStorcubasdocVO extends SuperVO {
 	public String custname;//客商名称
 	public String pk_defdoc;// 销售区域主键
 	public UFDouble kilometer;//公里数
-	public String custareaid;//所属地区
-	
+	public String custareaid;//所属地区	
 	public String pk_stordoc1;//其他分仓id
 	public String vnote;
 	//预留字段

@@ -5,8 +5,10 @@
       	package nc.vo.dm;
    	
 	import java.util.ArrayList;
+
+import oracle.sql.BLOB;
 	import nc.vo.pub.*;
-	import nc.vo.pub.lang.*;
+import nc.vo.pub.lang.*;
 	
 /**
  * <b> 发运计划录入 </b>
@@ -25,6 +27,8 @@
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	
 			//公司主键
 			public String pk_corp;
              public String reserve5;
@@ -138,6 +142,13 @@
              public static final String  VDEF5="vdef5";   
       
     
+        @Override
+        public void setAttributeValue(String arg0, Object arg1) {
+        	if("image".equalsIgnoreCase(arg0)){
+        		Object value = arg1;
+        	}
+        	super.setAttributeValue(arg0, arg1);
+        }
         /**
 	   * 属性pk_corp的Getter方法.
 	   *
@@ -1224,5 +1235,5 @@
 				
 	   return "wds_sendplanin"; 
 				
-	 } 
+	 }
 } 

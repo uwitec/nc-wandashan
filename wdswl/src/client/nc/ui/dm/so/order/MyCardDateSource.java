@@ -1,58 +1,50 @@
 package nc.ui.dm.so.order;
 
-import java.util.Properties;
-
-import javax.swing.ImageIcon;
-
-import nc.bs.framework.common.NCLocator;
-import nc.bs.framework.common.RuntimeEnv;
-import nc.itf.uap.busibean.IFileManager;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.print.IExDataSource;
 import nc.ui.trade.pub.CardPanelPRTS;
+import nc.ui.wl.pub.LongTimeTask;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public class MyCardDateSource extends CardPanelPRTS implements IExDataSource {
+	private BillCardPanel m_billcardpanel = null;
 
 	public MyCardDateSource(String moduleName, BillCardPanel billcardpanel) {
 		super(moduleName, billcardpanel);
-		// TODO Auto-generated constructor stub
+		this.m_billcardpanel = billcardpanel;
 	}
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public Object[] getObjectByExpress(String itemExpress){
-		if(itemExpress.equals("h_reserve7")){
-			String imageName = "";
-			String [] h_reserve7 = super.getItemValuesByExpress("h_reserve7");
-			if(h_reserve7 != null){
-				imageName = h_reserve7[0];
+
+	public Object[] getObjectByExpress(String itemExpress) {
+		if (itemExpress.equals("h_reserve7")) {
+			Object[] imageIcon = new Object[1];
+			String pk_cumandoc = (String) m_billcardpanel.getHeadItem(
+					"pk_cumandoc").getValueObject();
+			String classname = "nc.bs.dm.so.order.SoorderBo";
+			String methodname = "getCorpImag";
+			Class[] ParameterTypes = new Class[] { String.class };
+			Object[] ParameterValues = new Object[] { pk_cumandoc };
+			try {
+				Object obj = LongTimeTask.callRemoteService(
+						WdsWlPubConst.WDS_WL_MODULENAME, classname, methodname,
+						ParameterTypes, ParameterValues, 2);
+				imageIcon[0]=obj;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			IFileManager fileManager = (IFileManager) NCLocator.getInstance().lookup(IFileManager.class.getName());
-			Properties p = RuntimeEnv.getInstance().getArbitraryProperties();
-			String[] url = p.getProperty("SERVICELOOKUP_URL").split(":");
-			String defaultDir = url[0]+":"+url[1]+":/"+RuntimeEnv.getInstance()
-			.getNCHome()
-			+ "/webapps/nc_web/ncupload/printimage/"+imageName;
-			Object[] pics = new Object[1];
-			for(int i = 0; i < pics.length; i++){
-				try {
-					pics[0]= new ImageIcon(fileManager.readFile(defaultDir));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return pics;
+			return imageIcon;
 		}
 		return null;
 	}
 
 	public int getObjectTypeByExpress(String itemExpress) {
-		if(itemExpress.equals("h_reserve7"))
+		if (itemExpress.equals("h_reserve7"))
 			return IExDataSource.IMAGE_TYPE;
-		
 		return 0;
-}
+	}
 
 }

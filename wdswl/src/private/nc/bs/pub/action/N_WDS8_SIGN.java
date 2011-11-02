@@ -1,6 +1,5 @@
 package nc.bs.pub.action;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;

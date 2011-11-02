@@ -56,8 +56,7 @@ public class WdsWlPubConst {
 	/** 发运存货档案*/
 	public static String DM_PLAN_BASDOC_NODECODE="80060801";
 	/** 分仓承运商绑定*/
-	public static String DM_STORE_TRANSCORP_NODECODE="8006080202";
-	
+	public static String DM_STORE_TRANSCORP_NODECODE="8006080202";	
 	/** 学生成绩*/
 	public static String LM_CHENGJI_NODECODE="802005";
 	/**
@@ -87,10 +86,8 @@ public class WdsWlPubConst {
 	public static String TRANS_MIL_NODECODE="8008010201";
 	/**特殊运价表 节点号*/
 	public static String TRANS_SPECPRICE_NODECODE = "8008010216";
-	
 	/** 运输公司档案*/
 	public static String TRANS_CORP_NODECODE="8008010202";
-	
 	/**特殊业务档案节点号 */
 	public static String TRANS_SPECBUSI_NODECODE = "800801022001";
 	/**特殊业务运价表 节点号 */
@@ -105,7 +102,8 @@ public class WdsWlPubConst {
 	public static String TRANS_PRICE_NODECODEWDS3 = "REFWDS3";
 	/**费用核算单 参照销售运单订单节点标示 */
 	public static String TRANS_PRICE_NODECODEWDS5 = "REFWDS5";
-	
+	/** 客户公司图章 节点号 */
+	public static String DM_CUST_CORPSEAL="80060804";
 	
 	
 	/**特殊费用核算单节点号 */
