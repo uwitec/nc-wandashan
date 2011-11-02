@@ -1720,9 +1720,9 @@ public class HgScmPubBO {
 		buffer.append(" and coalesce(b.nnum,0.0)>0 and coalesce(b.nnum,0.0) - coalesce(b.nouttotalnum,0.0)>0 and isnull(b.dr,0)=0 and isnull(c.dr,0)=0 ");
 		if(billtype.equalsIgnoreCase(HgPubConst.PLAN_MONTH_BILLTYPE)){
 			buffer.append(" and (coalesce(b.nreserve10,0.0)-coalesce(b.nouttotalnum,0.0))>0.0 ");
-			buffer.append(" and b.vreserve2 ='Y' ");
+			buffer.append(" and nvl(b.vreserve2,'N') = 'Y' ");
 			// modify by zhw  平衡后    上个月计划不可在领
-			buffer.append(" and b.vreserve3 ='N' ");
+			buffer.append(" and nvl(b.vreserve3,'N') = 'N' ");     
 		}
 		buffer.append(s);
 		// Collection c = getBaseDao().retrieveByClause(PlanOtherBVO.class,

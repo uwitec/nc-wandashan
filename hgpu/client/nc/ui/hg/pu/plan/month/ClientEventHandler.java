@@ -130,8 +130,10 @@ public class ClientEventHandler extends PlanPubEventHandler {
 		if (checkVO == null)
 			throw new BusinessException("传入数据为空");
 
-		saveBefore(checkVO);
-		super.onBoSave();
+		if(saveBefore(checkVO)){
+		    super.onBoSave();
+		}
+		getBillManageUI().showHintMessage("保存失败");
 	}
 	
 	private boolean saveBefore(AggregatedValueObject checkVO) throws Exception{
@@ -154,13 +156,13 @@ public class ClientEventHandler extends PlanPubEventHandler {
 				String [] strs =err.split("&");
 				if(strs !=null && strs.length!=0){
 					Object invcode =HYPubBO_Client.findColValue("bd_invbasdoc","invcode","pk_invbasdoc='"+strs[0]+"'");
-					str.append("存货"+invcode+strs[1]+"。");
+					str.append("存货["+invcode+"]"+strs[1]);
 				}
 			}	
 		}
 		if(str==null ||str.length()==0)
 		    return true;
-		if(MessageDialog.showYesNoDlg((ClientUI)getBillManageUI(),"连锁提示校验",str.toString())==MessageDialog.ID_YES)
+		if(MessageDialog.showYesNoDlg((ClientUI)getBillManageUI(),"月计划可用量校验",str.toString())==MessageDialog.ID_YES)
 			return true;
 		return false;
 		

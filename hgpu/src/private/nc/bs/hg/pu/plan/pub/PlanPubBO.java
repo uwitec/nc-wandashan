@@ -877,10 +877,10 @@ public class PlanPubBO {
 		PlanVO vo = (PlanVO) billvo.getParentVO();
 		if (vo == null)
 			return;
-		String sql = " select c.invcode from hg_plan h join pk_planother_b b on h.pk_plan =b.pk_plan " +
+		String sql = " select c.invcode from hg_plan h join hg_planother_b b on h.pk_plan =b.pk_plan " +
 				     " join bd_invbasdoc c on c.pk_invbasdoc = b.pk_invbasdoc where h.pk_plan = '"+ vo.getPrimaryKey()+
 				     "' and h.cyear ='"+ vo.getCyear()+ "' and h.cmonth = '" + vo.getCmonth() + "' and isnull(h.dr,0) =0" +
-				     " and isnull(b.dr,0= 0) and isnull(c.dr,0)=0 and coalesce(b.nreserve10,0)>0";
+				     " and isnull(b.dr,0)= 0 and isnull(c.dr,0)=0 and coalesce(b.nreserve10,0)>0";
 
 		ArrayList<String> al = (ArrayList<String>) getBaseDao().executeQuery(sql, HgBsPubTool.COLUMNLISTPROCESSOR);
 		if (al == null || al.size() == 0)
@@ -890,12 +890,12 @@ public class PlanPubBO {
 		for (int i = 0; i < size; i++) {
 			if (PuPubVO.getString_TrimZeroLenAsNull(al.get(i)) != null) {
 				if (i == size - 1)
-					str.append(al.get(i));
+					str.append("存货[" + PuPubVO.getString_TrimZeroLenAsNull(al.get(i)) + "]已平衡,不能弃审。");
 				else
-					str.append(al.get(i) + ",");
+					str.append("存货[" + PuPubVO.getString_TrimZeroLenAsNull(al.get(i)) + "]已平衡,不能弃审。\n");
 			}
 		}
-		throw new BusinessException("存货[" + str.toString() + "]已平衡，不能弃审");
+		throw new BusinessException(str.toString());
 	}
 	
 }
