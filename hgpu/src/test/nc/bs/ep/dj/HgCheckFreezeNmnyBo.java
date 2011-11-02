@@ -68,8 +68,9 @@ public class HgCheckFreezeNmnyBo {
 		v_seq2 = pro_qryMny("fk", hbbmb, szxmid, pk_corp,deptid);
 		v_seq3 = pro_qryFreezeMny(hbbmb, szxmid, pk_corp,deptid);
 		v_seq4 = mny;
-		if (v_seq1.sub(v_seq2).sub(v_seq3).sub(v_seq4).doubleValue() < 0)
-			throw new BusinessException("³¬Ó¦¸¶Óà¶î");
+		UFDouble v_seq5=v_seq1.sub(v_seq2).sub(v_seq3).sub(v_seq4);
+		if (v_seq5.doubleValue() < 0)
+			throw new BusinessException("³¬Ó¦¸¶Óà¶î,³¬"+v_seq5);
 	}
 
 	private UFDouble pro_qryMny(String djdl, String ksbm_cl, String szxmid,
@@ -82,7 +83,7 @@ public class HgCheckFreezeNmnyBo {
 			sql = "select sum(coalesce(b.jfybje,0)) ";
 		}
 		sql += " from arap_djzb h inner join arap_djfb b  on h.vouchid = b.vouchid where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 "
-				+ " and h.djdl = '"+ djdl+ "' and b.hbbm ='"+ ksbm_cl+ "' and h.dwbm ='" + pk_corp + "'";
+				+ " and h.djdl = '"+ djdl+ "' and b.hbbm ='"+ ksbm_cl+ "' and h.dwbm ='" + pk_corp + "' and  b.deptid = '"+deptid+"'";
 		// and h.djzt = 2
 		if ("yf".equals(djdl))
 			sql = sql + " and h.zgyf =0";
