@@ -65,7 +65,7 @@ public class ClientUI extends PlanPubClientUI {
     public void setBodySpecialData(CircularlyAccessibleValueObject[] vos) throws Exception {
 
     }
-
+    
     @Override
     protected String getBillNo() throws Exception {
         return HYPubBO_Client.getBillNo(HgPubConst.PLAN_MONTH_BILLTYPE, _getCorp().getPrimaryKey(), null,
