@@ -3,12 +3,13 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
- * 销售出库回传
+ * 销售出库回传审批
  * @author Administrator
  *
  */
@@ -34,6 +35,13 @@ public class N_WDSO_APPROVE extends AbstractCompiler2 {
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
+			setParameter("date", vo.m_currentDate);
+			setParameter("operator", vo.m_operator);
+			setParameter("pk_corp",vo.m_coId);
+			AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "signQueryGenBillVO",
+					"&currentVo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+			setParameter("AggObject",icBillVO);
+			runClass("nc.bs.wds.ic.so.out.SoOutBO", "pushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);

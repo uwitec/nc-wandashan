@@ -25,7 +25,35 @@
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	//公司
+	 public String pk_corp;     
+	 //单据号
+	 public String vbillno;//保存销售订单号
+	 //单据日期
+	 public UFDate dbilldate;
+	 //单据类型
+	 public String pk_billtype;
+	 //单据状态
+	 public Integer vbillstatus;
+	 //业务类型
+	 public String pk_busitype;
+	//业务员id
+	 public String vemployeeid;
+	 //部门id
+	 public String pk_deptdoc;  
+	 //制单人
+	 public String voperatorid;
+	 //制单日期
+	 public UFDate dmakedate;         
+	 //审批人
+	 public String vapproveid;
+	 //审批日期
+	 public UFDate dapprovedate;
+	 //审批批语
+	 public String vapprovenote;
+	  public String pk_wds_writeback4c_h;//主键
+     public String csaleid; //保存销售订单主键
+     public UFBoolean fisvbatchcontorl;//是否批次管理(勾选的时候，回写批次号)
 	//预留字段
 	public String reserve1;
 	public String reserve2;
@@ -58,84 +86,6 @@
 	public Integer dr;
 	//备注
 	public String vmemo;
-	
-	//公司
-	 public String pk_corp;     
-	 //单据号
-	 public String vbillno;//保存销售订单号
-	 //单据日期
-	 public UFDate dbilldate;
-	 //单据类型
-	 public String pk_billtype;
-	 //单据状态
-	 public Integer vbillstatus;
-	 //业务类型
-	 public String pk_busitype;
-	//业务员id
-	 public String vemployeeid;
-	 //部门id
-	 public String pk_deptdoc;  
-	 //制单人
-	 public String voperatorid;
-	 //制单日期
-	 public UFDate dmakedate;         
-	 //审批人
-	 public String vapproveid;
-	 //审批日期
-	 public UFDate dapprovedate;
-	 //审批批语
-	 public String vapprovenote;
-	  public String pk_wds_writeback4c_h;//主键
-      public String csaleid; //保存销售订单主键
-     
-      public static final String  PK_CORP="pk_corp";   
-      public static final String  RESERVE5="reserve5";   
-      public static final String  RESERVE4="reserve4";   
-      public static final String  VDEF4="vdef4";   
-      public static final String  DMAKEDATE="dmakedate";   
-      public static final String  VDEF7="vdef7";   
-      public static final String  DR="dr";   
-      public static final String  VOPERATORID="voperatorid";   
-      public static final String  VAPPROVENOTE="vapprovenote";   
-      public static final String  PK_BILLTYPE="pk_billtype";   
-      public static final String  VBILLSTATUS="vbillstatus";   
-      public static final String  VEMPLOYEEID="vemployeeid";   
-      public static final String  VDEF2="vdef2";   
-      public static final String  RESERVE12="reserve12";   
-      public static final String  RESERVE11="reserve11";   
-      public static final String  VMEMO="vmemo";   
-      public static final String  TS="ts";   
-      public static final String  PK_BUSITYPE="pk_busitype";   
-      public static final String  RESERVE6="reserve6";   
-      public static final String  VDEF1="vdef1";   
-      public static final String  RESERVE3="reserve3";   
-      public static final String  RESERVE14="reserve14";   
-      public static final String  DBILLDATE="dbilldate";   
-      public static final String  VBILLNO="vbillno";   
-      public static final String  RESERVE13="reserve13";   
-      public static final String  RESERVE10="reserve10";   
-      public static final String  PK_WDS_WRITEBACK4C_H="pk_wds_writeback4c_h";   
-      public static final String  PK_DEPTDOC="pk_deptdoc";   
-      public static final String  RESERVE9="reserve9";   
-      public static final String  RESERVE8="reserve8";   
-      public static final String  VDEF3="vdef3";   
-      public static final String  VDEF9="vdef9";   
-      public static final String  RESERVE1="reserve1";   
-      public static final String  DAPPROVEDATE="dapprovedate";   
-      public static final String  VDEF8="vdef8";   
-      public static final String  RESERVE16="reserve16";   
-      public static final String  RESERVE7="reserve7";   
-      public static final String  VAPPROVEID="vapproveid";   
-      public static final String  RESERVE15="reserve15";   
-      public static final String  CSALEID="csaleid";   
-      public static final String  RESERVE2="reserve2";   
-      public static final String  VDEF6="vdef6";   
-      public static final String  VDEF10="vdef10";   
-      public static final String  VDEF5="vdef5";     
-             
-           
-      
-    
         /**
 	   * 属性pk_corp的Getter方法.
 	   *
@@ -1184,5 +1134,13 @@
 				
 	   return "wds_writeback4c_h"; 
 				
-	 } 
+	 }
+
+	public UFBoolean getFisvbatchcontorl() {
+		return fisvbatchcontorl;
+	}
+
+	public void setFisvbatchcontorl(UFBoolean fisvbatchcontorl) {
+		this.fisvbatchcontorl = fisvbatchcontorl;
+	} 
 } 

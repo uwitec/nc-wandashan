@@ -125,7 +125,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	/**
 	 * 
-	 * @作者：zhf
+	 * @作者：lyf
 	 * @说明：完达山物流项目 
 	 * 拣货完成后，根据批次号拆行
 	 * @时间：2011-6-17下午08:48:24

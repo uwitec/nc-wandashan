@@ -4,6 +4,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -29,6 +30,14 @@ public class N_WDSO_UNAPPROVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 			procUnApproveFlow(vo);
+			setParameter("currentVo", vo.m_preValueVo);
+			setParameter("date", vo.m_currentDate);
+			setParameter("operator", vo.m_operator);
+			setParameter("pk_corp",vo.m_coId);
+			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "canelSignQueryGenBillVO",
+					"&currentVo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+			setParameter("AggObject",icBillVO);
+			runClass("nc.bs.wds.ic.so.out.SoOutBO", "canelPushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
 			Object retObj = runClass("nc.bs.wl.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
 					vo, m_keyHas, m_methodReturnHas);

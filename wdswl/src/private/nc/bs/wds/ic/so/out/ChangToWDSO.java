@@ -285,6 +285,9 @@ public class ChangToWDSO {
 		head.setPk_billtype(WdsWlPubConst.WDSO);// 单据类型
 		head.setStatus(VOStatus.NEW);
 		head.setPk_corp(pk_corp);
+		head.setVoperatorid(coperator);
+		head.setDbilldate(logDate);
+		head.setDmakedate(logDate);
 		return head;
 	}
 

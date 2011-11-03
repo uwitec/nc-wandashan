@@ -16,7 +16,6 @@ import nc.vo.pub.VOStatus;
  * @author Administrator
  */
 public class SoOutBO  {
-	private SuperDMO dmo = new SuperDMO();	
 	private String s_billtype = "4C";	
 	private pushSaveWDSF puf=null;
 	public pushSaveWDSF getPuf(){
@@ -25,6 +24,8 @@ public class SoOutBO  {
 		}
 		return puf;
 	}
+	private SuperDMO dmo = new SuperDMO();	
+
 	public void updateHVO(TbOutgeneralHVO hvo) throws BusinessException{
 		if(hvo == null){
 			return;
@@ -35,7 +36,7 @@ public class SoOutBO  {
 			hvo.setStatus(VOStatus.NEW);
 		dmo.update(hvo);
 	}
-	public void pushSign4C(String date,String coperator,AggregatedValueObject billvo) throws Exception {
+	public void pushSign4C(String date,AggregatedValueObject billvo) throws Exception {
 		// 销售出库签字
 		if(billvo != null && billvo instanceof GeneralBillVO){
 			GeneralBillVO billVO = (GeneralBillVO)billvo;
@@ -57,10 +58,10 @@ public class SoOutBO  {
 		if(billvo != null && billvo[0]!= null && billvo[0] instanceof GeneralBillVO){
 			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());
 		for(int i=0;i<billvo.length;i++){
-		//	ArrayList retList = (ArrayList)bsBusiAction.processAction("CANCELSIGN", s_billtype,date,null,billvo[i], null,null);
-		//	if(retList.get(0) !=null && (Boolean)retList.get(0)){//取消签字成功
+			ArrayList retList = (ArrayList)bsBusiAction.processAction("CANCELSIGN", s_billtype,date,null,billvo[i], null,null);
+			if(retList.get(0) !=null && (Boolean)retList.get(0)){//取消签字成功
 				bsBusiAction.processBatch("CANELDELETE", s_billtype, date, billvo, null, null);//执行删除
-		//	}
+			}
 		   }
 		}
 	}
