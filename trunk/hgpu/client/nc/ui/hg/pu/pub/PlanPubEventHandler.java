@@ -10,9 +10,11 @@ import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.uif.pub.exception.UifException;
 import nc.vo.hg.pu.plan.month.PlanOtherBVO;
 import nc.vo.hg.pu.plan.year.PlanYearBVO;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
@@ -93,7 +95,19 @@ public abstract class PlanPubEventHandler extends FlowManageEventHandler {
 	    }else {
 	    	getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(2,row,"irowstatus");
 	    }
-	    
+	    Object csupplycorpid = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("csupplycorpid").getValueObject();
+	    Object supplycalbodyid = null;
+        Object supplycalbodyname = null;
+        try {
+            supplycalbodyid = HYPubBO_Client.findColValue("bd_calbody","pk_calbody","isnull(dr,0)=0 and pk_corp ='"+csupplycorpid+"'");
+            supplycalbodyname= HYPubBO_Client.findColValue("bd_calbody","bodyname"," isnull(dr,0)=0 and pk_calbody ='"+supplycalbodyid+"'");
+        } catch (UifException e1) {
+            getBillManageUI().showHintMessage(e1.getMessage());
+            supplycalbodyid = null;
+            supplycalbodyname = null;
+        }
+        setBodyCelValue(row,"csupplycalbodyid",supplycalbodyid);
+        setBodyCelValue(row,"sucalname",supplycalbodyname);
 	}
 	
 	private void setBodyCelValue(int row,String filedname,Object oValue){

@@ -15,7 +15,9 @@ import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.scm.pub.panel.RelationsCal;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
+import nc.uif.pub.exception.UifException;
 import nc.vo.hg.pu.plan.year.PlanYearBVO;
 import nc.vo.hg.pu.pub.HgPuBtnConst;
 import nc.vo.hg.pu.pub.HgPubConst;
@@ -127,8 +129,8 @@ public abstract class PlanPubClientUI extends DefBillManageUI implements
 		setHeadItemValue("capplypsnid", m_appInfor.getCapplypsnid());// 申请人
 		setHeadItemValue("capplydeptid", m_appInfor.getCapplydeptid());// 部门
 		setHeadItemValue("creqcalbodyid", m_appInfor.getCreqcalbodyid());// 申请组织
-		setHeadItemValue("csupplycorpid", m_appInfor.getCsupplycorpid());// 供货单位
-		setHeadItemValue("csupplydeptid", m_appInfor.getCsupplydeptid());// 供货部门
+//		setHeadItemValue("csupplycorpid", m_appInfor.getCsupplycorpid());// 供货单位
+//		setHeadItemValue("csupplydeptid", m_appInfor.getCsupplydeptid());// 供货部门
 		String[] aryAssistunit = new String[] { "creqcalbodyid->getColValue(bd_deptdoc,pk_calbody,pk_deptdoc,capplydeptid)" };
 		getBillCardPanel().execHeadFormulas(aryAssistunit);
 		// setHeadItemValue("csupplydeptid",m_appInfor.getCsupplycalbodyid());//供货组织
@@ -530,10 +532,8 @@ public abstract class PlanPubClientUI extends DefBillManageUI implements
 				getBillCardPanel().execHeadFormulas(aryAssistunit);
 				String creqcalbodyid = PuPubVO.getString_TrimZeroLenAsNull(getHeadItemValue("creqcalbodyid"));// 需求组织
 				setBodyCelValue(row, "creqcalbodyid", creqcalbodyid);
-				getBillCardPanel().getBillModel().execLoadFormulaByKey(
-				"creqcalbodyid");
-				getBillCardPanel().getBillModel().execLoadFormulaByKey(
-				"creqwarehouseid");
+				getBillCardPanel().getBillModel().execLoadFormulaByKey("creqcalbodyid");
+				getBillCardPanel().getBillModel().execLoadFormulaByKey("creqwarehouseid");
 			} 
 //			else if ("capplydeptid".equalsIgnoreCase(key)) {// 申请部门
 //				String[] aryAssistunit = new String[] { "creqcalbodyid->getColValue(bd_deptdoc,pk_calbody,pk_deptdoc,capplydeptid)" };
@@ -559,14 +559,27 @@ public abstract class PlanPubClientUI extends DefBillManageUI implements
 			} else if ("csupplycorpid".equalsIgnoreCase(key)) {// 供货单位
 				String csupplycorpid = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("csupplycorpid").getValue());
 				getBillCardPanel().getHeadItem("csupplydeptid").setValue(null);
-//				 String supplycalbodyid =PuPubVO.getString_TrimZeroLenAsNull(m_appInfor==null?null:m_appInfor.getCsupplycalbodyid());//供货组织
+				Object supplycalbodyid = null;
+				Object supplycalbodyname = null;
+				try {
+                    supplycalbodyid = HYPubBO_Client.findColValue("bd_calbody","pk_calbody","isnull(dr,0)=0 and pk_corp ='"+csupplycorpid+"'");
+                    supplycalbodyname= HYPubBO_Client.findColValue("bd_calbody","bodyname"," isnull(dr,0)=0 and pk_calbody ='"+supplycalbodyid+"'");
+                } catch (UifException e1) {
+                    showHintMessage(e1.getMessage());
+                    supplycalbodyid = null;
+                    supplycalbodyname = null;
+                }
+				
+//				String supplycalbodyid =PuPubVO.getString_TrimZeroLenAsNull(m_appInfor==null?null:m_appInfor.getCsupplycalbodyid());//供货组织
 //				setBodyCelValue(rowCount,"csupplycalbodyid",supplycalbodyid);
-//				if(csupplycorpid == null){
+				if(csupplycorpid == null){
 					setBodyCelValue(rowCount,"csupplycalbodyid",null);
 					setBodyCelValue(rowCount,"sucalname",null);
-//				}
+				}
 				setBodyCelValue(rowCount,"suware",null);
 				setBodyCelValue(rowCount,"csupplywarehouseid",null);
+				setBodyCelValue(rowCount,"csupplycalbodyid",supplycalbodyid);
+                setBodyCelValue(rowCount,"sucalname",supplycalbodyname);
 //			    getBillCardPanel().setBodyValueAt(supplycalbodyid,e.getRow(),"csupplycalbodyid");
 				getBillCardPanel().getBillModel().execLoadFormulaByKey("csupplycalbodyid");
 			} else if ("csupplydeptid".equalsIgnoreCase(key)) {// 供货部门

@@ -72,7 +72,7 @@ public class MonPlanBillSave extends HYBillSave {
 			if (err != null) {
 				Object invcode = bo.findColValue("bd_invbasdoc", "invcode",
 						"pk_invbasdoc='" + err + "'");
-				str.append("存货" + invcode + "已经存在。");
+				str.append("存货" + invcode + "已经存在。\n");
 			}
 		}
 		if (str == null || str.length() == 0)
@@ -190,7 +190,7 @@ public class MonPlanBillSave extends HYBillSave {
 
 		String sql = " select sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "
 				+ " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '"+ head.getPk_corp()+ "' and h.pk_billtype = 'HG02'" 
-				+ " and h.cyear = '" + head.getCyear() + "' and h.cmonth ='"+head.getCmonth()+"'and h.capplydeptid = '" + head.getCapplydeptid()
+				+ " and h.cyear = '" + head.getCyear() +"' and h.capplydeptid = '" + head.getCapplydeptid()
 				+ " ' and b.pk_invbasdoc in " + HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
 
 		ArrayList al = (ArrayList) getBaseDao()

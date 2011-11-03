@@ -661,7 +661,7 @@ public class PlanPubBO {
 			if (headvo.getPk_billtype().equalsIgnoreCase(
 					HgPubConst.PLAN_YEAR_BILLTYPE)) {
 				// YearPlanBO bo = new YearPlanBO();
-				getYearPlanBO().checkYearPlanOnUnapprove(uLogdate, headvo, dao);
+				getYearPlanBO().checkYearPlanOnUnapprove(uLogdate, billvo, getBaseDao());
 			}
 
 		}
