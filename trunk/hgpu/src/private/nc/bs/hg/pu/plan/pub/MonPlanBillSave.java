@@ -1,6 +1,8 @@
 package nc.bs.hg.pu.plan.pub;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
@@ -117,8 +119,8 @@ public class MonPlanBillSave extends HYBillSave {
 		if (als == null || als.size() == 0)
 			return null;
 
-		ArrayList aluy = getYearNum(head, als);// 年计划总量
-		ArrayList alum = getMonUsedNum(head, als);// 月计划累计量
+		Map aluy = getYearNum(head, als);// 年计划总量
+		Map alum = getMonUsedNum(head, als);// 月计划累计量
 		ArrayList<String> al = new ArrayList<String>();
 
 		int size = als.size();
@@ -127,7 +129,7 @@ public class MonPlanBillSave extends HYBillSave {
 				throw new BusinessException("所有存货的年计划量不存在。");
 			}
 
-			UFDouble ny = PuPubVO.getUFDouble_NullAsZero(aluy.get(i));
+			UFDouble ny = PuPubVO.getUFDouble_NullAsZero(aluy.get(als.get(i)));
 
 			if (ny.equals(UFDouble.ZERO_DBL))
 				al.add(als.get(i) + "&年计划量不存在。");
@@ -138,7 +140,7 @@ public class MonPlanBillSave extends HYBillSave {
 					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)));
 				else
 					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)))
-							.sub(PuPubVO.getUFDouble_NullAsZero(alum.get(i)));
+							.sub(PuPubVO.getUFDouble_NullAsZero(alum.get(als.get(i))));
 				if (nre.compareTo(UFDouble.ZERO_DBL) < 0)
 					al.add(als.get(i) + "&月计划量超出剩余计划量[" + nre+"]。\n");
 			}
@@ -158,19 +160,34 @@ public class MonPlanBillSave extends HYBillSave {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	private ArrayList getYearNum(PlanVO head, ArrayList<String> als)
+	private Map getYearNum(PlanVO head, ArrayList<String> als)
 			throws DAOException {
 
-		String sql = " select b.nnum from hg_plan h join hg_planyear_b b on h.pk_plan = b.pk_plan where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 "
-				+ " and h.pk_corp = '"+ head.getPk_corp()+ "' and h.pk_billtype='HG01' and h.cyear = '" + head.getCyear() + "'and h.capplydeptid = '" + head.getCapplydeptid()
-				+"' and b.pk_invbasdoc in "+ HgPubTool.getSubSql(als.toArray(new String[0]))+ " order by  b.pk_invbasdoc desc";
+		String sql = " select b.pk_invbasdoc,b.nnum from hg_plan h join hg_planyear_b b on h.pk_plan = b.pk_plan where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 "
+				+ " and h.pk_corp = '"+ head.getPk_corp()+ "' and h.vbillstatus =1 and h.pk_billtype='HG01' and h.cyear = '" + head.getCyear() + "'and h.capplydeptid = '" + head.getCapplydeptid()
+				+"' and b.pk_invbasdoc in "+ HgPubTool.getSubSql(als.toArray(new String[0]));
 		
-		Object o =  getBaseDao().executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);
+		Object o =  getBaseDao().executeQuery(sql.toString(), HgBsPubTool.ARRAYLISTPROCESSOR);
 		if(o==null)
 			return null;
 		ArrayList al =(ArrayList)o;
-
-		return al;
+		
+		if(al==null || al.size()==0)
+		    return null;
+		
+		int size = al.size();
+		
+		Map  map = new HashMap();
+		for(int i=0;i<size;i++){
+		    Object o1 = al.get(i);
+		    if(o1!=null){
+		        Object[] os = (Object[])o1;
+		        if(os != null && os.length>0){
+		            map.put(os[0],os[1]);
+		        }
+		    }
+		}
+		return map;
 	}
 
 	/**
@@ -185,18 +202,36 @@ public class MonPlanBillSave extends HYBillSave {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	private ArrayList getMonUsedNum(PlanVO head, ArrayList<String> als)
+	private Map getMonUsedNum(PlanVO head, ArrayList<String> als)
 			throws DAOException {
 
-		String sql = " select sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "
+		String sql = " select b.pk_invbasdoc,sum(coalesce(b.nouttotalnum,0)) from hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan "
 				+ " where nvl(h.dr, 0) =0 and nvl(b.dr, 0) = 0 and h.pk_corp = '"+ head.getPk_corp()+ "' and h.pk_billtype = 'HG02'" 
 				+ " and h.cyear = '" + head.getCyear() +"' and h.capplydeptid = '" + head.getCapplydeptid()
-				+ " ' and b.pk_invbasdoc in " + HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc order by  b.pk_invbasdoc desc";
+				+ " ' and b.pk_invbasdoc in " + HgPubTool.getSubSql(als.toArray(new String[0]))+ " group by  b.pk_invbasdoc";
 
-		ArrayList al = (ArrayList) getBaseDao()
-				.executeQuery(sql.toString(), HgBsPubTool.COLUMNLISTPROCESSOR);
-
-		return al;
+		Object o = getBaseDao().executeQuery(sql.toString(), HgBsPubTool.ARRAYLISTPROCESSOR);
+		
+		if(o==null)
+            return null;
+        ArrayList al =(ArrayList)o;
+        
+        if(al==null || al.size()==0)
+            return null;
+        
+        int size = al.size();
+        
+        Map  map = new HashMap();
+        for(int i=0;i<size;i++){
+            Object o1 = al.get(i);
+            if(o1!=null){
+                Object[] os = (Object[])o1;
+                if(os != null && os.length>0){
+                    map.put(os[0],os[1]);
+                }
+            }
+        }
+        return map;
 	}
 
 	/**
