@@ -67,7 +67,7 @@ public class YearPlanBO {
 //		}
 		
 //		if(flag>=0){
-		    String sql = " select  count(0) from  hg_plan h join hg_planother_b b where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"'" +
+		    String sql = " select  count(0) from  hg_plan h join hg_planother_b b on h.pk_plan = b.pk_plan where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"'" +
             " and h.cyear = '"+yearvo.getCyear()+"'  and h.pk_corp = '"+ yearvo.getPk_corp() + "' and h.capplydeptid = '" + yearvo.getCapplydeptid() + "' and b.cinventoryid in "+ HgPubTool.getSubSql(strs);//检查月份计划是否已存在
 		  
             Object o = dao.executeQuery(sql, HgBsPubTool.COLUMNPROCESSOR);
