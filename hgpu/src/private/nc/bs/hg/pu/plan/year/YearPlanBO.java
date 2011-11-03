@@ -10,6 +10,7 @@ import nc.vo.hg.pu.plan.year.PlanYearBVO;
 import nc.vo.hg.pu.pub.HgPubConst;
 import nc.vo.hg.pu.pub.HgPubTool;
 import nc.vo.hg.pu.pub.PlanVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDate;
@@ -29,24 +30,50 @@ public class YearPlanBO {
 	 * @param dao
 	 * @throws BusinessException
 	 */
-	public void checkYearPlanOnUnapprove(UFDate uLogdate,PlanVO yearvo,BaseDAO dao) throws BusinessException{
-		int planyear = Integer.valueOf(yearvo.getCyear());
-		int nowyear = uLogdate.getYear();
-		int flag = nowyear - planyear;
-		if(flag<0){
-			throw new BusinessException("计划已执行完毕");
-		}
-		if(flag==0){
-			int month = uLogdate.getMonth();
-			if(month>1)
-				throw new BusinessException("计划已部分执行不能弃审操作");
-			String sql = " select  count(*) from hg_planother_b b inner join HG_PLAN h on h.pk_plan = b.pk_plan" +
-			" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.cmonth = '01' and h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"'" +
-			" and b.cnextbillid = '"+yearvo.getPrimaryKey()+"' and coalesce(nouttotalnum,0)>0";//检查 1月份是否已经执行
-			Object o = dao.executeQuery(sql, HgBsPubTool.COLUMNLISTPROCESSOR);
-			if(PuPubVO.getInteger_NullAs(o, HgPubConst.IPRAYTYPE).intValue()>0)
-				throw new BusinessException("计划已部分执行不能弃审操作");
-		}
+	public void checkYearPlanOnUnapprove(UFDate uLogdate,AggregatedValueObject billvo,BaseDAO dao) throws BusinessException{
+	    
+	    PlanVO yearvo = (PlanVO)billvo.getParentVO();
+	    if(yearvo == null)
+	        throw new BusinessException("年计划表头不存在");
+	    PlanYearBVO[] yearbvo = (PlanYearBVO[])billvo.getChildrenVO();
+	    
+	    if(yearbvo==null || yearbvo.length==0)
+	        throw new BusinessException("年计划表头不存在");
+	    
+	    int len = yearbvo.length;
+	    String[] strs = new String[len];
+	    
+	    for(int i=0;i<len;i++){
+	        strs[i]= yearbvo[i].getCinventoryid();
+	    }
+//		int planyear = Integer.valueOf(yearvo.getCyear());
+//		int nowyear = uLogdate.getYear();
+		//int flag = nowyear - planyear;
+		//modify by zhw 2011-11-03
+//		int flag = planyear - nowyear;
+//		if(flag<0){
+//			throw new BusinessException("计划已执行完毕");
+//		}
+//		if(flag==0){
+//			int month = uLogdate.getMonth();
+//			if(month>1)
+//				throw new BusinessException("计划已部分执行不能弃审操作");
+//			String sql = " select  count(*) from hg_planother_b b inner join HG_PLAN h on h.pk_plan = b.pk_plan" +
+//			" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.cmonth = '01' and h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"'" +
+//			" and h.cyear = '"+planyear+"' and coalesce(nouttotalnum,0)>0";//检查 1月份是否已经执行
+//			Object o = dao.executeQuery(sql, HgBsPubTool.COLUMNLISTPROCESSOR);
+//			if(PuPubVO.getInteger_NullAs(o, HgPubConst.IPRAYTYPE).intValue()>0)
+//				throw new BusinessException("计划已部分执行不能弃审操作");
+//		}
+		
+//		if(flag>=0){
+		    String sql = " select  count(0) from  hg_plan h join hg_planother_b b where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_billtype = '"+HgPubConst.PLAN_MONTH_BILLTYPE+"'" +
+            " and h.cyear = '"+yearvo.getCyear()+"'  and h.pk_corp = '"+ yearvo.getPk_corp() + "' and h.capplydeptid = '" + yearvo.getCapplydeptid() + "' and b.cinventoryid in "+ HgPubTool.getSubSql(strs);//检查月份计划是否已存在
+		  
+            Object o = dao.executeQuery(sql, HgBsPubTool.COLUMNPROCESSOR);
+            if(PuPubVO.getInteger_NullAs(o, HgPubConst.IPRAYTYPE).intValue()>0)
+                throw new BusinessException("已存在月计划不能弃审操作");
+//		}
 	}
 	
 	public void splitYearPlan2MonthPlan(HYBillVO yearvo,String corp) throws BusinessException{
