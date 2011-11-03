@@ -45,7 +45,8 @@ public class HgCheckFreezeNmnyBo {
 		String szxmid = head.getSzxmid();
 		String deptid = head.getDeptid();
 		UFDouble mny  = PuPubVO.getUFDouble_NullAsZero(head.getYbje());
-
+		
+		String str1=deptid+szxmid+hbbmb;
 		if (!"fk".equalsIgnoreCase(djdl))
 			return;
 
@@ -54,13 +55,11 @@ public class HgCheckFreezeNmnyBo {
 			if(os !=null && os.length>0){
 				UFDouble oldmny =PuPubVO.getUFDouble_NullAsZero(os[0]);
 				String oldszxmid = PuPubVO.getString_TrimZeroLenAsNull(os[1]);
-				if(szxmid==null){
-					if(oldszxmid==null)
-						mny = mny.sub(oldmny);
-				}else{
-					if(szxmid.equalsIgnoreCase(oldszxmid))
-						mny = mny.sub(oldmny);
-				}
+				String olddeptid = PuPubVO.getString_TrimZeroLenAsNull(os[2]);
+				String oldhbbmb = PuPubVO.getString_TrimZeroLenAsNull(os[3]);
+				String str2=olddeptid+oldszxmid+oldhbbmb;
+				if(str1.equals(str2))
+				    mny = mny.sub(oldmny);
 			}
 		}
 
@@ -115,7 +114,7 @@ public class HgCheckFreezeNmnyBo {
 	
 	private Object[] pro_qryDjInfo(String primaryKey) throws DAOException {
 		 Object[] os =null;
-		String sql = " select z.ybje,b.szxmid  from arap_djzb z join arap_djfb b on b.vouchid=z.vouchid where isnull(z.dr,0)=0 and  isnull(b.dr,0)=0 and  z.vouchid ='"+primaryKey+"'";
+		String sql = " select z.ybje,b.szxmid,b.deptid,b.hbbm  from arap_djzb z join arap_djfb b on b.vouchid=z.vouchid where isnull(z.dr,0)=0 and  isnull(b.dr,0)=0 and  z.vouchid ='"+primaryKey+"'";
 		ArrayList al = (ArrayList)getBaseDAO().executeQuery(sql,new ArrayListProcessor());
 		 if(al!=null && al.size()>0){
 			 Object o = al.get(0);

@@ -28,8 +28,8 @@ public class CheckPubBO {
 				key =getBaseDAO().insertVO(vos[0]);
 			}else{
 				setvo =(FUNDSETVO)getBaseDAO().retrieveByPK(FUNDSETVO.class,key);
-				checkData(setvo.getNfund(), setvo.getNlockfund(), setvo.getNactfund());
-				checkData(vos[0].getNfund(), vos[0].getNlockfund(), vos[0].getNactfund());
+				//checkData(setvo.getNfund(), setvo.getNlockfund(), setvo.getNactfund());
+				checkData(vos[0].getNfund(), setvo.getNlockfund(), setvo.getNlockfund());
 				FUNDSETVO setvo1 = new FUNDSETVO();
 				String[] strs = setvo1.getAttributeNames();
 				String[] strl = new String[strs.length-3];

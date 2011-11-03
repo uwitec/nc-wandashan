@@ -264,13 +264,13 @@ public class BalancePlanBO {
 		int size = als.size();
 		for (int i = 0; i < size; i++) {
 			if (aluy == null || aluy.size() == 0) {
-				throw new BusinessException("所有存货的年计划量不存在");
+				throw new BusinessException("所有存货的年计划量不存在。\n");
 			}
 
 			UFDouble ny = PuPubVO.getUFDouble_NullAsZero(aluy.get(als.get(i)));
 
 			if (ny.equals(UFDouble.ZERO_DBL))
-				al.add(als.get(i) + "&年计划量不存在");
+				al.add(als.get(i) + "&年计划量不存在。\n");
 			else {
 				UFDouble nre = UFDouble.ZERO_DBL;
 				
@@ -280,7 +280,7 @@ public class BalancePlanBO {
 					nre = ny.sub(PuPubVO.getUFDouble_NullAsZero(alu.get(i)))
 							.sub(PuPubVO.getUFDouble_NullAsZero(alum.get(als.get(i))));
 				if (nre.compareTo(UFDouble.ZERO_DBL) < 0)
-					al.add(als.get(i) + "&月计划量超出剩余计划量[" + nre+"]");
+					al.add(als.get(i) + "&月计划量超出剩余计划量[" + nre+"]。\n");
 			}
 		}
 		return al;

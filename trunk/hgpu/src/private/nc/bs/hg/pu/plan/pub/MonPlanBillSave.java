@@ -126,13 +126,13 @@ public class MonPlanBillSave extends HYBillSave {
 		int size = als.size();
 		for (int i = 0; i < size; i++) {
 			if (aluy == null || aluy.size() == 0) {
-				throw new BusinessException("所有存货的年计划量不存在。");
+				throw new BusinessException("所有存货的年计划量不存在。\n");
 			}
 
 			UFDouble ny = PuPubVO.getUFDouble_NullAsZero(aluy.get(als.get(i)));
 
 			if (ny.equals(UFDouble.ZERO_DBL))
-				al.add(als.get(i) + "&年计划量不存在。");
+				al.add(als.get(i) + "&年计划量不存在。\n");
 			else {
 				UFDouble nre = UFDouble.ZERO_DBL;
 				
