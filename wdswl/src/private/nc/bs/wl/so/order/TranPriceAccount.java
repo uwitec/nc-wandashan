@@ -275,7 +275,7 @@ public class TranPriceAccount {
 			throw new BusinessException("请在分仓客商绑定节点，维护客商所属地区");
 		}
 		head.setCustareaid(reareaid);
-		// 汇总主数量
+		// 汇总出库主(辅)数量
 		UFDouble ntotalNum = new UFDouble(0);
 		UFDouble ntotalAssNUm = new UFDouble(0);
 		for (SoorderBVO body : bodys) {
@@ -297,8 +297,8 @@ public class TranPriceAccount {
 			if (stroCorp == null || stroCorp.size() == 0) {
 				colType = WdsWlPubConst.WDSI;
 			} else {
-				Integer ismalltype = stroCorp.get(0).getIsmalltype();
-				Integer ismallprice = stroCorp.get(0).getIsmallprice();
+				Integer ismalltype = stroCorp.get(0).getIsmalltype();//零担标准
+				Integer ismallprice = stroCorp.get(0).getIsmallprice();//运价类型
 				UFDouble nsmallnum = PuPubVO.getUFDouble_NullAsZero(stroCorp.get(0).getNsmallnum());
 				if (0 == ismalltype) {// 以主数量作为区分标准
 					if (nsmallnum.sub(totalNum.get(0)).doubleValue() >= 0) {
@@ -338,12 +338,13 @@ public class TranPriceAccount {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目
-	 * @时间：2011-6-9下午10:52:12
-	 * @param pk_outwhouse:仓库id
-	 *            pk_transcorp 承运商id 发货地区 id
-	 *            isDG 是否递归
-	 * @return 仓库承运商绑定VO
+	 * @说明：完达山物流项目 :根据收获地区，从小到大，递归获取分仓承运商信息
+	 * @时间：2011-11-3下午04:10:04
+	 * @param pk_outwhouse：仓库id
+	 * @param pk_transcorp：运输公司id
+	 * @param caredid:收货地点id
+	 * @param isDG :递归
+	 * @return
 	 * @throws BusinessException
 	 */
 	public ArrayList<StortranscorpBVO>  getStroCorpVO(String pk_outwhouse,
@@ -543,7 +544,6 @@ public class TranPriceAccount {
 				.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and vbillstatus = "
 						+ IBillStatus.CHECKPASS);
 		sqlb.append(" and h.pk_billtype = '" + pricetype + "'");// 运价表单据类型
-		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
 		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤

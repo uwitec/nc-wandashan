@@ -353,14 +353,9 @@ public class SoDealEventHandler{
 			showWarnMessage("未选中数据");
 			return;
 		}
-
 		//		对数据进行一层严密校验
-
 		SoDealBillVO.checkData((SoDealBillVO[])newVos);
-
-
 		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
-
 		boolean flag = false;
 		UFBoolean isauto = UFBoolean.FALSE;
 		if(o != null){
