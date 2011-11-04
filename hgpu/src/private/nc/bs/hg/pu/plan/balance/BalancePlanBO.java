@@ -102,19 +102,14 @@ public class BalancePlanBO {
 		if(aldata == null||aldata.size() == 0){
 			throw new BusinessException("传入计划数据为空");
 		}
-		SQLParameter param = new SQLParameter();
-		SQLParameter param1 = new SQLParameter();;;
-		String sql="update hg_planother_b set vreserve4 =?,vreserve5=?,nreserve10=? where pk_planother_b = ?";
-		String sql1 =" update hg_planother_b set vreserve3=? where pk_planother_b in (select b.pk_planother_b from hg_plan h, hg_planother_b b "+
-                      " where h.pk_plan = b.pk_plan  and nvl(h.dr, 0) = 0 and nvl(b.dr, 0) = 0 and h.cyear = ?  and h.pk_corp = ? and h.pk_billtype = 'HG02' "+
-                      " and h.cmonth =? and b.pk_invbasdoc = ? ) ";
+		
 		int size= aldata.size();
 		for(int i=0;i<size;i++){
 			
 			PlanMonDealVO vo =(PlanMonDealVO)aldata.get(i);
 			String inv =PuPubVO.getString_TrimZeroLenAsNull(vo.getInvcode());
-			String cnextbillid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillid());
-			String cnextbillbid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillbid());
+//			String cnextbillid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillid());
+//			String cnextbillbid =PuPubVO.getString_TrimZeroLenAsNull(vo.getCnextbillbid());
 			String mon = PuPubVO.getString_TrimZeroLenAsNull(vo.getCmonth());
 			if(mon.compareTo("11")<0){
 				mon = "0"+(Integer.parseInt(mon)-1);
@@ -124,32 +119,26 @@ public class BalancePlanBO {
 			String year = PuPubVO.getString_TrimZeroLenAsNull(vo.getCyear());
 			String corp = PuPubVO.getString_TrimZeroLenAsNull(vo.getPk_corp());
 			String pk_invbasdoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getPk_invbasdoc());
-			checkUpdateMon(inv,cnextbillid,cnextbillbid);
-			
+//			checkUpdateMon(inv,cnextbillid,cnextbillbid);
+			String vreserve3 = null;
 			if(isbalance){
 				if(vo.getNreserve10()==null)
 					throw new BusinessException("存货"+inv+"平衡数量为空");
 				//modify by  zhw   不在校验平衡数量与 计划量的关系   校验平衡数量与总剩余量的关系
 //				if((PuPubVO.getUFDouble_NullAsZero(vo.getNreserve10()).compareTo(vo.getNnum()))>0)
 //					throw new BusinessException("存货"+inv+"平衡数量大于计划领用数量");
-				param1.addParam("Y");
+				vreserve3 ="Y";
 			}else{
-				checkNouttotalnum(inv,cnextbillid,cnextbillbid,mon,year);
-				param1.addParam("N");
+//				checkNouttotalnum(inv,cnextbillid,cnextbillbid,mon,year);
+			    vreserve3 ="N";
 			}
-			param1.addParam(year);
-			param1.addParam(corp);
-			param1.addParam(mon);
-			param1.addParam(pk_invbasdoc);
 			
-			param.addParam(vo.getVreserve4());
-			param.addParam(vo.getVreserve5());
-			param.addParam(vo.getNreserve10());
-			param.addParam(vo.getPk_plan_b());
-			getPubBO().executeUpdate(sql,param);
-			getPubBO().executeUpdate(sql1,param1);
-			param.clearParams();
-			param1.clearParams();
+			String sql="update hg_planother_b set vreserve4 ='"+vo.getVreserve4()+"',vreserve5='"+vo.getVreserve5()+"',nreserve10="+vo.getNreserve10()+" where pk_planother_b = '"+vo.getPk_plan_b()+"'";
+	        String sql1 =" update hg_planother_b set vreserve3='"+vreserve3+"' where pk_planother_b in (select b.pk_planother_b from hg_plan h, hg_planother_b b "+
+	                      " where h.pk_plan = b.pk_plan  and nvl(h.dr, 0) = 0 and nvl(b.dr, 0) = 0 and h.cyear = '"+year+"' and h.pk_corp = '"+corp+"' and h.pk_billtype = 'HG02' "+
+	                      " and h.cmonth ='"+mon+"' and b.pk_invbasdoc = '"+pk_invbasdoc+"' ) ";
+			getPubBO().executeUpdate(sql);
+			getPubBO().executeUpdate(sql1);
 		}
 		
 	}
@@ -251,7 +240,7 @@ public class BalancePlanBO {
 	
 		for (PlanMonDealVO bvo : vos) {
 			als.add(bvo.getPk_invbasdoc());//存货id
-			alu.add(bvo.getNnum());//当前存货月计划量
+			alu.add(bvo.getNreserve10());//当前存货月计划平衡量
 		}
 		
 		if (als == null || als.size() == 0)
