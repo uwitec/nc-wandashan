@@ -34,7 +34,10 @@ public class PlanDealVO extends SendplaninBVO {
     public String pk_outwhouse;
     public UFDate dapprovedate;
     public String vapproveid; 
-      
+    public UFDouble nstorenumout;//发货站库存数量
+    public UFDouble narrstorenumout;//发货站安排后库存数量
+    public UFDouble nstorenumin;//收货站库存数量
+    public UFDouble narrstorenumin;//收货站安排后库存数量  
     
    
 	@Override
@@ -43,6 +46,14 @@ public class PlanDealVO extends SendplaninBVO {
     		return this.getNnum();
     	}else if("nassnum".equalsIgnoreCase(arg)){
     		return this.getNassnum();
+    	}else if("nstorenumout".equalsIgnoreCase(arg)){
+    		return this.getNstorenumout();
+    	}else if("narrstorenumout".equalsIgnoreCase(arg)){
+    		return this.getNarrstorenumout();
+    	}else if("nstorenumin".equalsIgnoreCase(arg)){
+    		return this.getNstorenumin();
+    	}else if("narrstorenumin".equalsIgnoreCase(arg)){
+    		return this.getNarrstorenumin();
     	}else if("pk_corp".equalsIgnoreCase(arg)){
     		return this.getPk_corp();
     	}else if("dmakedate".equalsIgnoreCase(arg)){
@@ -84,6 +95,14 @@ public class PlanDealVO extends SendplaninBVO {
     	if("nnum".equalsIgnoreCase(arg)){
     		 setNnum(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("nassnum".equalsIgnoreCase(arg)){
+    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("nstorenumout".equalsIgnoreCase(arg)){
+    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("narrstorenumout".equalsIgnoreCase(arg)){
+    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("nstorenumin".equalsIgnoreCase(arg)){
+    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("narrstorenumin".equalsIgnoreCase(arg)){
     		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("pk_corp".equalsIgnoreCase(arg)){
     		setPk_corp(PuPubVO.getString_TrimZeroLenAsNull(value));
@@ -315,7 +334,30 @@ public class PlanDealVO extends SendplaninBVO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	public UFDouble getNstorenumout() {
+		return nstorenumout;
+	}
+	public void setNstorenumout(UFDouble nstorenumout) {
+		this.nstorenumout = nstorenumout;
+	}
+	public UFDouble getNarrstorenumout() {
+		return narrstorenumout;
+	}
+	public void setNarrstorenumout(UFDouble narrstorenumout) {
+		this.narrstorenumout = narrstorenumout;
+	}
+	public UFDouble getNstorenumin() {
+		return nstorenumin;
+	}
+	public void setNstorenumin(UFDouble nstorenumin) {
+		this.nstorenumin = nstorenumin;
+	}
+	public UFDouble getNarrstorenumin() {
+		return narrstorenumin;
+	}
+	public void setNarrstorenumin(UFDouble narrstorenumin) {
+		this.narrstorenumin = narrstorenumin;
+	}
 	
 
 }
