@@ -1717,12 +1717,14 @@ public class HgScmPubBO {
 				.append(" b join bd_invbasdoc c on c.pk_invbasdoc = b.pk_invbasdoc where ");
 		buffer.append(" b.pk_plan  in "
 				+ HgPubTool.getSubSql(lheadid.toArray(new String[0])));
-		buffer.append(" and coalesce(b.nnum,0.0)>0 and coalesce(b.nnum,0.0) - coalesce(b.nouttotalnum,0.0)>0 and isnull(b.dr,0)=0 and isnull(c.dr,0)=0 ");
+		buffer.append(" and coalesce(b.nnum,0.0)>0  and isnull(b.dr,0)=0 and isnull(c.dr,0)=0 ");
 		if(billtype.equalsIgnoreCase(HgPubConst.PLAN_MONTH_BILLTYPE)){
 			buffer.append(" and (coalesce(b.nreserve10,0.0)-coalesce(b.nouttotalnum,0.0))>0.0 ");
 			buffer.append(" and nvl(b.vreserve2,'N') = 'Y' ");
 			// modify by zhw  平衡后    上个月计划不可在领
 			buffer.append(" and nvl(b.vreserve3,'N') = 'N' ");     
+		}else{
+		    buffer.append(" and coalesce(b.nnum,0.0) - coalesce(b.nouttotalnum,0.0)>0 ");
 		}
 		buffer.append(s);
 		// Collection c = getBaseDao().retrieveByClause(PlanOtherBVO.class,
