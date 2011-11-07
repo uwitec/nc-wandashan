@@ -18,6 +18,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.wds.dm.corpseal.CorpsealVO;
+import nc.vo.wds.dm.corpseal.RouteaddrCheckClass;
 
 public class ClientCartUI extends BillTreeCardUI{
 
@@ -139,5 +140,9 @@ public class ClientCartUI extends BillTreeCardUI{
 		// TODO Auto-generated method stub
 		
 	}
-
+@Override
+public Object getUserObject() {   //xjx  add
+	// TODO Auto-generated method stub
+	return new RouteaddrCheckClass();
+}
 }
