@@ -46,7 +46,10 @@ public class WdsDataFinder extends DefaultDataFinder{
 			sql = "  select distinct h1.PK_SOORDER,h1.VBILLNO from WDS_SOORDER h1 ,WDS_SOORDER_B b1 where h1.PK_SOORDER = b1.PK_SOORDER and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.CSOURCEBILLHID = ? ";
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_IN.equals(billType)){//其它入库
 			sql = " select distinct h1.geh_pk ,h1.geh_billcode from tb_general_h h1 ,tb_general_b b1 where h1.geh_pk = b1.geh_pk and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.csourcebillhid = ? ";
-		}else if("4C".equals(billType)){//供应链销售出库
+		}else if(WdsWlPubConst.WDSO.equals(billType)){//销售出库回传单
+			sql = " select distinct h1.pk_wds_writeback4c_h,h1.vbillno from wds_writeback4c_h h1,wds_writeback4c_b2 b2 where h1.pk_wds_writeback4c_h = b2.pk_wds_writeback4c_h and nvl(h1.dr,0) = 0 and nvl(b2.dr,0) = 0 and b2.csourcebillhid = ?  ";
+		}
+		else if("4C".equals(billType)){//供应链销售出库
 			sql = " select distinct h1.cgeneralhid,h1.vbillcode from ic_general_h h1,ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.cfirstbillhid = ?  ";
 		}
 		return sql;

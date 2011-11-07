@@ -51,7 +51,10 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 		
 		}else if(WdsWlPubConst.WDSF.equals(billType)){//×°Ð¶·ÑºËËã
 			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  wds_loadprice_b1 zz where zz.pk_loadprice = ? and nvl(zz.dr,0) = 0 ";
-		}else{
+		}else if(WdsWlPubConst.WDSO.equals(billType)){
+			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  wds_writeback4c_b2 zz where zz.pk_wds_writeback4c_h = ? and nvl(zz.dr,0) = 0 ";
+		}
+		else{
 			super.createSQL(billType);
 		}
 		return sql;

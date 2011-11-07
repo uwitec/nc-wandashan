@@ -7,14 +7,13 @@ import nc.vo.wds.ic.write.back4c.MultiBillVO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB1VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientController extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Add,
-				IBillButton.Save,
 				IBillButton.Line,
 				IBillButton.Query, 		
 				IBillButton.Return,
@@ -27,13 +26,12 @@ public class ClientController extends AbstractManageController {
 }
 	public int[] getListButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Add,
-				IBillButton.Save,
 				IBillButton.Query, 	
 				IBillButton.Card,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				IBillButton.Action
+				IBillButton.Action,
+				ButtonCommon.joinup
 		};
 		return buttonArray;
 	}

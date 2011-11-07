@@ -84,7 +84,7 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 			//查询主表数据
 			SuperVO[] queryVos = getBusiDelegator().queryHeadAllData(
 					getHeadClass(),
-					getUIControl().getBillType(), " "+headvo.getTableName()+"."+getUIControl().getPkField()+" = '"+id+"' ");
+					getUIControl().getBillType(), " "+headvo.getTableName()+"."+headvo.getPKFieldName()+" = '"+id+"' ");
 			
 			//查询子表数据
 			if(queryVos != null && queryVos.length > 0){
@@ -97,13 +97,8 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 			}
 			ButtonObject[] btns = getButtons();
 			for (ButtonObject btn : btns) {
-				if (("" + (IBillButton.Print)).equals(btn.getTag())) {
-					btn.setEnabled(true);
-					btn.setVisible(true);
-				} else {
-					btn.setEnabled(false);
-					btn.setVisible(false);
-				}
+				btn.setEnabled(true);
+				btn.setVisible(true);
 			}
 			updateButtons();
 			

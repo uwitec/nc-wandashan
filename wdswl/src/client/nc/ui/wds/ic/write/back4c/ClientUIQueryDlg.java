@@ -22,7 +22,4 @@ public class ClientUIQueryDlg extends HYQueryDLG {
 	}
 	public void init(){
 	}
-	
-
-
 }

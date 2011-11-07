@@ -8,6 +8,8 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.MutilChildUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
+import nc.vo.wl.pub.Button.CommonButtonDef;
 
 /**
  *  销售出库回传ERP
@@ -58,6 +60,13 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 			btn.removeChildButton(getButtonManager().getButton(
 					IBillButton.InsLine));
 		}
+	}
+	@Override
+	protected void initPrivateButton() {
+		super.initPrivateButton();
+		CommonButtonDef def = new CommonButtonDef();
+		ButtonVO  joinup = def.getJoinUPButton();
+		addPrivateButton(joinup);
 	}
 	@Override
 	protected void initEventListener() {

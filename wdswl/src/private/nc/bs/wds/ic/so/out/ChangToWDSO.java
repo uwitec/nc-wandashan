@@ -117,7 +117,7 @@ public class ChangToWDSO {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 销售出库单签字，生成销售出库回传单
+	 * @说明：完达山物流项目 销售出库单取消签字
 	 * @时间：2011-10-26下午01:14:05
 	 * @param billVO
 	 * @param coperator

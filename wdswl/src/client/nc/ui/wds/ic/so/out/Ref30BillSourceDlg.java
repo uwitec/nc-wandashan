@@ -100,6 +100,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 		hsql.append(" and coalesce(so_saleorder_b.nnumber,0)-coalesce(so_saleorder_b.ntaldcnum,0)<0");//订单数量->//利用系统销售订单  已参与价保数量(ntaldcnum) 作为  累计发运数量
 		String sub = getInvSub(inv_Pks);
 		hsql.append(" and cinventoryid in"+sub);
+		hsql.append(" )");
 		return hsql.toString();
 	}
 	private String getInvSub(String [] inv_Pks){
@@ -120,18 +121,19 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	}
 	@Override
 	public String getBodyCondition() {
+		String sub = getInvSub(inv_Pks);
 		return " and coalesce(nnumber,0)-coalesce(ntaldcnum,0)<0"+//订单数量-出库数量<0
-			" and cinventoryid in";
+			" and cinventoryid in"+sub;
 	}
 	
 	@Override
 	protected boolean isSelfLoadHead(){
-		return true;
+		return false;
 	}
 	@Override
     public boolean isSelfLoadBody() {
 		
-		return true;
+		return false;
 	}
 	@Override
 	public boolean getIsBusinessType() {

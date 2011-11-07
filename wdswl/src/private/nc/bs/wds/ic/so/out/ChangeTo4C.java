@@ -84,7 +84,8 @@ public class ChangeTo4C {
 			}
 			general_hs.add(general_h);
 		}
-		GeneralBillVO vo = getGeneralBillVO(general_hs);
+		//分别对应交换成erp销售出库单(4C)
+		GeneralBillVO vo = getGeneralBillVO( hvo,general_hs);
 		if(vo == null){
 			return null;
 		}
@@ -105,14 +106,28 @@ public class ChangeTo4C {
 						UFDouble oldsoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutassistnum());
 						UFDouble oldout =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutnum());
 						UFDouble oldoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutassistnum());
+						LocatorVO[]  oldLoctor = oldItem.getLocator();
+						
+						//重新设置 数量信息和货位信息
 						UFDouble newsout = PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutnum());
 						UFDouble newsoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutassistnum());
 						UFDouble newout =  PuPubVO.getUFDouble_NullAsZero(item.getNoutnum());
 						UFDouble newoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNoutassistnum());
+						LocatorVO[]  newLoctor = item.getLocator();
+
 						oldItem.setNshouldoutnum(oldsout.add(newsout));
 						oldItem.setNshouldoutassistnum(oldsoutass.add(newsoutass));
 						oldItem.setNoutnum(oldout.add(newout));
 						oldItem.setNoutassistnum(oldoutass.add(newoutass));
+						ArrayList<LocatorVO> list= new ArrayList<LocatorVO>();
+						if(oldLoctor != null){
+							list.addAll(Arrays.asList(oldLoctor));
+						}
+						if(newLoctor != null){
+							list.addAll(Arrays.asList(newLoctor));
+						}
+						oldItem.setLocator(list.toArray(new LocatorVO[0]));
+						
 					}else{
 						item.setCrowno(""+i);
 						map.put(key, item);
@@ -132,7 +147,7 @@ public class ChangeTo4C {
 	 * @param general_hs
 	 * @return
 	 */
-	public GeneralBillVO getGeneralBillVO(List<String> general_hs) throws BusinessException{
+	public GeneralBillVO getGeneralBillVO(Writeback4cHVO hvo,List<String> general_hs) throws BusinessException{
 		if(general_hs == null || general_hs.size() ==0){
 			return null;
 		}
@@ -153,6 +168,9 @@ public class ChangeTo4C {
 			if(i == 0){
 				head = vo.getHeaderVO();
 			}
+			for(GeneralBillItemVO item:vo.getItemVOs()){
+				item.setCfirstbillhid(hvo.getPrimaryKey());
+			}
 			items.addAll(Arrays.asList(vo.getItemVOs()));
 		}
 		bill.setParentVO(head);
@@ -169,7 +187,6 @@ public class ChangeTo4C {
 		}
 		this.coperator = coperator;
 		this.date = date;
-		//根据销售出库回传单，查找上有销售出库单（WDS8），然后分别对应交换成erp销售出库单(4C)
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
 		String csaleid = hvo.getCsaleid()==null ?"":hvo.getCsaleid();
@@ -181,6 +198,8 @@ public class ChangeTo4C {
 			for(int i = 0 ;i<alListData.size();i++){
 				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
 				gvo.getHeaderVO().setCoperatoridnow(coperator);
+				gvo.getHeaderVO().setDaccountdate(new UFDate(date));
+				gvo.getHeaderVO().setClogdatenow(date);
 			}
 			gbillvo = (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
 		}

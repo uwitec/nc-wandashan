@@ -1,5 +1,8 @@
 package nc.ui.wl.pub;
 
+import nc.ui.pub.ButtonObject;
+import nc.ui.pub.linkoperate.ILinkQueryData;
+import nc.ui.trade.button.IBillButton;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.wl.pub.Button.CommonButtonDef;
 
@@ -36,85 +39,21 @@ public abstract class MutiChildForOutInUI extends MutilChildUI{
 			String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
 	}
-//	
-//	private LoginInforHelper helper = null;
-//	
-//	public LoginInforHelper getLoginInforHelper(){
-//		if(helper == null){
-//			helper = new LoginInforHelper();
-//		}
-//		return helper;
-//	}
-//	
-//	private Class bodyVOClass;
-//	
-//	private Class aggBillVOClass;
-//	
-//	private Class bodyVO1Class;
-//	/**
-//	 * 联查动作
-//	 */
-//	public void doQueryAction(ILinkQueryData querydata) {
-//		try {
-//			if(querydata == null)
-//				return;
-//			String id = querydata.getBillID();
-//			if(id == null || "".equals(id))
-//				return;
-//			//查询主表数据
-//			SuperVO headvo = (SuperVO)getHeadClass().newInstance();
-//			//查询主表数据
-//			SuperVO[] queryVos = getBusiDelegator().queryHeadAllData(
-//					getHeadClass(),
-//					getUIControl().getBillType(), " "+headvo.getTableName()+"."+getUIControl().getPkField()+" = '"+id+"' ");
-//
-//			//查询子表数据
-//			if(queryVos != null && queryVos.length > 0){
-//					setCurrentPanel(BillTemplateWrapper.CARDPANEL);
-//					AggregatedValueObject aggvo = (AggregatedValueObject)getAggVOClass().newInstance();
-//					aggvo.setParentVO(queryVos[0]);
-//					getBusiDelegator().setChildData(
-//								aggvo,
-//								getBodyVOClass(),
-//								getUIControl().getBillType(),
-//								queryVos[0].getPrimaryKey(),null);
-//					getBufferData().addVOToBuffer(aggvo);
-//					getBufferData().setCurrentRow(getBufferData().getCurrentRow());
-//			}
-//			//
-//			ButtonObject[] btns = getButtons();
-//			for (ButtonObject btn : btns) {
-//				if (("" + (IBillButton.Card)).equals(btn.getTag()) || ("" + (IBillButton.Return)).equals(btn.getTag())) {
-//					btn.setEnabled(true);
-//					btn.setVisible(true);
-//				} else {
-//					btn.setEnabled(false);
-//					btn.setVisible(false);
-//				}
-//			}
-//			updateButtons();
-//		}  catch (Exception e) {
-//			Logger.error(e);
-//		}
-//		//
-//	}
-//
-//	private Class getBodyVOClass() throws Exception{
-//		if(bodyVOClass==null)
-//			bodyVOClass = Class.forName(getUIControl().getBillVoName()[2]);
-//		return bodyVOClass;
-//	}
-//	
-//	private Class getAggVOClass()  throws Exception{
-//		if(aggBillVOClass == null)
-//				aggBillVOClass = Class.forName(getUIControl().getBillVoName()[0]);
-//			return aggBillVOClass;
-//	}
-//	private Class getHeadClass()  throws Exception{
-//		if( bodyVO1Class == null)
-//			bodyVO1Class = Class.forName(getUIControl().getBillVoName()[1]);
-//			return bodyVO1Class ;
-//	}
+	@Override
+	public void doQueryAction(ILinkQueryData querydata) {
+		// TODO Auto-generated method stub
+		super.doQueryAction(querydata);
+		ButtonObject[] btns = getButtons();
+		for (ButtonObject btn : btns) {
+			if (("" + (IBillButton.Print)).equals(btn.getTag())) {
+				btn.setEnabled(true);
+				btn.setVisible(true);
+			}else{
+				btn.setEnabled(false);
+				btn.setVisible(false);
+			}
+		}
+	}
 	@Override
 	protected void initPrivateButton() {
 		super.initPrivateButton();
