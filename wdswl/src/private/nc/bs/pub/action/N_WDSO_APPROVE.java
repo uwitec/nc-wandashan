@@ -6,7 +6,9 @@ import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 
 /**
  * 销售出库回传审批
@@ -38,10 +40,15 @@ public class N_WDSO_APPROVE extends AbstractCompiler2 {
 			setParameter("date", vo.m_currentDate);
 			setParameter("operator", vo.m_operator);
 			setParameter("pk_corp",vo.m_coId);
+			//签字生成ERP销售出库单
 			AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "signQueryGenBillVO",
 					"&currentVo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 			setParameter("AggObject",icBillVO);
 			runClass("nc.bs.wds.ic.so.out.SoOutBO", "pushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
+			//
+			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
+			head.setDapprovedate(new UFDate(vo.m_currentDate));
+			head.setVapproveid(vo.m_operator);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);

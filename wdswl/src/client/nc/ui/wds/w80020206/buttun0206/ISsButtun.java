@@ -23,4 +23,7 @@ package nc.ui.wds.w80020206.buttun0206;
 	 	public final static int Ref4Y=205;//参照库存其他出库
 	 	
 	 	public final static int refwds6=206;//参照其他出库
+	 	
+	 	public final static int all_selected=207;//全选
+	 	public final static int all_not_selected=208;//全消
   }

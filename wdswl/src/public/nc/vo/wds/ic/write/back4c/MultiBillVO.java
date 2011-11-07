@@ -34,6 +34,10 @@ public class MultiBillVO extends HYBillVO implements IExAggVO{
 	private HashMap hmChildVOs = new HashMap();
 	
 	
+	public Writeback4cHVO getHeadVO(){
+		return (Writeback4cHVO)getParentVO();
+	}
+	
 	/**
 	 * 返回多个子表的编码
 	 * 必须与单据模版的页签编码对应

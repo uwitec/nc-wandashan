@@ -19,7 +19,7 @@ import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- * 销售计划安排
+ * 销售计划安排2
  * 
  * @author Administrator
  * 

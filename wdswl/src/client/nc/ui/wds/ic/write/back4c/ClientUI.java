@@ -2,13 +2,19 @@ package nc.ui.wds.ic.write.back4c;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillItemEvent;
+import nc.ui.pub.bill.BillMouseEnent;
+import nc.ui.pub.bill.IBillItem;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wds.w80020206.buttun0206.ISsButtun;
 import nc.ui.wl.pub.MutilChildUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
+import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 import nc.vo.wl.pub.Button.CommonButtonDef;
 
 /**
@@ -67,6 +73,24 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 		CommonButtonDef def = new CommonButtonDef();
 		ButtonVO  joinup = def.getJoinUPButton();
 		addPrivateButton(joinup);
+		addPrivateButton(getButtonVO());
+		addPrivateButton(getButton1VO());
+	}
+	public ButtonVO getButtonVO() {
+		ButtonVO btnVO = new ButtonVO();
+		btnVO.setBtnNo(ISsButtun.all_selected);
+		btnVO.setBtnName("全选");
+		btnVO.setBtnCode("全选");
+		btnVO.setBtnChinaName("全选");
+		return btnVO;
+	}
+	public ButtonVO getButton1VO() {
+		ButtonVO btnVO = new ButtonVO();
+		btnVO.setBtnNo(ISsButtun.all_not_selected);
+		btnVO.setBtnName("全消");
+		btnVO.setBtnCode("全消");
+		btnVO.setBtnChinaName("全消");
+		return btnVO;
 	}
 	@Override
 	protected void initEventListener() {
@@ -113,5 +137,24 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 		// TODO Auto-generated method stub
 		return new Writeback4cBusinessDelegator();
 	}
+
+	@Override
+	public void mouse_doubleclick(BillMouseEnent e) {
+		if (isListPanelSelected() && e.getPos() == IBillItem.HEAD) {
+			int row = e.getRow();
+			Writeback4cHVO head = (Writeback4cHVO)getBufferData().getCurrentVO().getParentVO();
+			Object value = getBillListPanel().getBillListData().getHeadBillModel().getValueAt(row, "fselect");
+			UFBoolean fselect = PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE);
+			if(!fselect.booleanValue()){
+				getBillListPanel().getBillListData().getHeadBillModel().setValueAt(UFBoolean.TRUE, row, "fselect");
+				head.setFselect(UFBoolean.TRUE);
+			}else{
+				getBillListPanel().getBillListData().getHeadBillModel().setValueAt(null, row, "fselect");
+				head.setFselect(UFBoolean.FALSE);
+
+			}
+		}
+	}
+
 
 }

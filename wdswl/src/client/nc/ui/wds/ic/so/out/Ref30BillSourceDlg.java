@@ -92,7 +92,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 		hsql.append(" on so_sale.csaleid=so_saleorder_b.csaleid ");
 		hsql.append(" where isnull(so_sale.dr,0)=0 ");
 		hsql.append(" and so_sale.pk_corp = '"+getPkCorp()+"' ");
-		hsql.append(" and so_sale.fstatus = 2 ");
+		hsql.append(" and so_sale.fstatus = 2 ");//审批通过
 		hsql.append(" and isnull(so_sale.bretinvflag,'N')='N' ");
 		if(!isStock){
 			hsql.append(" and so_sale.cwarehouseid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的

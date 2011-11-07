@@ -7,6 +7,8 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.bill.BillListPanel;
+import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
@@ -28,7 +30,12 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 	public WdsPubEnventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
-
+	protected BillListPanelWrapper getBillListPanelWrapper() {
+		return getBillManageUI().getBillListWrapper();
+	} 
+	protected BillListPanel getBillListPanel(){
+		return getBillListPanelWrapper().getBillListPanel();
+	}	
 	@Override
 	protected void onBoSave() throws Exception {
 		try {

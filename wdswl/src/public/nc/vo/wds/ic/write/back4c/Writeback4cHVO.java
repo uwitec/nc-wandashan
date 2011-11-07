@@ -25,6 +25,8 @@
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	//选择
+	UFBoolean fselect;
 	//公司
 	 public String pk_corp;     
 	 //单据号
@@ -1142,5 +1144,13 @@
 
 	public void setFisvbatchcontorl(UFBoolean fisvbatchcontorl) {
 		this.fisvbatchcontorl = fisvbatchcontorl;
+	}
+
+	public UFBoolean getFselect() {
+		return fselect;
+	}
+
+	public void setFselect(UFBoolean fselect) {
+		this.fselect = fselect;
 	} 
 } 

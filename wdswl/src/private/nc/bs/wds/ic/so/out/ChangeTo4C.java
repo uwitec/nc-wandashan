@@ -59,7 +59,7 @@ public class ChangeTo4C {
 	}
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();	
 	/**
-	 * @功能：签字动作
+	 * @功能：签字动作:得到销售出库单
 	 */
 	public AggregatedValueObject signQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws Exception {
 		if(bill==null){
@@ -67,7 +67,6 @@ public class ChangeTo4C {
 		}
 		this.coperator = coperator;
 		this.date = date;
-		//根据销售出库回传单，查找上有销售出库单（WDS8），然后分别对应交换成erp销售出库单(4C)
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
 		fisvbatchcontorl= hvo.getFisvbatchcontorl();
@@ -84,7 +83,7 @@ public class ChangeTo4C {
 			}
 			general_hs.add(general_h);
 		}
-		//分别对应交换成erp销售出库单(4C)
+		//根据销售出库回传单，查找上有销售出库单（WDS8），分别对应交换成erp销售出库单(4C)
 		GeneralBillVO vo = getGeneralBillVO( hvo,general_hs);
 		if(vo == null){
 			return null;

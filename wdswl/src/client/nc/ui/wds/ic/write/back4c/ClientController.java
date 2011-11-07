@@ -3,6 +3,7 @@ package nc.ui.wds.ic.write.back4c;
 
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
+import nc.ui.wds.w80020206.buttun0206.ISsButtun;
 import nc.vo.wds.ic.write.back4c.MultiBillVO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB1VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
@@ -26,6 +27,8 @@ public class ClientController extends AbstractManageController {
 }
 	public int[] getListButtonAry() {
 		int[] buttonArray = new int[] {
+				ISsButtun.all_selected,
+				ISsButtun.all_not_selected,
 				IBillButton.Query, 	
 				IBillButton.Card,
 				IBillButton.Brow,
