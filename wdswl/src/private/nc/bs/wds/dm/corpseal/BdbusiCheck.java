@@ -10,7 +10,7 @@ import nc.vo.wds.dm.sendinvdoc.SendinvdocVO;
 /**
  * 客户公司图章 后台校验类
  * @author Administrator
- *
+ *xjx  add
  */
 public class BdbusiCheck implements IBDBusiCheck {
 	private BaseDAO dao;
