@@ -184,7 +184,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			retflag = UIDialog.ID_OK;
 		}
 		setBackGround();
-//		chaneColor();
+		chaneColor();
 		setBodyModelState();
 		return retflag;
 	}

@@ -454,6 +454,7 @@ ActionListener, BillEditListener,BillEditListener2{
 			bbvo.setLvbatchcode(child.getLvbatchcode());// 回写批次
 			bbvo.setNprice(child.getNprice());// 单价
 			bbvo.setNmny(child.getNmny());// 金额
+		//	bbvo.setCdt_pk(child.getcdt)
 			getbillListPanel().getBodyBillModel().setBodyRowVO(bbvo, row);
 			getbillListPanel().getBodyBillModel().execLoadFormula();
 		}
@@ -480,7 +481,7 @@ ActionListener, BillEditListener,BillEditListener2{
 				//库存状态表ID
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("bd_cargdoc_tray.cdt_pk"), row, "cdt_pk");
 				//带出存货状态主键
-				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_stockstate.pk_state"), row, "pk_state");
+				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_stockstate.ss_pk"), row, "ss_pk");
 				//带出存货状态
 				getbillListPanel().getBodyBillModel().setValueAt(ref.getRefModel().getValue("tb_stockstate.ss_state"), row, "ss_state");
 			}
