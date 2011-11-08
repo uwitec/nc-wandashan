@@ -29,6 +29,7 @@ public class N_WDSO_APPROVE extends AbstractCompiler2 {
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
 		try {
 			super.m_tmpVo = vo;
+			String operator = (String)getUserObj();
 			// ####该组件为单动作工作流处理开始...不能进行修改####
 			Object m_sysflowObj = procActionFlow(vo);
 			if (m_sysflowObj != null) {
@@ -38,7 +39,7 @@ public class N_WDSO_APPROVE extends AbstractCompiler2 {
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
 			setParameter("date", vo.m_currentDate);
-			setParameter("operator", vo.m_operator);
+			setParameter("operator", operator);
 			setParameter("pk_corp",vo.m_coId);
 			//签字生成ERP销售出库单
 			AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "signQueryGenBillVO",
@@ -48,7 +49,7 @@ public class N_WDSO_APPROVE extends AbstractCompiler2 {
 			//
 			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
 			head.setDapprovedate(new UFDate(vo.m_currentDate));
-			head.setVapproveid(vo.m_operator);
+			head.setVapproveid(operator);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);

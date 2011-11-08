@@ -161,7 +161,8 @@ public class ChangeTo4C {
 			if(pk_billtype == null || "".equals(pk_billtype)){
 				return null;
 			}
-			setLocatorVO(billVO); //设置货位信息
+			 //设置货位信息
+			setLocatorVO(billVO);
 			GeneralBillVO vo =(GeneralBillVO) PfUtilTools.runChangeData(pk_billtype, "4C", billVO,null); //销售出库
 			setSpcGenBillVO(vo,coperator,date);
 			if(i == 0){

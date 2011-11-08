@@ -107,12 +107,8 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 	protected ManageEventHandler createEventHandler() {
 		return new ClientEventHandler(this, getUIControl());
 	}
-
-	/**
-	 * 增加后台校验
-	 */
 	public Object getUserObject() {
-		return null;
+		return _getOperator();
 	}
 
 	@Override
