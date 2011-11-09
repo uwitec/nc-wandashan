@@ -29,8 +29,8 @@ public class SoDealHeaderVo extends SuperVO {
 	
 	private UFDouble nminnum;//客户最低发货量
 	
-	private UFBoolean bisspecial= UFBoolean.FALSE;
-	
+//	private UFBoolean bisspecial= UFBoolean.FALSE;//是否特殊安排
+	private UFBoolean isonsell = UFBoolean.FALSE;//是否特殊安排
 	
 	public static String[] split_fields = new String[]{"ccustomerid"};
 	
@@ -75,12 +75,13 @@ public class SoDealHeaderVo extends SuperVO {
 		this.csalecorpid = csalecorpid;
 	}
 
-	public UFBoolean getBisspecial() {
-		return bisspecial;
+	
+	public UFBoolean getIsonsell() {
+		return isonsell;
 	}
 
-	public void setBisspecial(UFBoolean bisspecial) {
-		this.bisspecial = bisspecial;
+	public void setIsonsell(UFBoolean isonsell) {
+		this.isonsell = isonsell;
 	}
 
 	@Override

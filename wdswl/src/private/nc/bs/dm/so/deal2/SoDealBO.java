@@ -133,7 +133,7 @@ public class SoDealBO {
 				return false;
 			SoDealBillVO bill = (SoDealBillVO)o;
 //			特殊安排不考虑最小发货量
-			if(PuPubVO.getUFBoolean_NullAs(bill.getHeader().getBisspecial(), UFBoolean.FALSE).booleanValue()){
+			if(PuPubVO.getUFBoolean_NullAs(bill.getHeader().getIsonsell(), UFBoolean.FALSE).booleanValue()){
 				return true;
 			}
 			String ccustid = PuPubVO.getString_TrimZeroLenAsNull(bill.getHeader().getCcustomerid());

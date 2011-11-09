@@ -125,7 +125,7 @@ public class SoDealHealper {
 			tmpHead = new SoDealHeaderVo();
 			tmpHead.setCcustomerid(vos[0].getCcustomerid());
 			tmpHead.setDbilldate((UFDate)VOTool.min(vos, "dbilldate"));//应取 最小订单日期
-			tmpHead.setBisspecial(UFBoolean.FALSE);
+			tmpHead.setIsonsell(UFBoolean.FALSE);
 			tmpHead.setCsalecorpid(vos[0].getCsalecorpid());
 			tmpHead.setCbodywarehouseid(cwhid==null?vos[0].getCbodywarehouseid():cwhid);
 			tmpHead.setStatus(VOStatus.NEW);

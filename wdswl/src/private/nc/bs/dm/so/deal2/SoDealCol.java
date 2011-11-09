@@ -75,7 +75,7 @@ public class SoDealCol {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 通过分仓客商绑定获取  分仓客商的最小发货量设置
+	 * @说明 完达山物流项目 通过分仓客商绑定获取  分仓客商的最小发货量设置
 	 * @时间：2011-7-7下午04:09:28
 	 * @param ccustid
 	 * @param pk_store
@@ -98,16 +98,20 @@ public class SoDealCol {
 		}
 		return custMinNumInfor.get(key);
 	}
-	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：查询 存货库存量
+	 * @时间：2011-11-8下午07:59:53
+	 * @param invNumInfor
+	 * @throws BusinessException
+	 */
 	private void initInvNumInfor(Map<String, StoreInvNumVO> invNumInfor) throws BusinessException {
-
 		SoDealVO[] bodys = null;
 		SoDealHeaderVo head = null;
 		String key = null;
-
-		//	库存量信息  key 仓库+存货    
+		//	库存量信息  key =仓库+存货    
 		//	Map<String, StoreInvNumVO> invNumInfor = new HashMap<String, StoreInvNumVO>();
-
 		StoreInvNumVO tmpNumVO = null;
 		//	获取库存量
 		UFDouble[] stocknums = null;
@@ -117,7 +121,6 @@ public class SoDealCol {
 		for(SoDealBillVO bill:bills){
 			head = bill.getHeader();
 			bodys = bill.getBodyVos();
-
 			if(bodys == null || bodys.length ==0)
 				continue;
 
@@ -152,15 +155,10 @@ public class SoDealCol {
 				invNumInfor.put(key, tmpNumVO);				
 			}			
 		}
-
-
 		if(invNumInfor.size()==0){
 			Logger.info("本次待安排存货库存均为空，无法安排，推出");
 			return;
 		}
-		
-
-
 		//	获取占用量
 		Logger.info("获取存货已安排未出库量...");
 		Map<String,UFDouble[]> invNumInfor2 = getStockBO().getNdealNumInfor(pk_corp, head.getCbodywarehouseid(), invs.toArray(new String[0]), new TempTableUtil());

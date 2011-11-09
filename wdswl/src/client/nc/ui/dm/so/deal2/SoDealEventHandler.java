@@ -46,9 +46,7 @@ public class SoDealEventHandler{
 	public void onButtonClicked(String btnTag){
 		try {
 			if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
-
 				onDeal();
-
 			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
 							onNoSel();
 			}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
@@ -187,9 +185,7 @@ public class SoDealEventHandler{
 
 		//		对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
-
 		//处理查询出的计划  缓存  界面
-
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
 		getDataPane().execLoadFormula();
 		getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
@@ -266,17 +262,8 @@ public class SoDealEventHandler{
 		 * 
 		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
 		 * 
-		 */
-		
-//		whereSql.append("  nvl(h.dr,0)=0");
-//		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
-	
-//		whereSql.append(" and h.vbillstatus=1");
-		//liuys add for wds项目   总仓能查出所有分仓计划,分仓只能查出自己分仓计划(与登录人仓库绑定有关)
-		
-//		if(!WdsWlPubTool.isZc(ui.getWhid())){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-			
-			whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
+		 */			
+	whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
 			
 /**
  * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
