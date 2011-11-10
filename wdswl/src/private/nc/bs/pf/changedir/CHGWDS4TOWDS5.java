@@ -52,11 +52,11 @@ public String[] getField() {
 			"H_vinaddress->B_vreceiveaddress",//收货地址(销售订单表体)
 			"B_csourcebillhid->B_csaleid",
 			"B_csourcebillbid->B_corder_bid",
-			"B_vsourcebillcode->H_vreceiptcode",
+			"B_vsourcebillcode->B_vreceiptcode",
 			"B_vsourcerowno->B_crowno",
 			"B_cfirstbillhid->B_csaleid",
 			"B_cfirstbillbid->B_corder_bid",
-			"B_vfirstbillcode->H_vreceiptcode",
+			"B_vfirstbillcode->B_vreceiptcode",
 			"B_vfirstrowno->B_crowno",
 			
 			"B_pk_invmandoc->B_cinventoryid",
@@ -71,9 +71,7 @@ public String[] getField() {
 			
 			"B_nassarrangnum->B_nassnum",//安排辅数量
 			"B_narrangnmu->B_nnum",//安排数量
-			
-			
-//			"B_ndealnum->B_nnum",//安排数量
+
 		};
 }
 /**
@@ -93,7 +91,7 @@ public String[] getFormulas() {
 		    "H_dbilldate->\""+m_strDate+"\"",
 		    "H_dbegindate->\""+m_strDate+"\"",
 		    "H_pk_cubasdoc->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,H_ccustomerid)",
-			"B_csourcetype->\""+WdsWlPubConst.WDS4+"\"",
+			"B_csourcetype->\""+30+"\"",
 			"B_nhgrate->getColValue(bd_measdoc,scalefactor,pk_measdoc,B_assunit)",//换算率[辅单位]
 	};
 }

@@ -267,7 +267,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 	}
 
 	public void afterEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

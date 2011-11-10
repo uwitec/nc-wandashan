@@ -48,7 +48,6 @@ public class SoDealHealper {
 	public static void doDeal(List ldata, ToftPanel tp) throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;
-
 		SoDealClientUI ui = (SoDealClientUI)tp;
 		List<String> infor = new ArrayList<String>();
 		infor.add(ui.cl.getUser());

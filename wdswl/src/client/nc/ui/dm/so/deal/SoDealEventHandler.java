@@ -3,16 +3,18 @@ package nc.ui.dm.so.deal;
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillRelaSortListener2;
+import nc.ui.wl.pub.FilterNullBody;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
+import nc.vo.dm.so.deal2.SoDealHeaderVo;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
@@ -21,6 +23,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -30,19 +33,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 
 	private SoDealClientUI ui = null;
 	private SoDealQryDlg m_qrypanel = null;
-	private SoDealBillVO[] m_buffer = null;
-//	private SoDealBillVO[] billvos= null;
-	public SoDealBillVO[] getM_buffer() {
-		return m_buffer;
-	}
 	
-	public void setM_buffer(SoDealBillVO[] m_buffer) {
-		this.m_buffer = m_buffer;
-	}
-
+	public SoDealVO[] curBodys = null;
 	//数据缓存
 	private SoDealVO[] m_billdatas = null;
-	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
+//	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
 	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
@@ -74,7 +69,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			onQuery();
 		}else if (btnTag
 				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)) {
-			onXNDeal();
+//			onXNDeal();
 		}
 	}
 	
@@ -103,7 +98,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				list.add(dealvo);
 			}
 		}
-		return list.toArray( new SoDealVO[0]);
+		curBodys = list.toArray( new SoDealVO[0]);
+		return curBodys;
  	}
 	public void onNoSel(){
 		int rowcount = getDataPane().getRowCount();
@@ -112,21 +108,13 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		for(int i=0;i<rowcount;i++){
 			getDataPane().setValueAt(UFBoolean.FALSE, i, "bsel");
 		}
-		clearCache();
 	}
 	
-	private void clearCache(){
-		lseldata.clear();
-//		tsInfor.clear();
-	}
-
 	public void onAllSel(){
 		if(getDataBuffer() == null||getDataBuffer().length == 0)
 			return;
 		SoDealVO[] datas = getDataBuffer();
-		clearCache();
 		for(SoDealVO data:datas){
-			lseldata.add(data);
 //			tsInfor.put(data.getPk_plan_b(),data.getTs());
 		}
 		
@@ -135,11 +123,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			getDataPane().setValueAt(UFBoolean.TRUE, i, "bsel");
 		}
 	}
-	
-	
 	private SoDealQryDlg getQryDlg(){
 		if(m_qrypanel == null){
-			//parent, normalPnl, pk_corp, moduleCode, operator, busiType
 			m_qrypanel = new SoDealQryDlg(ui,
 					null,
 					ui.cl.getCorp(),
@@ -159,7 +144,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	
 	private void clearData(){
 		m_billdatas = null;
-		lseldata.clear();
 		getDataPane().clearBodyData();
 	}
 	/**
@@ -191,13 +175,21 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}		
-		
 		if(billdatas == null||billdatas.length == 0){
             clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
-
+		setDate(billdatas);
+	}
+	/**
+	 * 
+	 * @作者：lyf:查询完成设置界面数据
+	 * @说明：完达山物流项目 
+	 * @时间：2011-11-10下午11:57:53
+	 * @param billdatas
+	 */
+	void setDate(SoDealVO[] billdatas ){
 		CircularlyAccessibleValueObject[][]  voss = SplitBillVOs.getSplitVOs(billdatas, SoDeHeaderVo.split_fields);
 		if(voss == null || voss.length ==0)
 			return ;
@@ -226,7 +218,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		getDataPane().execLoadFormula();
 		getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
 		getBodyDataPane().execLoadFormula();
-		billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
 		 setDataBuffer(billdatas);		
 		showHintMessage("查询完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
@@ -273,41 +264,14 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	}
 	/**
 	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 发运计划 虚拟安排按钮处理方法
-	 * @时间：2011-3-25下午02:59:20
-	 */
-	public void onXNDeal() {
-		if (lseldata == null || lseldata.size() == 0) {
-			showWarnMessage("请选中要处理的数据");
-			return;
-		}
-		XnApDLG  tdpDlg = new XnApDLG(WdsWlPubConst.XNAP,  ui.getCl().getUser(),
-				ui.getCl().getCorp(), ui, lseldata);
-		if(tdpDlg.showModal()== UIDialog.ID_OK){}
-		// nc.ui.pub.print.IDataSource dataSource = new DealDataSource(
-		// ui.getBillListPanel(), WdsWlPubConst.DM_PLAN_DEAL_NODECODE);
-		// nc.ui.pub.print.PrintEntry print = new
-		// nc.ui.pub.print.PrintEntry(null,
-		// dataSource);
-		// print.setTemplateID(ui.getEviment().getCorporation().getPk_corp(),WdsWlPubConst.DM_PLAN_DEAL_NODECODE,ui.getEviment().getUser().getPrimaryKey(),
-		// null, null);
-		// if (print.selectTemplate() == 1)
-		// print.preview();
-
-	}
-	/**
-	 * 
 	 * @作者：zhf
 	 * @说明：完达山物流项目 
 	 * 发运计划  安排按钮处理方法
 	 * @时间：2011-3-25下午02:59:20
 	 */
 	public void onDeal(){
-		//安排  安排前   数据校验
 		/**
 		 * 数据校验
-		 * 调出仓库不能为空   调入仓库不能为空 两个仓库不能相同  
 		 * 过滤掉本次安排数量为0的行  
 		 * 本次安排数量不能大于 计划数量-累计安排数量
 		 * 将满足的数据传入后台   数据转换   保存    
@@ -315,47 +279,42 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 分单规则：计划号  发货站 收货站  存货   单据日期   安排日期
 		 * 
 		 */
-		WdsWlPubTool.stopEditing(getDataPane());
-		if(lseldata==null||lseldata.size()==0){
-			showWarnMessage("请选中要处理的数据");
+		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDealHeaderVo.class.getName(), SoDealVO.class.getName());
+		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
+		if(newVos == null || newVos.length == 0){
+			showWarnMessage("未选中数据");
 			return;
 		}
-		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(lseldata,"nnum");
+		for(int i=0;i<newVos.length;i++){
+			Object cbodywarehouseid =newVos[i].getParentVO().getAttributeValue("cbodywarehouseid");
+			CircularlyAccessibleValueObject[] bodys = newVos[i].getChildrenVO();
+			if(bodys != null){
+				for(CircularlyAccessibleValueObject body:bodys){
+					body.setAttributeValue("cbodywarehouseid", cbodywarehouseid);
+				}
+			}
+		}
+		CircularlyAccessibleValueObject[][]  splitVos = SplitBillVOs.getSplitVOs(WdsWlPubTool.getParentVOFromAggBillVo(newVos, SoDeHeaderVo.class), new String[]{"ccustomerid"});
+		if(splitVos !=null && splitVos.length>1){
+			showErrorMessage("只能安排相同的客户合单");
+			return ;
+		}
+		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(WdsWlPubTool.getBodysVOFromAggBillVo(newVos, SoDealVO.class),"nnum");
 		if(ldata == null||ldata.size() == 0){
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
-		//
-		
-		
+		List<SoDealVO > left = new ArrayList<SoDealVO>();
+		for(SoDealVO buf:m_billdatas){
+			if(ldata.contains(buf))
+			continue;
+			left.add(buf);
+		}
 		try{
 			for(SuperVO vo:ldata){
 				((SoDealVO)vo).validataOnDeal();
 			}
 			SoDealHealper.doDeal(ldata, ui);
-			
-//			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,false);	
-//			clearData();
-			
-			
-		  //对于已经安排的单选中了自动安排的记录 进行再次安排
-			List<SuperVO>  sdata=WdsWlPubTool.filterVOsisAutoSell(ldata);
-			if(sdata==null || sdata.size()==0){
-				getLeftDate(ldata);			
-				clearCache();
-				return;
-			}
-			for(SuperVO vo:sdata){
-				((SoDealVO)vo).validataOnDeal();
-			}			
-			SoDealHealper.doDeal(sdata, ui);
-			getLeftDate(sdata);			
-			clearCache();
-		
-			
-			
-			
-			
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
@@ -365,56 +324,10 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
+		setDataBuffer(left.toArray( new SoDealVO[0]));
 		ui.showHintMessage("安排已经完成...");
 	}
-	
-	private void getLeftDate(List<SuperVO> ldata){
-		List<SoDealVO> leftDate = new ArrayList<SoDealVO>();
-		if(m_billdatas == null || m_billdatas.length==0){
-			ui.showWarningMessage("获取缓存数据出错，请重新查询");
-		}
-		for(SoDealVO dealVO:m_billdatas){
-			if(ldata.contains(dealVO))
-				continue;
-			leftDate.add(dealVO);
-		}
-		getDataPane().setBodyDataVO(leftDate.toArray(new SoDealVO[0]));
-		getDataPane().execLoadFormula();
-		setDataBuffer(leftDate.toArray(new SoDealVO[0]));	
-	}
-
-	public void afterEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
-		int row = e.getRow();
-		String key = e.getKey();
-		if(row < 0)
-			return;
-		if(key.equalsIgnoreCase("isonsell")){
-			UFBoolean onsell = PuPubVO.getUFBoolean_NullAs(getDataPane().getValueAt(row, "isonsell"), UFBoolean.FALSE);
-			
-			getDataBuffer()[row].setIsonsell(onsell);		
-		}
-		if(key.equalsIgnoreCase("bsel")){
-			UFBoolean bsel = PuPubVO.getUFBoolean_NullAs(getDataPane().getValueAt(row, "bsel"), UFBoolean.FALSE);
-			if(bsel.booleanValue()){
-			    lseldata.add(getDataBuffer()[row]);
-			}else{
-				lseldata.remove(getDataBuffer()[row]);
-			}   
-		}else if("nnum".equalsIgnoreCase(key)){
-			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
-			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nassnum")));
-		}else if("nassnum".equalsIgnoreCase(key)){
-			getDataBuffer()[row].setNassnum(PuPubVO.getUFDouble_NullAsZero(e.getValue()));
-			getDataBuffer()[row].setNnum(PuPubVO.getUFDouble_NullAsZero(getDataPane().getValueAt(row, "nnum")));
-		}else if("warehousename".equalsIgnoreCase(key)){
-			getDataBuffer()[row].setCbodywarehouseid(PuPubVO.getString_TrimZeroLenAsNull(getDataPane().getValueAt(row, "cbodywarehouseid")));
-		}
-	}
-
-	public void bodyRowChange(BillEditEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void bodyRowChange(BillEditEvent e) {		
 	}
 	
 	private void showErrorMessage(String msg){
@@ -430,6 +343,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	public Object[] getRelaSortObjectArray() {
 		// TODO Auto-generated method stub
 		return getDataBuffer();
+	}
+
+	public void afterEdit(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

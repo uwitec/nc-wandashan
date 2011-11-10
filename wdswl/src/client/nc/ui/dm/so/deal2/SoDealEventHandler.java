@@ -332,7 +332,6 @@ public class SoDealEventHandler{
 			Object[] os = (Object[])o;
 			if(os == null || os.length == 0)
 				return;
-
 			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
 			//		未安排的客户信息
 			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[1];		

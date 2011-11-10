@@ -2,6 +2,7 @@ package nc.vo.wl.pub;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -459,7 +460,7 @@ private static Map<String,String> custNameInfor = new HashMap<String, String>();
 		return showvalues;
 	}
 	
-	private static final List<CircularlyAccessibleValueObject> tempVoList = new ArrayList<CircularlyAccessibleValueObject>();
+	private static final ArrayList<CircularlyAccessibleValueObject> tempVoList = new ArrayList<CircularlyAccessibleValueObject>();
 	/**
 	 * 
 	 * @author zhf
@@ -479,7 +480,29 @@ private static Map<String,String> custNameInfor = new HashMap<String, String>();
 		}
 		if(tempVoList.size() == 0)
 			return null;
-		return tempVoList.toArray((CircularlyAccessibleValueObject[])java.lang.reflect.Array.newInstance(parentClass, billvos.length));
+		return tempVoList.toArray(new CircularlyAccessibleValueObject[0]);
+	}
+	
+	/**
+	 * 
+	 * @author zhf
+	 * @说明：（鹤岗矿业）公用组件 返回传入单据vo 的表头vo
+	 * 2011-5-5上午10:17:20
+	 * @param billvos  单据vo 数组
+	 * @return
+	 */
+	public static ArrayList<CircularlyAccessibleValueObject> getBodysVOFromAggBillVo(AggregatedValueObject[] billvos,Class parentClass){
+		if(billvos == null || billvos.length ==0)
+			return null;
+		tempVoList.clear();
+		for(AggregatedValueObject bill:billvos){
+			if(bill.getChildrenVO() == null || bill.getChildrenVO().length ==0)
+				continue;
+			tempVoList.addAll(Arrays.asList(bill.getChildrenVO()));
+		}
+		if(tempVoList.size() == 0)
+			return null;
+		return tempVoList;
 	}
 	/**
 	 * 

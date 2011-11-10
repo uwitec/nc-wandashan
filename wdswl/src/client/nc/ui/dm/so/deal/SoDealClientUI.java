@@ -48,10 +48,10 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO, 2,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
-	private ButtonObject m_btnXnDeal = new ButtonObject(
-			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
-			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
-			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL);
+//	private ButtonObject m_btnXnDeal = new ButtonObject(
+//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
+//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
+//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL);
 
 	protected ClientEnvironment m_ce = null;
 	protected ClientLink cl = null;
@@ -227,9 +227,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 		} else if (btnTag
 				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)) {
 			m_btnQry.setEnabled(flag);
-		}else if(btnTag
-				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)){
-			m_btnXnDeal.setEnabled(flag);
 		}
 		updateButtons();
 	}
@@ -279,7 +276,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 	}
 
 	public void afterEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
+		String key = e.getKey();
 		
 	}
 
