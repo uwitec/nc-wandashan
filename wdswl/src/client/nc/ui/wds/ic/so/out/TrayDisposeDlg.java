@@ -114,7 +114,7 @@ ActionListener, BillEditListener,BillEditListener2{
 		setName("BillSourceUI");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(800, 650);
-		setTitle("选择托盘");
+		setTitle("托盘选择");
 		setContentPane(getUIDialogContentPane());
 		setEdit();
 		addListenerEvent();
@@ -329,6 +329,9 @@ ActionListener, BillEditListener,BillEditListener2{
 	}
 
 	private void validateTrayInfor(TbOutgeneralTVO[] bvos) throws BusinessException{
+		// liuys add 判断如果表体为空则退出
+		if(bvos == null || bvos.length == 0 || bvos[0] == null )
+			return;
 		CircularlyAccessibleValueObject[][] os = SplitBillVOs.getSplitVOs(bvos, TbOutgeneralTVO.combin_fields);
 		if(os == null || os.length ==0)
 			throw new BusinessException("数据处理异常");
@@ -502,6 +505,7 @@ ActionListener, BillEditListener,BillEditListener2{
 				String key = bvo.getCrowno();
 				TbOutgeneralTVO[] bvos = (TbOutgeneralTVO[])getbillListPanel().getBodyBillModel().getBodyValueVOs(TbOutgeneralTVO.class.getName());
 				try {
+					
 					validateTrayInfor(bvos);//zhf
 				} catch (BusinessException e1) {
 					// TODO Auto-generated catch block

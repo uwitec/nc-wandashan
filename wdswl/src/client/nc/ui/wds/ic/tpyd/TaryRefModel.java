@@ -95,8 +95,9 @@ public class TaryRefModel  extends AbstractRefModel{
 	       	m_sTableName.append(" join bd_cargdoc_tray on wds_cargdoc.pk_wds_cargdoc=bd_cargdoc_tray.pk_wds_cargdoc");
 	       	m_sTableName.append(" join bd_invmandoc on bd_invmandoc.pk_invmandoc = bd_cargdoc_tray.cdt_invmandoc");
 	       	m_sTableName.append(" join bd_invbasdoc on bd_invbasdoc.pk_invbasdoc=bd_cargdoc_tray.cdt_invbasdoc");
-	       	
-	       	
+	       	// liuys add    增加过滤条件,不能大于托盘的最大容量(当前未考虑有容量的托盘,只考虑参照出空托盘)
+	       	m_sTableName.append(" left join wds_invbasdoc on bd_invmandoc.pk_invmandoc=wds_invbasdoc.pk_invmandoc ");
+	       	m_sTableName.append(" left join tb_warehousestock on tb_warehousestock.pplpt_pk = bd_cargdoc_tray.cdt_pk ");
 	       	
 	       	
 		return m_sTableName.toString();

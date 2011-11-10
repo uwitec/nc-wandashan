@@ -38,7 +38,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	public OutPubClientUI ui = null;
 	private LoginInforHelper login=null;
-
+	//liuys  add 	取托盘选择界面批次号
+	private String uiVbatchcode;
+	
 	public OutPubEventHandler(OutPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 		ui = billUI;
@@ -463,6 +465,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
 						._getCorp().getPrimaryKey(), ui, true);
 		int retflag = UIDialog.ID_CANCEL;
+		
 		if (tdpDlg.showModal() == UIDialog.ID_OK) {
 			Map<String, List<TbOutgeneralTVO>> map2 = tdpDlg.getBufferData();
 			ui.setTrayInfor(map2);
@@ -494,8 +497,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				if (list == null || list.size() <= 0) {
 					return;
 				}
-				// 获取批次号
-				// 批次号
+				// 获取批次号// 批次号
 				String vbachcode = "";
 				// 来源批次号
 				String svbachcode = "";
@@ -519,6 +521,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 							vbl.add(vo.getLvbatchcode());
 						}
 					}
+					//liuys add 记录托盘选择的批次号
+					setUiVbatchcode(vo.getVbatchcode());
 				}
 				if (vbachcode.length() > 1) {
 					// 给界面的批次号赋值
@@ -607,4 +611,20 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
 	}
+	/**
+	 * 提供获取批次方法
+	 * @作者：liuys
+	 * @说明：完达山物流项目 
+	 * @时间：2011-11-10下午04:11:04
+	 * @return
+	 */
+
+	public String getUiVbatchcode() {
+		return uiVbatchcode;
+	}
+
+	public void setUiVbatchcode(String uiVbatchcode) {
+		this.uiVbatchcode = uiVbatchcode;
+	}
+	
 }

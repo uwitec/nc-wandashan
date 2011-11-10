@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
+import nc.ui.tm.framework.iufo.PubTools;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
@@ -181,11 +182,14 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 				JComponent jc = getBillCardPanel().getBodyItem("intarycode").getComponent();
 				if( jc instanceof UIRefPane){
 					UIRefPane ref = (UIRefPane)jc;
-					
+					//liuys modify 
 					ref.getRefModel().addWherePart(" and wds_cargdoc.pk_cargdoc='"+a
-							+"' and isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_null+
-							" and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
-									" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//当前货位下托盘为空且和移出托盘一样的存货
+							+"' and (isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_null+
+							" or isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_use+
+							") and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
+									" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' "
+									+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) >= "+getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")
+					);//当前货位下托盘为空且和移出托盘一样的存货
 				}
 			}
 			
