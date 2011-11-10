@@ -12,7 +12,7 @@ public class Writeback4yBusinessDelegator extends nc.ui.trade.bsdelegate.Busines
 	@Override
 	public Hashtable loadChildDataAry(String[] tableCodes, String key)
 			throws Exception {
-		String strWhere =" isnull(dr,0)=0 and pk_wds_writeback4Y_h='"+key+"'";
+		String strWhere =" isnull(dr,0)=0 and pk_wds_writeback4y_h='"+key+"'";
 		SuperVO[] b1vos = this.queryByCondition(Writeback4yB1VO.class, strWhere);
 		SuperVO[] b2vos = this.queryByCondition(Writeback4yB2VO.class, strWhere);
 		Hashtable<String, SuperVO[]> dataH=new Hashtable<String, SuperVO[]>();

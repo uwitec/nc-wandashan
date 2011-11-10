@@ -49,14 +49,14 @@ public class Writeback4yB2VO extends SuperVO {
 	public String assunit; // 存货辅计量单位id
 	public UFDouble ninnum;//入库数量
 	public UFDouble ninassistnum;//入库辅数量
-
+	public String pk_wds_writeback4y_b2;
+	public String pk_wds_writeback4y_h;
 	public String reserve5;
 	public String vdef4;
 	public Integer dr;
 	public UFDate reserve12;
 	public UFDateTime ts;
 	public UFDouble reserve6;
-	public String pk_wds_writeback4Y_b2;
 	public UFBoolean reserve14;
 	public UFDouble reserve10;
 	public String vdef3;
@@ -66,7 +66,7 @@ public class Writeback4yB2VO extends SuperVO {
 	public String reserve2;
 	public String vdef10;
 	public String vdef5;
-	public String pk_wds_writeback4Y_h;
+
 	public String reserve4;
 	public String vdef7;
 	public String vdef2;
@@ -81,57 +81,6 @@ public class Writeback4yB2VO extends SuperVO {
 	public String vdef8;
 	public UFDouble reserve7;
 	public String vdef6;
-
-	public static final String RESERVE5 = "reserve5";
-	public static final String ASSUNIT = "assunit";
-	public static final String CSOURCEBILLHID = "csourcebillhid";
-	public static final String VDEF4 = "vdef4";
-	public static final String VFIRSTBILLCODE = "vfirstbillcode";
-	public static final String CSOURCETYPE = "csourcetype";
-	public static final String DR = "dr";
-	public static final String NARRANGNUM = "narrangnum";
-	public static final String RESERVE12 = "reserve12";
-	public static final String TS = "ts";
-	public static final String NOUTNUM = "noutnum";
-	public static final String RESERVE6 = "reserve6";
-	public static final String CROWNO = "crowno";
-	public static final String PK_WDS_WRITEBACK4Y_B2 = "pk_wds_writeback4y_b2";
-	public static final String GEB_PK = "geb_pk";
-	public static final String RESERVE14 = "reserve14";
-	public static final String NOUTASSISTNUM = "noutassistnum";
-	public static final String RESERVE10 = "reserve10";
-	public static final String GEH_PK = "geh_pk";
-	public static final String VDEF3 = "vdef3";
-	public static final String RESERVE1 = "reserve1";
-	public static final String RESERVE16 = "reserve16";
-	public static final String RESERVE15 = "reserve15";
-	public static final String PK_INVMANDOC = "pk_invmandoc";
-	public static final String RESERVE2 = "reserve2";
-	public static final String VDEF10 = "vdef10";
-	public static final String CFIRSTBILLBID = "cfirstbillbid";
-	public static final String VDEF5 = "vdef5";
-	public static final String PK_WDS_WRITEBACK4Y_H = "pk_wds_writeback4y_h";
-	public static final String NASSARRANGNUM = "nassarrangnum";
-	public static final String CFIRSTBILLHID = "cfirstbillhid";
-	public static final String RESERVE4 = "reserve4";
-	public static final String VDEF7 = "vdef7";
-	public static final String PK_INVBASDOC = "pk_invbasdoc";
-	public static final String VDEF2 = "vdef2";
-	public static final String RESERVE11 = "reserve11";
-	public static final String VMEMO = "vmemo";
-	public static final String VSOURCEBILLCODE = "vsourcebillcode";
-	public static final String VDEF1 = "vdef1";
-	public static final String RESERVE3 = "reserve3";
-	public static final String CSOURCEBILLBID = "csourcebillbid";
-	public static final String RESERVE13 = "reserve13";
-	public static final String UNIT = "unit";
-	public static final String RESERVE8 = "reserve8";
-	public static final String RESERVE9 = "reserve9";
-	public static final String VDEF9 = "vdef9";
-	public static final String VDEF8 = "vdef8";
-	public static final String CFIRSTTYPE = "cfirsttype";
-	public static final String RESERVE7 = "reserve7";
-	public static final String VDEF6 = "vdef6";
 
 	/**
 	 * 属性reserve5的Getter方法.
@@ -404,7 +353,7 @@ public class Writeback4yB2VO extends SuperVO {
 	 * @return String
 	 */
 	public String getPk_wds_writeback4Y_b2() {
-		return pk_wds_writeback4Y_b2;
+		return pk_wds_writeback4y_b2;
 	}
 
 	/**
@@ -415,9 +364,9 @@ public class Writeback4yB2VO extends SuperVO {
 	 * @param newPk_wds_writeback4Y_b2
 	 *            String
 	 */
-	public void setPk_wds_writeback4Y_b2(String newPk_wds_writeback4Y_b2) {
+	public void setPk_wds_writeback4Y_b2(String newPk_wds_writeback4y_b2) {
 
-		pk_wds_writeback4Y_b2 = newPk_wds_writeback4Y_b2;
+		pk_wds_writeback4y_b2 = newPk_wds_writeback4y_b2;
 	}
 	/**
 	 * 属性reserve14的Getter方法.
@@ -669,28 +618,14 @@ public class Writeback4yB2VO extends SuperVO {
 		vdef5 = newVdef5;
 	}
 
-	/**
-	 * 属性pk_wds_writeback4Y_h的Getter方法.
-	 * 
-	 * 创建日期:2011-11-3
-	 * 
-	 * @return String
-	 */
-	public String getPk_wds_writeback4Y_h() {
-		return pk_wds_writeback4Y_h;
+	
+	
+	public String getPk_wds_writeback4y_h() {
+		return pk_wds_writeback4y_h;
 	}
 
-	/**
-	 * 属性pk_wds_writeback4Y_h的Setter方法.
-	 * 
-	 * 创建日期:2011-11-3
-	 * 
-	 * @param newPk_wds_writeback4Y_h
-	 *            String
-	 */
-	public void setPk_wds_writeback4Y_h(String newPk_wds_writeback4Y_h) {
-
-		pk_wds_writeback4Y_h = newPk_wds_writeback4Y_h;
+	public void setPk_wds_writeback4y_h(String pk_wds_writeback4y_h) {
+		this.pk_wds_writeback4y_h = pk_wds_writeback4y_h;
 	}
 
 	/**
@@ -1188,8 +1123,8 @@ public class Writeback4yB2VO extends SuperVO {
 		// fields that cannot be null.
 		// 检查是否为不允许空的字段赋了空值,你可能需要修改下面的提示信息:
 
-		if (pk_wds_writeback4Y_b2 == null) {
-			errFields.add(new String("pk_wds_writeback4Y_b2"));
+		if (pk_wds_writeback4y_b2 == null) {
+			errFields.add(new String("pk_wds_writeback4y_b2"));
 		}
 
 		StringBuffer message = new StringBuffer();
@@ -1215,7 +1150,7 @@ public class Writeback4yB2VO extends SuperVO {
 	 */
 	public java.lang.String getParentPKFieldName() {
 
-		return "pk_wds_writeback4Y_h";
+		return "pk_wds_writeback4y_h";
 
 	}
 
@@ -1228,7 +1163,7 @@ public class Writeback4yB2VO extends SuperVO {
 	 * @return java.lang.String
 	 */
 	public java.lang.String getPKFieldName() {
-		return "pk_wds_writeback4Y_b2";
+		return "pk_wds_writeback4y_b2";
 	}
 
 	/**
@@ -1259,13 +1194,13 @@ public class Writeback4yB2VO extends SuperVO {
 	 * 
 	 * 创建日期:2011-11-3
 	 * 
-	 * @param newPk_wds_writeback4Y_b2
+	 * @param newPk_wds_writeback4y_b2
 	 *            主键值
 	 */
-	public Writeback4yB2VO(String newPk_wds_writeback4Y_b2) {
+	public Writeback4yB2VO(String newPk_wds_writeback4y_b2) {
 
 		// 为主键字段赋值:
-		pk_wds_writeback4Y_b2 = newPk_wds_writeback4Y_b2;
+		pk_wds_writeback4y_b2 = newPk_wds_writeback4y_b2;
 
 	}
 
@@ -1278,7 +1213,7 @@ public class Writeback4yB2VO extends SuperVO {
 	 */
 	public String getPrimaryKey() {
 
-		return pk_wds_writeback4Y_b2;
+		return pk_wds_writeback4y_b2;
 
 	}
 
@@ -1290,9 +1225,9 @@ public class Writeback4yB2VO extends SuperVO {
 	 * @param newPk_wds_writeback4Y_b2
 	 *            String
 	 */
-	public void setPrimaryKey(String newPk_wds_writeback4Y_b2) {
+	public void setPrimaryKey(String newPk_wds_writeback4y_b2) {
 
-		pk_wds_writeback4Y_b2 = newPk_wds_writeback4Y_b2;
+		pk_wds_writeback4y_b2 = newPk_wds_writeback4y_b2;
 
 	}
 

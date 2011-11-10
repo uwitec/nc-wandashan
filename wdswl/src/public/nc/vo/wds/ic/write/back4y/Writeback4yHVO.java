@@ -87,9 +87,9 @@ import nc.vo.pub.lang.*;
              public String pk_wds_writeback4Y_h;
              //调出公司
         	 public String pk_corp;   
-             ////调出库存组织
+             //调出库存组织
              public String pk_calbody;
-           //调出仓库
+             //调出仓库
              public String cwarehouseid;
              //调入公司
              public String cothercorpid;
@@ -97,52 +97,6 @@ import nc.vo.pub.lang.*;
              public String cothercalbodyid;
              //调入仓库
              public String cotherwhid;
-            
-             public static final String  PK_CORP="pk_corp";   
-             public static final String  RESERVE5="reserve5";   
-             public static final String  RESERVE4="reserve4";   
-             public static final String  VDEF4="vdef4";   
-             public static final String  DMAKEDATE="dmakedate";   
-             public static final String  VDEF7="vdef7";   
-             public static final String  DR="dr";   
-             public static final String  VOPERATORID="voperatorid";   
-             public static final String  VAPPROVENOTE="vapprovenote";   
-             public static final String  PK_BILLTYPE="pk_billtype";   
-             public static final String  VBILLSTATUS="vbillstatus";   
-             public static final String  VEMPLOYEEID="vemployeeid";   
-             public static final String  VDEF2="vdef2";   
-             public static final String  RESERVE12="reserve12";   
-             public static final String  RESERVE11="reserve11";   
-             public static final String  VMEMO="vmemo";   
-             public static final String  TS="ts";   
-             public static final String  PK_BUSITYPE="pk_busitype";   
-             public static final String  RESERVE6="reserve6";   
-             public static final String  VDEF1="vdef1";   
-             public static final String  RESERVE3="reserve3";   
-             public static final String  RESERVE14="reserve14";   
-             public static final String  DBILLDATE="dbilldate";   
-             public static final String  VBILLNO="vbillno";   
-             public static final String  RESERVE13="reserve13";   
-             public static final String  RESERVE10="reserve10";   
-             public static final String  CGENERALHID="cgeneralhid";   
-             public static final String  PK_DEPTDOC="pk_deptdoc";   
-             public static final String  RESERVE9="reserve9";   
-             public static final String  RESERVE8="reserve8";   
-             public static final String  VDEF3="vdef3";   
-             public static final String  VDEF9="vdef9";   
-             public static final String  RESERVE1="reserve1";   
-             public static final String  DAPPROVEDATE="dapprovedate";   
-             public static final String  VDEF8="vdef8";   
-             public static final String  RESERVE16="reserve16";   
-             public static final String  RESERVE7="reserve7";   
-             public static final String  VAPPROVEID="vapproveid";   
-             public static final String  RESERVE15="reserve15";   
-             public static final String  RESERVE2="reserve2";   
-             public static final String  VDEF6="vdef6";   
-             public static final String  VDEF10="vdef10";   
-             public static final String  VDEF5="vdef5";   
-             public static final String  PK_WDS_WRITEBACK4Y_H="pk_wds_writeback4y_h";   
-      
     
         /**
 	   * 属性pk_corp的Getter方法.

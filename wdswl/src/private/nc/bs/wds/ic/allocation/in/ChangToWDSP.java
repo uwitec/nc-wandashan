@@ -91,6 +91,9 @@ public class ChangToWDSP {
 			head = (TbGeneralHVO) bill.getParentVO();
 			TbGeneralBVO[] bvos = (TbGeneralBVO[]) bill.getTableVO(bill
 					.getTableCodes()[0]);
+			if(bvos == null || bvos.length ==0){
+				return ;
+			}
 			for (TbGeneralBVO bvo : bvos) {
 				String key = PuPubVO.getString_TrimZeroLenAsNull(bvo
 						.getGylbillhid());// getGylbillhid
@@ -314,7 +317,7 @@ public class ChangToWDSP {
 			b1vos[i].setCbilltypecode(generalHead.getCbilltypecode());
 			b1vos[i].setPk_invmandoc(generalBods[i].getCinventoryid());// 存货管理id
 			b1vos[i].setPk_invbasdoc(generalBods[i].getCinvmanid());// 存货基本id
-			b1vos[i].setUnit(generalBods[i].getCaccountunitid());// 存货主计量单位
+			b1vos[i].setUnit(generalBods[i].getPk_measdoc());// 存货主计量单位
 			b1vos[i].setAssunit(generalBods[i].getCastunitid());// 存货辅计量单位
 			b1vos[i].setNnumber(generalBods[i].getNshouldoutnum());// 应出数量
 			b1vos[i].setNpacknumber(generalBods[i].getNshouldoutassistnum());// 应出辅数量
@@ -361,6 +364,8 @@ public class ChangToWDSP {
 			b2vos[i].setPk_invbasdoc(list.get(i).getGeb_cinvbasid());
 			b2vos[i].setUnit(list.get(i).getCastunitid());
 			b2vos[i].setAssunit(list.get(i).getCastunitid());
+			b2vos[i].setNinnum(list.get(i).getGeb_anum());
+			b2vos[i].setNinassistnum(list.get(i).getGeb_banum());
 			b2vos[i].setStatus(VOStatus.NEW);
 		}
 		return b2vos;

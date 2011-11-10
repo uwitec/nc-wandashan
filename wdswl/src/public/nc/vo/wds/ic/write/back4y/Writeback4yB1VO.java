@@ -45,8 +45,8 @@ import nc.vo.pub.lang.*;
         	 public UFDouble noutassistnum;//累计出库辅数量
         	 public UFDouble ninnum;//累计入库数量
         	 public UFDouble ninassistnum;//累计入库数量
-        	 public String pk_wds_writeback4Y_h;
-             public String pk_wds_writeback4Y_b1;
+        	 public String pk_wds_writeback4y_h;
+             public String pk_wds_writeback4y_b1;
             
              public String reserve5;
              public String vdef4;
@@ -898,45 +898,45 @@ import nc.vo.pub.lang.*;
 	 } 	  
        
         /**
-	   * 属性pk_wds_writeback4Y_h的Getter方法.
+	   * 属性pk_wds_writeback4y_h的Getter方法.
 	   *
 	   * 创建日期:2011-11-3
 	   * @return String
 	   */
-	 public String getPk_wds_writeback4Y_h() {
-		 return pk_wds_writeback4Y_h;
+	 public String getPk_wds_writeback4y_h() {
+		 return pk_wds_writeback4y_h;
 	  }   
 	  
      /**
-	   * 属性pk_wds_writeback4Y_h的Setter方法.
+	   * 属性pk_wds_writeback4y_h的Setter方法.
 	   *
 	   * 创建日期:2011-11-3
-	   * @param newPk_wds_writeback4Y_h String
+	   * @param newPk_wds_writeback4y_h String
 	   */
-	public void setPk_wds_writeback4Y_h(String newPk_wds_writeback4Y_h) {
+	public void setPk_wds_writeback4y_h(String newPk_wds_writeback4y_h) {
 		
-		pk_wds_writeback4Y_h = newPk_wds_writeback4Y_h;
+		pk_wds_writeback4y_h = newPk_wds_writeback4y_h;
 	 } 	  
        
         /**
-	   * 属性pk_wds_writeback4Y_b1的Getter方法.
+	   * 属性pk_wds_writeback4y_b1的Getter方法.
 	   *
 	   * 创建日期:2011-11-3
 	   * @return String
 	   */
-	 public String getPk_wds_writeback4Y_b1() {
-		 return pk_wds_writeback4Y_b1;
+	 public String getPk_wds_writeback4y_b1() {
+		 return pk_wds_writeback4y_b1;
 	  }   
 	  
      /**
-	   * 属性pk_wds_writeback4Y_b1的Setter方法.
+	   * 属性pk_wds_writeback4y_b1的Setter方法.
 	   *
 	   * 创建日期:2011-11-3
-	   * @param newPk_wds_writeback4Y_b1 String
+	   * @param newPk_wds_writeback4y_b1 String
 	   */
-	public void setPk_wds_writeback4Y_b1(String newPk_wds_writeback4Y_b1) {
+	public void setPk_wds_writeback4y_b1(String newPk_wds_writeback4y_b1) {
 		
-		pk_wds_writeback4Y_b1 = newPk_wds_writeback4Y_b1;
+		pk_wds_writeback4y_b1 = newPk_wds_writeback4y_b1;
 	 } 	  
        
        
@@ -954,8 +954,8 @@ import nc.vo.pub.lang.*;
                                                       // fields that cannot be null.
        		  // 检查是否为不允许空的字段赋了空值,你可能需要修改下面的提示信息:
 	
-	   		if (pk_wds_writeback4Y_b1 == null) {
-			errFields.add(new String("pk_wds_writeback4Y_b1"));
+	   		if (pk_wds_writeback4y_b1 == null) {
+			errFields.add(new String("pk_wds_writeback4y_b1"));
 			  }	
 	   	
 	    StringBuffer message = new StringBuffer();
@@ -980,7 +980,7 @@ import nc.vo.pub.lang.*;
 	  */
 	public java.lang.String getParentPKFieldName() {
 	  	 
-	 		return "pk_wds_writeback4Y_h";
+	 		return "pk_wds_writeback4y_h";
 	 	
 	}   
     
@@ -991,7 +991,7 @@ import nc.vo.pub.lang.*;
 	  * @return java.lang.String
 	  */
 	public java.lang.String getPKFieldName() {
-	 	  return "pk_wds_writeback4Y_b1";
+	 	  return "pk_wds_writeback4y_b1";
 	 	}
     
 	/**
@@ -1019,12 +1019,12 @@ import nc.vo.pub.lang.*;
 	 * 使用主键进行初始化的构造子.
 	 *
 	 * 创建日期:2011-11-3
-	 * @param newPk_wds_writeback4Y_b1 主键值
+	 * @param newPk_wds_writeback4y_b1 主键值
 	 */
-	 public Writeback4yB1VO(String newPk_wds_writeback4Y_b1) {
+	 public Writeback4yB1VO(String newPk_wds_writeback4y_b1) {
 		
 		// 为主键字段赋值:
-		 pk_wds_writeback4Y_b1 = newPk_wds_writeback4Y_b1;
+		 pk_wds_writeback4y_b1 = newPk_wds_writeback4y_b1;
 	
     	}
     
@@ -1037,7 +1037,7 @@ import nc.vo.pub.lang.*;
 	  */
 	   public String getPrimaryKey() {
 				
-		 return pk_wds_writeback4Y_b1;
+		 return pk_wds_writeback4y_b1;
 	   
 	   }
 
@@ -1045,11 +1045,11 @@ import nc.vo.pub.lang.*;
 	  * 设置对象标识,用来唯一定位对象.
 	  *
 	  * 创建日期:2011-11-3
-	  * @param newPk_wds_writeback4Y_b1  String    
+	  * @param newPk_wds_writeback4y_b1  String    
 	  */
-	 public void setPrimaryKey(String newPk_wds_writeback4Y_b1) {
+	 public void setPrimaryKey(String newPk_wds_writeback4y_b1) {
 				
-				pk_wds_writeback4Y_b1 = newPk_wds_writeback4Y_b1; 
+				pk_wds_writeback4y_b1 = newPk_wds_writeback4y_b1; 
 				
 	 } 
            

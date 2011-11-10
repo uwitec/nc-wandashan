@@ -74,7 +74,7 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 
 	@Override
 	protected BusinessDelegator createBusinessDelegator() {
-		return super.createBusinessDelegator();
+		return new Writeback4yBusinessDelegator();
 	}
 	
 	/*

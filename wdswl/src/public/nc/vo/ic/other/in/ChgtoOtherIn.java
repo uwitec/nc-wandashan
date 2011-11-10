@@ -9,7 +9,7 @@ import nc.vo.pub.BusinessException;
 /**
  * 
  * @author Administrator
- *转换趁其他入库单的后续处理类
+ *转换入库单的后续处理类
  */
 public class ChgtoOtherIn implements IchangeVO {
 
