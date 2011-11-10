@@ -107,10 +107,7 @@ public class AlloInBodyPrintVO extends SuperVO {
 	private String geb_invspec;
 //	private String trayno;
 	private String measdocname;
-	private String bmeasdocname;
-	
-	
-	
+	private String bmeasdocname;	
 //	托盘流水明细表   扩展字段
 	private String trayno;
 	private UFDouble t_gebb_num;
@@ -121,10 +118,6 @@ public class AlloInBodyPrintVO extends SuperVO {
 	private String t_cdt_pk;
 	private String t_gebb_customize1;
 	private String t_gebb_customize2;
-	
-	
-	
-	
 	public String getGeb_cgeneralbid() {
 		return geb_cgeneralbid;
 	}

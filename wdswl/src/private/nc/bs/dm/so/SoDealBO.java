@@ -83,7 +83,7 @@ public class SoDealBO {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 将本次安排数量，回写到发运计划安排累计发运数量
+	 * @说明：完达山物流项目 将本次安排数量，回写到销售订单安排累计发运数量
 	 * @时间：2011-3-25下午04:44:08
 	 * @param dealnumInfor
 	 * @throws BusinessException

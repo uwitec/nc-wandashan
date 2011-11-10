@@ -9,16 +9,17 @@ import nc.vo.pub.pf.PfUtilActionVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
-*  调拨入库单签字
- * @author lyf
+ *   调拨入库回传
+
+ * @author Administrator
  *
  */
-public class N_WDS9_APPROVECOND extends AbstractCompiler2 {
+public class N_WDSP_APPROVECOND extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
 
 
-	public N_WDS9_APPROVECOND() {
+	public N_WDSP_APPROVECOND() {
 		super();
 	}
 

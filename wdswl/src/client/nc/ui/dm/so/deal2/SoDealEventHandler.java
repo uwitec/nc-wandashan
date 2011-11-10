@@ -84,29 +84,12 @@ public class SoDealEventHandler{
 			model.addRowStateChangeEventListener(l);
 			ui.getPanel().updateUI();
 		}
-//		clearCache();
 	}
 	
-//	private void clearCache(){
-//		lseldata.clear();
-////		tsInfor.clear();
-//	}
 
 	public void onAllSel(){
 		if(getDataBuffer() == null||getDataBuffer().length == 0)
 			return;
-//		SoDealVO[] datas = getDataBuffer();
-//		clearCache();
-//		for(SoDealVO data:datas){
-//			lseldata.add(data);
-////			tsInfor.put(data.getPk_plan_b(),data.getTs());
-//		}
-//		
-//		int rowcount = getDataPane().getRowCount();
-//		for(int i=0;i<rowcount;i++){
-//			getDataPane().setValueAt(UFBoolean.TRUE, i, "bsel");
-//		}
-		//yf add
 		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
 			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.SELECTED);
 			ui.headRowChange(i);

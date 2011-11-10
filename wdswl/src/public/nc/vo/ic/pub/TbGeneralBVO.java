@@ -63,24 +63,14 @@ public class TbGeneralBVO extends SuperVO {
 	
 	public UFDate geb_dvalidate;//失效日期
 	public UFDate geb_proddate;//生产日期
-//	public String geb_cinvbasename;
-
 	public String castunitid;//辅计量单位ID
-
-
-//	public String geb_cinvenroryname;
 	public UFDate geb_freightdate;//运货日期
-//	public String bmeasdocname;
 	public String pk_measdoc;//单位主键
-
 	public String geb_vbatchcode;//批次号
 	public String geb_invtype;
 	public String vnote;
-
 	public UFDouble geb_hsl;//换算率
 	public UFDouble geb_nprice;//单价
-//	public String geb_invspec;//规格
-
 	public String pwbb_pk;//运单表体主键
 	public String pwb_pk;//运单表头主键
 	public String geb_cgeneralhid;//调拨出库表头主键
@@ -134,8 +124,6 @@ public class TbGeneralBVO extends SuperVO {
 	public String geb_customize6;
 	public UFTime ts;
 	public Integer dr;
-
-
 	public String  vfirstbillcode;
 	public String cfirsttype;
 	public String cfirstbillhid;
@@ -144,65 +132,6 @@ public class TbGeneralBVO extends SuperVO {
 	public String csourcetype;
 	public String csourcebillhid;
 	public String csourcebillbid;
-//	public static final String GEB_ISCLOSE="geb_isclose";
-//	public static final String GEB_VIRTUALBNUM="geb_virtualbnum";
-//	public static final String GEB_VIRTUALNUM="geb_virtualnum";
-//	public static final String GEB_BACKVBATCHCODE="geb_backvbatchcode";
-//	public static final String GEB_CGENERALHID="geb_cgeneralhid";
-//	public static final String GEB_CUSTOMIZE1 = "geb_customize1";
-//	public static final String PK_CUSTOMIZE3 = "pk_customize3";
-//	public static final String GEB_CUSTOMIZE2 = "geb_customize2";
-//	public static final String DR = "dr";
-//	public static final String GEB_CGENERALBID = "geb_cgeneralbid";
-//	public static final String GEB_CROWNO = "geb_crowno";
-//	public static final String GEB_SPACE = "geb_space";
-//	public static final String GEB_CUSTOMIZE6 = "geb_customize6";
-//	public static final String MEASDOCNAME = "measdocname";
-//	public static final String GEB_CUSTOMIZE3 = "geb_customize3";
-//	public static final String GEB_SNUM = "geb_snum";
-//	public static final String PK_CUSTOMIZE1 = "pk_customize1";
-//	public static final String TS = "ts";
-//	public static final String GEB_DVALIDATE = "geb_dvalidate";
-//	public static final String GEB_FLARGESS = "geb_flargess";
-//	public static final String GEB_PK = "geb_pk";
-//	public static final String GEB_CINVBASID = "geb_cinvbasid";
-//	public static final String GEB_CUSTOMIZE8 = "geb_customize8";
-//	public static final String CDT_PK = "cdt_pk";
-//	public static final String GEH_PK = "geh_pk";
-//	public static final String GEB_CINVENTORYID = "geb_cinventoryid";
-//	public static final String PK_CUSTOMIZE7 = "pk_customize7";
-//	public static final String GEB_NMNY = "geb_nmny";
-//	public static final String GEB_BSNUM = "geb_bsnum";
-//	public static final String GEB_TBNUM = "geb_tbnum";
-//	public static final String GEB_CUSTOMIZE4 = "geb_customize4";
-//	public static final String GEB_CUSTOMIZE7 = "geb_customize7";
-//	public static final String GEB_DBIZDATE = "geb_dbizdate";
-//	public static final String GEB_PRODDATE = "geb_proddate";
-//	public static final String GEB_CINVBASENAME = "geb_cinvbasename";
-//	public static final String GEB_CUSTOMIZE9 = "geb_customize9";
-//	public static final String PK_CUSTOMIZE4 = "pk_customize4";
-//	public static final String CASTUNITID = "castunitid";
-//	public static final String GEB_TNUM = "geb_tnum";
-//	public static final String PK_CUSTOMIZE9 = "pk_customize9";
-//	public static final String PK_CUSTOMIZE6 = "pk_customize6";
-//	public static final String GEB_CINVENRORYNAME = "geb_cinvenroryname";
-//	public static final String GEB_FREIGHTDATE = "geb_freightdate";
-//	public static final String BMEASDOCNAME = "bmeasdocname";
-//	public static final String PK_MEASDOC = "pk_measdoc";
-//	public static final String GEB_ANUM = "geb_anum";
-//	public static final String GEB_BANUM = "geb_banum";
-//	public static final String GEB_VBATCHCODE = "geb_vbatchcode";
-//	public static final String GEB_INVTYPE = "geb_invtype";
-//	public static final String VNOTE = "vnote";
-//	public static final String GEB_CUSTOMIZE5 = "geb_customize5";
-//	public static final String PK_CUSTOMIZE8 = "pk_customize8";
-//	public static final String PK_CUSTOMIZE2 = "pk_customize2";
-//	public static final String GEB_HSL = "geb_hsl";
-//	public static final String GEB_NPRICE = "geb_nprice";
-//	public static final String GEB_INVSPEC = "geb_invspec";
-//	public static final String PK_CUSTOMIZE5 = "pk_customize5";
-//	public static final String PWBB_PK="pwbb_pk";
-//	public static final String PWB_PK="pwb_pk";
 
 	/**
 	 * 属性geb_customize1的Getter方法.

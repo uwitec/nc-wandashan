@@ -15,8 +15,8 @@ import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
- *  调拨入库单取消签字
- * @author zpm
+ *  调拨入库单签字
+ * @author lyf
  */
 public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();

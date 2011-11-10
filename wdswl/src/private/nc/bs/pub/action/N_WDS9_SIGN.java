@@ -1,23 +1,15 @@
 package nc.bs.pub.action;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-
-import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.pushSaveWDSF;
-import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralHVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
  *  调拨入库单签字
- * @author zpm
+ * @author lyf
  *
  */
 public class N_WDS9_SIGN extends AbstractCompiler2 {
@@ -32,43 +24,27 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 	* 接口执行类
 	*/
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
-	try{
-		super.m_tmpVo=vo;
-		try {
-				super.m_tmpVo = vo;
-				Object retObj = null;
-				String date = null;
-				String operate = null;
-				ArrayList<String> list = (ArrayList<String>)vo.m_userObj;
-				if(list != null && list.size()>0){
-					 date = list.get(0);
-					 operate = list.get(1);
-				}				
-//				zhf add  2011 07 15  签字前 调整 保存时回写的来源erp调拨出库单的转出数量因为自动生成的erp调拨入保存时
-//				会再次 回写  避免重复				
-				OtherInBillVO bill = (OtherInBillVO)getVo();
-				if(bill == null||bill.getHeaderVo() == null||bill.getChildrenVO()==null||bill.getChildrenVO().length ==0)
-					throw new BusinessException("传入数据非法");				
-				IcInPubBO bo = new IcInPubBO();
-				bo.writeBackForInBill(bill, IBDACTION.DELETE, false);								
+		try{
+			super.m_tmpVo=vo;
+			try {
+					super.m_tmpVo = vo;
+					Object retObj = null;												
 				// ##################################################数据交换
 				setParameter("AggObj",vo.m_preValueVo);
-				setParameter("date", date);
-				setParameter("operator", operate);
-				AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.allocation.in.ChangeTo4E", "signQueryGenBillVO",
-						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-				// ##################################################推式保存、签字
-				setParameter("AggObject",icBillVO);
-				runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "pushSign4E",
-						"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
+				setParameter("date", vo.m_currentDate);
+				setParameter("operator", vo.m_operator);
+				setParameter("pk_corp",vo.m_coId);
+				// ##################################################推式保存生成销售出库回传
+				runClass("nc.bs.wds.ic.allocation.in.ChangToWDSP", "onSign",
+						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[调拨入库]签字内容
 				TbGeneralHVO headvo = (TbGeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
 				runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "updateHVO",
 						"&hvo:nc.vo.ic.pub.TbGeneralHVO", vo, m_keyHas,m_methodReturnHas);
 				//生成装卸费核算单
-				pushSaveWDSF pu=new pushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
+//				pushSaveWDSF pu=new pushSaveWDSF();
+//				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

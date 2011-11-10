@@ -62,35 +62,31 @@ public class CHG4YTOWDS9 extends nc.ui.pf.change.VOConversionUI {
 
 			
 //			"B_geb_banum->B_noutassistnum",//实发辅数量
-//			"B_geb_anum->B_noutnum",//实发数量
-			
-			
+//			"B_geb_anum->B_noutnum",//实发数量			
 			"B_geb_nprice->B_nprice",//单价
 			"B_geb_nmny->B_nmny",//金额
 			
-			"B_geb_vbatchcode->B_vbatchcode",//批次号
-			
-			"B_geb_backvbatchcode->B_vbatchcode",//回写批次号
-			
-			
-			
+			"B_geb_vbatchcode->B_vbatchcode",//批次号			
+			"B_geb_backvbatchcode->B_vbatchcode",//回写批次号			
 			"B_geb_flargess->B_flargess",//是否赠品
 			"B_geb_space->B_cspaceid",//货位ID
 			 
-			"B_csourcebillhid->B_csourcebillhid",//[保存  物流 其他出字段]
-			"B_csourcebillbid->B_csourcebillbid",//[保存  物流 其他出字段]
-			"B_vsourcebillcode->B_vsourcebillcode",//[保存  物流 其他出字段]
-			"B_csourcetype->B_csourcetype",//[保存  物流 其他出字段]
+			"B_csourcebillhid->B_csourcebillhid",//[调拨订单主键]
+			"B_csourcebillbid->B_csourcebillbid",//[调拨订单子表主键]
+			"B_vsourcebillcode->B_vsourcebillcode",//[调拨订单单据号]
+			"B_csourcetype->B_csourcetype",//[调拨订单单据类型]
 			
-			"B_cfirstbillhid->B_cfirstbillhid",// [保存  物流 其他出字段]
-			"B_cfirstbillbid->B_cfirstbillbid",//   [保存  物流 其他出字段]
-			"B_vfirstbillcode->B_vfirstbillcode",//[保存  物流 其他出字段 ]
-			"B_cfirsttype->B_cfirsttype",//
+			"B_cfirstbillhid->B_cfirstbillhid",// [调拨订单主键]
+			"B_cfirstbillbid->B_cfirstbillbid",//   [调拨订单子表主键]
+			"B_vfirstbillcode->B_vfirstbillcode",//[调拨订单单据号 ]
+			"B_cfirsttype->B_cfirsttype",//[调拨订单单据类型]
 			
-			"B_gylbillcode->H_vbillcode",//[保存  保存供应链 其他出字段 ]
-			"B_gylbilltype->H_cbilltypecode",//[保存  保存供应链 其他出字段 ]
-			"B_gylbillhid->B_cgeneralhid",//[保存  保存供应链 其他出字段 ]
-			"B_gylbillbid->B_cgeneralbid"//[保存  保存供应链 其他出字段 ]
+			
+			"B_gylbillhid->B_cgeneralhid",//[调拨出库单主键 ]
+			"B_gylbillbid->B_cgeneralbid",//[调拨出库单子表主键]
+			"B_gylbillcode->H_vbillcode",//[ 调拨出库单单据号]
+			"B_gylbilltype->H_cbilltypecode"//[调拨出库单单据类型--4Y ]
+		
 //			"B_geb_dbizdate->B_dbizdate"//业务日期 [重新赋值，入库日期]
 		};
 	}

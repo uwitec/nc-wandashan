@@ -29,7 +29,6 @@ public class SoDealBO {
 		if (m_dao == null) {
 			m_dao = new BaseDAO();
 		}
-		// int a = 0;
 		return m_dao;
 	}
 
@@ -80,9 +79,8 @@ public class SoDealBO {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 将本次安排数量，回写到发运计划安排累计发运数量
+	 * @说明：完达山物流项目 将本次安排数量，回写到销售订单安排累计发运数量
 	 * @时间：2011-3-25下午04:44:08
-	 * @param dealnumInfor
 	 * @throws BusinessException
 	 */
 	private void reWriteDealNumForPlan(Map<String, UFDouble> map)
@@ -100,14 +98,11 @@ public class SoDealBO {
 							.doubleValue() + " where corder_bid='"
 					+ entry.getKey() + "'";
 			if (getDao().executeUpdate(sql) == 0) {
-				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
+				throw new BusinessException("数据异常：该销售订单可能已被删除，请重新查询数据");
 			}
 			;
-
 			// 将计划数量（nplannum）和累计安排数量(ndealnum)比较
-
 			// 如果累计安排数量大于计划数量将抛出异常
-
 			String sql1 = "select count(0) from so_saleorder_b where corder_bid='"
 					+ entry.getKey()
 					+ "'and (coalesce(nnumber,0)-coalesce("
