@@ -260,8 +260,7 @@ public class ChangToWDSP {
 			writeBillVO.setTableVO(writeBillVO.getTableCodes()[1], b2list
 					.toArray(new Writeback4yB2VO[0]));
 		} else {// ---如果下游单据不存在
-			Writeback4yHVO hvo = getWrirteBackHvo(key, generalHead
-					.getCbilltypecode());
+			Writeback4yHVO hvo = getWrirteBackHvo(key, generalHead.getVbillcode());
 			Writeback4yB1VO[] b1vos = getWriteBackB1vo(generalHead, generalBods);
 			Writeback4yB2VO[] b2vos = getWriteBackB2vo(0, head, list);
 			writeBillVO.setParentVO(hvo);

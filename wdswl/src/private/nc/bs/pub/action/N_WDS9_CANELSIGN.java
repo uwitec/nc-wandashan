@@ -51,24 +51,24 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 			setParameter("AggObj",vo.m_preValueVo);
 			setParameter("operate",operate);
 			setParameter("date", date);
-			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.allocation.in.ChangeTo4E", "canelSignQueryGenBillVO",
-					"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-			// ##################################################
-			setParameter("AggObject",icBillVO);
-			retObj = runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "canelPushSign4E",
-					"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
+//			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.allocation.in.ChangeTo4E", "canelSignQueryGenBillVO",
+//					"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+//			// ##################################################
+//			setParameter("AggObject",icBillVO);
+//			retObj = runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "canelPushSign4E",
+//					"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
 			// ##################################################保存[调拨入库]取消签字内容
 			TbGeneralHVO headvo = (TbGeneralHVO)vo.m_preValueVo.getParentVO();
 			setParameter("hvo", headvo);
 			runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "updateHVO",
 					"&hvo:nc.vo.ic.pub.TbGeneralHVO", vo, m_keyHas,m_methodReturnHas);
-			
-//			zhf add  取消签字后  erp的调拨入库单被删除  将清空对erp来源调拨出的转出数量的回写  由于物流系统的调拨入仍存在转出数量不能清空
-			IcInPubBO bo = new IcInPubBO();
-			bo.writeBackForInBill(bill, IBDACTION.SAVE, true);		
-			//删除下游装卸费核算单
-			CanelDeleteWDF cw=new CanelDeleteWDF();
-			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
+//			
+////			zhf add  取消签字后  erp的调拨入库单被删除  将清空对erp来源调拨出的转出数量的回写  由于物流系统的调拨入仍存在转出数量不能清空
+//			IcInPubBO bo = new IcInPubBO();
+//			bo.writeBackForInBill(bill, IBDACTION.SAVE, true);		
+//			//删除下游装卸费核算单
+//			CanelDeleteWDF cw=new CanelDeleteWDF();
+//			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
 			
 			return retObj;
 			} catch (Exception ex) {
