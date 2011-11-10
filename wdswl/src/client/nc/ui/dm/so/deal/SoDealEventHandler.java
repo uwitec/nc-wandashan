@@ -145,6 +145,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	private void clearData(){
 		m_billdatas = null;
 		getDataPane().clearBodyData();
+		getBodyDataPane().clearBodyData();
 	}
 	/**
 	 * 
@@ -304,11 +305,21 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
+		// 获得未安排的数据:安排完成，将已经安排的数据，从界面移除
+		ArrayList<String> corder_bids = new ArrayList<String>();
+		for(int i=0;i<ldata.size();i++){
+			String corder_bid = (String) ldata.get(i).getAttributeValue("corder_bid");
+			if(corder_bids.contains(corder_bid))
+				continue;
+			corder_bids.add(corder_bid);
+		}
 		List<SoDealVO > left = new ArrayList<SoDealVO>();
 		for(SoDealVO buf:m_billdatas){
-			if(ldata.contains(buf))
-			continue;
+			String key = buf.getCorder_bid();
+			if(corder_bids.contains(key))
+				continue;
 			left.add(buf);
+			
 		}
 		try{
 			for(SuperVO vo:ldata){
@@ -324,7 +335,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
-		setDataBuffer(left.toArray( new SoDealVO[0]));
+		clearData();
+		setDate(left.toArray( new SoDealVO[0]));
 		ui.showHintMessage("安排已经完成...");
 	}
 	public void bodyRowChange(BillEditEvent e) {		
