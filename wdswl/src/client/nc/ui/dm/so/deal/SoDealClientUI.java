@@ -8,8 +8,11 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillEditListener2;
+import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillListPanel;
+import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
+import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.scm.pub.session.ClientLink;
@@ -22,7 +25,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author Administrator
  * 
  */
-public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
+public class SoDealClientUI extends ToftPanel implements BillEditListener {
 
 	/**
 	 * 
@@ -52,7 +55,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 
 	protected ClientEnvironment m_ce = null;
 	protected ClientLink cl = null;
-	private SoDealEventHandler m_handler = null;
+	private SoDealEventHandler event = null;
 
 	// 定义界面模板
 
@@ -61,6 +64,13 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 	// 按钮事件处理
 
 	private LoginInforHelper helper = null;
+	
+
+	private String cwhid;//当前登录客户所属仓库
+
+	public String getWhid(){
+		return cwhid;
+	}
 
 	public LoginInforHelper getLoginInforHelper() {
 		if (helper == null) {
@@ -92,6 +102,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
 			m_panel.setEnabled(true);
 			m_panel.getParentListPanel().setTotalRowShow(true);
+			m_panel.setMultiSelect(true);
+			m_panel.getHeadTable().removeSortListener();
 		}
 		return m_panel;
 	}
@@ -99,22 +111,64 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 	private void init() {
 		setLayout(new java.awt.CardLayout());
 		add(getPanel(), "a");
-
 		createEventHandler();
-
 		setButton();
-
 		initListener();
+		try {
+			cwhid  = new LoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey()).getWhid();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cwhid = null;
+		}
 	}
 
 	private void initListener() {
-		// getPanel().addBodyEditListener(this);
-		getPanel().addEditListener(m_handler);
-		getPanel().getParentListPanel().addEditListener2(this);
-		// getPanel().addBodyEditListener(l)
-		// getPanel().addHeadEditListener(l)
+		getPanel().addEditListener(this);
+		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
+	}
+	
+	public void headRowChange(int iNewRow) {
+		if (!getPanel().setBodyModelData(iNewRow)) {
+			//1.初次载入表体数据
+			loadBodyData(iNewRow);
+			//2.备份到模型中
+			getPanel().setBodyModelDataCopy(iNewRow);
+		}
+		getPanel().repaint();
+	}
+	
+	private void loadBodyData(int row){
+		getPanel().getBodyBillModel().clearBodyData();
+		String key = (String)getPanel().getHeadBillModel().getValueAt(row, "vreceiptcode");		
+		getPanel().getBodyBillModel().setBodyDataVO( event.getSelectBufferData(key));//设置表体
+		getPanel().getBodyBillModel().execLoadFormula();
+	}
+
+
+	private class HeadRowStateListener implements IBillModelRowStateChangeEventListener {
+
+		public void valueChanged(RowStateChangeEvent e) {
+			if (e.getRow() != getPanel().getHeadTable().getSelectedRow()) {
+				headRowChange(e.getRow());
+			}
+
+			BillModel model = getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+
+			if (e.isSelectState()) {
+				getPanel().getChildListPanel().selectAllTableRow();
+			} else {
+				getPanel().getChildListPanel().cancelSelectAllTableRow();
+			}
+			model.addRowStateChangeEventListener(l);
+
+			getPanel().updateUI();
+		}
 
 	}
+	
 
 	private void setButton() {
 		//yf去掉模拟安排按钮
@@ -127,7 +181,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 
 	private void createEventHandler() {
 
-		m_handler = new SoDealEventHandler(this);
+		event = new SoDealEventHandler(this);
 
 	}
 
@@ -157,8 +211,9 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 	public void onButtonClicked(ButtonObject btn) {
 		// TODO Auto-generated method stub
 
-		m_handler.onButtonClicked(btn.getCode());
+		event.onButtonClicked(btn.getCode());
 	}
+	
 
 	public void updateButtonStatus(String btnTag, boolean flag) {
 		if (btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)) {
@@ -178,47 +233,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 		}
 		updateButtons();
 	}
-
-	// public boolean beforeEdit(BillItemEvent e) {
-	// String key=e.getItem().getKey();
-	// //项目主键 warehousename
-	// if(key==null){
-	// return false;
-	// }
-	// if(key.equalsIgnoreCase("warehousename")){
-	//		
-	// try {
-	// LoginInforVO
-	// login=getLoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey());
-	//		
-	// if(login.getBistp()==null){
-	// return false;
-	// }
-	// //特批权限的过滤，只有具有特批权限的保管员，才能编辑发货站
-	// if(login.getBistp().booleanValue()==true){
-	// getPanel().getHeadItem("warehousename").setEnabled(true);
-	//			
-	// //过滤直属于物流 的仓库
-	// JComponent c =getPanel().getHeadItem("warehousename").getComponent();
-	// if( c instanceof UIRefPane){
-	// UIRefPane ref = (UIRefPane)c;
-	// ref.getRefModel().addWherePart(" def1 = '1' and isnull(dr,0) = 0");
-	// }
-	//				
-	// }
-	//		
-	//		
-	//		
-	// } catch (Exception e1) {
-	// // TODO Auto-generated catch block
-	// e1.printStackTrace();
-	// }
-	//		 
-	//		 
-	// }
-	//		
-	// return false;
-	// }
 
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
@@ -262,5 +276,19 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener2 {
 
 	public void setCl(ClientLink cl) {
 		this.cl = cl;
+	}
+
+	public void afterEdit(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void bodyRowChange(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getRow()<0)
+			return;
+		e.getValue();
+		headRowChange(e.getRow());
+		
 	}
 }
