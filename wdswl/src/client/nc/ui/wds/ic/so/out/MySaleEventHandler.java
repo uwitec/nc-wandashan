@@ -1,5 +1,7 @@
 package nc.ui.wds.ic.so.out;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import nc.bs.logging.Logger;
@@ -18,6 +20,7 @@ import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
+import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.ScaleKey;
 import nc.vo.ic.pub.ScaleValue;
 import nc.vo.pub.AggregatedValueObject;
@@ -70,8 +73,9 @@ public class MySaleEventHandler extends OutPubEventHandler {
 						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 						new String[]{"ccunhuobianma","batchcode"},
 						new String[]{"存货编码","批次号"});
-				ontpzd();
-				onBatchCodeChange();
+				int ii = ontpzd();
+				if(ii != UIDialog.ID_CANCEL)
+					onBatchCodeChange();
 				break;
 			case ISsButtun.zdqh://自动取货
 				valudateWhereYeqian();
@@ -164,9 +168,12 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		String va = "";
 		if(rowCount>0){
 			for(int i = 0 ;i<rowCount; i++){
-				Object o1 =model.getValueAt(i, str);
-				va = String.valueOf(o1);				
-				
+				//liuys 原获取批次是从出库单界面,注销掉,应该从托盘选择界面获得批次号
+//				Object o1 =model.getValueAt(i, str);
+//				va = String.valueOf(o1);		
+				if(getUiVbatchcode() == null || getUiVbatchcode().length()==0 ||getUiVbatchcode().trim().equals(""))
+					return;
+				va = getUiVbatchcode();
 				Pattern p = Pattern
 				.compile(
 						"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
