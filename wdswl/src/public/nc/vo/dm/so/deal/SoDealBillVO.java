@@ -1,13 +1,26 @@
 package nc.vo.dm.so.deal;
 
+import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.pub.HYBillVO;
 
-public class SoDealBillVO extends AggregatedValueObject {
+public class SoDealBillVO extends HYBillVO {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CircularlyAccessibleValueObject parent = null;
 	private CircularlyAccessibleValueObject[] bodys = null;
 
+	public SoDealHeaderVo getHeader(){
+		return (SoDealHeaderVo)getParentVO();
+	}
+	public SoDealVO[] getBodyVos(){
+		return (SoDealVO[])getChildrenVO();
+	}
+	
 	@Override
 	public CircularlyAccessibleValueObject[] getChildrenVO() {
 		// TODO Auto-generated method stub
