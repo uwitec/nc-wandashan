@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
+import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.FilterNullBody;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -105,23 +106,39 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		int rowcount = getDataPane().getRowCount();
 		if(rowcount <= 0)
 			return;
-		for(int i=0;i<rowcount;i++){
-			getDataPane().setValueAt(UFBoolean.FALSE, i, "bsel");
+		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
+			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.UNSTATE);
+			ui.headRowChange(i);
+			BillModel model = ui.getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+			ui.getPanel().getChildListPanel().cancelSelectAllTableRow();
+			model.addRowStateChangeEventListener(l);
+			ui.getPanel().updateUI();
 		}
 	}
 	
+
+	/**
+	 * 
+	 * @作者：全选
+	 * @说明：完达山物流项目 
+	 * @时间：2011-11-11上午11:09:55
+	 */
 	public void onAllSel(){
 		if(getDataBuffer() == null||getDataBuffer().length == 0)
 			return;
-		SoDealVO[] datas = getDataBuffer();
-		for(SoDealVO data:datas){
-//			tsInfor.put(data.getPk_plan_b(),data.getTs());
+		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
+			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.SELECTED);
+			ui.headRowChange(i);
+			BillModel model = ui.getPanel().getBodyBillModel();
+			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
+			model.removeRowStateChangeEventListener();
+			ui.getPanel().getChildListPanel().selectAllTableRow();
+			model.addRowStateChangeEventListener(l);
+			ui.getPanel().updateUI();
 		}
 		
-		int rowcount = getDataPane().getRowCount();
-		for(int i=0;i<rowcount;i++){
-			getDataPane().setValueAt(UFBoolean.TRUE, i, "bsel");
-		}
 	}
 	private SoDealQryDlg getQryDlg(){
 		if(m_qrypanel == null){

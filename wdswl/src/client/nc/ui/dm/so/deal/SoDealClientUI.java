@@ -40,14 +40,14 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL, 2,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL);
-//	private ButtonObject m_btnSelAll = new ButtonObject(
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL, 2,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL);
-//	private ButtonObject m_btnSelno = new ButtonObject(
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO, 2,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
+	private ButtonObject m_btnSelAll = new ButtonObject(
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL,
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL, 2,
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL);
+	private ButtonObject m_btnSelno = new ButtonObject(
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO, 2,
+			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
 //	private ButtonObject m_btnXnDeal = new ButtonObject(
 //			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
 //			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
@@ -175,7 +175,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 //		ButtonObject[] m_objs = new ButtonObject[] { m_btnSelAll, m_btnSelno,
 //				m_btnQry, m_btnDeal ,m_btnXnDeal};
 		ButtonObject[] m_objs = new ButtonObject[] { 
-				m_btnQry, m_btnDeal};
+				m_btnQry,m_btnSelAll,m_btnSelno, m_btnDeal};
 		this.setButtons(m_objs);
 	}
 
