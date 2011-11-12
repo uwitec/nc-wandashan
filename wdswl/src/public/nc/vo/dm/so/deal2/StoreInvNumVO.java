@@ -25,10 +25,10 @@ public class StoreInvNumVO extends SuperVO{
 	private String cinvbasid;
 	
 	private UFDouble nnum;//可用量
-	private UFDouble nassnum;//辅数量
+	private UFDouble nassnum;//可用量辅数量
 	
 	private UFDouble nstocknum;//现存量
-	private UFDouble nstockassnum;
+	private UFDouble nstockassnum;//现存量辅数量
 	private UFDouble ndealnum;//已安排未出库量
 	private UFDouble ndealassnum;
 	

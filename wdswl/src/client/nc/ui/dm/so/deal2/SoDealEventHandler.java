@@ -303,6 +303,10 @@ public class SoDealEventHandler{
 		}
 		//对数据进行一层严密校验
 		SoDealBillVO.checkData((SoDealBillVO[])newVos);
+		// SoDealHealper.doDeal((SoDealBillVO[])newVos, ui)返回值：
+		// 1.null:所有客户的发货量都未达到最小发货量
+		// 2.Object[] { isauto, null, null ,reasons}:所有客户都待安排的存货中，都包含可用量不足的存货
+		// 3.Object[] { isauto, lcust, lnum,reasons}：有需要手动安排的客户
 		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
 		boolean flag = false;
 		UFBoolean isauto = UFBoolean.FALSE;
@@ -310,18 +314,32 @@ public class SoDealEventHandler{
 			Object[] os = (Object[])o;
 			if(os == null || os.length == 0)
 				return;
+			//是否有一部分客户进行了自动安排
 			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
 			//未安排的客户信息
 			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[1];		
-			//库存存量信息
+			//存货库存量，可用量
 			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
+			//本次不能安排的客户原因
+			List<String> reasons = (List<String>)os[3];
+			
 			if(lcust!=null && lcust.size()>0){
 				flag = doHandDeal(lcust, lnum);
 			}
+			if(reasons != null && reasons.size() >0){
+				StringBuffer bur = new StringBuffer();
+				bur.append("本次不能进行安排的客户:\n");
+				for(int i=0;i<reasons.size();i++){
+					bur.append("**");
+					String reason = reasons.get(i);
+					bur.append(reason+"\n");
+				}
+				showWarnMessage(bur.toString());
+			}
+		}else{
+			showWarnMessage("本次安排的所有客户均未达到最小发货量");
 		}
-		if(flag || isauto.booleanValue())
-			showWarnMessage("存货可用量不足");
-			onRefresh();
+		onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
 	
@@ -359,8 +377,7 @@ public class SoDealEventHandler{
 			ldeal.addAll(Arrays.asList(bodys));
 		}
 		if(ldeal.size() <= 0)
-			return false;
-		
+			return false;		
 //		过滤最小发货量   手工安排的  不过滤最小发货量   支持 人工 最大
 //		过滤零安排量得存货    
 //		VOUtil.filter(ldeal, iFilter);

@@ -126,7 +126,6 @@ public class SoDealCol {
 		// invNumInfor <key,StoreInvNumVO> =
 		// <存货基本档案id，StoreInvNumVO（包含当前存货库存量，本次需要安排的数量,已经安排的运单占用量）>
 		Set<String> invs = new HashSet<String>();// 本次安排的所有存货id
-
 		SoDealHeaderVo head = null;
 		SoDealVO[] bodys = null;
 		StoreInvNumVO tmpNumVO = null;
@@ -217,10 +216,14 @@ public class SoDealCol {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 算法描述： 1、按品种获取各个品种的库存存量 2、按品种汇总各个品种的需求量 3、将品种分为两类：1、存量满足类
-	 *             2、存量不足类 4、将客户分为两类：1、可直接安排类 2、存在存量不足的品种的客户类 5、可直接安排的客户
-	 *             直接安排生成运单 6、不足的客户根据客户最小发货量过滤库存存量，如果库存存量比客户的最小发货量还小 抛弃该客户
-	 *             7、将剩余的客户数据返回输出 等待 用户手工安排
+	 * @说明：完达山物流项目 算法描述： 
+	 * 1、本次安排的各个品种的库存存量
+	 *  2、按品种汇总各个品种的需求量 
+	 *  3、将品种分为两类：1、存量满足类* 2、存量不足类 
+	 *  4、将客户分为两类：1、可直接安排类 2、存在存量不足的品种的客户类 
+	 *  5、可直接安排的客户	直接安排生成运单 
+	 *  6、不足的客户根据客户最小发货量过滤库存存量，如果库存存量比客户的最小发货量还小 抛弃该客户
+	 *  7、将剩余的客户数据返回输出 等待 用户手工安排
 	 * @时间：2011-7-7下午04:58:32 返回不够安排的客户 和 不够安排的品种库存状态
 	 */
 	public Object col() throws Exception {
@@ -236,56 +239,70 @@ public class SoDealCol {
 		Logger.info("根据最小发货量过滤库存可用量偏低的存货");
 		List<SoDealVO> ldeal = null;
 		List<SoDealVO> lnodeal = null;
-		SoDealVO[] bodys = null;
-		List<SoDealBillVO> lcust = new ArrayList<SoDealBillVO>();// 不能发货的客户信息
-		StoreInvNumVO tmpNumVO = null;
+		List<SoDealBillVO> lcust = new ArrayList<SoDealBillVO>();// 因为可用量不足，不能直接安排发货的客户信息
+		List<String> reasons = new ArrayList<String>();// 客户本次不能安排的原因,返回前台做提示用
 		for (SoDealBillVO bill : bills) {
-			bodys = bill.getBodyVos();
+			SoDealVO[] bodys = bill.getBodyVos();
 			if (bodys == null || bodys.length == 0)
 				continue;
-			boolean isdeal = true;
-			boolean pass = false;
+			boolean pass = false;//是否跳过该客户
+			boolean isdeal = true;//默认 该客户表体 货可用量都满足
 			for (SoDealVO body : bodys) {
-				tmpNumVO = invNumInfor.get(body.getCinvbasdocid());
-				if (tmpNumVO == null
-						|| PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNnum())
-								.equals(WdsWlPubTool.DOUBLE_ZERO)) {
-					// 存在存货的可用量为空的 涉及该存货的客户 均不可安排 本次 该客户直接丢弃
-					Logger.info("存货"
-							+ WdsWlPubTool.getInvCodeByInvid(body
-									.getCinvbasdocid())
-							+ "可用量为空,客户["
-							+ WdsWlPubTool.getCustNameByid(bill.getHeader()
-									.getCcustomerid()) + "]本次无法安排");
+				StoreInvNumVO tmpNumVO = invNumInfor.get(body.getCinvbasdocid());
+				// 2.1存在存货的可用量<=0的 涉及该存货的客户 均不可安排 本次 该客户直接丢弃
+				if(tmpNumVO == null){
+					String num = "0";
+					String reason = "存货"+ WdsWlPubTool.getInvCodeByInvid(body.getCinvbasdocid())
+					+ "可用量为:"+num+"客户["
+					+ WdsWlPubTool.getCustNameByid(bill.getHeader()
+							.getCcustomerid()) + "]本次无法安排;\n";
+					Logger.info(reason);
+					reasons.add(reason);
 					pass = true;
 					break;
 				}
-				// 如果库存可用量 低于该客户的最小发货量 过滤 掉该客户
-				if (PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNassnum())
-						.compareTo(
-								getMinSendNumForCust(bill.getHeader()
-										.getCcustomerid(), bill.getHeader()
-										.getCbodywarehouseid())) < 0) {
-					Logger.info("存货"
-							+ WdsWlPubTool.getInvCodeByInvid(body
-									.getCinvbasdocid())
-							+ "可用量低于客户的最小发货量,客户["
-							+ WdsWlPubTool.getCustNameByid(bill.getHeader()
-									.getCcustomerid()) + "]本次无法安排");
+				double nnum = PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNnum()).doubleValue();//可用量主数量
+				double nassnum = PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNassnum()).doubleValue();//可用量辅数量
+				//2.2存在存货的可用量<=0的 涉及该存货的客户 均不可安排 本次 该客户直接丢弃
+				if (nnum<=0) {
+					String reason = "存货"+ WdsWlPubTool.getInvCodeByInvid(body.getCinvbasdocid())
+					+ "可用量:主数量="+nnum+",辅数量="+nassnum+"\n 客户["
+					+ WdsWlPubTool.getCustNameByid(bill.getHeader()
+							.getCcustomerid()) + "]本次无法安排;\n";
+					Logger.info(reason);
+					reasons.add(reason);
 					pass = true;
 					break;
 				}
-				if (!PuPubVO.getUFBoolean_NullAs(//比较可用量与本次安排数量，判断是否可以直接安排
-						invNumInfor.get(body.getCinvbasdocid()).getBisok(),
-						UFBoolean.FALSE).booleanValue()) {
+				// 2.3如果可用量 低于该客户的最小发货量 过滤 掉该客户 
+				double nminSendNum = getMinSendNumForCust(bill.getHeader().getCcustomerid(), bill.getHeader().getCbodywarehouseid()).doubleValue();	
+				if (nassnum -nassnum<0) {
+					String reason = "存货"
+						+ WdsWlPubTool.getInvCodeByInvid(body
+								.getCinvbasdocid())
+						+ "可用量:主数量="+nnum+",辅数量="+nassnum+"\n 低于客户的最小发货量"+nminSendNum+",客户["
+						+ WdsWlPubTool.getCustNameByid(bill.getHeader()
+								.getCcustomerid()) + "]本次无法安排;\n";
+					Logger.info(reason);
+					reasons.add(reason);
+					pass = true;
+					break;
+				}
+				//2.4比较可用量与本次安排数量，判断是否可以直接安排(如果可用量 > 本次安排数量,bisok = true)
+				// 即使该客户表体存货有一个可用量不满足，也标记为不能直接安排
+				boolean bisok = PuPubVO.getUFBoolean_NullAs(invNumInfor.get(body.getCinvbasdocid()).getBisok(),UFBoolean.FALSE).booleanValue();
+				if (!bisok) {
 					isdeal = false;
 					continue;
 				}
 			}
-			// 该客户的本次发货要求 由于 库存量 过低 而 放弃
+			//3. 经过 上 4步 的判断，对客户分3种情况进行安排：
+			//pass=true 直接跳过，本次不进行安排;
+			//isdeal=true 可以直接安排生成运单，放入ldeal,一会直接安排生成运单;
+			//isdeal = false 不能直接安排，放入lnodeal 经过数据处理，返回前台进行手动安排
 			if (pass)
 				continue;
-			if (isdeal) {//是否可以本次直接安排
+			if (isdeal) {
 				if (ldeal == null) {
 					ldeal = new ArrayList<SoDealVO>();
 				}
@@ -301,7 +318,9 @@ public class SoDealCol {
 				lcust.add(bill);
 			}
 		}
-		UFBoolean isauto = UFBoolean.FALSE;// 是否自动安排了
+		// 4.将过滤后可以安排的是数据进行安排
+		// 4.1 将可以直接安排的数据，直接安排生成运单，将isauto标记为true
+		UFBoolean isauto = UFBoolean.FALSE;// 本次安排待安排的数据中，是否有数据满足自动安排，进行了自动安排
 		if (ldeal == null || ldeal.size() == 0) {
 			Logger.info("本次安排未存在可直接安排的客户");
 		} else {// 直接安排
@@ -310,10 +329,9 @@ public class SoDealCol {
 			isauto = UFBoolean.TRUE;
 			Logger.info("系统直接安排成功");
 		}
-		if (lnodeal != null && lnodeal.size() > 0) {// 过滤最小发货量后 手动安排
-		// 不知道如何过滤 暂不过滤 最小发货量 将不足的直接进入手工安排
-		// return new Object[]{lnodeal,invNumInfor};
-		// 将数据转换封装处理
+		//4.2 将需要手动安排的数据，进行封装，返回前台处理
+		//????如果存在自动安排，则当前存货可用量已经不准确，是否应该重新计算？？
+		if (lnodeal != null && lnodeal.size() > 0) {
 			Collection<StoreInvNumVO> c = invNumInfor.values();
 			Iterator<StoreInvNumVO> it = c.iterator();
 			StoreInvNumVO tmp = null;
@@ -334,14 +352,13 @@ public class SoDealCol {
 			// UFDateTime time2 = new UFDateTime(System.currentTimeMillis());
 			Logger.info("本次安排处理结束,返回界面手工安排");
 			Logger.info("#####################################################");
-			return new Object[] { isauto, lcust, ltmp };
+			return new Object[] { isauto, lcust, ltmp,reasons };
 		} else {
 			Logger.info("本次安排未存在需要用户手工安排的数据");
 			Logger.info("本次安排处理结束");
-			Logger
-					.info("#####################################################");
+			Logger.info("#####################################################");
 		}
-		return new Object[] { isauto, null, null };
+		return new Object[] { isauto, null, null ,reasons};
 	}
 
 }
