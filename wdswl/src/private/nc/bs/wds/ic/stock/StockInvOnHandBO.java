@@ -397,7 +397,6 @@ public class StockInvOnHandBO {
 		 * 因为  实际托盘为 一个批次放多个托盘  但对于虚拟托盘 却是 一个托盘对多个批次
 		 */
 		
-		
 		Object o =  getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.ARRAYROCESSOR);
         if(o == null)
         	return null;
@@ -442,7 +441,7 @@ public class StockInvOnHandBO {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 获取仓库内已安排未出库的存货量   该处 需要  处理 关闭的运单 运单不存在关闭
+	 * @说明：完达山物流项目 获取仓库内已安排未出库的存货量
 	 * @时间：2011-7-7下午07:51:37
 	 * @param corp
 	 * @param cstoreid
@@ -452,7 +451,6 @@ public class StockInvOnHandBO {
 	 */
 	public Map<String, UFDouble[]> getNdealNumInfor(String corp,String cstoreid,String[] cinvids,
 			TempTableUtil tt) throws BusinessException{
-
 		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
 		String sql = null;
 		//		1、销售运单占用量

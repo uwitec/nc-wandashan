@@ -36,10 +36,10 @@ public class N_WDS1_UNAPPROVE extends AbstractCompiler2 {
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
 					vo, m_keyHas, m_methodReturnHas);
 			//弃审以后 价的追加计划，从月计划中拆分出来
-//			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
-//			if(iplantype!=null && 1==(Integer)iplantype){
-//				runClass("nc.bs.wl.plan.PlanCheckinBO","unplanStats","nc.vo.pub.AggregatedValueObject:01",vo, m_keyHas,m_methodReturnHas);		
-//			}		
+			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
+			if(iplantype!=null && 1==(Integer)iplantype){
+				runClass("nc.bs.wl.plan.PlanCheckinBO","unplanStats","nc.vo.pub.AggregatedValueObject:01",vo, m_keyHas,m_methodReturnHas);		
+			}		
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

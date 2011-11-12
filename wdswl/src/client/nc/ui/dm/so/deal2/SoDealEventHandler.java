@@ -126,7 +126,6 @@ public class SoDealEventHandler{
 	
 	private void clearData(){
 		m_buffer = null;
-//		lseldata.clear();
 		getDataPane().clearBodyData();
 		getBodyDataPane().clearBodyData();
 	}
@@ -145,11 +144,7 @@ public class SoDealEventHandler{
 		 * 满足什么条件的计划呢？人员和仓库已经绑定了   登陆人只能查询他的权限仓库  总仓的人可以安排分仓的
 		 * 校验登录人是否为总仓库德人 如果是可以安排任何仓库的  转分仓  计划 
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
-		 * 
-		 * 
-		 * 
-		 * 分仓客商绑定     
-		 * 
+		 * 分仓客商绑定
 		 */	
 		clearData();
 		getQryDlg().showModal();
@@ -157,16 +152,13 @@ public class SoDealEventHandler{
 			return;
 
 		whereSql = getSQL();
-		SoDealVO[] billdatas = billdatas = SoDealHealper.doQuery(whereSql);
-
-
+		SoDealVO[] billdatas = SoDealHealper.doQuery(whereSql);
 		if(billdatas == null||billdatas.length == 0){
 			clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
-
-		//		对数据进行合并  按客户合并  订单日期取最小订单日期
+		//对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
@@ -185,26 +177,18 @@ public class SoDealEventHandler{
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
 			billdatas = SoDealHealper.doQuery(whereSql);
-
-
 			if(billdatas == null||billdatas.length == 0){
-//				clearData();
-				//				showHintMessage("查询完成：没有满足条件的数据");
 				return;
 			}
-
-			//			对数据进行合并  按客户合并  订单日期取最小订单日期
+			//对数据进行合并  按客户合并  订单日期取最小订单日期
 			SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
-
 			//处理查询出的计划  缓存  界面
-
 			getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
 			getDataPane().execLoadFormula();
 			getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
 			getBodyDataPane().execLoadFormula();
 			//			billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
-			setDataBuffer(billvos);		
-
+			setDataBuffer(billvos);	
 			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 		}
 		showHintMessage("操作完成");
@@ -233,11 +217,9 @@ public class SoDealEventHandler{
 		
 //		过滤掉发货结束和出库结束的行
 		whereSql.append(" and coalesce(c.bifreceiptfinish,'N') = 'N'");
-		whereSql.append(" and coalesce(c.bifinventoryfinish,'N') = 'N'");
-		
+		whereSql.append(" and coalesce(c.bifinventoryfinish,'N') = 'N'");	
 //		销售订单表体  的航状态 字段 不知是否有影响    如有 影响  请后续 支持 
-//		frowstatus                    SMALLINT(2)         行状态 
-				
+//		frowstatus                    SMALLINT(2)         行状态 			
 		/**
 		 * 
 		 * bifreceiptfinish              CHAR(1)             是否发货结束
@@ -248,14 +230,12 @@ public class SoDealEventHandler{
 		 */			
 	whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
 			
-/**
- * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
- * 如果是分仓登录  该条件不可编辑默认为 登录仓库
- * 如果是总仓登录  该条件默认为总仓  但可选择分仓-----------暂未实现
- */
-			
-//		}
-		return whereSql.toString();
+	/**
+	 * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
+	 * 如果是分仓登录  该条件不可编辑默认为 登录仓库
+	 * 如果是总仓登录  该条件默认为总仓  但可选择分仓-----------暂未实现
+	 */
+	return whereSql.toString();
 	}
 	
 	private void setDataBuffer(SoDealBillVO[] billvos){
@@ -315,15 +295,13 @@ public class SoDealEventHandler{
 		 * 考虑是否特殊安排  过滤最小发货量   考虑库存现存量是否满足   直接安排   手工安排界面
 		 * 安排日志
 		 */
-
-		//		获取选中的数据
 		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDealHeaderVo.class.getName(), SoDealVO.class.getName());
 		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
 		if(newVos == null || newVos.length == 0){
 			showWarnMessage("未选中数据");
 			return;
 		}
-		//		对数据进行一层严密校验
+		//对数据进行一层严密校验
 		SoDealBillVO.checkData((SoDealBillVO[])newVos);
 		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
 		boolean flag = false;
@@ -333,16 +311,16 @@ public class SoDealEventHandler{
 			if(os == null || os.length == 0)
 				return;
 			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
-			//		未安排的客户信息
+			//未安排的客户信息
 			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[1];		
-			//		库存存量信息
+			//库存存量信息
 			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
-
-			if(lcust!=null || lcust.size()>0){
+			if(lcust!=null && lcust.size()>0){
 				flag = doHandDeal(lcust, lnum);
 			}
 		}
 		if(flag || isauto.booleanValue())
+			showWarnMessage("存货可用量不足");
 			onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
@@ -357,10 +335,9 @@ public class SoDealEventHandler{
 	 * @throws Exception
 	 */
 	private boolean doHandDeal(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum) throws Exception{
-		//		对客户按订单日期  自动 分配  发运量
-		SoDealHealper.autoDealNum(lcust, lnum);		
-
-		//		调用手工安排界面  供用户 手工安排  存量不足货品
+		//对客户按订单日期  自动 分配  发运量
+		SoDealHealper.autoDealNum(lcust, lnum);	
+		//调用手工安排界面  供用户 手工安排  存量不足货品
 		getHandDealDlg().setLcust(lcust);
 		getHandDealDlg().setLnum(lnum);
 		getHandDealDlg().getDataPanel().setDataToUI();
@@ -368,11 +345,9 @@ public class SoDealEventHandler{
 		if(retFlag != UIDialog.ID_OK){
 			return false;
 		}
-
-		//		处理手工安排信息  生成运单
+		//处理手工安排信息  生成运单
 		SoDealVO[] bodys = null;
 		List<SoDealBillVO> lcust2 = getHandDealDlg().getBuffer().getLcust();
-
 		if(lcust2 == null || lcust2.size() == 0)
 			return false;
 		List<SoDealVO> ldeal = new ArrayList<SoDealVO>();
@@ -400,10 +375,6 @@ public class SoDealEventHandler{
 		}
 		return m_handDlg;
 	}
-	
-	
-
-	
 	private void showErrorMessage(String msg){
 		ui.showErrorMessage(msg);
 	}

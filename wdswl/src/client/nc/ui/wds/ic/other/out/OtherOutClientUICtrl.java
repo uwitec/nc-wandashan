@@ -44,7 +44,8 @@ public class OtherOutClientUICtrl extends AbstractManageController {
 				ButtonCommon.joinup,
 				nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn,
 				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr,
-				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz };
+				nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz,
+				IBillButton.Print};
 
 	}
 

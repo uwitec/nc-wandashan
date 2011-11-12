@@ -8,6 +8,11 @@ import nc.vo.wds.invcl.checkClassInterface;
 
 public class InvClClientUI extends BillTreeCardUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected IVOTreeData createTableTreeData() {
 		// TODO Auto-generated method stub

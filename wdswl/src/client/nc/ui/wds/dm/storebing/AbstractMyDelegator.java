@@ -2,6 +2,8 @@ package nc.ui.wds.dm.storebing;
 
 import java.util.Hashtable;
 
+import nc.vo.wds.dm.storebing.TbStorcubasdocVO;
+
 
 /**
  *
@@ -12,10 +14,10 @@ import java.util.Hashtable;
  */
 public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusinessDelegator {
 
-	public Hashtable loadChildDataAry(String[] tableCodes,String key) 
+	public Hashtable<String, TbStorcubasdocVO[]> loadChildDataAry(String[] tableCodes,String key) 
 	                                                 throws Exception{
 		
-	   Hashtable dataHashTable = new Hashtable();
+	   Hashtable<String, TbStorcubasdocVO[]> dataHashTable = new Hashtable<String, TbStorcubasdocVO[]>();
 	                         
            nc.vo.wds.dm.storebing.TbStorcubasdocVO[] bodyVOs1 =
                        (nc.vo.wds.dm.storebing.TbStorcubasdocVO[])queryByCondition(nc.vo.wds.dm.storebing.TbStorcubasdocVO.class,

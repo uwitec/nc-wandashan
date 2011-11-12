@@ -183,11 +183,9 @@ public class SoDealBO {
 	 */
 	public Object doDeal(nc.vo.dm.so.deal2.SoDealBillVO[] bills,List lpara) throws Exception{
 		if(bills == null || bills.length == 0)
-			return null;
-		
+			return null;		
 		Logger.init(WdsWlPubConst.wds_logger_name);
 //		过滤最小发货量  
-//		UFDateTime time = new UFDateTime(System.currentTimeMillis());
 		Logger.info("##########################################################");
 		Logger.info("销售计划安排，待安排客户数量"+bills.length+"--------------");
 //		过滤最小发货量  分仓客商绑定  节点 维护了  每个客户的最小发货量
@@ -197,7 +195,6 @@ public class SoDealBO {
 			return null;
 		Logger.info("待安排客户数量为"+newbills.length);
 		Logger.info("根据库存存量进行安排....");
-		
 //		对表体同一客户同一个货品的量再次进行合并
 				
 		dealCol.setData(newbills, lpara);
