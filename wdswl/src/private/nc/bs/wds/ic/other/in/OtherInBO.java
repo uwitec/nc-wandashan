@@ -1,10 +1,17 @@
 package nc.bs.wds.ic.other.in;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.naming.NamingException;
+
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
+import nc.bs.wds.pub.report.ReportDMO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.uap.pf.IPFBusiAction;
 import nc.ui.scm.util.ObjectUtils;
@@ -23,6 +30,7 @@ import nc.vo.pub.lang.UFDateTime;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.CombinVO;
 import nc.vo.wl.pub.IUFTypes;
+import nc.vo.wl.pub.report.ReportBaseVO;
 /**
  * 其它入库(WDS7)
  * @author Administrator
@@ -145,4 +153,25 @@ public class OtherInBO  {
 			}
 		}
 	}
+	
+	//支持托盘打印
+	public  ReportBaseVO[] getCorpTP(String general) throws DAOException,
+	  SQLException, IOException, NamingException {
+         if (general == null || "".equalsIgnoreCase(general)) {
+	          return null;
+           }
+         StringBuffer sql = new StringBuffer();
+         sql.append(" select tb_general_b_b.*,bd_cargdoc_tray.*  ");//出入库单孙 表
+         sql.append(" from tb_general_b_b ");
+         sql.append(" join bd_cargdoc_tray ");//货物托盘信息
+         sql.append(" on tb_general_b_b.cdt_pk = bd_cargdoc_tray.cdt_pk");
+         sql.append(" where  geb_pk='" + general + "'");         
+         sql.append(" and isnull(tb_general_b_b.dr,0)=0  and isnull(bd_cargdoc_tray.dr,0)=0");         
+         ReportBaseVO[]  vos = new ReportDMO().queryVOBySql(sql.toString());
+        if(vos==null||vos.length==0){
+        	return null;
+        }
+         return vos;
+      }
+	
 }

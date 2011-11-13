@@ -1,11 +1,17 @@
 package nc.bs.wds.ic.other.out;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
+import nc.bs.wds.pub.report.ReportDMO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.uap.pf.IPFBusiAction;
 import nc.ui.scm.util.ObjectUtils;
@@ -17,13 +23,14 @@ import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.scm.pub.DynamicVO;
 import nc.vo.wl.pub.CombinVO;
 import nc.vo.wl.pub.IUFTypes;
+import nc.vo.wl.pub.report.ReportBaseVO;
 /**
  * 其它出库(WDS8)
  * @author Administrator
@@ -145,4 +152,25 @@ public class OtherOutBO  {
 			}
 		}
 	}
+	
+	//支持托盘打印
+	public  ReportBaseVO[] getCorpTP(String general) throws DAOException,
+	  SQLException, IOException, NamingException {
+         if (general == null || "".equalsIgnoreCase(general)) {
+	          return null;
+           }
+         StringBuffer sql = new StringBuffer();
+         sql.append(" select tb_outgeneral_t.*,bd_cargdoc_tray.*  ");//出入库单孙 表
+         sql.append(" from tb_outgeneral_t ");
+         sql.append(" join bd_cargdoc_tray ");//货物托盘信息
+         sql.append(" on tb_outgeneral_t.cdt_pk = bd_cargdoc_tray.cdt_pk");
+         sql.append(" where  general_b_pk='" + general + "'");
+         sql.append(" and isnull(tb_outgeneral_t.dr,0)=0  and isnull(bd_cargdoc_tray.dr,0)=0");
+         ReportBaseVO[]  vos = new ReportDMO().queryVOBySql(sql.toString());
+        if(vos==null||vos.length==0){
+        	return null;
+        }
+         return vos;
+      }
+	
 }
