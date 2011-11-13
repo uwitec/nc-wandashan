@@ -3,6 +3,7 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
@@ -11,6 +12,8 @@ import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.uif.pub.exception.UifException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
@@ -183,5 +186,35 @@ public class OtherInEventHandler extends InPubEventHandler {
 			return;
 		}
 		super.onBoDel();	
+	}
+	
+	@Override
+	protected void onBoPrint() throws Exception {
+		final nc.ui.pub.print.IDataSource dataSource = new MyTpDateSource(
+				getBillUI()._getModuleCode(), getBillCardPanelWrapper()
+						.getBillCardPanel());
+		final nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(
+				null, dataSource);
+		print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(),
+				getBillUI()._getModuleCode(), getBillUI()._getOperator(),
+				getBillUI().getBusinessType(), getBillUI().getNodeKey());
+		if (print.selectTemplate() == 1)
+			print.preview();
+		// 更改数据源，支持托盘打印
+	//	super.onBoPrint();
+		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
+				.getCurrentVO().getParentVO().getAttributeValue(
+						"cdt_pk"), 0);
+		iprintcount = iprintcount + 1;
+		getBufferData().getCurrentVO().getParentVO().setAttributeValue(
+				"iprintcount", iprintcount);
+		try {
+			HYPubBO_Client.update((SuperVO) getBufferData().getCurrentVO()
+					.getParentVO());
+			onBoRefresh();
+		} catch (final UifException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,9 +1,8 @@
 package nc.ui.wds.ic.so.out;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
@@ -17,10 +16,10 @@ import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.ScaleKey;
 import nc.vo.ic.pub.ScaleValue;
 import nc.vo.pub.AggregatedValueObject;
@@ -350,22 +349,50 @@ public class MySaleEventHandler extends OutPubEventHandler {
 			getBillManageUI().showErrorMessage("签字失败！");
 		}
 	}
-	@Override
-	protected void onBoPrint() throws Exception {
-		// TODO Auto-generated method stub
-		super.onBoPrint();
-		Integer iprintcount =PuPubVO.getInteger_NullAs(getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").getValueObject(), 0) ;
-		iprintcount=++iprintcount;
-		getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").setValue(iprintcount);
-		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
-		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-	}
+//	@Override
+//	protected void onBoPrint() throws Exception {
+//		// TODO Auto-generated method stub
+//		super.onBoPrint();
+//		Integer iprintcount =PuPubVO.getInteger_NullAs(getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").getValueObject(), 0) ;
+//		iprintcount=++iprintcount;
+//		getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").setValue(iprintcount);
+//		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+//		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+//	}
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
 		
 		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 	}
 	
-	//
+	@Override
+	protected void onBoPrint() throws Exception {
+		final nc.ui.pub.print.IDataSource dataSource = new MySoDateSource(
+				getBillUI()._getModuleCode(), getBillCardPanelWrapper()
+						.getBillCardPanel());
+		final nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(
+				null, dataSource);
+		print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(),
+				getBillUI()._getModuleCode(), getBillUI()._getOperator(),
+				getBillUI().getBusinessType(), getBillUI().getNodeKey());
+		if (print.selectTemplate() == 1)
+			print.preview();
+		// 更改数据源，支持托盘打印
+	//	super.onBoPrint();
+		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
+				.getCurrentVO().getParentVO().getAttributeValue(
+						"cdt_pk"), 0);
+		iprintcount = iprintcount + 1;
+		getBufferData().getCurrentVO().getParentVO().setAttributeValue(
+				"iprintcount", iprintcount);
+		try {
+			HYPubBO_Client.update((SuperVO) getBufferData().getCurrentVO()
+					.getParentVO());
+			onBoRefresh();
+		} catch (final UifException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

@@ -14,6 +14,7 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
+import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -294,16 +295,17 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		return tools;
 	}
 
-	@Override
-	protected void onBoPrint() throws Exception {
-		super.onBoPrint();
-		Integer iprintcount =PuPubVO.getInteger_NullAs(getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").getValueObject(), 0) ;
-		iprintcount=++iprintcount;
-		getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").setValue(iprintcount);
-		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
-		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
-	
-	}
+//	@Override
+//	protected void onBoPrint() throws Exception {
+//		super.onBoPrint();
+//		Integer iprintcount =PuPubVO.getInteger_NullAs(getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").getValueObject(), 0) ;
+//		iprintcount=++iprintcount;
+//		getBillCardPanelWrapper().getBillCardPanel().getTailItem("iprintcount").setValue(iprintcount);
+//		getBufferData().getCurrentVO().getParentVO().setAttributeValue("iprintcount", iprintcount);
+//		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
+//	
+//		
+//	}
 	
 	/**
 	 * zhf add  不支持修改时 行操作
@@ -320,8 +322,36 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 		
 	}
-	
-	
+
+	@Override
+	protected void onBoPrint() throws Exception {
+		final nc.ui.pub.print.IDataSource dataSource = new MyDuoDateSource(
+				getBillUI()._getModuleCode(), getBillCardPanelWrapper()
+						.getBillCardPanel());
+		final nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(
+				null, dataSource);
+		print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(),
+				getBillUI()._getModuleCode(), getBillUI()._getOperator(),
+				getBillUI().getBusinessType(), getBillUI().getNodeKey());
+		if (print.selectTemplate() == 1)
+			print.preview();
+		// 更改数据源，支持托盘打印
+	//	super.onBoPrint();
+		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
+				.getCurrentVO().getParentVO().getAttributeValue(
+						"cdt_pk"), 0);
+		iprintcount = iprintcount + 1;
+		getBufferData().getCurrentVO().getParentVO().setAttributeValue(
+				"iprintcount", iprintcount);
+		try {
+			HYPubBO_Client.update((SuperVO) getBufferData().getCurrentVO()
+					.getParentVO());
+			onBoRefresh();
+		} catch (final UifException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	protected void onBoDel() throws Exception {
 		if (getBufferData().getCurrentVO() == null)
@@ -335,4 +365,5 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		
 	}
 
+	
 }

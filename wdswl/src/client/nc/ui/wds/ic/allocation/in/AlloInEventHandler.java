@@ -1,19 +1,24 @@
 package nc.ui.wds.ic.allocation.in;
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.util.ObjectUtils;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.pub.print.WdsWlPrintTool;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
+import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.bill.BillRendererVO;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.allo.in.AlloInBodyPrintVO;
 import nc.vo.wds.ic.allo.in.AlloInHeadPrintVO;
@@ -190,26 +195,57 @@ public class AlloInEventHandler extends InPubEventHandler {
 	/**
 	 * 按钮m_boPrint点击时执行的动作,如有必要，请覆盖.
 	 */
+//	protected void onBoPrint() throws Exception {
+//		if(getBufferData().isVOBufferEmpty())
+//			throw new BusinessException("无数据");
+//		if(getBufferData().getCurrentRow()< 0)
+//			throw new BusinessException("请选择数据");
+//		//		很关键的一步
+//		dealData();
+//
+//		HYBillVO bill = null;
+//
+//		bill = (HYBillVO)getPringModel().getBillValueVO(HYBillVO.class.getName(), 
+//				AlloInHeadPrintVO.class.getName(), 
+//				AlloInBodyPrintVO.class.getName());
+//		if(bill == null){
+//			getBillUI().showWarningMessage("无数据");
+//			return;
+//		}
+//
+//		getPringTool().priview(bill);
+//	}
+	
+	@Override
 	protected void onBoPrint() throws Exception {
-		if(getBufferData().isVOBufferEmpty())
-			throw new BusinessException("无数据");
-		if(getBufferData().getCurrentRow()< 0)
-			throw new BusinessException("请选择数据");
-		//		很关键的一步
-		dealData();
-
-		HYBillVO bill = null;
-
-		bill = (HYBillVO)getPringModel().getBillValueVO(HYBillVO.class.getName(), 
-				AlloInHeadPrintVO.class.getName(), 
-				AlloInBodyPrintVO.class.getName());
-		if(bill == null){
-			getBillUI().showWarningMessage("无数据");
-			return;
+		final nc.ui.pub.print.IDataSource dataSource = new MyDbTyDateSource(
+				getBillUI()._getModuleCode(), getBillCardPanelWrapper()
+						.getBillCardPanel());
+		final nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(
+				null, dataSource);
+		print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(),
+				getBillUI()._getModuleCode(), getBillUI()._getOperator(),
+				getBillUI().getBusinessType(), getBillUI().getNodeKey());
+		if (print.selectTemplate() == 1)
+			print.preview();
+		// 更改数据源，支持托盘打印
+	//	super.onBoPrint();
+		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
+				.getCurrentVO().getParentVO().getAttributeValue(
+						"cdt_pk"), 0);
+		iprintcount = iprintcount + 1;
+		getBufferData().getCurrentVO().getParentVO().setAttributeValue(
+				"iprintcount", iprintcount);
+		try {
+			HYPubBO_Client.update((SuperVO) getBufferData().getCurrentVO()
+					.getParentVO());
+			onBoRefresh();
+		} catch (final UifException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		getPringTool().priview(bill);
 	}
+	
 	
 	protected void onBoDirectPrint() throws Exception {
 
