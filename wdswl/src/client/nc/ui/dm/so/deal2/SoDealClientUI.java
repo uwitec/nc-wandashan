@@ -9,11 +9,15 @@ import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
+import nc.ui.pub.bill.BillEditListener2;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -24,7 +28,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author Administrator
  * 
  */
-public class SoDealClientUI extends ToftPanel implements BillEditListener {
+public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEditListener2 {
 
 	/**
 	 * 
@@ -224,37 +228,44 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener {
 
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
-		// 项目主键 warehousename
-		if (key == null) {
-			return false;
-		}
-		if (key.equalsIgnoreCase("warehousename")) {
-			try {
-				LoginInforVO login = getLoginInforHelper().getLogInfor(
-						m_ce.getUser().getPrimaryKey());
-				if (login.getBistp() == null) {
-					return false;
-				}
-				// 特批权限的过滤，只有具有特批权限的保管员，才能编辑发货站
-				if (login.getBistp().booleanValue() == true) {
-					getPanel().getHeadItem("warehousename").setEnabled(true);
-					// 过滤直属于物流 的仓库
-					JComponent c = getPanel().getHeadItem("warehousename")
-					.getComponent();
-					if (c instanceof UIRefPane) {
-						UIRefPane ref = (UIRefPane) c;
-						ref.getRefModel().addWherePart(
-						" and def1 = '1' and isnull(dr,0) = 0");
+		int row  = e.getRow();
+		if(e.getPos() == BillItem.HEAD){
+			if ("warehousename".equalsIgnoreCase(key)) {
+				try {
+					LoginInforVO login = getLoginInforHelper().getLogInfor(
+							m_ce.getUser().getPrimaryKey());
+					if (login.getBistp() == null) {
+						return false;
 					}
-					return true;
-				} else {
-					getPanel().getHeadItem("warehousename").setEnabled(false);
+					// 特批权限的过滤，只有具有特批权限的保管员，才能编辑发货站
+					if (login.getBistp().booleanValue() == true) {
+						getPanel().getHeadItem("warehousename").setEnabled(true);
+						// 过滤直属于物流 的仓库
+						JComponent c = getPanel().getHeadItem("warehousename")
+						.getComponent();
+						if (c instanceof UIRefPane) {
+							UIRefPane ref = (UIRefPane) c;
+							ref.getRefModel().addWherePart(
+							" and def1 = '1' and isnull(dr,0) = 0");
+						}
+						return true;
+					} else {
+						getPanel().getHeadItem("warehousename").setEnabled(false);
+						return false;
+					}
+				} catch (Exception e1) {
+					Logger.error(e1);
+				}
+			}
+		}else{
+			if("nassnum".equalsIgnoreCase(key) || "nnum".equalsIgnoreCase(key)){//控制赠品不可以被拆分
+				Object value = getPanel().getBodyBillModel().getValueAt(row, "blargessflag");
+				if(PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE).booleanValue()){
 					return false;
 				}
-			} catch (Exception e1) {
-				Logger.error(e1);
 			}
 		}
+		
 		return true;
 	}
 

@@ -1,5 +1,6 @@
 package nc.bs.pf.changedir;
 
+import nc.bs.framework.common.RuntimeEnv;
 import nc.vo.pf.change.UserDefineFunction;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -148,8 +149,10 @@ public String[] getField() {
 * @return java.lang.String[]
 */
 public String[] getFormulas() {
-	new UFDate(System.currentTimeMillis());
-	super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+	if(m_strDate == null){
+		new UFDate(System.currentTimeMillis());
+		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+	}
 	return new String[] {
 //		"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
 //		"H_forderstatus->int(0)",

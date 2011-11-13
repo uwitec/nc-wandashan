@@ -37,7 +37,7 @@ public class SoDealVO extends SuperVO{
 	private String creceiptcustomerid;
 	private String creceiptcorpid;
 	private String cwarehouseid;
-	private UFBoolean bfreecustflag;
+	private UFBoolean bfreecustflag;//是否赠品
 	private String cfreecustid;
 	private UFDate dmakedate;
 	private String capproveid;
@@ -842,8 +842,13 @@ public class SoDealVO extends SuperVO{
 //			throw new ValidationException("发货站不能和收获站相同");
 //		}
 		UFDouble nchecknum = PuPubVO.getUFDouble_NullAsZero(getNnumber()).sub(PuPubVO.getUFDouble_NullAsZero(getAttributeValue(WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME)));
-		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue()>WdsWlPubTool.DOUBLE_ZERO.doubleValue())
+		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue()>0)
 			throw new ValidationException("不能超销售计划安排");
+		UFBoolean fisgift = PuPubVO.getUFBoolean_NullAs(getBfreecustflag(), UFBoolean.FALSE);
+		if(fisgift.booleanValue()){
+			if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue() !=0)
+				throw new ValidationException("赠品不允许拆分");
+		}
 	}
 	public String getCrowno() {
 		return crowno;

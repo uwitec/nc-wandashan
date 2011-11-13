@@ -234,7 +234,7 @@ public class SoDealCol {
 		Map<String, StoreInvNumVO> invNumInfor = new HashMap<String, StoreInvNumVO>();
 		initInvNumInfor(invNumInfor);
 		if (invNumInfor.size() == 0)
-			throw new BusinessException("所有存货的当前库存量均为空,无法安排,退出");
+			throw new BusinessException("所有存货的当前库存量均为空,无法自动安排");
 		// 2. 根据最小发货量过滤库存可用量偏低的存货"
 		Logger.info("根据最小发货量过滤库存可用量偏低的存货");
 		List<SoDealVO> ldeal = null;

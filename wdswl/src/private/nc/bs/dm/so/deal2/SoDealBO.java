@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
+import nc.bs.wds.load.pub.pushSaveWDSF;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.so.deal.SoDealVO;
@@ -158,9 +159,9 @@ public class SoDealBO {
 			for(SoDealVO body:bodys){
 				nallnum = nallnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNnumber())).sub(PuPubVO.getUFDouble_NullAsZero(body.getNtaldcnum()));
 			}
-			
-			if(WdsWlPubConst.sale_send_isass){
-				nallnum = nallnum.multiply(bodys[0].getNnumber()).div(bodys[0].getNpacknumber());
+			UFDouble npackNum =PuPubVO.getUFDouble_NullAsZero(bodys[0].getNpacknumber()) ;
+			if(WdsWlPubConst.sale_send_isass && npackNum.doubleValue()>0){
+				nallnum = nallnum.multiply(bodys[0].getNnumber()).div(npackNum);
 			}
 			if(nallnum.compareTo(nminnum)>0)
 				return true;	
