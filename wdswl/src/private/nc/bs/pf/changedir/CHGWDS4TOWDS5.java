@@ -79,8 +79,10 @@ public String[] getField() {
 * @return java.lang.String[]
 */
 public String[] getFormulas() {
-	new UFDate(System.currentTimeMillis());
-	super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+	if(m_strDate == null){
+		new UFDate(System.currentTimeMillis());
+		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+	}
 	return new String[] {
 			"H_pk_outwhouse->B_cbodywarehouseid",
 			"H_pk_billtype->\""+WdsWlPubConst.WDS5+"\"",

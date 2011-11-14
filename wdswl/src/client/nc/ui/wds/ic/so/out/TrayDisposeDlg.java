@@ -569,27 +569,22 @@ ActionListener, BillEditListener,BillEditListener2{
 //		int row = e.getRow();
 		TbOutgeneralBVO child = getHeadBVO(getHeadCurrentRow());
 		String invtoryid = child.getCinventoryid();
-//		String vbatchcode = child.getVbatchcode();
 		String subsql=getSubSql(e.getRow());
 		if("ctuopanbianma".equals(key)){//托盘指定，增加托盘过滤，
 			if (pk_cargdoc == null){
 				MessageDialog.showWarningDlg(this, "", "请先选择表头货位");
 				return false;
 			}
-			UIRefPane ref = (UIRefPane)getbillListPanel().getBodyItem("ctuopanbianma").getComponent();			
-			ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) ="+StockInvOnHandVO.stock_state_use+" and" +
-					" tb_warehousestock.whs_stocktonnage > 0" +
-					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
-					" and bd_cargdoc_tray.cdt_pk not in "+subsql +
-					" or isnull(bd_cargdoc_tray.cdt_traystatus,0) = "+StockInvOnHandVO.stock_state_use+
-					" and tb_warehousestock.whs_stocktonnage > 0"+
-					" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"' and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'" +
-					" and bd_cargdoc_tray.cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'"+
-					" and isnull(bd_cargdoc_tray.dr,0)=0 "+
-					" and isnull(tb_warehousestock.dr,0)=0 "+	    	
-					" and isnull(bd_invmandoc.dr,0)=0 "+
-					" and isnull(bd_invbasdoc.dr,0)=0 "+	    	
-					" and tb_warehousestock.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
+			UIRefPane ref = (UIRefPane)getbillListPanel().getBodyItem("ctuopanbianma").getComponent();
+			StringBuffer bur = new StringBuffer();
+			bur.append(" and bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"'");//货位托盘档案--货位
+			bur.append(" and ( bd_cargdoc_tray.cdt_pk not in "+subsql );//货位托盘档案--托盘id
+			bur.append("  or bd_cargdoc_tray.cdt_traycode like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%')");
+			bur.append(" and isnull(bd_cargdoc_tray.cdt_traystatus,0) = 1 ");//货位托盘档案-托盘状态占用
+			bur.append(" and tb_warehousestock.whs_stocktonnage > 0 ");//存货状态--库存辅数量为0
+			bur.append(" and tb_warehousestock.pk_invmandoc ='"+invtoryid+"'");
+			bur.append(" ");
+			ref.getRefModel().addWherePart(bur.toString());
 
 		}
 		return true;

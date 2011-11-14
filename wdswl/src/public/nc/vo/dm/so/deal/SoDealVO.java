@@ -844,7 +844,7 @@ public class SoDealVO extends SuperVO{
 		UFDouble nchecknum = PuPubVO.getUFDouble_NullAsZero(getNnumber()).sub(PuPubVO.getUFDouble_NullAsZero(getAttributeValue(WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME)));
 		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue()>0)
 			throw new ValidationException("不能超销售计划安排");
-		UFBoolean fisgift = PuPubVO.getUFBoolean_NullAs(getBfreecustflag(), UFBoolean.FALSE);
+		UFBoolean fisgift = PuPubVO.getUFBoolean_NullAs(getBlargessflag(), UFBoolean.FALSE);
 		if(fisgift.booleanValue()){
 			if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue() !=0)
 				throw new ValidationException("赠品不允许拆分");

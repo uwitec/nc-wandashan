@@ -122,13 +122,13 @@ public class CargeTaryRefModel2 extends AbstractRefModel {
 	public String getTableName() {
 		StringBuffer m_sTableName = new StringBuffer();
 		m_sTableName.append(" bd_cargdoc_tray ");//托盘档案
-		m_sTableName.append(" join tb_warehousestock ");//存货状态
+		m_sTableName.append(" join tb_warehousestock ");//存货状态（库存信息）
 		m_sTableName.append(" on bd_cargdoc_tray.cdt_pk = tb_warehousestock.pplpt_pk");
-		m_sTableName.append(" join bd_invmandoc ");
+		m_sTableName.append(" join bd_invmandoc ");//存货管理档案
 		m_sTableName.append(" on tb_warehousestock.pk_invmandoc =bd_invmandoc.pk_invmandoc ");
-		m_sTableName.append(" join bd_invbasdoc ");
+		m_sTableName.append(" join bd_invbasdoc ");//存货基本档案
 		m_sTableName.append(" on tb_warehousestock.pk_invbasdoc =bd_invbasdoc.pk_invbasdoc ");
-		m_sTableName.append(" join tb_stockstate ");
+		m_sTableName.append(" join tb_stockstate ");//存货状态档案
 		m_sTableName.append(" on tb_warehousestock.ss_pk=tb_stockstate.ss_pk");
 		return m_sTableName.toString();
 	}
