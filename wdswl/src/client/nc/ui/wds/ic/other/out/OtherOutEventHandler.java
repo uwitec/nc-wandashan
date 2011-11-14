@@ -52,20 +52,20 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			case ISsButtun.tpzd:
 				valudateWhereYeqian();
 				//拣货 存货唯一校验
-				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-						new String[]{"ccunhuobianma","batchcode"},
-						new String[]{"存货编码","批次号"});
+//				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+//						new String[]{"ccunhuobianma","batchcode"},
+//						new String[]{"存货编码","批次号"});
 				ontpzd();
 				
 				break;
 			case ISsButtun.zdqh:
 				valudateWhereYeqian();
 				//拣货 存货唯一校验
-				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-						new String[]{"ccunhuobianma","batchcode"},
-						new String[]{"存货编码","批次号"});
+//				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+//						new String[]{"ccunhuobianma","batchcode"},
+//						new String[]{"存货编码","批次号"});
 				onzdqh();
 				
 				break;
