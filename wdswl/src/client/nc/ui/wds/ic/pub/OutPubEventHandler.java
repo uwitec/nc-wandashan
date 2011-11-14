@@ -393,7 +393,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoSave() throws Exception {
 		super.onBoSave();
 	}
-
 	protected void onPasteLineToTail(int line,String[] vbatchcodes) throws Exception{
 		if(vbatchcodes!=null && vbatchcodes.length>0){
 			for(int i = 0 ;i<vbatchcodes.length;i++){

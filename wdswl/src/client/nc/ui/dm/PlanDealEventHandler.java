@@ -270,7 +270,6 @@ public class PlanDealEventHandler implements BillEditListener,
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
-
 		try {
 			for (SuperVO vo : ldata) {
 				((PlanDealVO) vo).validataOnDeal();

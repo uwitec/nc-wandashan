@@ -15,7 +15,6 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
@@ -251,8 +250,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //}
 
 	@Override
-	protected void onBoSave() throws Exception {
-		
+	protected void onBoSave() throws Exception {		
 		//对贴签数量    小于    实入数量的校验
 		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
 			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
@@ -261,12 +259,9 @@ public class MySaleEventHandler extends OutPubEventHandler {
 				UFDouble u2=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNtagnum());
 				if(u1.sub(u2).doubleValue()<0){
 					throw new BusinessException("贴签数量   不能大于实入数量");
-				}
-				
-				
+				}			
 			}			
 		}
-		
 		super.onBoSave();
 	}
 
@@ -281,14 +276,6 @@ public class MySaleEventHandler extends OutPubEventHandler {
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();
 				TbOutgeneralHVO generalh = (TbOutgeneralHVO)aObject.getParentVO();
-//				if(generalh.getFisload() != null &&generalh.getFisload().equals(UFBoolean.TRUE)){
-//					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
-//					return ;
-//				}
-//				if(generalh.getFistran() != null &&generalh.getFistran().equals(UFBoolean.TRUE)){
-//					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
-//					return ;
-//				}
 				generalh.setVbillstatus(IBillStatus.FREE);// 自由状态
 				generalh.setCregister(null);// 签字人主键
 				generalh.setTaccounttime(null);// 签字时间

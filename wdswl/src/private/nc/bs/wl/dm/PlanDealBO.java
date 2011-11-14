@@ -346,27 +346,21 @@ public class PlanDealBO {
 	public void doDeal(List<PlanDealVO> ldata, List<String> infor)
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
-			return;
-		
-		
+			return;		
 		/**
 		 * zhf  add  应首先进行 并发校验  校验发运计划是否发生了改变
 		 */
 		Map<String,UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
 		for(PlanDealVO data:ldata){
 			tsInfor.put(data.getPrimaryKey(), data.getTs());
-		}
-		
-		checkTs(tsInfor);
-		
-		
+		}	
+		checkTs(tsInfor);	
 		/**
 		 * 安排：生成发运订单 发运计划安排生成发运订单
-		 * 
 		 * 计划单号 计划行号 不合并计划行 
 		 * 计划和订单为1对多关系 
-		 * 分单规则： 发货站 收货站不同 不考虑计划类型
-		 * 		 */
+		 * 分单规则： 发货站 收货站不同 不考虑计划类型		 * 
+		 *  */
 		//回写计划累计安排数量
 		// 发运安排vo---》发运计划vo
 		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
@@ -398,6 +392,9 @@ public class PlanDealBO {
 		}
 		// 发运计划vo---》发运订单vo
 		PfParameterVO paraVo = new PfParameterVO();
+		paraVo.m_operator = infor.get(0);
+		paraVo.m_coId = infor.get(1);
+		paraVo.m_currentDate = infor.get(2);
 		// 参量上 设置 日期 操作人
 		HYBillVO[] orderVos = (HYBillVO[]) PfUtilTools.runChangeDataAry(
 				WdsWlPubConst.WDS1,
