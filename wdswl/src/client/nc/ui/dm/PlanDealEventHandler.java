@@ -305,27 +305,6 @@ public class PlanDealEventHandler implements BillEditListener,
 		ui.showHintMessage("安排已经完成...");
 		onRefresh();
 	}
-/**
- * 
- * @作者：lyf
- * @说明：完达山物流项目 :获取安排后剩余的数据
- * @时间：2011-11-14下午07:46:16
- * @param ldata
- */
-	private void getLeftDate(List<SuperVO> ldata) {
-		List<PlanDealVO> leftDate = new ArrayList<PlanDealVO>();
-		if (m_billdatas == null || m_billdatas.length == 0) {
-			ui.showWarningMessage("获取缓存数据出错，请重新查询");
-		}
-		for (PlanDealVO dealVO : m_billdatas) {
-			if (ldata.contains(dealVO))
-				continue;
-			leftDate.add(dealVO);
-		}
-		getDataPane().setBodyDataVO(leftDate.toArray(new PlanDealVO[0]));
-		getDataPane().execLoadFormula();
-		setDataBuffer(leftDate.toArray(new PlanDealVO[0]));
-	}
 
 	public void afterEdit(BillEditEvent e) {
 		// TODO Auto-generated method stub
@@ -346,14 +325,18 @@ public class PlanDealEventHandler implements BillEditListener,
 					.getHsl());
 			UFDouble num = e.getValue() == null ? new UFDouble(0)
 					: new UFDouble(e.getValue().toString());
-			getDataBuffer()[row].setNassnum(num.div(hsl));
+			if(hsl != null && hsl.doubleValue()>0){
+				getDataBuffer()[row].setNassnum(num.div(hsl));
+				ui.getPanel().getHeadBillModel().setValueAt(num.div(hsl), row, "nassnum");
+			}
 		} else if ("nassnum".equalsIgnoreCase(key)) {
-			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
-					.getHsl());
 			UFDouble assnum = e.getValue() == null ? new UFDouble(0)
-					: new UFDouble(e.getValue().toString());
+			: new UFDouble(e.getValue().toString());
+			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
+					.getHsl());	
 			getDataBuffer()[row].setNnum(hsl.multiply(assnum));
 			getDataBuffer()[row].setNassnum(assnum);
+			ui.getPanel().getHeadBillModel().setValueAt(hsl.multiply(assnum), row, "nnum");
 		}
 
 	}
