@@ -67,11 +67,11 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		switch (intBtn) {
 			case ISsButtun.tpzd://托盘指定(手动拣货)
 				valudateWhereYeqian();
-				//拣货 存货唯一校验
-				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-						new String[]{"ccunhuobianma","batchcode"},
-						new String[]{"存货编码","批次号"});
+				//liuys 先注释掉校验  //拣货 存货唯一校验
+//				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+//						new String[]{"ccunhuobianma","batchcode"},
+//						new String[]{"存货编码","批次号"});
 				int ii = ontpzd();
 				if(ii != UIDialog.ID_CANCEL)
 					onBatchCodeChange();

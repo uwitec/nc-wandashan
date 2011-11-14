@@ -56,6 +56,8 @@ ActionListener, BillEditListener,BillEditListener2{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private int row = -1;
+	
 	protected OutPubClientUI myClientUI = null;
 
 	private JPanel ivjUIDialogContentPane = null;
@@ -270,6 +272,10 @@ ActionListener, BillEditListener,BillEditListener2{
 	}
 	// 点击按钮后的监听事件
 	public void actionPerformed(ActionEvent e) {
+		if(row==-1){
+			MessageDialog.showErrorDlg(this, "警告", "请选中表头");
+			return;
+		}
 		// 判断是否为取消按钮
 		if (e.getSource().equals(getbtnCancel())) {
 			// 关闭窗体
@@ -286,6 +292,7 @@ ActionListener, BillEditListener,BillEditListener2{
 			//			if(!flag)
 			//				return;
 			try{
+				addBufferBodyData();
 				//确定前数据合法行校验
 				validute();
 				saveCurrentData(getHeadCurrentRow());
@@ -305,6 +312,33 @@ ActionListener, BillEditListener,BillEditListener2{
 			onReLock();
 		}
 	}		
+	
+	/**
+	 * 将最后界面的vo表体加入缓存(用于校验)
+	 * @作者：liuys
+	 * @说明：完达山物流项目 
+	 * @时间：2011-11-12下午08:59:48
+	 */
+	private void addBufferBodyData() {
+		TbOutgeneralBVO bvo = getHeadBVO(row);
+		String key = bvo.getCrowno();
+		TbOutgeneralTVO[] bvos = (TbOutgeneralTVO[]) getbillListPanel()
+				.getBodyBillModel().getBodyValueVOs(
+						TbOutgeneralTVO.class.getName());
+		try {
+
+			validateTrayInfor(bvos);
+		} catch (BusinessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			getbillListPanel().getHeadTable().getSelectionModel()
+					.setSelectionInterval(row, row);
+			myClientUI.showErrorMessage(WdsWlPubTool
+					.getString_NullAsTrimZeroLen(e1.getMessage()));
+			return;
+		}
+		getBufferData().put(key, arrayToList(bvos));
+	}
 	/**
 	 * 
 	 * @作者：mlr
@@ -519,7 +553,7 @@ ActionListener, BillEditListener,BillEditListener2{
 			//清空表体数据
 			getbillListPanel().getBodyBillModel().clearBodyData();
 			//重新加载表体数据
-			int row = e.getRow();
+			row = e.getRow();
 			TbOutgeneralBVO newbvo = getHeadBVO(row);
 			String key2 = newbvo.getCrowno();
 			List<TbOutgeneralTVO> list = getBufferData().get(key2);
@@ -623,6 +657,12 @@ ActionListener, BillEditListener,BillEditListener2{
 				List<TbOutgeneralTVO> list = map1.get(key);
 				map2.put(key, cloneBBVO(list));
 			}	
+			//liuys add 初始化map,key为行号,value为空,用于校验
+		}else{
+			int rowCout = getbillListPanel().getHeadTable().getRowCount();
+			for(int i=0;i<rowCout;i++){
+				map2.put(i+1+"0", null);
+			}
 		}
 		return map2;
 	}

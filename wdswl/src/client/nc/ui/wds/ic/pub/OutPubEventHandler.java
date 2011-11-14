@@ -473,8 +473,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
 			retflag = UIDialog.ID_OK;
+			chaneColor();
 		}
-		chaneColor();
 		setBodyModelState();
 		return retflag;
 	}
