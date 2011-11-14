@@ -312,6 +312,9 @@ public class PlanDealVO extends SendplaninBVO {
 		if(getPk_outwhouse().equalsIgnoreCase(getPk_inwhouse())){
 			throw new ValidationException("发货站不能和收获站相同");
 		}
+		if(getHsl() != null && getHsl().doubleValue()>0){
+			setNassnum(PuPubVO.getUFDouble_NullAsZero(getNnum()).div(getHsl()));
+		}
 		UFDouble nchecknum = PuPubVO.getUFDouble_NullAsZero(getNplannum()).sub(PuPubVO.getUFDouble_NullAsZero(getNdealnum()));
 		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue()>WdsWlPubTool.DOUBLE_ZERO.doubleValue())
 			throw new ValidationException("不能超计划安排");

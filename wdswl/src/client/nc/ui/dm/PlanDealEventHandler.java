@@ -30,15 +30,7 @@ public class PlanDealEventHandler implements BillEditListener,
 	// 数据缓存
 	private PlanDealVO[] m_billdatas = null;
 	private List<PlanDealVO> lseldata = new ArrayList<PlanDealVO>();
-
-	// private Map<String, UFDateTime> tsInfor = new HashMap<String,
-	// UFDateTime>();
-
-	// private MonthNumAdjustDlg m_monNumDlg = null;
-
-	// private PlanDealVO[] m_combinDatas = null;
-
-	// private String planType= null;
+	private String  whereSql = null;
 
 	public PlanDealEventHandler(PlanDealClientUI parent) {
 		super();
@@ -135,13 +127,12 @@ public class PlanDealEventHandler implements BillEditListener,
 		 * 如果是可以安排任何仓库的 转分仓 计划 如果是分仓的人 只能 安排 本分仓内部的 发运计划
 		 * 
 		 */
-		clearData();
 		getQryDlg().showModal();
 		if (!getQryDlg().isCloseOK())
 			return;
 		PlanDealVO[] billdatas = null;
 		try {
-			String whereSql = getSQL();
+			whereSql = getSQL();
 			billdatas = PlanDealHealper.doQuery(whereSql);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,19 +140,26 @@ public class PlanDealEventHandler implements BillEditListener,
 					.getMessage()));
 			return;
 		}
-
+		setDataToUI(billdatas);
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 :设置数据到界面和缓存
+	 * @时间：2011-11-14下午07:41:04
+	 * @param billdatas
+	 */
+	public void setDataToUI(PlanDealVO[] billdatas ){
+		clearData();
 		if (billdatas == null || billdatas.length == 0) {
-			clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
-		}
-		
+		}	
 //		处理时间戳
 		Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
 		for(PlanDealVO data:billdatas){
 			tsInfor.put(data.getPrimaryKey(), data.getTs());
-		}
-		
+		}	
 		// 处理查询出的计划 缓存 界面
 		getDataPane().setBodyDataVO(billdatas);
 		getDataPane().execLoadFormula();
@@ -172,6 +170,25 @@ public class PlanDealEventHandler implements BillEditListener,
 		}
 		setDataBuffer(billdatas);
 		showHintMessage("查询完成");
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 ：刷新
+	 * @时间：2011-11-14下午07:32:22
+	 */
+	public void onRefresh(){
+		clearData();
+		PlanDealVO[] billdatas = null;
+		try {
+			billdatas = PlanDealHealper.doQuery(whereSql);
+		} catch (Exception e) {
+			e.printStackTrace();
+			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e
+					.getMessage()));
+			return;
+		}
+		setDataToUI(billdatas);
 	}
 
 	/**
@@ -275,8 +292,6 @@ public class PlanDealEventHandler implements BillEditListener,
 				((PlanDealVO) vo).validataOnDeal();
 			}
 			PlanDealHealper.doDeal(ldata, ui);
-			getLeftDate(ldata);
-			clearCache();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (e instanceof ValidationException) {
@@ -288,8 +303,15 @@ public class PlanDealEventHandler implements BillEditListener,
 			return;
 		}
 		ui.showHintMessage("安排已经完成...");
+		onRefresh();
 	}
-
+/**
+ * 
+ * @作者：lyf
+ * @说明：完达山物流项目 :获取安排后剩余的数据
+ * @时间：2011-11-14下午07:46:16
+ * @param ldata
+ */
 	private void getLeftDate(List<SuperVO> ldata) {
 		List<PlanDealVO> leftDate = new ArrayList<PlanDealVO>();
 		if (m_billdatas == null || m_billdatas.length == 0) {
@@ -322,26 +344,16 @@ public class PlanDealEventHandler implements BillEditListener,
 		} else if ("nnum".equalsIgnoreCase(key)) {
 			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
 					.getHsl());
-			// UFDouble assplannum =
-			// PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row].getNassplannum());
-			// if(hsl.doubleValue() == 0 &&assplannum.doubleValue() != 0){
-			// hsl = getDataBuffer()[row].getNplannum().div(assplannum);
-			// }
 			UFDouble num = e.getValue() == null ? new UFDouble(0)
 					: new UFDouble(e.getValue().toString());
 			getDataBuffer()[row].setNassnum(num.div(hsl));
 		} else if ("nassnum".equalsIgnoreCase(key)) {
 			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
 					.getHsl());
-			// UFDouble assplannum =
-			// PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row].getNassplannum());
-			// if(hsl.doubleValue() == 0 &&assplannum.doubleValue() != 0){
-			// hsl = getDataBuffer()[row].getNplannum().div(assplannum);
-			// }
 			UFDouble assnum = e.getValue() == null ? new UFDouble(0)
 					: new UFDouble(e.getValue().toString());
 			getDataBuffer()[row].setNnum(hsl.multiply(assnum));
-			(getDataBuffer()[row]).setNassnum(assnum);
+			getDataBuffer()[row].setNassnum(assnum);
 		}
 
 	}

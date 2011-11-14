@@ -170,6 +170,7 @@ public class WdsWlPubTool {
 					.equals(WdsWlPubTool.DOUBLE_ZERO)) {
 				continue;
 			}
+			
 			lnewData.add(vo);
 		}
 		return lnewData;

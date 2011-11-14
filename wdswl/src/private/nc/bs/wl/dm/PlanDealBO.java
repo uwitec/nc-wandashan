@@ -103,11 +103,12 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.pk_invbasdoc,");
 		sql.append(" wds_sendplanin_b.unit,");
 		sql.append(" wds_sendplanin_b.assunit,");
-		sql.append(" wds_sendplanin_b.nplannum nplannum,");
-		sql.append(" wds_sendplanin_b.nassplannum nassplannum,");
-		sql.append(" wds_sendplanin_b.ndealnum,");
-		sql.append(" coalesce(wds_sendplanin_b.nplannum,0)-coalesce(wds_sendplanin_b.ndealnum,0) nnum,");//
-		sql.append(" wds_sendplanin_b.hsl,");
+		sql.append(" wds_sendplanin_b.nplannum nplannum,");//计划数量
+		sql.append(" wds_sendplanin_b.nassplannum nassplannum,");//计划辅数量
+		sql.append(" wds_sendplanin_b.ndealnum,");//已安排数量
+		sql.append(" coalesce(wds_sendplanin_b.nplannum,0)-coalesce(wds_sendplanin_b.ndealnum,0) nnum,");//本次安排数量
+		sql.append(" coalesce(wds_sendplanin_b.nassplannum,0)-coalesce(wds_sendplanin_b.nassdealnum,0) nassnum,");//本次安排数量
+		sql.append(" wds_sendplanin_b.hsl hsl,");
 		sql.append(" wds_sendplanin_b.ts");
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
@@ -398,7 +399,7 @@ public class PlanDealBO {
 		// 参量上 设置 日期 操作人
 		HYBillVO[] orderVos = (HYBillVO[]) PfUtilTools.runChangeDataAry(
 				WdsWlPubConst.WDS1,
-				WdsWlPubConst.WDS3, planBillVos, null);
+				WdsWlPubConst.WDS3, planBillVos, paraVo);
 		// 分单---》保存订单
 		if(orderVos ==null || orderVos.length==0){
 			return;
@@ -408,27 +409,6 @@ public class PlanDealBO {
 			pfbo.processAction(WdsWlPubConst.DM_PLAN_TO_ORDER_SAVE, WdsWlPubConst.WDS3, infor.get(2), null, bill, null);
 		}
 	}
-//	private SendplaninBVO[] getPlanBodyVOs(PlanDealVO[] dealVos){
-//		if(dealVos == null||dealVos.length==0){
-//			return null;
-//		}
-//		SendplaninBVO[] bodys = new SendplaninBVO[dealVos.length];
-//		SendplaninBVO tmp = null;
-//		String[] names = null;
-//		int index = 0;
-//		for(PlanDealVO deal:dealVos){
-//			tmp = new SendplaninBVO();
-//			if(names == null){
-//				names = tmp.getAttributeNames();
-//			}
-//			for(String name:names){
-//				tmp.setAttributeValue(name, deal.getAttributeValue(name));
-//			}
-//			bodys[index] = tmp;
-//			index ++;
-//		}
-//		return bodys;
-//	}
 	private SendplaninVO getPlanHead(PlanDealVO dealVo){
 		if(dealVo == null)
 			return null;
