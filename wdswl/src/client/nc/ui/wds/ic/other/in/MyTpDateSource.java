@@ -6,6 +6,7 @@ import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
 
+//  xjx   add  ø®∆¨–Õ¥Ú”°
 public class MyTpDateSource extends CardPanelPRTS {
 	private BillCardPanel m_billcardpanel = null;
 

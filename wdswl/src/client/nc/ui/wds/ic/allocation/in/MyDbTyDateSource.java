@@ -5,7 +5,11 @@ import nc.ui.trade.pub.CardPanelPRTS;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
-
+/**
+ * ø®∆¨¥Ú”°
+ * @author xjx  
+ *
+ */
 public class MyDbTyDateSource extends CardPanelPRTS {
 	private BillCardPanel m_billcardpanel = null;
 

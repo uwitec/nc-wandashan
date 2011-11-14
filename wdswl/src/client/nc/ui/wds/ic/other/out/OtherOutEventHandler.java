@@ -10,6 +10,7 @@ import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
@@ -323,8 +324,21 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		
 	}
 
-	@Override
+	@Override  //xjx  add   打印
 	protected void onBoPrint() throws Exception {
+		//　如果是列表界面，使用ListPanelPRTS数据源
+		if( getBillManageUI().isListPanelSelected() ){
+			nc.ui.pub.print.IDataSource dataSource = new MyListDateSource(
+					getBillUI()._getModuleCode(), ((BillManageUI) getBillUI())
+					.getBillListPanel());
+			nc.ui.pub.print.PrintEntry print = new nc.ui.pub.print.PrintEntry(null,
+					dataSource);
+			print.setTemplateID(getBillUI()._getCorp().getPrimaryKey(), getBillUI()
+					._getModuleCode(), getBillUI()._getOperator(), getBillUI()
+					.getBusinessType(), getBillUI().getNodeKey());
+			if (print.selectTemplate() == 1)
+				print.preview();
+		}else{
 		final nc.ui.pub.print.IDataSource dataSource = new MyDuoDateSource(
 				getBillUI()._getModuleCode(), getBillCardPanelWrapper()
 						.getBillCardPanel());
@@ -337,6 +351,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			print.preview();
 		// 更改数据源，支持托盘打印
 	//	super.onBoPrint();
+		}
 		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
 				.getCurrentVO().getParentVO().getAttributeValue(
 						"cdt_pk"), 0);
@@ -350,7 +365,8 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		} catch (final UifException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		   
+	   }
 	}
 	
 	protected void onBoDel() throws Exception {

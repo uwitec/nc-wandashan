@@ -6,6 +6,7 @@ import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
 
+// xjx  add   列表型打印
 public class MyListTPDateSource extends ListPanelPRTS {
 	private BillListPanel m_billcardpanel = null;
 
