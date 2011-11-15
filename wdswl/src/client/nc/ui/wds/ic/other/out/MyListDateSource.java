@@ -46,7 +46,7 @@ public class MyListDateSource extends ListPanelPRTS {
 						if(list != null && list.length>0){
 							for(int j=0;j<list.length;j++){
 								bur.append("托盘编号："+list[j].getAttributeValue("cdt_traycode")+", ");
-								bur.append("实出数量："+list[j].getAttributeValue("noutnum")+", ");
+						//		bur.append("实出数量："+list[j].getAttributeValue("noutnum")+", ");
 								bur.append("实出辅数量："+list[j].getAttributeValue("noutassistnum")+", ");
 								bur.append("\n");
 							}

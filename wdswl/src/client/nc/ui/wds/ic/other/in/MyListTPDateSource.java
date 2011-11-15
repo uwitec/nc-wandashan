@@ -40,7 +40,7 @@ public class MyListTPDateSource extends ListPanelPRTS {
 						if(list != null && list.length>0){
 							for(int j=0;j<list.length;j++){
 								bur.append("托盘编号："+list[j].getAttributeValue("cdt_traycode")+", ");
-								bur.append("实入数量："+list[j].getAttributeValue("gebb_num")+", ");
+					//			bur.append("实入数量："+list[j].getAttributeValue("gebb_num")+", ");
 								bur.append("实入辅数量："+list[j].getAttributeValue("ninassistnum")+", ");
 								bur.append("\n");
 							}
