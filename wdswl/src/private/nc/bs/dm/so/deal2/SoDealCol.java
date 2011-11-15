@@ -171,7 +171,7 @@ public class SoDealCol {
 		if (invNumInfor.size() == 0) {
 			Logger.info("本次待安排存货库存均为空，无法安排，退出");
 		}
-		// 2.获取占用量
+		// 2.获取占用量,根据存货现存量和待安排数量，将存货分为两类：够安排和不够安排
 		Logger.info("获取存货已安排未出库量...");
 		Map<String, UFDouble[]> invNumInfor2 = getStockBO().getNdealNumInfor(
 				pk_corp, head.getCbodywarehouseid(),
@@ -235,12 +235,13 @@ public class SoDealCol {
 		initInvNumInfor(invNumInfor);
 		if (invNumInfor.size() == 0)
 			throw new BusinessException("所有存货的当前库存量均为空,无法自动安排");
-		// 2. 根据最小发货量过滤库存可用量偏低的存货"
+		// 2.根据可用量过滤客户，将客户分为本次可以直接安排的客户，存量不足需要手工安排的客户
 		Logger.info("根据最小发货量过滤库存可用量偏低的存货");
 		List<SoDealVO> ldeal = null;
 		List<SoDealVO> lnodeal = null;
 		List<SoDealBillVO> lcust = new ArrayList<SoDealBillVO>();// 因为可用量不足，不能直接安排发货的客户信息
 		List<String> reasons = new ArrayList<String>();// 客户本次不能安排的原因,返回前台做提示用
+		List<String> reasons2 = new ArrayList<String>();//本次直接安排的客户
 		for (SoDealBillVO bill : bills) {
 			SoDealVO[] bodys = bill.getBodyVos();
 			if (bodys == null || bodys.length == 0)
@@ -307,6 +308,8 @@ public class SoDealCol {
 					ldeal = new ArrayList<SoDealVO>();
 				}
 				ldeal.addAll(Arrays.asList(bodys));
+				reasons2.add(WdsWlPubTool.getCustNameByid(bill.getHeader()
+						.getCcustomerid()));
 				Logger.info("##客户["
 						+ WdsWlPubTool.getCustNameByid(bill.getHeader()
 								.getCcustomerid()) + "]本次可直接安排");
@@ -330,7 +333,7 @@ public class SoDealCol {
 			Logger.info("系统直接安排成功");
 		}
 		//4.2 将需要手动安排的数据，进行封装，返回前台处理
-		//????如果存在自动安排，则当前存货可用量已经不准确，是否应该重新计算？？
+		//????如果存在自动安排，自动安排之后，则当前存货可用量已经不准确，是否应该重新计算？？
 		if (lnodeal != null && lnodeal.size() > 0) {
 			Collection<StoreInvNumVO> c = invNumInfor.values();
 			Iterator<StoreInvNumVO> it = c.iterator();
@@ -352,13 +355,13 @@ public class SoDealCol {
 			// UFDateTime time2 = new UFDateTime(System.currentTimeMillis());
 			Logger.info("本次安排处理结束,返回界面手工安排");
 			Logger.info("#####################################################");
-			return new Object[] { isauto, lcust, ltmp,reasons };
+			return new Object[] { isauto, lcust, ltmp,reasons,reasons2};
 		} else {
 			Logger.info("本次安排未存在需要用户手工安排的数据");
 			Logger.info("本次安排处理结束");
 			Logger.info("#####################################################");
 		}
-		return new Object[] { isauto, null, null ,reasons};
+		return new Object[] { isauto, null, null ,reasons,reasons2};
 	}
 
 }

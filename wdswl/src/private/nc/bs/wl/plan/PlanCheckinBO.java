@@ -19,17 +19,16 @@ import nc.vo.wl.pub.VOTool;
 
 /**
  * @作者：lyf
- * @说明：完达山物流项目 
- * 发运计划录入（WDS1）后台类
+ * @说明：完达山物流项目 发运计划录入（WDS1）后台类
  */
 public class PlanCheckinBO {
-	//计划主数量
+	// 计划主数量
 	private String planNum="nplannum";
-	//计划辅数量
+	// 计划辅数量
 	private String planBnum="nassplannum";	
-	//入库仓库
+	// 入库仓库
 	private String pk_inwhouse="pk_inwhouse";
-	//出库仓库
+	// 出库仓库
 	private String pk_outwhouse="pk_outwhouse";
 	BaseDAO dao = null;	
 	private BaseDAO getBaseDAO(){
@@ -41,15 +40,14 @@ public class PlanCheckinBO {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 * 	保存前校验
-	 * 当前登录人的管理的仓库在当前会计月是否已经有月计划
+	 * @说明：完达山物流项目 保存前校验 当前登录人的管理的仓库在当前会计月是否已经有月计划
 	 * @时间：2011-3-23下午09:14:56
-	 * @param pk_inwhouse =调入仓库p主键，pk=主表主键
+	 * @param pk_inwhouse
+	 *            =调入仓库p主键，pk=主表主键
 	 */
 	public void beforeCheck(String pk_outwhouse,String  pk_inwhouse,String pk,String date) throws BusinessException{
 		AccountCalendar calendar = AccountCalendar.getInstance();
-		calendar.setDate(new UFDate(date));//spf add
+		calendar.setDate(new UFDate(date));// spf add
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();
 		StringBuffer sql = new StringBuffer();
@@ -76,11 +74,11 @@ public class PlanCheckinBO {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 *   弃审前校验 是否已经安排生产下游发运订单
+	 * @说明：完达山物流项目 弃审前校验 是否已经安排生产下游发运订单
 	 * @时间：2011-3-27上午09:44:46
-	 * @param 要弃审的 发运计划单据
-	 * @throws BusinessException 
+	 * @param 要弃审的
+	 *            发运计划单据
+	 * @throws BusinessException
 	 */
 	public void beforeUnApprove(AggregatedValueObject obj) throws BusinessException{
 		if(obj ==null){
@@ -101,7 +99,7 @@ public class PlanCheckinBO {
 		}
 		
 	}
-	//追加计划校验
+	// 追加计划校验
 	public void beforeCheck1(String  pk_inwhouse,String pk) throws BusinessException{
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
@@ -118,9 +116,9 @@ public class PlanCheckinBO {
 				throw new BusinessException("该调入仓库，当前会计月没有月计划");
 			}			
 	}
-	//将追加计划合并到月计划
+	// 将追加计划合并到月计划
 	public void planStats(AggregatedValueObject obj2) throws BusinessException{
-		//将传来的对象克隆一份
+		// 将传来的对象克隆一份
 		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);
 	   
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();		
@@ -128,52 +126,60 @@ public class PlanCheckinBO {
 		SendplaninBVO[] childs=(SendplaninBVO[]) obj.getChildrenVO();
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
-		UFDate endDate = calendar.getMonthVO().getEnddate();		
+		UFDate endDate = calendar.getMonthVO().getEnddate();	
+		// 查询月计划:如果月计划还没有审批，追加计划不能审批
 		StringBuffer sql=new StringBuffer();
 		sql.append(" select pk_sendplanin  from");
-		sql.append(" wds_sendplanin where wds_sendplanin.vbillstatus=1");
-		sql.append(" and isnull(wds_sendplanin.dr,0)=0");
+		sql.append(" wds_sendplanin ");
+		sql.append(" where vbillstatus=1 ");// 单据状态=审批通过
+		sql.append(" and iplantype =0");// 月计划
+		sql.append(" and isnull(dr,0)=0");
 		sql.append(" and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
-
 		List<SendplaninBVO> adds=new ArrayList<SendplaninBVO>();
-		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();
-		
+		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();		
 	    Object o=getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
-	    if( o!=null && o instanceof String){      
-	        String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
-	    	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
-	    	boolean isExist=false;
-		    for(int i=0;i<childs.length;i++){
-		       if(!isExist&& i>0){		        
-		    	 childs[i-1].setPk_sendplanin((String)o);  
-		    	 childs[i-1].setPk_sendplanin_b(null);
-		         adds.add(childs[i-1]);	       
-		       }
-		       isExist=false;
-		       for(int j=0;j<list.size();j++){
-		    	  if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){	    		  
-		    		  list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum())));
+	    if(o == null || "".equalsIgnoreCase((String)o)){
+	    	throw new BusinessException("未找到已经审批过的月计划");
+	    }
+	    // 查询表体明细
+	    String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
+    	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
+    	boolean isExist=false;
+	    for(int i=0;i<childs.length;i++){
+	       if(!isExist&& i>0){		        
+	    	 childs[i-1].setPk_sendplanin((String)o);  
+	    	 childs[i-1].setPk_sendplanin_b(null);
+	         adds.add(childs[i-1]);	       
+	       }
+	       isExist=false;
+	       for(int j=0;j<list.size();j++){
+	    	  if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){	
+	    		  UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
+	    		  if(nplanNum.doubleValue() >0){// 本次有安排数量的，才更新月计划
+	    			  list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
 		    		  list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
 		    		  mods.add(list.get(j)); 
 		    		  isExist=true;
-		    		  break;
-		        }
-		    	  
-		      } 
-		    }
+		    		  break; 
+	    		  }
+	    		 
+	        }
+	    	  
+	      } 
 	    }
 	  for(int i=0;i<adds.size();i++){
 	    getBaseDAO().insertVOWithPK(adds.get(i));
-	  }	  
+	  }	 
+	  if(mods.size()>0){
 		  getBaseDAO().updateVOList(mods); 
+	  }
 	}
 	/**
 	 * 
 	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 *      检查发运计划的计划数量不允许都为空
+	 * @说明：完达山物流项目 检查发运计划的计划数量不允许都为空
 	 * @时间：2011-7-8下午07:18:43
 	 * @param vo
 	 * @throws BusinessException
@@ -199,24 +205,22 @@ public class PlanCheckinBO {
 	/**
 	 * 
 	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 *      检查发运计划追加计划 如果计划数量都为空 不允许保存
-	 *            如果没有月计划 追加计划不允许保存              
+	 * @说明：完达山物流项目 检查发运计划追加计划 如果计划数量都为空 不允许保存 如果没有月计划 追加计划不允许保存
 	 * @时间：2011-7-8下午07:18:43
 	 * @param vo
 	 * @throws BusinessException
 	 */
 	public void checkForBplan(AggregatedValueObject vo)throws BusinessException{
-		//保存追加计划时  计划数量不允许为空
+		// 保存追加计划时 计划数量不允许为空
 		checkNotAllNull(vo);
-		//校验是否存在月计划,如果不存在月计划不允许保存
+		// 校验是否存在月计划,如果不存在月计划不允许保存
 		SuperVO hvo=(SuperVO) vo.getParentVO();
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();
-		//入库仓库主键
+		// 入库仓库主键
 		String pk_in=PuPubVO.getString_TrimZeroLenAsNull( hvo.getAttributeValue(pk_inwhouse));
-		//出库仓库主键
+		// 出库仓库主键
 		String pk_out=PuPubVO.getString_TrimZeroLenAsNull( hvo.getAttributeValue(pk_outwhouse));
 		StringBuffer sql=new StringBuffer();
 		sql.append(" select pk_sendplanin  from");
@@ -234,9 +238,9 @@ public class PlanCheckinBO {
 	}
 	
 	
-	//将 追加计划    从  月计划 拆分出来
+	// 将 追加计划 从 月计划 拆分出来
 	public void unplanStats(AggregatedValueObject obj2) throws BusinessException{
-		//将传来的对象克隆一份
+		// 将传来的对象克隆一份
 		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);
 	   
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();		
@@ -245,67 +249,43 @@ public class PlanCheckinBO {
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();		
+		// 查询月计划:如果月计划还没有审批，追加计划不能审批
 		StringBuffer sql=new StringBuffer();
 		sql.append(" select pk_sendplanin  from");
-		sql.append(" wds_sendplanin where wds_sendplanin.vbillstatus=1");
-		sql.append(" and isnull(wds_sendplanin.dr,0)=0");
+		sql.append(" wds_sendplanin ");
+		sql.append(" where vbillstatus=1 ");// 单据状态=审批通过
+		sql.append(" and iplantype =0");// 月计划
+		sql.append(" and isnull(dr,0)=0");
 		sql.append(" and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
-
-		
-		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();
-		
+		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();		
 	    Object o=getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
+	    if(o == null || "".equalsIgnoreCase((String)o)){
+	    	throw new BusinessException("未找到已经审批过的月计划");
+	    }	
 	    if( o!=null && o instanceof String){      
 	        String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
 	    	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
-	    	boolean isExist=false;
-		    for(int i=0;i<childs.length;i++){
-		    
-		       for(int j=0;j<list.size();j++){
-		    	  if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){	    		  
-		    		  list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).sub(PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum())));
-		    		  list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).sub(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
-		    		 if(list.get(j).getNplannum().doubleValue()<0 || list.get(j).getNassplannum().doubleValue()<0){
-		    			throw new BusinessException("不能弃审，月计划已经安排了该追加计划中的单品");
-		    		  }
-		    		  mods.add(list.get(j));    		  
-		    		  break;
-		        }
-		    	  
-		      } 
-		    }
+	    	 for(int i=0;i<childs.length;i++){
+	    			for(int j=0;j<list.size();j++){
+	    				UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
+	    				if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc()) && nplanNum.doubleValue() >0){
+	    					list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).sub(PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum())));
+	    					list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).sub(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));
+	    					if(list.get(j).getNplannum().doubleValue()<0 || list.get(j).getNassplannum().doubleValue()<0){
+				    			throw new BusinessException("不能弃审，月计划已经安排了该追加计划中的单品");
+			    		  }
+	    					mods.add(list.get(j));    		  
+				    		break;
+	    				}
+	    			}
+	    	}
 	    }
-	  
-		  getBaseDAO().updateVOList(mods); 
+	    if(mods.size() >0){
+			getBaseDAO().updateVOList(mods); 
+	    }
+	    
 	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

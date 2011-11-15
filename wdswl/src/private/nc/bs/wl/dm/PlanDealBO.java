@@ -106,8 +106,9 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.nplannum nplannum,");//计划数量
 		sql.append(" wds_sendplanin_b.nassplannum nassplannum,");//计划辅数量
 		sql.append(" wds_sendplanin_b.ndealnum,");//已安排数量
+		sql.append(" wds_sendplanin_b.nassdealnum,");//已安排辅数量
 		sql.append(" coalesce(wds_sendplanin_b.nplannum,0)-coalesce(wds_sendplanin_b.ndealnum,0) nnum,");//本次安排数量
-		sql.append(" coalesce(wds_sendplanin_b.nassplannum,0)-coalesce(wds_sendplanin_b.nassdealnum,0) nassnum,");//本次安排数量
+		sql.append(" coalesce(wds_sendplanin_b.nassplannum,0)-coalesce(wds_sendplanin_b.nassdealnum,0) nassnum,");//本次安排辅数量
 		sql.append(" wds_sendplanin_b.hsl hsl,");
 		sql.append(" wds_sendplanin_b.ts");
 		sql.append(" from wds_sendplanin ");
@@ -292,23 +293,25 @@ public class PlanDealBO {
 	 * @param dealnumInfor
 	 * @throws BusinessException
 	 */
-	private void reWriteDealNumForPlan(Map<String,UFDouble> map) throws BusinessException{
-
+	private void reWriteDealNumForPlan(Map<String,ArrayList<UFDouble>> map) throws BusinessException{
 		if(map == null || map.size()==0)
 			return;
-		for(Entry<String, UFDouble> entry:map.entrySet()){
+		for(Entry<String, ArrayList<UFDouble>> entry:map.entrySet()){
 			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
-				+entry.getValue()+" where pk_sendplanin_b='"+entry.getKey()+"'";
+				+entry.getValue().get(0)+" where pk_sendplanin_b='"+entry.getKey()+"'";
 			if(getDao().executeUpdate(sql)==0){
 				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
 			};
-
+			String sql1 = "update wds_sendplanin_b set nassdealnum =coalesce(nassdealnum,0)+"
+				+entry.getValue().get(1)+" where pk_sendplanin_b='"+entry.getKey()+"'";
+			if(getDao().executeUpdate(sql1)==0){
+				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
+			};
 			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
-
 			//如果累计安排数量大于计划数量将抛出异常
 
-			String sql1="select count(0) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
-			Object o=getDao().executeQuery(sql1,WdsPubResulSetProcesser.COLUMNPROCESSOR);
+			String sql2="select count(0) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
+			Object o=getDao().executeQuery(sql2,WdsPubResulSetProcesser.COLUMNPROCESSOR);
 			if(o==null){
 				throw new BusinessException("累计安排数量不能大于计划数量！");
 			}
@@ -364,15 +367,25 @@ public class PlanDealBO {
 		 *  */
 		//回写计划累计安排数量
 		// 发运安排vo---》发运计划vo
-		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
+		Map<String,ArrayList<UFDouble>> map = new HashMap<String, ArrayList<UFDouble>>();
 		for(int i=0;i<ldata.size();i++){
 			String key = ldata.get(i).getPk_sendplanin_b();
+			ArrayList<UFDouble> list = new ArrayList<UFDouble>();
 			UFDouble num= PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNnum());
+			UFDouble nassnum = PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNassnum());
 			if(map.containsKey(key)){
-				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key));
-				map.put(key, oldValue.add(num));
+				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key).get(0));
+				UFDouble oldAssValue =PuPubVO.getUFDouble_NullAsZero(map.get(key).get(1));
+				num = num.add(oldValue);
+				nassnum = nassnum.add(oldAssValue);
+				list.add(num);
+				list.add(nassnum);
+				map.put(key, list);
+			}else{
+				list.add(num);
+				list.add(nassnum);
+				map.put(key, list);
 			}
-			map.put(key, num);
 		}
 		reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 收货站 分单

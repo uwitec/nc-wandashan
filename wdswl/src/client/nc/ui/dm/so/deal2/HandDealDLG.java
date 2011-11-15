@@ -77,8 +77,7 @@ public class HandDealDLG  extends UIDialog implements ActionListener{
 		setSize(1000, 500);
 		setTitle("∑¢ªı∞≤≈≈");
 		setContentPane(getUIDialogContentPane());
-		createHandDataBuffer();
-		
+		createHandDataBuffer();	
 		getbtnCancel().addActionListener(this);
 		getbtnOk().addActionListener(this);
 	}

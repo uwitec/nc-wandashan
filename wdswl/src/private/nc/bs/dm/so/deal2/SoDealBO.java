@@ -83,7 +83,7 @@ public class SoDealBO {
 	 * @时间：2011-3-25下午04:44:08
 	 * @throws BusinessException
 	 */
-	private void reWriteDealNumForPlan(Map<String, UFDouble> map)
+	public void reWriteDealNumForPlan(Map<String, UFDouble> map)
 			throws BusinessException {
 
 		if (map == null || map.size() == 0)
@@ -127,7 +127,7 @@ public class SoDealBO {
 			if(!(o instanceof SoDealBillVO))
 				return false;
 			SoDealBillVO bill = (SoDealBillVO)o;
-//			特殊安排不考虑最小发货量
+			//特殊安排不考虑最小发货量
 			if(PuPubVO.getUFBoolean_NullAs(bill.getHeader().getIsonsell(), UFBoolean.FALSE).booleanValue()){
 				return true;
 			}
@@ -195,8 +195,7 @@ public class SoDealBO {
 			return null;
 		Logger.info("待安排客户数量为"+newbills.length);
 		Logger.info("根据库存存量进行安排....");
-//		对表体同一客户同一个货品的量再次进行合并
-				
+//		对表体同一客户同一个货品的量再次进行合并			
 		dealCol.setData(newbills, lpara);
 		Object o = dealCol.col();
 		return o;

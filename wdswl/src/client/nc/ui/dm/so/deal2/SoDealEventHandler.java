@@ -146,7 +146,6 @@ public class SoDealEventHandler{
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 分仓客商绑定
 		 */	
-		clearData();
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
@@ -160,6 +159,7 @@ public class SoDealEventHandler{
 		}
 		//对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
+		clearData();
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
 		getDataPane().execLoadFormula();
@@ -289,6 +289,7 @@ public class SoDealEventHandler{
 	 * 发运计划  安排按钮处理方法
 	 * @时间：2011-3-25下午02:59:20
 	 */
+	@SuppressWarnings("unchecked")
 	public void onDeal() throws Exception{
 		//安排  安排前   数据校验
 		/**
@@ -322,18 +323,29 @@ public class SoDealEventHandler{
 			List<StoreInvNumVO> lnum = (List<StoreInvNumVO>)os[2];
 			//本次不能安排的客户原因
 			List<String> reasons = (List<String>)os[3];
-			
+			//本站直接安排的客户
+			List<String> reasons2 = (List<String>)os[4];
 			if(lcust!=null && lcust.size()>0){
 				flag = doHandDeal(lcust, lnum);
 			}
+			StringBuffer bur = new StringBuffer();
+			if(reasons2 != null && reasons2.size() >0){
+				bur.append("本次直接安排的客户:\n");
+				for(int i=0;i<reasons2.size();i++){
+					bur.append("**");
+					String reason = reasons2.get(i);
+					bur.append(reason+"\n");
+				}
+			}
 			if(reasons != null && reasons.size() >0){
-				StringBuffer bur = new StringBuffer();
 				bur.append("本次不能进行安排的客户:\n");
 				for(int i=0;i<reasons.size();i++){
 					bur.append("**");
 					String reason = reasons.get(i);
 					bur.append(reason+"\n");
 				}
+			}
+			if(bur.toString().length()>0){
 				showWarnMessage(bur.toString());
 			}
 		}else{
@@ -342,10 +354,9 @@ public class SoDealEventHandler{
 		onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
-	
 	/**
 	 * 
-	 * @作者：zhf
+	 * @作者：lyf
 	 * @说明：完达山物流项目  手工安排
 	 * @时间：2011-7-11下午03:08:02
 	 * @param lcust
@@ -353,9 +364,9 @@ public class SoDealEventHandler{
 	 * @throws Exception
 	 */
 	private boolean doHandDeal(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum) throws Exception{
-		//对客户按订单日期  自动 分配  发运量
+		//1.对客户按订单日期 自动 分配  发运量
 		SoDealHealper.autoDealNum(lcust, lnum);	
-		//调用手工安排界面  供用户 手工安排  存量不足货品
+		//2.调用手工安排界面  供用户 手工安排  存量不足货品
 		getHandDealDlg().setLcust(lcust);
 		getHandDealDlg().setLnum(lnum);
 		getHandDealDlg().getDataPanel().setDataToUI();

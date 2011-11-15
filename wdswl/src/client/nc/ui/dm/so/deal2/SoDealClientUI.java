@@ -59,21 +59,14 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	protected ClientEnvironment m_ce = null;
 	protected ClientLink cl = null;
 	private SoDealEventHandler m_handler = null;
-
 	private String cwhid;//当前登录客户所属仓库
-
 	public String getWhid(){
 		return cwhid;
 	}
-
 	// 定义界面模板
-
 	private BillListPanel m_panel = null;
-
 	// 按钮事件处理
-
 	private LoginInforHelper helper = null;
-
 	public LoginInforHelper getLoginInforHelper() {
 		if (helper == null) {
 			helper = new LoginInforHelper();
@@ -105,11 +98,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	private void init() {
 		setLayout(new java.awt.CardLayout());
 		add(getPanel(), "a");
-
 		createEventHandler();
-
 		setButton();
-
 		initListener();
 		try {
 			cwhid  = new LoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey()).getWhid();

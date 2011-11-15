@@ -1,6 +1,9 @@
 package nc.ui.dm.so.deal2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -142,38 +145,43 @@ public class SoDealHealper {
 	 * @作者：zhf
 	 * @说明：完达山物流项目 对客户按订单日期自动 分配  发运量
 	 * @时间：2011-7-11上午11:27:47
-	 * @param lcust
-	 * @param lnum
+	 * @param lcust:需要手动安排的客户
+	 * @param lnum：需要手动安排的客户涉及到的存货的存量信息，每个存量信息里面记录所有设计到该存货的订单表体
 	 */
 	public static void autoDealNum(List<SoDealBillVO> lcust,List<StoreInvNumVO> lnum){
 		if(lcust == null || lcust.size() == 0 || lnum == null || lnum.size() == 0){
 			return;
 		}
-
-//		自动分配
-		Set<SoDealVO> bodys = null;
-		UFDouble nallnum = null;//辅计量进行处理
-		UFDouble nnum = null;
-		UFDouble hsl = null;
-		for(StoreInvNumVO num:lnum){
-			bodys = num.getLdeal();
-			nallnum = num.getNassnum();
-			hsl = num.getNnum().div(num.getNassnum());
-			
+		for(StoreInvNumVO numVO:lnum){
+			ArrayList<SoDealVO> bodys = numVO.getLdeal();//涉及都该存货的所有订单明细
+			Collections.sort(bodys, new Comparator<SoDealVO>(){
+				public int compare(SoDealVO o1,SoDealVO o2){
+					if(o1 == null)
+						return 1;
+					if(o2 == null)
+						return -1;
+					UFDate dbilldate1 = o1.getDbilldate();
+					UFDate dbilldate2 = o2.getDbilldate();
+					if(dbilldate1 == null || dbilldate2 == null){
+						return 0;
+					}
+					return dbilldate2.compareTo(dbilldate1);
+				}
+			});
+			UFDouble nallnum = numVO.getNassnum();//可用量（辅）
+			UFDouble hsl = numVO.getNnum().div(numVO.getNassnum());			
 			if(bodys == null || bodys.size() == 0){
-//				throw new BusinessException("数据异常");
-				return;
+				continue;
 			}
 			for(SoDealVO body:bodys){
-				nnum = body.getNassnum();
+				UFDouble nnum = body.getNassnum();//本次安排数量（辅）
 				if(nallnum.doubleValue()>nnum.doubleValue()){
-//					数量不发生变化按照  安排数量  进行安排
+//					数量不发生变化按照 安排数量  进行安排
 					nallnum = nallnum.sub(nnum);
 				}else if(nallnum.doubleValue()>0){
 					body.setNassnum(nallnum);
 					body.setNnum(nallnum.multiply(hsl));
 					nallnum = WdsWlPubTool.DOUBLE_ZERO;					
-//					continue;
 				}else{
 					body.setNassnum(WdsWlPubTool.DOUBLE_ZERO);
 					body.setNnum(WdsWlPubTool.DOUBLE_ZERO);
