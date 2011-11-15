@@ -82,6 +82,7 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 	public void setCustDataToUI(){
 		if(!ui.getBuffer().isCustEmpty()){
 			SoDealBillVO[] bills = ui.getBuffer().getLcust().toArray(new SoDealBillVO[0]);
+			ui.getBuffer().setCustSelRow(0);
 			getCustPane().getHeadBillModel().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(bills, SoDealHeaderVo.class));
 			getCustPane().getBodyBillModel().setBodyDataVO(bills[0].getChildrenVO());
 			getCustPane().getHeadBillModel().execLoadFormula();
@@ -91,6 +92,7 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 	public void setDealDataToUI(){
 		if(!ui.getBuffer().isNumEmpty()){
 			StoreInvNumVO[] nums = ui.getBuffer().getLnum().toArray(new StoreInvNumVO[0]);
+			ui.getBuffer().setNumSelRow(0);
 			getDealPane().getHeadBillModel().setBodyDataVO(nums);
 			getDealPane().getBodyBillModel().setBodyDataVO(nums[0].getLdeal().toArray(new SoDealVO[0]));
 			getDealPane().getHeadBillModel().execLoadFormula();

@@ -14,8 +14,10 @@ import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.voutils.IFilter;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -382,10 +384,11 @@ public class SoDealEventHandler{
 		List<SoDealVO> ldeal = new ArrayList<SoDealVO>();
 		for(SoDealBillVO cust:lcust){
 			bodys = cust.getBodyVos();
-			for(SoDealVO body:bodys){
+			SoDealVO[] newBodys = (SoDealVO[])VOUtil.filter(bodys, new FilterNullNum("nnum"));
+			for(SoDealVO body:newBodys){
 				body.validataOnDeal();
+				ldeal.add(body);
 			}
-			ldeal.addAll(Arrays.asList(bodys));
 		}
 		if(ldeal.size() <= 0)
 			return false;		
@@ -394,6 +397,24 @@ public class SoDealEventHandler{
 //		VOUtil.filter(ldeal, iFilter);
 		SoDealHealper.doHandDeal(ldeal, ui);
 		return true;
+	}
+	public class FilterNullNum implements IFilter{
+		private String para;
+		FilterNullNum(String column){
+			this.para = column;
+		}
+		public boolean accept(Object obj) {
+			if( obj instanceof SuperVO){
+				SuperVO vo = (SuperVO)obj;
+				String value = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(para));
+				if(value == null){
+					return false;
+				}
+				return true;
+			}
+			return false;
+		}
+		
 	}
 	
 	private HandDealDLG m_handDlg = null;
