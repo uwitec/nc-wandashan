@@ -4,6 +4,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillListPanel;
@@ -12,6 +13,8 @@ import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -136,7 +139,6 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 	class DealPaneHeadListSelListener implements BillEditListener{
 
 		public void afterEdit(BillEditEvent e) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -158,13 +160,33 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 		String key = e.getKey();
 		if(key.equalsIgnoreCase("nassnum")){//安排辅数量 调整后  相应变动
 			SoDealVO deal = (SoDealVO)getDealPane().getBodyBillModel().getBodyValueRowVO(e.getRow(), SoDealVO.class.getName());
+			//校验，不能超计划安排
+			UFDouble nnumber = PuPubVO.getUFDouble_NullAsZero(deal.getNnumber());//计划主数量
+			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(deal.getNnum());//本次安排数量
+			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero(deal.getNtaldcnum());//累计安排数量
+			if(nnumber.sub(ntaldcnum).sub(nnum).doubleValue()<0){
+				MessageDialog.showWarningDlg(this, "警告", "不能超计划未安排数量");
+				getDealPane().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+				return ;
+			}
+			//校验不能超过总的可用量
+			SoDealVO [] bodys =(SoDealVO []) getDealPane().getBodyBillModel().getBodyValueVOs(SoDealVO.class.getName());
+			UFDouble	curNum =new UFDouble(0);
+			for(SoDealVO body:bodys){
+				curNum = curNum.add(PuPubVO.getUFDouble_NullAsZero(body.getNassnum()));
+			}
+			UFDouble curTotalNum = PuPubVO.getUFDouble_NullAsZero(getDealPane().getHeadBillModel().getValueAt(ui.getBuffer().getNumSelRow(), "nassnum"));
+			if(curNum.sub(curTotalNum).doubleValue()>0){
+				MessageDialog.showWarningDlg(this, "警告", "不能超过当前可用量");
+				getDealPane().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+				return ;
+			}
 //			同步数据
 			SoDealHealper.synData(ui.getBuffer().getLcust(), deal);
 			ischange = true;
 		}
 	}
 	public void bodyRowChange(BillEditEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 	public void stateChanged(ChangeEvent e) {
