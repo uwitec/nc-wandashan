@@ -96,8 +96,8 @@ public class SoDealVO extends SuperVO{
 	private String vdef18;
 	private String vdef19;
 	private String vdef20;
-    private UFDouble nnumber;
-	private UFDouble npacknumber;
+    private UFDouble nnumber;//订单数量
+	private UFDouble npacknumber;//订单辅数量
 	private String cbodywarehouseid;
 	private UFDate dconsigndate;
 	private UFDate ddeliverdate;
@@ -838,9 +838,6 @@ public class SoDealVO extends SuperVO{
 		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
 			throw new ValidationException("待安排量为空或0");
 		}
-//		if(getPk_outwhouse().equalsIgnoreCase(getPk_inwhouse())){
-//			throw new ValidationException("发货站不能和收获站相同");
-//		}
 		UFDouble nchecknum = PuPubVO.getUFDouble_NullAsZero(getNnumber()).sub(PuPubVO.getUFDouble_NullAsZero(getAttributeValue(WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME)));
 		if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue()>0)
 			throw new ValidationException("不能超销售计划安排");
