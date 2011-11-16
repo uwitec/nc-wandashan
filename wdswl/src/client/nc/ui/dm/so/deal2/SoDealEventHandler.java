@@ -1,7 +1,6 @@
 package nc.ui.dm.so.deal2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import nc.ui.pub.beans.UIDialog;
@@ -16,6 +15,7 @@ import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.trade.voutils.VOUtil;
@@ -406,8 +406,8 @@ public class SoDealEventHandler{
 		public boolean accept(Object obj) {
 			if( obj instanceof SuperVO){
 				SuperVO vo = (SuperVO)obj;
-				String value = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(para));
-				if(value == null){
+				UFDouble value = PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue(para));
+				if(value == null || value.doubleValue() <= 0){
 					return false;
 				}
 				return true;
