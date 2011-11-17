@@ -12,7 +12,6 @@ import nc.vo.wl.pub.WdsWlPubConst;
  *
  */
 public class PlanDealClientUI extends ToftPanel{
-	
 	/**
 	 * 
 	 */
