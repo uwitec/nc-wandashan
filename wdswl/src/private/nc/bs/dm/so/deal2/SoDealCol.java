@@ -247,9 +247,14 @@ public class SoDealCol {
 			if (bodys == null || bodys.length == 0)
 				continue;
 			boolean pass = false;//是否跳过该客户
+			boolean isGift = false;//判断是否赠品单：赠品单不允许拆单。即赠品单存在两种情况：可用量都满足，直接安排;有可用量不满足，跳过;
 			boolean isdeal = true;//默认 该客户表体 货可用量都满足
 			for (SoDealVO body : bodys) {
 				StoreInvNumVO tmpNumVO = invNumInfor.get(body.getCinvbasdocid());
+				boolean blargessflag = PuPubVO.getUFBoolean_NullAs(body.getBlargessflag(), UFBoolean.FALSE).booleanValue();
+				if(blargessflag){
+					isGift = true;
+				}
 				// 2.1存在存货的可用量<=0的 涉及该存货的客户 均不可安排 本次 该客户直接丢弃
 				if(tmpNumVO == null){
 					String num = "0";
@@ -317,8 +322,16 @@ public class SoDealCol {
 				if (lnodeal == null) {
 					lnodeal = new ArrayList<SoDealVO>();
 				}
-				lnodeal.addAll(Arrays.asList(bodys));
-				lcust.add(bill);
+				if(isGift){
+					String reason = "客户["+ WdsWlPubTool.getCustNameByid(bill.getHeader()
+								.getCcustomerid()) + "包含赠品单，但又可用量不足的存货，不能安排，可将赠品单先单独安排";
+					Logger.info(reason);
+					reasons.add(reason);
+				}else{
+					lnodeal.addAll(Arrays.asList(bodys));
+					lcust.add(bill);
+				}
+				
 			}
 		}
 		// 4.将过滤后可以安排的是数据进行安排
