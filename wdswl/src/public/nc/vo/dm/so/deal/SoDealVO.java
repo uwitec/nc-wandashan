@@ -101,7 +101,7 @@ public class SoDealVO extends SuperVO{
 	private String cbodywarehouseid;
 	private UFDate dconsigndate;
 	private UFDate ddeliverdate;
-	private UFBoolean blargessflag = new UFBoolean(false);
+	private UFBoolean blargessflag = new UFBoolean(false);// «∑Ò‘˘∆∑
 	private String ccurrencytypeid;
 	private UFDouble nitemdiscountrate;
 	private UFDouble ndiscountrate;
