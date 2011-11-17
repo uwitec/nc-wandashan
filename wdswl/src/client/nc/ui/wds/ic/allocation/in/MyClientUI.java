@@ -70,6 +70,7 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	}	
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
+		super.beforeEdit(e);
 		return true;
 	}
 	/**
