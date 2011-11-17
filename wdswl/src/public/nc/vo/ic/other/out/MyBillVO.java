@@ -90,7 +90,7 @@ public class  MyBillVO extends HYBillVO implements IExAggVO{
 			super.setChildrenVO(null);
 		}
 		else{
-			super.setChildrenVO((CircularlyAccessibleValueObject[]) Arrays.asList(children).toArray(new TbOutgeneralBVO[0]));
+			super.setChildrenVO(children);
 		}
 		
 		setTableVO(getDefaultTableCode(), children);
@@ -113,7 +113,6 @@ public class  MyBillVO extends HYBillVO implements IExAggVO{
 	}
 
 	public SuperVO[] getChildVOsByParentId(String tableCode, String parentid) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -122,22 +121,18 @@ public class  MyBillVO extends HYBillVO implements IExAggVO{
 	}
 
 	public HashMap getHmEditingVOs() throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getParentId(SuperVO item) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String[] getTableCodes() {
-		// TODO Auto-generated method stub
 		return new String[]{"tb_outgeneral_b","tb_outgeneral_b2"};
 	}
 
 	public String[] getTableNames() {
-		// TODO Auto-generated method stub
 		return new String[]{"存货设置","班组设置"};
 	}
 

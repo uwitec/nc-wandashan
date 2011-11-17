@@ -3,8 +3,10 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.linkoperate.ILinkQuery;
 import nc.ui.pub.linkoperate.ILinkQueryData;
+import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.button.IBillButton;
+import nc.ui.trade.multichild.MultiChildBillCardPanelWrapper;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
@@ -141,6 +143,18 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 			// 列表表体为空时，会抛空指针异常
 			Logger.debug("千分位初始化时出现异常，但不是错误");
 		}
+	}
+	/**
+	* 
+	* @return nc.ui.trade.bill.BillCardPanelWrapper
+	*/
+	public BillCardPanelWrapper createBillCardPanelWrapper() throws Exception {
+		return new MutiCardWarper(
+			getClientEnvironment(),
+			getUIControl(),
+			getBusinessType(),
+			getNodeKey(),
+			getBillDef(getUIControl().getHeadZYXKey(), getUIControl().getBodyZYXKey()));
 	}
 
 	public String[] getTableCodes() {
