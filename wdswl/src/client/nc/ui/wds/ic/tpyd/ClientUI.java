@@ -7,7 +7,6 @@ import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
-import nc.ui.tm.framework.iufo.PubTools;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
