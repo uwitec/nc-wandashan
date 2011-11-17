@@ -38,8 +38,6 @@ public class AlloInClientUICtrl extends AbstractManageController {
 				IBillButton.Del,
 				IBillButton.Save, 
 				IBillButton.Line,
-//				IBillButton.CopyLine,
-//				IBillButton.PasteLine,
 				IBillButton.Cancel,
 				IBillButton.Return,
 				IBillButton.Refresh,

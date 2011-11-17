@@ -577,11 +577,10 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	}
 	//批量验证批次号是否正确mlr
 	protected boolean validateBachCode(){		
-		int num = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getRowCount();
+		int num = getBillCardPanelWrapper().getBillCardPanel().getBillTable("tb_general_b").getRowCount();
 		for (int i = 0; i < num; i++) {
-			int row = i;
-			String va = (String) getBillCardPanelWrapper().getBillCardPanel()
-					.getBodyValueAt(i, "geb_vbatchcode");
+			String va = (String) getBillCardPanelWrapper().getBillCardPanel().getBillModel("tb_general_b")
+			.getValueAt(i, "geb_vbatchcode");
 			if (!validateBachCode(va)) {
 				return false;
 			}
@@ -619,7 +618,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		super.onBoEdit();
 //		zhf add
 		setHeadPartEdit(false);
-		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
 		getBillUI().updateButtons();
 	}	
 		
