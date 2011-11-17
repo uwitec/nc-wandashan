@@ -6,10 +6,12 @@ import java.util.regex.Pattern;
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
@@ -18,6 +20,7 @@ import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
+import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.ScaleKey;
@@ -262,6 +265,10 @@ public class MySaleEventHandler extends OutPubEventHandler {
 				}			
 			}			
 		}
+		BillItem[] bte2=getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyItems();
+		if(bte2==null||bte2.length==0){
+			
+		}
 		super.onBoSave();
 	}
 
@@ -349,8 +356,11 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //	}
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
-		
-		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+//		zhf add
+	//	setHeadPartEdit(false);
+//		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//		getBillUI().updateButtons();
+//		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 	}
 	
 	@Override//  add   xjx

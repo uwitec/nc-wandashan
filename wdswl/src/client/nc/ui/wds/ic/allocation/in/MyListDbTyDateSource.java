@@ -1,5 +1,11 @@
 package nc.ui.wds.ic.allocation.in;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.LongTimeTask;
@@ -11,53 +17,102 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  *
  */
 public class MyListDbTyDateSource extends ListPanelPRTS {
+
 	private BillListPanel m_billcardpanel = null;
 
-	public MyListDbTyDateSource(String moduleCode, BillListPanel billListPanel) {
-		// TODO Auto-generated constructor stub
-		super(moduleCode, billListPanel);
-		this.m_billcardpanel = billListPanel;
+	public MyListDbTyDateSource(String moduleName, BillListPanel billcardpanel) {
+		super(moduleName, billcardpanel);
+		this.m_billcardpanel = billcardpanel;
+		try {
+			setTpInfors();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * gebb_num ninassistnum
+	 */
 	private static final long serialVersionUID = 1L;
+
+	Map<Integer, ArrayList<String>> tpInfor = null;// 记录出库单所以的托盘信息<当前 表体行,托盘信息>
+
+	public void setTpInfors() throws Exception {
+		if (tpInfor == null) {
+			tpInfor = new HashMap<Integer, ArrayList<String>>();
+		}
+		String[] general_b_pks = super.getItemValuesByExpress("geb_pk");// 得到所有的表体主键信息
+		String classname = "nc.bs.wds.ic.allocation.in.AllocationInBO";
+		String methodname = "getCorpTP";
+		Class[] ParameterTypes = new Class[] { String.class };
+		if (general_b_pks != null && general_b_pks.length > 0) {
+			for (int i = 0; i < general_b_pks.length; i++) {
+				Object[] ParameterValues = new Object[] { general_b_pks[i] };
+				ReportBaseVO[] list = (ReportBaseVO[]) LongTimeTask
+						.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
+								classname, methodname, ParameterTypes,
+								ParameterValues, 2);
+				ArrayList<String> tp = new ArrayList<String>();
+				if (list != null && list.length > 0) {
+					for (int j = 0; j < list.length; j++) {
+						// getItemValuesByExpress(itemExpress);
+						StringBuffer bur = new StringBuffer();
+						bur.append("托盘编号："
+								+ list[j].getAttributeValue("cdt_traycode"));
+						bur.append("实入辅数量: "
+								+ list[j].getAttributeValue("ninassistnum")
+								+ ",");
+						bur.append("\n");
+						tp.add(bur.toString());
+					}
+				}
+				tpInfor.put(i, tp);
+			}
+		}
+	}
 
 	@Override
 	public String[] getItemValuesByExpress(String itemExpress) {
-		// 增加托盘中得一些必要字段字段。。。 t_cdt_pk general_b_pk
-		if (itemExpress.equals("geb_pk")) {
-			String[] general_b_pks = super
-					.getItemValuesByExpress("geb_pk");
-			String[] tpInfor = new String[general_b_pks.length];
-			if (general_b_pks != null && general_b_pks.length > 0) {
-				String classname = "nc.bs.wds.ic.allocation.in.AllocationInBO";
-				String methodname = "getCorpTP";
-				Class[] ParameterTypes = new Class[] { String.class };
-				for (int i=0;i<general_b_pks.length;i++) {
-					Object[] ParameterValues = new Object[] { general_b_pks[i] };
-					try {
-						ReportBaseVO[] list = (ReportBaseVO[]) LongTimeTask
-								.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
-										classname, methodname, ParameterTypes,
-										ParameterValues, 2);
-						StringBuffer bur = new StringBuffer();
-						if(list != null && list.length>0){
-							for(int j=0;j<list.length;j++){
-								bur.append("托盘编号："+list[j].getAttributeValue("cdt_traycode")+", ");
-							//	bur.append("实入数量："+list[j].getAttributeValue("gebb_num")+", ");
-								bur.append("实入辅数量："+list[j].getAttributeValue("ninassistnum")+", ");
-								bur.append("\n");
-							}
-						}
-						tpInfor[i] = bur.toString();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+
+		int row=m_billcardpanel.getHeadTable().getSelectedRow();
+		if(itemExpress.startsWith("h_")||itemExpress.startsWith("t_")){
+			return super.getItemValuesByExpress(itemExpress);		
+			}else{
+			int rowCount=m_billcardpanel.getBodyBillModel().getRowCount();
+			String[] retStr=new String[rowCount];
+			for(int i=0;i<rowCount;i++){
+				BillItem item=	m_billcardpanel.getBodyBillModel().getBodyItems()[i];
+
+				for(int j=0;j<rowCount;j++){
+				Object obj=m_billcardpanel.getBodyBillModel().getValueAt(j,itemExpress);
+				if(obj!=null)
+					retStr[j]=obj.toString();
+				else
+					retStr[j]="";
+				}
+				
+				if (itemExpress.equals("geb_pk")) {
+					ArrayList<String>  list = new ArrayList<String>();
+					Set<Integer> set = tpInfor.keySet();
+					for(Integer key:set){
+						list.addAll(tpInfor.get(key));
+					}
+					return list.toArray(new String[0]);	
+				}
+				// lyf begin 将托盘分担到表体对应行：如果该行有多个托盘，则要增加空行
+				ArrayList<String> list = new ArrayList<String>();
+				for (int row1 = 0; row1 < retStr.length; row1++) {
+					list.add(retStr[row1]);
+					ArrayList<String> tp = tpInfor.get(row1);
+					for (int m = 1; m < tp.size(); m++) {
+						list.add("");
 					}
 				}
+				return list.toArray(new String[0]);
+				// lyf end
 			}
-			return tpInfor;
-
-		}
-		return super.getItemValuesByExpress(itemExpress);
+			return null;
+		}			
 	}
+
 }
