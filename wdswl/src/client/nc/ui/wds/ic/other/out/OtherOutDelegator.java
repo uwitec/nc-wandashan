@@ -1,10 +1,13 @@
 package nc.ui.wds.ic.other.out;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.pub.SuperVO;
 /**
   *
@@ -20,7 +23,10 @@ public class OtherOutDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 			TbOutgeneralTVO[] ctmps=(TbOutgeneralTVO[]) this.queryByCondition(TbOutgeneralTVO.class, " general_b_pk = '"+body.getPrimaryKey()+"'");
 			if(ctmps == null||ctmps.length==0)
 				continue;
-			body.setTrayInfor(Arrays.asList(ctmps));
+			List<TbOutgeneralTVO> list=new ArrayList<TbOutgeneralTVO>();
+			list.addAll(Arrays.asList(ctmps));
+	
+			body.setTrayInfor(list);
 		}
 		
 		// 根据主表主键，取得子的数据
