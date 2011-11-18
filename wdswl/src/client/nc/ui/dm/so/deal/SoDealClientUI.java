@@ -98,20 +98,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		init();
 		loadData(billId);
 	}
-
-	protected BillListPanel getPanel() {
-		if (m_panel == null) {
-			m_panel = new BillListPanel();
-			m_panel.loadTemplet(WdsWlPubConst.WDS4, null, m_ce.getUser()
-					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
-			m_panel.setEnabled(true);
-			m_panel.getParentListPanel().setTotalRowShow(true);
-			m_panel.setMultiSelect(true);
-			m_panel.getHeadTable().removeSortListener();
-		}
-		return m_panel;
-	}
-
 	private void init() {
 		setLayout(new java.awt.CardLayout());
 		add(getPanel(), "a");
@@ -128,9 +114,77 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	}
 
 	private void initListener() {
+		//表头编辑前后监听
 		getPanel().addEditListener(this);
+		getPanel().getParentListPanel().addEditListener2(this);
+		//表体编辑前后监听
+		BodyEditListener bodyEditListener = new BodyEditListener(); 
+		getPanel().addBodyEditListener(bodyEditListener);
+		getPanel().getBodyScrollPane("body").addEditListener2(bodyEditListener);
 		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
 	}
+	/**
+	 * lyf:表体编辑监听
+	 * @author
+	 *
+	 */
+	private class BodyEditListener  implements BillEditListener,BillEditListener2{
+
+		public void afterEdit(BillEditEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void bodyRowChange(BillEditEvent e) {
+		}
+
+		public boolean beforeEdit(BillEditEvent e) {
+			String key  = e.getKey();
+			if("nassnum".equalsIgnoreCase(key)){
+				if(isGift()){
+					return false;
+				}
+			}else if("nnum".equalsIgnoreCase(key)){
+				if(isGift()){
+					return false;
+				}
+			}
+			return false;
+		}
+		/**
+		 * 
+		 * @作者：lyf:判断是否赠品单
+		 * @说明：完达山物流项目 
+		 * @时间：2011-11-17下午09:41:46
+		 * @return
+		 */
+		public boolean isGift(){
+			boolean isGift = false;
+			int count = getPanel().getBodyBillModel().getRowCount();
+			for(int row =0;row<count;row++){
+				Object value = getPanel().getBodyBillModel().getValueAt(row, "blargessflag");
+				isGift = PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE).booleanValue();
+				if(isGift){
+					return isGift;
+				}
+			}
+			return isGift;
+		}
+	}
+	
+	protected BillListPanel getPanel() {
+		if (m_panel == null) {
+			m_panel = new BillListPanel();
+			m_panel.loadTemplet(WdsWlPubConst.WDS4, null, m_ce.getUser()
+					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
+			m_panel.setEnabled(true);
+			m_panel.getParentListPanel().setTotalRowShow(true);
+			m_panel.setMultiSelect(true);
+			m_panel.getHeadTable().removeSortListener();
+		}
+		return m_panel;
+	}
+
 	
 	public void headRowChange(int iNewRow) {
 		if (!getPanel().setBodyModelData(iNewRow)) {
@@ -151,23 +205,19 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 
 
 	private class HeadRowStateListener implements IBillModelRowStateChangeEventListener {
-
 		public void valueChanged(RowStateChangeEvent e) {
 			if (e.getRow() != getPanel().getHeadTable().getSelectedRow()) {
 				headRowChange(e.getRow());
 			}
-
 			BillModel model = getPanel().getBodyBillModel();
 			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
 			model.removeRowStateChangeEventListener();
-
 			if (e.isSelectState()) {
 				getPanel().getChildListPanel().selectAllTableRow();
 			} else {
 				getPanel().getChildListPanel().cancelSelectAllTableRow();
 			}
 			model.addRowStateChangeEventListener(l);
-
 			getPanel().updateUI();
 		}
 
@@ -175,18 +225,13 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	
 
 	private void setButton() {
-		//yf去掉模拟安排按钮
-//		ButtonObject[] m_objs = new ButtonObject[] { m_btnSelAll, m_btnSelno,
-//				m_btnQry, m_btnDeal ,m_btnXnDeal};
 		ButtonObject[] m_objs = new ButtonObject[] { 
 				m_btnQry,m_btnSelAll,m_btnSelno, m_btnDeal};
 		this.setButtons(m_objs);
 	}
 
 	private void createEventHandler() {
-
 		event = new SoDealEventHandler(this);
-
 	}
 
 	public void loadData(String billId) {
@@ -214,7 +259,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	@Override
 	public void onButtonClicked(ButtonObject btn) {
 		// TODO Auto-generated method stub
-
 		event.onButtonClicked(btn.getCode());
 	}
 	
@@ -228,6 +272,16 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		}
 		updateButtons();
 	}
+	//表头行切换事件
+	public void bodyRowChange(BillEditEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getRow()<0)
+			return;
+		e.getValue();
+		headRowChange(e.getRow());
+		
+	}
+	//表头编辑前事件
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		int row = e.getRow();
@@ -270,28 +324,18 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	
 		return true;
 	}
-
-	public ClientLink getCl() {
-		return cl;
-	}
-
-	public void setCl(ClientLink cl) {
-		this.cl = cl;
-	}
-
+	//表头编辑后事件
 	public void afterEdit(BillEditEvent e) {
 		String key = e.getKey();
 		if("warehousename".equalsIgnoreCase(key)){
 			
 		}
 	}
+	public ClientLink getCl() {
+		return cl;
+	}
 
-	public void bodyRowChange(BillEditEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getRow()<0)
-			return;
-		e.getValue();
-		headRowChange(e.getRow());
-		
+	public void setCl(ClientLink cl) {
+		this.cl = cl;
 	}
 }

@@ -14,7 +14,6 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
-import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;

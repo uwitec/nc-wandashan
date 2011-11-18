@@ -34,9 +34,15 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 		super();
 		cl = new ClientLink(ClientEnvironment.getInstance());
 		this.ui = ui;
-		initListener();
 		initData();
+		initListener();
 	}
+	
+	private void initData(){
+		addTab("客户待发货信息", getCustPane());
+		addTab("安排界面", getDealPane());		
+	}
+
 	private void initListener(){
 		getCustPane().addHeadEditListener(new CustPaneHeadListSelListener());
 		getDealPane().addHeadEditListener(new DealPaneHeadListSelListener());
@@ -64,12 +70,6 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 		}
 		return m_dealpane;
 	}
-
-	private void initData(){
-		addTab("客户待发货信息", getCustPane());
-		addTab("安排界面", getDealPane());		
-	}
-
 	public void setDataToUI(){
 		clearPanel();
 		//		客户页签数据设置
