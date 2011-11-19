@@ -1,6 +1,9 @@
 package nc.ui.wds.ic.allocation.in;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
+
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbgeneralB2VO;
@@ -21,6 +24,10 @@ public class AlloDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 			TbGeneralBBVO[] ctmps=(TbGeneralBBVO[]) this.queryByCondition(TbGeneralBBVO.class, " geb_pk = '"+body.getPrimaryKey()+"'");
 			if(ctmps == null||ctmps.length==0)
 				continue;
+			List<TbGeneralBBVO> list=new ArrayList<TbGeneralBBVO>();
+			list.addAll(Arrays.asList(ctmps));
+			body.setTrayInfor(list);
+	
 			body.setTrayInfor(Arrays.asList(ctmps));
 		}		
 		// 根据主表主键，取得子的数据

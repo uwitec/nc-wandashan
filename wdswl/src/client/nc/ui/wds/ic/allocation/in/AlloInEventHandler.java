@@ -1,14 +1,12 @@
 package nc.ui.wds.ic.allocation.in;
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.pub.print.WdsWlPrintTool;

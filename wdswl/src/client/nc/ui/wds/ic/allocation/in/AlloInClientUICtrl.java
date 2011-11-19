@@ -1,5 +1,4 @@
 package nc.ui.wds.ic.allocation.in;
-
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
@@ -9,15 +8,11 @@ import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.TbgeneralB2VO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
- * 
  * <p>
  *    µ÷²¦Èë¿â
  * </p>
- * 
  * Create on 2006-4-6 16:00:51
- * 
  * @author authorName
  * @version tempProject version
  */

@@ -61,12 +61,13 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	}
 
 	protected void initSelfData() {
-		//除去行操作多余按钮
-//		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
-//		if (btnobj != null) {
-//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
-//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
-//		}
+	//	除去行操作多余按钮
+		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
+		if (btnobj != null) {
+		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
+			//btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
+		}
+
 	}	
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
