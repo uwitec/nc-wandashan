@@ -18,6 +18,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.other.in.TrayDisposeDlg;
+import nc.ui.wl.pub.MutiChildForInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
@@ -529,8 +530,8 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(oValue, row, key);
 	}
 	
-	protected InPubClientUI getBillInPubUI() {
-		return (InPubClientUI)getBillManageUI();
+	protected MutiInPubClientUI getBillInPubUI() {
+		return (MutiInPubClientUI)getBillManageUI();
 	}
 	@Override
 	public void onBillRef() throws Exception {		
@@ -538,7 +539,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		if(getBillUI().getBillOperate() == IBillOperate.OP_REFADD){
 			BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc");
 			if(item.getValueObject() == null){
-				String  cargdoc=((InPubClientUI )getBillUI()).getLoginInforHelper().getSpaceByLogUserForStore(_getOperator());		
+				String  cargdoc=((MutiChildForInUI )getBillUI()).getLoginInforHelper().getSpaceByLogUserForStore(_getOperator());		
 				item.setValue(cargdoc);
 			}
 			getBillInPubUI().afterHeadCargDoc(item.getValueObject());
@@ -626,7 +627,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	protected void setInitWarehouse(String warehouseid) throws Exception{
 		BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(warehouseid);
 		if(null != item && item.getValueObject() == null){
-			String  geh_cwarehouseid = ((InPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
+			String  geh_cwarehouseid = ((MutiInPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
 	}

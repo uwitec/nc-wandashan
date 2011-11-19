@@ -5,7 +5,18 @@ import nc.vo.trade.button.ButtonVO;
 import nc.vo.wl.pub.Button.CommonButtonDef;
 
 public class MutiChildForInUI extends MutilChildUI {
-
+    
+	
+	private LoginInforHelper helper = null;
+	
+	public LoginInforHelper getLoginInforHelper(){
+		if(helper == null){
+			helper = new LoginInforHelper();
+		}
+		return helper;
+	}	
+	
+	
 	@Override
 	protected AbstractManageController createController() {
 		// TODO Auto-generated method stub

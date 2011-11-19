@@ -2,8 +2,6 @@ package nc.vo.ic.other.in;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -19,9 +17,6 @@ import nc.vo.trade.pub.IExAggVO;
  * @version Your Project 1.0
  */
 public class  OtherInBillVO extends HYBillVO implements IExAggVO {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private HashMap hmChildVOs = new HashMap();
@@ -90,28 +85,23 @@ public class  OtherInBillVO extends HYBillVO implements IExAggVO {
 	}
 
 	public String getParentId(SuperVO item) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String[] getTableCodes() {
-		// TODO Auto-generated method stub
 		return new String[]{"tb_general_b","tb_outgeneral_b2"};
 	}
 
 	public String[] getTableNames() {
-		// TODO Auto-generated method stub
 		return new String[]{"存货设置","班组设置"};
 	}
 
 	public CircularlyAccessibleValueObject[] getTableVO(String tableCode) {
-		// TODO Auto-generated method stub
 		return (CircularlyAccessibleValueObject[])
 		hmChildVOs.get(tableCode);
 	}
 
 	public void setParentId(SuperVO item, String id) {
-		// TODO Auto-generated method stub
 		
 	}
 

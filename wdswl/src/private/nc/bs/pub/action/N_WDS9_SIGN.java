@@ -37,7 +37,7 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 				setParameter("date", vo.m_currentDate);
 				setParameter("operator", vo.m_operator);
 				setParameter("pk_corp",vo.m_coId);
-				// ##################################################推式保存生成销售出库回传
+				// ##################################################推式保存生成调拨出库回传
 				runClass("nc.bs.wds.ic.allocation.in.ChangToWDSP", "onSign",
 						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[调拨入库]签字内容

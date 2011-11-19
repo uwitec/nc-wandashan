@@ -5,8 +5,6 @@ import nc.ui.pub.linkoperate.ILinkQuery;
 import nc.ui.pub.linkoperate.ILinkQueryData;
 import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bill.BillTemplateWrapper;
-import nc.ui.trade.button.IBillButton;
-import nc.ui.trade.multichild.MultiChildBillCardPanelWrapper;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
