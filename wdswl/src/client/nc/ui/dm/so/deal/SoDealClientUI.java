@@ -18,6 +18,7 @@ import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
@@ -129,10 +130,24 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	 *
 	 */
 	private class BodyEditListener  implements BillEditListener,BillEditListener2{
-
 		public void afterEdit(BillEditEvent e) {
-			// TODO Auto-generated method stub
-			
+			String key  = e.getKey();//不允许输入负数
+			Object value = e.getValue();
+			if("nassnum".equalsIgnoreCase(key)){
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(value);
+				if(num.doubleValue() <0){
+					showWarningMessage("不允许安排负数");
+					getPanel().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+					return;
+				}
+			}else if("nnum".equalsIgnoreCase(key)){
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(value);
+				if(num.doubleValue() <0){
+					showWarningMessage("不允许安排负数");
+					getPanel().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+					return;
+				}
+			}
 		}
 
 		public void bodyRowChange(BillEditEvent e) {

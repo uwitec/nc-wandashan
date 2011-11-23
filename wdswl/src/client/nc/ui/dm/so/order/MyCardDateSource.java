@@ -23,7 +23,7 @@ public class MyCardDateSource extends CardPanelPRTS implements IExDataSource {
 			Object[] imageIcon = new Object[1];
 			String pk_cumandoc = (String) m_billcardpanel.getHeadItem(
 					"pk_cumandoc").getValueObject();
-			String classname = "nc.bs.dm.so.order.SoorderBo";
+			String classname = "nc.bs.wl.so.order.SoorderBO";
 			String methodname = "getCorpImag";
 			Class[] ParameterTypes = new Class[] { String.class };
 			Object[] ParameterValues = new Object[] { pk_cumandoc };

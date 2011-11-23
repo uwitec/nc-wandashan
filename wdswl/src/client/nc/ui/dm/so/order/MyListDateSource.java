@@ -21,7 +21,7 @@ public class MyListDateSource extends ListPanelPRTS implements IExDataSource {
 		if (itemExpress.equals("h_reserve7")) {
 			Object[] imageIcon = new Object[0];
 			String pk_cumandoc = (String) listpanel.getHeadItem("pk_cumandoc").getValueObject();
-			String classname = "nc.bs.dm.so.order.SoorderBo";
+			String classname = "nc.bs.wl.so.order.SoorderBO";
 			String methodname = "getCorpImag";
 			Class[] ParameterTypes = new Class[] { String.class };
 			Object[] ParameterValues = new Object[] { pk_cumandoc };

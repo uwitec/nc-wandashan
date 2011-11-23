@@ -239,6 +239,9 @@ public class TranPriceAccount {
 					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
 				}else if(iadjtype ==2){//每吨补贴价格
 					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
+				}else if(iadjtype ==3){//按照最小吨数来计算总费用
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(nsmall, 8);
+					nmny =  PuPubVO.getUFDouble_NullAsZero(null);
 				}
 			}
 			head.setNtransmny(nmny.add(nadjmny, 8));

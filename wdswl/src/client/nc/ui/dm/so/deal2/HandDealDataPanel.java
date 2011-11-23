@@ -116,9 +116,7 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 
 		public void afterEdit(BillEditEvent e) {
 			// TODO Auto-generated method stub
-
 		}
-
 		public void bodyRowChange(BillEditEvent e) {
 			// TODO Auto-generated method stub
 			int row = e.getRow();
@@ -129,8 +127,6 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 			getCustPane().getBodyBillModel().setBodyDataVO(ui.getBuffer().getCurrBodysForCust());
 			getCustPane().getBodyBillModel().execLoadFormula();
 		}
-
-
 	}
 
 	/**
@@ -162,9 +158,14 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 		String key = e.getKey();
 		if(key.equalsIgnoreCase("nassnum")){//安排辅数量 调整后  相应变动
 			SoDealVO deal = (SoDealVO)getDealPane().getBodyBillModel().getBodyValueRowVO(e.getRow(), SoDealVO.class.getName());
+			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(deal.getNnum());//本次安排数量
+			if(nnum.doubleValue() < 0){
+				MessageDialog.showWarningDlg(this, "警告", "不能安排负数");
+				getDealPane().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+				return ;
+			}
 			//校验，不能超计划安排
 			UFDouble nnumber = PuPubVO.getUFDouble_NullAsZero(deal.getNnumber());//计划主数量
-			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(deal.getNnum());//本次安排数量
 			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero(deal.getNtaldcnum());//累计安排数量
 			if(nnumber.sub(ntaldcnum).sub(nnum).doubleValue()<0){
 				MessageDialog.showWarningDlg(this, "警告", "不能超计划未安排数量");
@@ -183,7 +184,7 @@ public class HandDealDataPanel extends BillTabbedPane implements BillEditListene
 				getDealPane().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
 				return ;
 			}
-//			同步数据
+//			//同步数据
 			SoDealHealper.synData(ui.getBuffer().getLcust(), deal);
 			ischange = true;
 		}
