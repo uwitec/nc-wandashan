@@ -543,7 +543,7 @@ public class StockInvOnHandBO {
 			}
 		}
 		//liuys add 根据出库单的表体来判断存货状态是否清理(如果出库单未审核且已经拣货,那么将不清理该存货的存货状态)
-		sql.append(" and tb_warehousestock.whs_pk in (select distinct t.whs_pk from tb_outgeneral_h h,tb_outgeneral_t t where  h.general_pk = t.general_pk and nvl(t.dr,0) = 0 and nvl(h.dr, 0) = 0 and h.vbillstatus = 8) ");
+		sql.append(" and tb_warehousestock.whs_pk not in (select distinct t.whs_pk from tb_outgeneral_h h,tb_outgeneral_t t where  h.general_pk = t.general_pk and nvl(t.dr,0) = 0 and nvl(h.dr, 0) = 0 and h.vbillstatus = 8) ");
 		return getDao().executeUpdate(sql.toString());
 	}
 
