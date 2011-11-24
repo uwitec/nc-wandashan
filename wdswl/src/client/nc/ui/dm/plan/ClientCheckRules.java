@@ -59,13 +59,13 @@ public class ClientCheckRules implements ICheckRules, ICheckRules2, IUniqueRules
 
 	// 判断表体不准重复
 	public IUniqueRule[] getItemUniqueRules(String tablecode) {
-		if (tablecode.equals("pp_sm_supcheck_class")) {
-			return new IUniqueRule[] { new UniqueRule("表体供方分类不可重复", new String[] { "pk_supclass" }) };
-		} else if (tablecode.equals("pp_sm_supcheck_qualif")) {
-			return new IUniqueRule[] { new UniqueRule("表体业务资质不可重复", new String[] { "pk_majorbusiqulif" }) };
-		} else {
+//		if (tablecode.equals("pp_sm_supcheck_class")) {
+//			return new IUniqueRule[] { new UniqueRule("表体供方分类不可重复", new String[] { "pk_supclass" }) };
+//		} else if (tablecode.equals("pp_sm_supcheck_qualif")) {
+//			return new IUniqueRule[] { new UniqueRule("表体业务资质不可重复", new String[] { "pk_majorbusiqulif" }) };
+//		} else {
 			return null;
-		}
+//		}
 	}
 
 	public static ClientCheckRules getInstance() {

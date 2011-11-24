@@ -132,7 +132,7 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 			}else if(e.getPos() == BillItem.BODY){
 				//编辑存货
 				if("invcode".equalsIgnoreCase(key)){
-					afterEditWhenAssistUnit(e);
+		//			afterEditWhenAssistUnit(e);
 				}else if("nplannum".equalsIgnoreCase(key)){//编辑计划数量				
 						afterEditNplannum(e);				
 				}else if("nassplannum".equalsIgnoreCase(key)){//编辑计划辅数量				
