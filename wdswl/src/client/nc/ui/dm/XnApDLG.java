@@ -193,10 +193,12 @@ ActionListener, BillEditListener,BillEditListener2{
 						xnvo.setPk_inwhouse(pk_inwhouse);
 						xnvo.setPk_invmandoc(pk_invmandoc);
 						xnvo.setPk_invbasdoc(vo.getPk_invbasdoc());
+						xnvo.setBisdate(vo.getBisdate());  //是否大日期
 						xnvo.setNnum(vo.getNnum());
 						xnvo.setNassnum(vo.getNassnum());
 						xnvo.setCunitid(vo.getUnit());
 						xnvo.setCassunitid(vo.getAssunit());
+				
 						map.put(key, xnvo);
 						
 					}
