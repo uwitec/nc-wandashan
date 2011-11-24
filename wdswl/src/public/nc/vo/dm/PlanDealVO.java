@@ -1,6 +1,7 @@
 package nc.vo.dm;
 
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -38,7 +39,7 @@ public class PlanDealVO extends SendplaninBVO {
     public UFDouble narrstorenumout;//发货站安排后库存数量
     public UFDouble nstorenumin;//收货站库存数量
     public UFDouble narrstorenumin;//收货站安排后库存数量  
-    
+    public UFBoolean bisdate;   //是否大日期
    
 	@Override
     public Object getAttributeValue(String arg) {
@@ -88,6 +89,8 @@ public class PlanDealVO extends SendplaninBVO {
     		return this.getDapprovedate();
     	}else if("vapproveid".equalsIgnoreCase(arg)){
     		return this.getVapproveid();
+    	}else if("bisdate".equalsIgnoreCase(arg)){
+    		return this.getBisdate();
     	}
     	return super.getAttributeValue(arg);
     }
@@ -139,6 +142,8 @@ public class PlanDealVO extends SendplaninBVO {
     		setDapprovedate((UFDate)value);
     	}else if("vapproveid".equalsIgnoreCase(arg)){
     		setVapproveid((String)value);
+    	}else if("bisdate".equalsIgnoreCase(arg)){
+    		setBisdate((UFBoolean)value);
     	}
     	 super.setAttributeValue(arg, value);
     }
@@ -146,7 +151,7 @@ public class PlanDealVO extends SendplaninBVO {
 	public UFDouble getNassnum() {
 		return nassnum;
 	}
-
+	
 	public void setNassnum(UFDouble nassnum) {
 		this.nassnum = nassnum;
 	}
@@ -336,6 +341,12 @@ public class PlanDealVO extends SendplaninBVO {
 	public String getTableName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public UFBoolean getBisdate() {
+		return bisdate;
+	}
+	public void setBisdate(UFBoolean bisdate) {
+		this.bisdate = bisdate;
 	}
 	public UFDouble getNstorenumout() {
 		return nstorenumout;

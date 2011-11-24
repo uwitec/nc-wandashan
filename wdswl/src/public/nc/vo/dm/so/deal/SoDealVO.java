@@ -125,7 +125,13 @@ public class SoDealVO extends SuperVO{
 	private UFDouble nsummny; // 本币价税合计
 	private UFDouble ndiscountmny;
 	private String crowno;
-	
+	private UFBoolean disdate;    //是否大日期
+	public UFBoolean getDisdate() {
+		return disdate;
+	}
+	public void setDisdate(UFBoolean disdate) {
+		this.disdate = disdate;
+	}
 	/**
 	 * 
 	 * @作者：zhf
@@ -240,7 +246,8 @@ public class SoDealVO extends SuperVO{
 		"b.nsummny", // 本币价税合计
 		"b.ndiscountmny",
 		"b.ntaldcnum",
-		"b.crowno"
+		"b.crowno",
+		"b.disdate"  //是否大日期
 	};
 	
 	

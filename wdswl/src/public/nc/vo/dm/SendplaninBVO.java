@@ -84,8 +84,12 @@ import nc.vo.wl.pub.WdsWlPubTool;
              public String vdef6;
              public String reserve2;
              public Integer dr;
-             public String vdef10;
+            
+
+			public String vdef10;
              public String vdef5;
+             
+             public UFBoolean bisdate;//是否大日期
             
              public static final String  RESERVE5="reserve5";   
              public static final String  TS="ts";   
@@ -135,6 +139,13 @@ import nc.vo.wl.pub.WdsWlPubTool;
 				this.hsl = hsl;
 			}
 
+			 public UFBoolean getBisdate() {
+					return bisdate;
+				}
+
+				public void setBisdate(UFBoolean bisdate) {
+					this.bisdate = bisdate;
+				}
 		/**
 	   * 属性reserve5的Getter方法.
 	   *

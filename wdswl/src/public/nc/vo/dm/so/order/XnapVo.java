@@ -1,6 +1,7 @@
 package nc.vo.dm.so.order;
 
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 /**
  * 发运订单 销售运单 虚拟安排 使用的vo
@@ -19,8 +20,17 @@ public class XnapVo extends SuperVO {
 	public String	cassunitid;
 	public UFDouble nnum;
 	public UFDouble	nassnum;
+	public UFBoolean bisdate;   //是否大日期
 	
 	
+	public UFBoolean getBisdate() {
+		return bisdate;
+	}
+
+	public void setBisdate(UFBoolean bisdate) {
+		this.bisdate = bisdate;
+	}
+
 	public static String NNUM="nnum";
 	public static String NASSNUM="nassnum";
 	public static String PK_OUTWHOUSE="pk_outwhouse";
