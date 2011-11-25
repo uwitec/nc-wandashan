@@ -1,7 +1,6 @@
 package nc.vo.dm.so.deal;
 
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.pub.HYBillVO;
 
