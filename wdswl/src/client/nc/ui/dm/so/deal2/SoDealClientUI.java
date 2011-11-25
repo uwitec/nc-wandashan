@@ -111,10 +111,88 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	}
 
 	private void initListener() {
+		//表头监听
 		getPanel().addEditListener(this);
-//		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
-	}
+		getPanel().getHeadBillModel().addRowStateChangeEventListener(new HeadRowStateListener());
+		//表体监听
+		BodyEditListener bodyEditListener = new BodyEditListener(); 
+		getPanel().getChildListPanel().addEditListener(bodyEditListener);
+		getPanel().getChildListPanel().addEditListener2(bodyEditListener);
 
+	}
+	/**
+	 * lyf:表体编辑监听
+	 * @author
+	 *
+	 */
+	private class BodyEditListener  implements BillEditListener,BillEditListener2{
+		public void afterEdit(BillEditEvent e) {
+			String key = e.getKey();
+		}
+
+		public void bodyRowChange(BillEditEvent e) {
+			int row = e.getOldRow();
+			if(row <0){
+				return ;
+			}
+			int state = getPanel().getBodyBillModel().getRowState(row);
+			String csaleid = PuPubVO.getString_TrimZeroLenAsNull(getPanel().getBodyBillModel().getValueAt(row, "csaleid"));
+			if(isGift(csaleid)){
+				updateGiftState(csaleid,state);
+				updateUI();
+			}
+		}
+		/**
+		 * 
+		 * @作者：更改赠品单状态
+		 * @说明：完达山物流项目 
+		 * @时间：2011-11-24上午10:31:16
+		 * @param csaleid
+		 */
+		public void updateGiftState(String csaleid,int state){
+
+			if(csaleid == null || "".equalsIgnoreCase(csaleid)){
+				return ;
+			}
+			int count = getPanel().getBodyBillModel().getRowCount();
+			for(int row =0;row<count;row++){
+				String csourcebillhid = PuPubVO.getString_TrimZeroLenAsNull(getPanel().getBodyBillModel().getValueAt(row, "csaleid"));
+				if(csaleid.equalsIgnoreCase(csourcebillhid)){
+					getPanel().getBodyBillModel().setRowState(row, state);
+				}
+			}
+			return ;
+		
+		}
+		/**
+		 * 
+		 * @作者：lyf:判断是否赠品单
+		 * @说明：完达山物流项目 
+		 * @时间：2011-11-17下午09:41:46
+		 * @return
+		 */
+		public boolean isGift(String csaleid){
+			if(csaleid == null || "".equalsIgnoreCase(csaleid)){
+				return false;
+			}
+			boolean isGift = false;
+			int count = getPanel().getBodyBillModel().getRowCount();
+			for(int row =0;row<count;row++){
+				String csourcebillhid = PuPubVO.getString_TrimZeroLenAsNull(getPanel().getBodyBillModel().getValueAt(row, "csaleid"));
+				if(csaleid.equalsIgnoreCase(csourcebillhid)){
+					Object value = getPanel().getBodyBillModel().getValueAt(row, "blargessflag");
+					isGift = PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE).booleanValue();
+					if(isGift){
+						return isGift;
+					}
+				}
+			}
+			return isGift;
+		}
+		public boolean beforeEdit(BillEditEvent e) {
+			return false;
+		}
+	}
 	public void headRowChange(int iNewRow) {
 		if (!getPanel().setBodyModelData(iNewRow)) {
 			//1.初次载入表体数据
@@ -133,7 +211,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 
 
 	private class HeadRowStateListener implements IBillModelRowStateChangeEventListener {
-
 		public void valueChanged(RowStateChangeEvent e) {
 			if (e.getRow() != getPanel().getHeadTable().getSelectedRow()) {
 				headRowChange(e.getRow());
@@ -142,14 +219,12 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			BillModel model = getPanel().getBodyBillModel();
 			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
 			model.removeRowStateChangeEventListener();
-
 			if (e.isSelectState()) {
 				getPanel().getChildListPanel().selectAllTableRow();
 			} else {
 				getPanel().getChildListPanel().cancelSelectAllTableRow();
 			}
 			model.addRowStateChangeEventListener(l);
-
 			getPanel().updateUI();
 		}
 
@@ -167,23 +242,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		m_handler = new SoDealEventHandler(this);
 
 	}
-
-	//	public void loadData(String billId) {
-	//		try {
-	//			SoDealVO[] billdatas = SoDealHealper.doQuery(" h.CSALEID = '"
-	//					+ billId + "' ");
-	//			if (billdatas == null || billdatas.length == 0) {
-	//				showHintMessage("查询完成：没有满足条件的数据");
-	//				return;
-	//			}
-	//			// 处理查询出的计划 缓存 界面
-	//			getPanel().getHeadBillModel().setBodyDataVO(billdatas);
-	//			getPanel().getHeadBillModel().execLoadFormula();
-	//		} catch (Exception e) {
-	//			e.printStackTrace();
-	//		}
-	//	}
-
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
@@ -268,7 +326,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	}
 
 	public void afterEdit(BillEditEvent e) {
-		
+		String key = e.getKey();
 		
 	}
 
@@ -279,4 +337,5 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		headRowChange(e.getRow());
 		
 	}
+	
 }

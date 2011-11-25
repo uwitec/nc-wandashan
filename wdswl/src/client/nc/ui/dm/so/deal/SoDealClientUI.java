@@ -158,10 +158,14 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			if("nassnum".equalsIgnoreCase(key)){
 				if(isGift()){
 					return false;
+				}else{
+					return true;
 				}
 			}else if("nnum".equalsIgnoreCase(key)){
 				if(isGift()){
 					return false;
+				}else{
+					return true;
 				}
 			}
 			return false;

@@ -278,6 +278,42 @@ public class TranPriceAccount {
 			throw new BusinessException("请在分仓客商绑定节点，维护客商所属地区");
 		}
 		head.setCustareaid(reareaid);
+//		//根据承运商查询 实际折合标准
+//		UFDouble nexNum = PuPubVO.getUFDouble_NullAsZero(null);//根据实际折合率追加的吨数
+//		AggregatedValueObject[] zhbzBills = getZhbz(pk_transcorp);
+//		if(zhbzBills !=null && zhbzBills.length>0){
+//			for(int i=0;i<zhbzBills.length;i++){
+//				ZhbzHVO hvo = (ZhbzHVO)zhbzBills[i].getParentVO();
+//				ZhbzBVO[] bvos =(ZhbzBVO[])  zhbzBills[i].getChildrenVO();
+//				UFDouble standardtune = PuPubVO.getUFDouble_NullAsZero(hvo.getStandardtune());//折合数量(箱数)
+//				UFDouble tuneunits = PuPubVO.getUFDouble_NullAsZero(hvo.getTuneunits()).div(1000);//实际换算率= （公斤/箱）除以 1000
+//				ArrayList<SoorderBVO> list = new ArrayList<SoorderBVO>();
+//				UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(null);//运单中属于该折合标准的存货总量（箱数）
+//				if(bvos !=null && bvos.length>0 ){
+//					for(ZhbzBVO bvo:bvos){
+//						String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getPk_invmandoc());
+//						if(pk_invmandoc == null){
+//							continue;
+//						}
+//						for (SoorderBVO body : bodys) {
+//							String pk_invmandoc2 = body.getPk_invmandoc();
+//							if(pk_invmandoc.equalsIgnoreCase(pk_invmandoc2)){
+//								nnum = nnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNassarrangnum()));
+//								list.add(body);
+//							}
+//						}
+//					}
+//				}
+//				double nexAssNum = nnum.sub(standardtune).doubleValue();//超出的箱数，按照实际换算率来计算吨数
+//				if(nexAssNum>0){
+//					for(int j=0;j<list.size();j++){
+//						SoorderBVO body = list.get(j);
+////						body
+//					}
+//				}
+//				
+//			}
+//		}
 		// 汇总出库主(辅)数量
 		UFDouble ntotalNum = new UFDouble(0);
 		UFDouble ntotalAssNUm = new UFDouble(0);
@@ -289,7 +325,6 @@ public class TranPriceAccount {
 		}
 		totalNum.add(ntotalNum);
 		totalNum.add(ntotalAssNUm);
-
 		// 判断是否总仓
 		if (WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)) {
 			isZC = true;
@@ -333,11 +368,28 @@ public class TranPriceAccount {
 			isZC = false;
 			colType = WdsWlPubConst.WDSK;
 		}
-	
-		
-	
 	}
-
+//	/**
+//	 * 
+//	 * @作者：lyf
+//	 * @说明：完达山物流项目:根据承运商查询实际折合标准
+//	 * @时间：2011-11-24下午07:24:55
+//	 * @param carriersid 承运商主键
+//	 * @return
+//	 * @throws UifException 
+//	 */
+//	public AggregatedValueObject[] getZhbz(String carriersid) throws UifException{
+//		AggregatedValueObject[] bills = null;
+//		if(carriersid == null || "".equalsIgnoreCase(carriersid)){
+//			return bills;
+//		}
+//		String[] obj = new String[]{HYBillVO.class.getName(),ZhbzHVO.class.getName(),ZhbzBVO.class.getName()}; 
+//		String strWhere = " carriersid='"+carriersid+"'";
+//		bills = new HYPubBO().queryBillVOByCondition(obj, strWhere);
+//		return bills;
+//	}
+	
+	
 	/**
 	 * 
 	 * @作者：lyf
@@ -550,8 +602,8 @@ public class TranPriceAccount {
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
 		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
-		sqlb.append(" h.nmincase <= " + totalNum.get(0).doubleValue());
-		sqlb.append(" h.nmaxcase > " + totalNum.get(0).doubleValue());
+		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
+		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");
 		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
 				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));

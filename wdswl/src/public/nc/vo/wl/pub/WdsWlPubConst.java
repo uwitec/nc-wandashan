@@ -92,6 +92,8 @@ public class WdsWlPubConst {
 	public static String TRANS_SPECBUSI_NODECODE = "800801022001";
 	/**特殊业务运价表 节点号 */
 	public static String TRANS_SPECBUSIPRICE_NODECODE = "800801022002";
+	/**折合标准单据模板类型 */
+	public static String ZHBZ ="ZHBZ";
 	/**车辆档案节点号 */
 	public static String TRANS_CARDOC_NODECODE = "8008010203";
 	/**车型档案节点号 */

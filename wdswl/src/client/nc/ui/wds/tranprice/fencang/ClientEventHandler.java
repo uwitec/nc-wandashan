@@ -1,14 +1,9 @@
 package nc.ui.wds.tranprice.fencang;
 
-import java.util.ArrayList;
-
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UITable;
-import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
-import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientEventHandler extends WdsPubEnventHandler {

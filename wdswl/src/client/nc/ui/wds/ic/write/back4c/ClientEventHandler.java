@@ -1,22 +1,10 @@
 package nc.ui.wds.ic.write.back4c;
 
-import java.util.ArrayList;
-
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
-import nc.ui.wds.w80020206.buttun0206.ISsButtun;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.IBillStatus;
-import nc.vo.trade.pub.IExAggVO;
-import nc.vo.wds.ic.write.back4c.MultiBillVO;
-import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
