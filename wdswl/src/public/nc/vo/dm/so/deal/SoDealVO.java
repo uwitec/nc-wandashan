@@ -247,7 +247,7 @@ public class SoDealVO extends SuperVO{
 		"b.ndiscountmny",
 		"b.ntaldcnum",
 		"b.crowno",
-		"b.disdate"  //是否大日期
+	//	"b.disdate"  //是否大日期
 	};
 	
 	
