@@ -230,8 +230,9 @@ public class SoDealEventHandler{
 		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
 		 * 
 		 */			
-	whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
-			
+	     whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
+	 		//   判断    是大日期就不显示
+	     whereSql.append(" and coalesce(c.vdef20, 'N') = 'N'");
 	/**
 	 * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
 	 * 如果是分仓登录  该条件不可编辑默认为 登录仓库

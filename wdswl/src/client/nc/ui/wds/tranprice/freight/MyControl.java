@@ -23,6 +23,7 @@ public class MyControl extends AbstractManageController{
 				IBillButton.Delete,
 				IBillButton.Edit,
 				IBillButton.Save,
+				IBillButton.Cancel,
 				IBillButton.Refresh,
 				IBillButton.Return
 		};
@@ -107,6 +108,7 @@ public class MyControl extends AbstractManageController{
 				IBillButton.Delete,
 				IBillButton.Edit,
 				IBillButton.Card,
+				IBillButton.Cancel,
 				IBillButton.Refresh
 		};
 		return buttonArray;

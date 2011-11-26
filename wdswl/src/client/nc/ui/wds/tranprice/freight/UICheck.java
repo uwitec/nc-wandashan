@@ -20,6 +20,9 @@ public class UICheck implements IUIBeforeProcAction{
 	    nc.ui.wl.pub.BeforeSaveValudate.beforeSaveBodyUnique(ui.getBillCardPanel().
 	    		getBillTable(),ui.getBillCardPanel().getBillModel(),
 	    		new String[]{"invcode"},new String[]{"´æ»õ±àÂë"});  
+	    
+	    
+	    
 	 }
 	}
 }
