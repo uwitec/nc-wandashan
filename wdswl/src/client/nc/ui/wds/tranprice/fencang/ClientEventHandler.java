@@ -33,7 +33,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if(strWhere == null || "".equals(strWhere)){
 			return " and pk_billtype='"+WdsWlPubConst.WDSK+"'";
 		}else {
-			return strWhere+" and pk_billtype='"+WdsWlPubConst.WDSI+"'";
+			return strWhere+" and pk_billtype='"+WdsWlPubConst.WDSK+"'";
 		}
 	}
 	@Override
