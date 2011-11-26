@@ -5,6 +5,7 @@ import nc.ui.pub.linkoperate.ILinkQuery;
 import nc.ui.pub.linkoperate.ILinkQueryData;
 import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.button.IBillButton;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
@@ -97,8 +98,13 @@ public abstract class MutilChildUI extends nc.ui.trade.multichild.MultiChildBill
 			}
 			ButtonObject[] btns = getButtons();
 			for (ButtonObject btn : btns) {
-				btn.setEnabled(true);
-				btn.setVisible(true);
+				if (("" + (IBillButton.Print)).equals(btn.getTag())) {
+					btn.setEnabled(true);
+					btn.setVisible(true);
+				}else{
+					btn.setEnabled(false);
+					btn.setVisible(false);
+				}
 			}
 			updateButtons();
 			

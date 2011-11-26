@@ -65,8 +65,13 @@ public abstract class WdsBillManagUI extends BillManageUI implements ILinkQuery{
 			}
 			ButtonObject[] btns = getButtons();
 			for (ButtonObject btn : btns) {
-				btn.setEnabled(true);
-				btn.setVisible(true);
+				if (("" + (IBillButton.Print)).equals(btn.getTag())) {
+					btn.setEnabled(true);
+					btn.setVisible(true);
+				}else{
+					btn.setEnabled(false);
+					btn.setVisible(false);
+				}
 			}
 			updateButtons();
 			
