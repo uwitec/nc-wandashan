@@ -12,6 +12,7 @@ import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -116,7 +117,7 @@ public class PlanCheckinBO {
 				throw new BusinessException("该调入仓库，当前会计月没有月计划");
 			}			
 	}
-	// 将追加计划合并到月计划
+	// 将追加计划合并到月计划 
 	public void planStats(AggregatedValueObject obj2) throws BusinessException{
 		// 将传来的对象克隆一份
 		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);
@@ -147,6 +148,8 @@ public class PlanCheckinBO {
 	    String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
     	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
     	boolean isExist=false;
+    	 UFBoolean bisdate=null;   // 是否大日期    月计划
+    	 UFBoolean bisdate1=null;  // 是否大日期     追加计划
 	    for(int i=0;i<childs.length;i++){
 	       if(!isExist&& i>0){		        
 	    	 childs[i-1].setPk_sendplanin((String)o);  
@@ -154,20 +157,23 @@ public class PlanCheckinBO {
 	         adds.add(childs[i-1]);	       
 	       }
 	       isExist=false;
+	      bisdate= PuPubVO.getUFBoolean_NullAs(childs[i].getBisdate(),UFBoolean.FALSE);
 	       for(int j=0;j<list.size();j++){
-	    	  if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){	
-	    		  UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
-	    		  if(nplanNum.doubleValue() >0){// 本次有安排数量的，才更新月计划
-	    			  list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
-		    		  list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
-		    		  mods.add(list.get(j)); 
-		    		  isExist=true;
-		    		  break; 
-	    		  }
-	    		 
-	        }
+	    	   bisdate1= PuPubVO.getUFBoolean_NullAs(list.get(j).getBisdate(),UFBoolean.FALSE);
+	    	   if(bisdate.booleanValue()==false&&bisdate1.booleanValue()==false){//判断是否大日期   
+	    	      if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){//存货名称相同	
+	    		       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
+	    		       if(nplanNum.doubleValue() >0){// 本次有安排数量的，才更新月计划
+	    			   list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
+		    	   	   list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
+		    		   mods.add(list.get(j)); 
+		    		   isExist=true;
+		    		   break; 
+	    		        }
+	    	        }
+	           }
 	    	  
-	      } 
+	        } 
 	    }
 	  for(int i=0;i<adds.size();i++){
 	    getBaseDAO().insertVOWithPK(adds.get(i));
