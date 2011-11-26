@@ -29,6 +29,10 @@ public class LinkQueryFinder extends AbstractBillFinder2{
 			return new String[] {WdsWlPubConst.BILLTYPE_OTHER_OUT};
 		}else if(WdsWlPubConst.WDSF.equals(type)){//装卸费核算
 			return null;
+		}else if(WdsWlPubConst.BILLTYPE_ALLO_IN.equals(type)){//wds调拨入库
+			return new String[] {WdsWlPubConst.WDSP};
+		}else if(WdsWlPubConst.WDSP.equals(type)){//wds调拨入库
+			return new String[] {WdsWlPubConst.GYL4E};
 		}
 		return null;
 	}

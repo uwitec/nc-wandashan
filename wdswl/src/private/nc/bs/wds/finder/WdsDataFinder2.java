@@ -25,6 +25,10 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 			sql = " select distinct h1.geh_pk ,h1.geh_billcode from tb_general_h h1 ,tb_general_b b1 where h1.geh_pk = b1.geh_pk and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.csourcebillhid = ? ";
 		}else if("4C".equals(billType)){//供应链销售出库
 			sql = " select distinct h1.cgeneralhid,h1.vbillcode from ic_general_h h1,ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.cfirstbillhid = ?  ";
+		}else if(WdsWlPubConst.WDSP.equals(billType)){//wds调拨入库
+			sql = " select distinct h1.pk_wds_writeback4Y_h, h1.vbillno from wds_writeback4y_h h1, wds_writeback4y_b2 b1 where h1.pk_wds_writeback4Y_h = b1.pk_wds_writeback4y_h and nvl(h1.dr, 0) = 0 and nvl(b1.dr, 0) = 0 and b1.csourcebillhid = ?  ";
+		}else if(WdsWlPubConst.GYL4E.equals(billType)){//供应链调拨入库
+			sql = " select distinct h1.cgeneralhid, h1.vbillcode from ic_general_h h1, ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr, 0) = 0 and nvl(b1.dr, 0) = 0 and b1.csourcebillhid = ? ";
 		}else{
 			super.createSQL1(billType);
 		}
@@ -51,10 +55,15 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 		
 		}else if(WdsWlPubConst.WDSF.equals(billType)){//装卸费核算
 			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  wds_loadprice_b1 zz where zz.pk_loadprice = ? and nvl(zz.dr,0) = 0 ";
-		}else if(WdsWlPubConst.WDSO.equals(billType)){
+		}else if(WdsWlPubConst.WDSO.equals(billType)){//销售出库回传
 			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  wds_writeback4c_b2 zz where zz.pk_wds_writeback4c_h = ? and nvl(zz.dr,0) = 0 ";
-		}
-		else{
+		}else if(WdsWlPubConst.BILLTYPE_ALLO_IN.equals(billType)){//调拨入库
+			sql = " select distinct zz.gylbilltype, zz.gylbillhid, zz.gylbillcode from tb_general_b zz where zz.geh_pk = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(WdsWlPubConst.GYL4Y.equals(billType)){//供应链调拨出库
+			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from ic_general_b zz where zz.cgeneralhid = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(WdsWlPubConst.GYL5D.equals(billType)){//供应链调拨订单
+			sql = " select distinct zz.csourcetypecode, zz.csourceid, zz.vsourcecode from to_bill_b zz where zz.cbillid = ? and nvl(zz.dr, 0) = 0 ";
+		}else{
 			super.createSQL(billType);
 		}
 		return sql;
