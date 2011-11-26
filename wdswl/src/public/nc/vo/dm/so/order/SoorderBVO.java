@@ -35,6 +35,8 @@ import nc.vo.wl.pub.WdsWlPubTool;
 	 */
 	private static final long serialVersionUID = -7505846428875000774L;
 			public String reserve5;
+			
+			public UFBoolean fiszh;//是否已经参与折合--临时使用字段，未存库
 			 //辅计量id
              public String assunit;
              //来源单据表头序列号
@@ -1475,5 +1477,14 @@ import nc.vo.wl.pub.WdsWlPubTool;
 				
 	   return "wds_soorder_b"; 
 				
-	 } 
+	 }
+
+	public UFBoolean getFiszh() {
+		return fiszh;
+	}
+
+	public void setFiszh(UFBoolean fiszh) {
+		this.fiszh = fiszh;
+	}
+
 } 
