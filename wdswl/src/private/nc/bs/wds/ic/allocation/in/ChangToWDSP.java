@@ -151,10 +151,8 @@ public class ChangToWDSP {
 		bur.append(" isnull(dr,0)=0  ");
 		bur.append(" and pk_corp='" + pk_corp + "'");
 		bur.append(" and pk_wds_writeback4Y_h in (");
-		bur
-				.append(" select distinct pk_wds_writeback4Y_h from wds_writeback4y_b2 ");
-		bur.append(" where isnull(dr,0)=0 and csourcebillhid='"
-				+ head.getPrimaryKey() + "'");
+		bur.append(" select distinct pk_wds_writeback4Y_h from wds_writeback4y_b2 ");
+		bur.append(" where isnull(dr,0)=0 and csourcebillhid='"+ head.getPrimaryKey() + "'");
 		bur.append(" )");
 		Writeback4yHVO[] writeHvos = (Writeback4yHVO[]) getHypubBO()
 				.queryByCondition(Writeback4yHVO.class, bur.toString());
@@ -177,10 +175,10 @@ public class ChangToWDSP {
 				int count = 0;
 				if (b2vos != null) {
 					for (Writeback4yB2VO b2vo : b2vos) {
-						String csourcebillhid = b2vo.getCsourcebillhid();
-						if (head.getPrimaryKey().equalsIgnoreCase(
+						String csourcebillhid = b2vo.getCsourcebillhid();   //得到表体2中表头主键
+						if (head.getPrimaryKey().equalsIgnoreCase(    //
 								csourcebillhid)) {
-							b2vo.setStatus(VOStatus.DELETED);
+							b2vo.setStatus(VOStatus.DELETED);    //设置表体2的类型      是否删除
 							count++;
 						}
 					}
@@ -229,7 +227,7 @@ public class ChangToWDSP {
 		if (generalBods == null || generalBods.length == 0) {
 			throw new BusinessException("查询调拨出库表体失败");
 		}
-		// 根据调拨出库 主键，查询是否已经生成调拨入库回传单（调拨入库回传单 表头保存调拨出库id,
+		// 根据调拨入库 主键，查询是否已经生成调拨入库回传单（调拨入库回传单 表头保存调拨出库id,
 		// 一一对应关系）
 		String strWhere = " isnull(dr,0)=0 and cgeneralhid='" + key
 				+ "' and pk_corp='" + pk_corp + "'";
@@ -249,7 +247,7 @@ public class ChangToWDSP {
 					.queryByCondition(Writeback4yB2VO.class, where);
 			int i = 0;
 			if (b2vos != null) {
-				i = 10 * b2vos.length;
+				i = 10 * b2vos.length;   //行号  的设置 10   20   30 。。。。
 			}
 			Writeback4yB2VO[] b2vosNew = getWriteBackB2vo(i, head, list);
 			ArrayList<Writeback4yB2VO> b2list = new ArrayList<Writeback4yB2VO>();
@@ -285,8 +283,10 @@ public class ChangToWDSP {
 		head.setVbillno(vbillno);// 调拨出库单据号
 		head.setVbillstatus(IBillStatus.FREE);// 单据状态
 		head.setPk_billtype(WdsWlPubConst.WDSP);// 单据类型
+	//	head.setCgeneralhid(newCgeneralhid);
 		head.setStatus(VOStatus.NEW);
 		head.setPk_corp(pk_corp);
+		head.setVoperatorid(coperator);
 		return head;
 	}
 
@@ -349,7 +349,7 @@ public class ChangToWDSP {
 			b2vos[i].setCfirstbillhid(list.get(i).getCfirstbillhid());
 			b2vos[i].setCfirstbillbid(list.get(i).getCfirstbillbid());
 			b2vos[i].setVfirstbillcode(list.get(i).getVfirstbillcode());
-			// 调拨出库单信息
+			// 调拨入库单信息
 			b2vos[i].setCgeneralhid(list.get(i).getGylbillhid());
 			b2vos[i].setCgeneralbid(list.get(i).getGylbillbid());
 			b2vos[i].setVbillcode(list.get(i).getGylbillcode());
@@ -361,8 +361,8 @@ public class ChangToWDSP {
 			b2vos[i].setCsourcetype(WdsWlPubConst.BILLTYPE_ALLO_IN);
 			b2vos[i].setPk_invmandoc(list.get(i).getGeb_cinventoryid());
 			b2vos[i].setPk_invbasdoc(list.get(i).getGeb_cinvbasid());
-			b2vos[i].setUnit(list.get(i).getCastunitid());
-			b2vos[i].setAssunit(list.get(i).getCastunitid());
+			b2vos[i].setUnit(list.get(i).getPk_measdoc());   //主计量单位
+    		b2vos[i].setAssunit(list.get(i).getCastunitid());//辅计量单位
 			b2vos[i].setNinnum(list.get(i).getGeb_anum());
 			b2vos[i].setNinassistnum(list.get(i).getGeb_banum());
 			b2vos[i].setStatus(VOStatus.NEW);
