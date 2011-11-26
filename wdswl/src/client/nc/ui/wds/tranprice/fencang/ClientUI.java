@@ -142,8 +142,11 @@ public class ClientUI extends BillManageUI  implements  BillCardBeforeEditListen
 	@Override
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
-		
-		
+	}
+	@Override
+	public boolean isSaveAndCommitTogether() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 public boolean beforeEdit(BillItemEvent e) {
