@@ -263,7 +263,7 @@ public class ChangeTo4E {
 		corp =outhvo.getPk_corp();
 		//
 		for(int i = 0 ;i<bvos.length;i++){
-			String key = bvos[i].getGeb_cgeneralbid();
+			String key = bvos[i].getPrimaryKey();
 			String str = " geb_pk ='"+key+"'";
 			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
 			bvos[i].setTrayInfor(Arrays.asList(tvos));
@@ -274,8 +274,8 @@ public class ChangeTo4E {
 				TbGeneralBBVO tvo = list.get(j);
 				LocatorVO lvo = new LocatorVO();
 				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNoutspacenum(tvo.getGebb_num());
-				lvo.setNoutspaceassistnum(tvo.getNinassistnum());
+				lvo.setNinspacenum(tvo.getGebb_num());
+				lvo.setNinspaceassistnum(tvo.getNinassistnum());
 				lvo.setCspaceid(tvo.getPk_cargdoc());//»õÎ»
 				lvo.setStatus(VOStatus.NEW);
 				if(l_map.containsKey(key)){

@@ -75,15 +75,15 @@ public class CHGWDS9TO4E extends nc.bs.pf.change.VOConversion {
 						"B_flargess->B_geb_flargess",//是否赠品
 						"B_cspaceid->B_geb_space",//货位ID
 
-						"B_csourcebillhid->B_gylbillhid",//[保存 供应链 其他出字段]
-						"B_csourcebillbid->B_gylbillbid",//[保存  供应链 其他出字段]
-						"B_vsourcebillcode->B_gylbillcode",//[保存 供应链 其他出字段]
-						"B_csourcetype->B_gylbilltype",//[保存  供应链 其他出字段]
+						"B_csourcebillhid->B_gylbillhid",//[保存 供应链 调拨出库单]
+						"B_csourcebillbid->B_gylbillbid",//[保存 供应链 调拨出库单]
+						"B_vsourcebillcode->B_gylbillcode",//[保存 供应链 调拨出库单]
+						"B_csourcetype->B_gylbilltype",//[保存 供应链 调拨出库单]
 						
-						"B_cfirstbillhid->B_geh_pk",// [保存  物流 其他入字段]，
-						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 其他入字段]
-						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 其他入字段 ]
-						"B_cfirsttype->H_geh_billtype",//[保存  物流 其他入字段 ]
+						"B_cfirstbillhid->B_geh_pk",// [保存  物流 调拨入库单字段]，
+						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 调拨入库单字段]
+						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 调拨入库单字段]
+						"B_cfirsttype->H_geh_billtype",//[保存  物流 调拨入库单字段]
 						
 						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						

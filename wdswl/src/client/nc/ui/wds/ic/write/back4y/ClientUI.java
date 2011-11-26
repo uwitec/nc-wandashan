@@ -93,7 +93,7 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 	 * 增加后台校验
 	 */
 	public Object getUserObject(){
-		return null;
+		return _getOperator();
 	}
 
 	public boolean beforeEdit(BillItemEvent e) {
