@@ -184,6 +184,7 @@ public class WdsWlPubConst {
 	public static String WDS4_2 = "WDS42";//销售计划安排2
 	public static String WDS4_2_1 = "cust";//销售计划安排2
 	public static String WDS4_2_2 = "deal";//销售计划安排2
+	public static String WDS30 = "30";//销售订单
 	/**销售运单 */
 	public static String WDS5="WDS5";
 	/**其他出库 */
@@ -194,6 +195,13 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_SALE_OUT = "WDS8";
 	/** 调拨入库*/
 	public static String BILLTYPE_ALLO_IN = "WDS9";
+	/** 供应链调拨出库 */
+	public static String GYL4Y = "4Y";
+	/** 供应链调拨订单 */
+	public static String GYL5D = "5D";
+	/** 供应链调拨入库 */
+	public static String GYL4E = "4E";
+	
 //	/** 退货入库*/
 //	public static String BILLTYPE_BACK_IN = "WDSA";
 	/**运输确认单*/
