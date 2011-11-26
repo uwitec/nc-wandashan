@@ -7,7 +7,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author zpm
  *
  */
-public class WdsDataFinder extends DefaultDataFinder{
+public class WdsDataFinder_old extends DefaultDataFinder{
 	
 	private String currentBillType = null;//设定当前单据
 	
