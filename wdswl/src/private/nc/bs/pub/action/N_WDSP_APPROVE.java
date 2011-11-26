@@ -8,7 +8,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.uap.pf.PFBusinessException;
-import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
+import nc.vo.wds.ic.write.back4y.Writeback4yHVO;
 
 /**
  *  调拨入库回传
@@ -47,7 +47,7 @@ public class N_WDSP_APPROVE extends AbstractCompiler2 {
 			setParameter("AggObject",icBillVO);
 			runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "pushSign4E","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
 			//
-			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
+			Writeback4yHVO head = (Writeback4yHVO)vo.m_preValueVo.getParentVO();
 			head.setDapprovedate(new UFDate(vo.m_currentDate));
 			head.setVapproveid(operator);
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",

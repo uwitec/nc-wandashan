@@ -103,7 +103,7 @@ public class ClientController extends AbstractManageController{
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Action,
-			//	ButtonCommon.joinup
+				ButtonCommon.joinup
 		};
 		return buttonArray;
 	}

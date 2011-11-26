@@ -32,16 +32,16 @@ public class Writeback4yB2VO extends SuperVO {
 	public String cfirstbillhid;// 调拨订单主键
 	public String cfirstbillbid;// 调拨订单字表主键
 	
-	public String cgeneralhid;// 调拨出库单主键
-	public String cgeneralbid;// 调拨出库单子表主键
-	public String vbillcode;// 调拨出库单
-	public String cbilltypecode;// 调拨出库单单据类型
+	public String cgeneralhid;// 调拨入库单主键
+	public String cgeneralbid;// 调拨入库单子表主键
+	public String vbillcode;// 调拨入库单
+	public String cbilltypecode;// 调拨入库单单据类型
 	
 	// 上下游信息字段
-	public String vsourcebillcode;// 物流销售出库单单据号（WDS8.....）
-	public String csourcetype;// 物流销售出库类型（WDS8）
-	public String csourcebillhid;// 物流销售出库单主键
-	public String csourcebillbid;// 物流销售出库单子表主键
+	public String vsourcebillcode;// 物流调拨入库单单据号（WDS8.....）
+	public String csourcetype;// 物流调拨入库类型（WDS8）
+	public String csourcebillhid;// 物流调拨入库单主键
+	public String csourcebillbid;// 物流调拨入库单子表主键
 	
 	public String pk_invmandoc;// 存货管理id
 	public String pk_invbasdoc;// 存货基本id

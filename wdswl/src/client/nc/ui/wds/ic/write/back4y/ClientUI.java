@@ -7,6 +7,8 @@ import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.MutilChildUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
+import nc.vo.wl.pub.Button.CommonButtonDef;
 
 public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener{
 	/**
@@ -19,6 +21,16 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 		super();
 	}
 
+	@Override
+	protected void initPrivateButton() {
+		super.initPrivateButton();
+		CommonButtonDef def = new CommonButtonDef();
+		ButtonVO  joinup = def.getJoinUPButton();
+		addPrivateButton(joinup);
+//		addPrivateButton(getButtonVO());
+//		addPrivateButton(getButton1VO());
+	}
+	
 	public ClientUI(Boolean useBillSource) {
 		super(useBillSource);
 	}

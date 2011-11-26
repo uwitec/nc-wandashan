@@ -52,7 +52,7 @@ public class MultiBillVO extends HYBillVO implements IExAggVO{
 	 * @return String[]
 	 */
 	public String[] getTableNames(){
-		return new String[]{"出库汇总","来源明细" };
+		return new String[]{"入库汇总","来源明细" };
 	}
 	
 	
