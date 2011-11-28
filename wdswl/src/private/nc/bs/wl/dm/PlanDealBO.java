@@ -265,7 +265,7 @@ public class PlanDealBO {
 						for(int i=0;i<list.size();i++){
 							Object[] obj =(Object[]) list.get(i);
 							String invmanid = PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
-							UFDouble num = PuPubVO.getUFDouble_NullAsZero(obj[0]);
+							UFDouble num = PuPubVO.getUFDouble_NullAsZero(obj[1]);
 							if(pk_ivnmandoc.equalsIgnoreCase(invmanid)){
 								curStornum.put(pk_ivnmandoc, num);
 							}
