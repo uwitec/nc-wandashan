@@ -1,15 +1,10 @@
 package nc.ui.wds.tranprice.freight;
 
-import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wds.tranprice.freight.ZhbzBVO;
-import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wds.tranprice.freight.GetCheck;
 
 public class MyClientUI extends BillManageUI{
 
