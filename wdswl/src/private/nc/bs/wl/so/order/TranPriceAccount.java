@@ -227,8 +227,8 @@ public class TranPriceAccount {
 			}
 		}else{
 			Integer ifw = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIfw(), 0);
-			UFDouble nmny = null;
-			UFDouble nadjmny = null;
+			UFDouble nmny = PuPubVO.getUFDouble_NullAsZero(null);
+			UFDouble nadjmny = PuPubVO.getUFDouble_NullAsZero(null);
 			if(ifw==0){//总费用
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
 			}else if(ifw==1){//每箱运价
