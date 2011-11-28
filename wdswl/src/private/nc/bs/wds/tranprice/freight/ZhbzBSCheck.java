@@ -65,7 +65,7 @@ public class ZhbzBSCheck implements IBDBusiCheck {
 			if(bvo==null||bvo.length==0){
 				throw new BusinessException("表体不能为空！");
 			}
-			String sql1="select pk_invmandoc from wds_zhbz_b";
+			String sql1="select pk_invmandoc from wds_zhbz_b where isnull(dr,0)=0";
 			ArrayListProcessor processor = new ArrayListProcessor();
 			List list=(List) getDao().executeQuery(sql1,processor);
 			for(int i=0;i<bvo.length;i++){
@@ -112,7 +112,7 @@ public class ZhbzBSCheck implements IBDBusiCheck {
 			if(bvo==null||bvo.length==0){
 				throw new BusinessException("表体不能为空！");
 			}
-			String sql="select pk_invmandoc from wds_zhbz_b";
+			String sql="select pk_invmandoc from wds_zhbz_b where isnull(dr,0)=0";
 			ArrayListProcessor processor = new ArrayListProcessor();
 			List list=(List) getDao().executeQuery(sql,processor);
 			for(int i=0;i<bvo.length;i++){
