@@ -11,7 +11,6 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.LoginInforVO;
@@ -116,51 +115,52 @@ public class ClientUI extends BillManageUI implements
 		return new ClientEventHandler(this, getUIControl());
 	}
 	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		String key = e.getKey();
+		int row = e.getRow();
+		//只用分仓才有零担标准
+		if ("nsmallnum".equalsIgnoreCase(key)) {//零担数量
+			Integer ifw = PuPubVO.getInteger_NullAs(getBillCardPanel().getBillModel().getValueAt(row, "ifw"), -1);
+			if(2!=ifw){
+				return false;
+			}
+		}
+		if ("nsmallprice".equalsIgnoreCase(key)) {//零担价格
+			Integer ifw = PuPubVO.getInteger_NullAs(getBillCardPanel().getBillModel().getValueAt(row, "ifw"), -1);
+			if(2!=ifw){
+				return false;
+			}
+		}
+		return super.beforeEdit(e);
+	}
+	@Override
 	public void afterEdit(BillEditEvent e) {
 		String key = e.getKey();
+		Object value= e.getValue();
+		int row =e.getRow();
 		if (e.getPos() == BillItem.HEAD) {
-			if ("pk_deptdoc".equalsIgnoreCase(key)) {
-				getBillCardPanel().getHeadItem("vemployeeid").setValue(null);
-			}
-			if ("vemployeeid".equalsIgnoreCase(key)) {
-				// 执行编辑公式
-				getBillCardPanel().execHeadTailEditFormulas();
-			}
-			//
-			if ("fiseffect".equalsIgnoreCase(key)) {
-				UFBoolean value = PuPubVO.getUFBoolean_NullAs(e.getValue(),
-						UFBoolean.FALSE);
-				if (value.equals(UFBoolean.TRUE)) {
-
-				} else {
-
-				}
-			}
-			// 是否采码 和 是否有采码价格保持一致
-			else if ("fiseffect".equalsIgnoreCase(key)) {
-				if (!PuPubVO.getUFBoolean_NullAs(e.getValue(), UFBoolean.FALSE)
-						.booleanValue()) {
-					getBillCardPanel().setHeadItem("reserve6", null);
-				}
-			} else if ("reserve6".equalsIgnoreCase(key)) {
-				if (PuPubVO.getString_TrimZeroLenAsNull(e.getValue()) != null) {
-					getBillCardPanel().setHeadItem("fiseffect", UFBoolean.TRUE);
+		}else{	
+			if("ifw".equalsIgnoreCase(key)){
+				getBillCardPanel().getBodyItem("ifw").getComponent();
+				Integer ifw = PuPubVO.getInteger_NullAs(value, -1);
+				if(2 != ifw){
+					getBillCardPanel().getBillModel().setValueAt(null, row, "nsmallnum");
+					getBillCardPanel().getBillModel().setValueAt(null, row, "nsmallprice");
 				}
 			}
 		}
 		super.afterEdit(e);
 	}
 
-		
-	 public Object getUserObject() {
-	 return null;
-	 }
+	public Object getUserObject() {
+		return null;
+	}
 
-	 @Override
-	 public boolean isSaveAndCommitTogether() {
-			
-	 return true;
-	 }
+	@Override
+	public boolean isSaveAndCommitTogether() {
+
+		return true;
+	}
 
 	@Override
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
@@ -168,8 +168,10 @@ public class ClientUI extends BillManageUI implements
 
 	}
 
+	/**
+	 * 表体编辑前事件
+	 */
 	public boolean beforeEdit(BillItemEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

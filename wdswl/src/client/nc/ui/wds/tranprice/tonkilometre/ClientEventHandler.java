@@ -18,7 +18,6 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	public ClientEventHandler(ClientUI clientUI, IControllerBase control) {
 		super(clientUI, control);
 	}
-
 	protected UIDialog createQueryUI() {
 		if (queryDialog == null) {
 			queryDialog=new ClientUIQueryDlg(getBillUI(),
@@ -28,7 +27,6 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 					_getOperator(),
 					getBillUI().getBusinessType(),
 					getBillUI().getNodeKey());
-			//queryDialog = new ClientUIQueryDlg(getBillUI(), null, tempinfo);
 		}
 		return queryDialog;
 	}
