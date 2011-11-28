@@ -37,6 +37,9 @@ public class CHGWDS9TO4E extends nc.bs.pf.change.VOConversion {
 						"H_cothercorpid->H_geh_cothercorpid",//出公司
 						"H_cothercalbodyid->H_geh_cothercalbodyid",//出库存组织
 						"H_cotherwhid->H_geh_cotherwhid",//出库仓库
+						//liuys add 调出公司,库存组织,仓库赋值
+						"H_coutcorpid->H_geh_cothercorpid",
+						"H_coutcalbodyid->H_geh_cothercalbodyid",
 						
 						"H_fallocflag->H_geh_fallocflag",//调拨类型标志
 						
@@ -48,7 +51,7 @@ public class CHGWDS9TO4E extends nc.bs.pf.change.VOConversion {
 //						"H_ccustomerid->",//客户
 //						"H_vdiliveraddress->",//收货地址[发运地址]
 						
-						"H_coperatorid->H_coperatorid",//制单人
+//						"H_coperatorid->H_coperatorid",//制单人
 						
 //						"B_creceieveid->",//收货单位管理id
 						
@@ -88,8 +91,8 @@ public class CHGWDS9TO4E extends nc.bs.pf.change.VOConversion {
 						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						
 		
-//						"H_coperatoridnow->SYSOPERATOR",
-//						"H_coperatorid->SYSOPERATOR",
+						"H_coperatoridnow->SYSOPERATOR",
+						"H_coperatorid->SYSOPERATOR",
 						
 //						"B_nplannedmny->B_jhje",//计划金额
 //						"B_nplannedprice->B_jhdj",//计划单价
