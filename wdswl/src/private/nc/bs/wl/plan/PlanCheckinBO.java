@@ -120,8 +120,7 @@ public class PlanCheckinBO {
 	// 将追加计划合并到月计划 
 	public void planStats(AggregatedValueObject obj2) throws BusinessException{
 		// 将传来的对象克隆一份
-		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);
-	   
+		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);	   
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();		
 		String pk_inwhouse=parent.getPk_inwhouse();	
 		SendplaninBVO[] childs=(SendplaninBVO[]) obj.getChildrenVO();
