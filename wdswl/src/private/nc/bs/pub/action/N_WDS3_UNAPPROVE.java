@@ -29,8 +29,8 @@ public class N_WDS3_UNAPPROVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
-			CgqyBO bo = new CgqyBO();
-			bo.checkBeforeUnApprove(vo.m_preValueVo.getParentVO().getPrimaryKey());
+//			CgqyBO bo = new CgqyBO();
+//			bo.checkBeforeUnApprove(vo.m_preValueVo.getParentVO().getPrimaryKey());
 			procUnApproveFlow(vo);
 			Object retObj = runClass("nc.bs.wl.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
