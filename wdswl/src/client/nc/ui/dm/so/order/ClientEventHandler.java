@@ -257,7 +257,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		SoorderVO head = (SoorderVO) billVo.getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(),
 				UFBoolean.FALSE);
-		if (fisended == UFBoolean.TRUE) {
+		if (fisended.booleanValue()) {
 			return;
 		}
 		head.setFisended(UFBoolean.TRUE);
@@ -281,7 +281,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		SoorderVO head = (SoorderVO) billVo.getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(),
 				UFBoolean.FALSE);
-		if (fisended == UFBoolean.FALSE) {
+		if (!fisended.booleanValue()) {
 			return;
 		}
 		head.setFisended(UFBoolean.FALSE);
@@ -291,8 +291,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	/**
 	 * 运费计算
+	 * @throws Exception 
 	 */
-	public void onBoCol() {
+	public void onBoCol() throws Exception {
 		if (getBufferData().isVOBufferEmpty()) {
 			getBillUI().showHintMessage("无数据");
 			return;
@@ -323,11 +324,12 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			return;
 		}
 
-		getBillCardPanelWrapper().getBillCardPanel().getBillData()
-				.setBillValueVO(billvo);
-		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
-				.execLoadFormula();
-		getBufferData().setCurrentVO(billvo);
+//		getBillCardPanelWrapper().getBillCardPanel().getBillData()
+//				.setBillValueVO(billvo);
+//		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+//				.execLoadFormula();
+//		getBufferData().setCurrentVO(billvo);
+		onBoRefresh();
 	}
 
 }
