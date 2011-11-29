@@ -151,10 +151,13 @@ public class PlanCheckinBO {
     	 UFBoolean bisdate=null;   // 是否大日期    月计划
     	 UFBoolean bisdate1=null;  // 是否大日期     追加计划
 	    for(int i=0;i<childs.length;i++){
-	       if(!isExist&& i>0){		        
-	    	 childs[i-1].setPk_sendplanin((String)o);  
-	    	 childs[i-1].setPk_sendplanin_b(null);
-	         adds.add(childs[i-1]);	       
+	       if(!isExist&& i>0){
+		       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i-1].getNplannum());
+		       if(nplanNum.doubleValue() >0){ 
+		    	   childs[i-1].setPk_sendplanin((String)o);  
+		    	 childs[i-1].setPk_sendplanin_b(null);
+		         adds.add(childs[i-1]);	 
+		         }      
 	       }
 	       isExist=false;
 	      bisdate= PuPubVO.getUFBoolean_NullAs(childs[i].getBisdate(),UFBoolean.FALSE);
