@@ -153,7 +153,7 @@ public class PlanCheckinBO {
 	    for(int i=0;i<childs.length;i++){
 	       if(!isExist&& i>0){
 		       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i-1].getNplannum());
-		       if(nplanNum.doubleValue() >0){ 
+		       if(nplanNum.doubleValue() >0){ //判断追加表    如果安排数量是大于0   则可以追加上去
 		    	   childs[i-1].setPk_sendplanin((String)o);  
 		    	 childs[i-1].setPk_sendplanin_b(null);
 		         adds.add(childs[i-1]);	 
