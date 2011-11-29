@@ -579,8 +579,8 @@ public class TranPriceAccount {
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
 		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
-		sqlb.append(" h.nmincase <= " + totalNum.get(0).doubleValue());
-		sqlb.append(" h.nmaxcase > " + totalNum.get(0).doubleValue());
+		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
+		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");
 		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
 				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
