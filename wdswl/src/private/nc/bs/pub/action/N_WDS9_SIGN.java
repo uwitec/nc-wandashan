@@ -1,6 +1,8 @@
 package nc.bs.pub.action;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
@@ -31,11 +33,12 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 			super.m_tmpVo=vo;
 			try {
 					super.m_tmpVo = vo;
-					Object retObj = null;												
+					Object retObj = null;
+					List userObject = (ArrayList)getUserObj();
 				// ##################################################数据交换
 				setParameter("AggObj",vo.m_preValueVo);
-				setParameter("date", vo.m_currentDate);
-				setParameter("operator", vo.m_operator);
+				setParameter("date", userObject.get(0));
+				setParameter("operator", userObject.get(1));
 				setParameter("pk_corp",vo.m_coId);
 				// ##################################################推式保存生成调拨出库回传
 				runClass("nc.bs.wds.ic.allocation.in.ChangToWDSP", "onSign",

@@ -49,8 +49,14 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 			
 			// ##################################################
 			setParameter("AggObj",vo.m_preValueVo);
-			setParameter("operate",operate);
+			setParameter("operator",operate);
 			setParameter("date", date);
+			setParameter("pk_corp",vo.m_coId);
+			
+			// ##################################################取消签字 , 删除调拨入库回写单 对应来源明细，如果删除后没有了来源明细，则删除整单
+			runClass("nc.bs.wds.ic.allocation.in.ChangToWDSP", "onCanclSign",
+					"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+			
 //			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.allocation.in.ChangeTo4E", "canelSignQueryGenBillVO",
 //					"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 //			// ##################################################
