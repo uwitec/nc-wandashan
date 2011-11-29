@@ -260,8 +260,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	
 	/**
 	 * 运费计算
+	 * @throws Exception 
 	 */
-	private void onBoCol(){
+	private void onBoCol() throws Exception{
 		if(getBufferData().isVOBufferEmpty()){
 			getBillUI().showHintMessage("无数据");
 			return;
@@ -278,19 +279,13 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			return ;
 		try{	
 			billvo = TranColHelper.col(getBillUI(), billvo, _getDate(),_getOperator());
-			if(getBillManageUI().isListPanelSelected()){
-				onBoReturn();
-			}
 
 		}catch(Exception e){
 			e.printStackTrace();
 			getBillUI().showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
-
-		getBillCardPanelWrapper().getBillCardPanel().getBillData().setBillValueVO(billvo);
-		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
-		getBufferData().setCurrentVO(billvo);		
+		onBoRefresh();	
 	}
 
 }

@@ -148,36 +148,36 @@ public class PlanCheckinBO {
 	    String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
     	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
     	boolean isExist=false;
-    	 UFBoolean bisdate=null;   // 是否大日期    月计划
-    	 UFBoolean bisdate1=null;  // 是否大日期     追加计划
-	    for(int i=0;i<childs.length;i++){
-	       if(!isExist&& i>0){
-		       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i-1].getNplannum());
-		       if(nplanNum.doubleValue() >0){ //判断追加表    如果安排数量是大于0   则可以追加上去
-		    	   childs[i-1].setPk_sendplanin((String)o);  
-		    	 childs[i-1].setPk_sendplanin_b(null);
-		         adds.add(childs[i-1]);	 
-		         }      
-	       }
+    	UFBoolean bisdate=null;   // 是否大日期    月计划
+    	UFBoolean bisdate1=null;  // 是否大日期     追加计划
+	    for(int i=0;i<childs.length;i++){   
 	       isExist=false;
+	       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
+		   if(nplanNum.doubleValue() <=0){
+		    	continue;
+		    }// 本次有安排数量的，才更新月计划
 	      bisdate= PuPubVO.getUFBoolean_NullAs(childs[i].getBisdate(),UFBoolean.FALSE);
-	       for(int j=0;j<list.size();j++){
-	    	   bisdate1= PuPubVO.getUFBoolean_NullAs(list.get(j).getBisdate(),UFBoolean.FALSE);
-	    	   if(bisdate.booleanValue()==false&&bisdate1.booleanValue()==false){//判断是否大日期   
-	    	      if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){//存货名称相同	
-	    		       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
-	    		       if(nplanNum.doubleValue() >0){// 本次有安排数量的，才更新月计划
-	    			   list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
-		    	   	   list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
-		    		   mods.add(list.get(j)); 
-		    		   isExist=true;
-		    		   break; 
-	    		        }
-	    	        }
-	           }
-	    	  
-	        } 
+	      if(!bisdate.booleanValue()){
+	    	  for(int j=0;j<list.size();j++){
+		    	   bisdate1= PuPubVO.getUFBoolean_NullAs(list.get(j).getBisdate(),UFBoolean.FALSE);
+		    	   if(! bisdate1.booleanValue()){//判断是否大日期   
+		    	      if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){//存货名称相同	
+		    			   list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
+			    	   	   list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
+			    		   mods.add(list.get(j)); 
+			    		   isExist=true;
+			    		   break;
+		    	      }
+		           } 
+		        }   
+	      }
+	       if(!isExist){
+	    	   childs[i].setPk_sendplanin((String)o);  
+		       childs[i].setPk_sendplanin_b(null);
+		       adds.add(childs[i]);
+	       }
 	    }
+		 
 	  for(int i=0;i<adds.size();i++){
 	    getBaseDAO().insertVOWithPK(adds.get(i));
 	  }	 

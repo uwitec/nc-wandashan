@@ -7,7 +7,6 @@ import nc.vo.trade.checkrule.ICompareRule;
 import nc.vo.trade.checkrule.ISpecialChecker;
 import nc.vo.trade.checkrule.IUniqueRule;
 import nc.vo.trade.checkrule.IUniqueRules;
-import nc.vo.trade.checkrule.UniqueRule;
 
 public class ClientCheckRules implements ICheckRules, ICheckRules2, IUniqueRules {
 

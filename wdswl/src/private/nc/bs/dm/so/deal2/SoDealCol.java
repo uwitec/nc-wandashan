@@ -9,10 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import nc.bs.dao.BaseDAO;
-import nc.bs.dm.so.SoDealBO;
 import nc.bs.logging.Logger;
+import nc.bs.pub.pf.PfUtilBO;
+import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
@@ -21,10 +23,16 @@ import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.so.so001.SaleorderHVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
@@ -55,7 +63,6 @@ public class SoDealCol {
 		this.lpara = lpara;
 	}
 
-	private StockInvOnHandBO stockbo = null;
 	private BaseDAO dao = null;
 
 	private BaseDAO getDao() {
@@ -63,7 +70,7 @@ public class SoDealCol {
 			dao = new BaseDAO();
 		return dao;
 	}
-
+	private StockInvOnHandBO stockbo = null;
 	private StockInvOnHandBO getStockBO() {
 		if (stockbo == null) {
 			stockbo = new StockInvOnHandBO(getDao());
@@ -340,8 +347,7 @@ public class SoDealCol {
 		if (ldeal == null || ldeal.size() == 0) {
 			Logger.info("本次安排未存在可直接安排的客户");
 		} else {// 直接安排
-			SoDealBO dealbo = new SoDealBO();
-			dealbo.doDeal(ldeal, lpara);
+			doDeal(ldeal, lpara);
 			isauto = UFBoolean.TRUE;
 			Logger.info("系统直接安排成功");
 		}
@@ -375,6 +381,131 @@ public class SoDealCol {
 			Logger.info("#####################################################");
 		}
 		return new Object[] { isauto, null, null ,reasons,reasons2};
+	}
+	
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目:执行安排，生成销售运单
+	 * @时间：2011-3-25下午03:58:14
+	 * @param ldata
+	 * @param infor
+	 *            :登录人，登录公司，登录日期
+	 * @throws Exception
+	 */
+	public void doDeal(List<SoDealVO> ldata, List<String> infor)
+			throws Exception {
+		if (ldata == null || ldata.size() == 0)
+			return;
+		/**
+		 * 安排：生成发运单 发运计划安排生成发运订单
+		 * 
+		 * 计划单号 计划行号 不合并计划行 计划和订单为1对多关系 分单规则： 发货站 收货站不同 不考虑计划类型
+		 * */
+		// 回写计划累计安排数量
+		// 销售计划安排vo---》销售订单
+		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
+		for (int i = 0; i < ldata.size(); i++) {
+			String key = ldata.get(i).getCorder_bid();
+			UFDouble num = PuPubVO.getUFDouble_NullAsZero(ldata.get(i)
+					.getNnum());
+			if (map.containsKey(key)) {
+				UFDouble oldValue = PuPubVO
+						.getUFDouble_NullAsZero(map.get(key));
+				map.put(key, oldValue.add(num));
+			}
+			map.put(key, num);
+		}
+		reWriteDealNumForPlan(map);
+		// 按 计划号 发货站 客户 分单
+		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
+				(CircularlyAccessibleValueObject[]) (ldata
+						.toArray(new SoDealVO[0])),
+				WdsWlPubConst.SO_PLAN_DEAL_SPLIT_FIELDS);
+		if (datas == null || datas.length == 0)
+			return;
+		int len = datas.length;
+		SoDealVO[] tmpVOs = null;
+		SoDealBillVO[] planBillVos = new SoDealBillVO[len];
+		for (int i = 0; i < len; i++) {
+			tmpVOs = (SoDealVO[]) datas[i];
+			planBillVos[i] = new SoDealBillVO();
+			planBillVos[i].setParentVO(getPlanHead(tmpVOs[0]));
+			planBillVos[i].setChildrenVO(tmpVOs);
+		}
+		// // 销售订单--》销售运单
+		PfParameterVO paraVo = new PfParameterVO();
+		paraVo.m_operator = infor.get(0);
+		paraVo.m_coId = infor.get(1);
+		paraVo.m_currentDate = infor.get(2);
+		// // 参量上 设置 日期 操作人
+		AggregatedValueObject[] orderVos = (AggregatedValueObject[]) PfUtilTools
+				.runChangeDataAry(WdsWlPubConst.WDS4, WdsWlPubConst.WDS5,
+						planBillVos, paraVo);
+		// // 分单---》保存订单
+		if (orderVos == null || orderVos.length == 0) {
+			return;
+		}
+		PfUtilBO pfbo = new PfUtilBO();
+		for (AggregatedValueObject bill : orderVos) {
+			pfbo.processAction(WdsWlPubConst.DM_PLAN_TO_ORDER_SAVE,
+					WdsWlPubConst.WDS5, infor.get(2), null, bill, null);
+		}
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 将本次安排数量，回写到销售订单安排累计发运数量
+	 * @时间：2011-3-25下午04:44:08
+	 * @param dealnumInfor
+	 * @throws BusinessException
+	 */
+	private void reWriteDealNumForPlan(Map<String, UFDouble> map)
+			throws BusinessException {
+
+		if (map == null || map.size() == 0)
+			return;
+		for (Entry<String, UFDouble> entry : map.entrySet()) {
+			String sql = "update so_saleorder_b set "
+					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
+					+ " = coalesce("
+					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
+					+ ",0)+"
+					+ PuPubVO.getUFDouble_NullAsZero(entry.getValue())
+							.doubleValue() + " where corder_bid='"
+					+ entry.getKey() + "'";
+			if (getDao().executeUpdate(sql) == 0) {
+				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
+			}
+			;
+
+			// 将计划数量（nplannum）和累计安排数量(ndealnum)比较
+
+			// 如果累计安排数量大于计划数量将抛出异常
+
+			String sql1 = "select count(0) from so_saleorder_b where corder_bid='"
+					+ entry.getKey()
+					+ "'and (coalesce(nnumber,0)-coalesce("
+					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME + ",0))>=0";
+			Object o = getDao().executeQuery(sql1,
+					WdsPubResulSetProcesser.COLUMNPROCESSOR);
+			if (o == null) {
+				throw new BusinessException("超计划量安排");
+			}
+		}
+	}
+	
+	private SaleorderHVO getPlanHead(SoDealVO dealVo) {
+		if (dealVo == null)
+			return null;
+		SaleorderHVO head = new SaleorderHVO();
+		String[] names = head.getAttributeNames();
+		for (String name : names) {
+			head.setAttributeValue(name, dealVo.getAttributeValue(name));
+		}
+		return head;
 	}
 
 }

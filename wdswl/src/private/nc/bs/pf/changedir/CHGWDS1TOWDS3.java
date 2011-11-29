@@ -101,6 +101,7 @@ public String[] getField() {
 			"B_nplannum->B_nplannum",//计划安排数量
 			"B_ndealnum->B_nnum",//本次安排数量
 			"B_nassdealnum->B_nassnum",//本次安排辅数量
+			"B_nhsl->B_hsl",//换算率
 			"B_reserve2->B_reserve2",
 			"B_reserve1->B_reserve1", 
 			"B_pk_fdsyzc_h->B_reserve1", 

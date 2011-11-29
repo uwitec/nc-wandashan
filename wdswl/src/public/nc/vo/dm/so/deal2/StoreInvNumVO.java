@@ -14,6 +14,10 @@ import nc.vo.pub.lang.UFDouble;
  */
 
 public class StoreInvNumVO extends SuperVO{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String pk_corp;//公司
 	private String ccalbodyid;//库存组织   暂时不需要
 	private String cstoreid;//仓库

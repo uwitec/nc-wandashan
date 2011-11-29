@@ -322,7 +322,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
-		// 获得未安排的数据:安排完成，将已经安排的数据，从界面移除
 		ArrayList<String> corder_bids = new ArrayList<String>();
 		for(int i=0;i<ldata.size();i++){
 			String corder_bid = (String) ldata.get(i).getAttributeValue("corder_bid");

@@ -51,17 +51,6 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected String getHeadCondition() {
-//		String whereSql = null;
-//		try{
-//			String cwhid = LoginInforHelper.getLogInfor(_getOperator()).getWhid();
-//			if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-//				whereSql=" wds_sendplanin.pk_outwhouse = '"+cwhid+"'";
-//			};
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			getBillUI().showErrorMessage(e.getMessage());
-//		}
-//		return whereSql;
 		return " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0  ";
 	}
 	

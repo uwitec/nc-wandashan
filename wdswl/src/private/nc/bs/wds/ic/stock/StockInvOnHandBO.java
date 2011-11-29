@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
@@ -17,8 +18,8 @@ import nc.vo.pub.VOStatus;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.query.ConditionVO;
-import nc.vo.pub.rs.ResultSetBase;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 /**
@@ -457,19 +458,79 @@ public class StockInvOnHandBO {
 		sql = " select b.pk_invbasdoc inv,coalesce(b.narrangnmu,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassarrangnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_soorder_b b inner join wds_soorder h on h.pk_soorder = b.pk_soorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
-		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
+		" and h.pk_outwhouse = '"+cstoreid+"' and h.vbillstatus=8 and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
 		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);
 		//		2、发运运单占用量
 		sql = " select b.pk_invbasdoc inv,coalesce(b.ndealnum,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassdealnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_sendorder_b b inner join wds_sendorder h on h.pk_sendorder = b.pk_sendorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
-		" and h.pk_outwhouse = '"+cstoreid+"' and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
+		" and h.pk_outwhouse = '"+cstoreid+"' and h.vbillstatus=8 and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
 		ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);
 		return retInfor;
 	}
 	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-11-29上午09:58:57
+	 * @param corp:公司
+	 * @param strWhere：自定义where条件
+	 * @return Map<String, UFDouble[]>:<存货基本id，{主数量,辅数量}>
+	 * @throws BusinessException
+	 */
+	public Map<String, UFDouble[]> getSoOrderNdealNumInfor(String corp,String strWhere) throws BusinessException{
+		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
+		StringBuffer sql= new StringBuffer();
+		sql.append(" select ");
+		sql.append(" b.pk_invbasdoc inv, ");//存货基本档案主键
+		sql.append(" coalesce(b.narrangnmu,0.0)-coalesce(b.noutnum,0) nnum ,");//存货未出库数量
+		sql.append(" coalesce(b.nassarrangnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum ");//存货未出库辅数量
+		sql.append(" from wds_soorder_b b ");
+		sql.append("  inner join wds_soorder h ");
+		sql.append("  on h.pk_soorder = b.pk_soorder ");
+		sql.append("  where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 ");
+		sql.append(" and h.pk_corp = '"+corp+"'");
+		sql.append(" and h.vbillstatus="+IBillStatus.FREE);
+		if(strWhere !=null && !"".equalsIgnoreCase(strWhere)){
+			sql.append(" and "+ strWhere);
+		}
+		List ldata = (List)getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
+		dealResultSet(retInfor, ldata);
+		return retInfor;
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 :获得发运订单未发运量
+	 * @时间：2011-11-29上午09:58:57
+	 * @param corp:公司
+	 * @param strWhere：自定义where条件
+	 * @return
+	 * @throws BusinessException
+	 */
+	public Map<String, UFDouble[]> getPlanOrderNdealNumInfor(String corp,String strWhere) throws BusinessException{
+		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
+		StringBuffer sql= new StringBuffer();
+		sql.append(" select ");
+		sql.append(" b.pk_invbasdoc inv, ");//存货基本档案主键
+		sql.append("  coalesce(b.ndealnum,0.0)-coalesce(b.noutnum,0) nnum ,");//存货未出库数量
+		sql.append(" coalesce(b.nassdealnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum ");//存货未出库辅数量
+		sql.append(" from wds_sendorder_b b ");
+		sql.append("  inner join wds_sendorder h ");
+		sql.append(" on h.pk_sendorder = b.pk_sendorder ");
+		sql.append("  where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 ");
+		sql.append(" and h.pk_corp = '"+corp+"'");
+		sql.append(" and h.vbillstatus="+IBillStatus.FREE);
+		if(strWhere !=null && !"".equalsIgnoreCase(strWhere)){
+			sql.append(" and "+ strWhere);
+		}
+		List ldata = (List)getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
+		dealResultSet(retInfor, ldata);
+		return retInfor;
+	}
 	/**
 	 * 
 	 * @作者：zhf

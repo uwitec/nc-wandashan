@@ -13,6 +13,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -28,6 +29,9 @@ import nc.vo.pub.lang.UFDouble;
  */
 public class SendorderBVO extends SuperVO {
 	private static final long serialVersionUID = 4752008406168776524L;
+	
+	public UFBoolean fiszh =UFBoolean.FALSE;//是否已经参与折合--临时使用字段，未存库
+
 	public String reserve5;
 	public UFDateTime ts;
 	//辅计量单位id
@@ -114,47 +118,14 @@ public class SendorderBVO extends SuperVO {
 	//已出库辅数量
 	public UFDouble nassoutnum;
 	public UFDouble nhsl;//换算率
-
-//	public static final String RESERVE5 = "reserve5";
-//	public static final String TS = "ts";
-//	public static final String ASSUNIT = "assunit";
-//	public static final String RESERVE4 = "reserve4";
-//	public static final String VDEF4 = "vdef4";
-//	public static final String VDEF7 = "vdef7";
-//	public static final String NONLINENUM = "nonlinenum";
-//	public static final String NASSPLANNUM = "nassplannum";
-//	public static final String PK_INVBASDOC = "pk_invbasdoc";
-//	public static final String VDEF2 = "vdef2";
-//	public static final String RESERVE11 = "reserve11";
-//	public static final String RESERVE12 = "reserve12";
-//	public static final String VMEMO = "vmemo";
-//	public static final String RESERVE6 = "reserve6";
-//	public static final String VDEF1 = "vdef1";
-//	public static final String RESERVE3 = "reserve3";
-//	public static final String PK_SENDORDER_B = "pk_sendorder_b";
-//	public static final String RESERVE14 = "reserve14";
-//	public static final String RESERVE10 = "reserve10";
-//	public static final String RESERVE13 = "reserve13";
-//	public static final String NOUTSENDNUM = "noutsendnum";
-//	public static final String UNIT = "unit";
-//	public static final String RESERVE8 = "reserve8";
-//	public static final String RESERVE9 = "reserve9";
-//	public static final String VDEF3 = "vdef3";
-//	public static final String VDEF9 = "vdef9";
-//	public static final String PK_SENDORDER = "pk_sendorder";
-//	public static final String VDEF8 = "vdef8";
-//	public static final String RESERVE1 = "reserve1";
-//	public static final String NOUTKEEPNUM = "noutkeepnum";
-//	public static final String RESERVE16 = "reserve16";
-//	public static final String RESERVE7 = "reserve7";
-//	public static final String RESERVE15 = "reserve15";
-//	public static final String PK_INVMANDOC = "pk_invmandoc";
-//	public static final String VDEF6 = "vdef6";
-//	public static final String RESERVE2 = "reserve2";
-//	public static final String DR = "dr";
-//	public static final String NINACCEPTNUM = "ninacceptnum";
-//	public static final String VDEF10 = "vdef10";
-//	public static final String VDEF5 = "vdef5";
+	
+	@Override
+	public void setAttributeValue(String arg0, Object arg1) {
+		if("nhsl".equalsIgnoreCase(arg0)){
+			setNhsl(PuPubVO.getUFDouble_NullAsZero(arg1));
+		}
+		super.setAttributeValue(arg0, arg1);
+	}
 
 	public UFDouble getNplannum() {
 		return nplannum;
@@ -1354,6 +1325,14 @@ public class SendorderBVO extends SuperVO {
 
 	public void setNhsl(UFDouble nhsl) {
 		this.nhsl = nhsl;
+	}
+
+	public UFBoolean getFiszh() {
+		return fiszh;
+	}
+
+	public void setFiszh(UFBoolean fiszh) {
+		this.fiszh = fiszh;
 	}
 	
 }

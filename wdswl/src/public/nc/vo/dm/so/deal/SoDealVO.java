@@ -98,7 +98,7 @@ public class SoDealVO extends SuperVO{
 	private String vdef20;
     private UFDouble nnumber;//订单数量
 	private UFDouble npacknumber;//订单辅数量
-	private String cbodywarehouseid;
+	private String cbodywarehouseid;//发货仓库
 	private UFDate dconsigndate;
 	private UFDate ddeliverdate;
 	private UFBoolean blargessflag = new UFBoolean(false);//是否赠品

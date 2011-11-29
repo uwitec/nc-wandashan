@@ -286,6 +286,9 @@ public class TranPriceAccount {
 		head.setCustareaid(reareaid);
 		//2 根据承运商查询 实际折合标准，并计算实际折合吨数
 		// 将运单表体存货分成两类：参与实际折合，不参与实际折合
+		for (SoorderBVO body : bodys) {
+			body.setFiszh(UFBoolean.FALSE);
+		}
 		UFDouble nexNum = PuPubVO.getUFDouble_NullAsZero(null);//符合实际折合标准的存货根据实际折合率计算的吨数
 		AggregatedValueObject[] zhbzBills = getZhbz(pk_transcorp);//每个承运商可能有多个折合标准，但是每个存货只能属于一个折合标准
 		if(zhbzBills !=null && zhbzBills.length>0){
@@ -296,7 +299,7 @@ public class TranPriceAccount {
 				UFDouble tuneunits = PuPubVO.getUFDouble_NullAsZero(hvo.getTuneunits()).div(1000);//实际换算率= （公斤/箱）除以 1000
 				ArrayList<SoorderBVO> list = new ArrayList<SoorderBVO>();
 				UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(null);//运单中属于该折合标准的存货总量（箱数）
-				UFDouble nminhsl = new UFDouble(100);//运单中属于该折合标准的存货最小换算率
+				UFDouble nminhsl = tuneunits;//运单中属于该折合标准的存货最小换算率
 				if(bvos !=null && bvos.length>0 ){
 					for(ZhbzBVO bvo:bvos){
 						String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getPk_invmandoc());
@@ -314,7 +317,7 @@ public class TranPriceAccount {
 								if(nhgrate.sub(nminhsl).doubleValue()<0){
 									nminhsl = nhgrate;
 								}
-								nnum = nnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNassarrangnum()));
+								nnum = nnum.add(PuPubVO.getUFDouble_NullAsZero(body.getNassoutnum()));
 								list.add(body);
 							}
 						}
@@ -325,7 +328,7 @@ public class TranPriceAccount {
 				UFDouble nexAssNum = nnum.sub(standardtune);
 				if(nexAssNum.doubleValue()>0){
 					UFDouble nds = standardtune.multiply(nminhsl);
-					UFDouble nexds = nexAssNum.sub(tuneunits);
+					UFDouble nexds = nexAssNum.multiply(tuneunits);
 					nexNum = nexNum.add(nds);
 					nexNum = nexNum.add(nexds);
 					for(int j=0;j<list.size();j++){
