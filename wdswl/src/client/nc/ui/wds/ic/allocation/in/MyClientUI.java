@@ -1,11 +1,16 @@
 package nc.ui.wds.ic.allocation.in;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JComponent;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
@@ -21,7 +26,10 @@ import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
 import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
+import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -65,7 +73,6 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
 		if (btnobj != null) {
 		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
-			//btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
 		}
 
 	}	
@@ -190,5 +197,10 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	@Override
 	public String getRefBillType() {
 		return "4Y";
+	}
+	
+	@Override
+	public void afterEdit(BillEditEvent e) {
+		super.afterEdit(e);
 	}
 }
