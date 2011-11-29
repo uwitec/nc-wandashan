@@ -14,6 +14,7 @@ import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB1VO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
+import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 出入库签字 推式保存形成装卸费核算单
@@ -62,8 +63,8 @@ public class pushSaveWDSF {
 		}
 		AggregatedValueObject vo = PfUtilTools.runChangeData(pk_billtype, WdsWlPubConst.WDSF, billVO,null); //销售出库
 		
-		setInfor(vo,coperator,date,lodytype);
-		return vo;
+		ExaggLoadPricVO epvo = (ExaggLoadPricVO)setInfor(vo,coperator,date,lodytype);
+		return epvo;
 	}
 	/**
 	 * 推式形成生成装卸费核算单

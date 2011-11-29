@@ -287,6 +287,8 @@ public class ChangToWDSP {
 		head.setStatus(VOStatus.NEW);
 		head.setPk_corp(pk_corp);
 		head.setVoperatorid(coperator);
+		head.setDbilldate(logDate);
+		head.setDmakedate(logDate);
 		return head;
 	}
 
@@ -434,9 +436,10 @@ public class ChangToWDSP {
 							.getUFDouble_NullAsZero(b1vo.getNinassistnum());
 					String cgeneralbid_total = b1vo.getCgeneralbid();
 					if (cgeneralbid.equalsIgnoreCase(cgeneralbid_total)) {
-						b1vo.setNinnum(ntotalInnum.add(ninnum));
+						//累计入库数量减去已经取消签字的明细数量,然后更新到调拨入库下游单据(调拨入库回传单)上
+						b1vo.setNinnum(ntotalInnum.sub(ninnum));
 						b1vo.setNinassistnum(ntotalInassistnum
-								.add(ninassistnum));
+								.sub(ninassistnum));
 						if (PuPubVO.getString_TrimZeroLenAsNull(b1vo
 								.getPrimaryKey()) != null) {
 							b1vo.setStatus(VOStatus.UPDATED);

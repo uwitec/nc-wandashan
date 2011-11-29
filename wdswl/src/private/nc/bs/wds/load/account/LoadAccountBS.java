@@ -184,12 +184,15 @@ public class LoadAccountBS {
 		LoadpriceHVO hvo=(LoadpriceHVO)(mybill.getParentVO());
 		hvo.setVzfee(feess);
 		hvo.setFloadtype(lodytype);
-		//如果只有一个班组，则将总费用赋值给给这个班组
+		
 		if(mybill.getTableVO(mybill.getTableCodes()[1])==null|| mybill.getTableVO(mybill.getTableCodes()[1]).length==0){
 			return;
 		}
+		//如果只有一个班组，则将总费用赋值给给这个班组
 		if(mybill.getTableVO(mybill.getTableCodes()[1]).length==1){
 			mybill.getTableVO(mybill.getTableCodes()[1])[0].setAttributeValue("nloadprice",feess);
+			//liuys add 增加表体2装卸费金额
+			mybill.getTableVO(mybill.getTableCodes()[0])[0].setAttributeValue("nloadprice",feess);
 		}
 	}
 
@@ -391,13 +394,15 @@ public class LoadAccountBS {
 		String outSql =" update tb_outgeneral_h set fisload='"+vaule+"' where general_pk=?";
 		String inSql =" update tb_general_h set fisload='"+vaule+"' where geh_pk=?";
 		SQLParameter parameter = new SQLParameter();
+		//出库
 		for(int i=0;i<csourcebillhidout.size();i++){
 			parameter.addParam(csourcebillhidout.get(i));
 			getBaseDAO().executeUpdate(outSql, parameter);
 			parameter.clearParams();
 		}
-		for(int i=0;i<csourcebillhidout.size();i++){
-			parameter.addParam(csourcebillhidout.get(i));
+		//liuys modify  修改低级错误入库
+		for(int i=0;i<csourcebillhidin.size();i++){
+			parameter.addParam(csourcebillhidin.get(i));
 			getBaseDAO().executeUpdate(inSql, parameter);
 			parameter.clearParams();
 		}
