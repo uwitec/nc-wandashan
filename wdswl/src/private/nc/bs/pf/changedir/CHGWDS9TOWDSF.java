@@ -25,8 +25,9 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	public String[] getField() {
 		// TODO Auto-generated method stub
 		return new String[]{
+				//liuys modify  修改低级错误
 				"H_pk_corp->H_pk_corp",//公司	
-				"B_csourcebillhid->B_B_geh_pk",
+				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",
 				"B_csourcetype->H_geh_billtype",
