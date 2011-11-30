@@ -345,10 +345,11 @@ public class PlanCheckinBO {
     				pk_sendplanin_b =  list_csoure.get(j).getPk_sendplanin_b();
     			}
     		}
-    		if(pk_sendplanin_b == null || "".equalsIgnoreCase(pk_sendplanin_b)){
-    			throw new BusinessException("查询数据异常：未查询到追加计划明细，对应的月计划明细");
-    		}
+//    		if(pk_sendplanin_b == null || "".equalsIgnoreCase(pk_sendplanin_b)){
+//    			throw new BusinessException("查询数据异常：未查询到追加计划明细，对应的月计划明细");
+//    		}
     		//2.2 将追加计划数量从月计划总减去，并用减去后的计划数量和安排数量比较，判断是否已经安排
+    		if(pk_sendplanin_b!=null && pk_sendplanin_b.length()>0){
 			for(int j=0;j<list.size();j++){
 				if(pk_sendplanin_b.equalsIgnoreCase(list.get(j).getPrimaryKey())){
 					list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).sub(PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum())));
@@ -361,6 +362,7 @@ public class PlanCheckinBO {
 					mods.add(list.get(j));    		  
 					break;
 				}
+			  }
 			}
     	}
 	    if(mods.size() >0){
