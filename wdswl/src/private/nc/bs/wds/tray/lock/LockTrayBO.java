@@ -537,7 +537,7 @@ public class LockTrayBO {
 		
 		String corp = SQLHelper.getCorpPk();
 		
-		SQLParameter para = new SQLParameter();
+	//	SQLParameter para = new SQLParameter();
 		int iflag = 0;
 		String key = null;
 		for(TbGeneralBVO body:allbodys){
@@ -545,6 +545,7 @@ public class LockTrayBO {
 			for(TbGeneralBBVO tray:ltray){
 				if(!ldata.contains(tray.getCdt_pk()))
 					continue;
+				SQLParameter para = new SQLParameter();
 				para.addParam(tray.getCdt_pk());
 				para.addParam(tray.getPk_invmandoc());
 				para.addParam(body.getGeb_vbatchcode());			
