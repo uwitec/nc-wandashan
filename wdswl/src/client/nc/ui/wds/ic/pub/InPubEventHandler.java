@@ -317,6 +317,12 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 						.setCellForeGround(i, field, Color.red);	
 					}
 					
+				}else if(b1.sub(b2).doubleValue() == 0){
+					String[] changFields = {"geb_anum","geb_snum","geb_bsnum","geb_banum"};
+					for (String field : changFields) {
+						getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
+						.setCellForeGround(i, field, Color.black);	
+					}
 				}
 				//yf end
 				

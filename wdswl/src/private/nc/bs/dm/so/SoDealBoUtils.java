@@ -75,21 +75,21 @@ public class SoDealBoUtils {
 				String strWhere= null;
 				//查询库存量
 				if(fisdate){
-					strWhere= "ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
-				}else{
 					strWhere= " ss_pk='"+WdsWlPubConst.WDS_STORSTATE_PK+"'";
+				}else{
+					strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
 				}
 				UFDouble[]stocknums = getStockBO().getInvStockNum(pk_corp,
 						tmpNumVO.getCstoreid(), null,
 						tmpNumVO.getCinvbasid(), null, null,strWhere);
 				if (stocknums == null || stocknums.length == 0){
-					String reason=" 存货"
+					String reason=" 存货:"
 						+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
 						+ " 无库存量";
 					if(fisdate){
-						reason="大日期："+reason;
+						reason="大日期状态："+reason;
 					}else{
-						reason="合格，待检："+reason;
+						reason="合格，待检状态："+reason;
 					}
 					Logger.info(reason);
 					throw new BusinessException(reason);
@@ -182,9 +182,9 @@ public class SoDealBoUtils {
 					+ tmpNumVO.getNassnum() + " 本次待安排总量："
 					+ tmpNumVO.getNplanassnum();
 				if(fisdate){
-					reason="大日期"+reason;
+					reason="大日期状态"+reason;
 				}else{
-					reason="合格，待检"+reason;
+					reason="合格，待检状态"+reason;
 				}
 				Logger.info(reason);
 				throw new BusinessException(reason);

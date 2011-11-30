@@ -15,8 +15,10 @@ import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -274,9 +276,15 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			getBillUI().showHintMessage("表体数据为空");
 			return;
 		}
-		SendorderVO head =(SendorderVO) getBufferData().getCurrentVO().getParentVO();
-		if(PuPubVO.getInteger_NullAs(head.getIcoltype(), 0)==3)//手动核算运费
-			return ;
+		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(null);
+		for(CircularlyAccessibleValueObject body:billvo.getChildrenVO()){
+			UFDouble noutnum1 = PuPubVO.getUFDouble_NullAsZero(body.getAttributeValue("noutnum"));
+			noutnum  = noutnum.add(noutnum1);
+		}
+		if(noutnum.doubleValue() ==0){
+			getBillUI().showWarningMessage("无出库数量");
+			return;
+		}
 		try{	
 			billvo = TranColHelper.col(getBillUI(), billvo, _getDate(),_getOperator());
 

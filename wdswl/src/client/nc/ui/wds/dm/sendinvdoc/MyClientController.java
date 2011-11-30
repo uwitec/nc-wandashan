@@ -15,8 +15,6 @@ public class MyClientController extends AbstractManageController implements ISin
 		return null;
 	}
 
-	
-
 	public boolean isShowCardRowNo() {//是否显示行
 		
 		return true;
@@ -97,14 +95,11 @@ public class MyClientController extends AbstractManageController implements ISin
 	}
 
 	public int[] getListButtonAry() {//等到按钮
-		
-
 		return new int[]{
 			IBillButton.Add,
 			IBillButton.Delete,
 			IBillButton.Query,
 			IBillButton.Edit,
-		 
 			IBillButton.Save,
 			IBillButton.Cancel,
 			IBillButton.Card,
@@ -119,23 +114,19 @@ public class MyClientController extends AbstractManageController implements ISin
 
 	public boolean isShowListRowNo() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isShowListTotal() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
-
 	public int[] getCardButtonAry() {
 		return new int[]{
 				IBillButton.Add,
 				IBillButton.Delete,
 				IBillButton.Query,
 				IBillButton.Edit,
-			
 				IBillButton.Save,
 				IBillButton.Cancel,
 				IBillButton.Return,

@@ -24,7 +24,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				ButtonCommon.joinup,				
-				ButtonCommon.FZGN,
+//				ButtonCommon.FZGN,
 		IBillButton.Print		
 		};
 		return buttonArray;

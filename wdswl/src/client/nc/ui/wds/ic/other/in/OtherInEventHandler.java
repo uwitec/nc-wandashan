@@ -7,7 +7,6 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
-import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;

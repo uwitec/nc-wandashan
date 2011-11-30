@@ -17,6 +17,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -304,6 +305,15 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if (billvo.getChildrenVO() == null
 				|| billvo.getChildrenVO().length == 0) {
 			getBillUI().showHintMessage("表体数据为空");
+			return;
+		}
+		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(null);
+		for(CircularlyAccessibleValueObject body:billvo.getChildrenVO()){
+			UFDouble noutnum1 = PuPubVO.getUFDouble_NullAsZero(body.getAttributeValue("noutnum"));
+			noutnum  = noutnum.add(noutnum1);
+		}
+		if(noutnum.doubleValue() ==0){
+			getBillUI().showWarningMessage("无出库数量");
 			return;
 		}
 		SoorderVO head = (SoorderVO) getBufferData().getCurrentVO()

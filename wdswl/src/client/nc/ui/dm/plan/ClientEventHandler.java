@@ -34,9 +34,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	}
 
 	protected UIDialog createQueryUI() {
-		if (queryDialog == null) {
-		
-			
+		if (queryDialog == null) {			
 			queryDialog=new ClientUIQueryDlg(	getBillUI(),
 					null,
 					_getCorp().getPrimaryKey(),
@@ -63,7 +61,6 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			MessageDialog.showErrorDlg(getBillUI(), "ะฃั้", e.getMessage());
 			return;
 		}
-		
 		AggregatedValueObject billVO = getBillUI().getChangedVOFromUI();
 		setTSFormBufferToVO(billVO);
 		AggregatedValueObject checkVO = getBillUI().getVOFromUI();

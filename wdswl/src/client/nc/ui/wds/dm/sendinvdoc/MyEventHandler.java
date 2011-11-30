@@ -20,13 +20,8 @@ public class MyEventHandler extends ManageEventHandler {
 	}
 	@Override
 	protected UIDialog createQueryUI() {
-		
 		return new MyQueryDIG(getBillUI(), null,_getCorp().getPrimaryKey(),getBillUI()._getModuleCode(),getBillUI()._getOperator(), null);
 	}	
-	
-	
-	
-	
 	@Override
 	protected void onBoQuery() throws Exception {
 		
@@ -34,9 +29,10 @@ public class MyEventHandler extends ManageEventHandler {
 
 		if (askForQueryCondition(strWhere) == false)
 			return;// 用户放弃了查询
+		strWhere.append(" and isnull(dr,0)=0 ");
+		strWhere.append(" and pk_corp='"+_getCorp().getPrimaryKey()+"'");
 	    strWhere.append(" order by crow"); 
 		SuperVO[] queryVos = queryHeadVOs(strWhere.toString());
-
 		getBufferData().clear();
 		// 增加数据到Buffer
 		addDataToBuffer(queryVos);

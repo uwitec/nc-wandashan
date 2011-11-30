@@ -1,15 +1,19 @@
 package nc.bs.wl.dm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.itf.scm.cenpur.service.TempTableUtil;
+import nc.jdbc.framework.SQLParameter;
+import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
@@ -42,7 +46,7 @@ public class PlanDealBOUtil {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目 
+	 * @说明：完达山物流项目:查询本次安排的存货库存量、发运订单占有量、销售运单占有量 
 	 * @时间：2011-11-28下午08:29:20
 	 * @param fisdate :是否大日期
 	 * @param pk_corp
@@ -194,5 +198,174 @@ public class PlanDealBOUtil {
 			
 	}
 	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目：发货站库存量和安排后库存量处理
+	 * @时间：2011-11-4下午10:26:39
+	 * @param fisdate:是否大日期 
+	 * @param datas
+	 * @throws BusinessException
+	 */
+	protected void arrangStornumout(boolean fisdate,PlanDealVO[] datas) throws BusinessException{
+		if(datas == null || datas.length == 0){
+			return ;
+		}
+		//按照发货仓库 分组
+		Map<String,ArrayList<PlanDealVO>> map = new HashMap<String ,ArrayList<PlanDealVO>>();
+		for(PlanDealVO data:datas){
+			String key = PuPubVO.getString_TrimZeroLenAsNull(data.getPk_outwhouse());
+			if(key == null){
+				continue;
+			}
+			if(map.containsKey(key)){
+				map.get(key).add(data);
+			}else{
+				ArrayList<PlanDealVO> list = new ArrayList<PlanDealVO>();
+				list.add(data);
+				map.put(key, list);
+			}
+		}
+		String strWhere = null;
+		//查询库存量
+		if(fisdate){
+			strWhere= " ss_pk='"+WdsWlPubConst.WDS_STORSTATE_PK+"'";
+		}else{
+			strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+		}
+		//查询发货仓库 所有存货的库存量
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select pk_invmandoc,sum(whs_stocktonnage) num ");
+		sql.append(" from tb_warehousestock ");
+		sql.append(" where pk_customize1 = ?");
+		if(strWhere !=null){
+			sql.append(" and "+strWhere);
+		}
+		sql.append(" group by pk_invmandoc ");
+		SQLParameter param = new SQLParameter();
+		ArrayListProcessor processor = new ArrayListProcessor();
+		for(Entry<String,ArrayList<PlanDealVO>> entry:map.entrySet()){
+			String key = entry.getKey();
+			ArrayList<PlanDealVO> values= entry.getValue();
+			param.addParam(key);
+			ArrayList<Object> list =(ArrayList<Object>)getDao().executeQuery(sql.toString(), param, processor);
+			if(list != null && list.size() >0){
+				for(int i=0;i<list.size();i++){
+					Object[] obj =(Object[]) list.get(i);
+					String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
+					UFDouble num = PuPubVO.getUFDouble_NullAsZero(obj[1]);
+					if(pk_invmandoc== null || num.doubleValue() <= 0){//如果库存数量为0，则不再继续分配
+						continue;
+					}
+					setNstoreNum(pk_invmandoc,num,values);
+				}
+			}
+			param.clearParams();
+		}
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目：收货站库存量和安排后库存量处理
+	 * @时间：2011-11-4下午10:26:39
+	 * @param datas
+	 * @param fisdate :是否大日期
+	 * @throws BusinessException
+	 */
+	protected void arrangStornumin(boolean fisdate,PlanDealVO[] datas) throws BusinessException{
+		if(datas == null || datas.length == 0){
+			return ;
+		}
+		//按照发货仓库 分组
+		Map<String,ArrayList<PlanDealVO>> map = new HashMap<String ,ArrayList<PlanDealVO>>();
+		for(PlanDealVO data:datas){
+			String key = PuPubVO.getString_TrimZeroLenAsNull(data.getPk_inwhouse());
+			if(key == null){
+				continue;
+			}
+			if(map.containsKey(key)){
+				map.get(key).add(data);
+			}else{
+				ArrayList<PlanDealVO> list = new ArrayList<PlanDealVO>();
+				list.add(data);
+				map.put(key, list);
+			}
+		}
+		String strWhere = null;
+		//查询库存量
+		if(fisdate){
+			strWhere= " ss_pk='"+WdsWlPubConst.WDS_STORSTATE_PK+"'";
+		}else{
+			strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+		}
+		//查询收货仓库 所有存货的库存量
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select pk_invmandoc,sum(whs_stocktonnage) num ");
+		sql.append(" from tb_warehousestock ");
+		sql.append(" where pk_customize1 = ?");
+		if(strWhere !=null){
+			sql.append(" and "+strWhere);
+		}
+		sql.append(" group by pk_invmandoc ");
+		SQLParameter param = new SQLParameter();
+		ArrayListProcessor processor = new ArrayListProcessor();
+		for(Entry<String,ArrayList<PlanDealVO>> entry:map.entrySet()){
+			String key = entry.getKey();
+			ArrayList<PlanDealVO> values= entry.getValue();
+			param.addParam(key);
+			ArrayList<Object> list =(ArrayList<Object>)getDao().executeQuery(sql.toString(), param, processor);
+			Map<String,UFDouble> curStornum = new HashMap<String, UFDouble>();//<存货主键,当前库存量>
+			for(PlanDealVO value:values){
+				String pk_ivnmandoc = value.getPk_invmandoc();
+				if(!curStornum.containsKey(pk_ivnmandoc)){
+					if(list != null && list.size() >0){
+						for(int i=0;i<list.size();i++){
+							Object[] obj =(Object[]) list.get(i);
+							String invmanid = PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
+							UFDouble num = PuPubVO.getUFDouble_NullAsZero(obj[1]);
+							if(pk_ivnmandoc.equalsIgnoreCase(invmanid)){
+								curStornum.put(pk_ivnmandoc, num);
+							}
+						}
+					}else{
+						curStornum.put(pk_ivnmandoc, new UFDouble(0));
+					}
+					
+				
+				}
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(curStornum.get(pk_ivnmandoc));
+				value.setNstorenumin(num);
+				num = num.add( PuPubVO.getUFDouble_NullAsZero(value.getNnum()));
+				value.setNarrstorenumin(num);
+				curStornum.put(pk_ivnmandoc, num);
+			}
+			param.clearParams();
+		}
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 :
+	 * @时间：2011-11-4下午09:59:52
+	 * @param pk_invmandoc
+	 * @param num
+	 * @param values
+	 */
+	void setNstoreNum(String pk_invmandoc,UFDouble num,ArrayList<PlanDealVO> values){
+		for(int i=0;i<values.size();i++){
+			if(num.doubleValue()<=0){
+				return;
+			}
+			if(!pk_invmandoc.equalsIgnoreCase(values.get(i).getPk_invmandoc())){
+				continue;
+			}
+			values.get(i).setNstorenumout(num);
+			UFDouble dealNum = PuPubVO.getUFDouble_NullAsZero(values.get(i).getNnum());//本次安排数量
+			num = num.sub(dealNum);
+			values.get(i).setNarrstorenumout(num);
+		}
+	}
 
 }

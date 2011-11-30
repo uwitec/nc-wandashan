@@ -88,8 +88,9 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS1);
 		getBillCardPanel().setTailItem("dmakedate", _getDate());		
-		getBillCardPanel().setHeadItem("pk_outwhouse", getLoginInforHelper().getLogInfor(_getOperator()).getWhid());
 		//调出仓库默认当前登录人关联的仓库	
+		getBillCardPanel().setHeadItem("pk_outwhouse", getLoginInforHelper().getLogInfor(_getOperator()).getWhid());
+		
 	}
 	protected ManageEventHandler createEventHandler() {
 		return new ClientEventHandler(this, getUIControl());
@@ -361,8 +362,7 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		btnvo.setBtnCode(null);// code最好设置为空
 		btnvo.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
 		btnvo.setChildAry(new int[] {ButtonCommon.ROWCLOSE});
-		addPrivateButton(btnvo);
-		
+		addPrivateButton(btnvo);		
 		//整单关闭-------------------------------暂不支持整单关闭   后续需要可以加上  zhf
 		ButtonVO btnvo3 = new ButtonVO();
 		btnvo3.setBtnNo(ButtonCommon.BILLCLOSE);
@@ -371,8 +371,7 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		btnvo3.setBtnCode(null);// code最好设置为空
 		btnvo3.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
 //		btnvo3.setBusinessStatus( new int[]{IBillStatus.CHECKPASS});
-		addPrivateButton(btnvo3);
-		
+		addPrivateButton(btnvo3);	
 		//行关闭
 		ButtonVO btnvo2 = new ButtonVO();
 		btnvo2.setBtnNo(ButtonCommon.ROWCLOSE);
@@ -382,7 +381,6 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		btnvo2.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
 //		btnvo2.setBusinessStatus( new int[]{IBillStatus.CHECKPASS});
 		addPrivateButton(btnvo2);		
-	
 		super.initPrivateButton();		
 	}
 
