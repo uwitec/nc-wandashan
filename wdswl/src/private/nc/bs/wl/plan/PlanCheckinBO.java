@@ -7,6 +7,7 @@ import nc.bd.accperiod.AccountCalendar;
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.ColumnProcessor;
+import nc.vo.dm.SendplaninB2VO;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -127,7 +128,7 @@ public class PlanCheckinBO {
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();	
-		// 查询月计划:如果月计划还没有审批，追加计划不能审批
+		// 1.查询月计划:如果月计划还没有审批，追加计划不能审批
 		StringBuffer sql=new StringBuffer();
 		sql.append(" select pk_sendplanin  from");
 		sql.append(" wds_sendplanin ");
@@ -143,25 +144,42 @@ public class PlanCheckinBO {
 	    if(o == null || "".equalsIgnoreCase((String)o)){
 	    	throw new BusinessException("未找到已经审批过的月计划");
 	    }
-	    // 查询表体明细
+	    // 1.1查询月计划的表体明细
 	    String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
     	List<SendplaninBVO> list=(List<SendplaninBVO>) getBaseDAO().retrieveByClause(SendplaninBVO.class, cond);    	
-    	boolean isExist=false;
-    	UFBoolean bisdate=null;   // 是否大日期    月计划
-    	UFBoolean bisdate1=null;  // 是否大日期     追加计划
+    	//2.将追加计划存货追加到月计划上：
+    	//大日期存货追加;新增存货增加;相同的非大日期存货更新月计划安排数量;
+    	boolean isExist=false;//是否更新月计划
+    	UFBoolean bisdate=null;  // 是否大日期    月计划
+    	UFBoolean bisdate1=null; // 是否大日期     追加计划
+    	ArrayList<SendplaninB2VO> b2List_Update = new ArrayList<SendplaninB2VO>();
+    	ArrayList<SendplaninB2VO> b2List_Add = new ArrayList<SendplaninB2VO>();
 	    for(int i=0;i<childs.length;i++){   
 	       isExist=false;
 	       UFDouble nplanNum = PuPubVO.getUFDouble_NullAsZero(childs[i].getNplannum());
-		   if(nplanNum.doubleValue() <=0){
+		   if(nplanNum.doubleValue() <=0){// 本次有安排数量的，才更新月计划
 		    	continue;
-		    }// 本次有安排数量的，才更新月计划
+		    }
+		   //获得需要更新到月计划的表体存货
 	      bisdate= PuPubVO.getUFBoolean_NullAs(childs[i].getBisdate(),UFBoolean.FALSE);
 	      if(!bisdate.booleanValue()){
 	    	  for(int j=0;j<list.size();j++){
 		    	   bisdate1= PuPubVO.getUFBoolean_NullAs(list.get(j).getBisdate(),UFBoolean.FALSE);
 		    	   if(! bisdate1.booleanValue()){//判断是否大日期   
 		    	      if(childs[i].getPk_invmandoc().equalsIgnoreCase(list.get(j).getPk_invmandoc())){//存货名称相同	
-		    			   list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
+		    			  //记录来源明细信息
+		    	    	  SendplaninB2VO b2vo = new SendplaninB2VO();
+		    	    	  b2vo.setCsourcebillhid(parent.getPrimaryKey());
+		    	    	  b2vo.setCsourcebillbid(childs[i].getPrimaryKey());
+		    	    	  b2vo.setCsourcetype(parent.getPk_billtype());
+		    	    	  b2vo.setVsourcebillcode(parent.getVbillno());
+		    	    	  b2vo.setSorce_ndealnum(childs[i].getNplannum());
+		    	    	  b2vo.setSorce_nassdealnum(childs[i].getNassplannum());
+		    	    	  b2vo.setPk_sendplanin(list.get(j).getPk_sendplanin());
+		    	    	  b2vo.setPk_sendplanin_b(list.get(j).getPrimaryKey());
+		    	    	  b2List_Update.add(b2vo);
+		    	    	  //更新月计划安排数量
+		    	    	  list.get(j).setNplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNplannum()).add(nplanNum));
 			    	   	   list.get(j).setNassplannum(PuPubVO.getUFDouble_NullAsZero(list.get(j).getNassplannum()).add(PuPubVO.getUFDouble_NullAsZero(childs[i].getNassplannum())));		    		  
 			    		   mods.add(list.get(j)); 
 			    		   isExist=true;
@@ -170,19 +188,37 @@ public class PlanCheckinBO {
 		           } 
 		        }   
 	      }
+	      //获得需要追加到月计划的表体存货
 	       if(!isExist){
-	    	   childs[i].setPk_sendplanin((String)o);  
-		       childs[i].setPk_sendplanin_b(null);
-		       adds.add(childs[i]);
+	    	   //记录来源明细信息
+	    	  SendplaninB2VO b2vo = new SendplaninB2VO();
+ 	    	  b2vo.setCsourcebillhid(parent.getPrimaryKey());
+ 	    	  b2vo.setCsourcebillbid(childs[i].getPrimaryKey());
+ 	    	  b2vo.setCsourcetype(parent.getPk_billtype());
+ 	    	  b2vo.setVsourcebillcode(parent.getVbillno());
+ 	    	  b2vo.setSorce_ndealnum(childs[i].getNplannum());
+ 	    	  b2vo.setSorce_nassdealnum(childs[i].getNassplannum());
+ 	    	  b2vo.setPk_sendplanin(o.toString());
+ 	    	  b2vo.setPk_sendplanin_b(null);
+		      b2List_Add.add(b2vo);
+		      //
+	    	  childs[i].setPk_sendplanin((String)o);  
+		      childs[i].setPk_sendplanin_b(null);
+		      adds.add(childs[i]);
 	       }
 	    }
-		 
+	   //更新数据库
 	  for(int i=0;i<adds.size();i++){
-	    getBaseDAO().insertVOWithPK(adds.get(i));
+	    String pk_sendplanin_b = getBaseDAO().insertVOWithPK(adds.get(i));
+	    b2List_Add.get(i).setPk_sendplanin_b(pk_sendplanin_b);
 	  }	 
 	  if(mods.size()>0){
 		  getBaseDAO().updateVOList(mods); 
 	  }
+	  //更新来源信息
+	  getBaseDAO().insertVOList(b2List_Add);
+	  getBaseDAO().insertVOList(b2List_Update);
+	  
 	}
 	/**
 	 * 
