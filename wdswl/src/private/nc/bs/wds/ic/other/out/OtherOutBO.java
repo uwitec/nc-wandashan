@@ -111,7 +111,7 @@ public class OtherOutBO  {
 		   List<TbOutgeneralTVO>  trayInfor=vo.getTrayInfor();
 		   if(trayInfor==null || trayInfor.size()==0)
 			   throw new Exception("没有分配货位");
-		   TbOutgeneralTVO tvo=trayInfor.get(i);
+		   TbOutgeneralTVO tvo=trayInfor.get(0);
 		    tvo.setNoutnum(PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("noutnum")));
 		    tvo.setNoutassistnum(PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("noutassistnum")));
 		    trayInfor.clear();
