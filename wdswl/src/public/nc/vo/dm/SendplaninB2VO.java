@@ -3,22 +3,35 @@ package nc.vo.dm;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
 
+/**
+ * 发运计划录入子表2：记录来源的追加计划信息，以及对应的月计划表体
+ * @author Administrator
+ *
+ */
 public class SendplaninB2VO extends SuperVO{
 
-	 /**子表主键 */
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**子表主键 */
     public String pk_sendplanin_b;
     /**父键 */
     public String pk_sendplanin;
     /**主键 */
     public String pk_sendplanin_b2;
-    /**来源主表主键 */
-    public String pk_sorce_sendplanin;
-    /**来源子表主键 */
-    public String pk_sorce_sendplanin_b;
-    /**来源主数量 */
+	//来源单据表头序列号
+	public String csourcebillhid;
+	//来源单据表体序列号	
+	public String csourcebillbid;
+	//来源单据类型
+	public String csourcetype;
+	//来源单据号
+	public String vsourcebillcode;
+
+    /**来源安排主数量 */
     public UFDouble sorce_ndealnum;
-    /**来源辅数量 */
-    
+    /**来源安排辅数量 */
     public UFDouble sorce_nassdealnum;
 	public String getPk_sendplanin_b() {
 		return pk_sendplanin_b;
@@ -42,22 +55,6 @@ public class SendplaninB2VO extends SuperVO{
 
 	public void setPk_sendplanin_b2(String pk_sendplanin_b2) {
 		this.pk_sendplanin_b2 = pk_sendplanin_b2;
-	}
-
-	public String getPk_sorce_sendplanin() {
-		return pk_sorce_sendplanin;
-	}
-
-	public void setPk_sorce_sendplanin(String pk_sorce_sendplanin) {
-		this.pk_sorce_sendplanin = pk_sorce_sendplanin;
-	}
-
-	public String getPk_sorce_sendplanin_b() {
-		return pk_sorce_sendplanin_b;
-	}
-
-	public void setPk_sorce_sendplanin_b(String pk_sorce_sendplanin_b) {
-		this.pk_sorce_sendplanin_b = pk_sorce_sendplanin_b;
 	}
 
 	public UFDouble getSorce_ndealnum() {
@@ -92,6 +89,38 @@ public class SendplaninB2VO extends SuperVO{
 	public String getTableName() {
 		// TODO Auto-generated method stub
 		return "wds_sendplanin_b2";
+	}
+
+	public String getCsourcebillhid() {
+		return csourcebillhid;
+	}
+
+	public void setCsourcebillhid(String csourcebillhid) {
+		this.csourcebillhid = csourcebillhid;
+	}
+
+	public String getCsourcebillbid() {
+		return csourcebillbid;
+	}
+
+	public void setCsourcebillbid(String csourcebillbid) {
+		this.csourcebillbid = csourcebillbid;
+	}
+
+	public String getCsourcetype() {
+		return csourcetype;
+	}
+
+	public void setCsourcetype(String csourcetype) {
+		this.csourcetype = csourcetype;
+	}
+
+	public String getVsourcebillcode() {
+		return vsourcebillcode;
+	}
+
+	public void setVsourcebillcode(String vsourcebillcode) {
+		this.vsourcebillcode = vsourcebillcode;
 	}
 
 }
