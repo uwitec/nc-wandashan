@@ -362,7 +362,7 @@ public class StockInvOnHandBO {
 		sql.append(" from tb_warehousestock");
 		sql.append(" where isnull(dr,0) = 0");
 		if(strWhere!= null && !"".equalsIgnoreCase(strWhere)){
-			sql.append(strWhere);
+			sql.append(" and "+strWhere);
 		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
 			sql.append(" and pk_corp = '"+corp+"'");

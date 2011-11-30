@@ -1,8 +1,8 @@
 package nc.bs.dm.so;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public class SoDealBoUtils {
 	 * @return
 	 * @throws BusinessException
 	 */
-	protected Map<String, StoreInvNumVO> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,ArrayList<SoDealVO> bodys) throws BusinessException{
+	protected Map<String, StoreInvNumVO> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,List<SoDealVO> bodys) throws BusinessException{
 		Map<String, StoreInvNumVO> invNumInfor=  new HashMap<String, StoreInvNumVO>();
 		if(bodys == null || bodys.size()==0){
 			return invNumInfor;
@@ -82,8 +82,18 @@ public class SoDealBoUtils {
 				UFDouble[]stocknums = getStockBO().getInvStockNum(pk_corp,
 						tmpNumVO.getCstoreid(), null,
 						tmpNumVO.getCinvbasid(), null, null,strWhere);
-				if (stocknums == null || stocknums.length == 0)
-					continue;
+				if (stocknums == null || stocknums.length == 0){
+					String reason=" 存货"
+						+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
+						+ " 无库存量";
+					if(fisdate){
+						reason="大日期："+reason;
+					}else{
+						reason="合格，待检："+reason;
+					}
+					Logger.info(reason);
+					throw new BusinessException(reason);
+				}
 				tmpNumVO.setNstocknum(stocknums[0]);
 				tmpNumVO.setNstockassnum(stocknums[1]);
 			}

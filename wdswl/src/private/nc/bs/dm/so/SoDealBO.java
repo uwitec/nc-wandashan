@@ -153,9 +153,9 @@ public class SoDealBO {
 				}
 				UFBoolean fisdate = PuPubVO.getUFBoolean_NullAs(vos[0].getDisdate(), UFBoolean.FALSE);
 				if(fisdate.booleanValue()){
-					util.initInvNumInfor(true,infor.get(1), pk_outwhouse, (ArrayList<SoDealVO>)Arrays.asList(vos));
+					util.initInvNumInfor(true,infor.get(1), pk_outwhouse, Arrays.asList(vos));
 				}else{
-					util.initInvNumInfor(false,infor.get(1), pk_outwhouse, (ArrayList<SoDealVO>)Arrays.asList(vos));
+					util.initInvNumInfor(false,infor.get(1), pk_outwhouse, Arrays.asList(vos));
 
 				}
 			}

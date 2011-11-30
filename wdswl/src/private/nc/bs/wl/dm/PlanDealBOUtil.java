@@ -1,10 +1,11 @@
 package nc.bs.wl.dm;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
@@ -50,7 +51,7 @@ public class PlanDealBOUtil {
 	 * @return
 	 * @throws BusinessException
 	 */
-	protected Map<String, StoreInvNumVo> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,ArrayList<PlanDealVO> bodys) throws BusinessException{
+	protected Map<String, StoreInvNumVo> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,List<PlanDealVO> bodys) throws BusinessException{
 		Map<String, StoreInvNumVo> invNumInfor=  new HashMap<String, StoreInvNumVo>();
 		if(bodys == null || bodys.size()==0){
 			return invNumInfor;
@@ -80,8 +81,18 @@ public class PlanDealBOUtil {
 				UFDouble[]stocknums = getStockBO().getInvStockNum(pk_corp,
 						tmpNumVO.getCstoreid(), null,
 						tmpNumVO.getCinvbasid(), null, null,strWhere);
-				if (stocknums == null || stocknums.length == 0)
-					continue;
+				if (stocknums == null || stocknums.length == 0){
+					String reason=" 存货"
+						+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
+						+ " 无库存量";
+					if(fisdate){
+						reason="大日期："+reason;
+					}else{
+						reason="合格，待检："+reason;
+					}
+					Logger.info(reason);
+					throw new BusinessException(reason);
+				}
 				tmpNumVO.setNstocknum(stocknums[0]);
 				tmpNumVO.setNstockassnum(stocknums[1]);
 			}
@@ -170,9 +181,9 @@ public class PlanDealBOUtil {
 					+ tmpNumVO.getNassnum() + " 本次待安排总量："
 					+ tmpNumVO.getNplanassnum();
 				if(fisdate){
-					reason="大日期"+reason;
+					reason="大日期："+reason;
 				}else{
-					reason="合格，待检"+reason;
+					reason="合格，待检："+reason;
 				}
 				Logger.info(reason);
 				throw new BusinessException(reason);
