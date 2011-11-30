@@ -8,6 +8,14 @@ public class WdsWlPubConst {
 	 *库存状态表大日期状态主键
 	 */
 	public static String WDS_STORSTATE_PK="1021S31000000009FS9A";
+	/**
+	 *库存状态表合格状态主键
+	 */
+	public static String WDS_STORSTATE_PK_hg="1050S310000000004CO0";
+	/**
+	 *库存状态表待检状态主键
+	 */
+	public static String WDS_STORSTATE_PK_dj="0001AA100000000BJINJ";
 	/**发运计划录入节点号 */
 	public static String DM_PLAN_LURU_NODECODE="80060405";
 	/**发运计划处理节点号  */

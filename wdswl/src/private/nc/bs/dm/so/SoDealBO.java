@@ -1,6 +1,7 @@
 package nc.bs.dm.so;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
@@ -133,20 +135,31 @@ public class SoDealBO {
 		if (ldata == null || ldata.size() == 0)
 			return;
 //		//1.将明细按照 是否大日期 分单，然后分别按照现存量来过滤
-//		SoDealBoUtils util= new SoDealBoUtils();
-//		CircularlyAccessibleValueObject[][] splitVos = SplitBillVOs.getSplitVOs(
-//				(CircularlyAccessibleValueObject[]) (ldata
-//						.toArray(new SoDealVO[0])),
-//				new String[]{"cbodywarehouseid","disdate"});//根据发货仓库和是否大日期
-//		if(splitVos == null || splitVos.length==0){
-//			return ;
-//		}
-//		SoDealVO[] vos = null;
-//		for(int i=0;i<splitVos.length;i++){
-//			vos = (SoDealVO[])splitVos[i];
-////			util.initInvNumInfor(infor.get(1), null, vos);
-//		}
-		
+		SoDealBoUtils util= new SoDealBoUtils();
+		CircularlyAccessibleValueObject[][] splitVos = SplitBillVOs.getSplitVOs(
+				(CircularlyAccessibleValueObject[]) (ldata
+						.toArray(new SoDealVO[0])),
+				new String[]{"cbodywarehouseid","disdate"});//根据发货仓库和是否大日期分单
+		if(splitVos == null || splitVos.length==0){
+			return ;
+		}
+		SoDealVO[] vos = null;
+		for(int i=0;i<splitVos.length;i++){
+			vos = (SoDealVO[])splitVos[i];
+			if(vos != null && vos.length>0){
+				String pk_outwhouse= PuPubVO.getString_TrimZeroLenAsNull(vos[0].getCbodywarehouseid());
+				if(pk_outwhouse  == null){
+					throw  new BusinessException("发货仓库不能未空");
+				}
+				UFBoolean fisdate = PuPubVO.getUFBoolean_NullAs(vos[0].getDisdate(), UFBoolean.FALSE);
+				if(fisdate.booleanValue()){
+					util.initInvNumInfor(true,infor.get(1), pk_outwhouse, (ArrayList<SoDealVO>)Arrays.asList(vos));
+				}else{
+					util.initInvNumInfor(false,infor.get(1), pk_outwhouse, (ArrayList<SoDealVO>)Arrays.asList(vos));
+
+				}
+			}
+		}
 		//2.回写销售订单累计安排数量
 		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
 		for (int i = 0; i < ldata.size(); i++) {

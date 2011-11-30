@@ -555,7 +555,7 @@ public class LockTrayBO {
 						throw new BusinessException("该托盘上该批次存货进行了绑定实际托盘,本次入库也必须绑定实际托盘");
 				}else{//不存在绑定关系  如果是该批次的第一次  存入  可以绑定 否则不能绑定
 //					判断  该批存货 是否  已存在
-					UFDouble[] nums = getStockBO().getInvStockNum(corp, cwhid, pk_cargdoc, body.getGeb_cinvbasid(), body.getGeb_vbatchcode(), tray.getCdt_pk());
+					UFDouble[] nums = getStockBO().getInvStockNum(corp, cwhid, pk_cargdoc, body.getGeb_cinvbasid(), body.getGeb_vbatchcode(), tray.getCdt_pk(),null);
 					boolean isexit = nums!=null && nums.length>0 && nums[0].doubleValue()>0;
 					if(lockTrayInfor.containsKey(key)&&isexit){
 						throw new BusinessException("该托盘上该批次存货未进行绑定,本次入库也不能绑定实际托盘");

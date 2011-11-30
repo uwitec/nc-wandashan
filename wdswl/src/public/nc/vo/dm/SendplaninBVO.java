@@ -6,7 +6,6 @@
    	
 	import java.util.ArrayList;
 
-import nc.vo.pub.BusinessException;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;

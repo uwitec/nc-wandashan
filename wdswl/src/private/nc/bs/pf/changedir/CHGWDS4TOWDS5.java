@@ -63,12 +63,10 @@ public String[] getField() {
 			"B_pk_invbasdoc->B_cinvbasdocid",
 			
 			"B_uint->B_cunitid",//主计量单位
-			"B_assunit->B_cpackunitid",//辅计量单位
-			
+			"B_assunit->B_cpackunitid",//辅计量单位			
 			"B_picicode->B_cbatchid",//批次
-
 			"B_fisgift->B_blargessflag",//是否赠品
-			
+			"B_bisdate->B_disdate",//是否大日期
 			"B_nassarrangnum->B_nassnum",//安排辅数量
 			"B_narrangnmu->B_nnum",//安排数量
 

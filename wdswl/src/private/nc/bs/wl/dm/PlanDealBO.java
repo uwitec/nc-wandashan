@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nc.bs.dao.BaseDAO;
+import nc.bs.dm.so.SoDealBoUtils;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
@@ -20,10 +21,12 @@ import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
+import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -352,21 +355,37 @@ public class PlanDealBO {
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;		
-		/**
-		 * zhf  add  应首先进行 并发校验  校验发运计划是否发生了改变
-		 */
 		Map<String,UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
 		for(PlanDealVO data:ldata){
 			tsInfor.put(data.getPrimaryKey(), data.getTs());
 		}	
-		checkTs(tsInfor);	
-		/**
-		 * 安排：生成发运订单 发运计划安排生成发运订单
-		 * 计划单号 计划行号 不合并计划行 
-		 * 计划和订单为1对多关系 
-		 * 分单规则： 发货站 收货站不同 不考虑计划类型		 * 
-		 *  */
-		//回写计划累计安排数量
+		checkTs(tsInfor);
+//		//1.将明细按照 是否大日期 分单，然后分别按照现存量来过滤
+		PlanDealBOUtil util= new PlanDealBOUtil();
+		CircularlyAccessibleValueObject[][] splitVos = SplitBillVOs.getSplitVOs(
+				(CircularlyAccessibleValueObject[]) (ldata
+						.toArray(new PlanDealVO[0])),
+				new String[]{"pk_outwhouse","bisdate"});//根据发货仓库和是否大日期分单
+		if(splitVos == null || splitVos.length==0){
+			return ;
+		}
+		PlanDealVO[] vos = null;
+		for(int i=0;i<splitVos.length;i++){
+			vos = (PlanDealVO[])splitVos[i];
+			if(vos != null && vos.length>0){
+				String pk_outwhouse= PuPubVO.getString_TrimZeroLenAsNull(vos[0].getPk_outwhouse());
+				if(pk_outwhouse  == null){
+					throw  new BusinessException("发货仓库不能未空");
+				}
+				UFBoolean fisdate = PuPubVO.getUFBoolean_NullAs(vos[0].getBisdate(), UFBoolean.FALSE);
+				if(fisdate.booleanValue()){
+					util.initInvNumInfor(true,infor.get(1), pk_outwhouse, (ArrayList<PlanDealVO>)Arrays.asList(vos));
+				}else{
+					util.initInvNumInfor(false,infor.get(1), pk_outwhouse, (ArrayList<PlanDealVO>)Arrays.asList(vos));
+
+				}
+			}
+		}
 		// 发运安排vo---》发运计划vo
 		Map<String,ArrayList<UFDouble>> map = new HashMap<String, ArrayList<UFDouble>>();
 		for(int i=0;i<ldata.size();i++){

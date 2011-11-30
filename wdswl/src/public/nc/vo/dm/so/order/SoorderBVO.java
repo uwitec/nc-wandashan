@@ -37,6 +37,8 @@ import nc.vo.wl.pub.WdsWlPubTool;
 			public String reserve5;
 			
 			public UFBoolean fiszh;//是否已经参与折合--临时使用字段，未存库
+			
+			public UFBoolean bisdate;
 			 //辅计量id
              public String assunit;
              //来源单据表头序列号
@@ -1485,6 +1487,14 @@ import nc.vo.wl.pub.WdsWlPubTool;
 
 	public void setFiszh(UFBoolean fiszh) {
 		this.fiszh = fiszh;
+	}
+
+	public UFBoolean getBisdate() {
+		return bisdate;
+	}
+
+	public void setBisdate(UFBoolean bisdate) {
+		this.bisdate = bisdate;
 	}
 
 } 

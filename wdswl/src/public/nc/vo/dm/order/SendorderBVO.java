@@ -39,7 +39,8 @@ public class SendorderBVO extends SuperVO {
 	public String reserve4;
 	//计划主数量
 	public UFDouble nplannum;
-
+	
+	public UFBoolean bisdate;//是否大日期
 	public String vdef4;
 	public String vdef7;
 	//收货站待接收数量
@@ -1333,6 +1334,14 @@ public class SendorderBVO extends SuperVO {
 
 	public void setFiszh(UFBoolean fiszh) {
 		this.fiszh = fiszh;
+	}
+
+	public UFBoolean getBisdate() {
+		return bisdate;
+	}
+
+	public void setBisdate(UFBoolean bisdate) {
+		this.bisdate = bisdate;
 	}
 	
 }

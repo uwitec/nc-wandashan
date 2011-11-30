@@ -1,17 +1,15 @@
-package nc.bs.dm.so;
+package nc.bs.wl.dm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.itf.scm.cenpur.service.TempTableUtil;
-import nc.vo.dm.so.deal.SoDealVO;
-import nc.vo.dm.so.deal2.StoreInvNumVO;
+import nc.vo.dm.PlanDealVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
@@ -24,7 +22,7 @@ import nc.vo.wl.pub.WdsWlPubTool;
  * @author Administrator
  *
  */
-public class SoDealBoUtils {
+public class PlanDealBOUtil {
 	
 	private BaseDAO dao = null;
 
@@ -52,26 +50,26 @@ public class SoDealBoUtils {
 	 * @return
 	 * @throws BusinessException
 	 */
-	protected Map<String, StoreInvNumVO> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,ArrayList<SoDealVO> bodys) throws BusinessException{
-		Map<String, StoreInvNumVO> invNumInfor=  new HashMap<String, StoreInvNumVO>();
+	protected Map<String, StoreInvNumVo> initInvNumInfor(boolean fisdate ,String pk_corp,String pk_stordoc,ArrayList<PlanDealVO> bodys) throws BusinessException{
+		Map<String, StoreInvNumVo> invNumInfor=  new HashMap<String, StoreInvNumVo>();
 		if(bodys == null || bodys.size()==0){
 			return invNumInfor;
 		}
 		Set<String> cinvids = new HashSet<String>();// 本次安排的所有存货id
-		StoreInvNumVO tmpNumVO = null;
+		StoreInvNumVo tmpNumVO = null;
 		String key = null;
-		for (SoDealVO body : bodys) {
+		for (PlanDealVO body : bodys) {
 			key = WdsWlPubTool.getString_NullAsTrimZeroLen(body
-					.getCinvbasdocid());
-			cinvids.add(body.getCinvbasdocid());
+					.getPk_invbasdoc());
+			cinvids.add(body.getPk_invbasdoc());
 			if (invNumInfor.containsKey(key)) {
 				tmpNumVO = invNumInfor.get(key);
 			} else {
-				tmpNumVO = new StoreInvNumVO();
+				tmpNumVO = new StoreInvNumVo();
 				tmpNumVO.setPk_corp(pk_corp);
 				tmpNumVO.setCstoreid(pk_stordoc);
-				tmpNumVO.setCinvbasid(body.getCinvbasdocid());
-				tmpNumVO.setCinvmanid(body.getCinventoryid());
+				tmpNumVO.setCinvbasid(body.getPk_invbasdoc());
+				tmpNumVO.setCinvmanid(body.getPk_invmandoc());
 				String strWhere= null;
 				//查询库存量
 				if(fisdate){

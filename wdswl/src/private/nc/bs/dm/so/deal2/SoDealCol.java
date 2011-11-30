@@ -160,7 +160,7 @@ public class SoDealCol {
 					tmpNumVO.setCinvmanid(body.getCinventoryid());
 					stocknums = getStockBO().getInvStockNum(pk_corp,
 							tmpNumVO.getCstoreid(), null,
-							tmpNumVO.getCinvbasid(), null, null);
+							tmpNumVO.getCinvbasid(), null, null,null);
 					if (stocknums == null || stocknums.length == 0)
 						continue;
 					tmpNumVO.setNstocknum(stocknums[0]);

@@ -345,11 +345,12 @@ public class StockInvOnHandBO {
 	 * @param cinvbasid
 	 * @param vbatchcode
 	 * @param ctrayid
+	 * @param strWhere 自定义查询条件
 	 * @return
 	 * @throws BusinessException
 	 */
 	public UFDouble[] getInvStockNum(String corp,String cwarehouseid,
-			String pk_cargdoc,String cinvbasid,String vbatchcode,String ctrayid) throws BusinessException{
+			String pk_cargdoc,String cinvbasid,String vbatchcode,String ctrayid ,String strWhere) throws BusinessException{
 		StringBuffer sql = new StringBuffer();
 		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)==null){
 			throw new BusinessException("仓库不能为空");
@@ -360,6 +361,9 @@ public class StockInvOnHandBO {
 		sql.append("select sum(whs_stocktonnage) nnum,sum(whs_stockpieces) nassnum ");
 		sql.append(" from tb_warehousestock");
 		sql.append(" where isnull(dr,0) = 0");
+		if(strWhere!= null && !"".equalsIgnoreCase(strWhere)){
+			sql.append(strWhere);
+		}
 		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
 			sql.append(" and pk_corp = '"+corp+"'");
 		}
@@ -566,7 +570,7 @@ public class StockInvOnHandBO {
 				nnum = invNumInfor.get(invid);
 				if(nnum == null || nnum.length == 0)
 					throw new ValidationException("发货量为空");
-				nstocknum = getInvStockNum(corp, cstoreid, null, invid, null, null);
+				nstocknum = getInvStockNum(corp, cstoreid, null, invid, null, null,null);
 				ndealnum = dealNumInfor.get(invid);
 				for(int i=0;i<2;i++){
 					if(PuPubVO.getUFDouble_NullAsZero(nnum[i]).compareTo(
