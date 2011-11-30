@@ -662,7 +662,7 @@ public class TranPriceAccount {
 		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
 		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
 		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
-		sqlb.append(" and b.pk_replace='" + reareaid + "'");
+		sqlb.append(" and b.pk_replace='" + reareaid + "'");      // 收货地
 		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
 				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
 		// 如果没有获取对应收货地区的定义，查询有没有上级的定义
