@@ -183,13 +183,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 
 		 */	
-		clearData();
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
-		
 			return;
+		clearData();
 		SoDealVO[] billdatas = null; 
-		
 		try{
 			String whereSql = getSQL();
 			billdatas = SoDealHealper.doQuery(whereSql);
@@ -309,7 +307,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showWarnMessage("未选中数据");
 			return;
 		}
-		//表头仓库 可以编辑 ，更新表体存货
+		//表头仓库 可以编辑 ，更新表体仓库
 		for(int i=0;i<newVos.length;i++){
 			Object cbodywarehouseid =newVos[i].getParentVO().getAttributeValue("cbodywarehouseid");
 			CircularlyAccessibleValueObject[] bodys = newVos[i].getChildrenVO();

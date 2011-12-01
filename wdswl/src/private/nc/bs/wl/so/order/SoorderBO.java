@@ -60,7 +60,6 @@ public class SoorderBO {
 		if( i>0){
 			throw new BusinessException("已有下游销售出库单，请先删除再做此操作");
 		}
-		
 	}
 	
 	//销售运单作废,回写销售订单
