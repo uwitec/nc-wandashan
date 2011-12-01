@@ -81,27 +81,6 @@ public class MyClientUI extends WdsBillManagUI implements
 		super.afterEdit(e);
 	}
 	public boolean beforeEdit(BillEditEvent e){
-//		if (getBillCardPanel().isEnabled() == false) {
-//			return false;
-//		}
-//		// 这里如果单据上选择了客户，参选合同时，需要按客户过滤经销合同
-//		if ("invname".equals(e.getKey())) {
-//			String pk_cargdoc = (String) this.getBillCardPanel().getHeadItem(
-//					"pk_cargdoc").getValueObject();
-//			if (pk_cargdoc != null && pk_cargdoc.length() > 0) {
-//				// 得到合同参照
-//				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-//						.getBodyItem("invname").getComponent();
-//				// this.getBillCardPanel()
-//				// .getHeadItem("cif_pk").setDecimalDigits(iDecimalDigits);
-//				// 加上客户做为条件去过滤
-//				panel
-//						.getRefModel()
-//						.setWherePart(
-//								" pk_invbasdoc in (select pk_invbasdoc from tb_spacegoods where dr = 0 and pk_cargdoc = '"
-//										+ pk_cargdoc.toString() + "') and dr=0 ");
-//			}
-//		}
 		//项目主键	invcode
 		if("invcode".equalsIgnoreCase(e.getKey())){
 		

@@ -129,7 +129,7 @@ public class MyClientUI extends OutPubClientUI implements
 					JComponent c = getBillCardPanel().getBodyItem("ccunhuobianma").getComponent();
 					if (c instanceof UIRefPane) {
 						UIRefPane ref = (UIRefPane) c;
-			//			ref.getRefModel().addWherePart("  and 	bd_invbasdoc.def2='""'");//过滤交旧物资
+						ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
 					}
 					return true;
 				}
