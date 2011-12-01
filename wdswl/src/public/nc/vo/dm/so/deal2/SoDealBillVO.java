@@ -6,14 +6,16 @@ import nc.vo.trade.pub.HYBillVO;
 
 public class SoDealBillVO extends HYBillVO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public SoDealHeaderVo getHeader(){
 		return (SoDealHeaderVo)getParentVO();
 	}
 	public SoDealVO[] getBodyVos(){
 		return (SoDealVO[])getChildrenVO();
 	}
-	
-	
 	public static void checkData(SoDealBillVO[] bills) throws ValidationException {
 		SoDealHeaderVo head = null;
 		SoDealVO[] bodys = null;

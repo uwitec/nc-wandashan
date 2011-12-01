@@ -125,7 +125,7 @@ public class PlanDealBOUtil {
 		}
 		Map<String, UFDouble[]> invNumInfor1 = getStockBO().getSoOrderNdealNumInfor(pk_corp, strWhereSO);
 		if (invNumInfor1 == null || invNumInfor1.size() == 0) {
-			Logger.info("本次安排的存货不存在已安排未出库量");
+			Logger.info("本次安排的存货销售运单不存在已安排未出库量");
 			if (invNumInfor1 == null)
 				invNumInfor1 = new HashMap<String, UFDouble[]>();
 		}
@@ -137,7 +137,7 @@ public class PlanDealBOUtil {
 		}
 		Map<String, UFDouble[]> invNumInfor2 = getStockBO().getPlanOrderNdealNumInfor(pk_corp, strWherePlan);
 		if (invNumInfor2 == null || invNumInfor2.size() == 0) {
-			Logger.info("本次安排的存货不存在已安排未出库量");
+			Logger.info("本次安排的存货发运订单不存在已安排未出库量");
 			if (invNumInfor2 == null)
 				invNumInfor2 = new HashMap<String, UFDouble[]>();
 		}
@@ -147,7 +147,7 @@ public class PlanDealBOUtil {
 			UFDouble[] stocknum2 = invNumInfor2.get(key2);
 			if (tmpNumVO == null)
 				continue;
-			// 已安排运单占用量
+			//1. 已安排运单占用量
 			UFDouble nplannum= PuPubVO.getUFDouble_NullAsZero(null);
 			UFDouble nplanassnum= PuPubVO.getUFDouble_NullAsZero(null);
 			if(stocknums != null){
@@ -160,14 +160,9 @@ public class PlanDealBOUtil {
 				nplanassnum= nplanassnum.add(PuPubVO.getUFDouble_NullAsZero(stocknum2[1]));
 
 			}
-			tmpNumVO.setNdealnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-					: stocknums[0]);
-			tmpNumVO
-					.setNdealassnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-							: stocknums[1]);
-			tmpNumVO.setNplannum(nplannum);
-			tmpNumVO.setNplanassnum(nplanassnum);
-			// 当前可用量=库存量-已经安排的运单占用量
+			tmpNumVO.setNdealnum(nplannum);
+			tmpNumVO.setNdealassnum(nplanassnum);
+			//2.当前可用量=库存量-已经安排的运单占用量
 			tmpNumVO.setNnum(tmpNumVO.getNstocknum()
 					.sub(tmpNumVO.getNdealnum()));
 			tmpNumVO.setNassnum(tmpNumVO.getNstockassnum().sub(
@@ -180,8 +175,8 @@ public class PlanDealBOUtil {
 				tmpNumVO.setBisok(UFBoolean.FALSE);
 				String reason=" 存货"
 					+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
-					+ " 当前存量：" + tmpNumVO.getNstockassnum() + " 已安排未出库量："
-					+ tmpNumVO.getNdealassnum() + " 本次可用量："
+					+ " 当前库存量：" + tmpNumVO.getNstockassnum() + " 已安排未出库量："
+					+ tmpNumVO.getNdealassnum() + " 当前可用量："
 					+ tmpNumVO.getNassnum() + " 本次待安排总量："
 					+ tmpNumVO.getNplanassnum();
 				if(fisdate){

@@ -144,7 +144,7 @@ public class SoDealBoUtils {
 			UFDouble[] stocknum2 = invNumInfor2.get(key2);
 			if (tmpNumVO == null)
 				continue;
-			// 已安排运单占用量
+			// 1.已安排运单占用量
 			UFDouble nplannum= PuPubVO.getUFDouble_NullAsZero(null);
 			UFDouble nplanassnum= PuPubVO.getUFDouble_NullAsZero(null);
 			if(stocknums != null){
@@ -157,19 +157,14 @@ public class SoDealBoUtils {
 				nplanassnum= nplanassnum.add(PuPubVO.getUFDouble_NullAsZero(stocknum2[1]));
 
 			}
-			tmpNumVO.setNdealnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-					: stocknums[0]);
-			tmpNumVO
-					.setNdealassnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-							: stocknums[1]);
-			tmpNumVO.setNplannum(nplannum);
-			tmpNumVO.setNplanassnum(nplanassnum);
-			// 当前可用量=库存量-已经安排的运单占用量
+			tmpNumVO.setNdealnum(nplannum);
+			tmpNumVO.setNdealassnum(nplanassnum);
+			//2. 当前可用量=库存量-已经安排的运单占用量
 			tmpNumVO.setNnum(tmpNumVO.getNstocknum()
 					.sub(tmpNumVO.getNdealnum()));
 			tmpNumVO.setNassnum(tmpNumVO.getNstockassnum().sub(
 					tmpNumVO.getNdealassnum()));
-			// 如果可用量 > 本次安排量 ，标记为可安排
+			//3. 如果可用量 > 本次安排量 ，标记为可安排
 			if (tmpNumVO.getNassnum().doubleValue() > tmpNumVO.getNplanassnum()
 					.doubleValue()){
 				tmpNumVO.setBisok(UFBoolean.TRUE);

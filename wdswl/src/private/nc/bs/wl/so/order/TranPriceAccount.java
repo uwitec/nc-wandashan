@@ -120,7 +120,6 @@ public class TranPriceAccount {
 		doSavePriceInfor();
 		return billvo;
 	}
-
 	/**
 	 * 
 	 * @throws BusinessException

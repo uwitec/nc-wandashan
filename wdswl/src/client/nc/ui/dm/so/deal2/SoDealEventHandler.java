@@ -17,6 +17,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -27,6 +28,7 @@ public class SoDealEventHandler{
 	private SoDealClientUI ui = null;
 	private SoDealQryDlg m_qrypanel = null;	
 	private SoDealBillVO[] m_buffer = null;
+	private SoDealVO[] m_billdatas = null;
 	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
@@ -69,6 +71,9 @@ public class SoDealEventHandler{
 	
 	public SoDealBillVO[] getDataBuffer(){
 		return m_buffer;
+	}
+	public SoDealVO[] getDataBufferDetail(){
+		return m_billdatas;
 	}
 	
 	public void onNoSel(){
@@ -153,14 +158,14 @@ public class SoDealEventHandler{
 			return;
 
 		whereSql = getSQL();
-		SoDealVO[] billdatas = SoDealHealper.doQuery(whereSql);
-		if(billdatas == null||billdatas.length == 0){
+		m_billdatas = SoDealHealper.doQuery(whereSql);
+		if(m_billdatas == null||m_billdatas.length == 0){
 			clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
 		//对数据进行合并  按客户合并  订单日期取最小订单日期
-		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
+		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),m_billdatas);
 		clearData();
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
@@ -293,8 +298,7 @@ public class SoDealEventHandler{
 	 * @时间：2011-3-25下午02:59:20
 	 */
 	@SuppressWarnings("unchecked")
-	public void onDeal() throws Exception{
-		//安排  安排前   数据校验
+	public void onDeal() throws Exception{	
 		/**
 		 * 考虑是否特殊安排  过滤最小发货量   考虑库存现存量是否满足   直接安排   手工安排界面
 		 * 安排日志
@@ -306,12 +310,17 @@ public class SoDealEventHandler{
 			return;
 		}
 		//对数据进行一层严密校验
-		SoDealBillVO.checkData((SoDealBillVO[])newVos);
-		// SoDealHealper.doDeal((SoDealBillVO[])newVos, ui)返回值：
+		SoDealBillVO[] dealBills = (SoDealBillVO[])newVos;
+		SoDealBillVO.checkData(dealBills);
+		//安排  安排前   数据校验:赠品单不能被拆分
+		if(!checkIsGiftSpilt(dealBills)){
+			return;
+		}
+		// **SoDealHealper.doDeal((SoDealBillVO[])newVos, ui)返回值：
 		// 1.null:所有客户的发货量都未达到最小发货量
 		// 2.Object[] { isauto, null, null ,reasons}:所有客户都待安排的存货中，都包含可用量不足的存货
 		// 3.Object[] { isauto, lcust, lnum,reasons}：有需要手动安排的客户
-		Object o = SoDealHealper.doDeal((SoDealBillVO[])newVos, ui);
+		Object o = SoDealHealper.doDeal(dealBills, ui);
 		boolean flag = false;
 		UFBoolean isauto = UFBoolean.FALSE;
 		if(o != null){
@@ -357,6 +366,25 @@ public class SoDealEventHandler{
 		onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
+	/**
+	 * 
+	 * @作者：校验，赠品单是否被拆分
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-1下午02:55:46
+	 * @param dealBills
+	 */
+	private boolean checkIsGiftSpilt(SoDealBillVO[] dealBills){		
+		for(SoDealBillVO dealBill:dealBills){
+			SoDealVO[] bodys = dealBill.getBodyVos();
+			if(bodys == null || bodys.length ==0){
+				showWarnMessage("表体不能为空");
+				return false;
+			}
+			SplitBillVOs.getSplitVOs(bodys, new String[]{});
+		}
+		return true;
+	}
+
 	/**
 	 * 
 	 * @作者：lyf
