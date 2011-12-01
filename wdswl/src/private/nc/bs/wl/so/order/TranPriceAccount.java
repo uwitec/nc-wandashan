@@ -239,13 +239,13 @@ public class TranPriceAccount {
 			if(nsmall.sub(totalNum.get(0)).doubleValue()>0){
 				Integer iadjtype = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIadjtype(), 0);
 				if(iadjtype==0){//总费用
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj());
 				}else if(iadjtype==1){//每箱补贴价格
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(1), 8);
 				}else if(iadjtype ==2){//每吨补贴价格
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(0), 8);
 				}else if(iadjtype ==3){//按照最小吨数来计算总费用
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(nsmall, 8);
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(nsmall, 8);
 					nmny =  PuPubVO.getUFDouble_NullAsZero(null);
 				}
 			}
