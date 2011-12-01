@@ -54,11 +54,11 @@ public class PlanOrderBO {
 	}
 	/**
 	 * 
-	 * @throws BusinessException 
-	 * @作者：lyf
+	 * @作者：LYF
 	 * @说明：完达山物流项目 
-	 * 发运订单作废的时候，需要回减 发运计划累计安排数量
-	 * @时间：2011-3-28上午11:35:11
+	 * @时间：2011-11-30下午06:19:59
+	 * @param obj
+	 * @throws BusinessException
 	 */
 	public void reWriteSendPlan(AggregatedValueObject obj) throws BusinessException{
 		if(obj == null ||obj.getChildrenVO()==null ||obj.getChildrenVO().length==0 ){
@@ -70,7 +70,9 @@ public class PlanOrderBO {
 		StringBuffer sql = new StringBuffer();
 		for(SendorderBVO body:bodys){			
 			sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
-			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum()));
+			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum())+",");
+			sql.append(" nassdealnum = coalesce(nassdealnum,0)-");
+			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNassdealnum()));
 			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
 			sql.append(" and pk_sendplanin='"+body.getCsourcebillhid()+"'");
 			if(getBaseDAO().executeUpdate(sql.toString())==0){

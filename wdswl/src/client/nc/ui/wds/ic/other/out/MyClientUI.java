@@ -100,41 +100,27 @@ public class MyClientUI extends OutPubClientUI implements
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
-		String key = e.getKey();
-		
+		String key = e.getKey();		
 		int row = e.getRow();
-		
-		/**
-		 * @author 
-		 * 如果fistag == true  选中返回 true
-		 */
-		
-		if("ntagnum".equalsIgnoreCase(key)){
-			Object s =getBillCardPanel().getBodyValueAt(row, "fistag");
-			if("true".equals(s.toString())){
-				return true;
-			}
-			return false;
-		}
-		
-		
 		if (e.getPos() == BillItem.BODY) {
-			
+			if("ntagnum".equalsIgnoreCase(key)){
+				UFBoolean fistag = PuPubVO.getUFBoolean_NullAs(getBillCardPanel().getBodyValueAt(row, "fistag"), UFBoolean.FALSE);
+				if(fistag.booleanValue()){
+					return true;
+				}
+				return false;
+			}
 			String csourcetype = PuPubVO
 				.getString_TrimZeroLenAsNull(getBillCardPanel()
 						.getBodyValueAt(row, "csourcetype"));
 			
-			
-			
-			//如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
+			//如果是参照过来的存货不可以编辑 ，如果是自制单据可以编辑
 			if ("ccunhuobianma".equalsIgnoreCase(key)) {
-//				编辑是不可修改  zhf add 20110624
 				if(getBillOperate() == IBillOperate.OP_EDIT)
 					return false;
 				if (csourcetype != null) {
 					return false;
 				} else {
-					//
 					String pk_cargdoc = (String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
 					if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
 						showWarningMessage("前选择入库货位");
@@ -250,8 +236,8 @@ public class MyClientUI extends OutPubClientUI implements
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
 		String key=e.getKey();
-		   //修改仓库 清空货位
-		   if("srl_pk".equalsIgnoreCase(key)){
+		if(e.getPos() == BillItem.HEAD){
+			if("srl_pk".equalsIgnoreCase(key)){
 			   //仓库 为空 则 货位禁止编辑；反之 货位可编辑
 			   boolean isEditable = true;
 			   if(PuPubVO.getString_TrimZeroLenAsNull(e.getValue()) == null){
@@ -259,24 +245,21 @@ public class MyClientUI extends OutPubClientUI implements
 			   }
 			   getBillCardPanel().getHeadItem("pk_cargdoc").setEnabled(isEditable);
 			   getBillCardPanel().getHeadItem("pk_cargdoc").setValue(null);
-		   }
-		if("cdptid".equalsIgnoreCase(key)){
-		getBillCardPanel().getHeadItem("cbizid").setValue(null);	
-		}else if(key.equalsIgnoreCase("cbizid")){		
-			getBillCardPanel().execHeadTailLoadFormulas();
-		}
-		/**
-		 * @author yf
-		 * 当fistag != true ，ntagnum清空
-		 */
-		if("fistag".equalsIgnoreCase(key)){
-			int row = e.getRow();
-			Object o = e.getValue();
-			if( UFBoolean.FALSE.equals(o) ){
-				getBillCardPanel().setBodyValueAt(null,row, "ntagnum");
+			 }
+			if("cdptid".equalsIgnoreCase(key)){
+				getBillCardPanel().getHeadItem("cbizid").setValue(null);	
+			}else if(key.equalsIgnoreCase("cbizid")){		
+				getBillCardPanel().execHeadTailLoadFormulas();
+			}
+		}else{
+			if("fistag".equalsIgnoreCase(key)){//不勾选贴签的时候，贴签数量清空
+				int row = e.getRow();
+				Object o = e.getValue();
+				if( UFBoolean.FALSE.equals(o) ){
+					getBillCardPanel().setBodyValueAt(null,row, "ntagnum");
+				}
 			}
 		}
-		
 	}
 
 	@Override
@@ -294,19 +277,6 @@ public class MyClientUI extends OutPubClientUI implements
 	
 	public boolean beforeEdit(BillItemEvent e) {
 		String key = e.getItem().getKey();
-		if("pk_cargdoc".equals(key)){//出库货位
-			//仓库id
-			Object a = getBillCardPanel().getHeadItem("srl_pk").getValueObject();
-			if(a==null){
-				showWarningMessage("请选择仓库");
-				return false;
-			}
-			UIRefPane panel = (UIRefPane) this.getBillCardPanel().getHeadItem("pk_cargdoc").getComponent();
-			if (null != a && !"".equals(a)) {
-				//修改参照 条件 增加条件 指定仓库id
-				panel.getRefModel().addWherePart(" and bd_stordoc.pk_stordoc = '"+a+"' ");
-			}
-		}
 		if (e.getItem().getPos() == BillItem.HEAD) {
 			// 仓库过滤，只属于物流系统的
 			// srl_pkr 为入库仓库
@@ -319,6 +289,7 @@ public class MyClientUI extends OutPubClientUI implements
 							" and def1 = '1' and isnull(dr,0) = 0");
 				}
 			}
+			//过滤物流的仓库
 			if ("srl_pkr".equalsIgnoreCase(key)) {
 				JComponent c = getBillCardPanel().getHeadItem("srl_pkr")
 						.getComponent();
@@ -328,28 +299,42 @@ public class MyClientUI extends OutPubClientUI implements
 							" and def1 = '1' and isnull(dr,0) = 0");
 				}
 			}
+			//根据仓库过滤货位
+			if("pk_cargdoc".equals(key)){//出库货位
+				//仓库id
+				Object a = getBillCardPanel().getHeadItem("srl_pk").getValueObject();
+				if(a==null){
+					showWarningMessage("请选择仓库");
+					return false;
+				}
+				UIRefPane panel = (UIRefPane) this.getBillCardPanel().getHeadItem("pk_cargdoc").getComponent();
+				if (null != a && !"".equals(a)) {
+					//修改参照 条件 增加条件 指定仓库id
+					panel.getRefModel().addWherePart(" and bd_stordoc.pk_stordoc = '"+a+"' ");
+				}
+			}
+			// 对当前货位下的管理员进行过滤
+			if ("cwhsmanagerid".equalsIgnoreCase(key)) {
+				String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
+						"pk_cargdoc").getValueObject();
+				if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
+					showWarningMessage("前选择入库货位");
+					return false;
+				}
+				JComponent c = getBillCardPanel().getHeadItem
+				("cwhsmanagerid").getComponent();
+				if (c instanceof UIRefPane) {
+					UIRefPane ref = (UIRefPane) c;
+					ref.getRefModel().addWherePart(
+							"  and tb_stockstaff.pk_cargdoc='" + pk_cargdoc + "' ");
+				}
+				return true;
+			}
 		}
 		
 		
 
-		// 对当前货位下的管理员进行过滤
-		if ("cwhsmanagerid".equalsIgnoreCase(key)) {
-			String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
-					"pk_cargdoc").getValueObject();
-			if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
-				showWarningMessage("前选择入库货位");
-				return false;
-			}
-			JComponent c = getBillCardPanel().getHeadItem
-
-			("cwhsmanagerid").getComponent();
-			if (c instanceof UIRefPane) {
-				UIRefPane ref = (UIRefPane) c;
-				ref.getRefModel().addWherePart(
-						"  and tb_stockstaff.pk_cargdoc='" + pk_cargdoc + "' ");
-			}
-			return true;
-		}
+	
 		return true;
 	}
 

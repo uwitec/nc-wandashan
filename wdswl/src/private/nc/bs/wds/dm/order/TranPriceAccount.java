@@ -300,11 +300,11 @@ public class TranPriceAccount {
 		if (pk_custman == null || "".equalsIgnoreCase(pk_custman)) {
 			throw new BusinessException("未取到收货仓库信息");
 		}
-		// 获得分仓与客商的绑定VO
+		// 获得分仓与客商(分仓)的绑定VO
 		getBingVo(pk_outwhouse, pk_custman);
 		this.reareaid = bingVO.getCustareaid();
 		if (reareaid == null || "".equalsIgnoreCase(reareaid)) {
-			throw new BusinessException("请在分仓客商绑定节点，维护分仓所属地区");
+			throw new BusinessException("维护分仓所属地区");
 		}
 		head.setCustareaid(reareaid);
 		//2 根据承运商查询 实际折合标准，并计算实际折合吨数
@@ -322,7 +322,7 @@ public class TranPriceAccount {
 				UFDouble tuneunits = PuPubVO.getUFDouble_NullAsZero(hvo.getTuneunits()).div(1000);//实际换算率= （公斤/箱）除以 1000
 				ArrayList<SendorderBVO> list = new ArrayList<SendorderBVO>();
 				UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(null);//运单中属于该折合标准的存货总量（箱数）
-				UFDouble nminhsl = tuneunits;//运单中属于该折合标准的存货最小换算率
+				UFDouble nminhsl = new UFDouble(1);;//运单中属于该折合标准的存货最小换算率
 				if(bvos !=null && bvos.length>0 ){
 					for(ZhbzBVO bvo:bvos){
 						String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getPk_invmandoc());
@@ -494,7 +494,7 @@ public class TranPriceAccount {
 				.executeQuery(sql,
 						new BeanListProcessor(TbStorcubasdocVO.class));
 		if (list == null || list.size() == 0) {
-			throw new BusinessException("请维护客商与分仓的绑定关系");
+			throw new BusinessException("请维护分仓与分仓的绑定关系");
 		}
 		this.bingVO = (TbStorcubasdocVO) list.get(0);
 	}
@@ -537,7 +537,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0) = 0 or b.ifw =1) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0) = 0 or b.ifw =2) ");// 应运范围过滤
 		if(fisbigflour){
 			sqlb.append(" and isnull(fiseffect,'N')='Y'");
 		}else{

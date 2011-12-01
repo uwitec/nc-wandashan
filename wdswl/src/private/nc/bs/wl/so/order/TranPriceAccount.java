@@ -299,7 +299,7 @@ public class TranPriceAccount {
 				UFDouble tuneunits = PuPubVO.getUFDouble_NullAsZero(hvo.getTuneunits()).div(1000);//实际换算率= （公斤/箱）除以 1000
 				ArrayList<SoorderBVO> list = new ArrayList<SoorderBVO>();
 				UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(null);//运单中属于该折合标准的存货总量（箱数）
-				UFDouble nminhsl = tuneunits;//运单中属于该折合标准的存货最小换算率
+				UFDouble nminhsl = new UFDouble(1);//运单中属于该折合标准的存货最小换算率
 				if(bvos !=null && bvos.length>0 ){
 					for(ZhbzBVO bvo:bvos){
 						String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getPk_invmandoc());

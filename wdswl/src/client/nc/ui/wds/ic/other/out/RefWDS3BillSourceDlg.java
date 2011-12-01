@@ -86,25 +86,17 @@ public class RefWDS3BillSourceDlg  extends WdsBillSourceDLG {
 	@Override
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
-		//表单参照交换vo添加pk_corp
 		hsql.append(" wds_sendorder.pk_corp = '"+getPkCorp()+"' and");
 		hsql.append(" isnull(wds_sendorder.dr,0)=0 and wds_sendorder.vbillstatus =8 and isnull(iprintcount,0)>0");//自由态，并且打印过的 
-		hsql.append(" and isnull(wds_sendorder.fisended,'N')='N'");
-		//hsql.append(" isnull(wds_sendorder.dr,0)=0 and wds_sendorder.vbillstatus =1 ");
+		hsql.append(" and isnull(wds_sendorder.fisended,'N')='N'");//是否已经发运（冻结）
 		if(!isStock){
 			hsql.append("and wds_sendorder.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
 		hsql.append("and wds_sendorder.pk_sendorder in");//只能看到包含当前登录人绑定货位下存货的单据
-	//	if(inv_Pks !=null && inv_Pks.length>0){
-			hsql.append("(");
-			hsql.append("select distinct pk_sendorder from wds_sendorder_b where isnull(wds_sendorder_b.dr,0)=0 ");
-			hsql.append(" and coalesce(ndealnum,0)-coalesce(noutnum,0)>0");//安排数量-出库数量>0
-	//		String sub = getTempTableUtil().getSubSql(inv_Pks);
-			hsql.append(" and pk_invmandoc in ");
-	//		hsql.append(")");
-	//	}else{
-	//		hsql.append("('')");
-	//	}
+		hsql.append("(");
+		hsql.append("select distinct pk_sendorder from wds_sendorder_b where isnull(wds_sendorder_b.dr,0)=0 ");
+		hsql.append(" and coalesce(ndealnum,0)-coalesce(noutnum,0)>0");//安排数量-出库数量>0
+		hsql.append(" and pk_invmandoc in ");
 		return hsql.toString();
 	}
 	

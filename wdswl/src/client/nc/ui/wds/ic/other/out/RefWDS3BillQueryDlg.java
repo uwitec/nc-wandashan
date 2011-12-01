@@ -24,19 +24,13 @@ public class RefWDS3BillQueryDlg extends WdsBillQueryDlg{
 		super(parent,null,pk_corp,
 				WdsWlPubConst.OTHER_OUT_FUNCODE,userid,null,WdsWlPubConst.OTHER_OUT_REFWDS3_NODECODE);
 	}
-
-
-
-	
 	@Override
 	public String getWhereSQL() {
-		String sql=super.getWhereSQL();
-		
+		String sql=super.getWhereSQL();		
 		if(sql==null){
 	      return null;
 		}
 		if(sql.contains("wds_sendorder.vbillstatus = 0")){
-			
 		  return sql.replace("wds_sendorder.vbillstatus = 0", "wds_sendorder.vbillstatus = 8");
 		}
 		return sql;

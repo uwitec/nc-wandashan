@@ -294,6 +294,8 @@ public class OutPubClientUI extends MutiChildForOutInUI{
 	}
 	
 	public void afterHeadCargDoc(Object pk_cargdoc){
+		//清空库管员
+		getBillCardPanel().setHeadItem("cwhsmanagerid", null);
 		//表体重新赋值[货位]
 		int row = getBillCardPanel().getBillTable().getRowCount();
 		if(row < 0 ){

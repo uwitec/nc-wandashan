@@ -483,6 +483,9 @@ public class LockTrayBO {
 		String key = null;
 		for(TbOutgeneralBVO body:bodys){
 			ltray = body.getTrayInfor();
+			if(ltray == null){
+				throw new BusinessException("获取表体托盘信息失败");
+			}
 			for(TbOutgeneralTVO tray:ltray){
 				if(isLock(tray.getCdt_pk(), body.getCinventoryid(), body.getVbatchcode()).booleanValue()){
 					key = WdsWlPubTool.getString_NullAsTrimZeroLen(tray.getCdt_pk())+","+WdsWlPubTool.getString_NullAsTrimZeroLen(tray.getVbatchcode());

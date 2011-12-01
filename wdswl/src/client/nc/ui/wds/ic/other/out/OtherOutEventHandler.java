@@ -61,11 +61,6 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				break;
 			case ISsButtun.zdqh:
 				valudateWhereYeqian();
-				//拣货 存货唯一校验
-//				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-//						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-//						new String[]{"ccunhuobianma","batchcode"},
-//						new String[]{"存货编码","批次号"});
 				onzdqh();
 				
 				break;
@@ -80,12 +75,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefSendOrder:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDS3);
-				onBillRef();
-				//设置 仓库和货位的是否可编辑，总仓可以，分仓不可以
-				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
-				//设置参照出库中出库仓库为空，则赋值默认仓库为当前操作员仓库
-				setInitWarehouse("srl_pk");
-				
+				onBillRef();				
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefWDSC:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSC);
@@ -110,19 +100,15 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	   }
 	}
 	@Override
-	public void onBillRef() throws Exception {
-		super.onBillRef();
+	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
+		// TODO Auto-generated method stub
+		super.setRefData(vos);
+		//设置 仓库和货位的是否可编辑，总仓可以，分仓不可以
+		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
+		//设置参照出库中出库仓库为空，则赋值默认仓库为当前操作员仓库
+		setInitWarehouse("srl_pk");
 		//设置单据号
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vbillno", ((MyClientUI)getBillUI()).getBillNo());
-//		AggregatedValueObject[] vos = PfUtilClient.getRetOldVos();
-//		AggregatedValueObject vo = vos[0];
-//		CgqyHVO headVO = (CgqyHVO) vo.getParentVO();
-//		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vnote", "取货单位："+
-//				//headVO.getAttributeValue("ccusmandoc")+
-//				";取货人："
-//				//+vo.getParentVO().getAttributeValue("ccustomer")
-//				);
-		//增行按钮去掉
 		ButtonObject btnobj = getBillUI().getButtonManager().getButton(IBillButton.AddLine);
 		if (btnobj != null) {
 			btnobj.setEnabled(false);
@@ -130,7 +116,6 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		}
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("is_yundan", null);
 	}
-
 	@Override
 	protected UIDialog createQueryUI() {
 		// TODO Auto-generated method stub

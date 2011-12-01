@@ -6,16 +6,6 @@ import nc.ui.trade.button.IBillButton;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.wl.pub.Button.CommonButtonDef;
 
-//import nc.bs.logging.Logger;
-//import nc.ui.pub.ButtonObject;
-//import nc.ui.pub.linkoperate.ILinkQueryData;
-//import nc.ui.trade.bill.AbstractManageController;
-//import nc.ui.trade.bill.BillTemplateWrapper;
-//import nc.ui.trade.button.IBillButton;
-//import nc.vo.pub.AggregatedValueObject;
-//import nc.vo.pub.SuperVO;
-//import nc.vo.trade.button.ButtonVO;
-//import nc.vo.wl.pub.Button.CommonButtonDef;
 
 public abstract class MutiChildForOutInUI extends MutilChildUI{
 
