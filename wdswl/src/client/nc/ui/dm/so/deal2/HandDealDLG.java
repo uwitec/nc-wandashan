@@ -13,8 +13,8 @@ import javax.swing.WindowConstants;
 import nc.ui.pub.beans.UIButton;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIPanel;
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
+import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 
 /**

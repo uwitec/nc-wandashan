@@ -165,7 +165,7 @@ public class SoDealBoUtils {
 			tmpNumVO.setNassnum(tmpNumVO.getNstockassnum().sub(
 					tmpNumVO.getNdealassnum()));
 			//3. 如果可用量 > 本次安排量 ，标记为可安排
-			if (tmpNumVO.getNassnum().doubleValue() > tmpNumVO.getNplanassnum()
+			if (tmpNumVO.getNassnum().doubleValue() >=tmpNumVO.getNplanassnum()
 					.doubleValue()){
 				tmpNumVO.setBisok(UFBoolean.TRUE);
 			}else{

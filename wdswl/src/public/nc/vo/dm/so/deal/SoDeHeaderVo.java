@@ -1,13 +1,13 @@
 package nc.vo.dm.so.deal;
 
-import nc.vo.pub.SuperVO;
+import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 
-public class SoDeHeaderVo extends SuperVO {
+public class SoDeHeaderVo extends SoDealHeaderVo {
 	
 //	需要的字段 客户id  订单日期（合并前订单的最小日期）  是否特殊安排 销售组织 销售公司
 	
@@ -84,24 +84,6 @@ public class SoDeHeaderVo extends SuperVO {
 
 	public void setBisspecial(UFBoolean bisspecial) {
 		this.bisspecial = bisspecial;
-	}
-
-	@Override
-	public String getPKFieldName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getParentPKFieldName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getTableName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public void validate() throws ValidationException {

@@ -14,7 +14,6 @@ import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
-import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -304,7 +303,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 分单规则：计划号  发货站 收货站  存货   单据日期   安排日期
 		 * 
 		 */
-		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDealHeaderVo.class.getName(), SoDealVO.class.getName());
+		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDeHeaderVo.class.getName(), SoDealVO.class.getName());
 		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
 		if(newVos == null || newVos.length == 0){
 			showWarnMessage("未选中数据");
@@ -399,13 +398,13 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 					String csaleid2 = dealvo.getCsaleid();
 					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
 					if(csaleid.equalsIgnoreCase(csaleid2)){
-						count++;
+						count= count+1;
 						if(blargessflag){
 							fisgift = blargessflag;
 						}
 					}
 				}
-				if(fisgift && (vos.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
+				if(fisgift && (splitBodys.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
 					throw new BusinessException("赠品必须整单安排，不能拆单安排");
 				}
 			}

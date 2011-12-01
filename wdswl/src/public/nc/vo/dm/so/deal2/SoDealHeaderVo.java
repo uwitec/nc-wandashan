@@ -1,11 +1,11 @@
 package nc.vo.dm.so.deal2;
 
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.so.so001.SaleorderHVO;
 
 /**
  * 
@@ -14,7 +14,7 @@ import nc.vo.scm.pu.PuPubVO;
  *
  */
 
-public class SoDealHeaderVo extends SuperVO {
+public class SoDealHeaderVo extends SaleorderHVO {
 	
 //	需要的字段 客户id  订单日期（合并前订单的最小日期）  是否特殊安排 销售组织 销售公司
 	
@@ -84,23 +84,6 @@ public class SoDealHeaderVo extends SuperVO {
 		this.isonsell = isonsell;
 	}
 
-	@Override
-	public String getPKFieldName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getParentPKFieldName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getTableName() {//非实体vo
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	public void validate() throws ValidationException {
 		if(PuPubVO.getString_TrimZeroLenAsNull(getCcustomerid())==null){

@@ -12,6 +12,7 @@ import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -22,7 +23,6 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.so.so001.SaleorderHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class SoDealBO {
@@ -210,10 +210,10 @@ public class SoDealBO {
 		}
 	}
 
-	private SaleorderHVO getPlanHead(SoDealVO dealVo) {
+	private SoDeHeaderVo getPlanHead(SoDealVO dealVo) {
 		if (dealVo == null)
 			return null;
-		SaleorderHVO head = new SaleorderHVO();
+		SoDeHeaderVo head = new SoDeHeaderVo();
 		String[] names = head.getAttributeNames();
 		for (String name : names) {
 			head.setAttributeValue(name, dealVo.getAttributeValue(name));

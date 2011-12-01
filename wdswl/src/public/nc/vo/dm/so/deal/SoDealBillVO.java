@@ -1,6 +1,4 @@
 package nc.vo.dm.so.deal;
-
-import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.pub.HYBillVO;
 
@@ -13,8 +11,8 @@ public class SoDealBillVO extends HYBillVO {
 	private CircularlyAccessibleValueObject parent = null;
 	private CircularlyAccessibleValueObject[] bodys = null;
 
-	public SoDealHeaderVo getHeader(){
-		return (SoDealHeaderVo)getParentVO();
+	public SoDeHeaderVo getHeader(){
+		return (SoDeHeaderVo)getParentVO();
 	}
 	public SoDealVO[] getBodyVos(){
 		return (SoDealVO[])getChildrenVO();

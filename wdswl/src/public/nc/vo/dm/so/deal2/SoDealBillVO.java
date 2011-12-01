@@ -1,14 +1,9 @@
 package nc.vo.dm.so.deal2;
 
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.trade.pub.HYBillVO;
 
 public class SoDealBillVO extends HYBillVO {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public SoDealHeaderVo getHeader(){
 		return (SoDealHeaderVo)getParentVO();

@@ -7,9 +7,9 @@ import java.util.List;
 
 import nc.ui.pub.ToftPanel;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
+import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.VOStatus;

@@ -19,9 +19,9 @@ import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.util.SQLHelper;
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
+import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -31,7 +31,6 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.so.so001.SaleorderHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -497,10 +496,10 @@ public class SoDealCol {
 		}
 	}
 	
-	private SaleorderHVO getPlanHead(SoDealVO dealVo) {
+	private SoDealHeaderVo getPlanHead(SoDealVO dealVo) {
 		if (dealVo == null)
 			return null;
-		SaleorderHVO head = new SaleorderHVO();
+		SoDealHeaderVo head = new SoDealHeaderVo();
 		String[] names = head.getAttributeNames();
 		for (String name : names) {
 			head.setAttributeValue(name, dealVo.getAttributeValue(name));

@@ -8,9 +8,9 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.wl.pub.FilterNullBody;
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
+import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -398,13 +398,13 @@ public class SoDealEventHandler{
 					String csaleid2 = dealvo.getCsaleid();
 					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
 					if(csaleid.equalsIgnoreCase(csaleid2)){
-						count++;
+						count= count+1;
 						if(blargessflag){
 							fisgift = blargessflag;
 						}
 					}
 				}
-				if(fisgift && (vos.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
+				if(fisgift && (splitBodys.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
 					throw new BusinessException("赠品必须整单安排，不能拆单安排");
 				}
 			}

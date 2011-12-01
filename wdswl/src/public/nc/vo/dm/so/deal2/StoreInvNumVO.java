@@ -1,8 +1,6 @@
 package nc.vo.dm.so.deal2;
 
 import java.util.ArrayList;
-
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;

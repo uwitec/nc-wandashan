@@ -2,8 +2,8 @@ package nc.ui.dm.so.deal2;
 
 import java.util.List;
 
-import nc.vo.dm.so.deal.SoDealVO;
 import nc.vo.dm.so.deal2.SoDealBillVO;
+import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 
 public class HandDataBuffer {
