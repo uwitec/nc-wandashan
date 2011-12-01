@@ -271,6 +271,9 @@ public class TranPriceAccount {
 					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(1), 8);
 				}else if(iadjtype ==2){//每吨补贴价格
 					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(0), 8);
+				}else if(iadjtype ==3){//按照最小吨数来计算总费用
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(nsmall, 8);
+					nmny =  PuPubVO.getUFDouble_NullAsZero(null);
 				}
 			}
 			head.setNtransmny(nmny.add(nadjmny, 8));
@@ -660,7 +663,7 @@ public class TranPriceAccount {
 		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =2) ");// 应运范围过滤
 		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());    //最小数量
 		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());      //最大数量
-		sqlb.append(" and b.pk_replace='" + reareaid + "'");      // 收货地
+		sqlb.append(" and b.pk_replace='" + reareaid + "'");      //  收货地
 		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
 				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
 		// 如果没有获取对应收货地区的定义，查询有没有上级的定义
