@@ -41,6 +41,8 @@ public class TranspriceBVO extends SuperVO {
 	public String pk_replace;
 	//运价
 	public UFDouble ntransprice;
+	//运费计算类型-当前只有分仓运价表使用
+	public Integer icoltype;
 	//零散吨数
 	public UFDouble nsmallnum;
 	//零散运价
@@ -59,6 +61,7 @@ public class TranspriceBVO extends SuperVO {
 	public UFDouble nadjrate;
 	// 应用范围
 	public Integer ifw;
+	
 	
 	
 	//预留字段
@@ -132,89 +135,6 @@ public class TranspriceBVO extends SuperVO {
 	public String csourcetype;
 	public String csourcebillhid;
 	public String csourcebillbid;
-
-	public static final String IFW = "ifw";
-	public static final String IADJTYPE = "iadjtype";
-	public static final String RESERVE5 = "reserve5";
-	public static final String VLASTBILLROWID = "vlastbillrowid";
-	public static final String CSOURCEBILLHID = "csourcebillhid";
-	public static final String VDEF4 = "vdef4";
-	public static final String VDEF18 = "vdef18";
-	public static final String PK_WDS_TRANSPRICE_H = "pk_wds_transprice_h";
-	public static final String CSOURCETYPE = "csourcetype";
-	public static final String NPRICEADJ = "npriceadj";
-	public static final String DR = "dr";
-	public static final String VDEF16 = "vdef16";
-	public static final String VDEF17 = "vdef17";
-	public static final String VDEF12 = "vdef12";
-	public static final String RESERVE12 = "reserve12";
-	public static final String PK_DEFDOC11 = "pk_defdoc11";
-	public static final String TS = "ts";
-	public static final String CSOURCEBILLCODE = "csourcebillcode";
-	public static final String RESERVE6 = "reserve6";
-	public static final String PK_DEFDOC10 = "pk_defdoc10";
-	public static final String PK_DEFDOC6 = "pk_defdoc6";
-	public static final String RESERVE14 = "reserve14";
-	public static final String VDEF19 = "vdef19";
-	public static final String VLASTBILLCODE = "vlastbillcode";
-	public static final String DENDDATE = "denddate";
-	public static final String RESERVE10 = "reserve10";
-	public static final String PK_DEFDOC20 = "pk_defdoc20";
-	public static final String PK_DEPLACE = "pk_deplace";
-	public static final String VDEF3 = "vdef3";
-	public static final String VDEF13 = "vdef13";
-	public static final String PK_DEFDOC3 = "pk_defdoc3";
-	public static final String PK_DEFDOC12 = "pk_defdoc12";
-	public static final String RESERVE1 = "reserve1";
-	public static final String VLASTBILLID = "vlastbillid";
-	public static final String RESERVE16 = "reserve16";
-	public static final String PK_DEFDOC2 = "pk_defdoc2";
-	public static final String RESERVE15 = "reserve15";
-	public static final String PK_DEFDOC7 = "pk_defdoc7";
-	public static final String PK_DEFDOC17 = "pk_defdoc17";
-	public static final String RESERVE2 = "reserve2";
-	public static final String VDEF10 = "vdef10";
-	public static final String VDEF5 = "vdef5";
-	public static final String PK_DEFDOC15 = "pk_defdoc15";
-	public static final String VDEF11 = "vdef11";
-	public static final String RESERVE4 = "reserve4";
-	public static final String NTRANSPRICE = "ntransprice";
-	public static final String NSMALLNUMM = "nsmallnum";
-	public static final String NSMLLPRICE = "nsmallprice";
-	public static final String NADJUSTNUM = "nadjustnum";	
-	public static final String PK_DEFDOC16 = "pk_defdoc16";
-	public static final String VDEF7 = "vdef7";
-	public static final String NMINDISTANCE = "nmindistance";
-	public static final String PK_DEFDOC13 = "pk_defdoc13";
-	public static final String NADJRATE = "nadjrate";
-	public static final String VDEF20 = "vdef20";
-	public static final String VDEF2 = "vdef2";
-	public static final String RESERVE11 = "reserve11";
-	public static final String VMEMO = "vmemo";
-	public static final String PK_DEFDOC18 = "pk_defdoc18";
-	public static final String VDEF1 = "vdef1";
-	public static final String PK_DEFDOC9 = "pk_defdoc9";
-	public static final String NMAXDISTANCE = "nmaxdistance";
-	public static final String RESERVE3 = "reserve3";
-	public static final String CSOURCEBILLBID = "csourcebillbid";
-	public static final String PK_REPLACE = "pk_replace";
-	public static final String PK_DEFDOC1 = "pk_defdoc1";
-	public static final String PK_DEFDOC19 = "pk_defdoc19";
-	public static final String VDEF14 = "vdef14";
-	public static final String PK_DEFDOC4 = "pk_defdoc4";
-	public static final String RESERVE13 = "reserve13";
-	public static final String PK_DEFDOC5 = "pk_defdoc5";
-	public static final String VLASTBILLTYPE = "vlastbilltype";
-	public static final String RESERVE8 = "reserve8";
-	public static final String RESERVE9 = "reserve9";
-	public static final String VDEF9 = "vdef9";
-	public static final String VDEF8 = "vdef8";
-	public static final String PK_DEFDOC8 = "pk_defdoc8";
-	public static final String RESERVE7 = "reserve7";
-	public static final String VDEF6 = "vdef6";
-	public static final String VDEF15 = "vdef15";
-	public static final String PK_DEFDOC14 = "pk_defdoc14";
-	public static final String PK_WDS_TRANSPRICE_B = "pk_wds_transprice_b";
 
 	public Integer getIfw() {
 		return ifw;
@@ -2209,15 +2129,19 @@ public class TranspriceBVO extends SuperVO {
 		this.nsmallprice = nsmallprice;
 	}
 
-	public static String getNSMLLPRICE() {
-		return NSMLLPRICE;
-	}
-
 	public UFDouble getNadjustnum() {
 		return nadjustnum;
 	}
 
 	public void setNadjustnum(UFDouble nadjustnum) {
 		this.nadjustnum = nadjustnum;
+	}
+
+	public Integer getIcoltype() {
+		return icoltype;
+	}
+
+	public void setIcoltype(Integer icoltype) {
+		this.icoltype = icoltype;
 	}
 }

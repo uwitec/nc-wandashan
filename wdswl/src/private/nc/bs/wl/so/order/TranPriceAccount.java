@@ -226,14 +226,14 @@ public class TranPriceAccount {
 				head.setNtransmny(nprice.multiply(nnum, 8));
 			}
 		}else{
-			Integer ifw = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIfw(), 0);
+			Integer icoltype = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIcoltype(), 0);
 			UFDouble nmny = PuPubVO.getUFDouble_NullAsZero(null);
 			UFDouble nadjmny = PuPubVO.getUFDouble_NullAsZero(null);
-			if(ifw==0){//总费用
+			if(icoltype==0){//总费用
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
-			}else if(ifw==1){//每箱运价
+			}else if(icoltype==1){//每箱运价
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
-			}else if(ifw ==2){//每吨运价
+			}else if(icoltype ==2){//每吨运价
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
 			}
 			UFDouble nsmall = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNsmallnum());
@@ -514,7 +514,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0) = 0 or b.ifw =1) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0) = 0 or isnull(b.ifw,0) =1) ");// 应运范围过滤
 		sqlb.append(" and h.dstartdate <= '" + date + "' and h.denddate >= '"
 				+ date + "'");
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");
@@ -573,7 +573,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =1) ");// 应运范围过滤
 		if (PuPubVO.getString_TrimZeroLenAsNull(getPricePeriodWhereSql()) != null)// 箱数区间过滤
 			sqlb.append(" and " + getPricePeriodWhereSql());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");
@@ -630,7 +630,7 @@ public class TranPriceAccount {
 		sqlb.append(" and h.pk_billtype = '" + pricetype + "'");// 运价表单据类型
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =1) ");// 应运范围过滤
 		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
 		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");

@@ -252,14 +252,14 @@ public class TranPriceAccount {
 				head.setNtransmny(nprice.multiply(nnum, 8));
 			}
 		}else{
-			Integer ifw = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIfw(), 0);
+			Integer icoltype = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIcoltype(), 0);
 			UFDouble nmny = null;
 			UFDouble nadjmny = null;
-			if(ifw==0){//总费用
+			if(icoltype==0){//总费用
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
-			}else if(ifw==1){//每箱运价
+			}else if(icoltype==1){//每箱运价
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
-			}else if(ifw ==2){//每吨运价
+			}else if(icoltype ==2){//每吨运价
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
 			}
 			UFDouble nsmall = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNsmallnum());
@@ -537,7 +537,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0) = 0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0) = 0 or isnull(b.ifw,0) =2) ");// 应运范围过滤
 		if(fisbigflour){
 			sqlb.append(" and isnull(fiseffect,'N')='Y'");
 		}else{
@@ -601,7 +601,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =2) ");// 应运范围过滤
 		if (PuPubVO.getString_TrimZeroLenAsNull(getPricePeriodWhereSql()) != null)// 箱数区间过滤
 			sqlb.append(" and " + getPricePeriodWhereSql());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");
@@ -650,16 +650,14 @@ public class TranPriceAccount {
 			sqlb.append(" b." + name + ",");
 		}
 		sqlb.append(" 'aaa'");
-		sqlb
-				.append("from wds_transprice_h h inner join wds_transprice_b  b on b.pk_wds_transprice_h = h.pk_wds_transprice_h ");
-		sqlb
-				.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and vbillstatus = "
+		sqlb.append("from wds_transprice_h h inner join wds_transprice_b  b on b.pk_wds_transprice_h = h.pk_wds_transprice_h ");
+		sqlb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and vbillstatus = "
 						+ IBillStatus.CHECKPASS);
 		sqlb.append(" and h.pk_billtype = '" + pricetype + "'");// 运价表单据类型
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
-		sqlb.append(" and (isnull(b.ifw,0)=0 or b.ifw =2) ");// 应运范围过滤
+		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =2) ");// 应运范围过滤
 		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
 		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");      // 收货地
