@@ -263,14 +263,14 @@ public class TranPriceAccount {
 				nmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
 			}
 			UFDouble nsmall = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNsmallnum());
-			if(nsmall.sub(totalNum.get(0)).doubleValue()>0){
+			if(nsmall.sub(totalNum.get(0)).doubleValue()>0){  //判断发货数量是否大于最小发货数量
 				Integer iadjtype = PuPubVO.getInteger_NullAs(curTranpriceBvo.getIadjtype(), 0);
 				if(iadjtype==0){//总费用
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice());
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj());//	npriceadj   追加零带
 				}else if(iadjtype==1){//每箱补贴价格
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(1), 8);
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(1), 8);
 				}else if(iadjtype ==2){//每吨补贴价格
-					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNtransprice()).multiply(totalNum.get(0), 8);
+					nadjmny = PuPubVO.getUFDouble_NullAsZero(curTranpriceBvo.getNpriceadj()).multiply(totalNum.get(0), 8);
 				}
 			}
 			head.setNtransmny(nmny.add(nadjmny, 8));
@@ -658,8 +658,8 @@ public class TranPriceAccount {
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
 		sqlb.append(" and (isnull(b.ifw,0)=0 or isnull(b.ifw,0) =2) ");// 应运范围过滤
-		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());
-		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());
+		sqlb.append(" and h.nmincase <= " + totalNum.get(0).doubleValue());    //最小数量
+		sqlb.append(" and h.nmaxcase > " + totalNum.get(0).doubleValue());      //最大数量
 		sqlb.append(" and b.pk_replace='" + reareaid + "'");      // 收货地
 		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
 				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
