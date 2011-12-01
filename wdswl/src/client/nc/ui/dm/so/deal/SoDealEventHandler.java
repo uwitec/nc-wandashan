@@ -12,10 +12,11 @@ import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.FilterNullBody;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
+import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
-import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
@@ -61,7 +62,12 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 
 	public void onButtonClicked(String btnTag){
 		if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL)){
-			onDeal();
+			try {
+				onDeal();
+			} catch (BusinessException e) {
+				e.printStackTrace();
+				showErrorMessage(e.getMessage());
+			}
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO)){
 			onNoSel();
 		}else if(btnTag.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELALL)){
@@ -282,12 +288,13 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	}
 	/**
 	 * 
+	 * @throws BusinessException 
 	 * @作者：zhf
 	 * @说明：完达山物流项目 
 	 * 发运计划  安排按钮处理方法
 	 * @时间：2011-3-25下午02:59:20
 	 */
-	public void onDeal(){
+	public void onDeal() throws BusinessException{
 		/**
 		 * 数据校验
 		 * 过滤掉本次安排数量为0的行  
@@ -303,6 +310,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showWarnMessage("未选中数据");
 			return;
 		}
+		//表头仓库 可以编辑 ，更新表体存货
 		for(int i=0;i<newVos.length;i++){
 			Object cbodywarehouseid =newVos[i].getParentVO().getAttributeValue("cbodywarehouseid");
 			CircularlyAccessibleValueObject[] bodys = newVos[i].getChildrenVO();
@@ -312,6 +320,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				}
 			}
 		}
+		//校验只有相同的客户可以合单
 		CircularlyAccessibleValueObject[][]  splitVos = SplitBillVOs.getSplitVOs(WdsWlPubTool.getParentVOFromAggBillVo(newVos, SoDeHeaderVo.class), new String[]{"ccustomerid"});
 		if(splitVos !=null && splitVos.length>1){
 			showErrorMessage("只能安排相同的客户合单");
@@ -322,6 +331,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
+		//安排  安排前   数据校验:赠品单不能被拆分
+		checkIsGiftSpilt((SoDealBillVO[])newVos);
 		ArrayList<String> corder_bids = new ArrayList<String>();
 		for(int i=0;i<ldata.size();i++){
 			String corder_bid = (String) ldata.get(i).getAttributeValue("corder_bid");
@@ -354,6 +365,52 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		clearData();
 		setDate(left.toArray( new SoDealVO[0]));
 		ui.showHintMessage("安排已经完成...");
+	}
+	
+	/**
+	 * 
+	 * @作者：校验，赠品单是否被拆分
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-1下午02:55:46
+	 * @param dealBills
+	 * @throws BusinessException 
+	 */
+	private void checkIsGiftSpilt(SoDealBillVO[] dealBills) throws BusinessException{		
+		for(SoDealBillVO dealBill:dealBills){
+			SoDealVO[] bodys = dealBill.getBodyVos();
+			if(bodys == null || bodys.length ==0){
+				throw  new BusinessException("表体不能为空");
+			}
+			//将表体数据按照订单分单
+			CircularlyAccessibleValueObject[][] vos = SplitBillVOs.getSplitVOs(bodys, new String[]{"csaleid"});
+			if(vos == null || vos.length ==0){
+				return;
+			}
+			//判断赠品是否拆单
+			for(int i=0;i<vos.length;i++){
+				SoDealVO[] splitBodys =(SoDealVO[])vos[i];
+				String csaleid = splitBodys[0].getCsaleid();
+				if(csaleid == null || "".equalsIgnoreCase(csaleid)){
+					continue;
+				}
+				int count =0;
+				boolean fisgift = false;
+				for(SoDealVO dealvo:getDataBuffer()){//跟缓存中的数据比较
+					String csaleid2 = dealvo.getCsaleid();
+					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
+					if(csaleid.equalsIgnoreCase(csaleid2)){
+						count++;
+						if(blargessflag){
+							fisgift = blargessflag;
+						}
+					}
+				}
+				if(fisgift && (vos.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
+					throw new BusinessException("赠品必须整单安排，不能拆单安排");
+				}
+			}
+		}
+
 	}
 	public void bodyRowChange(BillEditEvent e) {		
 	}

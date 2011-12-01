@@ -13,6 +13,8 @@ import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
@@ -313,9 +315,7 @@ public class SoDealEventHandler{
 		SoDealBillVO[] dealBills = (SoDealBillVO[])newVos;
 		SoDealBillVO.checkData(dealBills);
 		//安排  安排前   数据校验:赠品单不能被拆分
-		if(!checkIsGiftSpilt(dealBills)){
-			return;
-		}
+		checkIsGiftSpilt(dealBills);
 		// **SoDealHealper.doDeal((SoDealBillVO[])newVos, ui)返回值：
 		// 1.null:所有客户的发货量都未达到最小发货量
 		// 2.Object[] { isauto, null, null ,reasons}:所有客户都待安排的存货中，都包含可用量不足的存货
@@ -372,17 +372,44 @@ public class SoDealEventHandler{
 	 * @说明：完达山物流项目 
 	 * @时间：2011-12-1下午02:55:46
 	 * @param dealBills
+	 * @throws BusinessException 
 	 */
-	private boolean checkIsGiftSpilt(SoDealBillVO[] dealBills){		
+	private void checkIsGiftSpilt(SoDealBillVO[] dealBills) throws BusinessException{		
 		for(SoDealBillVO dealBill:dealBills){
 			SoDealVO[] bodys = dealBill.getBodyVos();
 			if(bodys == null || bodys.length ==0){
-				showWarnMessage("表体不能为空");
-				return false;
+				throw  new BusinessException("表体不能为空");
 			}
-			SplitBillVOs.getSplitVOs(bodys, new String[]{});
+			//将表体数据按照订单分单
+			CircularlyAccessibleValueObject[][] vos = SplitBillVOs.getSplitVOs(bodys, new String[]{"csaleid"});
+			if(vos == null || vos.length ==0){
+				return;
+			}
+			//判断赠品是否拆单
+			for(int i=0;i<vos.length;i++){
+				SoDealVO[] splitBodys =(SoDealVO[])vos[i];
+				String csaleid = splitBodys[0].getCsaleid();
+				if(csaleid == null || "".equalsIgnoreCase(csaleid)){
+					continue;
+				}
+				int count =0;
+				boolean fisgift = false;
+				for(SoDealVO dealvo:getDataBufferDetail()){//跟缓存中的数据比较
+					String csaleid2 = dealvo.getCsaleid();
+					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
+					if(csaleid.equalsIgnoreCase(csaleid2)){
+						count++;
+						if(blargessflag){
+							fisgift = blargessflag;
+						}
+					}
+				}
+				if(fisgift && (vos.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
+					throw new BusinessException("赠品必须整单安排，不能拆单安排");
+				}
+			}
 		}
-		return true;
+
 	}
 
 	/**

@@ -37,14 +37,9 @@ public String getOtherClassName() {
 */
 
 public String[] getField() {
-	return new String[] {
-			
-			"H_pk_corp->H_pk_corp",
-			"H_voperatorid->H_voperatorid",
+	return new String[] {		
 			"H_pk_outwhouse->H_pk_outwhouse",
 			"H_pk_inwhouse->H_pk_inwhouse",
-		
-			
 			"H_reserve2->H_reserve2",
 			"H_reserve1->H_reserve1", 
 			"H_pk_fdsyzc_h->H_reserve1", 
@@ -155,8 +150,8 @@ public String[] getFormulas() {
 		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
 	}
 	return new String[] {
-//		"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
-//		"H_forderstatus->int(0)",
+			"H_pk_corp->\""+m_strCorp+"\"",
+			"H_voperatorid->\""+m_strOperator+"\"",
 			"H_pk_billtype->\""+WdsWlPubConst.WDS3+"\"",
 			"H_vbillstatus->int(8)",
 		    "B_csourcetype->\""+WdsWlPubConst.WDS1+"\"",
