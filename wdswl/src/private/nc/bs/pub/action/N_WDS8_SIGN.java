@@ -6,7 +6,7 @@ import java.util.List;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.pushSaveWDSF;
+import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -49,7 +49,7 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",
 						"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
 				//生成装卸费核算单
-				pushSaveWDSF pu=new pushSaveWDSF();
+				PushSaveWDSF pu=new PushSaveWDSF();
 				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
 
 				return retObj;

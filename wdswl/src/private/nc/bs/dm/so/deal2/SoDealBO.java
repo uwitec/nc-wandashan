@@ -54,7 +54,6 @@ public class SoDealBO {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select  ");
 		String[] names = SoDealVO.m_headNames;
-
 		for (String name : names) {
 			sql.append(name + ", ");
 		}
@@ -63,16 +62,13 @@ public class SoDealBO {
 			sql.append(name + ", ");
 		}
 		sql.append(" 'aaa' ");
-		sql.append(" from so_sale h inner join so_saleorder_b b on h.csaleid = b.csaleid " +
-				" inner join so_saleexecute c on b.corder_bid = c.csale_bid " +
-				"join  tb_storcubasdoc tbst on tbst.pk_cumandoc = h.creceiptcustomerid");
-	
+		sql.append(" from so_sale h inner join so_saleorder_b b on h.csaleid = b.csaleid ");
+//		sql.append(" inner join so_saleexecute c on b.corder_bid = c.csale_bid ");	
 		sql.append(" where");
-		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(c.dr,0)=0 and isnull(tbst.dr,0)=0");
+		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0 ");
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
-
 		Object o = getDao().executeQuery(sql.toString(),
 				new BeanListProcessor(SoDealVO.class));
 		if (o != null) {

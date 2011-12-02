@@ -9,7 +9,7 @@ import javax.naming.NamingException;
 import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
-import nc.bs.wds.load.pub.pushSaveWDSF;
+import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.bs.wds.pub.report.ReportDMO;
 import nc.itf.uap.pf.IPFBusiAction;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
@@ -27,11 +27,11 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  */
 public class SoOutBO {
 	private String s_billtype = "4C";
-	private pushSaveWDSF puf = null;
+	private PushSaveWDSF puf = null;
 
-	public pushSaveWDSF getPuf() {
+	public PushSaveWDSF getPuf() {
 		if (puf == null) {
-			puf = new pushSaveWDSF();
+			puf = new PushSaveWDSF();
 		}
 		return puf;
 	}

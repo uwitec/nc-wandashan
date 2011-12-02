@@ -21,73 +21,90 @@
  */
      public class LoadpriceB2VO extends SuperVO {
            
-             public String reserve5;
-             public String reserve4;
-             public String vdef4;
-             public String pk_loadprice;
-             public String vdef7;
-             public String pk_loadprice_b2;
-             public Integer dr;
-             public String vdef2;
-             public UFDate reserve11;
-             public UFDate reserve12;
-             public String vmemo;
-             public UFDouble reserve6;
-             public String vdef1;
-             public String reserve3;
-             public UFBoolean reserve14;
-             public String pk_wds_teamdoc_h;
-             public UFDateTime ts;
-             public UFDouble reserve10;
-             public UFDate reserve13;
-             public UFDouble reserve8;
-             public UFDouble reserve9;
-             public String vdef3;
-             public String vdef9;
-             public String vdef8;
-             public String reserve1;
-             public UFBoolean reserve16;
-             public UFDouble reserve7;
-             public UFBoolean reserve15;
-             public UFDouble nloadprice;
-             public String vdef6;
-             public String reserve2;
-             public String vdef10;
-             public String vdef5;
+             /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    public String pk_loadprice;//主表主键
+    public String pk_loadprice_b2; //主键
+    public String pk_wds_teamdoc_h; //班组主键          
+    public UFDouble nloadprice;//装卸费
+	//预留字段
+	public String reserve1;
+	public String reserve2;
+	public String reserve3;
+	public String reserve4;	
+	public String reserve5;
+	public UFDouble reserve6;
+	public UFDouble reserve7;
+	public UFDouble reserve8;
+	public UFDouble reserve9;	
+	public UFDouble reserve10;
+	public UFDate reserve11;
+	public UFDate reserve12;
+	public UFDate reserve13;	
+	public UFBoolean reserve14;
+	public UFBoolean reserve15;
+	public UFBoolean reserve16;	
+	//自定义项
+	public String vdef1;
+	public String vdef2;
+	public String vdef3;
+	public String vdef4;	
+	public String vdef5;
+	public String vdef6;
+	public String vdef7;
+	public String vdef8;
+	public String vdef9;
+	public String vdef10;	
+	public UFDateTime ts;
+	public Integer dr;
+	//备注
+	public String vmemo;
+	//上下游信息字段
+	public String vlastbillcode;
+	public String vlastbilltype;
+	public String vlastbillid;
+	public String vlastbillrowid;
+	public String csourcebillcode;
+	public String csourcetype;
+	public String csourcebillhid;
+	public String csourcebillbid;
             
-             public static final String  RESERVE5="reserve5";   
-             public static final String  RESERVE4="reserve4";   
-             public static final String  VDEF4="vdef4";   
-             public static final String  PK_LOADPRICE="pk_loadprice";   
-             public static final String  VDEF7="vdef7";   
-             public static final String  PK_LOADPRICE_B2="pk_loadprice_b2";   
-             public static final String  DR="dr";   
-             public static final String  VDEF2="vdef2";   
-             public static final String  RESERVE11="reserve11";   
-             public static final String  RESERVE12="reserve12";   
-             public static final String  VMEMO="vmemo";   
-             public static final String  RESERVE6="reserve6";   
-             public static final String  VDEF1="vdef1";   
-             public static final String  RESERVE3="reserve3";   
-             public static final String  RESERVE14="reserve14";   
-             public static final String  PK_WDS_TEAMDOC_H="pk_wds_teamdoc_h";   
-             public static final String  TS="ts";   
-             public static final String  RESERVE10="reserve10";   
-             public static final String  RESERVE13="reserve13";   
-             public static final String  RESERVE8="reserve8";   
-             public static final String  RESERVE9="reserve9";   
-             public static final String  VDEF3="vdef3";   
-             public static final String  VDEF9="vdef9";   
-             public static final String  VDEF8="vdef8";   
-             public static final String  RESERVE1="reserve1";   
-             public static final String  RESERVE16="reserve16";   
-             public static final String  RESERVE7="reserve7";   
-             public static final String  RESERVE15="reserve15";   
-             public static final String  NLOADPRICE="nloadprice";   
-             public static final String  VDEF6="vdef6";   
-             public static final String  RESERVE2="reserve2";   
-             public static final String  VDEF10="vdef10";   
-             public static final String  VDEF5="vdef5";   
+     public static final String  RESERVE5="reserve5";   
+     public static final String  RESERVE4="reserve4";   
+     public static final String  VDEF4="vdef4";   
+     public static final String  PK_LOADPRICE="pk_loadprice";   
+     public static final String  VDEF7="vdef7";   
+     public static final String  PK_LOADPRICE_B2="pk_loadprice_b2";   
+     public static final String  DR="dr";   
+     public static final String  VDEF2="vdef2";   
+     public static final String  RESERVE11="reserve11";   
+     public static final String  RESERVE12="reserve12";   
+     public static final String  VMEMO="vmemo";   
+     public static final String  RESERVE6="reserve6";   
+     public static final String  VDEF1="vdef1";   
+     public static final String  RESERVE3="reserve3";   
+     public static final String  RESERVE14="reserve14";   
+     public static final String  PK_WDS_TEAMDOC_H="pk_wds_teamdoc_h";   
+     public static final String  TS="ts";   
+     public static final String  RESERVE10="reserve10";   
+     public static final String  RESERVE13="reserve13";   
+     public static final String  RESERVE8="reserve8";   
+     public static final String  RESERVE9="reserve9";   
+     public static final String  VDEF3="vdef3";   
+     public static final String  VDEF9="vdef9";   
+     public static final String  VDEF8="vdef8";   
+     public static final String  RESERVE1="reserve1";   
+     public static final String  RESERVE16="reserve16";   
+     public static final String  RESERVE7="reserve7";   
+     public static final String  RESERVE15="reserve15";   
+     public static final String  NLOADPRICE="nloadprice";   
+     public static final String  VDEF6="vdef6";   
+     public static final String  RESERVE2="reserve2";   
+     public static final String  VDEF10="vdef10";   
+     public static final String  VDEF5="vdef5";   
       
     
         /**

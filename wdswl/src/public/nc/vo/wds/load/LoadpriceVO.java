@@ -53,9 +53,7 @@ import nc.vo.pub.lang.UFDouble;
 				this.cwarehouseid = cwarehouseid;
 			}
 
-			private String cwarehouseid;//仓库   zhf  add    20110624   修改为仓库级别
-             
-            
+			private String cwarehouseid;//仓库   zhf  add    20110624   修改为仓库级别      
              public static final String  PK_INVBASDOC="pk_invbasdoc";   
              public static final String  PK_CORP="pk_corp";   
              public static final String  NLOADPRICE="nloadprice";   

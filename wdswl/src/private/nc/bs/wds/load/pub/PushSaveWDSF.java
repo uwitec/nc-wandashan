@@ -1,5 +1,6 @@
 package nc.bs.wds.load.pub;
 import java.util.ArrayList;
+
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.billcodemanage.BillcodeGenerater;
 import nc.bs.pub.pf.PfUtilTools;
@@ -14,13 +15,12 @@ import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB1VO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
-import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 出入库签字 推式保存形成装卸费核算单
  * @author mlr
  */
-public class pushSaveWDSF {
+public class PushSaveWDSF {
 	private LoadAccountBS  lbs=null; 
 	private BillcodeGenerater billcode;
 	private nc.bs.wl.pub.WdsWlPubBO bo;
@@ -45,7 +45,7 @@ public class pushSaveWDSF {
 	}
 	
 	 /**
-     * 通过 销售出库单vo获得装卸费核算单vo
+     * 通过出入库单vo获得装卸费核算单vo
      * @作者：mlr
      * @说明：完达山物流项目 
      * @时间：2011-9-22下午07:55:38
@@ -62,7 +62,6 @@ public class pushSaveWDSF {
 			return null;
 		}
 		AggregatedValueObject vo = PfUtilTools.runChangeData(pk_billtype, WdsWlPubConst.WDSF, billVO,null); //销售出库
-		
 		ExaggLoadPricVO epvo = (ExaggLoadPricVO)setInfor(vo,coperator,date,lodytype);
 		return epvo;
 	}
@@ -82,7 +81,7 @@ public class pushSaveWDSF {
 	public void  pushSaveWDSF(AggregatedValueObject billVO,String coperator,String date,int lodytype)throws Exception{
 		AggregatedValueObject bill=getPushSaveWDSF(billVO,coperator,date,lodytype);	   
 		IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());		
-		ArrayList retList = (ArrayList)bsBusiAction.processAction("SAVE",WdsWlPubConst.WDSF,date,null,bill, null,null);		
+		bsBusiAction.processAction("SAVE",WdsWlPubConst.WDSF,date,null,bill, null,null);		
 	}
 	/**
 	 * 设置推式保存形成的核算单的vo信息
@@ -98,6 +97,7 @@ public class pushSaveWDSF {
 		if(billVO != null && billVO instanceof ExaggLoadPricVO){
 			ExaggLoadPricVO bill = (ExaggLoadPricVO)billVO;
 			String pk_corp=PuPubVO.getString_TrimZeroLenAsNull(bill.getParentVO().getAttributeValue("pk_corp"));
+			
 			getBs().accoutLoadPrice(bill,pk_corp, getBo().getLogInfor(coperator,pk_corp).getWhid(),lodytype);	
 			//设置新增单据的基本信息
 			bill.getParentVO().setAttributeValue("vbillstatus", IBillStatus.FREE);

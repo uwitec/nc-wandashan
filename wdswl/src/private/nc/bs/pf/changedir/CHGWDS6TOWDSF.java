@@ -5,7 +5,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- *其他出库->装卸费结算
+ *其他出库->装卸费核算单
  * @author Administrator
  *
  */
@@ -29,27 +29,6 @@ public class CHGWDS6TOWDSF extends VOConversion {
 	public String[] getField() {
 		// TODO Auto-generated method stub
 		return new String[]{
-//				"H_pk_corp->H_pk_corp",//公司				
-//				"B_csourcebillhid->B_general_pk",
-//				"B_csourcebillbid->B_general_b_pk",
-//				"B_vsourcebillcode->H_vbillcode",
-//				"B_csourcetype->H_vbilltype",				
-//				"B_cfirstbillhid->B_cfirstbillhid",
-//				"B_cfirstbillbid->B_cfirstbillbid",
-//				"B_vfirstbillcode->B_vfirstbillcode",
-//				"B_cfirsttype->B_cfirsttyp",
-//				"B_pk_invmandoc->B_cinventoryid",
-//				"B_pk_invbasdoc->B_cinvbasid",
-//				"B_cunitid->B_unitid",//主 计量单位
-//				"B_cassunitid->B_castunitid",//辅计量单位
-//				"B_noutnum->B_noutnum",//实出数量
-//				"B_nassoutnum->B_noutassistnum",//实出辅数量
-//				"B_nshouldoutnum->B_nshouldoutnum",//应出数量
-//				"B_ntagnum->B_ntagnum",
-//				"B_nassshouldoutnum->B_nshouldoutassistnum",//应出辅数	
-//				"B_fistag->B_fistag"
-				
-				
 				"H_pk_corp->H_pk_corp",//公司	
 				"B_csourcebillhid->B_general_pk",
 				"B_csourcebillbid->B_general_b_pk",
@@ -77,11 +56,10 @@ public class CHGWDS6TOWDSF extends VOConversion {
 	* @return java.lang.String[]
 	*/
 	public String[] getFormulas() {
-		new UFDate(System.currentTimeMillis());
-		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+		if(m_strDate == null){
+			super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+		}
 		return new String[] {
-//			"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
-//			"H_forderstatus->int(0)",
 				"H_pk_billtype->\""+WdsWlPubConst.WDSF+"\"",
 				"H_vbillstatus->int(8)",
 			    "H_dmakedate->\""+m_strDate+"\"",

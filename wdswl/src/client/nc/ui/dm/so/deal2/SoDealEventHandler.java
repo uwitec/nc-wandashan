@@ -223,23 +223,22 @@ public class SoDealEventHandler{
 			whereSql.append(" and "+where);
 		}
 		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' ");//审核通过的
-		
-//		过滤掉发货结束和出库结束的行
-		whereSql.append(" and coalesce(c.bifreceiptfinish,'N') = 'N'");
-		whereSql.append(" and coalesce(c.bifinventoryfinish,'N') = 'N'");	
-//		销售订单表体  的航状态 字段 不知是否有影响    如有 影响  请后续 支持 
-//		frowstatus                    SMALLINT(2)         行状态 			
-		/**
-		 * 
-		 * bifreceiptfinish              CHAR(1)             是否发货结束
-           bifinventoryfinish            CHAR(1)             是否出库结束     
-		 * 
-		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
-		 * 
-		 */			
-	     whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
-	 		//   判断    是大日期就不显示
-	     whereSql.append(" and coalesce(c.vdef20, 'N') = 'N'");
+////		过滤掉发货结束和出库结束的行
+//		whereSql.append(" and coalesce(c.bifreceiptfinish,'N') = 'N'");
+//		whereSql.append(" and coalesce(c.bifinventoryfinish,'N') = 'N'");	
+////		销售订单表体  的航状态 字段 不知是否有影响    如有 影响  请后续 支持 
+////		frowstatus                    SMALLINT(2)         行状态 			
+//		/**
+//		 * 
+//		 * bifreceiptfinish              CHAR(1)             是否发货结束
+//           bifinventoryfinish            CHAR(1)             是否出库结束     
+//		 * 
+//		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
+//		 * 
+//		 */			
+//	     whereSql.append(" and tbst.pk_stordoc = '"+ui.getWhid()+"' ");
+//	 		//   判断    是大日期就不显示
+//	     whereSql.append(" and coalesce(c.vdef20, 'N') = 'N'");
 	/**
 	 * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
 	 * 如果是分仓登录  该条件不可编辑默认为 登录仓库

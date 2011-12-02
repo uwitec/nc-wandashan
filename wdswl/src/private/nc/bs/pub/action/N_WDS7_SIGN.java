@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.pushSaveWDSF;
+import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -46,7 +46,7 @@ public class N_WDS7_SIGN extends AbstractCompiler2 {
 				AggregatedValueObject billvo=(AggregatedValueObject) runClass("nc.bs.wds.ic.other.in.OtherInBO", "combinVO",
 						"&AggObj:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);	
 				//生成装卸费核算单
-				pushSaveWDSF pu=new pushSaveWDSF();
+				PushSaveWDSF pu=new PushSaveWDSF();
 				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
 				// ##################################################数据交换
 				setParameter("AggObj",billvo);
