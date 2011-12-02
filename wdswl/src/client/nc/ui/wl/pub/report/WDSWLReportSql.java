@@ -405,5 +405,40 @@ public class WDSWLReportSql {
 		    }
 			return sql.toString();
 	}
-
+	/**
+	 * 获得查询现存量的sql语句
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getStoreSql(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+        sql.append(" select ");//仓库主键	
+        sql.append(" t.pk_customize1 pk_stordoc,");
+        sql.append(" t.pk_cargdoc pk_cargdoc,");//货位
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+        sql.append(" t.whs_batchcode vbatchcode,");		
+		sql.append(" t.ss_pk  pk_storestate,");//存货状态主键
+        sql.append(" t.pk_invbasdoc pk_invbasdoc,");		      
+        sql.append(" round(sysdate-to_date(t.creadate,'YYYY-MM-DD HH24-MI-SS'),0) days,");//入库天数
+        sql.append(" t.creadate creadate,");//入库日期
+        sql.append(" t.whs_stocktonnage num,");//库存中的单品的主数量 主要用来设置库龄主数量
+        sql.append(" t.whs_stockpieces bnum"); //库存中的单品的辅数量 主要用来设置库龄辅数量 
+        sql.append(" from ");	        	 
+		sql.append(" tb_warehousestock t");
+		sql.append(" join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on t.pk_invbasdoc=iv.pk_invbasdoc");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and nvl(cl.dr, 0) = 0");
+		sql.append(" where isnull(t.dr,0)=0");//
+		sql.append(" and isnull(iv.dr,0)=0");//
+		if(whereSql!=null && whereSql.length()!=0)
+		sql.append(" and "+whereSql);
+		sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
 }

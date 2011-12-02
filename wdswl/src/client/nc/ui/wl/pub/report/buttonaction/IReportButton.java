@@ -6,7 +6,8 @@ package nc.ui.wl.pub.report.buttonaction;
   * 创建日期:2007-8-22下午03:11:12
   */
 public class IReportButton {
-	
+    public static final int onboRefresh=147;//报表刷新按钮
+
     public final static Integer QueryBtn = new Integer(0);//查询
 	
 	public final static Integer ColumnFilterBtn=new Integer(1);//栏目设置

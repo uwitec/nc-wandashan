@@ -19,6 +19,10 @@ import nc.vo.pub.lang.UFDouble;
  */
 public class ReportBaseVO extends nc.vo.pub.CircularlyAccessibleValueObject
 	implements IReportVO {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7272690546416181463L;
 	private boolean m_isSubtotal = false;
 	private boolean m_isTotal = false;
 	private boolean m_isCombined = false;

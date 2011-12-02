@@ -288,4 +288,26 @@ public class WdsWlPubConst {
 	
 //	库存状态  清理 查询对话框  模板ID
 	public static String INV_STATE_QRY_TEMPLET_ID = "0001S3100000000L231C";
+	
+	
+	//mlr 完达山物流报表  开发功能节点
+	public static String report1="80100201";//各仓产品库存 产品明细表
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
