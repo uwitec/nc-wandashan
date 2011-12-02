@@ -20,6 +20,7 @@ public class StockInvOnHandVO extends SuperVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public String pk_customize1;//----------------------仓库ID  zhf add
 	public String pk_cargdoc;//货位
 	public String pplpt_pk;//托盘id
 	public String whs_batchcode;// 批次号
@@ -47,6 +48,10 @@ public class StockInvOnHandVO extends SuperVO {
 	public String pk_headsource;
 	public String pk_bodysource; // 来源单据表体主键， 缓存表主键
 	public String whs_sourcecode;
+//	托盘状态
+	public static int stock_state_use = 1;//占用
+	public static int stock_state_null = 0;//空
+	public static int stock_state_lock = 2;//锁定
 
 	public UFTime ts;
 	public String nvote;
@@ -66,7 +71,6 @@ public class StockInvOnHandVO extends SuperVO {
 	public String pk_customize9;
 	public String whs_customize4;
 	public String pk_customize6;
-	public String pk_customize1;//----------------------仓库ID  zhf add
 	public String whs_customize6;
 	public String whs_customize7;
 	public String pk_customize8;
@@ -74,10 +78,7 @@ public class StockInvOnHandVO extends SuperVO {
 	public String pk_customize2;
 	public String pk_customize5;
 	public String pk_customize4;
-//	托盘状态
-	public static int stock_state_use = 1;//占用
-	public static int stock_state_null = 0;//空
-	public static int stock_state_lock = 2;//锁定
+
 
 	/**
 	 * 属性pk_customize4的Getter方法.
