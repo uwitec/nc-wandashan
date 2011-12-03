@@ -4,6 +4,7 @@ import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
@@ -83,6 +84,12 @@ public class MyClientUI extends BillManageUI {
 		return new GetCheckClass();
 	}
 	
-
+	
+	@Override
+	protected BusinessDelegator createBusinessDelegator() {
+		// TODO Auto-generated method stub
+		return new MyDelegator();
+	}
+	
 
 }

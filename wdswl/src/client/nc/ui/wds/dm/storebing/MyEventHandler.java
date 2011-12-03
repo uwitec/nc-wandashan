@@ -1,8 +1,10 @@
 package nc.ui.wds.dm.storebing;
 
 import nc.ui.pub.beans.UIDialog;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.query.INormalQuery;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
@@ -114,6 +116,46 @@ public class MyEventHandler extends WdsPubEnventHandler {
 
 		updateBuffer();
 
+	}
+	
+	@Override
+	protected boolean askForQueryCondition(StringBuffer sqlWhereBuf)
+			throws Exception {
+		if (sqlWhereBuf == null)
+			throw new IllegalArgumentException(
+					"askForQueryCondition().sqlWhereBuf cann't be null");
+		UIDialog querydialog = getQueryUI();
+
+		if (querydialog.showModal() != UIDialog.ID_OK)
+			return false;
+		INormalQuery query = (INormalQuery) querydialog;
+
+		String strWhere = query.getWhereSql();
+		if (strWhere == null)
+			strWhere = "1=1";
+
+		if (getButtonManager().getButton(IBillButton.Busitype) != null) {
+			if (getBillIsUseBusiCode().booleanValue())
+				// 业务类型编码
+				strWhere = "(" + strWhere + ") and "
+						+ getBillField().getField_BusiCode() + "='"
+						+ getBillUI().getBusicode() + "'";
+
+			else
+				// 业务类型
+				strWhere = "(" + strWhere + ") and "
+						+ getBillField().getField_Busitype() + "='"
+						+ getBillUI().getBusinessType() + "'";
+
+		}
+
+		strWhere = "(" + strWhere + ")";
+
+		if (getHeadCondition() != null)
+			strWhere = strWhere + " and " + getHeadCondition();
+		// 现在我先直接把这个拼好的串放到StringBuffer中而不去优化拼串的过程
+		sqlWhereBuf.append(strWhere);
+		return true;
 	}
 
 }

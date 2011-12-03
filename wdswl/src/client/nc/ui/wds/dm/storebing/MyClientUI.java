@@ -5,6 +5,7 @@ import javax.swing.JComponent;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -90,5 +91,12 @@ public class MyClientUI extends AbstractMyClientUI {
 			}
 		}
 	}
+	@Override
+	protected BusinessDelegator createBusinessDelegator() {
+		// TODO Auto-generated method stub
+		return new MyDelegator();
+	}
 
+	
+	
 }

@@ -1,6 +1,7 @@
 package nc.ui.wds.dm.storetranscorp;
 
 import java.awt.Container;
+
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.wl.pub.WdsQueryDlg;
@@ -16,5 +17,8 @@ public class MyQueryDIG extends WdsQueryDlg{
 		setDefaultValue("bd_stordoc.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());
 	}
 	private static final long serialVersionUID = -8327804194852113256L;
+	
+
+
 
 }

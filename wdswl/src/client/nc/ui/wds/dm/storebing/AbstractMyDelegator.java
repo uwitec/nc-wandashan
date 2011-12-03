@@ -40,7 +40,7 @@ public abstract class AbstractMyDelegator extends nc.ui.trade.bsdelegate.BDBusin
        public String getBodyCondition(Class bodyClass,String key){
 		
        	 if(bodyClass == nc.vo.wds.dm.storebing.TbStorcubasdocVO.class)
-	   return "pk_stordoc = '" + key + "' and isnull(dr,0)=0 ";
+	   return "pk_stordoc = '" + key + "' ";
        		
 	 return null;
        } 
