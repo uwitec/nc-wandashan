@@ -82,7 +82,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFDate dbizdate;//业务日期
 	public UFDouble ntagnum;//贴签数量
 	public UFBoolean fistag;//是否贴签
-	
+	private UFBoolean isxnap;//是否虚拟安排 liuys add
 	
 	public List<TbOutgeneralTVO> trayInfor = null;
 	
@@ -163,7 +163,8 @@ public class TbOutgeneralBVO extends SuperVO {
 	public static final String NSHOULDOUTASSISTNUM = "nshouldoutassistnum";
 	public static final String VUSERDEF6 = "vuserdef6";
 	public static final String VUSERDEF13 = "vuserdef13";
-
+	public static final String ISXNAP = "isxnap";
+	
 	/**
 	 * 属性vuserdef9的Getter方法.
 	 * 
@@ -1568,6 +1569,12 @@ public class TbOutgeneralBVO extends SuperVO {
 	}
 	public void setFistag(UFBoolean fistag) {
 		this.fistag = fistag;
+	}
+	public UFBoolean getIsxnap() {
+		return isxnap;
+	}
+	public void setIsxnap(UFBoolean isxnap) {
+		this.isxnap = isxnap;
 	}
 	
 }
