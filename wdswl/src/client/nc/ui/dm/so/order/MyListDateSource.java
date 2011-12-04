@@ -29,6 +29,10 @@ public class MyListDateSource extends ListPanelPRTS implements IExDataSource {
 				Object o = LongTimeTask.callRemoteService(
 						WdsWlPubConst.WDS_WL_MODULENAME, classname, methodname,
 						ParameterTypes, ParameterValues, 2);
+				if("".equals(o)||o.toString().length()==0){
+					return null;
+				}
+				imageIcon[0]=o;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
