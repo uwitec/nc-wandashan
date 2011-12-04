@@ -4,7 +4,7 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
 import nc.vo.trade.pub.HYBillVO;
-import nc.vo.wds.dm.storebing.BdStordocVO;
+import nc.vo.wds.dm.storetranscorp.BdStordocVO;
 import nc.vo.wds.dm.storetranscorp.StortranscorpBVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 

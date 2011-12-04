@@ -21,6 +21,10 @@ import nc.vo.pub.lang.*;
  * @version Your Project 1.0
  */
 public class StortranscorpBVO extends SuperVO {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String pk_corp;
 	public String pk_stordoc;//Ö÷¼ü
 	public Integer dr;

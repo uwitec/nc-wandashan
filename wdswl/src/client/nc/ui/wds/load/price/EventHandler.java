@@ -5,6 +5,7 @@ import nc.ui.bd.pub.BillExportUtil;
 import nc.ui.bd.pub.IBDButton;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.MessageDialog;
+import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.AbstractBillUI;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.ICardController;
@@ -23,6 +24,8 @@ import nc.vo.wds.load.LoadpriceVO;
 
 
 public class EventHandler {
+	
+	
 	public static IListEventHandler getListEventHandler(BillListUI billUI, IListController control){
 		return new EventHandler().new IListEventHandler(billUI,control);
 	}
@@ -31,6 +34,7 @@ public class EventHandler {
 		return new EventHandler().new ICardEventHandler(billUI,control);
 	}
 	public class IListEventHandler extends ListEventHandler {
+		
 		public IListEventHandler(BillListUI billUI, IListController control) {
 			super(billUI, control);
 		}
@@ -53,13 +57,28 @@ public class EventHandler {
 			getBillUI().getMultiAppManager().showFirst();
 		}
 	}
+	
 
 	public class ICardEventHandler extends TreeCardEventHandler {
+		public ClientUIQueryDlg queryDialog = null;
 		public ICardEventHandler(BillTreeCardUI billUI, ICardController control) {
 			super(billUI, control);
 
 		}
-
+		protected UIDialog createQueryUI() {
+			if (queryDialog == null) {
+				queryDialog = new ClientUIQueryDlg(
+						
+						getBillUI(),
+						null,
+						_getCorp().getPrimaryKey(),
+						getBillUI()._getModuleCode(),
+						_getOperator(),
+						getBillUI().getBusinessType(), null);
+			}
+			return queryDialog;
+		}
+			
 		protected void onBoSave() throws Exception {
 			this.getBillCardPanelWrapper().getBillCardPanel().getBillData()
 					.dataNotNullValidate();

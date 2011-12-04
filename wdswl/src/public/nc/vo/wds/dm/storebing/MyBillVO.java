@@ -17,6 +17,11 @@ import nc.vo.wds.dm.storebing.TbStorcubasdocVO;
  */
 public class  MyBillVO extends HYBillVO {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public CircularlyAccessibleValueObject[] getChildrenVO() {
 		return (TbStorcubasdocVO[]) super.getChildrenVO();
 	}

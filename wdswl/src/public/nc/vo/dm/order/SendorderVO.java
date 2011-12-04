@@ -28,18 +28,19 @@ import nc.vo.pub.lang.UFDouble;
  */
 public class SendorderVO extends SuperVO {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String reserve5;
 	// 公司主键
 	public String pk_corp;
 	public UFDateTime ts;
 	// 打印次数
 	public Integer iprintcount;
-
 	public String vdef4;
 	// 源头单据号
-
 	// 来源单据类型
-
 	// 制单人
 	public String voperatorid;
 	// 审批批语
@@ -60,6 +61,8 @@ public class SendorderVO extends SuperVO {
 	public String pk_sendorder;
 	// 发货站
 	public String pk_outwhouse;
+	//发货地区
+	public String pk_sendareal;
 	public String reserve1;
 	public UFBoolean reserve16;
 	public UFBoolean reserve15;
@@ -2006,5 +2009,13 @@ public class SendorderVO extends SuperVO {
 
 	public void setNdestorynum(UFDouble ndestorynum) {
 		this.ndestorynum = ndestorynum;
+	}
+
+	public String getPk_sendareal() {
+		return pk_sendareal;
+	}
+
+	public void setPk_sendareal(String pk_sendareal) {
+		this.pk_sendareal = pk_sendareal;
 	}
 }

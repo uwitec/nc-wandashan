@@ -4,10 +4,14 @@
 \***************************************************************/
 package nc.vo.wds.dm.storebing;
 
-import java.awt.Image;
 import java.util.ArrayList;
-import nc.vo.pub.*;
-import nc.vo.pub.lang.*;
+
+import nc.vo.pub.NullFieldException;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.pub.lang.UFTime;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -24,7 +28,12 @@ import nc.vo.pub.lang.*;
 public class TbStorcubasdocVO extends SuperVO {
 	
 	
-	public String pk_stordoc;//主表主键
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public String pk_wds_storecust_h;//主表主键
+	public String pk_stordoc;//主表仓库主键
 	public String scb_pk;//子表主键
 	public String pk_cumandoc;//绑定分仓的客商管理档案主键
 	public String pk_cubasdoc;//客商基本档案主键
@@ -761,7 +770,7 @@ public class TbStorcubasdocVO extends SuperVO {
 	 */
 	public java.lang.String getParentPKFieldName() {
 
-		return "pk_stordoc";
+		return "pk_wds_storecust_h";
 
 	}
 
@@ -893,6 +902,14 @@ public class TbStorcubasdocVO extends SuperVO {
 
 	public void setPk_stordoc1(String pk_stordoc1) {
 		this.pk_stordoc1 = pk_stordoc1;
+	}
+
+	public String getPk_wds_storecust_h() {
+		return pk_wds_storecust_h;
+	}
+
+	public void setPk_wds_storecust_h(String pk_wds_storecust_h) {
+		this.pk_wds_storecust_h = pk_wds_storecust_h;
 	}
 	
 }
