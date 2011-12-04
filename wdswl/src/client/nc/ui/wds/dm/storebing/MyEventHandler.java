@@ -60,44 +60,8 @@ public class MyEventHandler extends WdsPubEnventHandler {
 		WdsWlPubTool.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(), 
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), new String[]{"pk_cumandoc","pk_stordoc1"}, new String[]{"客商","分仓"});
 
-
-//		// 除了本仓外其他仓库的绑定客商
-//		StringBuffer sql_srcbd = new StringBuffer();
-//		sql_srcbd.append(" dr=0 ");
-//		if (null != bdStordocVO && null != bdStordocVO.getPk_stordoc()) {
-//			sql_srcbd.append("and  pk_stordoc!='");
-//			sql_srcbd.append(bdStordocVO.getPk_stordoc());
-//			sql_srcbd.append("' ");
-//		}
-//		IUAPQueryBS query = (IUAPQueryBS) NCLocator.getInstance().lookup(
-//				IUAPQueryBS.class.getName());
-//		ArrayList tbStorcubasdocVOs = (ArrayList) query.retrieveByClause(
-//				TbStorcubasdocVO.class, sql_srcbd.toString());
-//		AggregatedValueObject mybillVO = getBillUI().getChangedVOFromUI();
-//		TbStorcubasdocVO[] tbStorcubasdocChangeVOs = (TbStorcubasdocVO[]) mybillVO
-//				.getChildrenVO();
-//		if (null != tbStorcubasdocVOs && null != tbStorcubasdocChangeVOs) {
-//			for (int i = 0; i < tbStorcubasdocVOs.size(); i++) {
-//				TbStorcubasdocVO tbStorcubasdocVO = (TbStorcubasdocVO) tbStorcubasdocVOs
-//						.get(i);
-//				for (int j = 0; j < tbStorcubasdocChangeVOs.length; j++) {
-//					TbStorcubasdocVO tbStorcubasdocChangeVO = tbStorcubasdocChangeVOs[j];
-//					if (null != tbStorcubasdocVO.getPk_cubasdoc()
-//							&& null != tbStorcubasdocChangeVO.getPk_cubasdoc()) {
-//						if (tbStorcubasdocVO.getPk_cubasdoc().trim().equals(
-//								tbStorcubasdocChangeVO.getPk_cubasdoc().trim())) {
-//							getBillUI().showErrorMessage(
-//									"添加的客商已经和其它分仓绑定，请您先解除绑定关系！");
-//							return;
-//						}
-//					}
-//				}
-//			}
-//		}
-
 		super.onBoSave();
 	}
-
 	@Override
 	protected void onBoQuery() throws Exception {
 		// TODO Auto-generated method stub
@@ -107,7 +71,6 @@ public class MyEventHandler extends WdsPubEnventHandler {
 			return;// 用户放弃了查询
 
 		strWhere.append(" and def1='1' ");
-
 		SuperVO[] queryVos = queryHeadVOs(strWhere.toString());
 
 		getBufferData().clear();
@@ -125,7 +88,6 @@ public class MyEventHandler extends WdsPubEnventHandler {
 			throw new IllegalArgumentException(
 					"askForQueryCondition().sqlWhereBuf cann't be null");
 		UIDialog querydialog = getQueryUI();
-
 		if (querydialog.showModal() != UIDialog.ID_OK)
 			return false;
 		INormalQuery query = (INormalQuery) querydialog;

@@ -5,8 +5,10 @@ import javax.swing.JComponent;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
+import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 
@@ -21,7 +23,7 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
  * @author author
  * @version tempProject version
  */
-public class MyClientUI extends AbstractMyClientUI {
+public class MyClientUI extends BillManageUI {
 
 	protected ManageEventHandler createEventHandler() {
 		return new MyEventHandler(this, getUIControl());
@@ -95,6 +97,12 @@ public class MyClientUI extends AbstractMyClientUI {
 	protected BusinessDelegator createBusinessDelegator() {
 		// TODO Auto-generated method stub
 		return new MyDelegator();
+	}
+
+	@Override
+	protected AbstractManageController createController() {
+		// TODO Auto-generated method stub
+		return new MyClientUICtrl();
 	}
 
 	

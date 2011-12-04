@@ -28,16 +28,16 @@ public class MyClientUICtrl extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 
-		return new int[] { IBillButton.Query, IBillButton.Edit,
-				IBillButton.Line, IBillButton.Save, IBillButton.Cancel,
-				IBillButton.Return,IBillButton.Brow, IBillButton.Refresh,IBillButton.Print };
+		return new int[] {  IBillButton.Add, IBillButton.Edit,IBillButton.Query,
+				IBillButton.Line, IBillButton.Save, IBillButton.Cancel,IBillButton.Delete,
+				IBillButton.Return,IBillButton.Brow, IBillButton.Refresh };
 
 	}
 
 	public int[] getListButtonAry() {
-		return new int[] { IBillButton.Query, IBillButton.Edit,
-				IBillButton.Line, IBillButton.Save, IBillButton.Cancel,
-				IBillButton.Card, IBillButton.Brow,IBillButton.Refresh,IBillButton.Print
+		return new int[] { IBillButton.Add,IBillButton.Edit,IBillButton.Query,
+				IBillButton.Line, IBillButton.Save, IBillButton.Cancel,IBillButton.Delete,
+				IBillButton.Card, IBillButton.Brow,IBillButton.Refresh
 
 		};
 
