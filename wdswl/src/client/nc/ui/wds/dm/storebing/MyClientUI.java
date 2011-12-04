@@ -11,6 +11,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.wds.dm.storebing.GetCheck;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -106,6 +107,9 @@ public class MyClientUI extends BillManageUI {
 		return new MyClientUICtrl();
 	}
 
-	
+	//校验
+	public Object getUserObject() {
+		return new GetCheck();
+	}
 	
 }

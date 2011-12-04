@@ -70,7 +70,7 @@ public class MyEventHandler extends WdsPubEnventHandler {
 		if (askForQueryCondition(strWhere) == false)
 			return;// 用户放弃了查询
 
-		strWhere.append(" and def1='1' ");
+	//	strWhere.append(" and def1='1' ");
 		SuperVO[] queryVos = queryHeadVOs(strWhere.toString());
 
 		getBufferData().clear();
