@@ -56,6 +56,7 @@ public class MyClientUI extends BillManageUI {
 	}
 
 	public void setDefaultData() throws Exception {
+		getBillCardPanel().getHeadItem("pk_corp").setValue(_getCorp().getPrimaryKey());
 	}
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {

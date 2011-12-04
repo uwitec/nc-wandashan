@@ -268,16 +268,21 @@ public class TranPriceAccount {
 		if (pk_transcorp == null || "".equalsIgnoreCase(pk_transcorp)) {
 			throw new BusinessException("请先选择承运商");
 		}
+		
 		String pk_outwhouse = head.getPk_outwhouse();
 		if (pk_outwhouse == null || "".equalsIgnoreCase(pk_outwhouse)) {
 			throw new BusinessException("未取到发货站");
+		}
+		String pk_sendareal = head.getPk_sendareal();
+		if (pk_sendareal == null || "".equalsIgnoreCase(pk_sendareal)) {
+			throw new BusinessException("未取得发货地区");
 		}
 		String pk_custman = head.getPk_cumandoc();
 		if (pk_custman == null || "".equalsIgnoreCase(pk_custman)) {
 			throw new BusinessException("未取到客商信息");
 		}
 		// 1获得分仓与客商的绑定VO
-		getBingVo(pk_outwhouse, pk_custman);
+		getBingVo(pk_outwhouse,pk_sendareal, pk_custman);
 		this.reareaid = bingVO.getCustareaid();
 		if (reareaid == null || "".equalsIgnoreCase(reareaid)) {
 			throw new BusinessException("请在分仓客商绑定节点，维护客商所属地区");
@@ -458,16 +463,23 @@ public class TranPriceAccount {
 	 * @时间：2011-6-9下午11:34:44
 	 * @param pk_outwhouse
 	 *            发货站
+	 * @param pk_sendareal
+	 *  		  发货地区         
 	 * @param pk_custman
 	 *            客商
 	 * @throws BusinessException
 	 */
-	public void getBingVo(String pk_outwhouse, String pk_custman)
+	public void getBingVo(String pk_outwhouse, String pk_sendareal,String pk_custman)
 			throws BusinessException {
-		String sql = "select * from tb_storcubasdoc  where pk_stordoc='"
-				+ pk_outwhouse + "' and pk_cumandoc='" + pk_custman
-				+ "' and isnull(dr,0)=0";
-		ArrayList<TbStorcubasdocVO> list = (ArrayList<TbStorcubasdocVO>)getBaseDAO().executeQuery(sql,
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select tb_storcubasdoc.* from ");
+		sql.append("  wds_storecust_h ");//分仓客商绑定主表
+		sql.append(" join tb_storcubasdoc ");
+		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");//分仓客商绑定子表
+		sql.append(" where isnull(wds_storecust_h.dr,0)=0 and isnull(tb_storcubasdoc.dr,0)=0");
+		sql.append(" and wds_storecust_h.pk_sendareacl ='"+pk_sendareal+"'");
+		sql.append(" and tb_storcubasdoc.pk_cumandoc='"+pk_custman+"'");
+		ArrayList<TbStorcubasdocVO> list = (ArrayList<TbStorcubasdocVO>)getBaseDAO().executeQuery(sql.toString(),
 				new BeanListProcessor(TbStorcubasdocVO.class));
 		if (list == null || list.size()==0) {
 			throw new BusinessException("请维护客商与分仓的绑定关系");

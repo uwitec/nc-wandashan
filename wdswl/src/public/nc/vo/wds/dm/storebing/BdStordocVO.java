@@ -27,7 +27,7 @@
 	private static final long serialVersionUID = 1L;
 		public String pk_corp;//公司
         public String pk_stordoc;//仓库
-        public String pk_sendareacl;//发货地点
+        public String pk_sendareacl;//发货地区
         public String pk_wds_storecust_h;//主键
         public Integer dr;
         public UFTime ts;    
