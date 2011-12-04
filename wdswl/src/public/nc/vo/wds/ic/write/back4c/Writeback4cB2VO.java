@@ -83,8 +83,17 @@ import nc.vo.pub.lang.*;
 	public Integer dr;
 	//备注
 	public String vmemo;
+	private UFBoolean isxnap;//是否虚拟安排 liuys add
     
-        /**
+        public UFBoolean getIsxnap() {
+		return isxnap;
+	}
+
+	public void setIsxnap(UFBoolean isxnap) {
+		this.isxnap = isxnap;
+	}
+
+		/**
 	   * 属性reserve5的Getter方法.
 	   *
 	   * 创建日期:2011-10-25

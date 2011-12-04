@@ -70,10 +70,23 @@ public class ChangeTo4C {
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
 		fisvbatchcontorl= hvo.getFisvbatchcontorl();
-		Writeback4cB2VO[] b2vos = (Writeback4cB2VO[])billvo.getTableVO(billvo.getTableCodes()[1]);
-		if(b2vos == null || b2vos.length ==0){
+		//装载非虚拟流程表体
+		List<Writeback4cB2VO>  listbvos = new ArrayList<Writeback4cB2VO>();
+		//原销售出库回传单表体vo
+		Writeback4cB2VO[] bvos = (Writeback4cB2VO[])billvo.getTableVO(billvo.getTableCodes()[1]);
+		if(bvos == null || bvos.length ==0){
 			return null;
 		}
+		// liuys add 判断是否为虚拟安排  , 如果是,那么不回传erp销售出库
+		for(int i=0;i<bvos.length;i++){
+			if(bvos[i].getIsxnap().booleanValue())
+				listbvos.add(bvos[i]);
+		}
+		//liuys add 如果整单都是虚拟安排,那么直接返回null,不处理
+		if(listbvos==null || listbvos.size()==0)
+			return null;
+		Writeback4cB2VO[] b2vos  = listbvos.toArray(new Writeback4cB2VO[0]);
+		
 		List<String> general_hs = new ArrayList<String>();
 		for(Writeback4cB2VO b2vo:b2vos){
 			String general_h = b2vo.getCsourcebillhid();

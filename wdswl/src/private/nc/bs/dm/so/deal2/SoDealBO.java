@@ -75,7 +75,59 @@ public class SoDealBO {
 			ArrayList<SoDealVO> list = (ArrayList<SoDealVO>) o;
 			datas = list.toArray(new SoDealVO[0]);
 		}
-
+		
+		/**
+		 * liuys add 
+		 * 虚拟流程查询, 根据销售订单查询ERP销售出库,如果有对应的销售出库单并且该单标识为虚拟安排,则在销售计划安排只能查询出虚拟流程的单据
+		 *  出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量
+		 * 
+		 */ 
+		String[] pks = new String[datas.length];
+		Map map = new HashMap();
+		for (int i = 0; i < datas.length; i++) {
+			pks[i] = datas[i].getCorder_bid();
+			StringBuffer generalSql = new StringBuffer(
+					" select noutnum,csourcebillbid from ic_general_b bb where  bb.vuserdef9='Y' and nvl(bb.dr, 0) = 0 and bb.csourcebillbid = '"
+							+ datas[i].getCorder_bid() + "'");
+			Object obj = getDao().executeQuery(generalSql.toString(),
+					WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+			// 情况1 : 如果未查询到销售出库对应表体单据,则不是虚拟安排,按正常安排流程走
+			if (obj == null)
+				continue;
+			List<?> kcList = (ArrayList<?>) obj;
+			if (kcList.size() == 0)
+				continue;
+			//情况2 : 如果只查询出一个对应的虚拟出库的单据,那么直接存入map
+			if (kcList.size() == 1) {
+				map.put(kcList.get(1), kcList.get(0));
+				continue;
+			}
+			//情况3 : 如果只查询出多个对应的虚拟出库的单据,那么将出库量合计并存入map
+			UFDouble hj = new UFDouble();
+			for (int j = 0; j < kcList.size(); i++) {
+				hj= hj.add(new UFDouble(kcList.get(0).toString()));
+				if(i == kcList.size()-1)
+					map.put(kcList.get(1), hj);
+			}
+		}
+		//如果存在对应的虚拟出库单,则校验量是否满足
+		if(map  != null || map.size()>0 ){
+			for(int y=0;y<datas.length;y++){
+				SoDealVO vo = (SoDealVO)datas[y];
+				Object obje = map.get(vo.getCorder_bid());
+				if(obje != null && obje.toString().length()>0){
+					//出库数量合计
+					UFDouble cksl1 = new UFDouble(obje.toString());
+					//订单已安排量
+					UFDouble ntaldcnum = vo.getNtaldcnum();
+					//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
+					if(cksl1.sub(ntaldcnum).doubleValue()>0){
+						vo.setIsxnap(new UFBoolean(true));
+						vo.setNnum(cksl1.sub(ntaldcnum));
+					}
+				}
+			}
+		}
 		return datas;
 	}
 

@@ -126,6 +126,14 @@ public class SoDealVO extends SuperVO{
 	private UFDouble ndiscountmny;
 	private String crowno;
 	private UFBoolean disdate;    //是否大日期
+	private UFBoolean isxnap;//是否虚拟安排 liuys add
+	
+	public UFBoolean getIsxnap() {
+		return isxnap;
+	}
+	public void setIsxnap(UFBoolean isxnap) {
+		this.isxnap = isxnap;
+	}
 	public UFBoolean getDisdate() {
 		return disdate;
 	}

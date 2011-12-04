@@ -356,6 +356,7 @@ public class ChangToWDSO {
 			b2vos[i].setNoutnum(list.get(i).getNoutnum());
 			b2vos[i].setNoutassistnum(list.get(i).getNoutassistnum());
 			b2vos[i].setStatus(VOStatus.NEW);
+			b2vos[i].setIsxnap(list.get(i).getIsxnap());//ÊÇ·ñĞéÄâ°²ÅÅ liuys add
 		}
 		return b2vos;
 	}

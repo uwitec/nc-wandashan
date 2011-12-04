@@ -6,7 +6,7 @@
    	
 	import java.util.ArrayList;
 	import nc.vo.pub.*;
-	import nc.vo.pub.lang.*;
+import nc.vo.pub.lang.*;
 	
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -38,6 +38,7 @@
 	 public UFDouble noutassistnum;//累计出库辅数量
 	 public String pk_wds_writeback4c_b1;
 	 public String pk_wds_writeback4c_h;   
+	 
 	//预留字段
 	public String reserve1;
 	public String reserve2;
@@ -1048,5 +1049,6 @@
 
 	public void setPk_wds_writeback4c_h(String pk_wds_writeback4c_h) {
 		this.pk_wds_writeback4c_h = pk_wds_writeback4c_h;
-	} 
+	}
+
 } 

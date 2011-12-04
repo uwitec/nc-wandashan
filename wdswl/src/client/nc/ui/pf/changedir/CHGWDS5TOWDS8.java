@@ -51,7 +51,8 @@ public class CHGWDS5TOWDS8 extends VOConversionUI{
 				"B_vbatchcode->B_picicode", //批次号
 				"B_unitid->B_uint",//主单位
 				"B_castunitid->B_assunit",//辅单位
-				"B_hsl->B_nhgrate"//换算率
+				"B_hsl->B_nhgrate",//换算率
+				"B_isxnap->B_isxnap"//是否虚拟安排 liuys add
 		};
 	}
 	/**

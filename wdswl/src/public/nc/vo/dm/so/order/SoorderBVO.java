@@ -124,7 +124,7 @@ import nc.vo.wl.pub.WdsWlPubTool;
              public String cfirsttype;
              public UFDouble reserve7;
              public String vdef6;
-             
+             private UFBoolean isxnap;// «∑Ò–Èƒ‚∞≤≈≈ liuys add
              
            
             
@@ -184,7 +184,15 @@ import nc.vo.wl.pub.WdsWlPubTool;
 //             public static final String  VDEF6="vdef6";   
       
     
-        public UFDouble getNoutnum() {
+        public UFBoolean getIsxnap() {
+				return isxnap;
+			}
+
+			public void setIsxnap(UFBoolean isxnap) {
+				this.isxnap = isxnap;
+			}
+
+		public UFDouble getNoutnum() {
 				return noutnum;
 			}
 
