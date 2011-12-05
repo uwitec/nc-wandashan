@@ -44,9 +44,9 @@ public class BSCheck implements IBDBusiCheck {
 //        if(vo.getChildrenVO()==null || vo.getChildrenVO().length==0){
 //        	return;
 //        }
-        if(vo.getParentVO().getPrimaryKey()==null || vo.getParentVO().getPrimaryKey().trim().length()==0){
-        	return;
-        }
+//        if(vo.getParentVO().getPrimaryKey()==null || vo.getParentVO().getPrimaryKey().trim().length()==0){
+//        	return;
+//        }
         BdStordocVO ivo = (BdStordocVO) vo.getParentVO();  //pk_wds_corpseal
 		String primary= PuPubVO.getString_TrimZeroLenAsNull(ivo.getPrimaryKey());
 		//新增保存和 修改保存 区分校验
@@ -87,10 +87,19 @@ public class BSCheck implements IBDBusiCheck {
         }
         int size=vos.length;
         for(int i=0;i<size;i++){
-        if(BsUniqueCheck.isEmpty(vos[i].getAttributeValue("pk_cumandoc"))){
-        	continue;
-        }
-        BsUniqueCheck.FieldUniqueCheck(vos[i], "pk_cumandoc"," and pk_stordoc <> '"+vo.getParentVO().getPrimaryKey()+"'", " 该客商已在其他仓库绑定");
+//        if(BsUniqueCheck.isEmpty(vos[i].getAttributeValue("pk_cumandoc"))){
+//        	continue;
+//        }
+//        BsUniqueCheck.FieldUniqueCheck(vos[i], "pk_cumandoc"," and pk_stordoc <> '"+vo.getParentVO().getPrimaryKey()+"'", " 该客商已在其他仓库绑定");
+    //    BsUniqueCheck.FieldUniqueChecks(vos[i],["pk_stordoc",],);
+            String 	pk_cumandoc=(String) vos[i].getAttributeValue("pk_cumandoc");
+            if(pk_cumandoc!=null&&pk_cumandoc.length()>0){
+		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_cumandoc"}, " 该客户在别的仓库中已绑定 ");
+             }
+            String 	pk_stordoc1=(String) vos[i].getAttributeValue("pk_stordoc1");
+            if(pk_stordoc1!=null&&pk_stordoc1.length()>0){
+		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_stordoc1"}, " 该分仓在别的仓库中已绑定 ");
+            }
         }		
 	}
 	

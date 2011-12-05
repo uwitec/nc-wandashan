@@ -79,7 +79,8 @@ public class ChangeTo4C {
 		}
 		// liuys add 判断是否为虚拟安排  , 如果是,那么不回传erp销售出库
 		for(int i=0;i<bvos.length;i++){
-			if(bvos[i].getIsxnap().booleanValue())
+			UFBoolean isxnap=PuPubVO.getUFBoolean_NullAs(bvos[i].getIsxnap(), UFBoolean.FALSE);
+			if(isxnap.booleanValue())
 				listbvos.add(bvos[i]);
 		}
 		//liuys add 如果整单都是虚拟安排,那么直接返回null,不处理
