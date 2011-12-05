@@ -16,9 +16,7 @@ import nc.vo.pub.lang.UFDouble;
  * <p>
  * 在此处添加此类的描述信息
  * </p>
- * 
  * 创建日期:2011-5-3
- * 
  * @author author
  * @version Your Project 1.0
  */

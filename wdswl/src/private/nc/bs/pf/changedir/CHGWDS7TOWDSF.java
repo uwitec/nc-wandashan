@@ -29,7 +29,8 @@ public class CHGWDS7TOWDSF extends VOConversion {
 	public String[] getField() {
 		
 		return new String[]{
-				"H_pk_corp->H_pk_corp",//公司	
+				"H_pk_corp->H_pk_corp",//公司
+				"H_pk_stordoc->H_geh_cwarehouseid,",//仓库
 				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",

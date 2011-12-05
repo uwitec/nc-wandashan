@@ -25,8 +25,8 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	public String[] getField() {
 		// TODO Auto-generated method stub
 		return new String[]{
-				//liuys modify  修改低级错误
 				"H_pk_corp->H_pk_corp",//公司	
+				"H_pk_stordoc->H_geh_cwarehouseid,",//仓库
 				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",
@@ -52,11 +52,10 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	* @return java.lang.String[]
 	*/
 	public String[] getFormulas() {
-		new UFDate(System.currentTimeMillis());
-		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+		if(m_strDate == null || "".equalsIgnoreCase(m_strDate)){
+			super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
+		}
 		return new String[] {
-//			"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
-//			"H_forderstatus->int(0)",
 				"H_pk_billtype->\""+WdsWlPubConst.WDSF+"\"",
 				"H_vbillstatus->int(8)",
 			    "H_dmakedate->\""+m_strDate+"\"",
