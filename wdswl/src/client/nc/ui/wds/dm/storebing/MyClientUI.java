@@ -10,6 +10,7 @@ import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.wds.dm.storebing.GetCheck;
 
@@ -76,12 +77,23 @@ public class MyClientUI extends BillManageUI {
 	public void afterEdit(BillEditEvent e) {
 		String key = e.getKey();
 		Object value =e.getValue();
+		String 	pk_stordoc= getBillCardPanel().getHeadItem("pk_stordoc").getValue();//取到表头仓库存到表体中作校验
+		if(pk_stordoc==null || pk_stordoc.length()==0 ){
+		    try {
+				throw new BusinessException("表头仓库信息不能为空");
+			} catch (BusinessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		if ("custcode".equals(key)) {
 			//选定客商后，清除分仓信息
 			if(value != null && !"".equals(value)){
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "pk_stordoc1");
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "storname");
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "storcode");
+				getBillCardPanel().getBillModel().setValueAt(pk_stordoc, e.getRow(), "pk_stordoc");
+
 			}
 		}else if ("storcode".equals(key)) {
 			//选定分仓后，清除客商信息
@@ -92,6 +104,8 @@ public class MyClientUI extends BillManageUI {
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "custcode");
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "conaddr");
 				getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "areaclname");
+				getBillCardPanel().getBillModel().setValueAt(pk_stordoc, e.getRow(), "pk_stordoc");
+
 			}
 		}
 	}
