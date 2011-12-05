@@ -16,7 +16,7 @@ public class GetCheck implements Serializable, IBDGetCheckClass2 {
 	 * 前台校验类路径
 	 */
 	public String getUICheckClass() {		
-	//	return "nc.ui.wds.tranprice.freight.UICheck";
-		return "";
+		return "nc.ui.wds.dm.storebing.UICheck";
+	//	return "";
 	}
 }
