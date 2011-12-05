@@ -254,8 +254,7 @@ public class SoDealVO extends SuperVO{
 		"b.nsummny", // 本币价税合计
 		"b.ndiscountmny",
 		"b.ntaldcnum",
-		"b.crowno",
-	//	"b.disdate"  //是否大日期
+		"b.crowno"
 	};
 	
 	

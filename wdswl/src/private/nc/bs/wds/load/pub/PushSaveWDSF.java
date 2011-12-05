@@ -13,6 +13,7 @@ import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB1VO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
+import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 出入库签字 推式保存形成装卸费核算单
@@ -95,8 +96,8 @@ public class PushSaveWDSF {
 		if(billVO != null && billVO instanceof ExaggLoadPricVO){
 			ExaggLoadPricVO bill = (ExaggLoadPricVO)billVO;
 			String pk_corp=PuPubVO.getString_TrimZeroLenAsNull(bill.getParentVO().getAttributeValue("pk_corp"));
-			
-			getBs().accoutLoadPrice(bill,pk_corp, getBo().getLogInfor(coperator,pk_corp).getWhid(),lodytype);	
+			LoadpriceHVO head = (LoadpriceHVO)bill.getParentVO();
+			getBs().accoutLoadPrice(bill,pk_corp,head.getPk_stordoc(),lodytype);	
 			//设置新增单据的基本信息
 			bill.getParentVO().setAttributeValue("vbillstatus", IBillStatus.FREE);
 			bill.getParentVO().setAttributeValue("pk_billtype", WdsWlPubConst.WDSF);

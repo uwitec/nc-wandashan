@@ -183,6 +183,10 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 
 		 */	
+		if(PuPubVO.getString_TrimZeroLenAsNull(ui.getWhid()) == null){
+			showWarnMessage("当前登录人未绑定仓库");
+			return ;
+		}
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
@@ -263,10 +267,10 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			whereSql.append(" and "+where);
 		}
 		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' and isnull(h.dr,0)=0");//审核通过的
-				
+		whereSql.append(" and wds_storecust_h.pk_stordoc='"+ui.getWhid()+"' and isnull(wds_storecust_h.dr,0) =0 ");		
 		/**
 		 * 
-		 * bifreceiptfinish              CHAR(1)             是否发货结束                                      NULL                
+		 * bifreceiptfinish              CHAR(1)             是否发货结束   NULL                
            bifinventoryfinish            CHAR(1)             是否出库结束     
 		 * 
 		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
