@@ -14,9 +14,12 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsQueryDlg extends HYQueryDLG {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String cwhid = null;//仓库
 	protected String ccargdoc = null;//货位
-	
 	protected String cwh_fieldname;//仓库字段名称
 	protected String ccarg_fieldname;//货位字段名称
 	public WdsQueryDlg(Container parent, UIPanel normalPnl, String pk_corp,

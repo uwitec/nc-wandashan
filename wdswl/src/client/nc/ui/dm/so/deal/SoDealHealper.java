@@ -24,14 +24,15 @@ public class SoDealHealper {
 	 * 如果当前登录人是总仓的 可以查询所有的 发运安排
 	 * @时间：2011-3-25上午09:16:20
 	 * @param wheresql
+	 * @param pk_stordoc :仓库
 	 * @return
 	 * @throws Exception
 	 */
 
-	public static SoDealVO[] doQuery(String wheresql) throws Exception{
+	public static SoDealVO[] doQuery(String wheresql,String pk_stordoc) throws Exception{
 		SoDealVO[] dealVos=null;
-		Class[] ParameterTypes = new Class[] { String.class };
-		Object[] ParameterValues = new Object[] { wheresql };
+		Class[] ParameterTypes = new Class[] { String.class,String.class };
+		Object[] ParameterValues = new Object[] { wheresql,pk_stordoc };
 		Object o = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "doQuery", ParameterTypes, ParameterValues, 2);
 		if(o != null){
 			dealVos = (SoDealVO[])o;

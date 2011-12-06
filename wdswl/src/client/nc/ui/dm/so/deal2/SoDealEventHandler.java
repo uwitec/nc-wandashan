@@ -163,7 +163,7 @@ public class SoDealEventHandler{
 		if(!getQryDlg().isCloseOK())
 			return;
 		whereSql = getSQL();
-		m_billdatas = SoDealHealper.doQuery(whereSql);
+		m_billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
 		if(m_billdatas == null||m_billdatas.length == 0){
 			clearData();
 			showHintMessage("查询完成：没有满足条件的数据");
@@ -188,7 +188,7 @@ public class SoDealEventHandler{
 		clearData();
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
-			billdatas = SoDealHealper.doQuery(whereSql);
+			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
 			if(billdatas == null||billdatas.length == 0){
 				return;
 			}
@@ -226,7 +226,6 @@ public class SoDealEventHandler{
 			whereSql.append(" and "+where);
 		}
 		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' ");//审核通过的
-		whereSql.append(" and wds_storecust_h.pk_stordoc='"+ui.getWhid()+"' and isnull(wds_storecust_h.dr,0) =0 ");
 	/**
 	 * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
 	 * 如果是分仓登录  该条件不可编辑默认为 登录仓库

@@ -260,7 +260,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	public void loadData(String billId) {
 		try {
 			SoDealVO[] billdatas = SoDealHealper.doQuery(" h.CSALEID = '"
-					+ billId + "' ");
+					+ billId + "' ",getWhid());
 			if (billdatas == null || billdatas.length == 0) {
 				showHintMessage("查询完成：没有满足条件的数据");
 				return;

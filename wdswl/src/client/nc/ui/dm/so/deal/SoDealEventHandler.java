@@ -194,7 +194,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		SoDealVO[] billdatas = null; 
 		try{
 			String whereSql = getSQL();
-			billdatas = SoDealHealper.doQuery(whereSql);
+			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -267,7 +267,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			whereSql.append(" and "+where);
 		}
 		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' and isnull(h.dr,0)=0");//审核通过的
-		whereSql.append(" and wds_storecust_h.pk_stordoc='"+ui.getWhid()+"' and isnull(wds_storecust_h.dr,0) =0 ");		
 		/**
 		 * 
 		 * bifreceiptfinish              CHAR(1)             是否发货结束   NULL                
@@ -276,11 +275,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 在 销售扩展子表上 存在表体的行状态   没有进行过滤 如果后续需要  应扩展对  以上发货结束的控制 
 		 * 
 		 */
-		//liuys add for wds项目   总仓能查出所有分仓计划,分仓只能查出自己分仓计划(与登录人仓库绑定有关)
-		String cwhid  = new LoginInforHelper().getLogInfor(ui.m_ce.getUser().getPrimaryKey()).getWhid();
-		if(!WdsWlPubTool.isZc(cwhid)){//非总仓人员登陆  只能查询 发货仓库为自身的发运计划
-			whereSql.append(" and tbst.pk_stordoc = '"+cwhid+"' ");
-			}
 		return whereSql.toString();
 	}
 	

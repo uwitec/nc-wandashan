@@ -48,7 +48,7 @@ public class SoDealBO {
 	 * @return
 	 * @throws Exception
 	 */
-	public SoDealVO[] doQuery(String whereSql) throws Exception {
+	public SoDealVO[] doQuery(String whereSql,String pk_storedoc) throws Exception {
 		SoDealVO[] datas = null;
 		// 实现查询发运计划的逻辑
 		StringBuffer sql = new StringBuffer();
@@ -62,17 +62,20 @@ public class SoDealBO {
 			sql.append(name + ", ");
 		}
 		sql.append(" 'aaa' ");
-		sql.append(" from so_sale h inner join so_saleorder_b b on h.csaleid = b.csaleid ");
-		sql.append(" join  tb_storcubasdoc tbst on tbst.pk_cumandoc = h.creceiptcustomerid ");
-		sql.append(" join wds_storecust_h on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");
-
-//		" inner join so_saleexecute c on b.corder_bid = c.csale_bid " +
-//		" join  tb_storcubasdoc tbst on tbst.pk_cumandoc = h.creceiptcustomerid ");
-		sql.append(" where");
-		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  and isnull(tbst.dr,0)=0 ");
+		sql.append(" from so_sale h  " );
+		sql.append(" inner join so_saleorder_b b on h.csaleid = b.csaleid");
+		sql.append(" where ");
+		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
+		sql.append(" and h.creceiptcustomerid in(");
+		sql.append(" select tb_storcubasdoc.pk_wds_storecust_h  ");
+		sql.append(" from wds_storecust_h ");
+		sql.append(" join tb_storcubasdoc ");
+		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");
+		sql.append(" where wds_storecust_h.pk_stordoc ='"+pk_storedoc+"'");
+		sql.append(" )");
 		Object o = getDao().executeQuery(sql.toString(),
 				new BeanListProcessor(SoDealVO.class));
 		if (o != null) {
