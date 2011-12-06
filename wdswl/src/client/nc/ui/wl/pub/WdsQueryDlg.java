@@ -27,9 +27,7 @@ public class WdsQueryDlg extends HYQueryDLG {
 		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
 		cwh_fieldname = whfield;
 		ccarg_fieldname = cargfield;
-//		initData();
 		LoginInforHelper login = new LoginInforHelper();
-		
 		try {
 			cwhid = login.getCwhid(operator);
 			ccargdoc = login.getLogInfor(operator).getSpaceid();

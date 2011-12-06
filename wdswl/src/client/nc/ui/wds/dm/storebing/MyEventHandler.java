@@ -30,7 +30,6 @@ public class MyEventHandler extends WdsPubEnventHandler {
 		// TODO Auto-generated method stub
 		return new MyQueryDIG(
 				getBillUI(), null, 
-				
 				_getCorp().getPk_corp(), getBillUI().getModuleCode()
 				
 				, getBillUI()._getOperator(), null		

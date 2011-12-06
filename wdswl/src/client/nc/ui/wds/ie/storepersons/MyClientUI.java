@@ -39,6 +39,7 @@ public class MyClientUI extends BillManageUI implements BillCardBeforeEditListen
 	}
 
 	protected void initSelfData() {
+		
 	}
 
 	public void setDefaultData() throws Exception {

@@ -11,7 +11,7 @@ public class MyQueryDIG extends WdsQueryDlg{
 	
 	public MyQueryDIG(Container parent, UIPanel normalPnl, String pk_corp,
 			String moduleCode, String operator, String busiType) {
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"pk_stordoc",null);
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_storecust_h.pk_stordoc",null);
 
 //	 init();
 	}
