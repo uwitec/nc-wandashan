@@ -187,7 +187,10 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 							" or isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_use+
 							") and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
 									" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' "
-									+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) >= "+getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")
+									//yf modify 只过滤已满托盘 
+									+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) > 0"
+//											"= "+
+//									getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")
 					);//当前货位下托盘为空且和移出托盘一样的存货
 				}
 			}
