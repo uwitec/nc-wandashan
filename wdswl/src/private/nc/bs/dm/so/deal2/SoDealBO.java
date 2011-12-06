@@ -70,11 +70,13 @@ public class SoDealBO {
 			sql.append(" and " + whereSql);
 		}
 		sql.append(" and h.creceiptcustomerid in(");
-		sql.append(" select tb_storcubasdoc.pk_wds_storecust_h  ");
+		sql.append(" select tb_storcubasdoc.pk_cumandoc  ");
 		sql.append(" from wds_storecust_h ");
 		sql.append(" join tb_storcubasdoc ");
 		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");
 		sql.append(" where wds_storecust_h.pk_stordoc ='"+pk_storedoc+"'");
+		sql.append("  and isnull(wds_storecust_h.dr,0)=0");
+		sql.append("  and isnull(tb_storcubasdoc.dr,0)=0");
 		sql.append(" )");
 		Object o = getDao().executeQuery(sql.toString(),
 				new BeanListProcessor(SoDealVO.class));

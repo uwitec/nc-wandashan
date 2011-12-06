@@ -323,7 +323,7 @@ abstract public class ZmReportBaseUI extends ReportBaseUI{
  * @param vos
  * @return
  */
-  private ConditionVO[] filterQuery(ConditionVO[] vos) {
+  public ConditionVO[] filterQuery(ConditionVO[] vos) {
 	   List<ConditionVO> list=new ArrayList<ConditionVO>();
 	   if(vos==null || vos.length==0)
 		   return null;

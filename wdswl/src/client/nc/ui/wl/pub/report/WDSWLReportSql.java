@@ -1,6 +1,7 @@
 package nc.ui.wl.pub.report;
 
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.bill.BillStatus;
 import nc.vo.pub.lang.UFBoolean;
 
 public class WDSWLReportSql {	
@@ -417,28 +418,121 @@ public class WDSWLReportSql {
 	public static String getStoreSql(String whereSql){
 		StringBuffer sql = new StringBuffer();	
         sql.append(" select ");//仓库主键	
-        sql.append(" t.pk_customize1 pk_stordoc,");
-        sql.append(" t.pk_cargdoc pk_cargdoc,");//货位
+        sql.append(" h.pk_customize1 pk_stordoc,");
+        sql.append(" h.pk_cargdoc pk_cargdoc,");//货位
 		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
-        sql.append(" t.whs_batchcode vbatchcode,");		
-		sql.append(" t.ss_pk  pk_storestate,");//存货状态主键
-        sql.append(" t.pk_invbasdoc pk_invbasdoc,");		      
-        sql.append(" round(sysdate-to_date(t.creadate,'YYYY-MM-DD HH24-MI-SS'),0) days,");//入库天数
-        sql.append(" t.creadate creadate,");//入库日期
-        sql.append(" t.whs_stocktonnage num,");//库存中的单品的主数量 主要用来设置库龄主数量
-        sql.append(" t.whs_stockpieces bnum"); //库存中的单品的辅数量 主要用来设置库龄辅数量 
+        sql.append(" h.whs_batchcode vbatchcode,");		
+		sql.append(" h.ss_pk  pk_storestate,");//存货状态主键
+        sql.append(" h.pk_invbasdoc pk_invbasdoc,");		      
+        sql.append(" round(sysdate-to_date(h.creadate,'YYYY-MM-DD HH24-MI-SS'),0) days,");//入库天数
+        sql.append(" h.creadate creadate,");//入库日期
+        sql.append(" h.whs_stocktonnage num,");//库存中的单品的主数量 主要用来设置库龄主数量
+        sql.append(" h.whs_stockpieces bnum"); //库存中的单品的辅数量 主要用来设置库龄辅数量 
         sql.append(" from ");	        	 
-		sql.append(" tb_warehousestock t");
+		sql.append(" tb_warehousestock h");
 		sql.append(" join wds_invbasdoc iv");//关联存货档案
-		sql.append(" on t.pk_invbasdoc=iv.pk_invbasdoc");
+		sql.append(" on h.pk_invmandoc=iv.pk_invmandoc");
 		sql.append(" left join wds_invcl cl ");//关联存货分类
 		sql.append(" on iv.vdef1=cl.pk_invcl and nvl(cl.dr, 0) = 0");
-		sql.append(" where isnull(t.dr,0)=0");//
+		sql.append(" where isnull(h.dr,0)=0");//
 		sql.append(" and isnull(iv.dr,0)=0");//
 		if(whereSql!=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
-		sql.append(" and t.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
+	/**
+	 * 获得查询销售待发 数据的语句
+	 * 查询  销售订单  和 物流销售出库单
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getOrderDaiFaSql(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select h.vreceiptcode billcode, ");//单据号  
+//		sql.append(" h.dbilldate, ");  //订单日期
+//		sql.append(" h.ccustomerid, ");//  客商id   
+//		sql.append(" h.dmakedate,");   //制单日期     
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" tbh.pk_stordoc pk_stordoc,");//发货仓库
+		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
+		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
+//		sql.append(" b.cunitid,");   //主单位
+//		sql.append(" b.cpackunitid,"); //辅单位   
+		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id  
+		sql.append(" b.nnumber, ");  //订单数量
+		sql.append(" b.npacknumber, ");   //订单辅数量
+		sql.append(" b1.noutnum num,");//物流销售出库单实发数量
+		sql.append(" b1.noutassistnum bnum");//物流销售出库单实发辅数量
+	//	sql.append(" b.ntaldcnum,"); //累积出库数量  
+		sql.append(" from so_sale h ");
+		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
+		sql.append(" join tb_storcubasdoc tb ");//关联分仓客商绑定
+		sql.append(" on h.ccustomerid = tb.pk_cumandoc");
+		sql.append(" join wds_storecust_h tbh");
+		sql.append(" on tb.pk_wds_storecust_h = tbh.pk_wds_storecust_h");
+		sql.append(" left join tb_outgeneral_b b1 on b.corder_bid=b1.cfirstbillbid and isnull(b1.dr,0)=0");
+		sql.append(" left join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" where isnull(h.dr, 0) = 0 ");
+		sql.append(" and isnull(b.dr, 0) = 0 ");
+		sql.append(" and isnull(tb.dr,0) = 0");
+		sql.append(" and isnull(tbh.dr,0) =0 ");
+		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
+	/**
+	 * 获得转分仓在途,到货等状态的查询语句
+	 * 查询 发运订单
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getDmOrderSql(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select  ");
+//		sql.append(" h.vbillno ,");//发运订单订单号
+//		sql.append(" h.dbilldate, ");//订单日期
+//		sql.append(" h.pk_outwhouse,");//发货仓库
+		sql.append(" h.itransstatus ,");//0 待发 1 在途 2 到货
+		sql.append(" h.pk_inwhouse pk_stordoc,");//收货仓库
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b.pk_invmandoc,");//存货管理档案id
+		sql.append(" b.pk_invbasdoc ,");//存货基本档案id
+//		sql.append(" b.nplannum ,");//计划数量
+//		sql.append(" b.nassplannum,");//计划辅数量
+//		sql.append(" b.ndealnum,");//安排数量
+//		sql.append(" b.nassdealnum,");//安排辅数量
+		sql.append(" b.noutnum num,");//已经出库的数量
+		sql.append(" b.nassoutnum bnum");//已经出库的辅数量
+	    sql.append(" from wds_sendorder h ");
+		sql.append(" join wds_sendorder_b b");
+		sql.append(" on h.pk_sendorder = b.pk_sendorder ");
+		sql.append(" join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b.pk_invmandoc=iv.pk_invmandoc");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+        sql.append(" where isnull(h.dr,0)=0");
+        sql.append("  and isnull(b.dr,0)=0");
+        sql.append("  and isnull(iv.dr,0)=0");
+        sql.append("  and h.itransstatus=1");
+        if(whereSql !=null && whereSql.length()!=0)
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
 		return sql.toString();
 	}
 }

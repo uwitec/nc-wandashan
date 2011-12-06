@@ -54,9 +54,7 @@ public class CombinVO {
 		 *        为保证两组数据在 各组中按维度条件查询 只能查到一条
 		 *        可以先调用 combinData 方法进行合并
 		 *        然后再调用本方法
-		 *        
-		 *        
-		 *        
+		 *               
 	     *        两个vo数组按维度条件只能查到一个符合条件的vo   
 	     *                
 		 * @时间：2011-7-11下午09:12:25
@@ -69,7 +67,7 @@ public class CombinVO {
 		 */
 		public static CircularlyAccessibleValueObject[] combinVoByFields(CircularlyAccessibleValueObject[] vos, CircularlyAccessibleValueObject[] vos1,
 				String[] voCombinConds, int[] types,String[] combinFields) {
-				if (isEmpty(vos)) {
+			if (isEmpty(vos)) {
 				if (!isEmpty(vos1)) {
 					return vos1;
 				}
@@ -248,8 +246,19 @@ public class CombinVO {
 	}
 	/**
 	 * 	数据追加 按某个条件维度  将符合条件的数据  
-	 *  拼接到一起
+	 *  拼接到一起 
+	 *  
+	 *   
+	 *   
+	 *  只是将  vos1 中按维度查询  符合条件的  追加到vos中
+	 *  如果 vos1中按维度条件查询 能够查到
+	 *  而同样的维度查询 在vos2中查不到 那么 将不会追加到vos中
+	 *  
+	 *  
+	 *  
 	 *  限制条件： 按维度条件查询  各组数据必须是 唯一的
+	 *  
+	 *  
 	 *  要想保证数据唯一的话 可以先调用combinVoByFields方法进行维度合并
 	 * @author mlr
 	 * @说明：（鹤岗矿业）
@@ -302,6 +311,117 @@ public class CombinVO {
 				}
 			}			
 		return vos;
+	}	
+  /**
+	 * 	数据追加 按某个条件维度  将符合条件的数据  
+	 *  拼接到一起
+	 *  限制条件： 按维度条件查询  各组数据必须是 唯一的
+	 *  要想保证数据唯一的话 可以先调用combinVoByFields方法进行维度合并
+	 *  
+	 *  是对  addByContion1的改进
+	 *  会将  vos1中按维度查询到的 而在vos中按同样的维度查询却查不到的
+	 *  会在vos中新增一个vo将vos1中的该数据追加到vos中
+	 *  
+	 * @author mlr
+	 * @说明：（鹤岗矿业）
+	 * 2011-12-25上午09:44:00
+	 * @param vos1 报表集合
+	 * @param vos2 报表集合
+	 * @param conds 追加条件
+	 * @param xid 追加标识   将vos1中的数据追加到vos中时 会将 vos1中属性名字 改为 属性名+xid
+	 *             如果 xid为空 则不追加标示
+	 * @return
+	 * @throws Exception
+	 */
+public static ReportBaseVO[] addByContion2(ReportBaseVO[] vos,ReportBaseVO[] vos1,String[] voCombinConds,String xid)throws Exception{
+		if (isEmpty(vos)) {
+			if (!isEmpty(vos1)) {
+				return vos1;
+			}
+		}
+		if (isEmpty(vos1)) {
+			if (!isEmpty(vos)) {
+				return vos;
+			}
+		}
+		if (isEmpty(vos) &&isEmpty(vos1)) {
+			return null;
+		}	
+		//记录  vos1中已经被合并过的vo
+		List<ReportBaseVO> list=new ArrayList<ReportBaseVO>();
+
+		int size=vos.length;
+		int size1=vos1.length;
+			//拿 vos中的每个vo 按条件遍历vos1
+			//将符合条件的 vos1 加到 vo上
+			for (int i = 0; i < size; i++) {
+				ReportBaseVO avo = vos[i];
+				for (int j = 0; j < size1; j++) {
+					ReportBaseVO bvo = vos1[j];
+					boolean isEqual = true;
+					for (int k = 0; k < voCombinConds.length; k++) {
+						Object o1 = avo.getAttributeValue(voCombinConds[k]);
+						Object o2 = bvo.getAttributeValue(voCombinConds[k]);
+						if (!isEqual(o1, o2)) {
+							isEqual = false;
+							break;
+						}
+					}
+					if (isEqual) {
+						add(avo,bvo,xid);
+						list.add(bvo);
+					}
+				}
+			}	
+			
+			//记录vos1中没有被vos匹配上的vo 进行二次合并
+			//现有 vos1 和  list
+		    // 按照某个维度条件 将vos1中符合条件的  但 list中不符合条件的找出来
+			//如何找呢？
+			//两层循环  每次拿vos1中的一个vo 去list中按条件查找符合条件的 vo
+			//如果有符合条件的vo 
+			//就断开 list 循环 继续下一次循环
+			//如何将不符合条件的 vo从vos1中找出来
+			//当循环到 list的最后一个元素 还没有符合条件的元素时, 把vos中的对应vo取出来即可			
+			List<CircularlyAccessibleValueObject> list1=new ArrayList<CircularlyAccessibleValueObject>();//纪录vos1中没有被匹配的vo
+			int csize=vos1.length;
+			for(int i=0;i<csize;i++){			
+				CircularlyAccessibleValueObject avo=vos1[i];				
+				int csize1=list.size();
+				for(int j=0;j<csize1;j++){
+					boolean isEqual = true;
+					CircularlyAccessibleValueObject bvo=list.get(j);
+					for (int k = 0; k < voCombinConds.length; k++) {
+						Object o1 = avo.getAttributeValue(voCombinConds[k]);
+						Object o2 = bvo.getAttributeValue(voCombinConds[k]);
+						if (!isEqual(o1, o2)) {
+							isEqual = false;
+							break;
+						}
+					}
+					if(isEqual){					
+						break;
+					}
+					if(j==csize1-1){
+						list1.add(vos1[i]);
+					}
+				}
+			}
+			//如果list 长度为0 说明vos 和vos1 没有一个匹配上的
+			if(list.size()==0){
+				for(int i=0;i<vos1.length;i++){
+					list1.add(vos1[i]);
+				}				
+			}		
+			//将没有匹配上的vo合并上
+			if(list1.size()>0){
+			  for(int i=0;i<vos.length;i++){
+				 list1.add(vos[i]);  
+			  }
+			    return (ReportBaseVO[]) list1.toArray((CircularlyAccessibleValueObject[]) java.lang.reflect.Array.newInstance(vos[0].getClass(), 0));
+			  }else{
+				return vos;
+			 }		
 	}			
 		/**
 		 * 
@@ -477,5 +597,40 @@ public class CombinVO {
 	    dataMap.values().toArray(tarVos);
 	    return tarVos;
 	}
-
+	/**
+	 * 过滤符合条件的数据
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-5下午01:59:36
+	 * @param fields
+	 * @return
+	 */
+	public static ReportBaseVO[] filterVO(ReportBaseVO[] vos,String[] fields,String[] values)throws Exception{
+		if(vos==null || vos.length==0)
+			return null;
+		if(fields==null || fields.length==0)
+			throw new Exception("过滤字段为空");
+		if(values==null || values.length==0)
+			throw new Exception("过滤字段为空");
+		if(fields.length==values.length)
+			throw new Exception("过滤字段长度不一致");
+		int size=vos.length;
+		List<ReportBaseVO> list=new ArrayList<ReportBaseVO>();//记录过滤出的数据
+		boolean isEquale=true;
+		for (int i = 0; i < size; i++) {
+		   for(int j=0;j<fields.length;j++){
+			   String value=PuPubVO.getString_TrimZeroLenAsNull(vos[i].getAttributeValue(fields[j]));
+			   if(!isEqual(values[j],value)){
+				   isEquale=false;
+				   break;
+			   }
+		   }
+		   if(isEquale){
+			   list.add(vos[i]);
+		   }
+		}
+		if(list==null ||list.size()==0)
+			return null;
+		return list.toArray(new ReportBaseVO[0]);
+	}
 }
