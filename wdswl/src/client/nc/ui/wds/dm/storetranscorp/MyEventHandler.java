@@ -52,9 +52,9 @@ public class MyEventHandler extends WdsPubEnventHandler {
 	protected String getHeadCondition() {
 		String sql =super.getHeadCondition();
 		if(sql == null){
-			sql = sql+"  and def1='1' ";
+			sql = sql+"  and def1='1' and bd_stordoc.pk_corp='"+_getCorp().getPrimaryKey()+"' ";
 		}else{
-			return " def1='1'";
+			return " def1='1' and bd_stordoc.pk_corp='"+_getCorp().getPrimaryKey()+"'";
 		}
 		return sql;
 	}
