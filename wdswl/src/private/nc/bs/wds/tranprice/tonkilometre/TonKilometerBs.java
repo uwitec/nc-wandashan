@@ -13,6 +13,8 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.tranprice.tonkilometre.TranspriceHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -46,11 +48,13 @@ public class TonKilometerBs implements Serializable {
 		if (vo == null)
 			return;
 		TranspriceHVO hvo = (TranspriceHVO) vo.getParentVO();
+		UFBoolean fisbigflour= PuPubVO.getUFBoolean_NullAs(hvo.getFisbigflour(),UFBoolean.FALSE);//是否大包粉
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from wds_transprice_h where isnull(dr,0)=0  ");
 		sql.append(" and vbillstatus='1'");// 审批通过的
 		sql.append(" and reserve1='"+hvo.getReserve1()+"'");//仓库
-		sql.append(" and carriersid='"+hvo.getCarriersid()+"'");//承运商 		
+		sql.append(" and carriersid='"+hvo.getCarriersid()+"'");//承运商 	
+		sql.append(" and carriersid='"+fisbigflour+"'");//是否大包粉 	
 		sql.append(" and pk_billtype='" + WdsWlPubConst.WDSI + "'");
 		sql.append(" and( (dstartdate<='" + hvo.getDstartdate()
 				+ "' and denddate>='" + hvo.getDstartdate() + "')");
