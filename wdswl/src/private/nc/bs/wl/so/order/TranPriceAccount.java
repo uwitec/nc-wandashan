@@ -37,18 +37,25 @@ public class TranPriceAccount {
 	private AggregatedValueObject curBillvo = null;
 	// 当前登录日期
 	private UFDate date = null;
-	// 运价表类型
-	private String colType = null;
-	// 是否零担
-	private boolean isSmall = false;
-	//是否总仓
-	private boolean isZC = true;
+	
+	
 	// 分仓与客商绑定关系VO
 	private TbStorcubasdocVO bingVO = null;
 	// 收货地区
 	private String reareaid = null;
+	
+	//是否原料粉
+	private boolean fisbigflour;
+	//是否总仓
+	private boolean isZC = true;
+	// 是否零担
+	private boolean isSmall = false;
+	
+	// 运价表类型
+	private String colType = null;
 	// 当前使用的 运价表子表
 	private TranspriceBVO curTranpriceBvo = null;
+	
 	// 汇总的主数量 辅助数量
 	private ArrayList<UFDouble> totalNum = new ArrayList<UFDouble>();
 
@@ -87,38 +94,59 @@ public class TranPriceAccount {
 		this.curBillvo = billvo;
 		SoorderVO head = (SoorderVO) curBillvo.getParentVO();
 		head.setVcolpersonid(operatorid);
-		// 确定运费计算类型（吨公里，或者箱数）
-		setColType();
-		// 查找运价表
-		if(isZC){
-			if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
-				List<TranspriceBVO> lprice = getDsPriceInfor(colType, head
-						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
-				if (lprice == null || lprice.size() == 0) {
-					throw new BusinessException("未查询到匹配的运价表");
-				}
-				curTranpriceBvo = lprice.get(0);
-			} else {
-				List<TranspriceBVO> lprice = getXsPriceInfor(colType, head
-						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
-				if (lprice == null || lprice.size() == 0) {
-					throw new BusinessException("未查询到匹配的运价表");
-				}
-				curTranpriceBvo = lprice.get(0);
-			}
-		}else{
-			List<TranspriceBVO> lprice = getFCPriceInfor(colType, head
+		// 1.确定运费计算类型
+		getColType();
+		// 2.查找运价表
+		getTranPriceBvo();
+		// 3.计算运费，并且扫描运费信息到发运单
+		appendPriceInfor();
+		// 4. 保存运费
+		doSavePriceInfor();
+		return billvo;
+	}
+	/**
+	 * 
+	 * @throws BusinessException 
+	 * @作者：lyf:获得运价表
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-7下午03:34:45
+	 */
+	public void getTranPriceBvo() throws BusinessException{
+		SoorderVO head = (SoorderVO) curBillvo.getParentVO();
+		if(fisbigflour){//查找原料粉运价表：吨公里运价表
+			List<TranspriceBVO> lprice = getBigPriceInfor(colType, head
 					.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 			if (lprice == null || lprice.size() == 0) {
 				throw new BusinessException("未查询到匹配的运价表");
 			}
-			curTranpriceBvo = lprice.get(0);		
+			curTranpriceBvo = lprice.get(0);
+		}else{
+			if(isZC){//--总仓：吨公里运价表或者箱数运价表
+				if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
+					List<TranspriceBVO> lprice = getDsPriceInfor(colType, head
+							.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
+					if (lprice == null || lprice.size() == 0) {
+						throw new BusinessException("未查询到匹配的运价表");
+					}
+					curTranpriceBvo = lprice.get(0);
+				} else {
+					List<TranspriceBVO> lprice = getXsPriceInfor(colType, head
+							.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
+					if (lprice == null || lprice.size() == 0) {
+						throw new BusinessException("未查询到匹配的运价表");
+					}
+					curTranpriceBvo = lprice.get(0);
+				}
+			}else{//查询分仓运价表
+				List<TranspriceBVO> lprice = getFCPriceInfor(colType, head
+						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
+				if (lprice == null || lprice.size() == 0) {
+					throw new BusinessException("未查询到匹配的运价表");
+				}
+				curTranpriceBvo = lprice.get(0);		
+			}
 		}
-		// 计算运费，并且扫描运费信息到发运单
-		appendPriceInfor();
-		// 保存运费
-		doSavePriceInfor();
-		return billvo;
+		
 	}
 	/**
 	 * 
@@ -201,6 +229,25 @@ public class TranPriceAccount {
 		UFDouble nnum = null;
 		UFDouble ngls = null;
 		UFDouble nprice = null;
+		if(fisbigflour){
+			nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(0));
+			ngls = PuPubVO.getUFDouble_NullAsZero(head.getNgls());
+			nprice = PuPubVO.getUFDouble_NullAsZero(head.getNtranprice());
+			UFDouble nadustmny = null;
+			Integer iadjstType = PuPubVO.getInteger_NullAs(head
+					.getIadjusttype(), 1);
+			if (iadjstType == 0) {// 按照吨调整
+				nadustmny = PuPubVO.getUFDouble_NullAsZero(
+						head.getNadjustprice()).multiply(nnum);
+			} else {// 按照箱调整
+				nadustmny = PuPubVO.getUFDouble_NullAsZero(
+						head.getNadjustprice()).multiply(
+						PuPubVO.getUFDouble_NullAsZero(totalNum.get(1)));
+			}
+			head.setNtransmny(nprice.multiply(nnum, 8).multiply(ngls, 8).add(
+					nadustmny));
+			return;
+		}
 		if(isZC){
 			if (WdsWlPubConst.WDSI.equalsIgnoreCase(colType)) {
 				nnum = PuPubVO.getUFDouble_NullAsZero(totalNum.get(0));
@@ -257,11 +304,11 @@ public class TranPriceAccount {
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：根据主数量汇总值，查询分仓与承运商绑定关系，得到零担吨数， 比较 得到运费计算类型
+	 * @说明：
 	 * @时间：2011-6-9下午10:39:58
 	 * @return
 	 */
-	public void setColType() throws BusinessException {
+	public void getColType() throws BusinessException {
 		SoorderVO head = (SoorderVO) curBillvo.getParentVO();
 		SoorderBVO[] bodys = (SoorderBVO[]) curBillvo.getChildrenVO();
 		String pk_transcorp = head.getPk_transcorp();
@@ -343,7 +390,7 @@ public class TranPriceAccount {
 				
 			}
 		}
-		// 汇总出库主(辅)数量
+		// 3汇总出库主(辅)数量
 		UFDouble ntotalNum = new UFDouble(0);
 		UFDouble ntotalAssNUm = new UFDouble(0);
 		for (SoorderBVO body : bodys) {
@@ -358,16 +405,23 @@ public class TranPriceAccount {
 		ntotalNum = ntotalNum.add(nexNum);
 		totalNum.add(ntotalNum);
 		totalNum.add(ntotalAssNUm);
-		// 判断是否总仓
+		//判断 是否原料粉,原料粉发运按照吨公里运价表
+		fisbigflour = PuPubVO.getUFBoolean_NullAs(head.getFisbigflour(), UFBoolean.FALSE).booleanValue();
+		if(fisbigflour){
+			colType = WdsWlPubConst.WDSI;
+			return ;
+		}
+		// 5.判断是否总仓
 		if (WdsWlPubConst.WDS_WL_ZC.equalsIgnoreCase(pk_outwhouse)) {
 			isZC = true;
-			// 仓库与承运商绑定的VO
+			//5.1 仓库与承运商绑定的VO
 			List<StortranscorpBVO> stroCorp = getStroCorpVO(pk_outwhouse,
 					pk_transcorp, reareaid,true);
-			// 如果没有声明有零担标准，默认按照吨公里来计算
+			//5.1.1 如果没有声明有零担标准，默认按照吨公里来计算
 			if (stroCorp == null || stroCorp.size() == 0) {
 				colType = WdsWlPubConst.WDSI;
 			} else {
+			// 5.1.2获得零担标准
 				Integer ismalltype = stroCorp.get(0).getIsmalltype();//零担标准
 				Integer ismallprice = stroCorp.get(0).getIsmallprice();//运价类型
 				UFDouble nsmallnum = PuPubVO.getUFDouble_NullAsZero(stroCorp.get(0).getNsmallnum());
@@ -486,6 +540,66 @@ public class TranPriceAccount {
 		}
 		this.bingVO = (TbStorcubasdocVO) list.get(0);
 	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目:查询原料粉运价表
+	 * @时间：2011-6-9下午11:26:45
+	 * @param pricetype
+	 *            单据类型
+	 * @param pk_transcorp
+	 *            承运商
+	 * @param pk_outwhouse
+	 *            发货仓库
+	 * @param reareaid
+	 *            收货地
+	 * @param isDG
+	 *            是否继续递归
+	 * @return
+	 * @throws BusinessException
+	 */
+	public List<TranspriceBVO> getBigPriceInfor(String pricetype,
+			String pk_transcorp, String pk_outwhouse, String reareaid,
+			boolean isDG) throws BusinessException {
+		List<TranspriceBVO> lprice = null;
+		StringBuffer sqlb = new StringBuffer();
+		sqlb.append("select ");
+		String[] names = new TranspriceBVO().getAttributeNames();
+		for (String name : names) {
+			sqlb.append(" b." + name + ",");
+		}
+		sqlb.append(" 'aaa'");
+		sqlb
+				.append("from wds_transprice_h h inner join wds_transprice_b  b on b.pk_wds_transprice_h = h.pk_wds_transprice_h ");
+		sqlb
+				.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.vbillstatus = "
+						+ IBillStatus.CHECKPASS);
+		sqlb.append(" and h.pk_billtype = '" + pricetype + "'");// 运价表单据类型
+		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
+		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
+		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
+		sqlb.append(" and isnull(h.fisbigflour,'N') = 'Y'");//是否原料粉
+		sqlb.append(" and (isnull(b.ifw,0) = 0 or isnull(b.ifw,0) =1) ");// 应运范围过滤
+		sqlb.append(" and h.dstartdate <= '" + date + "' and h.denddate >= '"
+				+ date + "'");
+		sqlb.append(" and b.pk_replace='" + reareaid + "'");//收货地区
+		lprice = (List<TranspriceBVO>) getBaseDAO().executeQuery(
+				sqlb.toString(), new BeanListProcessor(TranspriceBVO.class));
+		// 如果没有获取对应收货地区的定义，查询有没有上级的定义
+		if ((lprice == null || lprice.size() == 0) && isDG) {
+			String pk_fatherarea = getFatherId(reareaid);
+			if (pk_fatherarea == null || "".equalsIgnoreCase(pk_fatherarea)) {
+				lprice = getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+						pk_fatherarea, false);
+			} else {
+				// 如果有上进地区分类，递归查询
+				lprice =getDsPriceInfor(pricetype, pk_transcorp, pk_outwhouse,
+						pk_fatherarea, true);
+			}
+		}
+		return lprice;
+	}
 
 	/**
 	 * 
@@ -525,6 +639,7 @@ public class TranPriceAccount {
 		// :吨公里运价表和箱数运价表适用同一个库表，但是单据类型不同
 		sqlb.append(" and h.carriersid='" + pk_transcorp + "'");// 承运商
 		sqlb.append(" and h.reserve1='" + pk_outwhouse + "'");// 发货仓库
+		sqlb.append(" and isnull(h.fisbigflour,'N') = 'N'");//是否原料粉
 		sqlb.append(" and (isnull(b.ifw,0) = 0 or isnull(b.ifw,0) =1) ");// 应运范围过滤
 		sqlb.append(" and h.dstartdate <= '" + date + "' and h.denddate >= '"
 				+ date + "'");

@@ -9,6 +9,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
@@ -72,6 +73,11 @@ public class ClientUI extends BillManageUI implements
 	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}
+	// // 单据号
+	public String getBillNo() throws java.lang.Exception {
+		return HYPubBO_Client.getBillNo(getUIControl().getBillType(),
+				_getCorp().getPrimaryKey(), null, null);
+	}
 
 	@Override
 	protected void initSelfData() {
@@ -120,49 +126,33 @@ public class ClientUI extends BillManageUI implements
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		int row = e.getRow();
-		//只用分仓才有零担标准
-		if ("nsmallnum".equalsIgnoreCase(key)) {//零担数量
-			JComponent jc = getBillCardPanel().getBodyItem("ifw").getComponent();
-			Object value = getBillCardPanel().getBillModel().getValueAt(row, "ifw");
-			if( jc instanceof UIComboBox){
-				UIComboBox box = (UIComboBox)jc;
-				int index  = box.getItemIndexByName(value);
-				if(2 != index){
-					return false;
-				}
-			}	
-		}
-		if ("nsmallprice".equalsIgnoreCase(key)) {//零担价格
-			JComponent jc = getBillCardPanel().getBodyItem("ifw").getComponent();
-			Object value = getBillCardPanel().getBillModel().getValueAt(row, "ifw");
-			if( jc instanceof UIComboBox){
-				UIComboBox box = (UIComboBox)jc;
-				int index  = box.getItemIndexByName(value);
-				if(2 != index){
-					return false;
-				}
-			}	
-		}
+//		//只用分仓才有零担标准
+//		if ("nsmallnum".equalsIgnoreCase(key)) {//零担数量
+//			JComponent jc = getBillCardPanel().getBodyItem("ifw").getComponent();
+//			Object value = getBillCardPanel().getBillModel().getValueAt(row, "ifw");
+//			if( jc instanceof UIComboBox){
+//				UIComboBox box = (UIComboBox)jc;
+//				int index  = box.getItemIndexByName(value);
+//				if(2 != index){
+//					return false;
+//				}
+//			}	
+//		}
+//		if ("nsmallprice".equalsIgnoreCase(key)) {//零担价格
+//			JComponent jc = getBillCardPanel().getBodyItem("ifw").getComponent();
+//			Object value = getBillCardPanel().getBillModel().getValueAt(row, "ifw");
+//			if( jc instanceof UIComboBox){
+//				UIComboBox box = (UIComboBox)jc;
+//				int index  = box.getItemIndexByName(value);
+//				if(2 != index){
+//					return false;
+//				}
+//			}	
+//		}
 		return super.beforeEdit(e);
 	}
 	@Override
 	public void afterEdit(BillEditEvent e) {
-		String key = e.getKey();
-		Object value= e.getValue();
-		int row =e.getRow();
-		if(e.getPos() == BillItem.BODY){	
-			if("ifw".equalsIgnoreCase(key)){
-				JComponent jc = getBillCardPanel().getBodyItem("ifw").getComponent();
-				if( jc instanceof UIComboBox){
-					UIComboBox box = (UIComboBox)jc;
-					int index  = box.getItemIndexByName(value);
-					if(2 != index){
-						getBillCardPanel().getBillModel().setValueAt(null, row, "nsmallnum");
-						getBillCardPanel().getBillModel().setValueAt(null, row, "nsmallprice");
-					}
-				}				
-			}
-		}
 		super.afterEdit(e);
 	}
 
