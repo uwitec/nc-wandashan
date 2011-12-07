@@ -3,6 +3,7 @@ package nc.ui.wl.pub.report;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillStatus;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public class WDSWLReportSql {	
 	/**
@@ -420,9 +421,10 @@ public class WDSWLReportSql {
         sql.append(" select ");//仓库主键	
         sql.append(" h.pk_customize1 pk_stordoc,");
         sql.append(" h.pk_cargdoc pk_cargdoc,");//货位
+        sql.append(" h.whs_batchcode vbatchcode,");//批次
 		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
-        sql.append(" h.whs_batchcode vbatchcode,");		
+        sql.append(" h.whs_batchcode vbatchcode,");	//批次	
 		sql.append(" h.ss_pk  pk_storestate,");//存货状态主键
         sql.append(" h.pk_invbasdoc pk_invbasdoc,");		      
         sql.append(" round(sysdate-to_date(h.creadate,'YYYY-MM-DD HH24-MI-SS'),0) days,");//入库天数
@@ -433,13 +435,17 @@ public class WDSWLReportSql {
 		sql.append(" tb_warehousestock h");
 		sql.append(" join wds_invbasdoc iv");//关联存货档案
 		sql.append(" on h.pk_invmandoc=iv.pk_invmandoc");
+		sql.append(" join tb_stockstate st");//关联库存状态
+		sql.append(" on h.ss_pk=st.ss_pk");
 		sql.append(" left join wds_invcl cl ");//关联存货分类
 		sql.append(" on iv.vdef1=cl.pk_invcl and nvl(cl.dr, 0) = 0");
 		sql.append(" where isnull(h.dr,0)=0");//
 		sql.append(" and isnull(iv.dr,0)=0");//
+		sql.append(" and isnull(st.dr,0)=0");//
 		if(whereSql!=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
 		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		sql.append(" and st.isok='Y'");//过滤出可以出库的存货
 		return sql.toString();
 	}
 	/**
@@ -493,7 +499,7 @@ public class WDSWLReportSql {
 	}
 	/**
 	 * 获得转分仓在途,到货等状态的查询语句
-	 * 查询 发运订单
+	 * 查询 发运订单 其他出库单
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-12-2下午03:05:50
@@ -513,15 +519,20 @@ public class WDSWLReportSql {
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
 		sql.append(" b.pk_invmandoc,");//存货管理档案id
 		sql.append(" b.pk_invbasdoc ,");//存货基本档案id
+		sql.append(" b1.vbatchcode vbatchcode,");//批次
 //		sql.append(" b.nplannum ,");//计划数量
 //		sql.append(" b.nassplannum,");//计划辅数量
 //		sql.append(" b.ndealnum,");//安排数量
 //		sql.append(" b.nassdealnum,");//安排辅数量
-		sql.append(" b.noutnum num,");//已经出库的数量
-		sql.append(" b.nassoutnum bnum");//已经出库的辅数量
+		sql.append(" b1.noutnum num,");//其他出库 实出
+		sql.append(" b1.noutassistnum bnum");//其他出库实出辅数量
+//		sql.append(" b.noutnum num,");//已经出库的数量
+//		sql.append(" b.nassoutnum bnum");//已经出库的辅数量
 	    sql.append(" from wds_sendorder h ");
 		sql.append(" join wds_sendorder_b b");
 		sql.append(" on h.pk_sendorder = b.pk_sendorder ");
+		sql.append(" join tb_outgeneral_b b1");
+		sql.append(" on b.pk_sendorder_b = b1.csourcebillbid");
 		sql.append(" join wds_invbasdoc iv");//关联存货档案
 		sql.append(" on b.pk_invmandoc=iv.pk_invmandoc");
 		sql.append(" left join wds_invcl cl ");//关联存货分类
@@ -529,10 +540,71 @@ public class WDSWLReportSql {
         sql.append(" where isnull(h.dr,0)=0");
         sql.append("  and isnull(b.dr,0)=0");
         sql.append("  and isnull(iv.dr,0)=0");
+        sql.append("  and isnull(b1.dr,0)=0");
         sql.append("  and h.itransstatus=1");
         if(whereSql !=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
 		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
 		return sql.toString();
 	}
+	
+	/**
+	 * 获得总仓转分仓虚拟出库
+	 * 查询 供应链其他出库单 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getZcXuNiSql(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select  ");
+		sql.append(" h.cwarehouseid  pk_stordoc ,");//出库仓库
+		sql.append(" h.pk_defdoc9 ,");//是否虚拟
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b.cinventoryid pk_invmandoc,");//存货管理档案主键
+		sql.append(" b.cinvbasid pk_invbasdoc,");//存货基本档案主键
+		sql.append(" b.noutnum num,");//实发数量
+		sql.append(" b.noutassistnum bnum");//实发辅数量
+		sql.append(" from ");
+		sql.append(" ic_general_h h");
+		sql.append(" join ic_general_b b");
+		sql.append(" on h.cgeneralhid = b.cgeneralhid");
+		sql.append(" join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b.cinventoryid=iv.pk_invmandoc");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+	    sql.append(" where isnull(h.dr,0)=0");
+	    sql.append("  and isnull(b.dr,0)=0");
+	    sql.append("  and isnull(iv.dr,0)=0");
+	    if(whereSql !=null && whereSql.length()!=0)
+	 	sql.append(" and "+whereSql);
+	    sql.append(" and h.cwarehouseid ='"+WdsWlPubConst.WDS_WL_ZC+"'");//出库仓库为总仓
+	    sql.append(" and h.pk_defdoc9='"+nc.ui.wds.report.report1.ReportUI.pk_ruout+"'");//过滤出虚拟出库的
+	 	sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");								
+		return sql.toString();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
