@@ -27,6 +27,8 @@ public class SoorderVO extends SuperVO {
 	 */
 	private static final long serialVersionUID = -8299919978628715989L;
 	
+	//启动reserve14 是否指定分拣仓出库
+	
 	//发货地区
 	public String pk_sendareal;
 	// 是否大包粉

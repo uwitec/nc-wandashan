@@ -10,6 +10,8 @@ import nc.ui.wl.pub.WdsBillSourceDLG;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
@@ -29,6 +31,8 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 	private String m_logUser = null;
 	
 	private String pk_stock = null; // 当前登录者对应的仓库主键
+	
+	private String pk_cargdoc = null ;//yf add当前登陆者绑定货位
 	
 	private int iType = -1;
 	
@@ -71,6 +75,12 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 			if(inv_Pks ==null || inv_Pks.length==0){
 				throw new BusinessException("当前登录人员货位下没有绑定存货");
 			}
+			//yf add 保管员绑定货位id
+			String[] space = getLoginInforHelper().getSpaceByLogUser(m_logUser);
+			if(space != null && space.length > 0){
+				pk_cargdoc = space[0];
+			}
+			//yf end
 			isStock = WdsWlPubTool.isZc(getLoginInforHelper().getCwhid(m_logUser));//是否是总仓
 		}catch(Exception e){
 			Logger.error(e);
@@ -86,6 +96,7 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 	}
 	public String getHeadCondition() {
 		StringBuffer hsql = new StringBuffer();
+		
 		hsql.append(" wds_soorder.pk_soorder in ");//只能看到包含当前登录人绑定货位下存货的单据
 		if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
@@ -100,6 +111,13 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 			if(!isStock){
 				hsql.append(" and wds_soorder.pk_outwhouse='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 			}
+			//yf add 登陆人绑定货位是分拣仓，取销售运单-是否指定分拣仓出库,已勾选
+			if(WdsWlPubConst.pk_cargdoc_30.equals(pk_cargdoc)){
+				hsql.append(" and coalesce(wds_soorder."+WdsWlPubConst.def_soorder_30+",'N') = 'Y'");
+			}else{
+				hsql.append(" and coalesce(wds_soorder."+WdsWlPubConst.def_soorder_30+",'N') = 'N'");
+			}
+			//yf end
 			hsql.append(" and isnull(wds_soorder_b.dr,0)= 0");
 			hsql.append(" and coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0");//安排数量-出库数量>0
 			String sub = getInvSub(inv_Pks);
