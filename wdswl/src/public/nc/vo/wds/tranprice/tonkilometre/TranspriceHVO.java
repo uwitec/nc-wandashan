@@ -120,7 +120,7 @@ public class TranspriceHVO extends SuperVO {
 	public String reserve1;
 	// 承运商
 	public String carriersid;
-	// 是否原料粉
+	// 是否生效
 	public UFBoolean fiseffect;
 	// 最小吨数
 	public UFDouble reserve6;
@@ -134,7 +134,17 @@ public class TranspriceHVO extends SuperVO {
 	public UFDouble nmaxcase;
 	// 单位
 	public Integer ipriceunit;
+	// 是否大包粉
+	public UFBoolean fisbigflour;
 
+
+	public UFBoolean getFisbigflour() {
+		return fisbigflour;
+	}
+
+	public void setFisbigflour(UFBoolean fisbigflour) {
+		this.fisbigflour = fisbigflour;
+	}
 
 	public static final String RESERVE5 = "reserve5";
 	public static final String PK_CORP = "pk_corp";
