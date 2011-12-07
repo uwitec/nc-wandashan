@@ -23,7 +23,7 @@ public class MyDelegator extends BDBusinessDelegator {
 		if(strWhere!=null && strWhere.length()>0){
 			where =  " pk_stordoc in (SELECT bd_stordoc.pk_stordoc FROM bd_stordoc  "+                //  bd_stordoc          wds_stortranscorp_b
        " left join wds_stortranscorp_b  on bd_stordoc.pk_stordoc=wds_stortranscorp_b.pk_stordoc "
-       +" and   (isnull(wds_stortranscorp_b.dr, 0) = 0) where (isnull(bd_stordoc.dr, 0) = 0) and bd_stordoc.def1='1'  and "+strWhere+") ";
+       +" where   (isnull(wds_stortranscorp_b.dr, 0) = 0) and (isnull(bd_stordoc.dr, 0) = 0) and bd_stordoc.def1='1'  and "+strWhere+") ";
 		}
 		SuperVO[] vo = HYPubBO_Client.queryByCondition(headClass, where);
 		return vo;
