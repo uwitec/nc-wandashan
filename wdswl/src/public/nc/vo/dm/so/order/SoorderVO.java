@@ -22,7 +22,6 @@ import nc.vo.scm.pu.PuPubVO;
  * @version Your Project 1.0
  */
 public class SoorderVO extends SuperVO {
-
 	/**
 	 * 
 	 */
@@ -30,7 +29,8 @@ public class SoorderVO extends SuperVO {
 	
 	//发货地区
 	public String pk_sendareal;
-
+	// 是否大包粉
+	public UFBoolean fisbigflour;
 	// 打印次数
 	public Integer iprintcount;
 	// 主键
@@ -2048,6 +2048,14 @@ public class SoorderVO extends SuperVO {
 
 	public void setPk_sendareal(String pk_sendareal) {
 		this.pk_sendareal = pk_sendareal;
+	}
+
+	public UFBoolean getFisbigflour() {
+		return fisbigflour;
+	}
+
+	public void setFisbigflour(UFBoolean fisbigflour) {
+		this.fisbigflour = fisbigflour;
 	}
 
 }
