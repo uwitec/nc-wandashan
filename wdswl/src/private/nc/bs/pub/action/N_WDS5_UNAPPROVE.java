@@ -28,9 +28,6 @@ public class N_WDS5_UNAPPROVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
-			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
-			runClass("nc.bs.wl.so.order.SoorderBO", "beforeUnApprove","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
-			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
 			procUnApproveFlow(vo);
 			Object retObj = runClass("nc.bs.wl.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",

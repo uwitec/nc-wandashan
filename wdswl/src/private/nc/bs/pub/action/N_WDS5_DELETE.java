@@ -30,6 +30,9 @@ public class N_WDS5_DELETE extends AbstractCompiler2 {
 			super.m_tmpVo = vo;
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
+			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
+			runClass("nc.bs.wl.so.order.SoorderBO", "beforeUnApprove","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
 			//##################################################回写销售订单	
 			runClass("nc.bs.wl.so.order.SoorderBO", "backSoleOrder","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
 			// ##################################################方法说明:行业公共删除
