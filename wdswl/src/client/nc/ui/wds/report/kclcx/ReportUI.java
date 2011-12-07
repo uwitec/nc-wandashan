@@ -90,7 +90,7 @@ public class ReportUI extends ReportBaseUI{
 			return;
 		}
 		getReportBase().getBillModel().setBodyDataVO(vos);
-		getReportBase().getBillModel().execLoadFormula();
+//		getReportBase().getBillModel().execLoadFormula();
 		
 	}
 
