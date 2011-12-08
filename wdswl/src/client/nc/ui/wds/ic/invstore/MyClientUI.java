@@ -112,7 +112,7 @@ public class MyClientUI extends WdsBillManagUI implements
 				// +
 				// " and tb_spacegoods.pk_cargdoc <>'"+pk_cargdoc+"')");
 				if (WdsWlPubConst.pk_cargdoc_30.equals(pk_cargdoc)) {
-
+					ref.getRefModel().addWherePart("");
 				} else {
 					ref
 							.getRefModel()

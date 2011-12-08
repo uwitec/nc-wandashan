@@ -8,6 +8,11 @@ import nc.vo.wds.ic.invstore.CargdocVO;
 import nc.vo.wds.ic.invstore.TbSpacegoodsVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 
+/**
+ * 
+ * @author yf 存货货位绑定 后台校验
+ * 
+ */
 public class BSCheck implements IBDBusiCheck {
 
 	public void check(int intBdAction, AggregatedValueObject vo, Object userObj)
@@ -25,9 +30,11 @@ public class BSCheck implements IBDBusiCheck {
 
 		TbSpacegoodsVO[] bvos = (TbSpacegoodsVO[]) vo.getChildrenVO();
 		// bd_cargdoc货位编码30 pk = pk_cargdoc_30
-		// 更换 唯一校验
+		// 校验表体存货是否在当前货位和分拣仓货位以外货位中是唯一的
 		BsUniqueCheck.FieldUniqueChecks(bvos, new String[] { "pk_invmandoc" },
-				" and pk_cargdoc <> '" + WdsWlPubConst.pk_cargdoc_30 + "' ",
+				" and pk_cargdoc not in ( '" + WdsWlPubConst.pk_cargdoc_30
+						+ "' ,'" + hvo.getPk_cargdoc()
+						+ "') and pk_storedoc = '" + hvo.getPk_stordoc() + "'",
 				"有存货已绑定其他货位");
 	}
 

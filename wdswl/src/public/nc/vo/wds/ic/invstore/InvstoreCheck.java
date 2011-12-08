@@ -16,7 +16,7 @@ public class InvstoreCheck implements Serializable,IBDGetCheckClass2{
 	}
 
 	public String getCheckClass() {
-		return null;
+		return "nc.bs.wds.ic.invstore.BSCheck";
 	}
 	
 }
