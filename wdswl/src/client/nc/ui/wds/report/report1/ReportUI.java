@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.table.TableColumnModel;
+
 import nc.bd.accperiod.AccountCalendar;
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
@@ -29,10 +31,8 @@ import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
-
 /**
  * 各仓产品库存 产品明细表
- * 
  * @author mlr
  */
 public class ReportUI extends ZmReportBaseUI {
@@ -131,6 +131,7 @@ public class ReportUI extends ZmReportBaseUI {
 		getQueryDlg().showModal();
 		if (getQueryDlg().getResult() == UIDialog.ID_OK) {
 			try {
+				
 				// 每次查询设置是否按批次展开的标志
 				setIsVbantchcode();
 				// 清空表体数据
@@ -148,22 +149,61 @@ public class ReportUI extends ZmReportBaseUI {
 						getQuerySQL4(getQueryConditon()), });
 				ReportBaseVO[] rvos = null;
 				rvos = zcal(list);
+				setWait("正在处理....");
 				if (rvos != null) {
 					super.updateBodyDigits();
 					setBodyVO(rvos);
 					setTolal();
 				}
+			
 			} catch (BusinessException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+	}
+
+	private void setWait(String msg) {
+		nc.ui.pub.tools.BannerDialog	m_dlgBanner = new nc.ui.pub.tools.BannerDialog(this);
+		if (msg == null || msg.trim().length() <= 0)
+			msg = "正在操作，请等待...";
+		m_dlgBanner.setStartText(msg);
+		MyTh a=new MyTh(m_dlgBanner);
+		a.start();
+		m_dlgBanner.showModal();
+	}
+	public class MyTh extends Thread{
+		nc.ui.pub.tools.BannerDialog m=null;
+		public MyTh(nc.ui.pub.tools.BannerDialog m){
+			super();
+			this.m=m;
+		}		
+		 public void run() {
+			try { 				
+		        boolean isStart=false;
+				while(!isStart){
+					if (m != null && m.isVisible()) {
+						isStart=true;
+					}	
+					this.sleep(200);
+				}
+				this.sleep(1000*60*2);				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}finally{
+				if (m != null && m.isVisible()) {
+					m.closeOK();
+				}
+				m = null;
+			
+			}			
+	     }			
 	}
 
 	/**
-	 * 设置是否按批次展开
-	 * 
+	 * 设置是否按批次展开 
 	 * @作者：zhf
 	 * @说明：完达山物流项目
 	 * @时间：2011-12-7下午04:32:03
