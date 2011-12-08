@@ -54,7 +54,7 @@ public class TonKilometerBs implements Serializable {
 		sql.append(" and vbillstatus='1'");// 审批通过的
 		sql.append(" and reserve1='"+hvo.getReserve1()+"'");//仓库
 		sql.append(" and carriersid='"+hvo.getCarriersid()+"'");//承运商 	
-		sql.append(" and carriersid='"+fisbigflour+"'");//是否大包粉 	
+		sql.append(" and fisbigflour='"+fisbigflour+"'");//是否大包粉 	
 		sql.append(" and pk_billtype='" + WdsWlPubConst.WDSI + "'");
 		sql.append(" and( (dstartdate<='" + hvo.getDstartdate()
 				+ "' and denddate>='" + hvo.getDstartdate() + "')");
@@ -67,32 +67,32 @@ public class TonKilometerBs implements Serializable {
 						new BeanListProcessor(TranspriceHVO.class));
 		if (list.size() > 0) {
 			TranspriceHVO oldHvo = list.get(0);
-			throw new BusinessException("和已经审批过相同仓库的相同承运商 吨公里运价表存在日期交叉:\n单据编号="
+			throw new BusinessException("和已经审批过相同仓库的相同承运商相同的大包粉 吨公里运价表存在日期交叉:\n单据编号="
 					+ oldHvo.getVbillno() +"\n运价编码="+oldHvo.getVpricecode()+"\n运价名称="+oldHvo.getVpricename()+"\n开始日期=" + oldHvo.getDstartdate()
 					+ "\n截止日期=" + oldHvo.getDenddate());
 		}
 
 	}
-	public void beforeSaveCheck(AggregatedValueObject vo) throws Exception{
-		//必须项校验
-		BsNotNullCheck.FieldNotNull(new SuperVO[]{(SuperVO)vo.getParentVO()},new String[]{"vbillno","pk_billtype","reserve1","carriersid","dstartdate","denddate"},new String[]{"单据号","单据类型","发货仓库","承运商","开始日期","结束日期"});
-		BsNotNullCheck.FieldNotNull((SuperVO[])vo.getChildrenVO(),new String[]{"ntransprice","pk_replace"},new String[]{"运价","收获地区"});
-		// 唯一性的校验 
-	    //单据号公司级唯一
-		BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.getParentVO(), new String[]{"vbillno","pk_billtype","pk_corp"}, "[  单据号  ] 在数据库中已经存在");			
-		//开始日期大于截止日期的校验
-		if(vo.getParentVO()!=null){
-			TranspriceHVO hvo=(TranspriceHVO) vo.getParentVO();
-			if(hvo.getDstartdate().after(hvo.getDenddate())){
-				throw new BusinessException("开始日期不能大于截止日期");
-			}
-		}
-		//发货仓库 承运商 单据类型 是否原料粉 组合唯一  
-		//  外加 开始日期 到 截止日期不能交叉
-		BsUniqueCheck.FieldUniqueCheckInment((SuperVO)vo.getParentVO(),new String[]{"reserve1","carriersid","pk_billtype"}, "dstartdate","denddate"," 已经定义 了该 [发货仓库]  [承运商] 下的这个期间段的运价表 ");		
-		//收获地区应用范围表体唯一性校验
-		validateBodyRePlace(vo.getChildrenVO(),new String[]{"pk_replace","ifw"},new String[]{"收获地区","应用范围"});	
-	}
+//	public void beforeSaveCheck(AggregatedValueObject vo) throws Exception{
+//		//必须项校验
+//		BsNotNullCheck.FieldNotNull(new SuperVO[]{(SuperVO)vo.getParentVO()},new String[]{"vbillno","pk_billtype","reserve1","carriersid","dstartdate","denddate"},new String[]{"单据号","单据类型","发货仓库","承运商","开始日期","结束日期"});
+//		BsNotNullCheck.FieldNotNull((SuperVO[])vo.getChildrenVO(),new String[]{"ntransprice","pk_replace"},new String[]{"运价","收获地区"});
+//		// 唯一性的校验 
+//	    //单据号公司级唯一
+//		BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.getParentVO(), new String[]{"vbillno","pk_billtype","pk_corp"}, "[  单据号  ] 在数据库中已经存在");			
+//		//开始日期大于截止日期的校验
+//		if(vo.getParentVO()!=null){
+//			TranspriceHVO hvo=(TranspriceHVO) vo.getParentVO();
+//			if(hvo.getDstartdate().after(hvo.getDenddate())){
+//				throw new BusinessException("开始日期不能大于截止日期");
+//			}
+//		}
+//		//发货仓库 承运商 单据类型 是否原料粉 组合唯一  
+//		//  外加 开始日期 到 截止日期不能交叉
+//		BsUniqueCheck.FieldUniqueCheckInment((SuperVO)vo.getParentVO(),new String[]{"reserve1","fisbigflour","carriersid","pk_billtype"}, "dstartdate","denddate"," 已经定义 了该 [发货仓库]  [承运商] [是否大包粉] 下的这个期间段的运价表 ");		
+//		//收获地区应用范围表体唯一性校验
+//		validateBodyRePlace(vo.getChildrenVO(),new String[]{"pk_replace","ifw"},new String[]{"收获地区","应用范围"});	
+//	}
 	/*
 	 * 收获地区 应用范围表体唯一性校验
 	 */
