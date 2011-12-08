@@ -1,11 +1,9 @@
 package nc.bs.pub.action;
 
 import java.util.Hashtable;
+
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wl.pub.BsNotNullCheck;
-import nc.bs.wl.pub.BsUniqueCheck;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
 /**
@@ -32,8 +30,8 @@ try{
 			Object retObj = null;	
 			//保存前校验
 			setParameter("currentVo", vo.m_preValueVo);
-			runClass("nc.bs.wds.tranprice.tonkilometre.TonKilometerBs", "beforeSaveCheck",
-					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);		
+//			runClass("nc.bs.wds.tranprice.tonkilometre.TonKilometerBs", "beforeSaveCheck",
+//					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);		
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

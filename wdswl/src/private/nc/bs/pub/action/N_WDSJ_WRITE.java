@@ -31,7 +31,7 @@ try{
 			super.m_tmpVo = vo;
 			Object retObj = null;
 		   //保存前的统一校验
-			beforeSaveValute(vo);
+//			beforeSaveValute(vo);
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

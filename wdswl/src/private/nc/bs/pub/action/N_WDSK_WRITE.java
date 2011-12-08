@@ -30,7 +30,7 @@ try{
 			super.m_tmpVo = vo;
 			Object retObj = null;
 			//价格编码  唯一性的校验
-			BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.m_preValueVo.getParentVO(), new String[]{"vpricecode","pk_billtype"}, "[  运价编码  ] 在数据库中已经存在");
+//			BsUniqueCheck.FieldUniqueCheck((SuperVO)vo.m_preValueVo.getParentVO(), new String[]{"vpricecode","pk_billtype"}, "[  运价编码  ] 在数据库中已经存在");
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {
