@@ -29,6 +29,10 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  */
 public class ReportUI extends ZmReportBaseUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 615146412290753102L;
 	private final static String splitBillField = "billtype";
 	private final static String[] combin_types = new String[] { "so", "send",
 			"sum" };
@@ -39,7 +43,7 @@ public class ReportUI extends ZmReportBaseUI {
 	private static String[] voCombinConds = new String[] { "pk_corp",
 			"pk_stordoc", "pk_invmandoc" };// 合并条件,拆单维度
 
-	int fisdate = 0;
+	int fisdate = 0;//0全部查询，1大日期查询，2合格和待检查询
 
 	@Override
 	public Map getNewItems() throws Exception {
