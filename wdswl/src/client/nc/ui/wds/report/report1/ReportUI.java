@@ -750,17 +750,17 @@ public class ReportUI extends ZmReportBaseUI {
 			if (cdate == null)
 				continue;
 			if (cdate.startsWith(year + "")) {
-				vos[i].setAttributeValue("num" + loc, vos[i]
-						.getAttributeValue("num"));
-				vos[i].setAttributeValue("bnum" + loc, vos[i]
-						.getAttributeValue("bnum"));
+//				vos[i].setAttributeValue("num" + loc, vos[i]
+//						.getAttributeValue("num"));
+//				vos[i].setAttributeValue("bnum" + loc, vos[i]
+//						.getAttributeValue("bnum"));
 				qus.add(vos[i]);
 			}
 			if (cdate.startsWith(year1 + "")) {
-				vos[i].setAttributeValue("num" + (loc + 1), vos[i]
-						.getAttributeValue("num"));
-				vos[i].setAttributeValue("bnum" + (loc + 1), vos[i]
-						.getAttributeValue("bnum"));
+//				vos[i].setAttributeValue("num" + (loc + 1), vos[i]
+//						.getAttributeValue("num"));
+//				vos[i].setAttributeValue("bnum" + (loc + 1), vos[i]
+//						.getAttributeValue("bnum"));
 				qis.add(vos[i]);
 			}
 		}
@@ -769,28 +769,28 @@ public class ReportUI extends ZmReportBaseUI {
 				ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qus
 						.toArray(new ReportBaseVO[0]), combinConds1,
 						combinFields, ReportBaseVO.class);
-				CombinVO.addByContion1(jichus, nevos, combinConds1, null);
+				CombinVO.addByContion1(jichus, nevos, combinConds1, loc+"");
 			}
 			if (qis.size() != 0) {
 				ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qis
 						.toArray(new ReportBaseVO[0]), combinConds1,
 						combinFields, ReportBaseVO.class);
 				CombinVO.addByContion1(jichus,
-						qis.toArray(new ReportBaseVO[0]), combinConds1, null);
+						qis.toArray(new ReportBaseVO[0]), combinConds1, loc+"");
 			}
 		} else {
 			if (qus.size() != 0) {
 				ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qus
 						.toArray(new ReportBaseVO[0]), combinConds1f,
 						combinFields, ReportBaseVO.class);
-				CombinVO.addByContion1(jichus, nevos, combinConds1f, null);
+				CombinVO.addByContion1(jichus, nevos, combinConds1f, loc+"");
 			}
 			if (qis.size() != 0) {
 				ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qis
 						.toArray(new ReportBaseVO[0]), combinConds1f,
 						combinFields, ReportBaseVO.class);
 				CombinVO.addByContion1(jichus,
-						qis.toArray(new ReportBaseVO[0]), combinConds1f, null);
+						qis.toArray(new ReportBaseVO[0]), combinConds1f, loc+"");
 			}
 
 		}
@@ -973,6 +973,11 @@ public class ReportUI extends ZmReportBaseUI {
 	 * @throws Exception
 	 */
 	public String getQuerySQL(String whereSql) throws Exception {
+		if(whereSql==null || whereSql.length()==0){
+			whereSql="  st.isok='Y' ";
+		}else{
+			whereSql=whereSql+"  and st.isok='Y' ";
+		}		
 		return WDSWLReportSql.getStoreSql(whereSql);
 	}
 

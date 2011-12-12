@@ -445,7 +445,6 @@ public class WDSWLReportSql {
 		if(whereSql!=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
 		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
-		sql.append(" and st.isok='Y'");//过滤出可以出库的存货
 		return sql.toString();
 	}
 	/**
