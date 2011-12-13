@@ -17,6 +17,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
 /**
  * @作者：mlr
@@ -68,8 +69,8 @@ abstract public class ZmReportBaseUI extends ReportBaseUI{
 	        	this.sql=sql;
 	            Class[] ParameterTypes = new Class[]{String.class};
 	            Object[] ParameterValues = new Object[]{sql};
-	            Object o = LongTimeTask.calllongTimeService(null, this, 
-	                    "正在查询...", 1, "nc.bs.ca.pub.report.ReportDMO", null, 
+	            Object o = LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, this, 
+	                    "正在查询...", 1, "nc.bs.wds.pub.report.ReportDMO", null, 
 	                    "queryVOBySql", ParameterTypes, ParameterValues);
 	            if(o != null){
 	                reportVOs = (ReportBaseVO[])o;
