@@ -13,7 +13,9 @@ import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.report.ReportPubTool;
 import nc.ui.wl.pub.report.ZmReportBaseUI2;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.report.ReportBaseVO;
 
 /**
@@ -27,7 +29,20 @@ public class ReportUI extends ZmReportBaseUI2 {
 	 * 
 	 */
 	private static final long serialVersionUID = 2193523266502400113L;
-
+   //托盘不展开的合并维度
+	private String[]  combinFields={"billtype","pk_bill","dbilldate",
+			                        "coutwarehouseid","psnid","vbillcode"
+			                        ,"coperatorid","cregister","pk_bill_b"
+			                        ,"pk_cargdoc","vsourcebillcode","pk_invmandoc"
+			                        ,"vbatchcode","isxnap","isgift"
+			                       };
+   //托盘展开的合并维度
+	private String[]  combinFields1={"billtype","pk_bill","dbilldate",
+            "coutwarehouseid","psnid","vbillcode"
+            ,"coperatorid","cregister","pk_bill_b"
+            ,"pk_cargdoc","vsourcebillcode","pk_invmandoc"
+            ,"vbatchcode","isxnap","isgift"
+            ,"cdt_pk"};
 	// 表头：制单日期、出入库仓库、库管员、来源单据号、单据号、制单人、签字人
 	private String[] select_fields_out_h = new String[] { "vbilltype billtype",
 			"general_pk pk_bill", "dbilldate dbilldate",
@@ -48,19 +63,21 @@ public class ReportUI extends ZmReportBaseUI2 {
 			"vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
 			"cinventoryid pk_invmandoc", "vbatchcode vbatchcode",
-			"isxnap isxnap", "flargess isgift", "noutnum noutnum",
-			"noutassistnum nassoutnum" };// 销售出库,其他出库
+			"isxnap isxnap", "flargess isgift"
+			 };// 销售出库,其他出库
 
 	private String[] select_fields_in_b = new String[] { "geb_pk pk_bill_b",
 			"geb_space pk_cargdoc", "vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
 			"geb_cinventoryid pk_invmandoc", "geb_vbatchcode vbatchcode",
 			// "isxnap isxnap",//没有虚拟属性
-			"geb_flargess isgift", "geb_anum ninnum", "geb_banum nassinnum" };// 调拨入库,其他入库
+			"geb_flargess isgift"};// 调拨入库,其他入库
 
 	// 孙表：托盘
 	private String[] select_fields_out_bb = new String[] { "cdt_pk" };// 销售出库,其他出库
 	private String[] select_fields_in_bb = new String[] { "cdt_pk" };// 销售出库,其他出库
+	
+	
 
 	public ReportUI() {
 		super();
@@ -88,10 +105,16 @@ public class ReportUI extends ZmReportBaseUI2 {
 			}
 			sql.append("b." + select_fields_out_b[i]);
 		}
+		sql.append(" , ");
+		sql.append(" bb.stockpieces  ninnum ,");
+		sql.append(" bb.stocktonnage  nassinnum ");
+		
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
 			sql.append(" , bb.cdt_pk ");
 		}
+	
+
 		sql.append(" from ");
 		sql.append(" tb_outgeneral_h h,tb_outgeneral_b b,tb_outgeneral_t bb");
 
@@ -165,6 +188,10 @@ public class ReportUI extends ZmReportBaseUI2 {
 			}
 			sql.append("b." + select_fields_in_b[i]);
 		}
+		sql.append(" , ");
+		sql.append(" bb.gebb_num  ninnum ,");
+		sql.append(" bb.ninassistnum  nassinnum ");
+		
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
 			sql.append(" , bb.cdt_pk ");
@@ -180,6 +207,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 			sql.append(" and ");
 			sql.append(getQueryConditon(1));
 		}
+		
 		return sql.toString();
 	}
 
@@ -229,11 +257,19 @@ public class ReportUI extends ZmReportBaseUI2 {
 		// if (list.get(2) != null || list.get(2).length > 0) {
 		// vos3 = list.get(2);
 		// }
+		ReportBaseVO[] rvos=null;
 		ReportBaseVO[] combinvo = null;
 		combinvo = CombinVO.comin(combinvo, vos1);
 		combinvo = CombinVO.comin(combinvo, vos2);
-		// combinvo = CombinVO.comin(combinvo, vos3);
-		return combinvo;
+		UFBoolean isCat=PuPubVO.getUFBoolean_NullAs(getQueryDlg().getConditionVOsByFieldCode("iscdt_pk")[0].getValue(), UFBoolean.FALSE); //是否展开
+		if(combinvo==null || combinvo.length==0)
+			return null;
+		if(isCat.booleanValue()){
+			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
+		}else{
+			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
+		}	
+ 		return rvos;
 		// return setVoByContion(combinvo, voCombinConds);
 	}
 
