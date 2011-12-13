@@ -3,7 +3,9 @@ package nc.ui.wds.dm.wljsq;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.pub.BusinessException;
 
 /**
  * 
@@ -13,7 +15,7 @@ import nc.ui.wl.pub.WdsPubEnventHandler;
  * @version tempProject version
  */
 
-public class MyEventHandler extends WdsPubEnventHandler {
+public class MyEventHandler extends ManageEventHandler {
 
 	public MyEventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
@@ -33,7 +35,12 @@ public class MyEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		// TODO Auto-generated method stub
+		Integer i= (Integer)  getBillCardPanelWrapper().getBillCardPanel().getHeadItem("datavale").getValueObject();
+		if(i==null){
+			throw new BusinessException("«Î—°‘Ò÷µ£°");
+		}
+		int datavale=i.intValue();
+		
 	
 		super.onBoSave();
 	}
@@ -41,6 +48,11 @@ public class MyEventHandler extends WdsPubEnventHandler {
 	protected void onBoQuery() throws Exception {
 		super.onBoQuery();
 
+	}
+	@Override
+	protected void onBoCancel() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoCancel();
 	}
 	
 }
