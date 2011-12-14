@@ -1,34 +1,16 @@
 package nc.ui.wds.report.xffymx;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ListSelectionModel;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UIRefPane;
-import nc.ui.scm.util.ObjectUtils;
-import nc.ui.trade.report.query.QueryDLG;
-import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportBaseUI;
-import nc.ui.wl.pub.report.ZmReportBaseUI;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.query.ConditionVO;
-import nc.vo.scm.pu.PuPubVO;
-import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
-import nc.vo.wl.pub.report.SubtotalVO;
 
 /**
  * 
@@ -98,9 +80,9 @@ public class ReportUI extends ReportBaseUI{
 
 		String sql = getQueryDlg().getWhereSQL();
 		if(sql==null||sql.length()==0){
-		      sql="  h.pk_corp = '"+_getCorpID()+"'";
+		      sql="  tb_outgeneral_h.pk_corp = '"+_getCorpID()+"'";
 		}else{
-		    sql = sql + "  and h.pk_corp = '"+_getCorpID()+"'";
+		    sql = sql + "  and tb_outgeneral_h.pk_corp = '"+_getCorpID()+"'";
 		}
 		ReportBaseVO[] vos;
 		try {
