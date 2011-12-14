@@ -142,6 +142,8 @@ public class WdsWlPubConst {
 	public static String  REPORT16="80100211";
 	/**箱粉库存明细--报表*/
 	public static String  REPORT17="80100212";
+	/**箱粉发运台账批次明细表--报表*/
+	public static String  REPORT30="80100230";
 	
 	public static String report_unusenum_node = "80061010";//yf add发运管理-报表统计-可用量查询报表
 	
