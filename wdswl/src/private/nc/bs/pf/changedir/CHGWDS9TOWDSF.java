@@ -26,7 +26,7 @@ public class CHGWDS9TOWDSF extends VOConversion{
 		// TODO Auto-generated method stub
 		return new String[]{
 				"H_pk_corp->H_pk_corp",//¹«Ë¾	
-				"H_pk_stordoc->H_geh_cwarehouseid,",//²Ö¿â
+				"H_pk_stordoc->H_geh_cwarehouseid",//²Ö¿â
 				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
 				"B_vsourcebillcode->H_geh_billcode",

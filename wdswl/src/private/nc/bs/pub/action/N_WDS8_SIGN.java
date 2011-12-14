@@ -31,7 +31,6 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
 	try{
 		super.m_tmpVo=vo;
-		try {
 				super.m_tmpVo = vo;
 				Object retObj = null;				
 				List userObject = (ArrayList)getUserObj();
@@ -51,14 +50,7 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				//生成装卸费核算单
 				PushSaveWDSF pu=new PushSaveWDSF();
 				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
-
 				return retObj;
-			} catch (Exception ex) {
-				if (ex instanceof BusinessException)
-					throw (BusinessException) ex;
-				else
-					throw new PFBusinessException(ex.getMessage(), ex);
-			}
 	} catch (Exception ex) {
 		if (ex instanceof BusinessException)
 			throw (BusinessException) ex;

@@ -11,7 +11,6 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
@@ -20,7 +19,6 @@ import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
-import nc.vo.ic.other.out.TbOutgeneralB2VO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.ScaleKey;
@@ -297,7 +295,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 			}
 		}catch(Exception e){
 			Logger.error(e);
-			getBillManageUI().showErrorMessage("È¡ÏûÇ©×ÖÊ§°Ü£¡");
+			getBillManageUI().showErrorMessage("È¡ÏûÇ©×ÖÊ§°Ü:"+e.getMessage());
 		}
 	}
 	
@@ -341,7 +339,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 			}
 		}catch(Exception e){
 			Logger.error(e);
-			getBillManageUI().showErrorMessage("Ç©×ÖÊ§°Ü£¡");
+			getBillManageUI().showErrorMessage("Ç©×ÖÊ§°Ü:"+e.getMessage());
 		}
 	}
 //	@Override

@@ -193,7 +193,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			}
 		}catch(Exception e){
 			Logger.error(e);
-			getBillManageUI().showErrorMessage("Ç©×ÖÊ§°Ü£¡");
+			getBillManageUI().showErrorMessage("Ç©×ÖÊ§°Ü:"+e.getMessage());
 		}
 	}
 	
@@ -256,7 +256,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			}
 		}catch(Exception e){
 			Logger.error(e);
-			getBillManageUI().showErrorMessage("È¡ÏûÇ©×ÖÊ§°Ü£¡");
+			getBillManageUI().showErrorMessage("È¡ÏûÇ©×ÖÊ§°Ü:"+e.getMessage());
 		}
 	}
 
