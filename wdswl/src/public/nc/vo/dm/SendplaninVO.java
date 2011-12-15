@@ -87,7 +87,7 @@ import nc.vo.pub.lang.*;
              public String reserve7;
              //
              public String vapproveid;
-             public UFBoolean reserve15;
+             public UFBoolean reserve15;// «∑Ò«∑∑¢
              public String reserve2;
              public String vdef6;
              public Integer dr;
