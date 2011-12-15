@@ -111,7 +111,8 @@ public class PlanDealBO {
 		sql.append(" coalesce(wds_sendplanin_b.nassplannum,0)-coalesce(wds_sendplanin_b.nassdealnum,0) nassnum,");//本次安排辅数量
 		sql.append(" wds_sendplanin_b.hsl hsl, ");
 		sql.append(" wds_sendplanin_b.ts, ");
-		sql.append(" wds_sendplanin_b.bisdate ");  //是否大日期
+		sql.append(" wds_sendplanin_b.bisdate, ");  //是否大日期
+		sql.append(" wds_sendplanin.reserve15 ");  //是否欠发
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
 		sql.append(" on wds_sendplanin.pk_sendplanin = wds_sendplanin_b.pk_sendplanin ");
