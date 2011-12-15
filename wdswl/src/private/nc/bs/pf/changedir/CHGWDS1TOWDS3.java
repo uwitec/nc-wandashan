@@ -55,7 +55,7 @@ public String[] getField() {
 			"H_reserve12->H_reserve12",
 			"H_reserve13->H_reserve13",
 			"H_reserve14->H_reserve14",
-			"H_reserve15->H_reserve15",
+			"H_reserve15->H_reserve15", //是否欠发
 			"H_reserve16->H_reserve16",
 			//自定义项
 			"H_vdef4->H_vdef4",
@@ -113,7 +113,7 @@ public String[] getField() {
 			"B_reserve12->B_reserve12",
 			"B_reserve13->B_reserve13",
 			"B_reserve14->B_reserve14",
-			"B_reserve15->B_reserve15",
+			"B_reserve15->B_reserve15",//是否欠发
 			"B_reserve16->B_reserve16",
 			
 		
