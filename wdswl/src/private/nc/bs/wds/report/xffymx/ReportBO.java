@@ -26,7 +26,7 @@ public class ReportBO {
         sql.append(" bd_invbasdoc.invcode  invcode,");//存货编码
         sql.append(" bd_invbasdoc.invname  invname ,");//存货名称
         sql.append(" bd_invbasdoc.invspec invspec,");//规格
-        
+        sql.append(" tb_outgeneral_h.pk_cargdoc pk_cargdoc,");//货位
 		sql.append(" tb_outgeneral_b.vbatchcode  vbatchcode," );//批次号
 		sql.append(" tb_outgeneral_b.noutnum  noutnum," );//数量吨
 		sql.append(" tb_outgeneral_b.noutassistnum noutassistnum," );//数量箱
@@ -36,12 +36,13 @@ public class ReportBO {
 		sql.append(" wds_invbasdoc.vdef1 vdef1," );//存货分类ID   类别
 		sql.append("  wds_invbasdoc.fuesed fuesed," );//存货分类
 		sql.append(" wds_storecust_h.pk_stordoc pk_stordoc," );//仓库
-		sql.append("  wds_storecust_h.pk_sendareacl pk_sendareacl," );//发货库位
+	//	sql.append("  wds_storecust_h.pk_sendareacl pk_sendareacl," );//发货库位
 		sql.append("  tb_storcubasdoc.pk_cubasdoc pk_cubasdoc," );//客商基本档案
 		sql.append("  tb_storcubasdoc. pk_cumandoc  pk_cumandoc ," );//客商管理档案
 		sql.append("  tb_storcubasdoc.  pk_defdoc pk_defdoc," );//销售区域
 		sql.append("  wds_soorder.pk_transcorp pk_transcorp,");//--承运商
 		sql.append("  wds_soorder.vcardno vcardno," );//车号
+		  sql.append(" wds_soorder.dmakedate dmakedate, ");  //日期
 		sql.append("   wds_soorder.vdriver vdriver" );//司机
 		sql.append("   from tb_outgeneral_h" );
 		sql.append("   join tb_outgeneral_b on tb_outgeneral_h.general_pk=tb_outgeneral_b.general_pk " );
@@ -88,7 +89,7 @@ public class ReportBO {
 				
 	}
 	private String[] keys = new String[]{"vbatchcode","noutnum","noutassistnum","cinvbasid","custcode","custname","invcode","invname","invspec",
-			"cinventoryid","vdef2","vdef1","fuesed","pk_stordoc","pk_sendareacl","pk_cubasdoc","pk_cumandoc","pk_transcorp",
+			"cinventoryid","vdef2","vdef1","fuesed","pk_stordoc","pk_cargdoc","pk_cubasdoc","pk_cumandoc","pk_transcorp","dmakedate",
 			"pk_defdoc","vcardno","vdriver"};
 
 }

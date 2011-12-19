@@ -30,6 +30,7 @@ public class ReportBO {
 		sql.append(" sum(wds_soorder_b.nassarrangnum) nassarrangnum ");//销售运单辅数量
 		sql.append(" from tb_warehousestock ");
 		sql.append(" join wds_soorder_b on wds_soorder_b.pk_invmandoc=tb_warehousestock.pk_invmandoc ");
+		sql.append(" join wds_soorder on wds_soorder.pk_soorder=wds_soorder_b.pk_soorder");
 		sql.append(" join bd_invbasdoc on bd_invbasdoc.pk_invbasdoc=tb_warehousestock.pk_invbasdoc ");
 		
 		
@@ -38,7 +39,8 @@ public class ReportBO {
 			sql.append(whereSql);
 		}
 		sql.append(" and isnull(tb_warehousestock.dr,0)=0  and " + " isnull(wds_soorder_b.dr,0)=0 ");
-			
+		sql.append(" and isnull(wds_soorder.dr,0)=0 ");	
+		sql.append(" and isnull(wds_soorder.reserve14,'N')='Y'");
 		sql.append(" group by  tb_warehousestock.pk_invmandoc ,bd_invbasdoc.invcode,bd_invbasdoc.invname,bd_invbasdoc.invspec ");//分类汇总
 		sql.append(" order by  tb_warehousestock.pk_invmandoc  ");  
 		List ldata = (List)getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
