@@ -145,6 +145,8 @@ public class WdsWlPubConst {
 	/**箱粉发运台账批次明细表--报表*/
 	public static String  REPORT30="80100230";
 	
+	public static String report_crklsz = "80100220";//yf add出入库流水账  报表
+	
 	public static String report_unusenum_node = "80061010";//yf add发运管理-报表统计-可用量查询报表
 	
 	public static String pk_cargdoc_30 = "1021S3100000000AGE95";//yf add存货绑定货位 分捡仓  货位编码30的pk值,注意更换帐套要重新获取bd_cargdoc  
