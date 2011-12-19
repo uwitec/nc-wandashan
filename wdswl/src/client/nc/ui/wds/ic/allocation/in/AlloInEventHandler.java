@@ -241,6 +241,7 @@ public class AlloInEventHandler extends InPubEventHandler {
 		if (print.selectTemplate() == 1)
 			print.preview();
 		// 更改数据源，支持托盘打印
+		}
 	//	super.onBoPrint();
 		Integer iprintcount = PuPubVO.getInteger_NullAs(getBufferData()
 				.getCurrentVO().getParentVO().getAttributeValue(
@@ -255,7 +256,7 @@ public class AlloInEventHandler extends InPubEventHandler {
 		} catch (final UifException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		   }
+		   
 	    }
 	}
 	
