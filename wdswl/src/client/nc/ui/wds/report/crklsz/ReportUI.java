@@ -15,6 +15,7 @@ import nc.ui.wl.pub.report.ZmReportBaseUI2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.report.ReportBaseVO;
 
@@ -45,14 +46,14 @@ public class ReportUI extends ZmReportBaseUI2 {
             ,"cdt_pk"};
 	// 表头：制单日期、出入库仓库、库管员、来源单据号、单据号、制单人、签字人
 	private String[] select_fields_out_h = new String[] { "vbilltype billtype",
-			"general_pk pk_bill", "dbilldate dbilldate",
+			"general_pk pk_bill", "dbilldate dbilldate","vnote",//备注
 			"srl_pk coutwarehouseid", "cwhsmanagerid psnid",
 			"vbillcode vbillcode", "coperatorid coperatorid",
 			"cregister cregister" };// 销售出库，其他出库
 
 	private String[] select_fields_in_h = new String[] {
 			"geh_billtype billtype", "geh_pk pk_bill",
-			"geh_dbilldate dbilldate", "geh_cwarehouseid cinwarehouseid",
+			"geh_dbilldate dbilldate", "geh_cwarehouseid cinwarehouseid","vnote",//备注
 			"geh_cwhsmanagerid psnid", "geh_billcode vbillcode",
 			"coperatorid coperatorid", "geh_storname cregister" };// 调拨入库,其他入库
 
@@ -62,14 +63,14 @@ public class ReportUI extends ZmReportBaseUI2 {
 			"cspaceid pk_cargdoc",
 			"vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
-			"cinventoryid pk_invmandoc", "vbatchcode vbatchcode",
+			"cinvbasid pk_invbasdoc", "vbatchcode vbatchcode",
 			"isxnap isxnap", "flargess isgift"
 			 };// 销售出库,其他出库
 
 	private String[] select_fields_in_b = new String[] { "geb_pk pk_bill_b",
 			"geb_space pk_cargdoc", "vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
-			"geb_cinventoryid pk_invmandoc", "geb_vbatchcode vbatchcode",
+			"geb_cinvbasid pk_invbasdoc", "geb_vbatchcode vbatchcode",
 			// "isxnap isxnap",//没有虚拟属性
 			"geb_flargess isgift"};// 调拨入库,其他入库
 
@@ -293,6 +294,6 @@ public class ReportUI extends ZmReportBaseUI2 {
 
 	@Override
 	public String _getModelCode() {
-		return "80100220";
+		return WdsWlPubConst.report_crklsz;
 	}
 }
