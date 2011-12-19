@@ -19,7 +19,7 @@ import nc.vo.pub.rs.MemoryResultSet;
 import nc.vo.pub.rs.MemoryResultSetMetaData;
 /**
  * 报表中经常要用到 将 查询出来的某一列的数据 或 某几列的数据 展开 到行上 形成二维的动态表 什么是一维表？ 所谓的一维表就是 列是固定不变的
- * 而上的数据是动态变化的 也就是 横坐标 不变 纵坐标变
+ * 而行上的数据是动态变化的 也就是 横坐标 不变 纵坐标变
  * 
  * 这种数据 是应该都知道
  * 
