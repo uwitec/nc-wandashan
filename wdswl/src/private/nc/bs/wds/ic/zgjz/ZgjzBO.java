@@ -63,6 +63,14 @@ public class ZgjzBO {
 		if(dendDate == null ){
 			dendDate = new UFDate(System.currentTimeMillis());
 		}
+		String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_outwhouse());//出库仓库
+		if(pk_outwhouse == null){
+			throw new BusinessException("发货仓库不能为空");
+		}
+		String pk_inwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_intwhouse());//入库仓库
+		if(pk_inwhouse == null){
+			throw new BusinessException("收货仓库不能为空");
+		}
 		//1.查询ERP的本月红冲数量
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select b.cinventoryid, ");//存货管理id
@@ -76,6 +84,8 @@ public class ZgjzBO {
 		sql.append(" and h.cbilltypecode='4I'");//其他出库单
 		sql.append(" and h.pk_defdoc11='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
 		sql.append(" and h.dbilldate between '"+dbeginDate+"' and '"+dendDate+"' ");
+		sql.append(" and h.cwarehouseid='"+pk_outwhouse+"'");//出库仓库
+		sql.append(" and h.cotherwhid='"+pk_inwhouse+"'");//入库仓库
 		sql.append(" and b.noutnum<0 ");//冲减的单据：实发数量小于0
 		sql.append(" group by b.cinventoryid ");
 		Object result = getBaseDAO().executeQuery(sql.toString(),new ArrayListProcessor());

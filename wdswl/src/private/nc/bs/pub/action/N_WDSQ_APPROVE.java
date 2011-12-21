@@ -1,8 +1,10 @@
 package nc.bs.pub.action;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.zgjz.ZgjzAuditBo;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -31,6 +33,11 @@ public class N_WDSQ_APPROVE extends AbstractCompiler2 {
 			if (m_sysflowObj != null) {
 				return m_sysflowObj;
 			}
+			//lyf  begin 审批自动生成下月数据
+			ArrayList<String> infor= (ArrayList<String>)getUserObj();
+			ZgjzAuditBo audit = new ZgjzAuditBo();
+			audit.onAudit(vo.m_preValueVo, infor);
+			//lyf end 审批自动生成下月数据
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);

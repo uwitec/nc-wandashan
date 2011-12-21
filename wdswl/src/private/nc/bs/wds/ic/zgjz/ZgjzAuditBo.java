@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
+import nc.bs.framework.common.NCLocator;
+import nc.itf.uap.pf.IPFBusiAction;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.util.SQLHelper;
@@ -30,6 +32,9 @@ private BaseDAO baseDAO = null;
 		}
 		return baseDAO;
 	}
+	String voperatorid = null;
+	UFDate loginDate = null;
+	UFDate sysDate = null;
 	String pk_corp = null;
 	ZgjzHVO curhead = null;
 	ZgjzBVO[] curbodys = null;
@@ -44,14 +49,17 @@ private BaseDAO baseDAO = null;
 	 * @return
 	 * @throws BusinessException 
 	 */
-	public void onAudit(AggregatedValueObject vo,ArrayList<String> infor) throws BusinessException{
+	public AggregatedValueObject onAudit(AggregatedValueObject vo,ArrayList<String> infor) throws BusinessException{
 		if(vo == null ){
-			return ;
+			return vo ;
 		}
+		voperatorid = infor.get(0);
+		loginDate = new UFDate(infor.get(1));
 		pk_corp = infor.get(2);
 		if(pk_corp == null){
 			pk_corp = SQLHelper.getCorpPk();
 		}
+		sysDate  = new UFDate(infor.get(3));
 		ZgjzHVO head_last = (ZgjzHVO) vo.getParentVO();
 		UFDate dbegindate_last = head_last.getDbegindate();//上月开始日期
 		UFDate denddate_last = head_last.getDenddate();//上月结束日期
@@ -62,10 +70,10 @@ private BaseDAO baseDAO = null;
 			denddate_last = new UFDate(System.currentTimeMillis());
 			head_last.setDenddate(denddate_last);
 		}
-		//首先更新本月冲上月欠发量
+		//1.首先更新本月冲上月欠发量
 		ZgjzBO  bo = new ZgjzBO();
 		vo =bo.refeshDeducNum(vo, infor);
-		//生成下月暂估数据
+		//2.根据本月暂居量生成下月暂估数据
 		curhead = head_last;
 		curbodys = (ZgjzBVO[])vo.getChildrenVO();
 		HYBillVO billVo = new HYBillVO();
@@ -73,7 +81,10 @@ private BaseDAO baseDAO = null;
 		ZgjzBVO[] children = getBodys();
 		billVo.setParentVO(parent);
 		billVo.setChildrenVO(children);
-		new HYPubBO_Client().saveBill(billVo);
+		HYPubBO_Client.saveBill(billVo);
+//		IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator.getInstance().lookup(IPFBusiAction.class.getName());
+//		bsBusiAction.processAction("SAVE", WdsWlPubConst.WDSQ,sysDate.toString(),null,billVo, null,null); 
+		return vo;
 	}
 	
 	/**
@@ -99,9 +110,12 @@ private BaseDAO baseDAO = null;
 		dendDate = new UFDate(year+"-"+month+"-"+day);
 		head_new.setDbegindate(denddate_last.getDateAfter(1));//开始日期
 		head_new.setDenddate(dendDate);//截止日期
+		head_new.setVapproveid(null);
+		head_new.setDapprovedate(null);
 		head_new.setVoperatorid(head.getVapproveid());//制单人--当前审批人
 		head_new.setDmakedate(head.getDapprovedate());//制单日期--审批日期
 		head_new.setDbilldate(head.getDapprovedate());//单据日期
+		head_new.setVbillstatus(IBillStatus.FREE);
 		head_new.setPrimaryKey(null);//清空主键
 		head_new.setDr(0);
 		head_new.setTs(null);
@@ -205,11 +219,19 @@ private BaseDAO baseDAO = null;
 			sql.append(" on h.cgeneralhid = b.cgeneralhid ");
 			sql.append(" where isnull(h.dr,0)=0  and  isnull(b.dr,0)=0 ");
 			sql.append(" and h.pk_corp='"+pk_corp+"'");
-			sql.append("  and h.cbilltypecode='4C'");//其他出库单
+			sql.append("  and h.cbilltypecode='4C'");//销售出库单
 			sql.append(" and h.pk_defdoc11='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
 			sql.append(" and h.dbilldate between '"+curhead.getDbegindate()+"' and '"+curhead.getDenddate()+"' ");
 			sql.append(" group by b.cinventoryid ");
 		}else if(ilacktype ==1){//转分仓本月暂估量
+			String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(curhead.getPk_outwhouse());//出库仓库
+			if(pk_outwhouse == null){
+				throw new BusinessException("发货仓库不能为空");
+			}
+			String pk_inwhouse = PuPubVO.getString_TrimZeroLenAsNull(curhead.getPk_intwhouse());//入库仓库
+			if(pk_inwhouse == null){
+				throw new BusinessException("收货仓库不能为空");
+			}
 			sql.append(" select b.cinventoryid, ");//存货管理id
 			sql.append(" sum(b.noutnum) noutnum,  ");//实出数量
 			sql.append(" sum(b.noutassistnum) noutassistnum ");//实出辅数量
@@ -220,6 +242,8 @@ private BaseDAO baseDAO = null;
 			sql.append(" and h.pk_corp='"+pk_corp+"'");
 			sql.append(" and h.cbilltypecode='4I'");//其他出库单
 			sql.append(" and h.pk_defdoc11='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
+			sql.append(" and h.cwarehouseid='"+pk_outwhouse+"'");//出库仓库
+			sql.append(" and h.cotherwhid='"+pk_inwhouse+"'");//入库仓库
 			sql.append(" and h.dbilldate between '"+curhead.getDbegindate()+"' and '"+curhead.getDenddate()+"' ");
 			sql.append(" group by b.cinventoryid ");
 		}

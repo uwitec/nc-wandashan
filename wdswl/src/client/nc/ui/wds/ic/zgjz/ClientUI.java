@@ -1,4 +1,6 @@
 package nc.ui.wds.ic.zgjz;
+import java.util.ArrayList;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
@@ -10,6 +12,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -119,7 +122,12 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 	 * 增加后台校验
 	 */
 	public Object getUserObject() {
-		return null;
+		ArrayList<String> infor = new ArrayList<String>();
+		infor.add(_getOperator());//操作人
+		infor.add(_getDate().toString());//登录日期
+		infor.add(_getCorp().getPrimaryKey());//登录公司
+		infor.add(new UFDate(System.currentTimeMillis()).toString());//系统日期
+		return infor;
 	}
 
 	@Override
