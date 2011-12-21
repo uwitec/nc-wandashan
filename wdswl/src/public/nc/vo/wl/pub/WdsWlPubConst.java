@@ -16,6 +16,14 @@ public class WdsWlPubConst {
 	 *库存状态表待检状态主键
 	 */
 	public static String WDS_STORSTATE_PK_dj="0001AA100000000BJINJ";
+	/**
+	 *供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
+	 */
+	public static String WDS_IC_FLAG_wu="0001S3100000000MPNIE";	
+	/**
+	 *供应链出库单单自定义项11（出入库标示）:有正常出库单单据
+	 */
+	public static String WDS_IC_FLAG_you="0001S3100000000MPNIF";
 	/**发运计划录入节点号 */
 	public static String DM_PLAN_LURU_NODECODE="80060405";
 	/**发运计划处理节点号  */
@@ -272,6 +280,8 @@ public class WdsWlPubConst {
 	public static String WDSO="WDSO";
 	/**调拨入库回传 */
 	public static String WDSP="WDSP";
+	/**暂估记账 */
+	public static String WDSQ="WDSQ";
 	
 	//---------------仓储管理中涉及的 几个对话框注册模板类型
 //	出库单据  出库托盘指定

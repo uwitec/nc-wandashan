@@ -26,4 +26,6 @@ package nc.ui.wds.w80020206.buttun0206;
 	 	
 	 	public final static int all_selected=207;//全选
 	 	public final static int all_not_selected=208;//全消
+	 	
+	 	public final static int Reduc_lastmonth= 209;//冲上月欠发
   }
