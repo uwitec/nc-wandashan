@@ -1,9 +1,11 @@
 package nc.bs.wds.ic.zgjz;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nc.bs.dao.BaseDAO;
 import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -31,6 +33,65 @@ public class ZgjzBO {
 		}
 		return baseDAO;
 	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-21下午06:54:22
+	 * @param vo
+	 * @throws BusinessException 
+	 */
+	public void beforeSaveChect(AggregatedValueObject vo) throws BusinessException{
+		if(vo == null){
+			return ;
+		}
+		ZgjzHVO head = (ZgjzHVO) vo.getParentVO();
+		Integer ilacktype = PuPubVO.getInteger_NullAs(head.getIlacktype(), 0);//销售的不需要更新虚拟欠发量
+		StringBuffer sql = new StringBuffer();
+		if( ilacktype ==0){//销售
+			String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_outwhouse());
+			if(pk_outwhouse == null){
+				throw new BusinessException("出货仓库不能为空");
+			}
+			sql.append(" select * from wds_zgjz_h ");
+			sql.append(" where  isnull(dr,0)=0 ");
+			sql.append(" and ilacktype='"+ilacktype+"'");
+			sql.append(" and pk_outwhouse='"+pk_outwhouse+"'");
+			sql.append(" and( (dbegindate<='" +head.getDbegindate()
+					+ "' and denddate>='" + head.getDenddate() + "')");
+			sql.append(" or (dbegindate<='" + head.getDenddate() 
+					+ "' and denddate>='" + head.getDenddate() + "')");
+			sql.append(" or (dbegindate>='" + head.getDbegindate()
+					+ "' and denddate<='" + head.getDenddate() + "'))");
+		}else{//转分仓的
+			String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_outwhouse());
+			if(pk_outwhouse == null){
+				throw new BusinessException("出货仓库不能为空");
+			}
+			String pk_inwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_intwhouse());
+			if(pk_inwhouse == null){
+				throw new BusinessException("入货仓库不能为空");
+			}
+			sql.append(" select * from wds_zgjz_h ");
+			sql.append(" where  isnull(dr,0)=0 ");
+			sql.append(" and ilacktype='"+ilacktype+"'");
+			sql.append(" and pk_outwhouse='"+head.getPk_outwhouse()+"'");
+			sql.append(" and pk_intwhouse='"+head.getPk_intwhouse()+"'");
+			sql.append(" and( (dbegindate<='" +head.getDbegindate()
+					+ "' and denddate>='" + head.getDbegindate() + "')");
+			sql.append(" or (dbegindate<='" + head.getDenddate() 
+					+ "' and denddate>='" + head.getDenddate() + "')");
+			sql.append(" or (dbegindate>='" + head.getDbegindate()
+					+ "' and denddate<='" + head.getDenddate() + "'))");
+		}
+		List<ZgjzHVO> list = (ArrayList<ZgjzHVO>) getBaseDAO()
+				.executeQuery(sql.toString(),
+						new BeanListProcessor(ZgjzHVO.class));
+		if(list.size()>0){
+			throw new BusinessException("存在日期交叉:已经存在暂估记账,开始日期="+list.get(0).getDbegindate()+"结束日期="+list.get(0).getDenddate());
+		}
+	}
+	
 	/**
 	 * 
 	 * @作者：lyf:更新上月欠发数量 

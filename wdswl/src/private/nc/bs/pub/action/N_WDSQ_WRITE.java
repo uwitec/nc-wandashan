@@ -2,6 +2,7 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.zgjz.ZgjzBO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -27,6 +28,8 @@ try{
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
+			ZgjzBO bo = new ZgjzBO();
+			bo.beforeSaveChect(vo.m_preValueVo);
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {

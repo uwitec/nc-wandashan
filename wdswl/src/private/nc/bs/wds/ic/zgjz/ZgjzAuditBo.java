@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
-import nc.bs.framework.common.NCLocator;
-import nc.itf.uap.pf.IPFBusiAction;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.util.SQLHelper;
