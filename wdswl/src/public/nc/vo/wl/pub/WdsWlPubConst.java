@@ -57,6 +57,12 @@ public class WdsWlPubConst {
 	public static String  IC_OTHER_IN_REFHWTZ_NODECODE= "02140288";
 	/**其他入库 运单确认 参照模板节点标示*/
 	public static String  IC_OTHER_IN_REFFYDJ_NODECODE= "2011040801";
+	
+	/**退货入库 节点号*/
+	public static String  IC_OUT_IN_NODECODE= "8004040220";
+	/**退货入库参照 [供应链] 销售订单 参照查询 NODEKEY  **/
+	public static String  IC_OUT_IN_REF4I_NODECODE = "800404021430";
+	
 //	/**运单确认 节点号 */
 //	public static String IC_TRANS_CONFIRM_NODECOED="80060210";
 	/**采购取样 节点号*/
@@ -219,6 +225,8 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_SALE_OUT = "WDS8";
 	/** 调拨入库*/
 	public static String BILLTYPE_ALLO_IN = "WDS9";
+	/**出库入库*/
+	public static String BILLTYPE_OUT_IN = "WDSZ";
 	/** 供应链调拨出库 */
 	public static String GYL4Y = "4Y";
 	/** 供应链调拨订单 */
