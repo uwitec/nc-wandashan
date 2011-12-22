@@ -1,16 +1,13 @@
 package nc.ui.wds.ic.allocation.in;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 
-import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
@@ -26,10 +23,7 @@ import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
 import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
-import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -38,7 +32,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * µ÷²¦Èë¿â
  */
-public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEditListener {
+public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEditListener,ChangeListener {
 
 	/**
 	 * 
@@ -76,6 +70,12 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 //		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
 //		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 		}
+		
+		// Ôö¼ÓÒ³Ç©ÇÐ»»¼àÌý
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener(this);
+		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
+	
 
 	}	
 	@Override
@@ -116,7 +116,6 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	
 	@Override
 	protected void initEventListener() {
-		
 		super.initEventListener();
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 	}
@@ -205,4 +204,16 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
 	}
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
+		Object sourece = arg0.getSource();
+		if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}else{
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}
+		updateButtons();
+	}
+
 }

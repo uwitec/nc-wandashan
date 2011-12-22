@@ -85,8 +85,9 @@ public class AlloInClientUICtrl extends AbstractManageController {
 	}
 
 	public String[] getBillVoName() {
-		return new String[] { OtherInBillVO.class.getName(), TbGeneralBVO.class.getName(),TbgeneralB2VO.class.getName(),
-				TbGeneralHVO.class.getName() };
+ 		return new String[] {  OtherInBillVO.class.getName(),TbGeneralHVO.class.getName(),
+				 TbGeneralBVO.class.getName(),TbgeneralB2VO.class.getName(),
+				 };
 	}
 
 	public String getBodyCondition() {

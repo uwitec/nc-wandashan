@@ -1,4 +1,5 @@
 package nc.ui.wds.ic.allocation.in;
+import java.awt.event.ContainerListener;
 import java.util.ArrayList;
 import java.util.List;
 import nc.ui.pub.beans.UIDialog;
@@ -16,6 +17,7 @@ import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.bill.BillRendererVO;
 import nc.vo.scm.pu.PuPubVO;
@@ -281,4 +283,10 @@ public class AlloInEventHandler extends InPubEventHandler {
 		getPringTool().print(bill);
 
 	}
+	@Override
+	protected void onBoLineCopy() throws Exception {
+		
+	}
+	
+
 }
