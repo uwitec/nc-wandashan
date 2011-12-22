@@ -63,7 +63,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	private SoDealEventHandler event = null;
 
 	// 定义界面模板
-
 	private BillListPanel m_panel = null;
 
 	// 按钮事件处理
@@ -151,6 +150,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		}
 
 		public void bodyRowChange(BillEditEvent e) {
+			
 		}
 
 		public boolean beforeEdit(BillEditEvent e) {
@@ -201,7 +201,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			m_panel.loadTemplet(WdsWlPubConst.WDS4, null, m_ce.getUser()
 					.getPrimaryKey(), m_ce.getCorporation().getPrimaryKey());
 			m_panel.setEnabled(true);
-			m_panel.getParentListPanel().setTotalRowShow(true);
+			m_panel.getChildListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
 			m_panel.getHeadTable().removeSortListener();
 		}
@@ -302,8 +302,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			return;
 		e.getValue();
 		headRowChange(e.getRow());
-		
-	}
+		getPanel().getBodyBillModel().reCalcurateAll();	
+		}
 	//表头编辑前事件
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();

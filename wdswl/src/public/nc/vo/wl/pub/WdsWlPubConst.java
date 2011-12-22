@@ -15,7 +15,7 @@ public class WdsWlPubConst {
 	/**
 	 *库存状态表待检状态主键
 	 */
-	public static String WDS_STORSTATE_PK_dj="0001AA100000000BJINJ";
+	public static String WDS_STORSTATE_PK_dj="1021S31000000009FS99";
 	/**
 	 *供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
 	 */

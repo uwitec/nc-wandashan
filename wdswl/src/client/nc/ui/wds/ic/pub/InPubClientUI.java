@@ -174,6 +174,7 @@ public class InPubClientUI extends WdsBillManagUI {
 		return billvo;
 	}
 	
+	
 	public AggregatedValueObject getBillVOFromUI() throws Exception {
 		AggregatedValueObject billvo = getBillCardWrapper().getBillVOFromUI();
 		return billvo;
@@ -287,7 +288,6 @@ public class InPubClientUI extends WdsBillManagUI {
 		Logger.info(e1);
 	}
 	}
-	
 	public void afterHeadCargDoc(Object pk_cargdoc){
 		//表体重新赋值[货位]
 		int row = getBillCardPanel().getBillTable().getRowCount();

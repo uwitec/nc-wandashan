@@ -335,7 +335,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		if(e.getRow()<0)
 			return;
 		headRowChange(e.getRow());
-		
+		getPanel().getBodyBillModel().reCalcurateAll();	
 	}
 	
 }

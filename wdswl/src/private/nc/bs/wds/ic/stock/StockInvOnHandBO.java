@@ -462,6 +462,7 @@ public class StockInvOnHandBO {
 		sql = " select b.pk_invbasdoc inv,coalesce(b.narrangnmu,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassarrangnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_soorder_b b inner join wds_soorder h on h.pk_soorder = b.pk_soorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
+		" and coalesce(b.bisdate,'N')='N' "+
 		" and h.pk_outwhouse = '"+cstoreid+"' and h.vbillstatus=8 and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
 		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);
@@ -469,6 +470,7 @@ public class StockInvOnHandBO {
 		sql = " select b.pk_invbasdoc inv,coalesce(b.ndealnum,0.0)-coalesce(b.noutnum,0) nnum ,coalesce(b.nassdealnum,0.0)-coalesce(b.nassoutnum,0.0) nassnum" +
 		" from wds_sendorder_b b inner join wds_sendorder h on h.pk_sendorder = b.pk_sendorder " +
 		" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.pk_corp = '"+corp+"'" +
+		" and  coalesce(b.bisdate,'N')='N'"+
 		" and h.pk_outwhouse = '"+cstoreid+"' and h.vbillstatus=8 and b.pk_invbasdoc in "+tt.getSubSql(cinvids);
 		ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		dealResultSet(retInfor, ldata);

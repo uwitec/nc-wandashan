@@ -157,9 +157,11 @@ public class SoDealCol {
 					tmpNumVO.setCstoreid(head.getCbodywarehouseid());
 					tmpNumVO.setCinvbasid(body.getCinvbasdocid());
 					tmpNumVO.setCinvmanid(body.getCinventoryid());
+					//根据仓库+存货 获得 合格和待检状态的现存量
+					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
 					stocknums = getStockBO().getInvStockNum(pk_corp,
 							tmpNumVO.getCstoreid(), null,
-							tmpNumVO.getCinvbasid(), null, null,null);
+							tmpNumVO.getCinvbasid(), null, null,strWhere);
 					if (stocknums == null || stocknums.length == 0)
 						continue;
 					tmpNumVO.setNstocknum(stocknums[0]);
@@ -177,7 +179,7 @@ public class SoDealCol {
 		if (invNumInfor.size() == 0) {
 			Logger.info("本次待安排存货库存均为空，无法安排，退出");
 		}
-		// 2.获取占用量,根据存货现存量和待安排数量，将存货分为两类：够安排和不够安排
+		// 2.获取运单占用量,根据存货现存量和待安排数量，将存货分为两类：够安排和不够安排
 		Logger.info("获取存货已安排未出库量...");
 		Map<String, UFDouble[]> invNumInfor2 = getStockBO().getNdealNumInfor(
 				pk_corp, head.getCbodywarehouseid(),

@@ -122,7 +122,9 @@ public class ClientUI extends BillManageUI  implements  BillCardBeforeEditListen
 		getBillCardPanel().setTailItem("dmakedate", _getDate());
 		getBillCardPanel().setHeadItem("dbilldate", _getDate());
 		// zhf add 初始化 默认 发货仓库
-		getBillCardPanel().setHeadItem("reserve1", m_loginInfor.getWhid());
+		if(m_loginInfor != null){
+			getBillCardPanel().setHeadItem("reserve1", m_loginInfor.getWhid());
+		}
 
 	}
 

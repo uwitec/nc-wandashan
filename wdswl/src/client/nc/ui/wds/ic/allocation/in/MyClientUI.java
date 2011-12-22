@@ -83,6 +83,7 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 		super.beforeEdit(e);
 		return true;
 	}
+	
 	/**
 	 * 注册自定义按钮
 	 */

@@ -249,7 +249,6 @@ public class SoDealBO {
 		if(bills == null || bills.length == 0)
 			return null;		
 		Logger.init(WdsWlPubConst.wds_logger_name);
-//		过滤最小发货量  
 		Logger.info("##########################################################");
 		Logger.info("销售计划安排，待安排客户数量"+bills.length+"--------------");
 //		过滤最小发货量  分仓客商绑定  节点 维护了  每个客户的最小发货量
