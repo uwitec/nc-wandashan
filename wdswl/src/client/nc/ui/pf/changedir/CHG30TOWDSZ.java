@@ -48,7 +48,9 @@ public class CHG30TOWDSZ extends nc.ui.pf.change.VOConversionUI{
 //				"B_vbatchcode->B_", //批次号
 				"B_pk_measdoc->B_cunitid",//主单位
 				"B_castunitid->B_cpackunitid",//辅单位
-				"B_geb_hsl->B_scalefactor"//换算率
+				"B_geb_hsl->B_scalefactor",//换算率
+				"B_geb_nprice->B_noriginalcurprice",//单价
+				"B_geb_nmny->B_noriginalcurmny",//金额
 		};
 	}
 	/**
