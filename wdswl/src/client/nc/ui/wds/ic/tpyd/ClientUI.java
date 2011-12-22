@@ -153,7 +153,7 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					JComponent jc = getBillCardPanel().getBodyItem("outtraycode").getComponent();
 					if( jc instanceof UIRefPane){
 						UIRefPane ref = (UIRefPane)jc;
-						ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)="+StockInvOnHandVO.stock_state_use+"" +
+						ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)=1" +
 								" and tb_warehousestock.pk_cargdoc='"+a+"'" +
 										" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//有货
 					}
@@ -183,12 +183,12 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					UIRefPane ref = (UIRefPane)jc;
 					//liuys modify 
 					ref.getRefModel().addWherePart(" and wds_cargdoc.pk_cargdoc='"+a
-							+"' and (isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_null+
-							" or isnull(bd_cargdoc_tray.cdt_traystatus,0)= " +StockInvOnHandVO.stock_state_use+
+							+"' and (isnull(bd_cargdoc_tray.cdt_traystatus,0)= 0"+
+							" or isnull(bd_cargdoc_tray.cdt_traystatus,0)= 1"+
 							") and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
-									" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' "
-									//yf modify 只过滤已满托盘 
-									+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) > 0"
+							" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' "
+							//yf modify 只过滤已满托盘 
+							+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) > 0"
 //											"= "+
 //									getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")
 					);//当前货位下托盘为空且和移出托盘一样的存货

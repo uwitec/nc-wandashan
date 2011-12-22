@@ -33,7 +33,7 @@ public class TaryRefModel  extends AbstractRefModel{
 				"bd_cargdoc_tray.cdt_traycode",
 				"bd_invbasdoc.invcode",
 				"bd_invbasdoc.invname",
-				"bd_cargdoc_tray.cdt_pk",
+				"bd_cargdoc_tray.cdt_pk"
 	    	};
 	    }
 
@@ -46,7 +46,7 @@ public class TaryRefModel  extends AbstractRefModel{
 	    	return new String[] {
 				"托盘编码",
 				"存货编码",
-				"存货名称",
+				"存货名称"
 	    	};
 	    }
 

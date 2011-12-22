@@ -11,6 +11,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.ButtonVOFactory;
@@ -46,6 +47,11 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 		return new AlloInEventHandler(this, getUIControl());
 	}
 
+	@Override
+	public BillCardPanelWrapper createBillCardPanelWrapper() throws Exception {
+		// TODO Auto-generated method stub
+		return super.createBillCardPanelWrapper();
+	}
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}

@@ -1,7 +1,7 @@
 package nc.ui.wds.ic.allocation.in;
-import java.awt.event.ContainerListener;
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.util.ObjectUtils;
@@ -16,8 +16,8 @@ import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.bill.BillRendererVO;
 import nc.vo.scm.pu.PuPubVO;
@@ -71,15 +71,17 @@ public class AlloInEventHandler extends InPubEventHandler {
 				break;
 			case  nc.ui.wds.w80020206.buttun0206.ISsButtun.Ref4I:
 				onBillRef();
-
-				//如果 参照的入库仓库为空 设置默认仓库为当前保管员仓库
-				setInitWarehouse("geh_cwarehouseid");
-
-				
-
 				break;
 		}
 	}
+	@Override
+	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
+		// TODO Auto-generated method stub
+		super.setRefData(vos);
+		//如果 参照的入库仓库为空 设置默认仓库为当前保管员仓库
+		setInitWarehouse("geh_cwarehouseid");
+	}
+	
 	/**
 	 * 
 	 * @作者：mlr
@@ -285,7 +287,7 @@ public class AlloInEventHandler extends InPubEventHandler {
 	}
 	@Override
 	protected void onBoLineCopy() throws Exception {
-		
+		super.onBoLineCopy();
 	}
 	
 
