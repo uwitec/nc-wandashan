@@ -86,21 +86,21 @@ public class BSCheck implements IBDBusiCheck {
         	return;
         }
         int size=vos.length;
-        for(int i=0;i<size;i++){
-//        if(BsUniqueCheck.isEmpty(vos[i].getAttributeValue("pk_cumandoc"))){
-//        	continue;
-//        }
-//        BsUniqueCheck.FieldUniqueCheck(vos[i], "pk_cumandoc"," and pk_stordoc <> '"+vo.getParentVO().getPrimaryKey()+"'", " 该客商已在其他仓库绑定");
-    //    BsUniqueCheck.FieldUniqueChecks(vos[i],["pk_stordoc",],);
-            String 	pk_cumandoc=(String) vos[i].getAttributeValue("pk_cumandoc");
-            if(pk_cumandoc!=null&&pk_cumandoc.length()>0){
-		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_cumandoc"}, " 该客户在别的仓库中已绑定 ");
-             }
-            String 	pk_stordoc1=(String) vos[i].getAttributeValue("pk_stordoc1");
-            if(pk_stordoc1!=null&&pk_stordoc1.length()>0){
-		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_stordoc1"}, " 该分仓在别的仓库中已绑定 ");
-            }
-        }		
+//        for(int i=0;i<size;i++){
+////        if(BsUniqueCheck.isEmpty(vos[i].getAttributeValue("pk_cumandoc"))){
+////        	continue;
+////        }
+////        BsUniqueCheck.FieldUniqueCheck(vos[i], "pk_cumandoc"," and pk_stordoc <> '"+vo.getParentVO().getPrimaryKey()+"'", " 该客商已在其他仓库绑定");
+//    //    BsUniqueCheck.FieldUniqueChecks(vos[i],["pk_stordoc",],);
+//            String 	pk_cumandoc=(String) vos[i].getAttributeValue("pk_cumandoc");
+//            if(pk_cumandoc!=null&&pk_cumandoc.length()>0){
+//		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_cumandoc"}, " 该客户在别的仓库中已绑定 ");
+//             }
+//            String 	pk_stordoc1=(String) vos[i].getAttributeValue("pk_stordoc1");
+//            if(pk_stordoc1!=null&&pk_stordoc1.length()>0){
+//		           BsUniqueCheck.FieldUniqueCheck(vos[i], new String[]{"pk_stordoc","pk_stordoc1"}, " 该分仓在别的仓库中已绑定 ");
+//            }
+//        }		
 	}
 	
 	public void dealAfter(int intBdAction, AggregatedValueObject billVo,

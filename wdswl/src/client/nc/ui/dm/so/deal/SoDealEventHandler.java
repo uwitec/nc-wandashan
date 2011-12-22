@@ -10,7 +10,6 @@ import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.FilterNullBody;
-import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;

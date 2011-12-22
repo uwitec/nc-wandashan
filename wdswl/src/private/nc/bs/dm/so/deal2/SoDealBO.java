@@ -91,49 +91,40 @@ public class SoDealBO {
 		 *  出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量
 		 * 
 		 */ 
-		String[] pks = new String[datas.length];
-		Map map = new HashMap();
+		String pk = null;
 		for (int i = 0; i < datas.length; i++) {
-			pks[i] = datas[i].getCorder_bid();
-			StringBuffer generalSql = new StringBuffer(
-					" select noutnum,csourcebillbid from ic_general_b bb where  bb.vuserdef9='Y' and nvl(bb.dr, 0) = 0 and bb.csourcebillbid = '"
-							+ datas[i].getCorder_bid() + "'");
-			Object obj = getDao().executeQuery(generalSql.toString(),
-					WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+			pk = PuPubVO.getString_TrimZeroLenAsNull(datas[i].getCorder_bid());
+			if(pk == null){
+				continue;
+			}
+			StringBuffer generalSql = new StringBuffer();
+			generalSql.append(" select sum(ic_general_b.noutnum) from ic_general_h ");
+			generalSql.append(" join ic_general_b on ");
+			generalSql.append(" ic_general_h.cgeneralhid = ic_general_b.cgeneralhid");
+			generalSql.append(" where isnull(ic_general_h.dr,0)=0 ");
+			generalSql.append(" and isnull(ic_general_b.dr,0)=0 ");
+			generalSql.append(" and ic_general_h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
+			generalSql.append(" and ic_general_b.csourcebillbid='"+pk + "'");
+			UFDouble noutnum =PuPubVO.getUFDouble_NullAsZero( getDao().executeQuery(generalSql.toString(),
+					WdsPubResulSetProcesser.COLUMNPROCESSOR));
 			// 情况1 : 如果未查询到销售出库对应表体单据,则不是虚拟安排,按正常安排流程走
-			if (obj == null)
+			if (noutnum.doubleValue() ==0)
 				continue;
-			List<?> kcList = (ArrayList<?>) obj;
-			if (kcList.size() == 0)
-				continue;
-			//情况2 : 如果只查询出一个对应的虚拟出库的单据,那么直接存入map
-			if (kcList.size() == 1) {
-				map.put(kcList.get(1), kcList.get(0));
-				continue;
+			//订单已安排量
+			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero( datas[i].getNtaldcnum());
+			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNnumber());
+			UFDouble npacknum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNpacknumber());
+			UFDouble nhsl = new UFDouble(1);
+			if(npacknum.doubleValue() >0){
+				nhsl = nnum.div(npacknum);
 			}
-			//情况3 : 如果只查询出多个对应的虚拟出库的单据,那么将出库量合计并存入map
-			UFDouble hj = new UFDouble();
-			for (int j = 0; j < kcList.size(); i++) {
-				hj= hj.add(new UFDouble(kcList.get(0).toString()));
-				if(i == kcList.size()-1)
-					map.put(kcList.get(1), hj);
-			}
-		}
-		//如果存在对应的虚拟出库单,则校验量是否满足
-		if(map  != null || map.size()>0 ){
-			for(int y=0;y<datas.length;y++){
-				SoDealVO vo = (SoDealVO)datas[y];
-				Object obje = map.get(vo.getCorder_bid());
-				if(obje != null && obje.toString().length()>0){
-					//出库数量合计
-					UFDouble cksl1 = new UFDouble(obje.toString());
-					//订单已安排量
-					UFDouble ntaldcnum = vo.getNtaldcnum();
-					//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
-					if(cksl1.sub(ntaldcnum).doubleValue()>0){
-						vo.setIsxnap(new UFBoolean(true));
-						vo.setNnum(cksl1.sub(ntaldcnum));
-					}
+			//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
+			if(noutnum.sub(ntaldcnum).doubleValue()>0){
+				datas[i].setIsxnap(UFBoolean.TRUE);
+				UFDouble nlefnum = noutnum.sub(ntaldcnum);
+				datas[i].setNnumber(nlefnum);
+				if(npacknum.doubleValue() >0){
+					datas[i].setNpacknumber(nlefnum.div(nhsl));
 				}
 			}
 		}

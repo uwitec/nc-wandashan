@@ -218,7 +218,7 @@ private BaseDAO baseDAO = null;
 			sql.append(" where isnull(h.dr,0)=0  and  isnull(b.dr,0)=0 ");
 			sql.append(" and h.pk_corp='"+pk_corp+"'");
 			sql.append("  and h.cbilltypecode='4C'");//销售出库单
-			sql.append(" and h.pk_defdoc11='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
+			sql.append(" and h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
 			sql.append(" and h.dbilldate between '"+curhead.getDbegindate()+"' and '"+curhead.getDenddate()+"' ");
 			sql.append(" group by b.cinventoryid ");
 		}else if(ilacktype ==1){//转分仓本月暂估量
@@ -239,7 +239,7 @@ private BaseDAO baseDAO = null;
 			sql.append(" where isnull(h.dr,0)=0  and  isnull(b.dr,0)=0 ");
 			sql.append(" and h.pk_corp='"+pk_corp+"'");
 			sql.append(" and h.cbilltypecode='4I'");//其他出库单
-			sql.append(" and h.pk_defdoc11='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
+			sql.append(" and h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
 			sql.append(" and h.cwarehouseid='"+pk_outwhouse+"'");//出库仓库
 			sql.append(" and h.cotherwhid='"+pk_inwhouse+"'");//入库仓库
 			sql.append(" and h.dbilldate between '"+curhead.getDbegindate()+"' and '"+curhead.getDenddate()+"' ");

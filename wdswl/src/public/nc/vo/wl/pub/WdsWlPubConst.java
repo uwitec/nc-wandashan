@@ -16,12 +16,17 @@ public class WdsWlPubConst {
 	 *库存状态表待检状态主键
 	 */
 	public static String WDS_STORSTATE_PK_dj="1021S31000000009FS99";
+	
 	/**
-	 *供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
+	 * ERP 出入库单标示 是否虚拟的自定义项
+	 */
+	public static String WDS_IC_ZG_DEF="pk_defdoc11";
+	/**
+	 *暂估处理：供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
 	 */
 	public static String WDS_IC_FLAG_wu="0001S3100000000MPNIE";	
 	/**
-	 *供应链出库单单自定义项11（出入库标示）:有正常出库单单据
+	 *暂估处理：供应链出库单单自定义项11（出入库标示）:有正常出库单单据
 	 */
 	public static String WDS_IC_FLAG_you="0001S3100000000MPNIF";
 	/**发运计划录入节点号 */
