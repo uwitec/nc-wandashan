@@ -318,6 +318,7 @@ public class MutiInPubClientUI extends MutiChildForInUI {
 			if(row < 0){
 				return;
 			}
+		    //	getBillCardPanel().getBillModel().getBodyItems();
 			Object o = getBufferData().getCurrentVO().getParentVO().getAttributeValue(getBillField().getField_BillStatus());
 			if(o.equals(IBillStatus.FREE)){//втси
 				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);

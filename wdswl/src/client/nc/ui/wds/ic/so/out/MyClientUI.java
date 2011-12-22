@@ -1,8 +1,11 @@
 package nc.ui.wds.ic.so.out;
 import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeListener;
 
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
@@ -22,6 +25,7 @@ import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
@@ -32,7 +36,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * <b> 销售出库 </b>
  */
-public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditListener {
+public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditListener, ChangeListener {
 
 	/**
 	 * 
@@ -75,6 +79,11 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 		getBillListPanel().getHeadTable().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);//单选
 		getBillListPanel().getBodyTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		getBillCardPanel().getBillTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
+		// 增加页签切换监听
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener( this);
+		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 		
 
 	}
@@ -267,6 +276,8 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 			if(row < 0){
 				return;
 			}
+			BillItem[] body=	getBillCardPanel().getBillModel().getBodyItems();
+			
 			Object o = getBufferData().getCurrentVO().getParentVO().getAttributeValue(getBillField().getField_BillStatus());
 			if(o.equals(IBillStatus.FREE)){//自由
 				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
@@ -301,4 +312,17 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 	public String[] getTableCodes() {
 		return new String[]{"tb_outgeneral_b","tb_outgeneral_b2"};
 	}
+	
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
+		Object sourece = arg0.getSource();
+		if("tb_outgeneral_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}else{
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}
+		updateButtons();
+	}
+
 }

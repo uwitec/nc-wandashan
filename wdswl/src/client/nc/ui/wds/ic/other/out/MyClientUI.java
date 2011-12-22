@@ -1,9 +1,11 @@
 package nc.ui.wds.ic.other.out;
 
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
@@ -34,7 +36,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * 其他出库
  */
 public class MyClientUI extends OutPubClientUI implements
-		BillCardBeforeEditListener {
+		BillCardBeforeEditListener, ChangeListener {
 
 	/**
 	 * 
@@ -42,6 +44,7 @@ public class MyClientUI extends OutPubClientUI implements
 	private static final long serialVersionUID = 1L;
 
 	private String curRefBilltype = null;
+//	public String csourcebillhid=null;
 
 	// private Map<String,List<TbOutgeneralTVO>> trayInfor = null;//缓存下 保存后更新到
 	// buffer
@@ -96,6 +99,12 @@ public class MyClientUI extends OutPubClientUI implements
 			btnobj.removeChildButton(getButtonManager().getButton(
 					IBillButton.InsLine));
 		}
+		
+		// 增加页签切换监听
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener( this);
+		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
+	
 	}
 
 	@Override
@@ -431,5 +440,20 @@ public class MyClientUI extends OutPubClientUI implements
 		this.curRefBilltype = curRefBilltype;
 	}
 	
-	
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
+		Object sourece = arg0.getSource();
+		
+		String csourcebillhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("csourcebillhid").getValue());
+		if(csourcebillhid!=null){
+		if("tb_outgeneral_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}else{
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		}
+		updateButtons();
+	}
+
+	}
 }

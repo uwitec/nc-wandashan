@@ -15,7 +15,6 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.other.in.TrayDisposeDlg;
 import nc.ui.wl.pub.MutiChildForInUI;

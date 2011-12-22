@@ -1,9 +1,12 @@
 package nc.ui.wds.ic.other.in;
 
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
+
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItemEvent;
@@ -31,7 +34,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  其他入库
  */
-public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEditListener{
+public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEditListener, ChangeListener{
 	/**
 	 * 
 	 */
@@ -81,6 +84,11 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
 		}
+		
+		// 增加页签切换监听
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener(this);
+		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 	
 	}
 
@@ -291,5 +299,21 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 	public Object getUserObject() {
 		return new GetCheck();
 	}	
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
+		Object sourece = arg0.getSource();
+		String geh_cgeneralhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("geh_cgeneralhid").getValue());
+		String csourcebillhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("geh_cgeneralhid").getValue());
+
+		if(csourcebillhid!=null||geh_cgeneralhid!=null){
+	     	if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+		          getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			      getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+	    	}else{
+			      getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			      getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		    } 
+	   	  updateButtons();
+	     }
+	}
 
 }

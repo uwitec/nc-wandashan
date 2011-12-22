@@ -1,5 +1,6 @@
 package nc.ui.wl.pub;
 import java.util.ArrayList;
+
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillData;
 import nc.ui.trade.bill.ICardController;
