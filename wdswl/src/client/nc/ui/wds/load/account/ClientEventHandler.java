@@ -66,7 +66,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		 * @author yf
 		 * 校验 录入时表体数据不能为空
 		 */
-		if(b.length <= 0){
+		if(b==null||b.length <= 0){
 			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "保存前请先分配班组");
 			return;
 		}
