@@ -77,6 +77,7 @@ public class XsBillSourceDlg extends WdsBillSourceDLG{
 		String  pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();		
 		StringBuffer hsql = new StringBuffer();
 		hsql.append(" isnull(head.dr,0)=0 and head.pk_corp ='"+pk_corp+"' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
+		
 //		hsql.append("and head.cotherwhid='"+pk_stock+"'");//
 //		hsql.append(" and head.cgeneralhid not in(select distinct gylbillhid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)");
 //		hsql.append("and head.cgeneralhid in");//只能看到包含当前登录人绑定货位下存货的单据
