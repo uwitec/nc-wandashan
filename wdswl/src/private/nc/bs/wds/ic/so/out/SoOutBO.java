@@ -56,7 +56,6 @@ public class SoOutBO {
 			GeneralBillVO billVO = (GeneralBillVO) billvo;
 			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator
 					.getInstance().lookup(IPFBusiAction.class.getName());
-			// pushsave ，存在按表头仓库进行分单，没有必要进行分单
 			ArrayList retList = (ArrayList) bsBusiAction.processAction(
 					"PUSHWRITE", s_billtype, date, null, billVO, null, null);
 			SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);

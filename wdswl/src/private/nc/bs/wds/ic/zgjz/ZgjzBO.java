@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nc.bs.dao.BaseDAO;
+import nc.bs.trade.business.HYPubBO;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.util.SQLHelper;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
@@ -188,8 +188,9 @@ public class ZgjzBO {
 			}
 		}
 		//2.¸üÐÂ
-		HYPubBO_Client.update(head);
-		HYPubBO_Client.updateAry(bodys);
+		HYPubBO pubo = new HYPubBO();
+		pubo.update(head);
+		pubo.updateAry(bodys);
 		return vo;
 	}
 	/**

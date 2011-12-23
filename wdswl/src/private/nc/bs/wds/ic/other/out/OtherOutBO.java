@@ -27,7 +27,6 @@ import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.scm.pub.DynamicVO;
 import nc.vo.wl.pub.CombinVO;
 import nc.vo.wl.pub.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
