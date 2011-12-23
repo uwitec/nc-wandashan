@@ -16,6 +16,7 @@ import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
@@ -260,24 +261,24 @@ public class ChangeTo4C {
 				|| value.getChildrenVO() == null || value.getChildrenVO().length == 0){
 			return;
 		}
-		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
-		TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) value.getChildrenVO();
+		TbGeneralHVO outhvo = (TbGeneralHVO) value.getParentVO();
+		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
 		corp =outhvo.getPk_corp();
 		//
 		for(int i = 0 ;i<bvos.length;i++){
-			String key = bvos[i].getGeneral_b_pk();
-			String str = " general_b_pk ='"+key+"'";
-			TbOutgeneralTVO[] tvos = (TbOutgeneralTVO[] )getHypubBO().queryByCondition(TbOutgeneralTVO.class, str	);
+			String key = bvos[i].getGeb_pk();
+			String str = " geb_pk ='"+key+"'";
+			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
 			bvos[i].setTrayInfor(Arrays.asList(tvos));
-			List<TbOutgeneralTVO> list = bvos[i].getTrayInfor();
+			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
 			if(list == null || list.size() == 0)
 				continue;
 			for(int j =0 ;j < list.size();j++){
-				TbOutgeneralTVO tvo = list.get(j);
+				TbGeneralBBVO tvo = list.get(j);
 				LocatorVO lvo = new LocatorVO();
 				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNoutspacenum(tvo.getNoutnum());
-				lvo.setNoutspaceassistnum(tvo.getNoutassistnum());
+				lvo.setNoutspacenum(tvo.getGebb_num());
+				lvo.setNoutspaceassistnum(tvo.getNinassistnum());
 				lvo.setCspaceid(tvo.getPk_cargdoc());//»õÎ»
 				lvo.setStatus(VOStatus.NEW);
 				if(l_map.containsKey(key)){
