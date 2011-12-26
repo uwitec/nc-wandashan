@@ -4,7 +4,6 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.BusinessException;
 
 /**

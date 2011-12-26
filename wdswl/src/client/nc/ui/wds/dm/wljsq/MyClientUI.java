@@ -1,13 +1,11 @@
 package nc.ui.wds.dm.wljsq;
 
-import nc.bs.bank_cvp.compile.registry.BussinessMethods;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.wds.dm.wljsq.PeriodCheckClass;
 
