@@ -15,7 +15,6 @@ import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
@@ -33,9 +32,6 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
-import nc.vo.wds.ic.write.back4c.MultiBillVO;
-import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
-import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 /**
  * 
  * @author lyf 
