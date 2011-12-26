@@ -545,6 +545,7 @@ public class TranPriceAccount {
 		sql.append(" join tb_storcubasdoc ");
 		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");//分仓客商绑定子表
 		sql.append(" where isnull(wds_storecust_h.dr,0)=0 and isnull(tb_storcubasdoc.dr,0)=0");
+		sql.append(" and wds_storecust_h.pk_stordoc='"+pk_outwhouse+"'");
 		sql.append(" and wds_storecust_h.pk_sendareacl ='"+pk_sendareal+"'");
 		sql.append(" and tb_storcubasdoc.pk_stordoc1='"+pk_inwhouse+"'");
 		ArrayList<TbStorcubasdocVO> list = (ArrayList<TbStorcubasdocVO>) getBaseDAO()

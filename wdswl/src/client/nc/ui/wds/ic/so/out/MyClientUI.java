@@ -3,7 +3,6 @@ import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeListener;
 
-import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -25,7 +24,6 @@ import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
@@ -178,15 +176,15 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 		soOrder.setBtnName("销售运单");
 		soOrder.setBtnChinaName("销售运单");
 		addPrivateButton(soOrder);
-		ButtonVO redSoorder = new ButtonVO();
-		redSoorder.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.RefRedSoOrder);
-		redSoorder.setBtnCode(null);
-		redSoorder.setBtnName("退货入库");
-		redSoorder.setBtnChinaName("退货入库");
-		addPrivateButton(redSoorder);
+//		ButtonVO redSoorder = new ButtonVO();
+//		redSoorder.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.RefRedSoOrder);
+//		redSoorder.setBtnCode(null);
+//		redSoorder.setBtnName("退货入库");
+//		redSoorder.setBtnChinaName("退货入库");
+//		addPrivateButton(redSoorder);
 		ButtonVO refbill =ButtonVOFactory.getInstance().build(IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT, IBillOperate.OP_INIT });
-		refbill.setChildAry(new int[]{soOrder.getBtnNo(),redSoorder.getBtnNo()});
+//		refbill.setChildAry(new int[]{soOrder.getBtnNo(),redSoorder.getBtnNo()});
 		addPrivateButton(refbill);
 	}
 	/**

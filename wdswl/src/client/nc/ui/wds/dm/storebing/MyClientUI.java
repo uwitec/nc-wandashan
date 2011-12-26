@@ -26,6 +26,10 @@ import nc.vo.wds.dm.storebing.GetCheck;
  * @version tempProject version
  */
 public class MyClientUI extends BillManageUI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	protected ManageEventHandler createEventHandler() {
 		return new MyEventHandler(this, getUIControl());
@@ -45,7 +49,6 @@ public class MyClientUI extends BillManageUI {
 
 	@Override
 	protected void initSelfData() {
-		//
 		ButtonObject btn = getButtonManager().getButton(IBillButton.Line);
 		if (btn != null) {
 			btn.removeChildButton(getButtonManager().getButton(
