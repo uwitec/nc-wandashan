@@ -39,9 +39,6 @@ public class MyEventHandler extends ManageEventHandler {
 		if(i==null){
 			throw new BusinessException("«Î—°‘Ò÷µ£°");
 		}
-		int datavale=i.intValue();
-		
-	
 		super.onBoSave();
 	}
 	@Override

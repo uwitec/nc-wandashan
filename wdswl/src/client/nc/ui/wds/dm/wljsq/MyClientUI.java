@@ -9,6 +9,7 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.wds.dm.wljsq.PeriodCheckClass;
 
 public class MyClientUI extends BillManageUI {
 
@@ -66,6 +67,11 @@ public class MyClientUI extends BillManageUI {
 	protected AbstractManageController createController() {
 		// TODO Auto-generated method stub
 		return new MyClientUICtrl();
+	}
+	@Override
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return new PeriodCheckClass();
 	}
 
 
