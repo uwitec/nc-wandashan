@@ -41,8 +41,9 @@ public class CHGWDS8TOWDSF extends VOConversion{
 				"B_noutnum->B_noutnum",//实出数量
 				"B_nassoutnum->B_noutassistnum",//实出辅数量
 				"B_nshouldoutnum->B_nshouldoutnum",//应出数量
-				"B_ntagnum->B_ntagnum",
+				"B_ntagnum->B_ntagnum",//贴签数量
 				"B_nassshouldoutnum->B_nshouldoutassistnum",//应出辅数	
+			
 				"B_fistag->B_fistag"
 		};
 	}
