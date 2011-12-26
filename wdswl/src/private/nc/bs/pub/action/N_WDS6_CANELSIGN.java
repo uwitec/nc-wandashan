@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.other.out.OtherOutBO_XN;
 import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
@@ -39,17 +42,25 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 				 date = list.get(0);
 				 operate = list.get(1);
 			}
-			// ##################################################
 			setParameter("AggObj",vo.m_preValueVo);
 			setParameter("operate",operate);
 			setParameter("date", date);
-			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.other.out.ChangeTo4I", "canelSignQueryGenBillVO",
-					"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-			// ##################################################
-			setParameter("AggObject",icBillVO);
-			retObj = runClass("nc.bs.wds.ic.other.out.OtherOutBO", "canelPushSign4I",
-					"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
-			// ##################################################保存[其它出库]取消签字内容
+			TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
+			UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
+			if(isxnap.booleanValue()){
+				OtherOutBO_XN bo = new OtherOutBO_XN();
+				bo.updateZgjzNum(vo.m_preValueVo, true);
+			}else{
+				// #################################################
+				AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.other.out.ChangeTo4I", "canelSignQueryGenBillVO",
+						"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+				// ##################################################
+				setParameter("AggObject",icBillVO);
+				retObj = runClass("nc.bs.wds.ic.other.out.OtherOutBO", "canelPushSign4I",
+						"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
+				// ##################################################保存[其它出库]取消签字内容
+			
+			}
 			TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 			setParameter("hvo", headvo);
 			runClass("nc.bs.wds.ic.other.out.OtherOutBO", "updateHVO",

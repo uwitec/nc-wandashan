@@ -43,6 +43,7 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				runClass("nc.bs.wds.ic.so.out.ChangToWDSO", "onSign",
 						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 				// ##################################################保存[销售出库]签字内容
+				//更新签字信息
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",

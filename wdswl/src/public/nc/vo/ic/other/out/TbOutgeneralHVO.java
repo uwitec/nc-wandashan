@@ -128,6 +128,7 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String vuserdef6;
 	public UFTime ts;
 	public Integer dr;
+	public UFBoolean isxnap;//是否虚拟安排--转分仓使用
 	
 	
 	public UFBoolean getIscaltrans() {
@@ -1707,5 +1708,15 @@ public class TbOutgeneralHVO extends SuperVO {
 
 	public void setFistran(UFBoolean fistran) {
 		this.fistran = fistran;
+	}
+
+
+	public UFBoolean getIsxnap() {
+		return isxnap;
+	}
+
+
+	public void setIsxnap(UFBoolean isxnap) {
+		this.isxnap = isxnap;
 	}
 }

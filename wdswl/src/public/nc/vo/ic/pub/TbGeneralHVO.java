@@ -126,7 +126,7 @@ import nc.vo.pub.lang.UFTime;
              public String geh_tranname;
              public String geh_customize7;//-------zhf 使用 是否调整 单据   转分仓时  存在如果其他入库数量小于出库数量 自动生成差值量得入库单  再自动出库
              public String pk_customize5;
-           
+         	 public UFBoolean isxnap;//是否虚拟安排--转分仓使用
              
              private UFBoolean fisnewcode;//回写供应链是否使用参数设置的批次号
 
@@ -1597,5 +1597,13 @@ import nc.vo.pub.lang.UFTime;
 
 	public void setFistran(UFBoolean fistran) {
 		this.fistran = fistran;
+	}
+
+	public UFBoolean getIsxnap() {
+		return isxnap;
+	}
+
+	public void setIsxnap(UFBoolean isxnap) {
+		this.isxnap = isxnap;
 	} 
 } 

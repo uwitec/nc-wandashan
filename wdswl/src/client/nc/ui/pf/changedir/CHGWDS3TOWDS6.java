@@ -43,6 +43,7 @@ public String[] getField() {
 			"H_srl_pk->H_pk_outwhouse",//³ö¿â²Ö¿â
 			"H_srl_pkr->H_pk_inwhouse",//Èë¿â²Ö¿â
 			"H_vdiliveraddress->H_vinaddress",//ÊÕ»õµØÖ·
+			"H_isxnap->H_reserve15",//ÊÇ·ñÐéÄâÇ··¢
 			"H_vnote->H_vmemo",			
 			"B_csourcebillhid->B_pk_sendorder",
 			"B_csourcebillbid->B_pk_sendorder_b",

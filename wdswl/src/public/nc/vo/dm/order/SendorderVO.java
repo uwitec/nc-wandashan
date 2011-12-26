@@ -65,7 +65,7 @@ public class SendorderVO extends SuperVO {
 	public String pk_sendareal;
 	public String reserve1;
 	public UFBoolean reserve16;
-	public UFBoolean reserve15;
+	public UFBoolean reserve15;//是否虚拟欠发--xjx
 
 	// 开始时间
 	public UFDate dbegindate;

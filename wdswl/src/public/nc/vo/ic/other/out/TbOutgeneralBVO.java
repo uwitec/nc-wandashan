@@ -82,7 +82,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFDate dbizdate;//业务日期
 	public UFDouble ntagnum;//贴签数量
 	public UFBoolean fistag;//是否贴签
-	private UFBoolean isxnap;//是否虚拟安排 liuys add
+	public UFBoolean isxnap;//是否虚拟安排 liuys add
 	
 	public List<TbOutgeneralTVO> trayInfor = null;
 	
