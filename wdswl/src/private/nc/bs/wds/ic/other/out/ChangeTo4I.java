@@ -1,14 +1,19 @@
 package nc.bs.wds.ic.other.out;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.itf.ic.pub.IGeneralBill;
 import nc.itf.uap.busibean.ISysInitQry;
+import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
@@ -30,6 +35,14 @@ import nc.vo.scm.pu.PuPubVO;
 public class ChangeTo4I {
 	
 	private  String beanName = IGeneralBill.class.getName(); 
+	BaseDAO dao = null;
+	
+	BaseDAO getBaseDAO() {
+		if (dao == null) {
+			dao = new BaseDAO();
+		}
+		return dao;
+	}
 	
 	private String s_billtype = "4I";
 	private String corp = null;//当前登录公司pk
@@ -88,8 +101,9 @@ public class ChangeTo4I {
 	 * @param billVO
 	 * @param coperator
 	 * @param date
+	 * @throws BusinessException 
 	 */
-	public void setSpcGenBillVO(AggregatedValueObject billVO,String coperator,String date){
+	public void setSpcGenBillVO(AggregatedValueObject billVO,String coperator,String date) throws BusinessException{
 		String para = null;
 		if(!isReturn){
 			para =getVbatchCode();
@@ -98,7 +112,21 @@ public class ChangeTo4I {
 			GeneralBillVO bill = (GeneralBillVO)billVO;
 			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 			bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
-			bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
+			
+			
+			Integer dates= getDefaultDay();
+			UFDate fs=NextMonth();
+			Date dqdate= new Date();
+			int dqday= dqdate.getDate();
+			int jzday=dates.intValue();
+			
+			//如果当前期小于等于结账期，则传ERP的出入库单单据期为当前期；
+			//如果当前期大于结账期，则传EPR单据为下一个月1号
+			if(dqday<=jzday){
+				bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
+			}else{
+				bill.getHeaderVO().setDbilldate(NextMonth());//单据日期
+			}
 			bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态
 			if(bill.getItemVOs()!=null && bill.getItemVOs().length>0){
 				for(int i = 0 ;i<bill.getItemVOs().length;i++){
@@ -120,6 +148,35 @@ public class ChangeTo4I {
 			}
 		}
 	}
+	//当前月的下一个月一号   日期
+	private UFDate NextMonth(){
+        Calendar   calendar   =   new   GregorianCalendar(); 
+        calendar.add(Calendar.DAY_OF_MONTH,  calendar     
+	            .getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.add(Calendar.DATE, 1); //设置某个月第一天
+      
+        int year = calendar.get(Calendar.YEAR); 
+        int month = calendar.get(Calendar.MONTH)+1;//这里月要加1 
+        String de=  year + "-" + month + "-1";    
+		return new UFDate(de);		
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf 查询结账期默认值
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-20上午10:23:43
+	 * @throws BusinessException
+	 */
+	private Integer getDefaultDay() throws BusinessException{
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select datavale from wds_periodsetting_h ");
+		sql.append(" where isnull(dr,0) =0 ");
+		sql.append(" and pk_corp='"+corp+"'");
+		Object value = getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
+		return PuPubVO.getInteger_NullAs(value, 20);
+	}
+
 	/**
 	 * 
 	 * @作者：lyf
