@@ -8,7 +8,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
@@ -19,7 +18,6 @@ import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
@@ -37,12 +35,14 @@ import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.write.back4c.MultiBillVO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
+
 /**
  * 
  * @author lyf 
  * 销售出库回传单，同步到ERP销售出库单
  *  
  */
+
 public class ChangeTo4C {
 	
 	HYPubBO pubbo = null;
@@ -324,29 +324,47 @@ public class ChangeTo4C {
 		TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) value.getChildrenVO();
 		corp =outhvo.getPk_corp();
 		//
-		for(int i = 0 ;i<bvos.length;i++){
-			String key = bvos[i].getGeneral_b_pk();
-			String str = " general_b_pk ='"+key+"'";
-			TbOutgeneralTVO[] tvos = (TbOutgeneralTVO[] )getHypubBO().queryByCondition(TbOutgeneralTVO.class, str	);
-			bvos[i].setTrayInfor(Arrays.asList(tvos));
-			List<TbOutgeneralTVO> list = bvos[i].getTrayInfor();
-			if(list == null || list.size() == 0)
-				continue;
-			for(int j =0 ;j < list.size();j++){
-				TbOutgeneralTVO tvo = list.get(j);
-				LocatorVO lvo = new LocatorVO();
-				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNoutspacenum(tvo.getNoutnum());
-				lvo.setNoutspaceassistnum(tvo.getNoutassistnum());
-				lvo.setCspaceid(tvo.getPk_cargdoc());//货位
-				lvo.setStatus(VOStatus.NEW);
-				if(l_map.containsKey(key)){
-					l_map.get(key).add(lvo);
-				}else{
-					ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
-					zList.add(lvo);
-					l_map.put(key, zList);
-				}
+		//		for(int i = 0 ;i<bvos.length;i++){
+		//			String key = bvos[i].getGeneral_b_pk();
+		//			String str = " general_b_pk ='"+key+"'";
+		//			TbOutgeneralTVO[] tvos = (TbOutgeneralTVO[] )getHypubBO().queryByCondition(TbOutgeneralTVO.class, str	);
+		//			bvos[i].setTrayInfor(Arrays.asList(tvos));
+		//			List<TbOutgeneralTVO> list = bvos[i].getTrayInfor();
+		//			if(list == null || list.size() == 0)
+		//				continue;
+		//			for(int j =0 ;j < list.size();j++){
+		//				TbOutgeneralTVO tvo = list.get(j);
+		//				LocatorVO lvo = new LocatorVO();
+		//				lvo.setPk_corp(outhvo.getPk_corp());
+		//				lvo.setNoutspacenum(tvo.getNoutnum());
+		//				lvo.setNoutspaceassistnum(tvo.getNoutassistnum());
+		//				lvo.setCspaceid(tvo.getPk_cargdoc());//货位
+		//				lvo.setStatus(VOStatus.NEW);
+		//				if(l_map.containsKey(key)){
+		//					l_map.get(key).add(lvo);
+		//				}else{
+		//					ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
+		//					zList.add(lvo);
+		//					l_map.put(key, zList);
+		//				}
+		//			}
+		//		}
+
+		//		zhf  modify  on 2011 12 27
+		for(TbOutgeneralBVO bvo:bvos){
+			String key = bvo.getGeneral_b_pk();
+			LocatorVO lvo = new LocatorVO();
+			lvo.setPk_corp(outhvo.getPk_corp());
+			lvo.setNoutspacenum(bvo.getNoutnum());
+			lvo.setNoutspaceassistnum(bvo.getNoutassistnum());
+			lvo.setCspaceid(bvo.getCspaceid());//货位
+			lvo.setStatus(VOStatus.NEW);
+			if(l_map.containsKey(key)){
+				l_map.get(key).add(lvo);
+			}else{
+				ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
+				zList.add(lvo);
+				l_map.put(key, zList);
 			}
 		}
 	}

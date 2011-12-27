@@ -3,16 +3,13 @@ package nc.bs.wds.ic.soin.out;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.naming.NamingException;
-
 import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
 import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.bs.wds.pub.report.ReportDMO;
 import nc.itf.uap.pf.IPFBusiAction;
-import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
@@ -51,25 +48,28 @@ public class SoOutBO {
 	}
 
 	public void pushSign4C(String date, AggregatedValueObject billvo)
-			throws Exception {
+	throws Exception {
 		// 销售出库签字
-		if (billvo != null && billvo instanceof GeneralBillVO) {
-			GeneralBillVO billVO = (GeneralBillVO) billvo;
-			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator
-					.getInstance().lookup(IPFBusiAction.class.getName());
-			ArrayList retList = (ArrayList) bsBusiAction.processAction(
-					"PUSHWRITE", s_billtype, date, null, billVO, null, null);
-			SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);
-			billVO.setSmallBillVO(smbillvo);
-			// 签字检查 <->[签字日期和表体业务日期]
-			// 当前操作人<->[业务加锁，锁定当前操作人员]
-			// 空货位检查 bb1表
-			bsBusiAction.processAction("SIGN", s_billtype, date, null, billVO,
-					null, null);
-			// 推式保存形成装卸费核算单
-			// getPuf().pushSaveWDSF(smbillvo, coperator, date,
-			// LoadAccountBS.LOADFEE);
+		if (billvo == null || !(billvo instanceof GeneralBillVO)) {
+			throw new BusinessException("回传erp销售出库单异常");
 		}
+		
+		GeneralBillVO billVO = (GeneralBillVO) billvo;
+		IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator
+		.getInstance().lookup(IPFBusiAction.class.getName());
+		ArrayList retList = (ArrayList) bsBusiAction.processAction(
+				"PUSHWRITE", s_billtype, date, null, billVO, null, null);
+		SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);
+		billVO.setSmallBillVO(smbillvo);
+		//			// 签字检查 <->[签字日期和表体业务日期]
+		//			// 当前操作人<->[业务加锁，锁定当前操作人员]
+		//			// 空货位检查 bb1表
+		bsBusiAction.processAction("SIGN", s_billtype, date, null, billVO,
+				null, null);
+		// 推式保存形成装卸费核算单
+		// getPuf().pushSaveWDSF(smbillvo, coperator, date,
+		// LoadAccountBS.LOADFEE);
+		//		}
 	}
 
 	public void canelPushSign4C(String date, AggregatedValueObject[] billvo)

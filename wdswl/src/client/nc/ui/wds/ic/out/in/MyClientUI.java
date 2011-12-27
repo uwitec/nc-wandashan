@@ -80,6 +80,7 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
+			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
 		}
 	
 	}

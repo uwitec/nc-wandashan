@@ -12,6 +12,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.so.so001.SOToolVO;
 import nc.vo.so.so001.SoVoConst;
 import nc.vo.so.so016.SoVoTools;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * zhf 修改   物流生成的销售出库单 会 自动签字生成  销售发票  ，取销售组织等字段的逻辑需要调整
@@ -163,7 +164,7 @@ public class OutToInvoiceChangeVO implements nc.vo.pf.change.IchangeVO {
     	                                                      .getAttributeValue("cfirsttype");
 
     	// zhf add
-    	boolean isfromwl = cfirsttype.equalsIgnoreCase("WDS8");
+    	boolean isfromwl = cfirsttype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_SALE_OUT)||cfirsttype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OUT_IN);
 
 
     	ArrayList hvolist = new ArrayList();

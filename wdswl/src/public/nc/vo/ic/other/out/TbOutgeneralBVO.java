@@ -12,7 +12,6 @@ import nc.vo.pub.lang.*;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-
 public class TbOutgeneralBVO extends SuperVO {
 
 	/**

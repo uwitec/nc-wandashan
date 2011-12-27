@@ -97,32 +97,36 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 		if(!isStock){
 			hsql.append(" and so_sale.cwarehouseid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
-		hsql.append(" and coalesce(so_saleorder_b.nnumber,0)-coalesce(so_saleorder_b.ntaldcnum,0)<0");//订单数量->//利用系统销售订单  已参与价保数量(ntaldcnum) 作为  累计发运数量
+		hsql.append(" and coalesce(so_saleorder_b.nnumber,0)<0");//红字销售订单
+		hsql.append(" and abs(coalesce(so_saleorder_b.nnumber,0))-abs(coalesce(so_saleorder_b.ntaldcnum,0))>0");//订单数量->//利用系统销售订单  已参与价保数量(ntaldcnum) 作为  累计发运数量
+//		说明：该字段ntaldcnum  回写时 需要回写 负值
 		String sub = getInvSub(inv_Pks);
 		hsql.append(" and cinventoryid in"+sub);
 		hsql.append(" )");
 		return hsql.toString();
 	}
 	private String getInvSub(String [] inv_Pks){
-		if(inv_Pks == null ){
+		if(inv_Pks == null || inv_Pks.length == 0){
 			return "('')";
 		}
 		StringBuffer bur = new StringBuffer();
 		bur.append("( ");
 		for(int i=0;i<inv_Pks.length;i++){
-			String pk_invmandoc = inv_Pks[i]==null?" ":inv_Pks[i];
+			String pk_invmandoc = inv_Pks[i]==null?null:inv_Pks[i].trim();
+			if(pk_invmandoc == null)
+				continue;
 			bur.append("'"+pk_invmandoc+"'");
 			if(i<inv_Pks.length-1){
 				bur.append(",");
 			}
 		}
-		bur.append(" )");
+		bur.append(" ,'aa')");//zhf  防止中空
 		return bur.toString();
 	}
 	@Override
 	public String getBodyCondition() {
 		String sub = getInvSub(inv_Pks);
-		return " and coalesce(nnumber,0)-coalesce(ntaldcnum,0)<0"+//订单数量-出库数量<0
+		return " and abs(coalesce(so_saleorder_b.nnumber,0))-abs(coalesce(so_saleorder_b.ntaldcnum,0))>0"+//订单数量-出库数量<0
 			" and cinventoryid in"+sub;
 	}
 	

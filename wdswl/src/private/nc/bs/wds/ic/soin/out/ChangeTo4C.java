@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
@@ -13,9 +12,6 @@ import nc.itf.ic.pub.IGeneralBill;
 import nc.itf.uap.busibean.ISysInitQry;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.in.OtherInBillVO;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
-import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
@@ -31,11 +27,11 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.HYBillVO;
+
 /**
  * 
  * @author lyf 
- * 销售出库回传单，同步到ERP销售出库单
+ * 同步到ERP销售出库单
  *  
  */
 public class ChangeTo4C {
@@ -61,7 +57,7 @@ public class ChangeTo4C {
 	/**
 	 * @功能：签字动作:得到销售出库单
 	 */
-	public AggregatedValueObject signQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws Exception {
+	public AggregatedValueObject signQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws BusinessException {
 		if(bill==null){
 			return bill;
 		}
@@ -86,7 +82,9 @@ public class ChangeTo4C {
 			}
 			general_hs.add(general_h);
 		}
-		GeneralBillVO vo = getGeneralBillVO( billvo,general_hs);
+		if(general_hs.size() == 0)
+			return null;
+		GeneralBillVO vo = getGeneralBillVO(billvo,general_hs);
 		if(vo == null){
 			return null;
 		}
@@ -139,7 +137,8 @@ public class ChangeTo4C {
 			vo.setChildrenVO(map.values().toArray(new GeneralBillItemVO[0]));
 		}
 		return vo;
-	}
+	}	
+	
 	/**
 	 * 
 	 * @作者：lyf
@@ -148,7 +147,7 @@ public class ChangeTo4C {
 	 * @param general_hs
 	 * @return
 	 */
-	public GeneralBillVO getGeneralBillVO(OtherInBillVO billvo,List<String> general_hs) throws BusinessException{
+	public GeneralBillVO getGeneralBillVO(OtherInBillVO billVO,List<String> general_hs) throws BusinessException{
 		if(general_hs == null || general_hs.size() ==0){
 			return null;
 		}
@@ -157,14 +156,12 @@ public class ChangeTo4C {
 		GeneralBillVO bill = new GeneralBillVO();
 		GeneralBillHeaderVO head = null;
 		List<GeneralBillItemVO> items = new ArrayList<GeneralBillItemVO>();
-		for(int i=0;i<general_hs.size();i++){
-			AggregatedValueObject billVO =  billvo;
-			
-			String pk_billtype = (String)billVO.getParentVO().getAttributeValue("geh_billtype");
-			if(pk_billtype == null || "".equals(pk_billtype)){
+		for(int i=0;i<general_hs.size();i++){			
+			String pk_billtype = PuPubVO.getString_TrimZeroLenAsNull(billVO.getParentVO().getAttributeValue("geh_billtype"));
+			if(pk_billtype == null){
 				return null;
 			}
-			 //设置货位信息
+			//设置货位信息
 			setLocatorVO(billVO);
 			GeneralBillVO vo =(GeneralBillVO) PfUtilTools.runChangeData(pk_billtype, "4C", billVO,null); //销售出库
 			setSpcGenBillVO(vo,coperator,date);
@@ -172,7 +169,7 @@ public class ChangeTo4C {
 				head = vo.getHeaderVO();
 			}
 			for(GeneralBillItemVO item:vo.getItemVOs()){
-				item.setCfirstbillhid(billvo.getParentVO().getPrimaryKey());
+				item.setCfirstbillhid(billVO.getParentVO().getPrimaryKey());
 			}
 			items.addAll(Arrays.asList(vo.getItemVOs()));
 		}
@@ -188,25 +185,26 @@ public class ChangeTo4C {
 		if(bill==null){
 			return null;
 		}
-//		this.coperator = coperator;
-//		this.date = date;
-//		OtherInBillVO billvo = (OtherInBillVO)bill;
-//		TbGeneralHVO hvo = (TbGeneralHVO)billvo.getParentVO();
-//		String csaleid = hvo.getCsaleid()==null ?"":hvo.getCsaleid();
-//		String where  = " csourcebillhid = '"+csaleid+"' ";
-//		QryConditionVO voCond = new QryConditionVO(where);
-//	    ArrayList alListData = (ArrayList)queryBills("4C", voCond);
-//	    GeneralBillVO[] gbillvo = null;
-//		if(alListData!=null && alListData.size()>0){
-//			for(int i = 0 ;i<alListData.size();i++){
-//				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
-//				gvo.getHeaderVO().setCoperatoridnow(coperator);
-//				gvo.getHeaderVO().setDaccountdate(new UFDate(date));
-//				gvo.getHeaderVO().setClogdatenow(date);
-//			}
-//			gbillvo = (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
-//		}
-		return null;
+		this.coperator = coperator;
+		this.date = date;
+		OtherInBillVO billvo = (OtherInBillVO)bill;
+		TbGeneralHVO hvo = (TbGeneralHVO)billvo.getParentVO();
+		String cid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
+		String where  = " body.cfirstbillhid = '"+cid+"'";
+		QryConditionVO voCond = new QryConditionVO(where);
+		ArrayList alListData = (ArrayList)queryBills("4C", voCond);		
+
+		if(alListData == null || alListData.size()  == 0)
+			return null;
+
+		for(int i = 0 ;i<alListData.size();i++){
+			GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
+			gvo.getHeaderVO().setCoperatoridnow(coperator);
+			gvo.getHeaderVO().setDaccountdate(new UFDate(date));
+			gvo.getHeaderVO().setClogdatenow(date);
+		}
+
+		return (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
 	}
 	/**
 	 * 
@@ -261,21 +259,21 @@ public class ChangeTo4C {
 		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
 		corp =outhvo.getPk_corp();
 		//
-		for(int i = 0 ;i<bvos.length;i++){
-			String key = bvos[i].getGeb_pk();
-			String str = " geb_pk ='"+key+"'";
-			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
-			bvos[i].setTrayInfor(Arrays.asList(tvos));
-			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
-			if(list == null || list.size() == 0)
-				continue;
-			for(int j =0 ;j < list.size();j++){
-				TbGeneralBBVO tvo = list.get(j);
+		for(TbGeneralBVO bvo:bvos){
+			String key = bvo.getGeb_pk();
+//			String str = " geb_pk ='"+key+"'";
+//			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
+//			bvos[i].setTrayInfor(Arrays.asList(tvos));
+//			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
+//			if(list == null || list.size() == 0)
+//				continue;
+//			for(int j =0 ;j < list.size();j++){
+//				TbGeneralBBVO tvo = list.get(j);
 				LocatorVO lvo = new LocatorVO();
 				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNoutspacenum(tvo.getGebb_num());
-				lvo.setNoutspaceassistnum(tvo.getNinassistnum());
-				lvo.setCspaceid(tvo.getPk_cargdoc());//货位
+				lvo.setNoutspacenum(bvo.getGeb_anum().multiply(-1));
+				lvo.setNoutspaceassistnum(bvo.getGeb_banum().multiply(-1));
+				lvo.setCspaceid(bvo.getGeb_space());//货位
 				lvo.setStatus(VOStatus.NEW);
 				if(l_map.containsKey(key)){
 					l_map.get(key).add(lvo);
@@ -284,7 +282,7 @@ public class ChangeTo4C {
 					zList.add(lvo);
 					l_map.put(key, zList);
 				}
-			}
+//			}
 		}
 	}
 	/**

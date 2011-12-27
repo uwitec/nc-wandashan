@@ -8,7 +8,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
@@ -17,7 +16,6 @@ import nc.itf.ic.pub.IGeneralBill;
 import nc.itf.uap.busibean.ISysInitQry;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.uif.pub.exception.UifException;
-import nc.vo.ic.pub.TbGeneralBBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
@@ -313,29 +311,46 @@ public class ChangeTo4E {
 		TbGeneralBVO[] bvos = (TbGeneralBVO[]) value.getChildrenVO();
 		corp =outhvo.getPk_corp();
 		//
-		for(int i = 0 ;i<bvos.length;i++){
-			String key = bvos[i].getPrimaryKey();
-			String str = " geb_pk ='"+key+"'";
-			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
-			bvos[i].setTrayInfor(Arrays.asList(tvos));
-			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
-			if(list == null || list.size() == 0)
-				continue;
-			for(int j =0 ;j < list.size();j++){
-				TbGeneralBBVO tvo = list.get(j);
-				LocatorVO lvo = new LocatorVO();
-				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNinspacenum(tvo.getGebb_num());
-				lvo.setNinspaceassistnum(tvo.getNinassistnum());
-				lvo.setCspaceid(tvo.getPk_cargdoc());//货位
-				lvo.setStatus(VOStatus.NEW);
-				if(l_map.containsKey(key)){
-					l_map.get(key).add(lvo);
-				}else{
-					ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
-					zList.add(lvo);
-					l_map.put(key, zList);
-				}
+//		for(int i = 0 ;i<bvos.length;i++){
+//			String key = bvos[i].getPrimaryKey();
+//			String str = " geb_pk ='"+key+"'";
+//			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
+//			bvos[i].setTrayInfor(Arrays.asList(tvos));
+//			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
+//			if(list == null || list.size() == 0)
+//				continue;
+//			for(int j =0 ;j < list.size();j++){
+//				TbGeneralBBVO tvo = list.get(j);
+//				LocatorVO lvo = new LocatorVO();
+//				lvo.setPk_corp(outhvo.getPk_corp());
+//				lvo.setNinspacenum(tvo.getGebb_num());
+//				lvo.setNinspaceassistnum(tvo.getNinassistnum());
+//				lvo.setCspaceid(tvo.getPk_cargdoc());//货位
+//				lvo.setStatus(VOStatus.NEW);
+//				if(l_map.containsKey(key)){
+//					l_map.get(key).add(lvo);
+//				}else{
+//					ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
+//					zList.add(lvo);
+//					l_map.put(key, zList);
+//				}
+//			}
+//		}
+//		zhf   2011 12 27  调整    
+		for(TbGeneralBVO bvo:bvos){
+			String key = bvo.getPrimaryKey();
+			LocatorVO lvo = new LocatorVO();
+			lvo.setPk_corp(outhvo.getPk_corp());
+			lvo.setNinspacenum(bvo.getGeb_anum());
+			lvo.setNinspaceassistnum(bvo.getGeb_banum());
+			lvo.setCspaceid(bvo.getGeb_space());//货位
+			lvo.setStatus(VOStatus.NEW);
+			if(l_map.containsKey(key)){
+				l_map.get(key).add(lvo);
+			}else{
+				ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
+				zList.add(lvo);
+				l_map.put(key, zList);
 			}
 		}
 	}

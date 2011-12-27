@@ -113,7 +113,7 @@ import nc.vo.pub.lang.UFTime;
          
              public String geh_libdate;
              public String clastmodiid;
-             public String geh_customize8;
+             public String geh_customize8;//zhf  111226 销售退货入库单  用作 客户id
              public String minstock;
              
              public String pk_customize8;

@@ -2,7 +2,9 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 
+import nc.bs.ic.pub.WriteBackTool;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -28,8 +30,15 @@ try{
 	try {
 		super.m_tmpVo = vo;
 		Object retObj = null;
+//		回写来源数量
+		TbGeneralBVO[] bodys = (TbGeneralBVO[])getVo().getChildrenVO();
+		if(bodys == null || bodys.length == 0)
+			throw new BusinessException("表体数据为空");
+		
+		WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
+//		回写结束
 		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
-			return retObj;
+		return retObj;
 	} catch (Exception ex) {
 			if (ex instanceof BusinessException)
 				throw (BusinessException) ex;

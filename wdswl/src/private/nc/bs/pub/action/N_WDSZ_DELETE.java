@@ -2,19 +2,15 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 import nc.bs.ic.pub.IcInPubBO;
+import nc.bs.ic.pub.WriteBackTool;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.VOStatus;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFDouble;
-import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
-import nc.vo.wl.pub.WdsWlPubTool;
 
 
 /**
@@ -48,20 +44,19 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			if(bodys == null || bodys.length ==0){
 				throw new BusinessException("传入数据为空");
 			}
-			UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
-			for(TbGeneralBVO body:bodys){
-				body.validateOnSave();
-				nallnum = nallnum.add(PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum()));
-			}
-//			boolean isNew = false;
-//			String geh_pk =((TbGeneralHVO)bill.getParentVO()).getGeh_pk();
-//			if(geh_pk == null || "".equals(geh_pk)){==0
-//				isNew=true;
-//			}
+			
 			// ##################################################
 			IcInPubBO bo = new IcInPubBO();
 			bo.deleteAdjustBill((OtherInBillVO)bill);
-			bo.writeBackForInBill((OtherInBillVO)bill, IBDACTION.DELETE, false); //参照情况，[回写本地其他出库]
+			
+//			修订来源单据累计量
+			for(TbGeneralBVO body:bodys){
+				body.setStatus(VOStatus.DELETED);
+			}
+			
+			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
+//			修订结束
+			
 			// ##################################################
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
