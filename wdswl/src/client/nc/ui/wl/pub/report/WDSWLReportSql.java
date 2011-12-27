@@ -587,8 +587,74 @@ public class WDSWLReportSql {
 		return sql.toString();
 	}
 	
-	
-	
+	/**
+	 * 获得查询物流销售出库 和 其他出库的sql
+	 * 查询  销售出库 和 其他出库
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getOutStore(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select h.srl_pk cwarehouseid, ");//出库仓库
+		sql.append(" h.cdispatcherid stvcl,");//出入库类别
+		sql.append(" h.dbilldate dbilldate,");//单据日期
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b1.cinventoryid pk_invmandoc,");  //存货管理id
+		sql.append(" b1.cinvbasid pk_invbasdoc, ");  //存货基本id  
+		sql.append(" b1.noutnum num,");//物流销售出库单实发数量
+		sql.append(" b1.noutassistnum bnum");//物流销售出库单实发辅数量	   
+	    sql.append(" from tb_outgeneral_h h");//
+		sql.append(" join tb_outgeneral_b b1 on h.general_pk=b1.general_pk ");
+		sql.append(" left join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b1.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" where isnull(h.dr, 0) = 0 ");
+		sql.append(" and isnull(b1.dr, 0) = 0 ");
+		if(whereSql !=null && whereSql.length()!=0)
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
+	/**
+	 * 获得查询物流其他入库 和 调拨入库的sql
+	 * 查询  其他入库 和 调拨入库
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getInStore(String whereSql){
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select h.geh_cwarehouseid cwarehouseid, ");//出库仓库
+		sql.append(" h.geh_cdispatcherid stvcl,");//出入库类别
+		sql.append(" h.geh_dbilldate dbilldate,");//单据日期
+		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b1.geb_cinventoryid pk_invmandoc,");  //存货管理id
+		sql.append(" b1.geb_cinvbasid pk_invbasdoc, ");  //存货基本id  
+		sql.append(" b1.geb_anum num,");//物流销售出库单实发数量
+		sql.append(" b1.geb_banum bnum");//物流销售出库单实发辅数量	   
+	    sql.append(" from tb_general_h h");//
+		sql.append(" join tb_general_b b1 on h.geh_pk=b1.geh_pk ");
+		sql.append(" left join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b1.geb_cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" where isnull(h.dr, 0) = 0 ");
+		sql.append(" and isnull(b1.dr, 0) = 0 ");
+		if(whereSql !=null && whereSql.length()!=0)
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
 	
 	
 	
