@@ -10,15 +10,15 @@ import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillScrollPane;
-import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bill.ICardController;
+import nc.ui.trade.multichild.MultiChildBillCardPanelWrapper;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.pub.IExAggVO;
 /**
  * @author mlr
  */
-public class MutiCardWarper extends BillCardPanelWrapper{
+public class MutiCardWarper extends MultiChildBillCardPanelWrapper{
 
 	public MutiCardWarper(ClientEnvironment ce, ICardController ctl,
 			String pk_busiType, String nodeKey) throws Exception {
