@@ -158,7 +158,8 @@ public class SoDealCol {
 					tmpNumVO.setCinvbasid(body.getCinvbasdocid());
 					tmpNumVO.setCinvmanid(body.getCinventoryid());
 					//根据仓库+存货 获得 合格和待检状态的现存量
-					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+//					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"')";
 					stocknums = getStockBO().getInvStockNum(pk_corp,
 							tmpNumVO.getCstoreid(), null,
 							tmpNumVO.getCinvbasid(), null, null,strWhere);

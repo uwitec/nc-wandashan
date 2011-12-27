@@ -66,11 +66,11 @@ public class ZgjzBO {
 		}else{//转分仓的
 			String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_outwhouse());
 			if(pk_outwhouse == null){
-				throw new BusinessException("出货仓库不能为空");
+				throw new BusinessException("发货仓库不能为空");
 			}
 			String pk_inwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getPk_intwhouse());
 			if(pk_inwhouse == null){
-				throw new BusinessException("入货仓库不能为空");
+				throw new BusinessException("收货仓库不能为空");
 			}
 			sql.append(" select * from wds_zgjz_h ");
 			sql.append(" where  isnull(dr,0)=0 ");

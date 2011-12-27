@@ -44,10 +44,6 @@ public class MyClientUI extends OutPubClientUI implements
 	private static final long serialVersionUID = 1L;
 
 	private String curRefBilltype = null;
-//	public String csourcebillhid=null;
-
-	// private Map<String,List<TbOutgeneralTVO>> trayInfor = null;//缓存下 保存后更新到
-	// buffer
 
 	protected ManageEventHandler createEventHandler() {
 		return new OtherOutEventHandler(this, getUIControl());

@@ -80,7 +80,8 @@ public class PlanDealBOUtil {
 				if(fisdate){
 					strWhere= " ss_pk='"+WdsWlPubConst.WDS_STORSTATE_PK+"'";
 				}else{
-					strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+					strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"')";
+//					strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
 				}
 				UFDouble[]stocknums = getStockBO().getInvStockNum(pk_corp,
 						tmpNumVO.getCstoreid(), null,

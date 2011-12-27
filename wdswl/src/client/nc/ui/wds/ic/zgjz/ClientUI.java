@@ -11,6 +11,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.button.ButtonVO;
@@ -92,10 +93,19 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSQ);
+		getBillCardPanel().setHeadItem("dbilldate", _getDate());
+		getBillCardPanel().setHeadItem("pk_outwhouse",
+				getLoginInforHelper().getCwhid(_getOperator()));
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setTailItem("dmakedate", _getDate());	
 	}
-
+	private LoginInforHelper helper = null;
+	public LoginInforHelper getLoginInforHelper(){
+		if(helper == null){
+			helper = new LoginInforHelper();
+		}
+		return helper;
+	}
 	protected ManageEventHandler createEventHandler() {
 		return new ClientEventHandler(this, getUIControl());
 	}
