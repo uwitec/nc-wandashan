@@ -29,9 +29,10 @@ public class CargeTaryRefModel extends AbstractRefModel {
      */
     public java.lang.String[] getFieldCode() {
     	return new String[] {
-			"bd_cargdoc_tray.cdt_traycode",
+			"bd_cargdoc_tray.cdt_traycode",//托盘信息
 			"bd_invbasdoc.invcode",
 			"bd_invbasdoc.invname",
+			"wds_invbasdoc.tray_volume",//托盘容量--辅数量
 			"tb_warehousestock.whs_stocktonnage",
 			"tb_warehousestock.whs_stockpieces",
 			"tb_warehousestock.whs_batchcode",
@@ -53,11 +54,16 @@ public class CargeTaryRefModel extends AbstractRefModel {
 			"托盘编码",
 			"存货编码",
 			"存货名称",
+			"托盘容量",
 			"库存主数量",
 			"库存辅数量",
 			"批次号",
+			"来源批次号",
+			"存货管理id",
+			"存货基本id",
 			"库存状态ID",
-			"来源批次号"
+			"托盘id"
+			
     	};
     }
 
@@ -107,13 +113,15 @@ public class CargeTaryRefModel extends AbstractRefModel {
      */
     public String getTableName() {
     	StringBuffer m_sTableName = new StringBuffer();
-       	m_sTableName.append(" bd_cargdoc_tray ");//托盘档案
-    	m_sTableName.append(" join tb_warehousestock ");//存货状态
+       	m_sTableName.append(" bd_cargdoc_tray ");//托盘档案表
+    	m_sTableName.append(" join tb_warehousestock ");//存货状态表（这个表是物流的库存量表）
     	m_sTableName.append(" on bd_cargdoc_tray.cdt_pk = tb_warehousestock.pplpt_pk");
     	m_sTableName.append(" join bd_invmandoc ");
     	m_sTableName.append(" on tb_warehousestock.pk_invmandoc =bd_invmandoc.pk_invmandoc ");
     	m_sTableName.append(" join bd_invbasdoc ");
-    	m_sTableName.append(" on tb_warehousestock.pk_invbasdoc =bd_invbasdoc.pk_invbasdoc ");
+    	m_sTableName.append(" on bd_invmandoc.pk_invbasdoc =bd_invbasdoc.pk_invbasdoc ");
+    	m_sTableName.append(" join wds_invbasdoc ");//存货档案表
+    	m_sTableName.append(" on tb_warehousestock.pk_invmandoc= wds_invbasdoc.pk_invmandoc");
 	return m_sTableName.toString();
     }
     @Override

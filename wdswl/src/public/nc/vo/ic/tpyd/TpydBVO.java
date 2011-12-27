@@ -20,11 +20,21 @@
  * @version Your Project 1.0
  */
      public class TpydBVO extends SuperVO {
-    	 
-    	   
     	     public String outtraycode;//移出托盘编码  -mlr
     	     public String intarycode;//移入托盘编码  -mlr
     	     public String vbanchcode;//批次 
+    	     public String pk_trayout;//移出托盘id
+             public UFDouble noutnum;//库存数量
+             public UFDouble noutassnum;//库存辅数量
+             public UFDouble nmovenum;//移动数量
+             public UFDouble nmoveassnum;//移动辅数量
+
+             public String pk_invmandoc;//存货管理id
+             public String pk_invbasdoc;//存货基本id
+             public String vbatchecode;//批次号
+             public String pk_trayin;//移如托盘id
+             public UFDouble ninnum;
+             public UFDouble ninassnum;
            
              public String getOuttraycode() {
 				return outtraycode;
@@ -50,26 +60,20 @@
 			public void setVbanchcode(String vbanchcode) {
 				this.vbanchcode = vbanchcode;
 			}
-
-
 			public String reserve5;
-             public String pk_tpyd_b;
              public String reserve4;
              public String vdef4;
              public String vdef7;
              public Integer dr;
-             public UFDouble nmovenum;
-             public String pk_trayout;
+             public String pk_tpyd_h;
+             public String pk_tpyd_b;
              public String cunitid;
-             public String pk_invbasdoc;
              public String vdef2;
              public UFDate reserve11;
              public UFDate reserve12;
-             public UFDouble nmoveassnum;
              public String vmemo;
-             public UFDouble noutnum;
              public UFDateTime ts;
-             public UFDouble ninassnum;
+
              public UFDouble reserve6;
              public String vdef1;
              public String reserve3;
@@ -82,19 +86,13 @@
              public String vdef3;
              public Integer iinvstatus;
              public String cassunitid;
-             public String vbatchecode;
-             public UFDouble noutassnum;
              public String vdef9;
              public UFDouble nhsl;
-             public String pk_trayin;
              public String vdef8;
              public String reserve1;
-             public UFDouble ninnum;
-             public String pk_tpyd_h;
              public UFBoolean reserve16;
              public UFDouble reserve7;
              public UFBoolean reserve15;
-             public String pk_invmandoc;
              public String vdef6;
              public String reserve2;
              public String vdef10;

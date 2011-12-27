@@ -152,8 +152,8 @@ public class ChangeTo4C {
 		if(general_hs == null || general_hs.size() ==0){
 			return null;
 		}
-		Object userObj = new String[]{HYBillVO.class.getName(),
-				TbOutgeneralHVO.class.getName(),TbOutgeneralBVO.class.getName()};
+//		Object userObj = new String[]{HYBillVO.class.getName(),
+//				TbOutgeneralHVO.class.getName(),TbOutgeneralBVO.class.getName()};
 		GeneralBillVO bill = new GeneralBillVO();
 		GeneralBillHeaderVO head = null;
 		List<GeneralBillItemVO> items = new ArrayList<GeneralBillItemVO>();

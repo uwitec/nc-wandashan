@@ -85,10 +85,27 @@ public class ZgjzBO {
 					+ "' and denddate<='" + head.getDenddate() + "'))");
 		}
 		List<ZgjzHVO> list = (ArrayList<ZgjzHVO>) getBaseDAO()
-				.executeQuery(sql.toString(),
-						new BeanListProcessor(ZgjzHVO.class));
-		if(list.size()>0){
-			throw new BusinessException("存在日期交叉:已经存在暂估记账,开始日期="+list.get(0).getDbegindate()+"结束日期="+list.get(0).getDenddate());
+		.executeQuery(sql.toString(),
+				new BeanListProcessor(ZgjzHVO.class));
+		String primarykey = PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey());
+		if( primarykey == null){
+			if(list.size()>0){
+				throw new BusinessException("存在日期交叉:已经存在暂估记账,开始日期="+list.get(0).getDbegindate()+"结束日期="+list.get(0).getDenddate());
+			}	
+		}else{
+			if(list.size() > 1){
+				for(ZgjzHVO hvo:list){
+					if(hvo.getPrimaryKey() == null){
+						continue;
+					}
+					if(hvo.getPrimaryKey().equalsIgnoreCase(primarykey)){
+						continue;
+					}
+					throw new BusinessException("存在日期交叉:已经存在暂估记账,开始日期="+hvo.getDbegindate()+"结束日期="+hvo.getDenddate());
+
+				}
+			}
+		
 		}
 	}
 	

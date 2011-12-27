@@ -215,8 +215,8 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "nmovenum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "nmoveassnum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbanchcode");
-
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.pk_invmandoc"), row, "pk_invmandoc");
+					
 					getBillCardPanel().getBillModel().execLoadFormulaByKey("pk_invmandoc");
 					getBillCardPanel().setBodyValueAt(null, row, "pk_trayin");
 					getBillCardPanel().getBillModel().execLoadFormulaByKey("pk_trayin");
