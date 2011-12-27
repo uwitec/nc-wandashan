@@ -1,4 +1,4 @@
-package nc.ui.wds.report.report3;
+package nc.ui.wds.report.report4;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ListSelectionModel;
@@ -11,14 +11,13 @@ import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
 /**
- * @author mlr 出入库月汇总报表 
+ * @author mlr 出入库月汇总报表 (合计)
  */
 public class ReportUI extends ZmReportBaseUI2 {
 	private static final long serialVersionUID = 2193523266502400113L;
     private static String[] combinsFields={"num","bnum"};//合并字段
     private static String[] comconds={"cwarehouseid","stvcl","dbilldate",
-    	                              "invtype","pk_invcl","pk_invmandoc",
-    	                              "pk_invbasdoc",};//合并条件
+    	                              "invtype","pk_invcl"};//合并条件
     private static int[] types={IUFTypes.UFD,IUFTypes.UFD};//合并类型
 	public ReportUI() {
 		super();
@@ -59,7 +58,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 	 */
 	public void dealQueryAfter() throws Exception{		
 		ReportRowColCrossTool.onCross(this, new String[]{"cwarehousename","stvclname","dbilldate"},
-                new String[]{"invtypename","invclname","invcode","invname","invspec"}, 
+                new String[]{"invtypename","invclname"}, 
                 new String[]{"num"});
 		setTolal1();//设置合计
 	}
@@ -106,6 +105,6 @@ public class ReportUI extends ZmReportBaseUI2 {
 
 	@Override
 	public String _getModelCode() {
-		return WdsWlPubConst.report3;
+		return WdsWlPubConst.report4;
 	}
 }
