@@ -1,10 +1,7 @@
 package nc.ui.wds.report.crklsz;
-
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.ListSelectionModel;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
@@ -18,7 +15,6 @@ import nc.vo.pub.query.ConditionVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.report.ReportBaseVO;
-
 /**
  * 
  * @author yf 出入库流水账
@@ -135,8 +131,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 	public void setItemsAfter(ReportItem it, List<ReportItem> list) {
 		it.setShow(false);
 		if (it.getKey().equalsIgnoreCase("cdt_pk")) {
-			it
-					.setLoadFormula(new String[] { "cdtcode->getColValue(bd_cargdoc_tray,cdt_traycode,cdt_pk,cdt_pk)" });
+			it.setLoadFormula(new String[] { "cdtcode->getColValue(bd_cargdoc_tray,cdt_traycode,cdt_pk,cdt_pk)" });
 			ReportItem it1 = ReportPubTool.getItem("cdtcode", "托盘",
 					IBillItem.STRING, 2, 80);
 			list.add(it1);
@@ -276,19 +271,16 @@ public class ReportUI extends ZmReportBaseUI2 {
 
 	@Override
 	public Map getNewItems() throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getQuerySQL() throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void initReportUI() {
-		// TODO Auto-generated method stub
 
 	}
 
