@@ -104,7 +104,7 @@ public class ChangeTo4A {
 			bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 
 			Integer dates= getDefaultDay();
-			UFDate fs=NextMonth();
+	//		UFDate fs=NextMonth();
 			Date dqdate= new Date();
 			int dqday= dqdate.getDate();
 			int jzday=dates.intValue();
@@ -143,14 +143,10 @@ public class ChangeTo4A {
 	//当前月的下一个月一号   日期
 	private UFDate NextMonth(){
         Calendar   calendar   =   new   GregorianCalendar(); 
-        calendar.add(Calendar.DAY_OF_MONTH,  calendar     
+        calendar.set(Calendar.DAY_OF_MONTH,  calendar     
 	            .getActualMaximum(Calendar.DAY_OF_MONTH));
-        calendar.add(Calendar.DATE, 1); //设置为第一天
-      
-        int year = calendar.get(Calendar.YEAR); 
-        int month = calendar.get(Calendar.MONTH)+1;//这里月要加1 
-        String de=  year + "-" + month + "-1";    
-		return new UFDate(de);		
+        calendar.add(Calendar.DATE, 1); //设置某个月第一天
+		return new UFDate(calendar.getTime());		
 	}
 	
 	/**
