@@ -196,7 +196,32 @@ public class ZmSubTotalConfDLG extends StandardUIDialog
 		}
 		return fs;
 	}
-
+	/**
+	 * 该方法得到所有的汇总字段， （一般来说总是数值类型的字段） 以及需要对这些字段进行的操作，sum or avg
+	 *
+	 * @return nc.ui.report.base.TotalField[]
+	 */
+	public TableField[] getTotalFields2()
+	{
+		TableField[] fs = new TableField[getTotalPanel().getLeftData().length];
+		for (int i = 0; i < fs.length; i++)
+		{
+			fs[i] = (TableField) getTotalPanel().getLeftData()[i];
+		}
+		return fs;
+	}
+	/**
+	 * 该方法得到SQL语句中Group的字段 返回数组中的顺序即是Group的顺序
+	 */
+	public TableField[] getGroupFields2()
+	{
+		TableField[] fs = new TableField[getGroupPanel().getLeftData().length];
+		for (int i = 0; i < fs.length; i++)
+		{
+			fs[i] = (TableField) getGroupPanel().getLeftData()[i];
+		}
+		return fs;
+	}
 
 	public boolean isSum()
 	{

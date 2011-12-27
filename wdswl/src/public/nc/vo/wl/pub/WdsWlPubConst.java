@@ -325,6 +325,8 @@ public class WdsWlPubConst {
 	public static String report1="80100201";//各仓产品库存 产品明细表
 	public static String report2="80100203";//各仓产品库存 总表
     public static String report3="80100234";//出入库月汇总
+    public static String report4="80100245";//出入库月汇总(合计)
+
 	
 	
 	

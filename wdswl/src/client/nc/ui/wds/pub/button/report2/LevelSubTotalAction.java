@@ -71,6 +71,31 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 																	 */);
 		}
 	}
+	/**
+	 * 自动进行数据合计
+	 */
+	public void atuoexecute2() throws Exception {
+	    subTotalCurrentUsingGroupFields = new TableField[0];
+        SubTotalCurrentUsingTotalFields = new TableField[0];
+        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+			issub = false;
+			issum = true;
+			isshow=dlg.isLevelCompute();
+			setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
+			setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
+	//		getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+
+			executeSubTotal();
+            dealShow();
+			getReportBaseUI()
+					.showHintMessage(
+							nc.ui.ml.NCLangRes.getInstance().getStrByID(
+									"uifactory_report",
+									"UPPuifactory_report-000022")/*
+																	 * @res
+																	 * "小计合计成功"
+																	 */);
+	}
     /**
      * 处理是否只显示原始行
      * @author mlr

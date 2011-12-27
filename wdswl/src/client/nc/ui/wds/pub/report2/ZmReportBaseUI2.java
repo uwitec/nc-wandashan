@@ -6,6 +6,7 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.pub.BusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
 /**
  * 支持分组查询的报表基类
@@ -137,8 +138,8 @@ public class ZmReportBaseUI2 extends JxReportBaseUI {
 			Class[] ParameterTypes = new Class[] { String[].class };
 			Object[] ParameterValues = new Object[] { sqls };
 			Object o = LongTimeTask.calllongTimeService(
-					null, this, "正在查询...", 1,
-					"nc.bs.ca.pub.report.ReportDMO", null, "queryVOBySql",
+					WdsWlPubConst.WDS_WL_MODULENAME, this, "正在查询...", 1,
+					"nc.bs.wds.pub.report.ReportDMO", null, "queryVOBySql",
 					ParameterTypes, ParameterValues);
 			if (o != null) {
 				reportVOs = (List<ReportBaseVO[]>) o;
