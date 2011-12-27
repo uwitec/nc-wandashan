@@ -1,7 +1,6 @@
 package nc.ui.wl.pub;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIMenuItem;
 import nc.ui.pub.bill.BillData;
