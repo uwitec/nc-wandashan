@@ -2,12 +2,10 @@ package nc.ui.wds.report.report3;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ListSelectionModel;
-import nc.ui.pub.beans.UIDialog;
+import nc.ui.wds.pub.report2.ReportRowColCrossTool;
+import nc.ui.wds.pub.report2.ZmReportBaseUI2;
 import nc.ui.wl.pub.CombinVO;
-import nc.ui.wl.pub.report.ReportRowColCrossTool;
 import nc.ui.wl.pub.report.WDSWLReportSql;
-import nc.ui.wl.pub.report.ZmReportBaseUI2;
-import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.IUFTypes;
 import nc.vo.wl.pub.report.ReportBaseVO;
@@ -27,34 +25,42 @@ public class ReportUI extends ZmReportBaseUI2 {
 		getReportBase().getBillTable().setSelectionMode(
 				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
-	@Override
-	public void onQuery() {
-		getQueryDlg().showModal();
-		if (getQueryDlg().getResult() == UIDialog.ID_OK) {
-			try {
-				// 清空表体数据
-				clearBody();
-				setDynamicColumn1();
-				// 得到查询结果
-				List<ReportBaseVO[]> list = getReportVO(new String[] {
-						getQuerySQL1(getQueryConditon()), getQuerySQL2(getQueryConditon()) });
-
-				ReportBaseVO[] vos = null;
-				vos = combinListVOs(list);
-				if (vos == null || vos.length == 0)
-					return;
-				if (vos != null) {
-					super.updateBodyDigits();
-					setBodyVO(vos);
-					//setQueryAfter(vos);
-					//setTolal();
-				}
-			} catch (BusinessException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	/**
+	 * 设置到ui界面之前 处理分组查询后的数据
+	 * @author mlr
+	 * @说明：（鹤岗矿业）
+	 * 2011-12-22上午10:42:36
+	 * @param list
+	 * @return
+	 */
+	public ReportBaseVO[] dealBeforeSetUI(List<ReportBaseVO[]> list)throws Exception{		
+		return  combinListVOs(list);
+	}
+	/**
+	 * 接收查询的组合sql
+	 * @author mlr
+	 * @说明：（鹤岗矿业）
+	 * 2011-12-22上午10:41:05
+	 * @return
+	 */
+	public String[] getSqls()throws Exception{
+		return new String[] {
+				getQuerySQL1(getQueryConditon()), getQuerySQL2(getQueryConditon()) };		
+	}
+	/**
+	 * 查询完成 设置到ui界面之后 后续处理  
+	 * @author mlr
+	 * @说明：（鹤岗矿业）
+	 * 2011-12-22上午10:42:36
+	 * @param list
+	 * @return
+	 * @throws Exception 
+	 */
+	public void dealQueryAfter() throws Exception{
+		
+		ReportRowColCrossTool.onCross(this, new String[]{"cwarehousename","stvclname","dbilldate"},
+                new String[]{"invtypename","invclname","invcode","invname","invtype","invspec"}, 
+                new String[]{"num"});
 	}
     /**
      * 进行数据交叉形成动态二维表
@@ -65,22 +71,14 @@ public class ReportUI extends ZmReportBaseUI2 {
      * @throws Exception 
      */
 	private void setQueryAfter(ReportBaseVO[] vos) throws Exception {
-		ReportRowColCrossTool.onCross(this, new String[]{"cwarehousename","stvclname","dbilldate"},
-				                            new String[]{"invtypename","invclname","invcode","invname","invtype","invspec"}, 
-				                            new String[]{"num"});
-	}
+		}
 	private String getQuerySQL2(String whereSql) {
 		return WDSWLReportSql.getInStore(whereSql);
 	}
 
-
-
 	private String getQuerySQL1(String whereSql) {
 		return WDSWLReportSql.getOutStore(whereSql);
 	}
-
-
-
 	private ReportBaseVO[] combinListVOs(List<ReportBaseVO[]> list)
 			throws Exception {
 		if (list == null || list.size() == 0) {

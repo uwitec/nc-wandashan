@@ -257,7 +257,7 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
 		} 
 	   }  
 	}	
-	public void dealQueryAfter() {
+	public void dealQueryAfter() throws Exception {
 		
 	}
 

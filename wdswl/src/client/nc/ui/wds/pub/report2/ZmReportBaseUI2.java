@@ -122,7 +122,7 @@ public class ZmReportBaseUI2 extends JxReportBaseUI {
 	 * @param list
 	 * @return
 	 */
-	public void dealQueryAfter(){
+	public void dealQueryAfter()throws Exception{
 		
 		return ;
 	}
