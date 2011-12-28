@@ -40,6 +40,7 @@ public class ReportBO {
 		sql.append("  tb_storcubasdoc.pk_cubasdoc pk_cubasdoc," );//客商基本档案
 		sql.append("  tb_storcubasdoc. pk_cumandoc  pk_cumandoc ," );//客商管理档案
 		sql.append("  tb_storcubasdoc.  pk_defdoc pk_defdoc," );//销售区域
+		sql.append("  so_sale.vreceiptcode jdcode, ");
 		sql.append("  wds_soorder.pk_transcorp pk_transcorp,");//--承运商
 		sql.append("  wds_soorder.vcardno vcardno," );//车号
 		  sql.append(" wds_soorder.dmakedate dmakedate, ");  //日期
@@ -53,6 +54,7 @@ public class ReportBO {
 		sql.append("   join wds_soorder on wds_soorder.pk_soorder=wds_soorder_b.pk_soorder" );
 		sql.append("   join bd_cubasdoc on bd_cubasdoc.pk_cubasdoc=tb_storcubasdoc.pk_cubasdoc  ");
 		sql.append("   join bd_invbasdoc on tb_outgeneral_b.cinvbasid=bd_invbasdoc.pk_invbasdoc  ");
+		sql.append("   join so_sale on so_sale.ccustomerid=tb_storcubasdoc. pk_cumandoc");
 		
 		sql.append(" where ");
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
@@ -63,6 +65,7 @@ public class ReportBO {
 		sql.append(" and  isnull(wds_storecust_h.dr,0)=0  ");
 		sql.append(" and  isnull(wds_soorder_b.dr,0)=0  ");
 		sql.append(" and  isnull(wds_soorder.dr,0)=0  ");
+		sql.append(" and  isnull(so_sale.dr,0)=0  ");
 	
 		
 //		sql.append(" group by  bd_cargdoc.csname,bd_stordoc.storname,bd_invbasdoc.invcode,bd_invbasdoc.invname,tb_stockstate.ss_state ");//分类汇总
@@ -89,7 +92,7 @@ public class ReportBO {
 				
 	}
 	private String[] keys = new String[]{"vbatchcode","noutnum","noutassistnum","cinvbasid","custcode","custname","invcode","invname","invspec",
-			"cinventoryid","vdef2","vdef1","fuesed","pk_stordoc","pk_cargdoc","pk_cubasdoc","pk_cumandoc","pk_transcorp","dmakedate",
+			"cinventoryid","vdef2","vdef1","fuesed","pk_stordoc","pk_cargdoc","pk_cubasdoc","pk_cumandoc","pk_transcorp","dmakedate","jdcode",
 			"pk_defdoc","vcardno","vdriver"};
 
 }
