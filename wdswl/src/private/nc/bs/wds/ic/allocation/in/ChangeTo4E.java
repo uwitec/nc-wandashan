@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
@@ -28,7 +29,6 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.write.back4y.MultiBillVO;

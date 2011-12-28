@@ -37,6 +37,8 @@ public class OutInEventHandler extends InPubEventHandler {
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 					new String[]{"invcode","geb_vbatchcode"},
 					new String[]{"存货编码","批次号"});
+			
+			valuteRowNum();
 			onZdtp();
 			break;
 		case ISsButtun.Ckmx:
@@ -49,6 +51,9 @@ public class OutInEventHandler extends InPubEventHandler {
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 					new String[]{"invcode","geb_vbatchcode"},
 					new String[]{"存货编码","批次号"});
+			
+			valuteRowNum();
+			setTrayCatNUll();
 			onZdrk();
 			break;
 		case ISsButtun.Zzdj:
@@ -74,6 +79,32 @@ public class OutInEventHandler extends InPubEventHandler {
 				
 		}
 	}
+	
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 *       自动拣货前设定托盘信息为空    
+	 * @时间：2011-7-26下午12:58:02
+	 */
+	private void setTrayCatNUll() {		
+	  if(getBillInPubUI()==null){
+		  return;
+	  }
+	  getBillInPubUI().setTrayInfor(null);
+	}
+	
+	/**
+	 * 
+	 * @作者  mlr 
+	 * @说明：完达山物流项目
+	 *       校验表体行号不允许重复 
+	 * @时间：2011-7-26下午12:46:08
+	 */
+    public void valuteRowNum()throws Exception{  	
+       BeforeSaveValudate.FieldBodyUnique(getBodyRowCount(),getBillCardPanelWrapper().getBillCardPanel().getBillModel(), "geb_crowno", "单据行号");
+    }
+	
     /**
      * 
      * @作者：mlr

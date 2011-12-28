@@ -36,9 +36,11 @@ public class WdsWlIcPubDealTool {
 		String key = null;
 		GeneralBillItemVO[] items = bill.getItemVOs();
 		GeneralBillItemVO tmp = null;
-
+		LocatorVO locavo = null;
+		
 		for(GeneralBillItemVO item:items){
 			key = WdsWlPubTool.getString_NullAsTrimZeroLen(item.getCsourcebillbid())+WdsWlPubTool.getString_NullAsTrimZeroLen(item.getVbatchcode());
+			locavo = item.getLocator()[0];
 			if(dataMap.containsKey(key)){
 				tmp = (GeneralBillItemVO)(dataMap.get(key));
 				if(isin){
@@ -46,11 +48,15 @@ public class WdsWlIcPubDealTool {
 					item.setNneedinassistnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNneedinassistnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNneedinassistnum())));
 					item.setNinnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNinnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNinnum())));
 					item.setNinassistnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNinassistnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNinassistnum())));
+					locavo.setNinspacenum(item.getNinnum());
+					locavo.setNinspaceassistnum(item.getNinassistnum());
 				}else{
 					item.setNshouldoutnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNshouldoutnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutnum())));
 					item.setNshouldoutassistnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNshouldoutassistnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutassistnum())));
 					item.setNoutnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNoutnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNoutnum())));
 					item.setNoutassistnum(PuPubVO.getUFDouble_NullAsZero(tmp.getNoutassistnum()).add(PuPubVO.getUFDouble_NullAsZero(item.getNoutassistnum())));
+					locavo.setNoutspacenum(item.getNoutnum());
+					locavo.setNoutspaceassistnum(item.getNoutassistnum());
 				}
 			}
 			dataMap.put(key, item);
@@ -94,7 +100,7 @@ public class WdsWlIcPubDealTool {
 			if(item.getDbizdate() == null){
 				item.setDbizdate(new UFDate(sdate));//业务日期
 			}	
-			if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
+			if(fisvbatchcontorl == null || !fisvbatchcontorl.booleanValue()){
 				item.setVbatchcode(returnBatchcode);
 			}
 			//设置货位信息

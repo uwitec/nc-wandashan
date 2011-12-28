@@ -38,7 +38,7 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 		WriteBackTool.setVsourcebillrowid("cfirstbillbid");
 		WriteBackTool.setVsourcebillid("cfirstbillhid");
 		WriteBackTool.setVsourcebilltype("cfirsttype");
-		WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
+		WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
 		//		»ØÐ´½áÊø
 		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		return retObj;

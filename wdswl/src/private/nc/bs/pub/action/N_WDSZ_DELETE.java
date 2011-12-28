@@ -55,7 +55,7 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			WriteBackTool.setVsourcebillrowid("cfirstbillbid");
 			WriteBackTool.setVsourcebillid("cfirstbillhid");
 			WriteBackTool.setVsourcebilltype("cfirsttype");
-			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
+			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
 //			ÐÞ¶©½áÊø
 			
 			// ##################################################

@@ -6,11 +6,13 @@ import java.util.List;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
 import nc.bs.wds.load.pub.PushSaveWDSF;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.uap.rbac.util.ObjectUtil;
 
 public class N_WDSZ_SIGN extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
@@ -28,7 +30,7 @@ public class N_WDSZ_SIGN extends AbstractCompiler2 {
 			super.m_tmpVo = vo;
 			Object retObj = null;				
 			List userObject = (ArrayList)getUserObj();
-			setParameter("AggObj",vo.m_preValueVo);
+			setParameter("AggObj",ObjectUtils.serializableClone(vo.m_preValueVo));
 			setParameter("date", userObject.get(0));
 			setParameter("operator", userObject.get(1));
 			//	setParameter("pk_corp",vo.m_coId);

@@ -1,10 +1,13 @@
 package nc.bs.ic.pub;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
@@ -77,6 +80,32 @@ public class WriteBackTool{
 	 splitSetMap(vos,soutablename,soutableidname,fieldnames,backfieldnames);
 	 //进行数据的回写
 	 writeBackSou();
+	 clearMap();
+  }
+  
+  /**
+   * 回写处理的入口方法	
+   * 
+   * @throws Exception
+   * @param vos 回写处理的vo集合
+   * @param soutablename  来源表名
+   * @param soutableidname 来源表主键名字
+   * @param fieldnames     要回写的字段
+   * @param backfieldnames 来源表回写对应字段
+   * @param checkfieldnames 来源表控制回写字段的字段   和回写字段对应
+   */
+  public static void writeBack(
+		  SuperVO[] vos,
+		  String soutablename,
+		  String soutableidname,
+		  String[] fieldnames,
+		  String[] backfieldnames,
+		  String[] checkfieldnames)throws Exception{
+	 //区分回写的vo类型 
+	 splitSetMap(vos,soutablename,soutableidname,fieldnames,backfieldnames);
+	 //进行数据的回写
+	 writeBackSou();
+	 check(vos, soutablename, soutableidname, backfieldnames, checkfieldnames);
 	 clearMap();
   }
   
@@ -269,5 +298,63 @@ private static void setValue(SuperVO vo, String soutablename,
  * 回写后的数据校验
  * @throws Exception
  */
- public static void check()throws Exception{} 
+ public static void check(
+		  SuperVO[] vos,
+		  String soutablename,
+		  String soutableidname,
+		  String[] backfieldnames,
+		  String[] checkfieldnames
+		  )throws Exception{
+	 if(vos == null || vos.length == 0)
+		 return;
+	 if(backfieldnames.length != checkfieldnames.length)
+		 throw new BusinessException("传入参数长度不一致");
+		 
+	 List<String> lsouid = new ArrayList<String>();
+	 String tmps = null;
+	 for(SuperVO vo:vos){
+		 tmps = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillid));
+		 if(tmps == null || lsouid.contains(tmps))
+			 continue;
+		 lsouid.add(tmps);			 
+	 }
+	 
+	 if(lsouid.size()== 0)
+		 return;
+	 
+//	 校验累计回写量 不能大于  主数量
+	 StringBuffer str = new StringBuffer();
+	 str.append(" select count(0) from ");
+	 str.append(soutablename);
+	 str.append(" where isnull(dr,0)= 0 ");
+	 str.append(" and "+soutableidname+" in "+WdsWlPubTool.getSubSql(lsouid.toArray(new String[0])));
+	 str.append(" and (");
+	 for(int i = 0;i<backfieldnames.length;i++){
+		 if(i>0)
+			 str.append(" or ");
+		 str.append("  coalesce("+checkfieldnames[i]+",0.0)-coalesce("+backfieldnames[i]+",0.0)<0 ");
+	 }	
+	 str.append(" )");
+	 int ivalue = PuPubVO.getInteger_NullAs(getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+	 if(ivalue>0)
+		 throw new BusinessException("超出来源单据数量控制");
+	 
+//	 校验累计量不能为负数
+	 str.setLength(0);
+	 str.append(" select count(0) from ");
+	 str.append(soutablename);
+	 str.append(" where isnull(dr,0)= 0 ");
+	 str.append(" and "+soutableidname+" in "+WdsWlPubTool.getSubSql(lsouid.toArray(new String[0])));
+	 str.append(" and (");
+	 for(int i = 0;i<backfieldnames.length;i++){
+		 if(i>0)
+			 str.append(" or ");
+		 str.append(" coalesce("+backfieldnames[i]+",0.0)<0 ");
+	 }	
+	 str.append(" )");
+	 
+	 ivalue = PuPubVO.getInteger_NullAs(getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+	 if(ivalue>0)
+		 throw new BusinessException("数据回写异常");
+ } 
 }

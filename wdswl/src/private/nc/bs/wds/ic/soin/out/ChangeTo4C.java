@@ -95,6 +95,16 @@ public class ChangeTo4C {
 		}
 		// 设置货位信息
 		setLocatorVO(billVO);
+		
+	
+		if(!fisvbatchcontorl.booleanValue()){
+			String debatchcode = getVbatchCode();
+			TbGeneralBVO[] bvos = (TbGeneralBVO[]) billVO.getChildrenVO();
+			for(TbGeneralBVO bvo:bvos){
+				bvo.setGeb_vbatchcode(debatchcode);
+			}
+		}
+		
 		GeneralBillVO vo = (GeneralBillVO) PfUtilTools.runChangeData(
 				pk_billtype, "4C", billVO, null); // 销售出库
 		setSpcGenBillVO(vo, coperator, date);
@@ -145,7 +155,7 @@ public class ChangeTo4C {
 
 		WdsWlIcPubDealTool.appFieldValueForIcNewBill(bill, l_map, coperator, date, fisvbatchcontorl, para);
 
-		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
+		if(fisvbatchcontorl == null || !fisvbatchcontorl.booleanValue()){
 			//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
 			WdsWlIcPubDealTool.combinItemsBySourceAndInv(bill, false);
 		}
