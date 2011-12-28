@@ -49,7 +49,10 @@ public class CHGWDS6TOWDSF extends VOConversion {
 				"B_nshouldoutnum->B_nshouldoutnum",//应出数量
 				"B_nassshouldoutnum->B_nshouldoutassistnum",//应出辅数量
 				"B_ntagnum->B_ntagnum",//贴签数量
-				"B_fistag->B_fistag"
+				"B_fistag->B_fistag",
+				
+				"B_nhsl->B_hsl",
+				"B_vbatchecode->B_vbatchcode",
 		};
 	}
 	

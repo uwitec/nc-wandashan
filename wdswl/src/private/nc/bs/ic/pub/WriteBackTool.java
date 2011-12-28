@@ -17,6 +17,9 @@ import nc.vo.wl.pub.WdsWlPubTool;
  */
 public class WriteBackTool{
 	private static BaseDAO dao=null;
+	private static String vsourcebillrowid = "vsourcebillrowid";//默认来源行id  如果不是默认需要调整
+	private static String vsourcebilltype = "vsourcebilltype";
+	private static String vsourcebillid = "vsourcebillid";
 	private static BaseDAO getDao(){
 	 if(dao==null){
 		 dao=new BaseDAO();
@@ -26,6 +29,16 @@ public class WriteBackTool{
 	private static Map<String,WriteBackVO> addmap= new HashMap<String,WriteBackVO>();//存放新增回写的数据
 	private static Map<String,WriteBackVO> editmap= new HashMap<String,WriteBackVO>();//存放修改回写的数据
 	private static Map<String,WriteBackVO> delemap= new HashMap<String,WriteBackVO>();//存放删除回写的数据	
+	
+	public static void setVsourcebillrowid(String id){
+		vsourcebillrowid = id;
+	}
+	public static void setVsourcebillid(String id){
+		vsourcebillid = id;
+	}
+	public static void setVsourcebilltype(String type){
+		vsourcebilltype = type;
+	}
     public static Map<String, WriteBackVO> getAddmap() {
 		return addmap;
 	}
@@ -70,7 +83,10 @@ public class WriteBackTool{
   private static void clearMap(){
 	  addmap.clear();
 	  editmap.clear();	
-      delemap.clear();			   
+      delemap.clear();	
+      setVsourcebillrowid("vsourcebillrowid");//设置为默认值
+      setVsourcebillid("vsourcebillid");
+      setVsourcebilltype("vsourcebilltype");
   }
   /**
    * 进行数据的回写
@@ -210,13 +226,13 @@ private static void splitSetMap(SuperVO[] vos, String soutablename,String soutab
 		//如果主键为空 则为新增数据
 		if(vo.getStatus()==VOStatus.NEW ||vo.getPrimaryKey()==null || vo.getStatus()== VOStatus.UNCHANGED){				
 			setValue(vo, soutablename,soutableidname,fieldnames,backfieldnames);
-			addmap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillrowid")),backvo);
+			addmap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid)),backvo);
 		}else if(vo.getStatus()==VOStatus.UPDATED ){
 			setValue(vo, soutablename,soutableidname,fieldnames,backfieldnames);
-			editmap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillrowid")),backvo);
+			editmap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid)),backvo);
 		}else{
 			setValue(vo, soutablename,soutableidname,fieldnames,backfieldnames);
-			delemap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillrowid")),backvo);			
+			delemap.put(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid)),backvo);			
 		}	
 	}
 }
@@ -233,7 +249,7 @@ private static void setValue(SuperVO vo, String soutablename,
 		String soutableidname, String[] fieldnames, String[] backfieldnames) {
 	backvo=new WriteBackVO();
 	backvo.setIdname(soutableidname);
-	backvo.setIdvalue(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillrowid")));
+	backvo.setIdvalue(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid)));
     UFDouble[] backnums=new UFDouble[fieldnames.length];
 	for(int i=0;i<fieldnames.length;i++){
 		backnums[i]=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue(fieldnames[i]));
@@ -241,9 +257,9 @@ private static void setValue(SuperVO vo, String soutablename,
 	backvo.setNums(backnums);
 	backvo.setNumsnames1(fieldnames);
 	backvo.setSourcetablename(soutablename);
-	backvo.setVsourcebillid(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillid")));
-	backvo.setVsourcebillrowid(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebillrowid")));
-	backvo.setVsourcebilltype(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("vsourcebilltype")));
+	backvo.setVsourcebillid(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillid)));
+	backvo.setVsourcebillrowid(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid)));
+	backvo.setVsourcebilltype(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebilltype)));
 	backvo.setNumsnames(backfieldnames);
 	backvo.setTablename(PuPubVO.getString_TrimZeroLenAsNull(vo.getTableName()));
 	backvo.setId(PuPubVO.getString_TrimZeroLenAsNull(vo.getPrimaryKey()));

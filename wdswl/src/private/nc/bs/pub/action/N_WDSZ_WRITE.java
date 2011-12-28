@@ -25,32 +25,30 @@ public N_WDSZ_WRITE() {
 * 接口执行类
 */
 public Object runComClass(PfParameterVO vo) throws BusinessException {
-try{
-	super.m_tmpVo=vo;
+
+
 	try {
 		super.m_tmpVo = vo;
 		Object retObj = null;
-//		回写来源数量
+		//		回写来源数量
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])getVo().getChildrenVO();
 		if(bodys == null || bodys.length == 0)
 			throw new BusinessException("表体数据为空");
-		
+
+		WriteBackTool.setVsourcebillrowid("cfirstbillbid");
+		WriteBackTool.setVsourcebillid("cfirstbillhid");
+		WriteBackTool.setVsourcebilltype("cfirsttype");
 		WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
-//		回写结束
+		//		回写结束
 		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		return retObj;
 	} catch (Exception ex) {
-			if (ex instanceof BusinessException)
-				throw (BusinessException) ex;
-			else
-				throw new PFBusinessException(ex.getMessage(), ex);
-		}
-} catch (Exception ex) {
-	if (ex instanceof BusinessException)
-		throw (BusinessException) ex;
-	else 
-    throw new PFBusinessException(ex.getMessage(), ex);
-}
+		if (ex instanceof BusinessException)
+			throw (BusinessException) ex;
+		else
+			throw new PFBusinessException(ex.getMessage(), ex);
+	}
+
 }
 /*
 * 备注：平台编写原始脚本

@@ -4,7 +4,6 @@ import java.util.Hashtable;
 import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.ic.pub.WriteBackTool;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -47,13 +46,15 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			
 			// ##################################################
 			IcInPubBO bo = new IcInPubBO();
-			bo.deleteAdjustBill((OtherInBillVO)bill);
+//			bo.deleteAdjustBill((OtherInBillVO)bill);
 			
 //			修订来源单据累计量
 			for(TbGeneralBVO body:bodys){
 				body.setStatus(VOStatus.DELETED);
 			}
-			
+			WriteBackTool.setVsourcebillrowid("cfirstbillbid");
+			WriteBackTool.setVsourcebillid("cfirstbillhid");
+			WriteBackTool.setVsourcebilltype("cfirsttype");
 			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"});
 //			修订结束
 			

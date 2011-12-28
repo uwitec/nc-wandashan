@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.so.out;
 
 import java.awt.Container;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -14,6 +13,7 @@ import nc.vo.wl.pub.WdsWlPubTool;
  * @author Administrator
  * 参照红字销售订单
  */
+
 public class Ref30BillSourceDlg extends WdsBillSourceDLG{
 	
 /**
@@ -27,7 +27,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	private String pk_stock = null; // 当前登录者对应的仓库主键
 	
-	private int iType = -1;
+//	private int iType = -1;
 	
 	private String[] inv_Pks = null;// 根据当前登录者查询所属仓库和其仓库所存储的产品
 	
@@ -62,7 +62,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 			if(pk_stock== null || "".equalsIgnoreCase(pk_stock)){
 				throw new BusinessException("当前登录人员没有绑定仓库");
 			}
-			iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
+//			iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
 			inv_Pks = getLoginInforHelper().getInvBasDocIDsByUserID(m_logUser);
 			if(inv_Pks ==null || inv_Pks.length==0){
 				throw new BusinessException("当前登录人员货位下没有绑定存货");
@@ -93,7 +93,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 		hsql.append(" where isnull(so_sale.dr,0)=0 ");
 		hsql.append(" and so_sale.pk_corp = '"+getPkCorp()+"' ");
 		hsql.append(" and so_sale.fstatus = 2 ");//审批通过
-		hsql.append(" and isnull(so_sale.bretinvflag,'N')='N' ");
+//		hsql.append(" and isnull(so_sale.bretinvflag,'N')='N' ");
 		if(!isStock){
 			hsql.append(" and so_sale.cwarehouseid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}

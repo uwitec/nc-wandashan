@@ -39,8 +39,7 @@ public class CHG30TOWDSZ extends nc.ui.pf.change.VOConversionUI{
 				"B_cfirsttype->H_creceipttype",//源头单据类型
 				"B_vfirstbillcode->H_vreceiptcode",//源头单据号
 				
-				"B_geb_snum->B_nnumber",// 应发数量
-				"B_geb_bsnum->B_npacknumber", // 应发辅数量
+				
 				"B_geb_cinventoryid->B_cinventoryid",// 存货主键
 				"B_geb_cinvbasid->B_cinvbasdocid",//存货基本id
 				"B_geb_flargess->B_blargessflag",// 是否赠品
@@ -48,9 +47,9 @@ public class CHG30TOWDSZ extends nc.ui.pf.change.VOConversionUI{
 //				"B_vbatchcode->B_", //批次号
 				"B_pk_measdoc->B_cunitid",//主单位
 				"B_castunitid->B_cpackunitid",//辅单位
-				"B_geb_hsl->B_scalefactor",//换算率
+//				"B_geb_hsl->B_scalefactor",//换算率
 				"B_geb_nprice->B_noriginalcurprice",//单价
-				"B_geb_nmny->B_noriginalcurmny",//金额
+				
 		};
 	}
 	/**
@@ -59,7 +58,11 @@ public class CHG30TOWDSZ extends nc.ui.pf.change.VOConversionUI{
 	public String[] getFormulas() {
 		return new String[] {
 				"B_isoper->\"Y\"", //是否进行操作
-				"H_vdiliveraddress->getColValue(bd_custaddr,addrname ,pk_custaddr , H_vreceiveaddress)"
+				"H_vdiliveraddress->getColValue(bd_custaddr,addrname ,pk_custaddr , H_vreceiveaddress)",
+				"B_geb_hsl->iif(B_scalefactor==null,B_nnumber/B_npacknumber,B_scalefactor)",
+				"B_geb_snum->-1*B_nnumber-B_ntaldcnum",// 应发数量
+				"B_geb_bsnum->(-1*B_nnumber-B_ntaldcnum)/iif(B_scalefactor==null,B_nnumber/B_npacknumber,B_scalefactor)", // 应发辅数量
+				"B_geb_nmny->(-1*B_nnumber-B_ntaldcnum)*B_noriginalcurprice",//金额
 //				"B_crowno->\"10\""//行号
 		};
 	}

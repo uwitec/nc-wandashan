@@ -1,18 +1,22 @@
 package nc.bs.pf.changedir;
+
 import nc.bs.pf.change.VOConversion;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.wl.pub.WdsWlPubConst;
+
 /**
- * 调拨入->装卸费结算
- * @author mlr
+ * 销售退货入库->装卸费结算
+ * @author Administrator
+ *
  */
-public class CHGWDS9TOWDSF extends VOConversion{
+public class CHGWDSZTOWDSF extends VOConversion {
+	
 	/**
 	* 获得后续类的全录经名称。
 	* @return java.lang.String[]
 	*/
 	public String getAfterClassName() {
-		return "nc.bs.pub.chgafter.WDS9TOWDSFAfterDeal";
+		return "nc.bs.pub.chgafter.WDSZTOWDSFAfterDeal";
 	}
 	/**
 	* 获得另一个后续类的全录径名称。
@@ -23,9 +27,9 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	}
 	@Override
 	public String[] getField() {
-		// TODO Auto-generated method stub
+		
 		return new String[]{
-				"H_pk_corp->H_pk_corp",//公司	
+				"H_pk_corp->H_pk_corp",//公司
 				"H_pk_stordoc->H_geh_cwarehouseid",//仓库
 				"B_csourcebillhid->B_geh_pk",
 				"B_csourcebillbid->B_geb_pk",
@@ -55,10 +59,11 @@ public class CHGWDS9TOWDSF extends VOConversion{
 	* @return java.lang.String[]
 	*/
 	public String[] getFormulas() {
-		if(m_strDate == null || "".equalsIgnoreCase(m_strDate)){
-			super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
-		}
+		new UFDate(System.currentTimeMillis());
+		super.setSysDate(new UFDate(System.currentTimeMillis()).toString());
 		return new String[] {
+//			"H_cvendorbaseid->getColValue(bd_cumandoc,pk_cubasdoc,pk_cumandoc,B_cvendormangid)",
+//			"H_forderstatus->int(0)",
 				"H_pk_billtype->\""+WdsWlPubConst.WDSF+"\"",
 				"H_vbillstatus->int(8)",
 			    "H_dmakedate->\""+m_strDate+"\"",

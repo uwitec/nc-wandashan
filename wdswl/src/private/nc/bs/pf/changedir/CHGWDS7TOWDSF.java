@@ -47,7 +47,10 @@ public class CHGWDS7TOWDSF extends VOConversion {
 				"B_noutnum->B_geb_anum",//实入数量
 				"B_nassoutnum->B_geb_banum",//实入辅数量
 				"B_nshouldoutnum->B_geb_snum",//应入数量
-				"B_nassshouldoutnum->B_nshouldoutassistnum",//应入辅数量
+				"B_nassshouldoutnum->B_geb_bsnum",//应入辅数量
+				
+				"B_nhsl->B_geb_hsl",
+				"B_vbatchecode->B_geb_vbatchcode",
 		};
 	}
 	
