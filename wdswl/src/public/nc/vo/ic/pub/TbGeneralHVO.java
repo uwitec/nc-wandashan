@@ -128,7 +128,7 @@ import nc.vo.pub.lang.UFTime;
              public String pk_customize5;
          	 public UFBoolean isxnap;//是否虚拟安排--转分仓使用
              
-             private UFBoolean fisnewcode;//回写供应链是否使用参数设置的批次号
+             private UFBoolean fisnewcode;//false：回写供应链使用参数设置的批次号    true：回写物流生成的批次
 
          	public UFBoolean fisload;//是否装卸费计算完成
          	public UFBoolean fistran;//是否运费计算完成

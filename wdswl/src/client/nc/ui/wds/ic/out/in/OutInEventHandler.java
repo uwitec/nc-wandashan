@@ -15,8 +15,10 @@ import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -227,4 +229,14 @@ public class OutInEventHandler extends InPubEventHandler {
 		  
 	   }
 	}	
+	
+	@Override
+	protected void onBoLineCopy() throws Exception {
+		int selectedRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
+		UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(selectedRow, "geb_anum"));
+		if(num.doubleValue()>0){
+			throw new BusinessException("已拣货入库,该行不可再复制");
+		}
+		super.onBoLineCopy();
+	}
 }

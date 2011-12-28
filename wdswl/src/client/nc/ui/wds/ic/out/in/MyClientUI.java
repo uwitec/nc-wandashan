@@ -77,8 +77,8 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		//除去行操作多余按钮
 		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
 		if (btnobj != null) {
-			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
-			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
+//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
+//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
 		}
@@ -177,11 +177,11 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		}if("geb_bsnum".equalsIgnoreCase(key)){
 			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
 				return false;
-			if (csourcetype != null) {
-				return false;
-			} else {
+//			if (csourcetype != null) {
+//				return false;
+//			} else {
 				return true;
-			}		
+//			}		
 		}
 			
 //		//过滤当前货位下的存货

@@ -1,21 +1,17 @@
 package nc.bs.wds.ic.soin.out;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
+import nc.bs.wl.pub.WdsWlIcPubDealTool;
 import nc.itf.ic.pub.IGeneralBill;
-import nc.itf.uap.busibean.ISysInitQry;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
-import nc.vo.ic.pub.bill.GeneralBillHeaderVO;
-import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.ic.pub.bill.QryConditionVO;
 import nc.vo.ic.pub.locator.LocatorVO;
@@ -24,8 +20,6 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
 
 /**
@@ -59,82 +53,23 @@ public class ChangeTo4C {
 	 */
 	public AggregatedValueObject signQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws BusinessException {
 		if(bill==null){
-			return bill;
+			return null;
 		}
 		this.coperator = coperator;
 		this.date = date;
 		OtherInBillVO billvo = (OtherInBillVO)bill;
 		TbGeneralHVO hvo = (TbGeneralHVO)billvo.getParentVO();
-	//	fisvbatchcontorl= hvo.getFisvbatchcontorl();
+		fisvbatchcontorl= PuPubVO.getUFBoolean_NullAs(hvo.getFisnewcode(),UFBoolean.FALSE);
 	
 		//原销售出库回传单表体vo
 		TbGeneralBVO[] bvos = (TbGeneralBVO[])billvo.getTableVO(billvo.getTableCodes()[0]);
 		if(bvos == null || bvos.length ==0){
 			return null;
 		}
-		
-		List<String> general_hs = new ArrayList<String>();
-		for(TbGeneralBVO b2vo:bvos){
-			String general_h = b2vo.getCfirstbillhid();
-			if(general_h == null || "".equalsIgnoreCase(general_h) 
-					|| general_hs.contains(general_h)){
-				continue;
-			}
-			general_hs.add(general_h);
-		}
-		if(general_hs.size() == 0)
-			return null;
-		GeneralBillVO vo = getGeneralBillVO(billvo,general_hs);
+	
+		GeneralBillVO vo = getGeneralBillVO(billvo);
 		if(vo == null){
 			return null;
-		}
-		//是否回传批次：如果不回传批次，则客户要求根据销售订单汇总，批次号统一为 参数对应的值
-		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
-			GeneralBillItemVO[]  items = vo.getItemVOs();
-			Map<String, GeneralBillItemVO> map = new HashMap<String, GeneralBillItemVO>();
-			if(items !=null){
-				int i=10;
-				for(GeneralBillItemVO item:items){
-					String key = item.getCsourcebillbid();
-					if(key == null || "".equalsIgnoreCase(key)){
-						continue;
-					}
-					if(map.containsKey(key)){
-						GeneralBillItemVO oldItem = map.get(key);
-						UFDouble oldsout = PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutnum());
-						UFDouble oldsoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutassistnum());
-						UFDouble oldout =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutnum());
-						UFDouble oldoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutassistnum());
-						LocatorVO[]  oldLoctor = oldItem.getLocator();
-						
-						//重新设置 数量信息和货位信息
-						UFDouble newsout = PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutnum());
-						UFDouble newsoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutassistnum());
-						UFDouble newout =  PuPubVO.getUFDouble_NullAsZero(item.getNoutnum());
-						UFDouble newoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNoutassistnum());
-						LocatorVO[]  newLoctor = item.getLocator();
-
-						oldItem.setNshouldoutnum(oldsout.add(newsout));
-						oldItem.setNshouldoutassistnum(oldsoutass.add(newsoutass));
-						oldItem.setNoutnum(oldout.add(newout));
-						oldItem.setNoutassistnum(oldoutass.add(newoutass));
-						ArrayList<LocatorVO> list= new ArrayList<LocatorVO>();
-						if(oldLoctor != null){
-							list.addAll(Arrays.asList(oldLoctor));
-						}
-						if(newLoctor != null){
-							list.addAll(Arrays.asList(newLoctor));
-						}
-						oldItem.setLocator(list.toArray(new LocatorVO[0]));
-						
-					}else{
-						item.setCrowno(""+i);
-						map.put(key, item);
-						i=i+10;
-					}
-				}
-			}
-			vo.setChildrenVO(map.values().toArray(new GeneralBillItemVO[0]));
 		}
 		return vo;
 	}	
@@ -147,35 +82,23 @@ public class ChangeTo4C {
 	 * @param general_hs
 	 * @return
 	 */
-	public GeneralBillVO getGeneralBillVO(OtherInBillVO billVO,List<String> general_hs) throws BusinessException{
-		if(general_hs == null || general_hs.size() ==0){
+	public GeneralBillVO getGeneralBillVO(OtherInBillVO billVO)
+			throws BusinessException {
+		if (billVO == null) {
 			return null;
 		}
-//		Object userObj = new String[]{HYBillVO.class.getName(),
-//				TbOutgeneralHVO.class.getName(),TbOutgeneralBVO.class.getName()};
-		GeneralBillVO bill = new GeneralBillVO();
-		GeneralBillHeaderVO head = null;
-		List<GeneralBillItemVO> items = new ArrayList<GeneralBillItemVO>();
-		for(int i=0;i<general_hs.size();i++){			
-			String pk_billtype = PuPubVO.getString_TrimZeroLenAsNull(billVO.getParentVO().getAttributeValue("geh_billtype"));
-			if(pk_billtype == null){
-				return null;
-			}
-			//设置货位信息
-			setLocatorVO(billVO);
-			GeneralBillVO vo =(GeneralBillVO) PfUtilTools.runChangeData(pk_billtype, "4C", billVO,null); //销售出库
-			setSpcGenBillVO(vo,coperator,date);
-			if(i == 0){
-				head = vo.getHeaderVO();
-			}
-			for(GeneralBillItemVO item:vo.getItemVOs()){
-				item.setCfirstbillhid(billVO.getParentVO().getPrimaryKey());
-			}
-			items.addAll(Arrays.asList(vo.getItemVOs()));
+
+		String pk_billtype = PuPubVO.getString_TrimZeroLenAsNull(billVO
+				.getParentVO().getAttributeValue("geh_billtype"));
+		if (pk_billtype == null) {
+			return null;
 		}
-		bill.setParentVO(head);
-		bill.setChildrenVO(items.toArray(new GeneralBillItemVO[0]));
-		return bill;
+		// 设置货位信息
+		setLocatorVO(billVO);
+		GeneralBillVO vo = (GeneralBillVO) PfUtilTools.runChangeData(
+				pk_billtype, "4C", billVO, null); // 销售出库
+		setSpcGenBillVO(vo, coperator, date);
+		return vo;
 	}
 	
 	/**
@@ -216,30 +139,15 @@ public class ChangeTo4C {
 	 * @param date
 	 */
 	public void setSpcGenBillVO(GeneralBillVO bill,String coperator,String date){
+		if(bill == null)
+			return;
 		String para = getVbatchCode();
-		if(bill != null && bill instanceof GeneralBillVO){
-			bill.setGetPlanPriceAtBs(false);//不需要查询计划价
-			bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
-			bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
-			bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态
-			if(bill.getItemVOs()!=null && bill.getItemVOs().length>0){
-				for(int i = 0 ;i<bill.getItemVOs().length;i++){
-					bill.getItemVOs()[i].setCrowno(String.valueOf((i+1)*10));//行号
-					bill.getItemVOs()[i].setStatus(VOStatus.NEW);//单据新增状态
-					if(bill.getItemVOs()[i].getDbizdate() == null){
-						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期
-					}	
-					if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
-						bill.getItemVOs()[i].setVbatchcode(para);
-					}
-					//设置货位信息
-					String key  = bill.getItemVOs()[i].getCfirstbillbid();
-					ArrayList<LocatorVO> lvo = l_map.get(key);
-					if(lvo!=null && lvo.size()>0){
-						bill.getItemVOs()[i].setLocator(lvo.toArray(new LocatorVO[0]));
-					}
-				}
-			}
+
+		WdsWlIcPubDealTool.appFieldValueForIcNewBill(bill, l_map, coperator, date, fisvbatchcontorl, para);
+
+		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
+			//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
+			WdsWlIcPubDealTool.combinItemsBySourceAndInv(bill, false);
 		}
 	}
 	/**
@@ -294,17 +202,6 @@ public class ChangeTo4C {
 	 * @return
 	 */
 	private String getVbatchCode(){
-		ISysInitQry sysinitQry = (ISysInitQry) NCLocator.getInstance().lookup(ISysInitQry.class.getName());
-		String para = "2009";
-		try {
-			SysInitVO vo =sysinitQry.queryByParaCode(corp, "WDS00");
-			if(vo != null){
-				para = vo.getValue();
-			}
-		} catch (BusinessException e) {
-			e.printStackTrace();
-			System.out.println("获取参数WDS00失败");
-		}
-		return para;
+		return WdsWlIcPubDealTool.getDefaultVbatchCode(corp);
 	}
 }

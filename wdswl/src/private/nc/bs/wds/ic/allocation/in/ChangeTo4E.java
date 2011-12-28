@@ -12,8 +12,8 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
+import nc.bs.wl.pub.WdsWlIcPubDealTool;
 import nc.itf.ic.pub.IGeneralBill;
-import nc.itf.uap.busibean.ISysInitQry;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.TbGeneralBVO;
@@ -29,7 +29,6 @@ import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.write.back4y.MultiBillVO;
@@ -103,54 +102,61 @@ public class ChangeTo4E {
 		if(vo == null){
 			return null;
 		}
-		//是否回传批次：如果不回传批次，则客户要求根据销售订单汇总，批次号统一为 参数对应的值
-		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
-			GeneralBillItemVO[]  items = vo.getItemVOs();
-			Map<String, GeneralBillItemVO> map = new HashMap<String, GeneralBillItemVO>();
-			if(items !=null){
-				int i=10;
-				for(GeneralBillItemVO item:items){
-					String key = item.getCsourcebillbid();
-					if(key == null || "".equalsIgnoreCase(key)){
-						continue;
-					}
-					if(map.containsKey(key)){
-						GeneralBillItemVO oldItem = map.get(key);
-						UFDouble oldsout = PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutnum());
-						UFDouble oldsoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutassistnum());
-						UFDouble oldout =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutnum());
-						UFDouble oldoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutassistnum());
-						LocatorVO[]  oldLoctor = oldItem.getLocator();
-						
-						//重新设置 数量信息和货位信息
-						UFDouble newsout = PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutnum());
-						UFDouble newsoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutassistnum());
-						UFDouble newout =  PuPubVO.getUFDouble_NullAsZero(item.getNoutnum());
-						UFDouble newoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNoutassistnum());
-						LocatorVO[]  newLoctor = item.getLocator();
-
-						oldItem.setNshouldoutnum(oldsout.add(newsout));
-						oldItem.setNshouldoutassistnum(oldsoutass.add(newsoutass));
-						oldItem.setNoutnum(oldout.add(newout));
-						oldItem.setNoutassistnum(oldoutass.add(newoutass));
-						ArrayList<LocatorVO> list= new ArrayList<LocatorVO>();
-						if(oldLoctor != null){
-							list.addAll(Arrays.asList(oldLoctor));
-						}
-						if(newLoctor != null){
-							list.addAll(Arrays.asList(newLoctor));
-						}
-						oldItem.setLocator(list.toArray(new LocatorVO[0]));
-						
-					}else{
-						item.setCrowno(""+i);
-						map.put(key, item);
-						i=i+10;
-					}
-				}
-			}
-			vo.setChildrenVO(map.values().toArray(new GeneralBillItemVO[0]));
-		}
+		
+		
+		WdsWlIcPubDealTool.combinItemsBySourceAndInv(vo, true);
+		
+//		//是否回传批次：如果不回传批次，则客户要求根据销售订单汇总，批次号统一为 参数对应的值
+//		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
+//			GeneralBillItemVO[]  items = vo.getItemVOs();
+//			Map<String, GeneralBillItemVO> map = new HashMap<String, GeneralBillItemVO>();
+//			if(items !=null){
+//				int i=10;
+//				for(GeneralBillItemVO item:items){
+//					String key = item.getCsourcebillbid();
+//					if(key == null || "".equalsIgnoreCase(key)){
+//						continue;
+//					}
+//					if(map.containsKey(key)){
+//						GeneralBillItemVO oldItem = map.get(key);
+//						UFDouble oldsout = PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutnum());
+//						UFDouble oldsoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNshouldoutassistnum());
+//						UFDouble oldout =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutnum());
+//						UFDouble oldoutass =  PuPubVO.getUFDouble_NullAsZero(oldItem.getNoutassistnum());
+//						LocatorVO[]  oldLoctor = oldItem.getLocator();
+//						
+//						//重新设置 数量信息和货位信息
+//						UFDouble newsout = PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutnum());
+//						UFDouble newsoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNshouldoutassistnum());
+//						UFDouble newout =  PuPubVO.getUFDouble_NullAsZero(item.getNoutnum());
+//						UFDouble newoutass =  PuPubVO.getUFDouble_NullAsZero(item.getNoutassistnum());
+//						LocatorVO[]  newLoctor = item.getLocator();
+//
+//						oldItem.setNshouldoutnum(oldsout.add(newsout));
+//						oldItem.setNshouldoutassistnum(oldsoutass.add(newsoutass));
+//						oldItem.setNoutnum(oldout.add(newout));
+//						oldItem.setNoutassistnum(oldoutass.add(newoutass));
+//						ArrayList<LocatorVO> list= new ArrayList<LocatorVO>();
+//						if(oldLoctor != null){
+//							list.addAll(Arrays.asList(oldLoctor));
+//						}
+//						if(newLoctor != null){
+//							list.addAll(Arrays.asList(newLoctor));
+//						}
+//						oldItem.setLocator(list.toArray(new LocatorVO[0]));
+//						
+//					}else{
+//						item.setCrowno(""+i);
+//						map.put(key, item);
+//						i=i+10;
+//					}
+//				}
+//			}
+//			vo.setChildrenVO(map.values().toArray(new GeneralBillItemVO[0]));
+//		}
+		
+		
+		
 		return vo;
 	}
 	/**
@@ -363,17 +369,8 @@ public class ChangeTo4E {
 	 * @return
 	 */
 	private String getVbatchCode(){
-		ISysInitQry sysinitQry = (ISysInitQry) NCLocator.getInstance().lookup(ISysInitQry.class.getName());
-		String para = "2009";
-		try {
-			SysInitVO vo =sysinitQry.queryByParaCode(corp, "WDS00");
-			if(vo != null){
-				para = vo.getValue();
-			}
-		} catch (BusinessException e) {
-			e.printStackTrace();
-			System.out.println("获取参数WDS00失败");
-		}
-		return para;
+
+		return WdsWlIcPubDealTool.getDefaultVbatchCode(corp);
+	
 	}
 }

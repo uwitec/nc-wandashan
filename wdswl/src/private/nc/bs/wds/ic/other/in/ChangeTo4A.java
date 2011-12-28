@@ -9,8 +9,8 @@ import java.util.Map;
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.wl.pub.WdsWlIcPubDealTool;
 import nc.itf.ic.pub.IGeneralBill;
-import nc.itf.uap.busibean.ISysInitQry;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
@@ -22,7 +22,6 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
 /**
  * 其他入库
@@ -170,16 +169,9 @@ public class ChangeTo4A {
 	 * @return
 	 */
 	private String getVbatchCode(){
-		ISysInitQry sysinitQry = (ISysInitQry) NCLocator.getInstance().lookup(ISysInitQry.class.getName());
-		String para = "2009";
-		try {
-			SysInitVO vo =sysinitQry.queryByParaCode(corp, "WDS00");
-			 para = vo.getValue();
-		} catch (BusinessException e) {
-			e.printStackTrace();
-			System.out.println("获取参数WDS00失败");
-		}
-		return para;
+
+		return WdsWlIcPubDealTool.getDefaultVbatchCode(corp);
+	
 	}
 	//货位信息
 	public void setLocatorVO(AggregatedValueObject value) {
