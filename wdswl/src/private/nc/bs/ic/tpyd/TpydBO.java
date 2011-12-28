@@ -310,7 +310,7 @@ public class TpydBO {
 				// 按移出托盘的辅数量校验
 				pk_trayout = PuPubVO.getString_TrimZeroLenAsNull(newVos[i]
 						.getAttributeValue("pk_trayout"));
-				String  whs_pkout = PuPubVO.getString_TrimZeroLenAsNull(newVos[i].getAttributeValue("pk_trayout"));
+				String  whs_pkout = PuPubVO.getString_TrimZeroLenAsNull(newVos[i].getAttributeValue("whs_pkout"));
 				rnum = PuPubVO.getUFDouble_NullAsZero(newVos[i]
 						.getAttributeValue("nmovenum"));
 				rbnum = PuPubVO.getUFDouble_NullAsZero(newVos[i]
