@@ -193,6 +193,12 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					ref.getRefModel().addWherePart(strWhere.toString());
 				}
 			}
+			if("nmoveassnum".equalsIgnoreCase(key)){
+				UFDouble noutassnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutassnum"));
+				if(noutassnum.doubleValue() <=0){
+					return false;
+				}
+			}
 			
 		}
 		return super.beforeEdit(e);
@@ -202,6 +208,13 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		String key=e.getKey();
 		int row = e.getRow();
 		if(e.getPos() == BillItem.HEAD){
+			if("pk_stordoc".equalsIgnoreCase(key)){
+				getBillCardPanel().setHeadItem("pk_cargedoc", null);
+				getBillCardPanel().getBillModel().setBodyDataVO(null);
+			}
+			if("pk_cargedoc".equalsIgnoreCase(key)){
+				getBillCardPanel().getBillModel().setBodyDataVO(null);
+			}
 			//仓管更改，情况货位
 			//仓库或者货位更改 清空表体
 		}else if(e.getPos() == BillItem.BODY){
@@ -209,9 +222,13 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 				JComponent jc = getBillCardPanel().getBodyItem("outtraycode").getComponent();
 				if( jc instanceof UIRefPane){
 					UIRefPane ref = (UIRefPane)jc;
-					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "noutnum");
-					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "noutassnum");
-					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("nhsl"), row, "nhsl");
+					UFDouble whs_stocktonnage = PuPubVO.getUFDouble_NullAsZero(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"));
+					getBillCardPanel().setBodyValueAt(whs_stocktonnage, row, "noutnum");					
+					UFDouble whs_stockpieces = PuPubVO.getUFDouble_NullAsZero(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"));
+					getBillCardPanel().setBodyValueAt(whs_stockpieces, row, "noutassnum");
+					if(whs_stockpieces.doubleValue() >0){
+						getBillCardPanel().setBodyValueAt(whs_stocktonnage.div(whs_stockpieces, 8), row, "nhsl");
+					}
 					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
 					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbanchcode");
