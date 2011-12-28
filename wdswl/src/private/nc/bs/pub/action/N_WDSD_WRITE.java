@@ -6,7 +6,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
 /**
- *  采购取样
+ *   托盘移动
  * @author Administrator
  *
  */

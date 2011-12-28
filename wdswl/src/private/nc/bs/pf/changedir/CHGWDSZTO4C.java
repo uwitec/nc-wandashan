@@ -64,10 +64,9 @@ public class CHGWDSZTO4C extends nc.bs.pf.change.VOConversion {
 				"B_vsourcebillcode->B_vfirstbillcode",//本地销售出库 源头单据号[销售 订单]   
 				"B_csourcetype->B_cfirsttype",//本地销售出库 源头单据类型编码[销售 订单]   
 				
-				///---------------------------用供应链 销售出库的源头记录 本地销售出库ID
-				"B_cfirstbillhid->B_geh_pk",// --销售出库回单单 审批生成erp销售出库单的时候，用来保存销售出库回传单主键，才支持联查;所有生成的ERP销售出库
+				"B_cfirstbillhid->B_geh_pk",// --销售退货入库单 审批生成erp销售出库单的时候，用来保存销售出库回传单主键，才支持联查;所有生成的ERP销售出库
 		
-				"B_cfirstbillbid->B_geb_pk",//--销售出库回传单，审批生成erp销售出库单的时候，根据表体ID来查找货位信息   
+				"B_cfirstbillbid->B_geb_pk",//--销售退货入库单，审批生成erp销售出库单的时候，根据表体ID来查找货位信息   
 				"B_vfirstbillcode->H_geh_billcode",//
 				"B_cfirsttype->H_geh_billtype",//
 				

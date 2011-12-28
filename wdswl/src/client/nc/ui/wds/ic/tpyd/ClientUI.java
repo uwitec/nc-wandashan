@@ -13,7 +13,6 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
-import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -117,6 +116,9 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		return HYPubBO_Client.getBillNo(getUIControl().getBillType(),
 				_getCorp().getPrimaryKey(), null, null);
 	}
+	/**
+	 * 表头编辑前事件
+	 */
 	public boolean beforeEdit(BillItemEvent e) {
 		String key=e.getItem().getKey();
 		if(e.getItem().getPos() ==BillItem.HEAD){
@@ -149,17 +151,18 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 		if(e.getPos() ==BillItem.BODY){
 			if("outtraycode".equalsIgnoreCase(key)){//移出托盘
 				Object a = getBillCardPanel().getHeadItem("pk_cargedoc").getValueObject();
-				if(null != a && !"".equals(a)){
-					JComponent jc = getBillCardPanel().getBodyItem("outtraycode").getComponent();
-					if( jc instanceof UIRefPane){
-						UIRefPane ref = (UIRefPane)jc;
-						ref.getRefModel().addWherePart(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)=1" +
-								" and tb_warehousestock.pk_cargdoc='"+a+"'" +
-										" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//有货
-					}
-				}else{
+				if(null == a || "".equals(a)){
 					showErrorMessage("请先选择表头货位信息!");
 					return false;
+				}
+				JComponent jc = getBillCardPanel().getBodyItem("outtraycode").getComponent();
+				if( jc instanceof UIRefPane){
+					UIRefPane ref = (UIRefPane)jc;
+					StringBuffer strWhere = new StringBuffer();
+					strWhere.append(" and isnull(bd_cargdoc_tray.cdt_traystatus,0)=1 ");//托盘状态为占用
+					strWhere.append(" and tb_warehousestock.pk_cargdoc='"+a+"'");//当前货位
+					strWhere.append(" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");//非虚拟托盘
+					ref.getRefModel().addWherePart(strWhere.toString());
 				}
 			}
 			if("intarycode".equalsIgnoreCase(key)){//移入托盘
@@ -181,17 +184,13 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 				JComponent jc = getBillCardPanel().getBodyItem("intarycode").getComponent();
 				if( jc instanceof UIRefPane){
 					UIRefPane ref = (UIRefPane)jc;
-					//liuys modify 
-					ref.getRefModel().addWherePart(" and wds_cargdoc.pk_cargdoc='"+a
-							+"' and (isnull(bd_cargdoc_tray.cdt_traystatus,0)= 0"+
-							" or isnull(bd_cargdoc_tray.cdt_traystatus,0)= 1"+
-							") and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'" +
-							" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' "
-							//yf modify 只过滤已满托盘 
-							+"and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) > 0"
-//											"= "+
-//									getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")
-					);//当前货位下托盘为空且和移出托盘一样的存货
+					StringBuffer strWhere = new StringBuffer();
+					strWhere.append("and wds_cargdoc.pk_cargdoc='"+a+"'");//货位
+					strWhere.append(" and bd_invmandoc.pk_invmandoc='"+pk_invmandoc+"'");
+					strWhere.append(" and bd_cargdoc_tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%' ");
+					strWhere.append(" and ((isnull(bd_cargdoc_tray.cdt_traystatus,0)= 0) ");//空托盘
+					strWhere.append(" or (isnull(bd_cargdoc_tray.cdt_traystatus,0)= 1 and coalesce (wds_invbasdoc.tray_volume,0) - coalesce (tb_warehousestock.whs_stockpieces,0) > 0))");//托盘未放满
+					ref.getRefModel().addWherePart(strWhere.toString());
 				}
 			}
 			
@@ -212,86 +211,143 @@ public class ClientUI extends BillManageUI implements BillCardBeforeEditListener
 					UIRefPane ref = (UIRefPane)jc;
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "noutnum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "noutassnum");
-					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "nmovenum");
-					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "nmoveassnum");
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("nhsl"), row, "nhsl");
+					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
+					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_batchcode"), row, "vbanchcode");
 					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.pk_invmandoc"), row, "pk_invmandoc");
-					
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_pk"), row, "whs_pkout");
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("wds_invbasdoc.tray_volume"), row, "tray_volume");//托盘容量					
 					getBillCardPanel().getBillModel().execLoadFormulaByKey("pk_invmandoc");
 					getBillCardPanel().setBodyValueAt(null, row, "pk_trayin");
 					getBillCardPanel().getBillModel().execLoadFormulaByKey("pk_trayin");
-					}
-				
+
+				}
+			}
+			if("intarycode".equalsIgnoreCase(key)){//移入托盘
+				JComponent jc = getBillCardPanel().getBodyItem("intarycode").getComponent();
+				if( jc instanceof UIRefPane){
+					UIRefPane ref = (UIRefPane)jc;
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stocktonnage"), row, "ninnum");//库存数量
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_stockpieces"), row, "ninassnum");//库存主数量
+					getBillCardPanel().setBodyValueAt(ref.getRefModel().getValue("tb_warehousestock.whs_pk"), row, "whs_pkin");//移入托盘存货状态id
+
+				}
 			}
 			if("nmovenum".equalsIgnoreCase(key)){
-				double noutnum =PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutnum")).doubleValue();
-				double value = PuPubVO.getUFDouble_NullAsZero(e.getValue()).doubleValue();
-				if(value>noutnum){
-					showWarningMessage("不能超库存数量移动");
-					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
-					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
-					return;
-				}else{
-					//计算换算率
-					//移出托盘主数量
-				     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutnum"));
-					//移出托盘辅数量
-				     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutassnum"));
-					
-				     UFDouble hsl=new UFDouble(0); 
-				     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
-				    	return; 
-				     }
-				     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
-				    	showWarningMessage("移出托盘主辅数量不一致");
-					 }
-				     if(bnum.doubleValue()<=0){
-				    	 return;
-				     }
-				     hsl=num.div(bnum);
-				     if(hsl.doubleValue()>0){
-				    	 getBillCardPanel().setBodyValueAt(value/hsl.doubleValue(), row, "nmoveassnum");
-				     }				
+				if(!afterEditNmovenum(e)){
+					getBillCardPanel().setBodyValueAt(e.getOldValue(), e.getRow(), e.getKey());
+					getBillCardPanel().getBillModel().execEditFormulaByKey(e.getRow(), e.getKey());
 				}
 				
-				
+				return;
 			}
 			if("nmoveassnum".equalsIgnoreCase(key)){
-				double nmoveassnum =PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "nmoveassnum")).doubleValue();
-				double value = PuPubVO.getUFDouble_NullAsZero(e.getValue()).doubleValue();
-				if(value>nmoveassnum){
-					showWarningMessage("不能超库存数量移动");
-					getBillCardPanel().setBodyValueAt(null, row, "nmovenum");
-					getBillCardPanel().setBodyValueAt(null, row, "nmoveassnum");
-					return;
-				}else{
-					//计算换算率
-					//移出托盘主数量
-				     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutnum"));
-					//移出托盘辅数量
-				     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "noutassnum"));
-					
-				     UFDouble hsl=new UFDouble(0); 
-				     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
-				    	return; 
-				     }
-				     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
-				    	showWarningMessage("移出托盘主辅数量不一致");
-					 }
-				     if(bnum.doubleValue()<=0){
-				    	 return;
-				     }
-				     hsl=num.div(bnum);
-				     if(hsl.doubleValue()>0){
-				    	 getBillCardPanel().setBodyValueAt(value*hsl.doubleValue(), row, "nmovenum");
-				     }				
+				if(!afterEditNmoveassnum(e)){
+					getBillCardPanel().setBodyValueAt(e.getOldValue(), e.getRow(), e.getKey());
+					getBillCardPanel().getBillModel().execEditFormulaByKey(e.getRow(), e.getKey());
 				}
+				
+				return;
 			}
-		
 		}
-	
 		super.afterEdit(e);
 	}
+	/**
+	 * 
+	 * @作者：lyf:移动主数量编辑后事件
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-27下午03:59:32
+	 */
+	private boolean afterEditNmovenum(BillEditEvent e){
+		String pk_taryin = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(e.getRow(), "pk_trayin"));
+		if(pk_taryin == null){
+			showWarningMessage("请先选择移入托盘");
+			return false;
+		}
+		//移动数量
+		double noutnum =PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutnum")).doubleValue();
+		double value = PuPubVO.getUFDouble_NullAsZero(e.getValue()).doubleValue();
+		if(value>noutnum){
+			showWarningMessage("不能超库存数量移动");
+			return false;
+		}else{
+			//根据移出托盘库存主辅数量计算换算率
+		     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutnum"));//移出托盘主数量
+		     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum"));//移出托盘辅数量
+		     UFDouble hsl=new UFDouble(0); 
+		     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
+		    	return false; 
+		     }
+		     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
+		    	showWarningMessage("移出托盘主辅数量不一致");
+		    	return false; 
+			 }
+		     if(bnum.doubleValue()<=0){
+		    	 return false; 
+		     	}
+		     hsl=num.div(bnum);
+		     UFDouble nmoveassnum = PuPubVO.getUFDouble_NullAsZero(value/hsl.doubleValue());
+		     UFDouble ninassnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "ninassnum"));//移入托盘辅数量
+		     UFDouble tray_volume= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "tray_volume"));//托盘容量（以辅数量作为标准）
+		     if(nmoveassnum.add(ninassnum).sub(tray_volume).doubleValue()>0){
+		    	showWarningMessage("超过移入托盘容量");
+		    	return false;
+		     }
+		     if(hsl.doubleValue()>0){
+		    	 getBillCardPanel().setBodyValueAt(nmoveassnum, e.getRow(), "nmoveassnum");
+		     }				
+		}
+		return true;
+	
+	}
+	/**
+	 * 
+	 * @作者：lyf:移动辅数量编辑后事件
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-27下午04:10:50
+	 * @param e
+	 */
+	private boolean afterEditNmoveassnum(BillEditEvent e){
+		String pk_taryin = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(e.getRow(), "pk_trayin"));
+		if(pk_taryin == null){
+			showWarningMessage("请先选择移入托盘");
+			return false;
+		}
+		//移动赋数量
+		double noutassnum =PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum")).doubleValue();
+		double value = PuPubVO.getUFDouble_NullAsZero(e.getValue()).doubleValue();
+		if(value>noutassnum){
+			showWarningMessage("不能超库存数量移动");
+			return false;
+		}else{
+			//根据移出托盘库存主辅数量计算换算率
+		     UFDouble num= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutnum"));//移出托盘主数量
+		     UFDouble bnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "noutassnum"));//移出托盘辅数量
+		     UFDouble hsl=new UFDouble(0); 
+		     if(num.doubleValue()<=0 && bnum.doubleValue()<=0){
+		    	 return false;
+		     }
+		     if(num.doubleValue()<=0 && bnum.doubleValue()>0){
+		    	showWarningMessage("移出托盘主辅数量不一致");
+			 }
+		     if(bnum.doubleValue()<=0){
+		    	 return false;
+		     }
+		     UFDouble ninassnum= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "ninassnum"));//移入托盘辅数量
+		     UFDouble tray_volume= PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "tray_volume"));//托盘容量（以辅数量作为标准）
+		     if(PuPubVO.getUFDouble_NullAsZero(e.getValue()).add(ninassnum).sub(tray_volume).doubleValue()>0){
+		    	showWarningMessage("超过移入托盘容量");
+		    	return false;
+		     }
+		     hsl=num.div(bnum);
+		     if(hsl.doubleValue()>0){
+		    	 getBillCardPanel().setBodyValueAt(value*hsl.doubleValue(), e.getRow(), "nmovenum");
+		     }				
+		}
+		return true;
+	}
+
 
 	/**
 	 * 增加后台校验

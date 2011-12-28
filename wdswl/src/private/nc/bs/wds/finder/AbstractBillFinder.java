@@ -1,10 +1,10 @@
 package nc.bs.wds.finder;
 import java.util.Hashtable;
+
 import nc.bs.pf.pub.PfDataCache;
 import nc.bs.trade.billsource.IBillDataFinder;
 import nc.bs.trade.billsource.IBillFinder;
 import nc.vo.trade.billsource.LightBillVO;
-import nc.vo.wl.pub.IBillFinder2;
 /**
  * 单据查找器默认类
  * @author mlr

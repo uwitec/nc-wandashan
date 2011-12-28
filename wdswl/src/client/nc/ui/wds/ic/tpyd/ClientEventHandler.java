@@ -109,19 +109,28 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		 *       对移入托盘的校验
 		 *       同一个托盘，移入的总量 不能 超出当前托盘的容量	       
 		 */ 
-		CircularlyAccessibleValueObject[] newVos1=CombinVO.combinVoByFields(vos,new String[]{"pk_trayin"},new int[]{nc.vo.wl.pub.IUFTypes.UFD,nc.vo.wl.pub.IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
+		CircularlyAccessibleValueObject[] newVos1=CombinVO.combinVoByFields(vos,new String[]{"whs_pkin","pk_trayin"},new int[]{nc.vo.wl.pub.IUFTypes.UFD,nc.vo.wl.pub.IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
 		int  size1=newVos1.length;
 		UFDouble rnum = null;//移动主数量	
 		UFDouble rbnum = null;	//移动辅数量	
 		for(int i=0;i<size1;i++){				  
-			//移出托盘辅数量
+			//移入托盘辅数量
 		     rbnum=PuPubVO.getUFDouble_NullAsZero(newVos1[i].getAttributeValue("nmoveassnum"));
 			//从存货档案查询托盘容量
+			String whs_pkin=PuPubVO.getString_TrimZeroLenAsNull(newVos1[i].getAttributeValue("whs_pkin"));
 			String pk_invmandoc=PuPubVO.getString_TrimZeroLenAsNull(newVos1[i].getAttributeValue("pk_invmandoc"));
 			UFDouble tray_volume=PuPubVO.getUFDouble_NullAsZero(WdsWlPubTool.execFomularClient("tray_volume->getColValue(wds_invbasdoc,tray_volume,pk_invmandoc,pk_invmandoc)", new String[]{"pk_invmandoc"}, new String[]{pk_invmandoc}));				  
-			if((rbnum.sub(tray_volume)).doubleValue()>0){				 
-				throw new Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+"]移入数量超出当前托盘的最大容量");
-			}			  				
+			if(whs_pkin == null){
+				if((rbnum.sub(tray_volume)).doubleValue()>0){				 
+					throw new Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+"]移入数量超出当前托盘的最大容量");
+				}		
+			}else{
+				UFDouble whs_stockpieces=PuPubVO.getUFDouble_NullAsZero(WdsWlPubTool.execFomularClient("tray_volume->getColValue(tb_warehousestock,whs_stockpieces,whs_pk,whs_pkin)", new String[]{"whs_pkin"}, new String[]{whs_pkin}));	
+				if((rbnum.add(whs_stockpieces).sub(tray_volume)).doubleValue()>0){				 
+					throw new Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+"]移入数量超出当前托盘的可用容量");
+				}	
+			}
+					  				
 		}		
 	}
    /**

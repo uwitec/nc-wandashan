@@ -9,7 +9,7 @@ import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
- * 采购取样
+ * 托盘移动
  * @author Administrator
  *
  */

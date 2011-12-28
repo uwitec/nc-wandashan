@@ -9,7 +9,7 @@
 	import nc.vo.pub.lang.*;
 	
 /**
- * <b> 在此处简要描述此类的功能 </b>
+ * <b> 托盘移动子表</b>
  *
  * <p>
  *     在此处添加此类的描述信息
@@ -20,7 +20,11 @@
  * @version Your Project 1.0
  */
      public class TpydBVO extends SuperVO {
-    	     public String outtraycode;//移出托盘编码  -mlr
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+			public String outtraycode;//移出托盘编码  -mlr
     	     public String intarycode;//移入托盘编码  -mlr
     	     public String vbanchcode;//批次 
     	     public String pk_trayout;//移出托盘id
@@ -28,13 +32,15 @@
              public UFDouble noutassnum;//库存辅数量
              public UFDouble nmovenum;//移动数量
              public UFDouble nmoveassnum;//移动辅数量
-
+             public String whs_pkout;//移出的存货状态表ID
+             public String whs_pkin;//移入的存货状态表ID--如果移入空托盘，此项为空
+             public UFDouble tray_volume;//托盘容量
              public String pk_invmandoc;//存货管理id
              public String pk_invbasdoc;//存货基本id
              public String vbatchecode;//批次号
              public String pk_trayin;//移如托盘id
-             public UFDouble ninnum;
-             public UFDouble ninassnum;
+             public UFDouble ninnum;//移入托盘当前库存量--如果移入空托盘，此项为空
+             public UFDouble ninassnum;//移入托盘当前库存辅数量--如果移入空托盘，此项为空
            
              public String getOuttraycode() {
 				return outtraycode;
@@ -1218,5 +1224,29 @@
 				
 	   return "wds_tpyd_b"; 
 				
-	 } 
+	 }
+
+	public String getWhs_pkout() {
+		return whs_pkout;
+	}
+
+	public void setWhs_pkout(String whs_pkout) {
+		this.whs_pkout = whs_pkout;
+	}
+
+	public String getWhs_pkin() {
+		return whs_pkin;
+	}
+
+	public void setWhs_pkin(String whs_pkin) {
+		this.whs_pkin = whs_pkin;
+	}
+
+	public UFDouble getTray_volume() {
+		return tray_volume;
+	}
+
+	public void setTray_volume(UFDouble tray_volume) {
+		this.tray_volume = tray_volume;
+	} 
 } 

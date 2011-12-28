@@ -1,7 +1,6 @@
 package nc.bs.ic.tpyd;
 
 import java.util.List;
-import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
@@ -36,7 +35,7 @@ public class TpydBO {
 	/**
 	 * 
 	 * @作者：mlr
-	 * @说明：完达山物流项目 审批后的回写 对移出的托盘进行状态的更改 对移入托盘形成新的现存量
+	 * @说明：完达山物流项目 审批后的回写 对移出的托盘进行状态的更改 对移入托盘形成新的库存量
 	 * @时间：2011-7-20上午09:18:29
 	 * @throws Exception
 	 */
@@ -111,7 +110,7 @@ public class TpydBO {
 	 */
 	private void valuteInCdt(SuperVO[] vos) throws Exception {
 		SuperVO[] newVos1 = (SuperVO[]) CombinVO.combinVoByFields(vos,
-				new String[] { "pk_trayin" }, new int[] {
+				new String[] {"whs_pkin", "pk_trayin" }, new int[] {
 						nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },
 				new String[] { "nmovenum", "nmoveassnum" });
 		int size1 = newVos1.length;
@@ -130,42 +129,12 @@ public class TpydBO {
 					.getAttributeValue("pk_trayout"));
 			pk_trayin = PuPubVO.getString_TrimZeroLenAsNull(newVos1[i]
 					.getAttributeValue("pk_trayin"));
-			// 审批前的校验
-			// 查询货位托盘信息表查看移入托盘是否为空,如果为空,才允许移入
-			/*
-			 * yf modify 查询托盘状态和以占用数量,以及托盘最大容量:
-			 */
-			String sql = " select cdt_traystatus  from bd_cargdoc_tray w where isnull(w.dr,0)=0 and w.cdt_pk='"
-					+ pk_trayin + "'";
-			Object o = getBaseDAO().executeQuery(sql,
-					WdsPubResulSetProcesser.COLUMNPROCESSOR);
-
-			// yf end
-			if (o == null) {
-				throw new Exception("编码为 ["
-						+ newVos1[i].getAttributeValue("intarycode")
-						+ "]的托盘不存在");
-			}
-			cdt_traystatus = PuPubVO.getInteger_NullAs(o, -1);
-			// yf modify 实现未满托盘的自由 移动
-			// if (cdt_traystatus != StockInvOnHandVO.stock_state_null) {
-			// throw new
-			// Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+
-			// "]的托盘已经被占用");
-			// }
-			if (cdt_traystatus == StockInvOnHandVO.stock_state_lock) {
-				throw new Exception("编码为  ["
-						+ newVos1[i].getAttributeValue("intarycode")
-						+ "]的托盘已经被锁定");
-			}
-
-			// yf end
-			// 根据移入的托盘的量 形成现存量纪录
-			// 首先查处移出的托盘的现存量vo
+			String whs_pkin=PuPubVO.getString_TrimZeroLenAsNull(newVos1[i].getAttributeValue("whs_pkin"));
+			String whs_pkout=PuPubVO.getString_TrimZeroLenAsNull(newVos1[i].getAttributeValue("whs_pkout"));
 			Object o1 = getBaseDAO().retrieveByClause(
 					StockInvOnHandVO.class,
-					" isnull(tb_warehousestock.dr,0)=0 and  tb_warehousestock.pplpt_pk='"
-							+ pk_trayout + "'");
+					" isnull(tb_warehousestock.dr,0)=0 and  tb_warehousestock.whs_pk='"
+							+ whs_pkout +"'");
 			if (o1 == null) {
 				throw new Exception("编码为 ["
 						+ newVos1[i].getAttributeValue("outtraycode")
@@ -178,16 +147,43 @@ public class TpydBO {
 						+ "]的移出托盘存量为空或托盘已经不存在");
 			}
 			StockInvOnHandVO old = (StockInvOnHandVO) list.get(0);
-			hvo = (StockInvOnHandVO) old.clone();
-			if (hvo == null) {
+			if (old == null) {
 				throw new Exception("编码为 ["
 						+ newVos1[i].getAttributeValue("outtraycode")
-						+ "]的移出托盘存量为空或托盘已经不存在");
+						+ "]的移出托盘存货状态已经不存在");
 			}
-			if (cdt_traystatus == StockInvOnHandVO.stock_state_use) {
-				// 已占用托盘 进入修改模式
-				update(pk_trayin, rnum, rbnum);
-			} else {
+			UFDouble tray_volume = getTray_valume(old.getPk_invmandoc());
+			if(whs_pkin == null){//移入空托盘				
+				if((rbnum.sub(tray_volume)).doubleValue()>0){				 
+					throw new Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+"]移入数量超出当前托盘的最大容量");
+				}	
+				// 查询货位托盘信息表查看移入托盘是否为空,如果为空,才允许移入
+				/*
+				 * yf modify 查询托盘状态和以占用数量,以及托盘最大容量
+				 */
+				String sql = " select cdt_traystatus from bd_cargdoc_tray w where isnull(w.dr,0)=0 and w.cdt_pk='"
+						+ pk_trayin + "'";
+				Object o = getBaseDAO().executeQuery(sql,
+						WdsPubResulSetProcesser.COLUMNPROCESSOR);
+				// yf end
+				if (o == null) {
+					throw new Exception("编码为 ["
+							+ newVos1[i].getAttributeValue("intarycode")
+							+ "]的托盘不存在");
+				}
+				cdt_traystatus = PuPubVO.getInteger_NullAs(o, -1);
+				// yf modify 实现未满托盘的自由 移动
+				// if (cdt_traystatus != StockInvOnHandVO.stock_state_null) {
+				// throw new
+				// Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+
+				// "]的托盘已经被占用");
+				// }
+				if (cdt_traystatus == StockInvOnHandVO.stock_state_lock) {
+					throw new Exception("编码为  ["
+							+ newVos1[i].getAttributeValue("intarycode")
+							+ "]的托盘已经被锁定");
+				}
+				hvo = (StockInvOnHandVO) old.clone();
 				hvo.setPrimaryKey(null);
 				hvo.setPplpt_pk(pk_trayin);
 				hvo.setWhs_omnum(rnum);
@@ -200,9 +196,37 @@ public class TpydBO {
 				String sql1 = "update bd_cargdoc_tray set cdt_traystatus=1 where isnull(dr,0)=0 and cdt_pk='"
 						+ pk_trayin + "'";
 				getBaseDAO().executeUpdate(sql1);
+				
+			}else{
+				List<StockInvOnHandVO>  inList = (List<StockInvOnHandVO>)getBaseDAO().retrieveByClause(
+						StockInvOnHandVO.class,
+						" isnull(tb_warehousestock.dr,0)=0 and  tb_warehousestock.whs_pk='"
+								+ whs_pkin +"'");
+				if(inList == null || inList.size() ==0){
+					throw new Exception("编码为  ["
+							+ newVos1[i].getAttributeValue("intarycode")
+							+ "]的托盘对应的存货状态数据已不存在");
+				}
+				StockInvOnHandVO inhandvo = inList.get(0);
+				UFDouble whs_stocktonnage=PuPubVO.getUFDouble_NullAsZero(inhandvo.getWhs_stocktonnage());//当前库存主数量
+				UFDouble whs_stockpieces=PuPubVO.getUFDouble_NullAsZero(inhandvo.getWhs_stockpieces());//当前库存辅数量
+				if((rbnum.add(whs_stockpieces).sub(tray_volume)).doubleValue()>0){				 
+					throw new Exception("编码为  ["+newVos1[i].getAttributeValue("intarycode")+"]移入数量超出当前托盘的可用容量");
+				}
+				
+				inhandvo.setWhs_stocktonnage(whs_stocktonnage.add(rnum));
+				inhandvo.setWhs_stockpieces(whs_stockpieces.add(rbnum));
+				getBaseDAO().updateVO(inhandvo);
 			}
-
 		}
+	}
+	
+	private UFDouble getTray_valume(String pk_invmandoc) throws BusinessException{
+		String sql ="select wds_invbasdoc.tray_volume from wds_invbasdoc where isnull(wds_invbasdoc.dr,0)=0 and wds_invbasdoc.pk_invmandoc = '"
+			+ pk_invmandoc + "'";
+		Object value = getBaseDAO().executeQuery(sql,WdsPubResulSetProcesser.COLUMNPROCESSOR);
+		return PuPubVO.getUFDouble_NullAsZero(value);
+		
 	}
 
 	/**
@@ -230,8 +254,7 @@ public class TpydBO {
 
 		dnum = PuPubVO.getUFDouble_NullAsZero(svo.getWhs_stocktonnage());
 		dbnum = PuPubVO.getUFDouble_NullAsZero(svo.getWhs_stockpieces());
-		Object o1 = getBaseDAO()
-				.executeQuery(
+		Object o1 = getBaseDAO().executeQuery(
 						"select wds_invbasdoc.tray_volume from wds_invbasdoc where isnull(wds_invbasdoc.dr,0)=0 and wds_invbasdoc.pk_invmandoc = '"
 								+ svo.getPk_invmandoc() + "'",
 						WdsPubResulSetProcesser.COLUMNPROCESSOR);
@@ -268,7 +291,7 @@ public class TpydBO {
 	private void valuteOutCdt(SuperVO[] vos) throws Exception {
 		// 将移出托盘编码相同的合并到一起 将移入数量 求和
 		SuperVO[] newVos = (SuperVO[]) CombinVO.combinVoByFields(vos,
-				new String[] { "pk_trayout" }, new int[] {
+				new String[] { "whs_pkout","pk_trayout" }, new int[] {
 						nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },
 				new String[] { "nmovenum", "nmoveassnum" });
 
@@ -287,14 +310,15 @@ public class TpydBO {
 				// 按移出托盘的辅数量校验
 				pk_trayout = PuPubVO.getString_TrimZeroLenAsNull(newVos[i]
 						.getAttributeValue("pk_trayout"));
+				String  whs_pkout = PuPubVO.getString_TrimZeroLenAsNull(newVos[i].getAttributeValue("pk_trayout"));
 				rnum = PuPubVO.getUFDouble_NullAsZero(newVos[i]
 						.getAttributeValue("nmovenum"));
 				rbnum = PuPubVO.getUFDouble_NullAsZero(newVos[i]
 						.getAttributeValue("nmoveassnum"));
 				Object o = getBaseDAO().retrieveByClause(
 						StockInvOnHandVO.class,
-						" isnull(tb_warehousestock.dr,0)=0 and  tb_warehousestock.pplpt_pk='"
-								+ pk_trayout + "'");
+						" isnull(tb_warehousestock.dr,0)=0 and  tb_warehousestock.whs_pk='"
+								+ whs_pkout + "'");
 				if (o == null) {
 					throw new Exception("编码为 ["
 							+ newVos[i].getAttributeValue("outtraycode")

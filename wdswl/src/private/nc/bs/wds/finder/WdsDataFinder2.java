@@ -71,6 +71,9 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 			sql = " select distinct zz.csourcetypecode, zz.csourceid, zz.vsourcecode from to_bill_b zz where zz.cbillid = ? and nvl(zz.dr, 0) = 0 ";
 		}else if(WdsWlPubConst.WDSP.equals(billType)){//供应链调拨订单
 			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from wds_writeback4y_b2 zz where zz.pk_wds_writeback4y_h = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(WdsWlPubConst.BILLTYPE_OUT_IN.equals(billType)){//退货入库
+			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  tb_general_b zz where zz.geh_pk = ? and nvl(zz.dr,0) = 0 ";
+		
 		}else{
 			super.createSQL(billType);
 		}

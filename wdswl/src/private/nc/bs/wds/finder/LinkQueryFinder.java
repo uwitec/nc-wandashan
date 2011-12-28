@@ -33,6 +33,8 @@ public class LinkQueryFinder extends AbstractBillFinder2{
 			return new String[] {WdsWlPubConst.WDSP,WdsWlPubConst.WDSF};
 		}else if(WdsWlPubConst.WDSP.equals(type)){//wds调拨入库
 			return new String[] {WdsWlPubConst.GYL4E};
+		}else if(WdsWlPubConst.BILLTYPE_OUT_IN.equals(type)){
+			return new String[]{"4C"};//销售出库单
 		}
 		return null;
 	}

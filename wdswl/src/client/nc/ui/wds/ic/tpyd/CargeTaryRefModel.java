@@ -19,7 +19,7 @@ public class CargeTaryRefModel extends AbstractRefModel {
      * getDefaultFieldCount 方法注解。
      */
     public int getDefaultFieldCount() {
-	return 7;
+	return 8;
     }
 
     /**
@@ -33,9 +33,10 @@ public class CargeTaryRefModel extends AbstractRefModel {
 			"bd_invbasdoc.invcode",
 			"bd_invbasdoc.invname",
 			"wds_invbasdoc.tray_volume",//托盘容量--辅数量
-			"tb_warehousestock.whs_stocktonnage",
-			"tb_warehousestock.whs_stockpieces",
-			"tb_warehousestock.whs_batchcode",
+			"tb_warehousestock.whs_stocktonnage",//主数量
+			"tb_warehousestock.whs_stockpieces",//辅数量
+			"tb_warehousestock.whs_stocktonnage/tb_warehousestock.whs_stockpieces nhls",
+			"tb_warehousestock.whs_batchcode",//批次号
 			"tb_warehousestock.whs_lbatchcode",
 			"tb_warehousestock.pk_invmandoc",
 			"tb_warehousestock.pk_invbasdoc",
