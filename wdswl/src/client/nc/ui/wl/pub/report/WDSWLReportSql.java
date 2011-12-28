@@ -448,6 +448,56 @@ public class WDSWLReportSql {
 		return sql.toString();
 	}
 	/**
+	 * 查询销售订单 关联 销售运单
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-28上午10:03:47
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getOrdertoYunDan(String whereSql){
+	    StringBuffer sql = new StringBuffer();			
+		sql.append(" select h.vreceiptcode  ordercode, ");//单据号  
+		sql.append(" h1.vbillno  ,");//运单号
+		sql.append(" h1.pk_outwhouse pk_stordoc ,");//发货仓库
+		sql.append(" h.dbilldate, ");  //订单日期
+		sql.append(" h.ccustomerid ccustomerid, ");//  客商id   
+		sql.append(" iv.fuesed chtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
+		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
+		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id 
+		sql.append(" h1.vcardno carcode,");//车号
+		sql.append(" h1.vdriver vdrivername,");//承运人
+		sql.append(" h1.pk_transcorp pk_transcorp,");//承运公司
+		sql.append(" h1.dacceptdate sorderdate,");//收订单日期
+		sql.append(" h1.ddispachdate cartime,");//派车时间
+		sql.append(" h1.dbilldate forderdate,");//发订单日期
+		sql.append(" h1.dsenddate djrfh,");//第几日发货
+		sql.append(" h1.pk_sendareal pk_sendareal,");//销售区域
+		sql.append(" h1.vtelphone jxstel,");//客商电话
+		sql.append(" h1.nruntime zcyxtime,");//正常运行时间		
+		sql.append(" b1.noutnum num, ");  //累积出库数量
+		sql.append(" b1.nassoutnum ");//累积出库辅数量		
+		sql.append(" from so_sale h ");
+		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
+		sql.append(" join wds_soorder_b b1 on b.corder_bid=b1.csourcebillbid ");
+		sql.append(" join wds_soorder h1 on b1.pk_soorder=b1.pk_soorder ");
+		sql.append(" left join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" where isnull(h.dr, 0) = 0 ");
+		sql.append(" and isnull(b.dr, 0) = 0 ");
+		sql.append(" and isnull(b1.dr,0) = 0");
+		sql.append(" and isnull(h1.dr,0) =0 ");
+		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
+		if(whereSql!=null && whereSql.length()!=0)
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();		
+	}
+	/**
 	 * 获得查询销售待发 数据的语句
 	 * 查询  销售订单  和 物流销售出库单
 	 * @作者：mlr
@@ -458,14 +508,14 @@ public class WDSWLReportSql {
 	 * @return
 	 */
 	public static String getOrderDaiFaSql(String whereSql){
-		StringBuffer sql = new StringBuffer();	
+		StringBuffer sql = new StringBuffer();			
 		sql.append(" select h.vreceiptcode billcode, ");//单据号  
-//		sql.append(" h.dbilldate, ");  //订单日期
-//		sql.append(" h.ccustomerid, ");//  客商id   
+		sql.append(" tbh.pk_stordoc pk_stordoc,");//发货仓库
+		sql.append(" h.dbilldate, ");  //订单日期
+		sql.append(" h.ccustomerid, ");//  客商id   
 //		sql.append(" h.dmakedate,");   //制单日期     
 		sql.append(" iv.fuesed invtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
-		sql.append(" tbh.pk_stordoc pk_stordoc,");//发货仓库
 		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
 		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
 //		sql.append(" b.cunitid,");   //主单位
@@ -491,6 +541,45 @@ public class WDSWLReportSql {
 		sql.append(" and isnull(b.dr, 0) = 0 ");
 		sql.append(" and isnull(tb.dr,0) = 0");
 		sql.append(" and isnull(tbh.dr,0) =0 ");
+		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
+		sql.append(" and "+whereSql);
+		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
+		return sql.toString();
+	}
+	/**
+	 * 获得查询销售待发 数据的语句
+	 * 查询  销售订单  和 物流销售出库单
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-2下午03:05:50
+	 * @param pk_corp
+	 * @param whereSql
+	 * @return
+	 */
+	public static String getOrderDaiFaSql1(String whereSql){
+		StringBuffer sql = new StringBuffer();			
+		sql.append(" select h.vreceiptcode billcode, ");//单据号  
+		sql.append(" h.dbilldate, ");  //订单日期
+		sql.append(" h.ccustomerid, ");//  客商id   
+		sql.append(" iv.fuesed chtype,");//存货类型 常用0  不常用1		
+		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
+		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
+		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
+		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id  
+		sql.append(" b.nnumber, ");  //订单数量
+	//	sql.append(" b.npacknumber, ");   //订单辅数量
+		sql.append(" b1.noutnum num,");//物流销售出库单实发数量
+	//	sql.append(" b1.noutassistnum bnum");//物流销售出库单实发辅数量
+		sql.append(" b.ntaldcnum,"); //累积出库数量  
+		sql.append(" from so_sale h ");
+		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
+		sql.append(" left join tb_outgeneral_b b1 on b.corder_bid=b1.cfirstbillbid and isnull(b1.dr,0)=0");
+		sql.append(" left join wds_invbasdoc iv");//关联存货档案
+		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
+		sql.append(" left join wds_invcl cl ");//关联存货分类
+		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" where isnull(h.dr, 0) = 0 ");
+		sql.append(" and isnull(b.dr, 0) = 0 ");
 		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
 		sql.append(" and "+whereSql);
 		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
