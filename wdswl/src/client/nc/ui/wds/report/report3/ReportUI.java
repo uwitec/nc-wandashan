@@ -65,7 +65,23 @@ public class ReportUI extends ZmReportBaseUI2 {
 		        	}
 		        }
 		    }
-		 }
+		    String[] query1=que[i].split(">=");
+		         if("(dbilldate".equals(query1[0].trim())){
+		        	 if(querys2==null){
+	    	            querys2="( geh_dbilldate >="+ query1[1];
+		        	 }else{
+		        		 querys2=querys2+"and (geh_dbilldate >="+query1[1];
+		        	 }
+	              } 
+		    String[] query2=que[i].split("<=");
+		         if("(dbilldate".equals(query2[0].trim())){
+		        	 if(querys2==null){
+	    	            querys2="( geh_dbilldate <="+ query2[1];
+		        	 }else{
+		        		 querys2=querys2+"and (geh_dbilldate <="+query2[1];
+		        	 }
+	              }
+		     }
 		}
 	
 		return new String[] {
