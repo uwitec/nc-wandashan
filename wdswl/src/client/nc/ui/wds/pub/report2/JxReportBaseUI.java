@@ -225,6 +225,26 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
     	}
     	return name.substring(2,name.lastIndexOf("展开"));
     }
+    /**
+     * 报表数据处理的步骤
+     * (设置数据到ui之前处理)
+     * 查询
+     * 
+     * 过滤(一般按 处理数据所在表的id进行数据过滤)
+     * 
+     * 分组
+     * 
+     * 合并
+     * 
+     * 汇总
+     * 
+     * 追加
+     * (设置数据到ui之后处理)
+     * 交叉  
+     * 
+     * 合计
+     *
+     */
 	@Override
 	public void onQuery() {
 		getQueryDlg().showModal();

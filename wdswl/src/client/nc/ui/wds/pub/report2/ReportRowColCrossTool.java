@@ -134,7 +134,7 @@ public class ReportRowColCrossTool {
 		Vector vecBodyDataVec = getReportGeneralUtil(ui).mrs2Vector(mrsCrs);
 		ui.getReportBase().getBillModel().setDataVector(vecBodyDataVec);	
 	  //  onTotal(ui,5);
-		createItem(fgvos, ui,true);
+		createItem(fgvos, ui,false);
 		ui.getBodyDataVO();
 		//ui.getReportBase().getBillModel().execLoadFormula();
 		
@@ -232,10 +232,13 @@ public class ReportRowColCrossTool {
 		  for (int i = 0; i < fgvos1.length; i++) {
 			String[] cbs = fgvos1[i].getGroupname().split("бе");
 			size = cbs.length;
-			String colName = cbs[cbs.length - 1];
-			String name = "";
-			for (int k = 0; k < cbs.length - 1; k++) {
+			 String colName="%";
+			 String name = "%";
+			if(size!=0){
+			  colName = cbs[cbs.length - 1];
+			 for (int k = 0; k < cbs.length - 1; k++) {
 				name = name + cbs[k];
+			 }
 			}
 			ZmColumnGroup cp = new ZmColumnGroup(colName);
 			cp.setParentName(name);
@@ -278,8 +281,11 @@ public class ReportRowColCrossTool {
 			List<ZmColumnGroup> flist = new ArrayList<ZmColumnGroup>();
 			for (int i = 0; i < fgvos1.length; i++) {
 				String[] cbs = fgvos1[i].getGroupname().split("бе");
-				String name = cbs[x];
-				String sname = "";
+				String name ="%";
+				String sname = "%";
+				if(cbs.length!=0){
+				 name = cbs[x];
+				}
 				for (int k = 0; k < x; k++) {
 					sname = sname + cbs[k];
 				}
@@ -727,7 +733,7 @@ public class ReportRowColCrossTool {
 		
 		 ui.getReportBase().getBillModel().getBodyValueVOs(vos);
 	  //  onTotal(ui,5);
-		createItem(fgvos, ui,true);
+		createItem(fgvos, ui,false);
 		ui.getBodyDataVO();
 		ui.setBodyDataVO(vos, true);
 		//ui.getReportBase().getBillModel().execLoadFormula();

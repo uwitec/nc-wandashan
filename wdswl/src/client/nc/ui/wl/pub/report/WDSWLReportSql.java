@@ -448,7 +448,7 @@ public class WDSWLReportSql {
 		return sql.toString();
 	}
 	/**
-	 * 查询销售订单 关联 销售运单
+	 * 查询销售订单 关联  销售运单 关联 供应链的销售出库单
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-12-28上午10:03:47
@@ -457,7 +457,7 @@ public class WDSWLReportSql {
 	 */
 	public static String getOrdertoYunDan(String whereSql){
 	    StringBuffer sql = new StringBuffer();			
-		sql.append(" select h.vreceiptcode  billcode, ");//单据号  
+		sql.append(" select h.vreceiptcode  ordercode, ");//单据号  
 		sql.append(" h1.vbillno  ,");//运单号
 		sql.append(" h1.pk_outwhouse pk_stordoc ,");//发货仓库
 		sql.append(" h.dbilldate, ");  //订单日期
@@ -465,24 +465,33 @@ public class WDSWLReportSql {
 		sql.append(" iv.fuesed chtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
 		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
-		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
+		sql.append(" b1.pk_soorder_b  b_pk,");//销售订单子表id
+		sql.append(" b1.pk_soorder_b b_pk1,");//销售运单子表id
 		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id 
 		sql.append(" h1.vcardno carcode,");//车号
 		sql.append(" h1.vdriver vdrivername,");//承运人
 		sql.append(" h1.pk_transcorp pk_transcorp,");//承运公司
-		sql.append(" h1.dacceptdate sorderdate,");//收订单日期
+		sql.append(" h.dapprovedate sorderdate,");//收订单日期 （订单的签字时间）
+
+	//	sql.append(" h1.dacceptdate sorderdate,");//收订单日期
 		sql.append(" h1.ddispachdate cartime,");//派车时间
 		sql.append(" h1.dbilldate forderdate,");//发订单日期
 		sql.append(" h1.dsenddate djrfh,");//第几日发货
 		sql.append(" h1.pk_sendareal pk_sendareal,");//销售区域
 		sql.append(" h1.vtelphone jxstel,");//客商电话
 		sql.append(" h1.nruntime zcyxtime,");//正常运行时间		
-		sql.append(" b1.noutnum num, ");  //累积出库数量
-		sql.append(" b1.nassoutnum ");//累积出库辅数量		
+	//	sql.append(" b.nnumber, ");  //订单数量
+	//	sql.append(" b1.noutnum num,");//物流销售出库单实发数量
+	//	sql.append(" b.ntaldcnum,"); //订单累积出库数量  
+		sql.append(" b1.noutnum num, ");  //运单累积出库数量
+	//	sql.append(" b1.nassoutnum ,");//累积出库辅数量	
+		sql.append(" ich.pk_defdoc11");//出入库标示
 		sql.append(" from so_sale h ");
 		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
 		sql.append(" join wds_soorder_b b1 on b.corder_bid=b1.csourcebillbid ");
 		sql.append(" join wds_soorder h1 on b1.pk_soorder=b1.pk_soorder ");
+		sql.append(" left join ic_general_b icb on b.corder_bid=icb.csourcebillbid and isnull(icb.dr,0)=0");
+		sql.append(" left join ic_general_h ich on icb.cgeneralhid=ich.cgeneralhid and isnull(ich.dr,0)=0");
 		sql.append(" left join wds_invbasdoc iv");//关联存货档案
 		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
 		sql.append(" left join wds_invcl cl ");//关联存货分类
@@ -499,7 +508,7 @@ public class WDSWLReportSql {
 	}
 	/**
 	 * 获得查询销售待发 数据的语句
-	 * 查询  销售订单  和 物流销售出库单
+	 * 查询  销售订单  和  物流销售出库单
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-12-2下午03:05:50
@@ -566,6 +575,7 @@ public class WDSWLReportSql {
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
 		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
 		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
+	    sql.append(" b1.general_b_pk b_pk1,");//物流销售出库子表 id
 		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id  
 		sql.append(" b.nnumber, ");  //订单数量
 		sql.append(" b1.noutnum num,");//物流销售出库单实发数量

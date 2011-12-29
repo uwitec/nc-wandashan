@@ -96,6 +96,59 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 																	 * "小计合计成功"
 																	 */);
 	}
+	/**
+	 * 自动进行数据合计
+	 */
+	public void atuoexecute2(boolean issub,boolean issum,String[] totfields,String[] totfieldsNames) throws Exception {
+	    subTotalCurrentUsingGroupFields = new TableField[0];
+        SubTotalCurrentUsingTotalFields = new TableField[0];
+        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+			this.issub = issub;
+			this.issum = issum;
+			isshow=dlg.isLevelCompute();
+			if(totfields==null || totfields.length==0){
+			    setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
+			}
+			else{
+				setSubTotalCurrentUsingGroupFields(getTableFields(totfields,totfieldsNames));
+			}
+			setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
+	//		getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+
+			executeSubTotal();
+            dealShow();
+			getReportBaseUI()
+					.showHintMessage(
+							nc.ui.ml.NCLangRes.getInstance().getStrByID(
+									"uifactory_report",
+									"UPPuifactory_report-000022")/*
+																	 * @res
+																	 * "小计合计成功"
+																	 */);
+	}
+	/**
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-29下午06:05:52
+	 * @param totfields
+	 * @param totfieldsNames
+	 * @return
+	 */
+	public TableField[] getTableFields(String[]totfields,String[] totfieldsNames){
+		if(totfields==null || totfields.length==0)
+			return null;
+		if(totfieldsNames==null || totfieldsNames.length==0)
+			return null;
+		if(totfields.length!=totfieldsNames.length){
+			return null;
+		}
+		TableField[] tbs=new TableField[totfields.length];
+		for(int i=0;i<tbs.length;i++){
+			tbs[i]=new TableField(totfields[i].trim(),totfieldsNames[i].trim(),false);
+		}
+		return tbs;
+	}
     /**
      * 处理是否只显示原始行
      * @author mlr
