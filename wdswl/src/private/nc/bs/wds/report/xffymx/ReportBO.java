@@ -28,8 +28,8 @@ public class ReportBO {
         sql.append(" bd_invbasdoc.invspec invspec,");//规格
         sql.append(" tb_outgeneral_h.pk_cargdoc pk_cargdoc,");//货位
 		sql.append(" tb_outgeneral_b.vbatchcode  vbatchcode," );//批次号
-		sql.append(" tb_outgeneral_b.noutnum  noutnum," );//数量吨
-		sql.append(" tb_outgeneral_b.noutassistnum noutassistnum," );//数量箱
+		sql.append(" sum(tb_outgeneral_b.noutnum)  noutnum," );//数量吨
+		sql.append(" sum(tb_outgeneral_b.noutassistnum) noutassistnum," );//数量箱
 		sql.append(" tb_outgeneral_b.cinvbasid  cinvbasid," );//存货id
 		sql.append(" tb_outgeneral_b.cinventoryid  cinventoryid," );//存货管理id
 		sql.append(" wds_invbasdoc.vdef2 vdef2," );//存货分类编码
@@ -40,10 +40,10 @@ public class ReportBO {
 		sql.append("  tb_storcubasdoc.pk_cubasdoc pk_cubasdoc," );//客商基本档案
 		sql.append("  tb_storcubasdoc. pk_cumandoc  pk_cumandoc ," );//客商管理档案
 		sql.append("  tb_storcubasdoc.  pk_defdoc pk_defdoc," );//销售区域
-		sql.append("  so_sale.vreceiptcode jdcode, ");
+		sql.append("  so_sale.vreceiptcode jdcode, ");  //订单号
 		sql.append("  wds_soorder.pk_transcorp pk_transcorp,");//--承运商
 		sql.append("  wds_soorder.vcardno vcardno," );//车号
-		  sql.append(" wds_soorder.dmakedate dmakedate, ");  //日期
+		  sql.append(" so_sale.dmakedate dmakedate, ");  //日期
 		sql.append("   wds_soorder.vdriver vdriver" );//司机
 		sql.append("   from tb_outgeneral_h" );
 		sql.append("   join tb_outgeneral_b on tb_outgeneral_h.general_pk=tb_outgeneral_b.general_pk " );
@@ -68,8 +68,15 @@ public class ReportBO {
 		sql.append(" and  isnull(so_sale.dr,0)=0  ");
 	
 		
-//		sql.append(" group by  bd_cargdoc.csname,bd_stordoc.storname,bd_invbasdoc.invcode,bd_invbasdoc.invname,tb_stockstate.ss_state ");//分类汇总
-//		sql.append(" order by  bd_cargdoc.csname,bd_stordoc.storname ");  
+		sql.append(" group by  bd_cubasdoc.custcode ,  wds_invbasdoc.vdef2 , wds_invbasdoc.vdef1,");
+	   sql.append(" bd_cubasdoc.custname , tb_outgeneral_b.cinvbasid ,tb_outgeneral_b.cinventoryid ,");
+	   sql.append(" bd_invbasdoc.invcode ,  wds_invbasdoc.fuesed , wds_storecust_h.pk_stordoc ,");
+		sql.append(" bd_invbasdoc.invname ,  tb_storcubasdoc.pk_cubasdoc,   tb_storcubasdoc. pk_cumandoc ,");
+		sql.append("bd_invbasdoc.invspec ,  tb_storcubasdoc. pk_defdoc , wds_soorder.vcardno ,");
+       sql.append("tb_outgeneral_h.pk_cargdoc ,   so_sale.vreceiptcode , wds_soorder.pk_transcorp ,");
+    	sql.append(" tb_outgeneral_b.vbatchcode ,  so_sale.dmakedate ,wds_soorder.vdriver  ");//分类汇总
+       		
+		sql.append(" order by so_sale.dmakedate ");  
 		List ldata = (List)getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
 		if(ldata == null || ldata.size() == 0){
 			return null;
