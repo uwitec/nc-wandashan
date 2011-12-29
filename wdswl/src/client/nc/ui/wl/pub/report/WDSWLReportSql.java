@@ -457,7 +457,7 @@ public class WDSWLReportSql {
 	 */
 	public static String getOrdertoYunDan(String whereSql){
 	    StringBuffer sql = new StringBuffer();			
-		sql.append(" select h.vreceiptcode  ordercode, ");//单据号  
+		sql.append(" select h.vreceiptcode  billcode, ");//单据号  
 		sql.append(" h1.vbillno  ,");//运单号
 		sql.append(" h1.pk_outwhouse pk_stordoc ,");//发货仓库
 		sql.append(" h.dbilldate, ");  //订单日期
@@ -548,7 +548,7 @@ public class WDSWLReportSql {
 	}
 	/**
 	 * 获得查询销售待发 数据的语句
-	 * 查询  销售订单  和 物流销售出库单
+	 * 查询  销售订单  供应链销售出库单 物流销售出库单
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-12-2下午03:05:50
@@ -559,20 +559,22 @@ public class WDSWLReportSql {
 	public static String getOrderDaiFaSql1(String whereSql){
 		StringBuffer sql = new StringBuffer();			
 		sql.append(" select h.vreceiptcode billcode, ");//单据号  
-		sql.append(" h.dbilldate, ");  //订单日期
+	//	sql.append(" h.dbilldate, ");  //订单日期
 		sql.append(" h.ccustomerid, ");//  客商id   
+		sql.append(" h.dapprovedate reordedate,");//收订单日期 （订单的签字时间）
 		sql.append(" iv.fuesed chtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
 		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
 		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
 		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id  
 		sql.append(" b.nnumber, ");  //订单数量
-	//	sql.append(" b.npacknumber, ");   //订单辅数量
 		sql.append(" b1.noutnum num,");//物流销售出库单实发数量
-	//	sql.append(" b1.noutassistnum bnum");//物流销售出库单实发辅数量
 		sql.append(" b.ntaldcnum,"); //累积出库数量  
+		sql.append(" ich.pk_defdoc11");//出入库标示
 		sql.append(" from so_sale h ");
-		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
+		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");	
+		sql.append(" left join ic_general_b icb on b.corder_bid=icb.csourcebillbid and isnull(icb.dr,0)=0");
+		sql.append(" left join ic_general_h ich on icb.cgeneralhid=ich.cgeneralhid and isnull(ich.dr,0)=0");
 		sql.append(" left join tb_outgeneral_b b1 on b.corder_bid=b1.cfirstbillbid and isnull(b1.dr,0)=0");
 		sql.append(" left join wds_invbasdoc iv");//关联存货档案
 		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
@@ -581,6 +583,7 @@ public class WDSWLReportSql {
 		sql.append(" where isnull(h.dr, 0) = 0 ");
 		sql.append(" and isnull(b.dr, 0) = 0 ");
 		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
+		if(whereSql!=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
 		sql.append(" and h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");				
 		return sql.toString();

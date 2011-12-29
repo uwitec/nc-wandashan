@@ -328,6 +328,9 @@ public class WdsWlPubConst {
     public static String report4="80100245";//出入库月汇总(合计)
     public static String report5="80100240";//物流香粉发运台账
     public static String report6="80100243";//物流香粉发运台账(汇总)
+    public static String report7="80100255";//物流香粉待发运台账
+    public static String report8="80100260";//物流香粉待发运台账(汇总)
+
 
    
 	

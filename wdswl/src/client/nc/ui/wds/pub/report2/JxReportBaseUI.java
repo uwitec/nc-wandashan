@@ -262,7 +262,7 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
 		
 	}
 
-	public ReportBaseVO[] dealBeforeSetUI(ReportBaseVO[] vos) {
+	public ReportBaseVO[] dealBeforeSetUI(ReportBaseVO[] vos) throws Exception{
 		return vos;
 	}
 

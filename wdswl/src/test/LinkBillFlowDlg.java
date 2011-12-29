@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+
 import nc.ui.ml.NCLangRes;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIMenu;
