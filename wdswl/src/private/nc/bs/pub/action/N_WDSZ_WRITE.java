@@ -32,13 +32,13 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 		Object retObj = null;
 		//		回写来源数量
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])getVo().getChildrenVO();
-		if(bodys == null || bodys.length == 0)
-			throw new BusinessException("表体数据为空");
-
-		WriteBackTool.setVsourcebillrowid("cfirstbillbid");
-		WriteBackTool.setVsourcebillid("cfirstbillhid");
-		WriteBackTool.setVsourcebilltype("cfirsttype");
-		WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
+		if(bodys != null && bodys.length > 0){
+			WriteBackTool.setVsourcebillrowid("cfirstbillbid");
+			WriteBackTool.setVsourcebillid("cfirstbillhid");
+			WriteBackTool.setVsourcebilltype("cfirsttype");
+			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
+		}
+		
 		//		回写结束
 		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		return retObj;

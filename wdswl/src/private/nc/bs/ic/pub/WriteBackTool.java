@@ -53,6 +53,8 @@ public class WriteBackTool{
 	 * @param backfieldnames 来源表回写对应字段
 	 */
 	public static void writeBack(SuperVO[] vos,String soutablename,String soutableidname,String[] fieldnames,String[] backfieldnames)throws Exception{
+		if(vos == null || vos.length == 0)
+			return;
 		//区分回写的vo类型 
 		splitSetMap(vos,soutablename,soutableidname,fieldnames,backfieldnames);
 		//进行数据的回写
@@ -293,7 +295,7 @@ public class WriteBackTool{
 		List<String> lsouid = new ArrayList<String>();
 		String tmps = null;
 		for(SuperVO vo:vos){
-			tmps = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillid));
+			tmps = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(vsourcebillrowid));
 			if(tmps == null || lsouid.contains(tmps))
 				continue;
 			lsouid.add(tmps);			 
@@ -312,7 +314,7 @@ public class WriteBackTool{
 		for(int i = 0;i<backfieldnames.length;i++){
 			if(i>0)
 				str.append(" or ");
-			str.append("  coalesce("+checkfieldnames[i]+",0.0)-coalesce("+backfieldnames[i]+",0.0)<0 ");
+			str.append("  abs(coalesce("+checkfieldnames[i]+",0.0))-abs(coalesce("+backfieldnames[i]+",0.0))<0 ");
 		}	
 		str.append(" )");
 		int ivalue = PuPubVO.getInteger_NullAs(getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);

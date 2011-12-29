@@ -295,6 +295,12 @@ public class AlloInEventHandler extends InPubEventHandler {
 		}
 		super.onBoLineCopy();
 	}
+
+	@Override
+	protected String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.BILLTYPE_ALLO_IN;
+	}
 	
 
 }

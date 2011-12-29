@@ -26,12 +26,14 @@ import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
+import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public abstract class InPubEventHandler extends WdsPubEnventHandler {
@@ -242,6 +244,8 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		if(vos != null && vos.length > 0 ){
 			for(TbGeneralBVO v : vos){
 			//	if(v.getPrimaryKey() !=null && v.getPrimaryKey().length()!=0){
+				if(v.getStatus() == VOStatus.DELETED)//删除的行不进行校验
+					continue;
 				v.validateOnSave();
 				List<TbGeneralBBVO> list = v.getTrayInfor();
 				for(TbGeneralBBVO b : list){
@@ -366,10 +370,15 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		
 		super.onBoLineCopy();
 	}
+	
+	protected abstract String getBillType();
 
 	@Override
 	protected void onBoLinePaste() throws Exception {
 		super.onBoLinePaste();
+//		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
+//				getBillType(), "geb_crowno");
+		BillRowNo.pasteLineRowNo(getBillCardPanelWrapper().getBillCardPanel(), getBillType(), "geb_crowno", 1);
 	}
 
 	/**

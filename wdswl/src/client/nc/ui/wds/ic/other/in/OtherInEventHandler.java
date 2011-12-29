@@ -230,5 +230,10 @@ public class OtherInEventHandler extends InPubEventHandler {
 			e.printStackTrace();
 		  
 	   }
+	}
+	@Override
+	protected String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.BILLTYPE_OTHER_IN;
 	}	
 }
