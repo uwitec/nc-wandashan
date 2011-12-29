@@ -179,28 +179,20 @@ public class ChangeTo4C {
 		//
 		for(TbGeneralBVO bvo:bvos){
 			String key = bvo.getGeb_pk();
-//			String str = " geb_pk ='"+key+"'";
-//			TbGeneralBBVO[] tvos = (TbGeneralBBVO[] )getHypubBO().queryByCondition(TbGeneralBBVO.class, str	);
-//			bvos[i].setTrayInfor(Arrays.asList(tvos));
-//			List<TbGeneralBBVO> list = bvos[i].getTrayInfor();
-//			if(list == null || list.size() == 0)
-//				continue;
-//			for(int j =0 ;j < list.size();j++){
-//				TbGeneralBBVO tvo = list.get(j);
-				LocatorVO lvo = new LocatorVO();
-				lvo.setPk_corp(outhvo.getPk_corp());
-				lvo.setNoutspacenum(bvo.getGeb_anum().multiply(-1));
-				lvo.setNoutspaceassistnum(bvo.getGeb_banum().multiply(-1));
-				lvo.setCspaceid(bvo.getGeb_space());//货位
-				lvo.setStatus(VOStatus.NEW);
-				if(l_map.containsKey(key)){
-					l_map.get(key).add(lvo);
-				}else{
-					ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
-					zList.add(lvo);
-					l_map.put(key, zList);
-				}
-//			}
+			LocatorVO lvo = new LocatorVO();
+			lvo.setPk_corp(outhvo.getPk_corp());
+			lvo.setNoutspacenum(bvo.getGeb_anum().multiply(-1));
+			lvo.setNoutspaceassistnum(bvo.getGeb_banum().multiply(-1));
+			lvo.setCspaceid(bvo.getGeb_space());//货位
+			lvo.setStatus(VOStatus.NEW);
+			if(l_map.containsKey(key)){
+				l_map.get(key).add(lvo);
+			}else{
+				ArrayList<LocatorVO> zList = new ArrayList<LocatorVO>();
+				zList.add(lvo);
+				l_map.put(key, zList);
+			}
+			//			}
 		}
 	}
 	/**

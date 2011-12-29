@@ -34,6 +34,8 @@ import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.write.back4y.MultiBillVO;
 import nc.vo.wds.ic.write.back4y.Writeback4yB2VO;
 import nc.vo.wds.ic.write.back4y.Writeback4yHVO;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 销售出库回传单 传 供应链调拨入库
  * @author liuys
@@ -267,7 +269,7 @@ public class ChangeTo4E {
 						bill.getItemVOs()[i].setVbatchcode(para);
 					}
 					//设置货位信息
-					String key  = bill.getItemVOs()[i].getCfirstbillbid();
+					String key  = WdsWlPubTool.getString_NullAsTrimZeroLen(bill.getItemVOs()[i].getAttributeValue(WdsWlPubConst.csourcebid_wds));
 					ArrayList<LocatorVO> lvo = l_map.get(key);
 					if(lvo!=null && lvo.size()>0){
 						bill.getItemVOs()[i].setLocator(lvo.toArray(new LocatorVO[0]));

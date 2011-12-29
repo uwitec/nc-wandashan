@@ -15,6 +15,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.para.SysInitVO;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class WdsWlIcPubDealTool {
@@ -103,7 +104,7 @@ public class WdsWlIcPubDealTool {
 				item.setVbatchcode(returnBatchcode);
 			}
 			//设置货位信息
-			String key  = item.getCfirstbillbid();
+			String key  = WdsWlPubTool.getString_NullAsTrimZeroLen(item.getAttributeValue(WdsWlPubConst.csourcebid_wds));
 			ArrayList<LocatorVO> lvo = l_map.get(key);
 			if(lvo!=null && lvo.size()>0){
 				item.setLocator(lvo.toArray(new LocatorVO[0]));
