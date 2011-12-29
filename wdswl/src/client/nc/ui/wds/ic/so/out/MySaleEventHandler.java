@@ -275,8 +275,8 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		try{
 			if (getBufferData().getCurrentVO()!=null){
 				getBillManageUI().showHintMessage("正在执行取消签字...");
-				int retu = getBillManageUI().showOkCancelMessage("确认取消签字?");
-				if (retu != 1) {
+				int retu = getBillManageUI().showOkCancelMessage("取消签字会删除下游装卸费核算单，是否确认取消签字?");
+				if (retu != UIDialog.ID_OK) {
 					return;
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();

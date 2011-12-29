@@ -84,16 +84,16 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		try{
 			if (getBufferData().getCurrentVO()!=null){
 				getBillManageUI().showHintMessage("正在执行取消签字...");
-				int retu = getBillManageUI().showOkCancelMessage("确认取消签字?");
+				int retu = getBillManageUI().showOkCancelMessage("取消签字，会删除装卸费核算单，确认取消签字?");
 				if (retu != 1) {
 					return;
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();
 				TbGeneralHVO tbGeneralHVOss = (TbGeneralHVO)aObject.getParentVO();
-				if(tbGeneralHVOss.getFisload() != null &&tbGeneralHVOss.getFisload().equals(UFBoolean.TRUE)){
-					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
-					return ;
-				}
+//				if(tbGeneralHVOss.getFisload() != null &&tbGeneralHVOss.getFisload().equals(UFBoolean.TRUE)){
+//					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
+//					return ;
+//				}
 //				if(tbGeneralHVOss.getFistran() != null &&tbGeneralHVOss.getFistran().equals(UFBoolean.TRUE)){
 //					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
 //					return ;
