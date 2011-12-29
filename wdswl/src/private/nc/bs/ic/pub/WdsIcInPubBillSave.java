@@ -1,8 +1,8 @@
 package nc.bs.ic.pub;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.pub.SuperDMO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
@@ -11,6 +11,7 @@ import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.SQLParameter;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
@@ -27,9 +28,9 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
-import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
+
 public class WdsIcInPubBillSave extends BillSave {
 	private SuperDMO dmo = new SuperDMO();
 	private SuperDMO getSuperDMO(){
@@ -88,21 +89,31 @@ public class WdsIcInPubBillSave extends BillSave {
 			throw new BusinessException("传入数据为空");
 		boolean isAdd = false;
 		boolean bodyChanged = false;
-		AggregatedValueObject oldbillVo = VOTool.aggregateVOClone(billVo);
+		
+		AggregatedValueObject oldbillVo = null;//备份原始单据信息
+		try {
+			oldbillVo = (AggregatedValueObject)ObjectUtils.serializableClone(billVo);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			throw new BusinessException(e1);
+		}
+		
 		TbGeneralHVO head = (TbGeneralHVO)billVo.getParentVO();
+		
 		Map<String, SmallTrayVO[]> lockTrayInfor = (Map<String, SmallTrayVO[]>)((OtherInBillVO)billVo).getOUserObj();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////////
+		
 		TbGeneralBVO[] obodys = (TbGeneralBVO[])billVo.getChildrenVO();
+		
 		//过滤掉删除行  zhf add
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(obodys, new filterDelLine());
 		billVo.setChildrenVO(bodys);
-//		UFDouble nallnum = WdsWlPubTool.DOUBLE_ZERO;
-//		if(bodys == null||bodys.length ==0){	
-//			throw new BusinessException("表体数据为空");
-//			
-//		}
-//		bodyChanged = true;
+
 		if(null != bodys && bodys.length > 0){
 			//yf记录表体是否有改动
 			bodyChanged = true;
@@ -115,16 +126,20 @@ public class WdsIcInPubBillSave extends BillSave {
 //		zhf add  校验  虚拟托盘的绑定关系
 		getLockTrayBO().checkInBillOnSave(lockTrayInfor, bodys, head.getGeh_cwarehouseid(), head.getPk_cargdoc());
 		
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		
 		if(!isAdd && bodyChanged){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
-			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),bodys);
+			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),(TbGeneralBVO[])oldbillVo.getChildrenVO());
 		}
+		
 		//回写必须在保存之前，保存之后再在同一事务中新数据和旧数据会完全一样，并且保存之后vo的状态不再是修改状态
 		try {
 			WriteBackTool.writeBack((SuperVO[])(billVo.getChildrenVO()), "tb_outgeneral_b", "general_b_pk", new String[]{"geb_nmny"}, new String[]{"ntagnum"});
 		} catch (Exception e) {
 			
-			throw new BusinessException(e.getMessage());
+			throw new BusinessException(e);
 		}
+		
 		getOutBO().writeBackForInBill((OtherInBillVO)oldbillVo,IBDACTION.SAVE,isAdd);
 		
 		java.util.ArrayList retAry = super.saveBill(billVo);
