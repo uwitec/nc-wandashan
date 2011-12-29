@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.swing.ListSelectionModel;
 
+import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
 import nc.ui.wds.pub.report2.ReportRowColCrossTool;
 import nc.ui.wds.pub.report2.ZmReportBaseUI2;
 import nc.ui.wl.pub.CombinVO;
@@ -107,7 +108,7 @@ public class ReportUI extends ZmReportBaseUI2 {
      * ºÏ¼Æ
      */
     public void setTolal1() throws Exception {
-    //  new LevelSubTotalAction(this).atuoexecute2();  	
+      new LevelSubTotalAction(this).atuoexecute2();  	
     }  
 	private String getQuerySQL2(String whereSql) {
 		return WDSWLReportSql.getInStore(whereSql);
