@@ -265,7 +265,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);
 		}
-		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' and isnull(h.dr,0)=0");//审核通过的
+		whereSql.append(" and h.fstatus in('"+BillStatus.AUDIT+"','"+BillStatus.FINISH+"') and isnull(h.dr,0)=0");//审核通过的
 		/**
 		 * 
 		 * bifreceiptfinish              CHAR(1)             是否发货结束   NULL                

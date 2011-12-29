@@ -44,7 +44,7 @@ public class InvClBO implements IBDBusiCheck {
 		str.append("select count(0) from wds_invcl where isnull(dr,0)= 0 ");
 		str.append(" and pk_corp = '"+corp+"' and vinvclcode = '"+code+"'");
 		if(PuPubVO.getString_TrimZeroLenAsNull(key)!=null){
-			str.append(" pk_invcl <> '"+key+"'");
+			str.append(" and pk_invcl <> '"+key+"'");
 		}
 		
 		if(PuPubVO.getInteger_NullAs(getDao().executeQuery(str.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0)>0)
