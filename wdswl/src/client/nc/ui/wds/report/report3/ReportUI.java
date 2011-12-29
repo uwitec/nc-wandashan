@@ -45,8 +45,31 @@ public class ReportUI extends ZmReportBaseUI2 {
 	 * @return
 	 */
 	public String[] getSqls()throws Exception{
+		String querycond=getQueryConditon();
+		String querys2=null;
+		if(querycond!=null&&querycond.length()>0){
+		String[] que= querycond.split("and");
+		
+	//	String query1=null;
+		for(int i=0;i<que.length;i++){
+		    String[] query=	 que[i].split("=");
+		    for(int j=0;j<query.length;j++){
+		        if("(dbilldate".equals(query[j].trim())){
+		    	    querys2="( geh_dbilldate ="+ query[1];
+		        } 
+		        if("(srl_pk".equals(query[j].trim())){
+		        	if(querys2==null){
+		        		querys2="(geh_cwarehouseid ="+query[1];
+		        	}else{
+		        		querys2=querys2+"and (geh_cwarehouseid ="+query[1];
+		        	}
+		        }
+		    }
+		 }
+		}
+	
 		return new String[] {
-				getQuerySQL1(getQueryConditon()), getQuerySQL2(getQueryConditon()) };		
+				getQuerySQL1(querycond), getQuerySQL2(querys2) };		
 	}
 	/**
 	 * 查询完成 设置到ui界面之后 后续处理  
