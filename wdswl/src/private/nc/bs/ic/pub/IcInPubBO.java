@@ -285,7 +285,7 @@ public class IcInPubBO {
 				else
 					para.clearParams();
 				para.addParam(numInfor.get(key));
-				para.addParam(numassInfor.get(key));
+//				para.addParam(numassInfor.get(key));
 				para.addParam(key);
 				getDao().executeUpdate(sql, para);
 				para.clearParams();
