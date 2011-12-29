@@ -8,6 +8,7 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
 import nc.vo.pub.BusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 
@@ -98,7 +99,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 //		if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
-			hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(ntranoutnum,0)>0");//应入数量-转出数量>0
+			hsql.append(" and coalesce(nshouldoutnum,0)-coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0");//应入数量-转出数量>0
 //			String sub = getTempTableUtil().getSubSql(inv_Pks);
 			hsql.append(" and cinvbasid in");
 //			hsql.append(")");
@@ -111,8 +112,8 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	@Override
 	public String getBodyCondition() {
-		String sub = getTempTableUtil().getSubSql(inv_Pks);
-		return " coalesce(body.nshouldoutnum,0)-coalesce(body.ntranoutnum,0)>0"+//应入数量-转出数量>0
+//		String sub = getTempTableUtil().getSubSql(inv_Pks);
+		return " coalesce(body.nshouldoutnum,0)-coalesce(body."+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0"+//应入数量-转出数量>0
 			" and body.cinvbasid in";}
 	@Override
 	protected boolean isHeadCanMultiSelect() {

@@ -22,8 +22,6 @@ public N_WDS9_WRITE() {
 * 接口执行类
 */
 public Object runComClass(PfParameterVO vo) throws BusinessException {
-try{
-	super.m_tmpVo=vo;
 	try {
 		super.m_tmpVo = vo;
 		Object retObj = null;
@@ -36,12 +34,6 @@ try{
 			else
 				throw new PFBusinessException(ex.getMessage(), ex);
 		}
-} catch (Exception ex) {
-	if (ex instanceof BusinessException)
-		throw (BusinessException) ex;
-	else 
-    throw new PFBusinessException(ex.getMessage(), ex);
-}
 }
 /*
 * 备注：平台编写原始脚本

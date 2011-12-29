@@ -70,8 +70,7 @@ public class WdsIcInPubBillSave extends BillSave {
 			if(vo.getStatus() == VOStatus.DELETED)
 				return false;
 			return true;
-		}
-		
+		}		
 	}
 	
 	/**

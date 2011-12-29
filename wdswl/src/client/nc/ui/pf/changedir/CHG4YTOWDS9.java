@@ -1,6 +1,7 @@
 package nc.ui.pf.changedir;
 
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 
  *
@@ -55,7 +56,7 @@ public class CHG4YTOWDS9 extends nc.ui.pf.change.VOConversionUI {
 //			"B_geb_cinventoryid->B_cinventoryid",//存货管理ID  	
 			"B_pk_measdoc->B_pk_measdoc",//主单位
 			"B_castunitid->B_castunitid",//辅单位
-			"B_geb_hsl->B_hsl",//换算率 
+//			"B_geb_hsl->B_hsl",//换算率 
 			
 			"B_geb_proddate->B_scrq",//生产日期
 			"B_geb_dvalidate->B_dvalidate",//失效日期
@@ -95,9 +96,11 @@ public class CHG4YTOWDS9 extends nc.ui.pf.change.VOConversionUI {
 		return new String[] {
 				"H_geh_billtype->\"WDS9\"",
 				"H_geh_cbilltypecode->\"WDS9\"",
+				"B_geb_hsl->iif(B_hsl==null,B_noutnum/B_noutassistnum,B_hsl)",
 				"B_geb_cinventoryid->getColValue2(bd_invmandoc,pk_invmandoc,pk_invbasdoc,B_cinvbasid,pk_corp,H_cothercorpid)",//根据基本ID，公司,获取管理ID			
-				"B_geb_bsnum->B_noutassistnum-B_ntranoutastnum",//应发辅数量
-				"B_geb_snum->B_noutnum-B_ntranoutnum",//应发数量 
+				
+				"B_geb_snum->B_noutnum-B_"+WdsWlPubConst.erp_allo_outnum_fieldname,//应发数量 
+				"B_geb_bsnum->(B_noutnum-B_"+WdsWlPubConst.erp_allo_outnum_fieldname+")/B_geb_hsl",//应发辅数量
 		};
 	}
 	/**

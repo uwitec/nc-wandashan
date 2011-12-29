@@ -275,7 +275,7 @@ public class IcInPubBO {
 				sql = " update tb_outgeneral_b set nacceptnum=coalesce(nacceptnum,0)+? ,nassacceptnum=coalesce(nassacceptnum,0)+?" +
 				" where general_b_pk=? ";
 			}else if(ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){
-				sql = " update ic_general_b set ntranoutnum = coalesce(ntranoutnum,0)+? ,ntranoutastnum=coalesce(ntranoutastnum,0)+? where cgeneralbid = ?";
+				sql = " update ic_general_b set "+WdsWlPubConst.erp_allo_outnum_fieldname+" = coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+",0)+? where cgeneralbid = ?";
 			}
 			//				BaseDAO dao = new BaseDAO();
 			SQLParameter para = null;
@@ -301,7 +301,7 @@ public class IcInPubBO {
 			sql = "select count(0) from tb_outgeneral_b where (coalesce(noutnum,0) - coalesce(nacceptnum,0)) < 0 " +
 			" and general_b_pk in "+getTempTableUtil().getSubSql(ids);
 		}else if(ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){
-			sql = "select count(0) from ic_general_b where (coalesce(noutnum, 0) - coalesce(ntranoutnum, 0) - coalesce(naccumwastnum, 0)) < 0 "+
+			sql = "select count(0) from ic_general_b where (coalesce(noutnum, 0) - coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+", 0) - coalesce(naccumwastnum, 0)) < 0 "+
 			" and cgeneralbid in "+getTempTableUtil().getSubSql(ids);
 		}
 		if(PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), -1)>0){
