@@ -71,6 +71,7 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 						"B_vsourcebillcode->H_geh_billcode",//[保存 供应链 其他出字段]
 						"B_csourcetype->H_geh_billtype",//[保存  供应链 其他出字段]
 						"B_"+WdsWlPubConst.csourcehid_wds+"->B_geh_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
+						"B_"+WdsWlPubConst.csourcebid_wds+"->B_geb_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 						"B_cfirstbillhid->B_geh_pk",// [保存  物流 其他入字段]，
 						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 其他入字段]
 						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 其他入字段 ]

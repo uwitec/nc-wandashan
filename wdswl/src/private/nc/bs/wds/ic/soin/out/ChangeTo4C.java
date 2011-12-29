@@ -3,6 +3,8 @@ package nc.bs.wds.ic.soin.out;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
@@ -37,6 +39,15 @@ public class ChangeTo4C {
 		}
 		return pubbo;
 	}	
+	
+BaseDAO dao = null;
+	
+	BaseDAO getBaseDAO() {
+		if (dao == null) {
+			dao = new BaseDAO();
+		}
+		return dao;
+	}
 	private String corp=null;
 	private String coperator = null;
 	private String date = null;
@@ -93,12 +104,12 @@ public class ChangeTo4C {
 		if (pk_billtype == null) {
 			return null;
 		}
-		// 设置货位信息
-		setLocatorVO(billVO);
 		
+		// 设置货位信息
+		setLocatorVO(billVO);		
 	
 		if(!fisvbatchcontorl.booleanValue()){
-			String debatchcode = getVbatchCode();
+			String debatchcode = WdsWlIcPubDealTool.getDefaultVbatchCode(corp);
 			TbGeneralBVO[] bvos = (TbGeneralBVO[]) billVO.getChildrenVO();
 			for(TbGeneralBVO bvo:bvos){
 				bvo.setGeb_vbatchcode(debatchcode);
@@ -107,7 +118,13 @@ public class ChangeTo4C {
 		
 		GeneralBillVO vo = (GeneralBillVO) PfUtilTools.runChangeData(
 				pk_billtype, "4C", billVO, null); // 销售出库
-		setSpcGenBillVO(vo, coperator, date);
+		
+		WdsWlIcPubDealTool.appFieldValueForIcNewBill(vo, l_map, corp,coperator, date, fisvbatchcontorl,getBaseDAO());
+		
+		if(!fisvbatchcontorl.booleanValue()){
+			//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
+			WdsWlIcPubDealTool.combinItemsBySourceAndInv(vo, false);
+		}
 		return vo;
 	}
 	
@@ -139,27 +156,7 @@ public class ChangeTo4C {
 
 		return (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
 	}
-	/**
-	 * 
-	 * @作者：zpm
-	 * @说明：完达山物流项目 
-	 * @时间：2011-11-3上午11:30:45
-	 * @param bill
-	 * @param coperator
-	 * @param date
-	 */
-	public void setSpcGenBillVO(GeneralBillVO bill,String coperator,String date){
-		if(bill == null)
-			return;
-		String para = getVbatchCode();
 
-		WdsWlIcPubDealTool.appFieldValueForIcNewBill(bill, l_map, coperator, date, fisvbatchcontorl, para);
-
-		if(fisvbatchcontorl == null || !fisvbatchcontorl.booleanValue()){
-			//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
-			WdsWlIcPubDealTool.combinItemsBySourceAndInv(bill, false);
-		}
-	}
 	/**
 	 * 
 	 * @作者：zpm
@@ -194,16 +191,5 @@ public class ChangeTo4C {
 			}
 			//			}
 		}
-	}
-	/**
-	 * 
-	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 * 完达山物流回写供应链的批次号，默认是2009，可通过参数来配置
-	 * @时间：2011-4-20上午11:57:57
-	 * @return
-	 */
-	private String getVbatchCode(){
-		return WdsWlIcPubDealTool.getDefaultVbatchCode(corp);
 	}
 }

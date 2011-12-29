@@ -74,6 +74,7 @@ public class CHGWDS6TO4I  extends nc.bs.pf.change.VOConversion {
 				"B_cfirsttype->B_cfirsttyp",//[供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]				
 				"B_dbizdate->B_dbizdate",//出库日期->业务日期-------------------------zpm
 				"B_"+WdsWlPubConst.csourcehid_wds+"->B_general_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
+				"B_"+WdsWlPubConst.csourcebid_wds+"->B_general_b_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 				//nc.itf.pd.pd4010.IBomOperate报错
 				//nplannedprice计划单价，如果没有计划单价，则从单据的计划价应该取自相应的成本型型库存组织，转向生产制造
 				//正常其它出库，计划单价也为空

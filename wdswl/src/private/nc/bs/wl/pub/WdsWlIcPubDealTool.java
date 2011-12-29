@@ -1,9 +1,13 @@
 package nc.bs.wl.pub;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.itf.uap.busibean.ISysInitQry;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
@@ -66,6 +70,50 @@ public class WdsWlIcPubDealTool {
 		dataMap.clear();
 	}
 	
+	private static void adjustBillData(GeneralBillVO bill,String corp,String date,String coperator,BaseDAO dao)
+	throws BusinessException{
+		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
+		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
+		Integer dates= getDefaultDay(corp,dao);
+		Date dqdate= new Date();
+		int dqday= dqdate.getDay();
+		int jzday=dates.intValue();
+
+		//如果当前期小于等于结账期，则传ERP的出入库单单据期为当前期；
+		//如果当前期大于结账期，则传EPR单据为下一个月1号
+		if(dqday<=jzday){
+			bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
+		}else{
+			bill.getHeaderVO().setDbilldate(NextMonth());//单据日期
+		}
+	}
+	
+
+	//当前月的下一个月一号   日期
+	private static UFDate NextMonth(){
+        Calendar   calendar   =   new   GregorianCalendar(); 
+        calendar.set(Calendar.DAY_OF_MONTH,  calendar     
+	            .getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.add(Calendar.DATE, 1); //设置某个月第一天
+		return new UFDate(calendar.getTime());		
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf 查询结账期默认值
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-20上午10:23:43
+	 * @throws BusinessException
+	 */
+	private static Integer getDefaultDay(String corp,BaseDAO dao) throws BusinessException{
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select datavale from wds_periodsetting_h ");
+		sql.append(" where isnull(dr,0) =0 ");
+		sql.append(" and pk_corp='"+corp+"'");
+		Object value = dao.executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR);
+		return PuPubVO.getInteger_NullAs(value, 20);
+	}
+	
 	/**
 	 * 
 	 * @作者：zhf
@@ -80,16 +128,26 @@ public class WdsWlIcPubDealTool {
 	 */
 	public static void appFieldValueForIcNewBill(GeneralBillVO bill,
 			Map<String,ArrayList<LocatorVO>> l_map,
+			String corp,
 			String coperator,
 			String sdate,
 			UFBoolean fisvbatchcontorl,
-			String returnBatchcode){
+			BaseDAO dao) throws BusinessException{
 		if(bill == null)
 			return;
+		
+		
+		
+		
+		adjustBillData(bill, corp, sdate, coperator, dao);
+		
+		
+		
 		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 		bill.getHeaderVO().setDbilldate(new UFDate(sdate));//单据日期
 		bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态
+		String returnBatchcode = getDefaultVbatchCode(corp);
 		GeneralBillItemVO[] items = bill.getItemVOs();
 		if(items == null || items.length == 0)
 			return;
