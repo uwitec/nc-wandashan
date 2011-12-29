@@ -23,9 +23,14 @@ public class WdsWlPubConst {
 	public static String WDS_IC_ZG_DEF="pk_defdoc11";
 	
 	/**
-	 * ERP出入库单如果单据由物流的单据推出，则用该字段,
+	 * ERP出入库单如果单据由物流的单据推出，则用该字段保存物流HID
 	 */
 	public static String csourcehid_wds="pk_defdoc11";
+	/**
+	 * ERP出入库单如果单据由物流的单据推出，则用该字段保存物流BID
+	 */
+	public static String csourcebid_wds="pk_defdoc12";
+	
 	/**
 	 *暂估处理：供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
 	 */
