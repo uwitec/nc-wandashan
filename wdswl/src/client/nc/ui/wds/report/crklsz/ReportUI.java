@@ -257,10 +257,16 @@ public class ReportUI extends ZmReportBaseUI2 {
 		ReportBaseVO[] combinvo = null;
 		combinvo = CombinVO.comin(combinvo, vos1);
 		combinvo = CombinVO.comin(combinvo, vos2);
-		UFBoolean isCat=PuPubVO.getUFBoolean_NullAs(getQueryDlg().getConditionVOsByFieldCode("iscdt_pk")[0].getValue(), UFBoolean.FALSE); //是否展开
+		ConditionVO[] conds=getQueryDlg().getConditionVOsByFieldCode("iscdt_pk");
+		boolean iscat=false;
+		if(conds==null || conds.length==0)
+			iscat=false;
+		else{
+			iscat=PuPubVO.getUFBoolean_NullAs(getQueryDlg().getConditionVOsByFieldCode("iscdt_pk")[0].getValue(), UFBoolean.FALSE).booleanValue(); //是否展开
+		}
 		if(combinvo==null || combinvo.length==0)
 			return null;
-		if(isCat.booleanValue()){
+		if(iscat){
 			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
 		}else{
 			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
