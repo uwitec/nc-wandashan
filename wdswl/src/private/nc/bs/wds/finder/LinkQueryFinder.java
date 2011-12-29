@@ -36,7 +36,7 @@ public class LinkQueryFinder extends AbstractBillFinder2{
 		}else if(WdsWlPubConst.BILLTYPE_OUT_IN.equals(type)){//退货入库
 			return new String[]{WdsWlPubConst.WDSF,"4C"};//销售出库单
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equals(type)){//其他出库
-			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4A};//ERP其他出库，物流其他入库
+			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4I};//ERP其他出库，物流其他入库
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_IN.equals(type)){//其他入库
 			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4A};//销售出库单
 		}

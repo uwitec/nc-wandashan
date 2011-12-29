@@ -36,8 +36,7 @@ public class WdsWlIcPubDealTool {
 		String key = null;
 		GeneralBillItemVO[] items = bill.getItemVOs();
 		GeneralBillItemVO tmp = null;
-		LocatorVO locavo = null;
-		
+		LocatorVO locavo = null;		
 		for(GeneralBillItemVO item:items){
 			key = WdsWlPubTool.getString_NullAsTrimZeroLen(item.getCsourcebillbid())+WdsWlPubTool.getString_NullAsTrimZeroLen(item.getVbatchcode());
 			locavo = item.getLocator()[0];

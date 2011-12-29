@@ -45,7 +45,6 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 		}
 		return sql;
 	}
-	//来源单据注册类
 	@Override
 	protected String createSQL(String billType) {//这个billtype参数为当前单据类型
 		//正常作法为：根据billtype所在单据ID，查询当前单据出来 来源单据类型、来源单据ID即可
@@ -75,10 +74,13 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 		}else if(WdsWlPubConst.BILLTYPE_OUT_IN.equals(billType)){//退货入库
 			sql = " select distinct zz.csourcetype,zz.csourcebillhid,zz.vsourcebillcode from  tb_general_b zz where zz.geh_pk = ? and nvl(zz.dr,0) = 0 ";
 		
-		}
-		else if(WdsWlPubConst.GYL4Y.equals(billType)){//供应链调拨出库
+		}else if(WdsWlPubConst.GYL4Y.equals(billType)){//供应链调拨出库
 			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from ic_general_b zz where zz.cgeneralhid = ? and nvl(zz.dr, 0) = 0 ";
-		}else if(WdsWlPubConst.GYL5D.equals(billType)){//供应链调拨订单
+		}else if(WdsWlPubConst.GYL4E.equals(billType)){//供应链
+			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from ic_general_b zz where zz.cgeneralhid = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(WdsWlPubConst.GYL4I.equals(billType)){//供应链调拨出库
+			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from ic_general_b zz where zz.cgeneralhid = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(WdsWlPubConst.GYL4A.equals(billType)){//供应链其他入库
 			sql = " select distinct zz.csourcetypecode, zz.csourceid, zz.vsourcecode from to_bill_b zz where zz.cbillid = ? and nvl(zz.dr, 0) = 0 ";
 		}
 		else{

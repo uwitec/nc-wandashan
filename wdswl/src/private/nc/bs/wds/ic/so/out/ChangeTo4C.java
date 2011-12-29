@@ -80,7 +80,7 @@ public class ChangeTo4C {
 		this.date = date;
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
-		fisvbatchcontorl= hvo.getFisvbatchcontorl();
+		fisvbatchcontorl= PuPubVO.getUFBoolean_NullAs(hvo.getFisvbatchcontorl(), UFBoolean.FALSE);
 		//装载非虚拟流程表体
 		List<Writeback4cB2VO>  listbvos = new ArrayList<Writeback4cB2VO>();
 		//原销售出库回传单表体vo
@@ -91,7 +91,7 @@ public class ChangeTo4C {
 		// liuys add 判断是否为虚拟安排  , 如果是,那么不回传erp销售出库
 		for(int i=0;i<bvos.length;i++){
 			UFBoolean isxnap=PuPubVO.getUFBoolean_NullAs(bvos[i].getIsxnap(), UFBoolean.FALSE);
-			if(isxnap.booleanValue())
+			if(!isxnap.booleanValue())
 				listbvos.add(bvos[i]);
 		}
 		//liuys add 如果整单都是虚拟安排,那么直接返回null,不处理
@@ -108,15 +108,18 @@ public class ChangeTo4C {
 			}
 			general_hs.add(general_h);
 		}
+		
+		
+		
 		//根据销售出库回传单，查找上有销售出库单（WDS8），分别对应交换成erp销售出库单(4C)
 		GeneralBillVO vo = getGeneralBillVO( hvo,general_hs);
 		if(vo == null){
 			return null;
 		}
 		
-		
-		
-		WdsWlIcPubDealTool.combinItemsBySourceAndInv(vo, false);
+		if(!fisvbatchcontorl.booleanValue()){
+			WdsWlIcPubDealTool.combinItemsBySourceAndInv(vo, false);
+		}
 		
 //		//是否回传批次：如果不回传批次，则客户要求根据销售订单汇总，批次号统一为 参数对应的值
 //		if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
@@ -272,7 +275,7 @@ public class ChangeTo4C {
 					if(bill.getItemVOs()[i].getDbizdate() == null){
 						bill.getItemVOs()[i].setDbizdate(new UFDate(date));//业务日期
 					}	
-					if(fisvbatchcontorl == null || fisvbatchcontorl == UFBoolean.FALSE){
+					if(!fisvbatchcontorl.booleanValue()){
 						bill.getItemVOs()[i].setVbatchcode(para);
 					}
 					//设置货位信息
