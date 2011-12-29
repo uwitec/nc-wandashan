@@ -6,7 +6,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
-import nc.vo.wl.pub.SingleVOChangeDataBsTool;
+import nc.bs.wl.pub.SingleVOChangeDataBsTool;
 public class WDS7TOWDSFAfterDeal  implements IchangeVO{
 	/**
 	 * 根据产品组自己的需求，把源VO中信息通过运算进行转换

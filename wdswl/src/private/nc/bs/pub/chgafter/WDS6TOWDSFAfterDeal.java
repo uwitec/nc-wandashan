@@ -6,7 +6,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
-import nc.vo.wl.pub.SingleVOChangeDataBsTool;
+import nc.bs.wl.pub.SingleVOChangeDataBsTool;
 /**
  * 交换的类后续处理类
  * @author Administrator

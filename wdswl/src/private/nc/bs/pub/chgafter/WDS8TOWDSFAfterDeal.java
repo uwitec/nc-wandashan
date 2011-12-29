@@ -1,4 +1,5 @@
 package nc.bs.pub.chgafter;
+import nc.bs.wl.pub.SingleVOChangeDataBsTool;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pf.change.IchangeVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -6,8 +7,6 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
 import nc.vo.wds.load.account.LoadpriceB2VO;
-import nc.vo.wl.pub.BeanProTool;
-import nc.vo.wl.pub.SingleVOChangeDataBsTool;
 
 /**
  * 交换的类后续处理类
