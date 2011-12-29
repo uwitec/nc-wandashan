@@ -106,12 +106,16 @@ public class ReportUI extends JxReportBaseUI {
 		ReportBaseVO[] nvos=(ReportBaseVO[]) ObjectUtils.serializableClone(list.toArray(new ReportBaseVO[0]));
 		//按销售订单 表体 id 数据汇总合并  物流出库单的实出数量
 		ReportBaseVO[] rvos=(ReportBaseVO[]) CombinVO.combinData(nvos, combinconds1,combinfs1, ReportBaseVO.class);
-        for(int i=0;i<rvos.length;i++){
+		  if(rvos==null ||rvos.length==0)
+	    	   return;
+		
+		for(int i=0;i<rvos.length;i++){
         	UFDouble uf=PuPubVO.getUFDouble_NullAsZero(rvos[i].getAttributeValue("nnumber"));
         	UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(rvos[i].getAttributeValue("num"));
         	rvos[i].setAttributeValue("num", uf.sub(uf1));
         }
-		CombinVO.addByContion1(jichus, rvos, combinconds, null);
+		ReportBaseVO[] rvos1=(ReportBaseVO[]) CombinVO.combinData(rvos, combinconds, combinfs, ReportBaseVO.class);
+		CombinVO.addByContion1(jichus, rvos1, combinconds, null);
 
 	}
 
@@ -138,12 +142,15 @@ public class ReportUI extends JxReportBaseUI {
 		ReportBaseVO[] nvos=(ReportBaseVO[]) ObjectUtils.serializableClone(list.toArray(new ReportBaseVO[0]));
 		//按销售订单 表体 id 数据汇总合并  物流出库单的实出数量
 		ReportBaseVO[] rvos=(ReportBaseVO[]) CombinVO.combinData(nvos, combinconds1,combinfs1, ReportBaseVO.class);
-        for(int i=0;i<rvos.length;i++){
+       if(rvos==null ||rvos.length==0)
+    	   return;
+		for(int i=0;i<rvos.length;i++){
         	UFDouble uf=PuPubVO.getUFDouble_NullAsZero(rvos[i].getAttributeValue("ntaldcnum"));
         	UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(rvos[i].getAttributeValue("num"));
         	rvos[i].setAttributeValue("num", uf.sub(uf1));
         }
-		CombinVO.addByContion1(jichus, rvos, combinconds, null);
+		ReportBaseVO[] rvos1=(ReportBaseVO[]) CombinVO.combinData(rvos, combinconds, combinfs, ReportBaseVO.class);
+		CombinVO.addByContion1(jichus, rvos1, combinconds, null);
 	}
 
 	@Override
