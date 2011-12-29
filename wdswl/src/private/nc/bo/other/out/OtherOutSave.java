@@ -7,17 +7,20 @@ import nc.bs.pub.SuperDMO;
 import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.SQLParameter;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
+import nc.vo.trade.voutils.IFilter;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
-import nc.vo.wl.pub.VOTool;
 
 /**
  * 
@@ -52,7 +55,14 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 
 		if(billVo==null)
 			throw new BusinessException("传入数据为空");
-		MyBillVO old_billVo = (MyBillVO)VOTool.aggregateVOClone(billVo);
+		MyBillVO old_billVo = null;
+		try {
+			old_billVo = (MyBillVO)ObjectUtils.serializableClone(billVo);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			throw new BusinessException(e1);
+		}
 		
 //		zhf add
 		Map<String, SmallTrayVO[]> trayInfor = (Map<String,SmallTrayVO[]>)((MyBillVO)billVo).getOUserObj();
@@ -63,19 +73,24 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 //		zhf end
 		
 		boolean isAdd = false;
-		boolean bodyChanged = false;
+		boolean bodyChanged = false;//表体是否修改
 		TbOutgeneralHVO head = (TbOutgeneralHVO)billVo.getParentVO();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
-		TbOutgeneralBVO[] bodys = null;	
-		if(billVo.getChildrenVO() != null && billVo.getChildrenVO().length > 0){
+		
+		
+		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billVo.getChildrenVO();
+		//过滤掉删除行  zhf add
+		bodys = (TbOutgeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(bodys, new filterDelLine());
+		
+		if(bodys!=null && bodys.length > 0){
 			bodyChanged = true;
-			bodys = (TbOutgeneralBVO[])billVo.getChildrenVO();
 			for(TbOutgeneralBVO body:bodys){
 				body.validationOnSave();
 			}
 		}
-		if(!isAdd && bodyChanged){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
+		
+		if(!isAdd && old_billVo.getChildrenVO().length>0){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
 			TbOutgeneralBVO[] bb = (TbOutgeneralBVO[])old_billVo.getChildrenVO();
 			for(TbOutgeneralBVO b : bb){
 				String wheresql = " general_b_pk = '"+b.getPrimaryKey()+"' and isnull(dr,0)=0";
@@ -84,10 +99,11 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 					getOutBO().deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
 			}
 		}
+		
 		//保存后  回写数据来源
 		getOutBO().writeBack(old_billVo,IBDACTION.SAVE,isAdd);
 		//---------------------------保存前校验结束----------------------------------------	
-		java.util.ArrayList retAry = super.saveBill(billVo);
+		java.util.ArrayList retAry = super.saveBill(old_billVo);
 
 		if(retAry == null || retAry.size() == 0){
 			throw new BusinessException("保存失败");
@@ -125,7 +141,18 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 		return retAry;
 	}
 	
-	
+	class filterDelLine implements IFilter{
+		public boolean accept(Object o) {
+			// TODO Auto-generated method stub
+			if(o == null)
+				return false;
+			SuperVO vo = (SuperVO)o;
+			if(vo.getStatus() == VOStatus.DELETED)
+				return false;
+			return true;
+		}
+		
+	}
 	
 //	/**
 //	 * 

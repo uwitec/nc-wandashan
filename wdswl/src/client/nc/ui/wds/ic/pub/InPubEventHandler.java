@@ -375,7 +375,10 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoLinePaste() throws Exception {
+		int row = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
 		super.onBoLinePaste();
+		getBillCardPanelWrapper()
+		.getBillCardPanel().getBillTable().getSelectionModel().setSelectionInterval(row+1, row+1);
 //		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
 //				getBillType(), "geb_crowno");
 		BillRowNo.pasteLineRowNo(getBillCardPanelWrapper().getBillCardPanel(), getBillType(), "geb_crowno", 1);

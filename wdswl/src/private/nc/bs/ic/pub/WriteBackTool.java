@@ -186,7 +186,7 @@ public class WriteBackTool{
 		if(map == null || map.size()==0){
 			return;
 		}
-		for(WriteBackVO vo:ladd){
+		for(WriteBackVO vo:map){
 			String sql=vo.getWriteBackSql();
 			if(sql==null){
 				continue;

@@ -112,7 +112,6 @@ public class WdsIcInPubBillSave extends BillSave {
 		
 		//过滤掉删除行  zhf add
 		TbGeneralBVO[] bodys = (TbGeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(obodys, new filterDelLine());
-		billVo.setChildrenVO(bodys);
 
 		if(null != bodys && bodys.length > 0){
 			//yf记录表体是否有改动
