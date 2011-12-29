@@ -2,7 +2,6 @@ package nc.ui.dm.so.deal;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
@@ -37,6 +36,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	public SoDealVO[] curBodys = null;
 	//数据缓存
 	private SoDealVO[] m_billdatas = null;
+	private String whereSql = null;
 //	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
 	
 	public SoDealEventHandler(SoDealClientUI parent){
@@ -206,6 +206,29 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		}
 		setDate(billdatas);
 	}
+	
+	private void onRefresh() throws Exception{
+		SoDealVO[] billdatas = null;
+		clearData();
+		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
+
+			try{
+				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
+			}catch(Exception e){
+				e.printStackTrace();
+				showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+				return;
+			}		
+			if(billdatas == null||billdatas.length == 0){
+	            clearData();
+				showHintMessage("查询完成：没有满足条件的数据");
+				return;
+			}
+			setDate(billdatas);
+		}
+		showHintMessage("操作完成");
+	}
+	
 	/**
 	 * 
 	 * @作者：lyf:查询完成设置界面数据
@@ -347,6 +370,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				((SoDealVO)vo).validataOnDeal();
 			}
 			SoDealHealper.doDeal(ldata, ui);
+			onRefresh();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(e instanceof ValidationException){
@@ -356,9 +380,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
-		clearData();
-		setDate(left.toArray( new SoDealVO[0]));
-		ui.showHintMessage("安排已经完成...");
 	}
 	
 	/**
