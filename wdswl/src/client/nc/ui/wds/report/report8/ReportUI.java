@@ -1,5 +1,6 @@
 package nc.ui.wds.report.report8;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ListSelectionModel;
@@ -86,11 +87,39 @@ public class ReportUI extends JxReportBaseUI {
 	public ReportBaseVO[] dealBeforeSetUI(ReportBaseVO[] vos) throws Exception {
 		if(vos==null || vos.length==0)
 			return null;
+		ReportBaseVO[] vos1=filter(vos);
 		//构建左侧基础数据树
-		ReportBaseVO[] jichus=(ReportBaseVO[]) CombinVO.combinData((ReportBaseVO[])ObjectUtils.serializableClone(vos), combinconds,combinfs, ReportBaseVO.class);
-		calXuNi(jichus,vos);
-		calZheChang(jichus,vos);		
+		ReportBaseVO[] jichus=(ReportBaseVO[]) CombinVO.combinData((ReportBaseVO[])ObjectUtils.serializableClone(vos1), combinconds,combinfs, ReportBaseVO.class);
+		
+		calXuNi(jichus,vos1);
+		calZheChang(jichus,vos1);		
 		return jichus;
+	}
+	/**
+	 * 按销售订单表体id 和 物流销售出库表体的 id过滤数据 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2011-12-29下午09:30:08
+	 * @param vos
+	 * @return
+	 */
+	private ReportBaseVO[] filter(ReportBaseVO[] vos) {
+	   if(vos==null || vos.length==0){
+		   return null;
+	   }
+	   Map<String,ReportBaseVO> map=new HashMap<String,ReportBaseVO>();//过滤map
+	   for(int i=0;i<vos.length;i++){
+		   String pk=PuPubVO.getString_TrimZeroLenAsNull(vos[i].getAttributeValue("b_pk"));
+		   String pk1=PuPubVO.getString_TrimZeroLenAsNull(vos[i].getAttributeValue("b_pk1"));
+		   map.put(pk+pk1, vos[i]);
+	   }
+	   if(map.size()==0)
+		   return null;
+	   List<ReportBaseVO> list=new ArrayList<ReportBaseVO>();
+	   for(String key:map.keySet()){
+		   list.add(map.get(key));
+	   }   
+		return list.toArray(new ReportBaseVO[0]);
 	}
 	/**
 	 * 计算正常订单的待发
