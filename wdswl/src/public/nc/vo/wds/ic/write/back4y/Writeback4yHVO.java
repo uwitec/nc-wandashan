@@ -97,8 +97,18 @@ import nc.vo.pub.lang.*;
              public String cothercalbodyid;
              //调入仓库
              public String cotherwhid;
+             
+             public UFBoolean fisvbatchcontorl;//是否批次管理
     
-        /**
+        public UFBoolean getFisvbatchcontorl() {
+				return fisvbatchcontorl;
+			}
+
+			public void setFisvbatchcontorl(UFBoolean fisvbatchcontorl) {
+				this.fisvbatchcontorl = fisvbatchcontorl;
+			}
+
+		/**
 	   * 属性pk_corp的Getter方法.
 	   *
 	   * 创建日期:2011-11-3
