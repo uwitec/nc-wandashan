@@ -21,6 +21,11 @@ public class WdsWlPubConst {
 	 * ERP 出入库单标示 是否虚拟的自定义项
 	 */
 	public static String WDS_IC_ZG_DEF="pk_defdoc11";
+	
+	/**
+	 * ERP出入库单如果单据由物流的单据推出，则用该字段,
+	 */
+	public static String csourcehid_wds="pk_defdoc11";
 	/**
 	 *暂估处理：供应链出库单单自定义项11（出入库标示）:无标示虚拟出入库
 	 */
@@ -238,6 +243,10 @@ public class WdsWlPubConst {
 	public static String GYL5D = "5D";
 	/** 供应链调拨入库 */
 	public static String GYL4E = "4E";
+	/** 供应链其他出库 */
+	public static String GYL4I = "4I";
+	/** 供应链其他入库 */
+	public static String GYL4A = "4A";
 	
 //	/** 退货入库*/
 //	public static String BILLTYPE_BACK_IN = "WDSA";

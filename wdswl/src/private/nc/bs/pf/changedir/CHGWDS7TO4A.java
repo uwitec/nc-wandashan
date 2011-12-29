@@ -1,6 +1,7 @@
 package nc.bs.pf.changedir;
 
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 本地其他入库->供应链其他入库
@@ -65,11 +66,11 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 						"B_flargess->B_geb_flargess",//是否赠品
 						"B_cspaceid->B_geb_space",//货位ID
 
-						"B_csourcebillhid->B_gylbillhid",//[保存 供应链 其他出字段]
-						"B_csourcebillbid->B_gylbillbid",//[保存  供应链 其他出字段]
-						"B_vsourcebillcode->B_gylbillcode",//[保存 供应链 其他出字段]
-						"B_csourcetype->B_gylbilltype",//[保存  供应链 其他出字段]
-						
+						"B_csourcebillhid->B_geh_pk",//[保存 供应链 其他出字段]
+						"B_csourcebillbid->B_geb_pk",//[保存  供应链 其他出字段]
+						"B_vsourcebillcode->H_geh_billcode",//[保存 供应链 其他出字段]
+						"B_csourcetype->H_geh_billtype",//[保存  供应链 其他出字段]
+						"B_"+WdsWlPubConst.csourcehid_wds+"->B_geh_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 						"B_cfirstbillhid->B_geh_pk",// [保存  物流 其他入字段]，
 						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 其他入字段]
 						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 其他入字段 ]

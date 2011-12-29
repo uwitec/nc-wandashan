@@ -1,6 +1,7 @@
 package nc.bs.pf.changedir;
 
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 本地调拨入库->供应链调拨入库
@@ -82,11 +83,12 @@ public class CHGWDS9TO4E extends nc.bs.pf.change.VOConversion {
 						"B_csourcebillbid->B_gylbillbid",//[保存 供应链 调拨出库单]
 						"B_vsourcebillcode->B_gylbillcode",//[保存 供应链 调拨出库单]
 						"B_csourcetype->B_gylbilltype",//[保存 供应链 调拨出库单]
-						
-						"B_cfirstbillhid->B_geh_pk",// [保存  物流 调拨入库单字段]，
-						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 调拨入库单字段]
-						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 调拨入库单字段]
-						"B_cfirsttype->H_geh_billtype",//[保存  物流 调拨入库单字段]
+						"B_"+WdsWlPubConst.csourcehid_wds+"->B_geb_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
+
+						"B_cfirstbillhid->B_cfirstbillhid",// [保存  物流 调拨入库单字段]，
+						"B_cfirstbillbid->B_cfirstbillbid",//   [保存  物流 调拨入库单字段]
+						"B_vfirstbillcode->B_vfirstbillcode",//[保存  物流 调拨入库单字段]
+						"B_cfirsttype->B_cfirsttype",//[保存  物流 调拨入库单字段]
 						
 						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						
