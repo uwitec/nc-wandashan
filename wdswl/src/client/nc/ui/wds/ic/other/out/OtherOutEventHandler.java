@@ -190,20 +190,20 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		try{
 			if (getBufferData().getCurrentVO()!=null){
 				getBillManageUI().showHintMessage("正在执行取消签字...");
-				int retu = getBillManageUI().showOkCancelMessage("确认取消签字?");
-				if (retu != 1) {
+				int retu = getBillManageUI().showOkCancelMessage("取消签字会删除下游装卸费核算单，是否确认取消签字?");
+				if (retu != UIDialog.ID_OK) {
 					return;
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();
 				TbOutgeneralHVO generalh = (TbOutgeneralHVO)aObject.getParentVO();
-				if(generalh.getFisload() != null &&generalh.getFisload().equals(UFBoolean.TRUE)){
-					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
-					return ;
-				}
-				if(generalh.getFistran() != null &&generalh.getFistran().equals(UFBoolean.TRUE)){
-					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
-					return ;
-				}
+//				if(generalh.getFisload() != null &&generalh.getFisload().equals(UFBoolean.TRUE)){
+//					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
+//					return ;
+//				}
+//				if(generalh.getFistran() != null &&generalh.getFistran().equals(UFBoolean.TRUE)){
+//					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
+//					return ;
+//				}
 				generalh.setVbillstatus(IBillStatus.FREE);// 自由状态
 				generalh.setCregister(null);// 签字人主键
 				generalh.setTaccounttime(null);// 签字时间

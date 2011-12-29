@@ -62,7 +62,7 @@ public class ChangeTo4I {
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
 		String where  = " csourcebillhid = '"+outhvo.getPrimaryKey()+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
-	    ArrayList alListData = (ArrayList)queryBills("4C", voCond);
+	    ArrayList alListData = (ArrayList)queryBills("4I", voCond);
 		if(alListData!=null && alListData.size()>0){
 			for(int i = 0 ;i<alListData.size();i++){
 				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);

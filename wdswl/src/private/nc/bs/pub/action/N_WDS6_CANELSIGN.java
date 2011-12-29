@@ -67,7 +67,7 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 					"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
 			//删除下游装卸费核算单
 			CanelDeleteWDF cw=new CanelDeleteWDF();
-			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
+			cw.canelDeleteWDF(vo.m_preValueVo, date, operate);
 			return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)
