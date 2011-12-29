@@ -225,7 +225,7 @@ public class SoDealEventHandler{
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);
 		}
-		whereSql.append(" and h.fstatus ='"+BillStatus.AUDIT+"' ");//审核通过的
+		whereSql.append(" and h.fstatus in('"+BillStatus.AUDIT+"','"+BillStatus.FINISH+"') and isnull(h.dr,0)=0");//审核通过的
 	/**
 	 * 关于总仓可以   看到  分仓的计划 解决方案为  在 查询条件出  增加  仓库的选择
 	 * 如果是分仓登录  该条件不可编辑默认为 登录仓库
