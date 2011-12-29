@@ -93,7 +93,7 @@ public class PlanDealBOUtil {
 					if(fisdate){
 						reason="大日期状态："+reason;
 					}else{
-						reason="合格，待检状态："+reason;
+						reason="合格状态："+reason;
 					}
 					Logger.info(reason);
 					throw new BusinessException(reason);

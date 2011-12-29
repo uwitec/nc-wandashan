@@ -1,11 +1,9 @@
 package nc.ui.wds.ic.allocation.in;
 
 import javax.swing.JComponent;
-import javax.swing.event.ChangeListener;
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItemEvent;
@@ -33,7 +31,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 调拨入库
  */
-public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEditListener,ChangeListener {
+public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEditListener {
 
 	/**
 	 * 
@@ -69,6 +67,7 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	}
 
 	protected void initSelfData() {
+		super.initSelfData();
 	//	除去行操作多余按钮
 		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
 		if (btnobj != null) {
@@ -76,13 +75,7 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 //		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
 //		    btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 		}
-		
-		// 增加页签切换监听
-		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
-		m_CardUITabbedPane.addChangeListener(this);
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
-	
-
 	}	
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
@@ -210,17 +203,6 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		super.afterEdit(e);
-	}
-	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
-		Object sourece = arg0.getSource();
-		if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
-			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		}else{
-			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
-			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		}
-		updateButtons();
 	}
 
 }

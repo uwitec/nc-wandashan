@@ -10,6 +10,8 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.event.ChangeListener;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
@@ -18,6 +20,7 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.ic.other.out.BillField;
 import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.vo.bd.invdoc.InvmandocVO;
@@ -31,7 +34,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
-public class OutPubClientUI extends MutiChildForOutInUI{
+public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListener{
 	/**
 	 * 
 	 */
@@ -140,14 +143,15 @@ public class OutPubClientUI extends MutiChildForOutInUI{
 
 	@Override
 	protected void initSelfData() {
-		// TODO Auto-generated method stub
+		// 增加页签切换监听
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener( this);
 
 	}
 
 	@Override
 	public void setDefaultData() throws Exception {
-		// TODO Auto-generated method stub
-
+		super.setDefaultData();
 	}
 	/**
 	 * 获得界面变化数据VO。 创建日期：(2004-1-7 10:01:01)
@@ -358,11 +362,17 @@ public class OutPubClientUI extends MutiChildForOutInUI{
 //	       }
 //	     }
 //	}
-
-	
-//	public boolean onClosing() {
-//		boolean flag = super.onClosing();
-//		MakeBiddingHelper.clear();//销毁 静态变量
-//		return flag;
-//	}
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){	
+		if(getBillOperate() == IBillOperate.OP_REFADD){
+			if("tb_outgeneral_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			}else{
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			}
+			updateButtons();
+		}
+		
+	}
 }

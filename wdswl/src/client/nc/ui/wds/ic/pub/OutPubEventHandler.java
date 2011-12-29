@@ -12,6 +12,7 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -269,6 +270,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super.setRefData(vos);
 		getBillUI().setDefaultData();
 		setBodySpace();
+		getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		getBillUI().updateButtons();
 	}
 
 	@Override
@@ -278,8 +282,17 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		///zpm start//生成行号
 	    BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),WdsWlPubConst.BILLTYPE_OTHER_OUT, "crowno");
 		//zpm end
+
 	}
 
+	@Override
+	protected void onBoEdit() throws Exception {
+		// TODO Auto-generated method stub
+		super.onBoEdit();
+	    getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		getBillUI().updateButtons();
+	}
 	// 表体赋货位
 	protected void setBodySpace() throws BusinessException {
 		String pk_cargdoc = getPk_cargDoc();
@@ -337,8 +350,11 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		// 获取并判断表体是否有值，进行循环
 		if (null != generalbVO && generalbVO.length > 0) {
 			for (int i = 0; i < generalbVO.length; i++) {
+				if(tmap.containsKey(generalbVO[i].getCrowno())){
+					generalbVO[i].setTrayInfor(tmap.get(generalbVO[i].getCrowno()));
+				}	
 				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
-				// 红色：没有实发数量；蓝色：有实发数量但是数量不够；白色：实发数量与应发数量相等
+				// 红色：实发小于应发：红色；蓝色：包含大日期的为蓝色
 				UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"nshouldoutassistnum"));// 应发辅数量
 				UFDouble tatonum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"noutassistnum"));// 实发辅数量
 				//yf add
@@ -347,24 +363,27 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
 					for (String field : changFields) {getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.red);
 					}					
-				}
-				if(tmap.containsKey(generalbVO[i].getCrowno())){
-					generalbVO[i].setTrayInfor(tmap.get(generalbVO[i].getCrowno()));
-				}			
+				}	
 				//大日期:蓝色 add mlr
  				List<TbOutgeneralTVO>  trays=generalbVO[i].getTrayInfor();//获取托盘信息
  				if(trays==null || trays.size()==0){
  					return;
  				}
- 				for(TbOutgeneralTVO tvo:trays){
+ 				boolean isWarningDays = false;//是否包含大日期
+ 				for(TbOutgeneralTVO tvo:trays){ 
+ 					if(isWarningDays)
+ 						break;
  					//查询大日期状态的主键
- 	 				String whs_pk= PuPubVO.getString_TrimZeroLenAsNull(WdsWlPubTool.execFomularClient("ss_pk->getColValue(tb_warehousestock,ss_pk,pplpt_pk,pk)", new String[]{"pk"}, new String[]{tvo.getCdt_pk()}));		
+ 	 				String whs_pk= PuPubVO.getString_TrimZeroLenAsNull(WdsWlPubTool.execFomularClient("ss_pk->getColValue(tb_warehousestock,ss_pk,whs_pk,whs_pk)", new String[]{"whs_pk"}, new String[]{tvo.getCdt_pk()}));		
  					if(WdsWlPubConst.WDS_STORSTATE_PK.equalsIgnoreCase(whs_pk)){
- 						String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
- 						for (String field : changFields) {
- 						  getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.BLUE);
- 						}		
+ 						isWarningDays = true;	
  					}
+ 				}
+ 				if(isWarningDays){
+ 					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
+						for (String field : changFields) {
+						  getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.BLUE);
+						}	
  				}
 			}
 		}

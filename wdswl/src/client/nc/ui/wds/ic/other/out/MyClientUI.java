@@ -1,11 +1,9 @@
 package nc.ui.wds.ic.other.out;
 
 import javax.swing.JComponent;
-import javax.swing.event.ChangeListener;
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
@@ -36,7 +34,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * 其他出库
  */
 public class MyClientUI extends OutPubClientUI implements
-		BillCardBeforeEditListener, ChangeListener {
+		BillCardBeforeEditListener {
 
 	/**
 	 * 
@@ -85,6 +83,7 @@ public class MyClientUI extends OutPubClientUI implements
 	}
 
 	protected void initSelfData() {
+		super.initSelfData();
 		// 除去行操作多余按钮
 		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
 		if (btnobj != null) {
@@ -95,10 +94,6 @@ public class MyClientUI extends OutPubClientUI implements
 			btnobj.removeChildButton(getButtonManager().getButton(
 					IBillButton.InsLine));
 		}
-		
-		// 增加页签切换监听
-		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
-		m_CardUITabbedPane.addChangeListener( this);
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 	
 	}
@@ -121,7 +116,7 @@ public class MyClientUI extends OutPubClientUI implements
 			
 			//如果是参照过来的存货不可以编辑 ，如果是自制单据可以编辑
 			if ("ccunhuobianma".equalsIgnoreCase(key)) {
-				if(getBillOperate() == IBillOperate.OP_EDIT)
+				if(getBillOperate() == IBillOperate.OP_REFADD)
 					return false;
 				if (csourcetype != null) {
 					return false;
@@ -140,7 +135,7 @@ public class MyClientUI extends OutPubClientUI implements
 				}
 			}else if("nshouldoutnum".equalsIgnoreCase(key)){
 //				zhf add
-				if(getBillOperate() == IBillOperate.OP_EDIT)
+				if(getBillOperate() == IBillOperate.OP_REFADD)
 					return false;
 				if(csourcetype != null){
 
@@ -150,7 +145,7 @@ public class MyClientUI extends OutPubClientUI implements
 				}
 			}else if("nshouldoutassistnum".equalsIgnoreCase(key)){
 //				zhf add
-				if(getBillOperate() == IBillOperate.OP_EDIT)
+				if(getBillOperate() == IBillOperate.OP_REFADD)
 					return false;
 				if (csourcetype != null) {
 				return false;
@@ -434,22 +429,5 @@ public class MyClientUI extends OutPubClientUI implements
 
 	public void setRefBillType(String curRefBilltype) {
 		this.curRefBilltype = curRefBilltype;
-	}
-	
-	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
-		Object sourece = arg0.getSource();
-		
-		String csourcebillhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("csourcebillhid").getValue());
-		if(csourcebillhid!=null){
-		if("tb_outgeneral_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
-			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		}else{
-			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
-			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		}
-		updateButtons();
-	}
-
 	}
 }

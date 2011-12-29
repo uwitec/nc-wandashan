@@ -8,13 +8,17 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.event.ChangeListener;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.ui.wl.pub.MutiChildForInUI;
 import nc.vo.bd.invdoc.InvmandocVO;
@@ -28,7 +32,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
-public class MutiInPubClientUI extends MutiChildForInUI {
+public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListener{
 	/**
 	 * 
 	 */
@@ -165,7 +169,10 @@ public class MutiInPubClientUI extends MutiChildForInUI {
 
 	@Override
 	protected void initSelfData() {
-
+		super.initSelfData();
+		// Ôö¼ÓÒ³Ç©ÇÐ»»¼àÌý
+		UITabbedPane m_CardUITabbedPane = getBillCardPanel().getBodyTabbedPane();
+		m_CardUITabbedPane.addChangeListener(this);
 	}
 
 	@Override
@@ -339,6 +346,18 @@ public class MutiInPubClientUI extends MutiChildForInUI {
 			}
 		}
 		return true;
+	}
+	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
+		if(getBillOperate() == IBillOperate.OP_REFADD){
+			if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			}else{
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			}
+			updateButtons();
+		}
 	}
 	
 }

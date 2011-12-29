@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
-import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -109,21 +108,14 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		setInitWarehouse("srl_pk");
 		//设置单据号
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vbillno", ((MyClientUI)getBillUI()).getBillNo());
-		ButtonObject btnobj = getBillUI().getButtonManager().getButton(IBillButton.AddLine);
-		if (btnobj != null) {
-			btnobj.setEnabled(false);
-			btnobj.setHint("参照不允许增行");
-		}
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("is_yundan", null);
 	}
 	@Override
 	protected UIDialog createQueryUI() {
 		// TODO Auto-generated method stub
 		return new MyQueryDIG(
-				getBillUI(), null, 
-				
-				_getCorp().getPk_corp(), getBillUI().getModuleCode()
-				
+				getBillUI(), null, 				
+				_getCorp().getPk_corp(), getBillUI().getModuleCode()				
 				, getBillUI()._getOperator(), null		
 		);
 	}
@@ -137,37 +129,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	    BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),WdsWlPubConst.BILLTYPE_OTHER_OUT, "crowno");
 	    
 	}
-	/**
-	 * 给界面上一些属性赋值
-	 */
-	private void setViewPro() throws BusinessException {
-		// 设置制单人
-		getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-		"coperatorid").setValue(
-				ClientEnvironment.getInstance().getUser().getPrimaryKey());
-		// 设置修改人
-		getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-		"clastmodiid").setValue(
-				ClientEnvironment.getInstance().getUser().getPrimaryKey());
-		// 单据日期
-		getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
-		"dbilldate").setValue(_getDate().toString());
-		//		if (isControl == 3) {
-		// 设置收发类别和备注可编辑
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-		"cdispatcherid").setEnabled(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("vnote")
-		.setEnabled(true);
-		// 部门
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("cdptid")
-		.setEnabled(true);
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("cdptid")
-		.setValue("1021B110000000000BN9");
-		// 库管员
-		getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-		"cwhsmanagerid").setEnabled(true);
-		ui.updateButtons();
-	}
+	
 	// 签字确认
 	protected void onQzqr() throws Exception {
 		try{

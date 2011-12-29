@@ -1,8 +1,6 @@
 package nc.ui.wds.ic.other.in;
 
 import javax.swing.JComponent;
-import javax.swing.event.ChangeListener;
-
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
@@ -34,10 +32,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  ∆‰À˚»Îø‚
  */
-public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEditListener, ChangeListener{
-	/**
-	 * 
-	 */
+public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEditListener{
 	private static final long serialVersionUID = 1L;
 	private String curRefBilltype = null;
 	protected ManageEventHandler createEventHandler() {
@@ -299,21 +294,4 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 	public Object getUserObject() {
 		return new GetCheck();
 	}	
-	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
-		Object sourece = arg0.getSource();
-		String geh_cgeneralhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("geh_cgeneralhid").getValue());
-		String csourcebillhid=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("geh_cgeneralhid").getValue());
-
-		if(csourcebillhid!=null||geh_cgeneralhid!=null){
-	     	if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
-		          getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-			      getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-	    	}else{
-			      getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
-			      getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		    } 
-	   	  updateButtons();
-	     }
-	}
-
 }

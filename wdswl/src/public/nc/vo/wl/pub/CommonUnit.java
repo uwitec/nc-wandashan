@@ -830,7 +830,7 @@ public class CommonUnit {
 	}
 	
 	/**
-	 * 根据当前登录者主键和存货单品主键查询出库存表中信息 进行批次排序
+	 * 根据当前登录者主键和存货单品主键查询出库存表中信息 进行批次(先入先出)排序
 	 * 条件：当前登录人所在货位可以出库的有存量的托盘存量信息
 	 *其他出库，销售出库自动捡货位
 	 */
@@ -865,7 +865,7 @@ public class CommonUnit {
 			sql.append(" wds_invbasdoc.so_ywaring_days");
 		}
 		sql.append(">=sysdate");
-		sql.append(" order by tmp.whs_batchcode,tmp.cdt_traycode,substr(tmp.cdt_traycode,length(tmp.cdt_traycode),1) desc, substr(tmp.cdt_traycode,length(tmp.cdt_traycode)-1,1) ");//由外向里，由下向上
+		sql.append(" order by tmp.whs_batchcode asc,tmp.cdt_traycode,substr(tmp.cdt_traycode,length(tmp.cdt_traycode),1) desc, substr(tmp.cdt_traycode,length(tmp.cdt_traycode)-1,1) ");//由外向里，由下向上
 		ArrayList<StockInvOnHandVO> list = (ArrayList<StockInvOnHandVO>)getbaseDao().executeQuery(sql.toString(), new BeanListProcessor(StockInvOnHandVO.class));
 		
 		return list;

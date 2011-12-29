@@ -277,13 +277,21 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			return;
 		}
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(null);
+		boolean isContineZero = false;//表体出库数量是否有为 0
 		for(CircularlyAccessibleValueObject body:billvo.getChildrenVO()){
 			UFDouble noutnum1 = PuPubVO.getUFDouble_NullAsZero(body.getAttributeValue("noutnum"));
+			if(noutnum1.doubleValue() ==0){
+				isContineZero = true;
+			}
 			noutnum  = noutnum.add(noutnum1);
 		}
 		if(noutnum.doubleValue() ==0){
 			getBillUI().showWarningMessage("无出库数量");
 			return;
+		}
+		if(isContineZero){
+			if(getBillUI().showYesNoMessage("有存货无出库数量，是否继续？") == UIDialog.ID_NO)
+			return ;
 		}
 		try{	
 			billvo = TranColHelper.col(getBillUI(), billvo, _getDate(),_getOperator());
