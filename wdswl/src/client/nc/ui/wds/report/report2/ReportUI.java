@@ -10,6 +10,7 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.scm.util.ObjectUtils;
+import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
 import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.ui.wl.pub.report.ZmReportBaseUI;
@@ -71,7 +72,7 @@ public class ReportUI extends ZmReportBaseUI {
 				if (rvos != null) {
 					super.updateBodyDigits();
 					setBodyVO(rvos);
-					setTolal();
+					setTolal1();
 				}
 			} catch (BusinessException e) {
 				e.printStackTrace();
@@ -79,6 +80,11 @@ public class ReportUI extends ZmReportBaseUI {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void setTolal1() throws Exception {
+		   new LevelSubTotalAction(this).atuoexecute2();  			
+
 	}
 
 	/**

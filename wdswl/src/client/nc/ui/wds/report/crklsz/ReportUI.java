@@ -6,6 +6,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
 import nc.ui.trade.report.query.QueryDLG;
+import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
 import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.report.ReportPubTool;
 import nc.ui.wl.pub.report.ZmReportBaseUI2;
@@ -232,7 +233,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 				if (vos != null) {
 					super.updateBodyDigits();
 					setBodyVO(vos);
-					setTolal();
+					setTolal1();
 				}
 			} catch (BusinessException e) {
 				e.printStackTrace();
@@ -240,6 +241,11 @@ public class ReportUI extends ZmReportBaseUI2 {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void setTolal1() throws Exception {
+		   new LevelSubTotalAction(this).atuoexecute2();  			
+		
 	}
 
 	private ReportBaseVO[] combinListVOs(List<ReportBaseVO[]> list)

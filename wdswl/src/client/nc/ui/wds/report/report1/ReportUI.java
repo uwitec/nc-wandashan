@@ -16,6 +16,7 @@ import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.report.query.QueryDLG;
+import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
 import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.report.ReportPubTool;
@@ -146,11 +147,11 @@ public class ReportUI extends ZmReportBaseUI {
 						getQuerySQL4(getQueryConditon()), });
 				ReportBaseVO[] rvos = null;
 				rvos = zcal(list);
-				setWait("正在处理....");
+			//	setWait("正在处理....");
 				if (rvos != null) {
 					super.updateBodyDigits();
 					setBodyVO(rvos);
-					setTolal();
+					setTolal1();
 				}
 
 			} catch (BusinessException e) {
@@ -160,6 +161,10 @@ public class ReportUI extends ZmReportBaseUI {
 			}
 		}
 
+	}
+
+	private void setTolal1() throws Exception {
+		   new LevelSubTotalAction(this).atuoexecute2();  			
 	}
 
 	private void setWait(String msg) {

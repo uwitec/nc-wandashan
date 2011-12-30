@@ -27,7 +27,7 @@ import nc.vo.wl.pub.report.ReportBaseVO;
  *        支持查询条件生成动态列  按动态列数据展开
  * @时间：2011-7-8下午03:20:53
  */
-abstract public class ZmReportBaseUI extends ReportBaseUI{	
+abstract public class ZmReportBaseUI extends nc.ui.wds.pub.report2.ReportBaseUI{	
 	private static final long serialVersionUID = -8293771841532487812L;  
     protected  ReportItem[]olditems=null; //记录初次加载的表体元素  
     private  Integer location=0;//查询动态列的插入位置 默认插入第0列
@@ -237,7 +237,7 @@ abstract public class ZmReportBaseUI extends ReportBaseUI{
      * 合计
      */
     public void setTolal() throws Exception {
- 
+    	
     }
 	 /**
      * 基本列合并

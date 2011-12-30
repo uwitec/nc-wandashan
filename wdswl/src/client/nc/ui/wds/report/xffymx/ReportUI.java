@@ -26,7 +26,6 @@ public class ReportUI extends ReportBaseUI{
 
 	@Override
 	public String _getModelCode() {
-		// TODO Auto-generated method stub
 		return WdsWlPubConst.REPORT30;
 	}
 

@@ -482,6 +482,10 @@ public class WDSWLReportSql {
 	//	sql.append(" b.nnumber, ");  //订单数量
 	//	sql.append(" b1.noutnum num,");//物流销售出库单实发数量
 	//	sql.append(" b.ntaldcnum,"); //订单累积出库数量  
+		sql.append(" b2.general_b_pk get_pk,");//物流销售出库单表体id
+		sql.append(" b2.vbatchcode vbantchcode,");//批次
+		sql.append(" b2.noutnum nnum ,");//销售出库 实出数量
+		sql.append(" b2.noutassistnum bnum ,");//销售出库单 实出辅数量
 		sql.append(" b1.noutnum num, ");  //运单累积出库数量
 	    sql.append(" h1.ntranprice yfprice,");//运费单价
 	    sql.append(" h1.ngls yfgls,");//公里数
