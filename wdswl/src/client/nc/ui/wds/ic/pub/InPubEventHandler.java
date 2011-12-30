@@ -169,8 +169,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			throw new BusinessException("请先输入表体数据");
 		for(TbGeneralBVO vo : bvo){
 			vo.validateOnZdrk(false);
-		}
-		
+		}		
 		//校验批次号
 		if(! validateBachCode()){
 		   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
