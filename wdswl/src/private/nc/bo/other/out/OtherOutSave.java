@@ -63,33 +63,33 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 			e1.printStackTrace();
 			throw new BusinessException(e1);
 		}
-		
-//		zhf add
+
+		//		zhf add
 		Map<String, SmallTrayVO[]> trayInfor = (Map<String,SmallTrayVO[]>)((MyBillVO)billVo).getOUserObj();
-		
-//		校验  进行了 绑定实际托盘的虚拟托盘 必须  指定  解除绑定信息
+
+		//		校验  进行了 绑定实际托盘的虚拟托盘 必须  指定  解除绑定信息
 		LockTrayBO lockbo = new LockTrayBO();
 		lockbo.checkIsLock((MyBillVO)billVo);
-//		zhf end
-		
+		//		zhf end
+
 		boolean isAdd = false;
 		boolean bodyChanged = false;//表体是否修改
 		TbOutgeneralHVO head = (TbOutgeneralHVO)billVo.getParentVO();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
-		
-		
+
+
 		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billVo.getChildrenVO();
 		//过滤掉删除行  zhf add
 		bodys = (TbOutgeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(bodys, new filterDelLine());
-		
+
 		if(bodys!=null && bodys.length > 0){
 			bodyChanged = true;
 			for(TbOutgeneralBVO body:bodys){
 				body.validationOnSave();
 			}
 		}
-		
+
 		if(!isAdd && old_billVo.getChildrenVO().length>0){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
 			TbOutgeneralBVO[] bb = (TbOutgeneralBVO[])old_billVo.getChildrenVO();
 			for(TbOutgeneralBVO b : bb){
@@ -99,7 +99,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 					getOutBO().deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
 			}
 		}
-		
+
 		//保存后  回写数据来源
 		getOutBO().writeBack(old_billVo,IBDACTION.SAVE,isAdd);
 		//---------------------------保存前校验结束----------------------------------------	
@@ -132,15 +132,15 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				throw new BusinessException(e);
 			}		
 		}
-		
+
 		if(trayInfor != null && trayInfor.size()>0){
-//			解锁  实际托盘
+			//			解锁  实际托盘
 			lockbo.doDelLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)), head.getSrl_pk(), trayInfor);
 		}
-		
+
 		return retAry;
 	}
-	
+
 	class filterDelLine implements IFilter{
 		public boolean accept(Object o) {
 			// TODO Auto-generated method stub
@@ -151,111 +151,9 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				return false;
 			return true;
 		}
-		
+
 	}
-	
-//	/**
-//	 * 
-//	 * @作者：zhf
-//	 * @说明：完达山物流项目 
-//	 * @时间：2011-4-7下午04:57:17
-//	 * @param arg1
-//	 * @param sLogUser
-//	 * @param uLogDate
-//	 * @param sLogCorp	 * @param itype 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-//	 * @throws Exception
-//	 */
-//	public void insertFyd(AggregatedValueObject arg1) throws Exception {
-//		if(arg1 == null)
-//			return;
-//		MyBillVO billVo = (MyBillVO)arg1;
-//		TbOutgeneralHVO generalh =(TbOutgeneralHVO) arg1.getParentVO();
-//		TbOutgeneralBVO[] generalb = (TbOutgeneralBVO[])arg1.getChildrenVO();
-//		Object[] o = new Object[3];
-//		o[0] = false;
-//		TbFydnewVO fydvo = new TbFydnewVO();
-//		List<TbFydmxnewVO[]> fydmxList = new ArrayList<TbFydmxnewVO[]>();
-//		HYPubBO hybo = new HYPubBO();
-//
-//		// 进行VO转换/////////////////////////////////////////////
-//
-//		// ------------转换表头对象-----------------//
-//		
-//		if (null != generalh && null != generalb && generalb.length > 0) {
-//			if (null != generalh.getVdiliveraddress()
-//					&& !"".equals(generalh.getVdiliveraddress())) {
-//				fydvo.setFyd_shdz(generalh.getVdiliveraddress()); // 收货地址
-//			}
-//			if (null != generalh.getVnote() && !"".equals(generalh.getVnote())) {
-//				fydvo.setFyd_bz(generalh.getVnote()); // 备注
-//			}
-//			if (null != generalh.getCdptid()
-//					&& !"".equals(generalh.getCdptid())) {
-//				fydvo.setCdeptid(generalh.getCdptid()); // 部门
-//			}
-//			// 设置运货方式
-//			fydvo.setFyd_yhfs("汽运");
-//			// 单据类型 0 发运制单 1 销售订单 2 分厂直流 3拆分订单4 合并订单 8 出库自制单据生成的运单
-//			fydvo.setBilltype(billVo.getItype());
-//			fydvo.setVbillstatus(1);
-//			// 单据号----------------------------------------------------------------
-//			fydvo.setVbillno(hybo.getBillNo(WdsWlPubConst.BILLTYPE_SEND_CONFIRM, billVo.getSLogCorp(), null, null));
-//			// 制单日期
-//			fydvo.setDmakedate(billVo.getULogDate());
-//			fydvo.setVoperatorid(billVo.getSLogUser()); // 设置制单人
-//			// 设置发货站
-//			fydvo.setSrl_pk(generalh.getSrl_pk());
-//			// 到货站
-//			fydvo.setSrl_pkr(generalh.getSrl_pkr());
-//			// --------------转换表头结束---------------//
-//			// --------------转换表体----------------//
-//			List<TbFydmxnewVO> tbfydmxList = new ArrayList<TbFydmxnewVO>();
-//			for (int j = 0; j < generalb.length; j++) {
-//				TbFydmxnewVO fydmxnewvo = new TbFydmxnewVO();
-//				TbOutgeneralBVO genb = generalb[j];
-//				if (null != genb.getCinventoryid()
-//						&& !"".equals(genb.getCinventoryid())) {
-//					fydmxnewvo.setPk_invbasdoc(genb.getCinventoryid()); // 单品主键
-//				}
-//				if (null != genb.getNshouldoutnum()
-//						&& !"".equals(genb.getNshouldoutnum())) {
-//					fydmxnewvo.setCfd_yfsl(genb.getNshouldoutnum()); // 应发数量
-//				}
-//				if (null != genb.getNshouldoutassistnum()
-//						&& !"".equals(genb.getNshouldoutassistnum())) {
-//					fydmxnewvo.setCfd_xs(genb.getNshouldoutassistnum()); // 箱数
-//				}
-//				if (null != genb.getNoutnum() && !"".equals(genb.getNoutnum())) {
-//					fydmxnewvo.setCfd_sfsl(genb.getNoutnum()); // 实发数量
-//				}
-//				if (null != genb.getNoutassistnum()
-//						&& !"".equals(genb.getNoutassistnum())) {
-//					fydmxnewvo.setCfd_sffsl(genb.getNoutassistnum()); // 实发辅数量
-//				}
-//				if (null != genb.getCrowno() && !"".equals(genb.getCrowno())) {
-//					fydmxnewvo.setCrowno(genb.getCrowno()); // 行号
-//				}
-//				if (null != genb.getUnitid() && !"".equals(genb.getUnitid())) {
-//					fydmxnewvo.setCfd_dw(genb.getUnitid()); // 单位
-//				}
-//				fydmxnewvo.setCfd_pc(genb.getVbatchcode()); // 批次		
-//				fydmxnewvo.setVsourcebillcode(WdsWlPubConst.BILLTYPE_OTHER_OUT);
-//				fydmxnewvo.setCsourcebillbid(genb.getGeneral_b_pk());
-//				fydmxnewvo.setCsourcebillhid(genb.getGeneral_pk());
-//				tbfydmxList.add(fydmxnewvo);
-//			}
-//			// ----------------转换表体结束---------------------//
-//				TbFydmxnewVO[] fydmxVO = new TbFydmxnewVO[tbfydmxList.size()];
-//				tbfydmxList.toArray(fydmxVO);
-//				fydmxList.add(fydmxVO);
-//				o[0] = true;
-//		HYBillVO newBillVo = new HYBillVO();
-//		newBillVo.setParentVO(fydvo);
-//		newBillVo.setChildrenVO(fydmxVO);
-//		saveBD(newBillVo, null);
-//	}
-//	}
-	
+
 	/**
 	 * 
 	 * @作者：zhf
@@ -272,7 +170,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 		TbOutgeneralBVO[] newbodys = (TbOutgeneralBVO[])newBillVo.getChildrenVO();
 		TbOutgeneralBVO[] oldbodys = (TbOutgeneralBVO[])oldBillVo.getChildrenVO();	
 		checkTrayUsed(oldbodys);
-//		String[] tmps = null;
+		//		String[] tmps = null;
 		for(TbOutgeneralBVO old : oldbodys){
 			String oldno = old.getCrowno();
 			for(TbOutgeneralBVO newbody:newbodys){
@@ -294,7 +192,7 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 			}
 		}
 	}
-	
+
 	public List<TbOutgeneralTVO> arrayTolist(TbOutgeneralTVO[] bvo){
 		List<TbOutgeneralTVO> list  = null;
 		if(bvo!=null && bvo.length>0){
@@ -314,11 +212,11 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 	 */
 	private void checkTrayUsed(TbOutgeneralBVO[] bodys) throws BusinessException{
 		String sql ="select cdt_traycode from bd_cargdoc_tray  " +
-				" join tb_warehousestock on tb_warehousestock.pplpt_pk = bd_cargdoc_tray.cdt_pk " +
-				" where bd_cargdoc_tray.cdt_pk=? and tb_warehousestock.whs_pk=? " +
-				" and (bd_cargdoc_tray.cdt_traystatus="+StockInvOnHandVO.stock_state_null+" or  " +
-				" coalesce(tb_warehousestock.whs_stocktonnage,0)<? " +
-				" and tb_warehousestock.whs_stocktonnage>0)";
+		" join tb_warehousestock on tb_warehousestock.pplpt_pk = bd_cargdoc_tray.cdt_pk " +
+		" where bd_cargdoc_tray.cdt_pk=? and tb_warehousestock.whs_pk=? " +
+		" and (bd_cargdoc_tray.cdt_traystatus="+StockInvOnHandVO.stock_state_null+" or  " +
+		" coalesce(tb_warehousestock.whs_stocktonnage,0)<? " +
+		" and tb_warehousestock.whs_stocktonnage>0)";
 		SQLParameter para = new SQLParameter();
 		for(TbOutgeneralBVO bvo:bodys){
 			List<TbOutgeneralTVO> tray = bvo.getTrayInfor();
@@ -336,27 +234,6 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 				para.clearParams();
 			}
 		}
-		
-	}
-	
-//	/**
-//	 * 根据出库子表信息删除缓存里面数据
-//	 * 
-//	 * @param generalb
-//	 *            出库子表
-//	 * @throws BusinessException
-//	 */
-//	private void deleteTrayInfor(TbOutgeneralBVO[] generalb)
-//			throws BusinessException {
-//		if (null != generalb && generalb.length > 0) {
-//			for (int i = 0; i < generalb.length; i++) {
-//				String strWhere = " pk_invbasdoc='"
-//						+ generalb[i].getCinventoryid()
-//						+ "' and cfirstbillbid ='"
-//						+ generalb[i].getCsourcebillbid() + "'";
-//				getBaseDao().deleteByClause(TbOutgeneralTVO.class, strWhere);
-//			}
-//		}
-//	}
 
+	}
 }
