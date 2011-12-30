@@ -1,4 +1,5 @@
 package nc.ui.wds.pub.report2;
+
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -10,19 +11,19 @@ import nc.vo.pub.cquery.FldgroupVO;
 import nc.vo.pub.rs.MemoryResultSet;
 import nc.vo.pub.rs.MemoryResultSetMetaData;
 import nc.vo.pub.util1.MutilWeiClass;
+
 /**
- * 数据交叉表 用于动态构建二维表
- * 取自供应链的查询引擎
- * 但供应链的查询引擎 对存在多个交叉值的 数据交叉 会导致数据混乱
- * 所以 重写了本类  用来支持 存在多个交叉值的数据交叉 的实现
+ * 数据交叉表 用于动态构建二维表 取自供应链的查询引擎 但供应链的查询引擎 对存在多个交叉列的 数据交叉 会导致数据混乱 所以 重写了本类 用来支持
+ * 本类实现了： 存在多个交叉列的数据交叉 的实现
+ * 
  * @author mlr 2011-12-16 modify
  */
 public class ZmCrossTable {
-	//zjb+
+	// zjb+
 	public static final String CRS_DELIM = "ˉ";
 
 	private static final String CRS_VALUE_COLUMN = "&type";
-	
+
 	private String[] m_crsCols = null;
 
 	private String[] m_crsRows = null;
@@ -43,9 +44,8 @@ public class ZmCrossTable {
 
 	private String m_strSp = CRS_DELIM;
 
-	//lyyuan+
+	// lyyuan+
 	private Comparator m_userDefComparator = null;
-
 
 	public final static Comparator DEFAULTCOMPARATOR = new java.util.Comparator() {
 		public int compare(Object o1, Object o2) {
@@ -55,14 +55,14 @@ public class ZmCrossTable {
 				return ((Double) o1).compareTo((Double) o2);
 			else if (o1 instanceof Short || o2 instanceof Short)
 				return ((Short) o1).compareTo((Short) o2);
-			else if (o1 instanceof java.math.BigDecimal || o2 instanceof java.math.BigDecimal)
-				return ((java.math.BigDecimal) o1).compareTo((java.math.BigDecimal) o2);
+			else if (o1 instanceof java.math.BigDecimal
+					|| o2 instanceof java.math.BigDecimal)
+				return ((java.math.BigDecimal) o1)
+						.compareTo((java.math.BigDecimal) o2);
 			else
 				return (o1.toString()).compareTo(o2.toString());
 		}
 	};
-
-
 
 	/**
 	 * CrossTable 构造子注解。
@@ -78,8 +78,8 @@ public class ZmCrossTable {
 	 * @param objs
 	 *            java.lang.Object[][]
 	 */
-	private MemoryResultSet arrayToMrs(Object[][] objs, MemoryResultSetMetaData mrsmdNew)
-			throws Exception {
+	private MemoryResultSet arrayToMrs(Object[][] objs,
+			MemoryResultSetMetaData mrsmdNew) throws Exception {
 		int iTypeAtCol = 0;
 		String[] strRows = splitFuHeRows(getCrsRows());
 		String[] strCols = splitFuHeRows(getCrsCols());
@@ -107,9 +107,9 @@ public class ZmCrossTable {
 			}
 		}
 
-		//开始分拆
+		// 开始分拆
 		int iStart = splitFuHeRows(getCrsRows()).length;
-		//&type在列
+		// &type在列
 		if (iTypeAtCol == 1)
 			for (int i = iStart; i < mrsmdNew.getColumnCount(); i++) {
 				if (mrsmdNew.getColumnType(i + 1) == Types.DOUBLE
@@ -119,18 +119,20 @@ public class ZmCrossTable {
 						|| mrsmdNew.getColumnType(i + 1) == Types.SMALLINT
 						|| mrsmdNew.getColumnType(i + 1) == Types.FLOAT
 						|| mrsmdNew.getColumnType(i + 1) == Types.REAL
-						//oracle数据库
+						// oracle数据库
 						|| mrsmdNew.getColumnType(i + 1) == Types.NUMERIC) {
 					for (int j = 0; j < objs.length; j++) {
 						// if (i == 17)
-						//	System.out.println();
+						// System.out.println();
 						if (objs[j][i] != null) {
 							// if (i == 17)
-							//	System.out.println();
-							StringTokenizer st = new StringTokenizer(objs[j][i].toString(), " ");
+							// System.out.println();
+							StringTokenizer st = new StringTokenizer(objs[j][i]
+									.toString(), " ");
 							double d = 0;
 							while (st.hasMoreElements()) {
-								// d += Double.parseDouble(st.nextElement().toString());
+								// d +=
+								// Double.parseDouble(st.nextElement().toString());
 								String strTemp = st.nextToken();
 								d += (strTemp == null || strTemp.equals("null")) ? 0
 										: Double.parseDouble(strTemp);
@@ -143,22 +145,24 @@ public class ZmCrossTable {
 									&& mrsmdNew.getScale(i + 1) != 0)
 								objs[j][i] = new Double(d);
 							else {
-								objs[j][i] = new Integer(new Double(d).intValue());
+								objs[j][i] = new Integer(new Double(d)
+										.intValue());
 							}
 						}
 					}
 				} else {
 					for (int j = 0; j < objs.length; j++)
 						if (objs[j][i] != null) {
-							StringTokenizer st = new StringTokenizer(objs[j][i].toString(), " ");
-							//Set set = new LinkedHashSet();
+							StringTokenizer st = new StringTokenizer(objs[j][i]
+									.toString(), " ");
+							// Set set = new LinkedHashSet();
 							ArrayList al = new ArrayList();
 							while (st.hasMoreTokens()) {
-								//set.add(st.nextToken());
+								// set.add(st.nextToken());
 								al.add(st.nextToken());
 							}
 							StringBuffer sb = new StringBuffer();
-							//Iterator iter = set.iterator();
+							// Iterator iter = set.iterator();
 							Iterator iter = al.iterator();
 							while (iter.hasNext()) {
 								sb.append(iter.next());
@@ -169,14 +173,15 @@ public class ZmCrossTable {
 				}
 			}
 
-		//&type在行：分两种情况
+		// &type在行：分两种情况
 		else if (iTypeAtCol == -1) {
-			//a Vals不含字串，全部按Double
+			// a Vals不含字串，全部按Double
 			if (vIsStringType.size() == 0) {
 				for (int i = iStart; i < mrsmdNew.getColumnCount(); i++)
 					for (int j = 0; j < objs.length; j++) {
 						if (objs[j][i] != null) {
-							StringTokenizer st = new StringTokenizer(objs[j][i].toString(), " ");
+							StringTokenizer st = new StringTokenizer(objs[j][i]
+									.toString(), " ");
 							double d = 0;
 							while (st.hasMoreTokens()) {
 								// d += Double.parseDouble(st.nextToken());
@@ -189,12 +194,13 @@ public class ZmCrossTable {
 					}
 			} else {
 
-				//b 含字串，按行作。
+				// b 含字串，按行作。
 				for (int i = 0; i < objs.length; i++) {
 					if (!vIsStringType.contains(objs[i][iTypeColNo].toString()))
 						for (int j = iStart; j < mrsmdNew.getColumnCount(); j++) {
 							if (objs[i][j] != null) {
-								StringTokenizer st = new StringTokenizer(objs[i][j].toString(), " ");
+								StringTokenizer st = new StringTokenizer(
+										objs[i][j].toString(), " ");
 								double d = 0;
 								while (st.hasMoreTokens()) {
 									d += Double.parseDouble(st.nextToken());
@@ -205,15 +211,16 @@ public class ZmCrossTable {
 					else {
 						for (int j = iStart; j < mrsmdNew.getColumnCount(); j++) {
 							if (objs[i][j] != null) {
-								StringTokenizer st = new StringTokenizer(objs[i][j].toString(), " ");
-								//Set set = new LinkedHashSet();
+								StringTokenizer st = new StringTokenizer(
+										objs[i][j].toString(), " ");
+								// Set set = new LinkedHashSet();
 								ArrayList al = new ArrayList();
 								while (st.hasMoreTokens()) {
-									//set.add(st.nextToken());
+									// set.add(st.nextToken());
 									al.add(st.nextToken());
 								}
 								StringBuffer sb = new StringBuffer();
-								//Iterator iter = set.iterator();
+								// Iterator iter = set.iterator();
 								Iterator iter = al.iterator();
 								while (iter.hasNext()) {
 									sb.append(iter.next());
@@ -228,11 +235,12 @@ public class ZmCrossTable {
 			}
 		} else {
 
-			//&type不在行，也不在列，全部按Double作
+			// &type不在行，也不在列，全部按Double作
 			for (int i = 0; i < objs.length; i++) {
 				for (int j = iStart; j < mrsmdNew.getColumnCount(); j++) {
 					if (objs[i][j] != null) {
-						StringTokenizer st = new StringTokenizer(objs[i][j].toString(), " ");
+						StringTokenizer st = new StringTokenizer(objs[i][j]
+								.toString(), " ");
 						double d = 0;
 						while (st.hasMoreTokens()) {
 							// d += Double.parseDouble(st.nextToken());
@@ -264,11 +272,12 @@ public class ZmCrossTable {
 	 * 
 	 * @return nc.vo.pub.rs.MemoryResultSetMetaData
 	 */
-	private MemoryResultSetMetaData changeCrossTableMrsmd(int iColCount, MutilWeiClass mwc)
-			throws Exception {
+	private MemoryResultSetMetaData changeCrossTableMrsmd(int iColCount,
+			MutilWeiClass mwc) throws Exception {
 		String[] strRows = splitFuHeRows(getCrsRows());
 		MemoryResultSetMetaData mrsmdOrg = getMrsOrg().getMetaData0();
-		MemoryResultSetMetaData mrsmdCrsOrg = getCrsMemoryResultSet().getMetaData0();
+		MemoryResultSetMetaData mrsmdCrsOrg = getCrsMemoryResultSet()
+				.getMetaData0();
 		ArrayList al = new ArrayList();
 		int[] iDataType = new int[iColCount];
 		for (int i = 0; i < strRows.length; i++) {
@@ -287,13 +296,14 @@ public class ZmCrossTable {
 					nAlColVal *= lists[k].size();
 			}
 			for (int j = 0; j < iLength; j++) {
-				String str = lists[i].get((j / nAlColVal) % lists[i].size()).toString();
+				String str = lists[i].get((j / nAlColVal) % lists[i].size())
+						.toString();
 				if (sbKeys[j] == null) {
 					sbKeys[j] = new StringBuffer();
 					sbKeys[j].append(str);
 				} else {
-					sbKeys[j].append(m_strSp); //zjb改
-					//sbKeys[j].append(".");
+					sbKeys[j].append(m_strSp); // zjb改
+					// sbKeys[j].append(".");
 					sbKeys[j].append(str);
 				}
 			}
@@ -311,8 +321,8 @@ public class ZmCrossTable {
 				break;
 			}
 		}
-		//modify mlr  改正纵向的复合维度的合并 无法合并 
-		String[] strCols = getCrsCols(); 
+		// modify mlr 改正纵向的复合维度的合并 无法合并的bug
+		String[] strCols = getCrsCols();
 		int iTypeLoc = -1;
 		for (int i = 0; i < strCols.length; i++)
 			if (strCols[i].equals("&type")) {
@@ -330,19 +340,19 @@ public class ZmCrossTable {
 			al.add(sbKeys[i].toString());
 			Vector vecKeys = new Vector();
 			if (iTypeLoc != -1) {
-				//对于有空串的情况可能会出错
-				////////////////////////////////////////////////////////////////////////
-				//StringTokenizer st = new
+				// 对于有空串的情况可能会出错
+				// //////////////////////////////////////////////////////////////////////
+				// StringTokenizer st = new
 				// StringTokenizer(sbKeys[i].toString(), CRS_DELIM); //zjb改
-				////StringTokenizer st = new
+				// //StringTokenizer st = new
 				// StringTokenizer(sbKeys[i].toString(), ".");
-				//while (st.hasMoreTokens())
-				//vecKeys.add(st.nextToken());
-				/////////////////////////////////////////////////////////////////////////
+				// while (st.hasMoreTokens())
+				// vecKeys.add(st.nextToken());
+				// ///////////////////////////////////////////////////////////////////////
 				String str = sbKeys[i].toString();
 				int index = str.indexOf(m_strSp);
 				while (index != -1) {
-					//System.out.println(str.substring(0,index));
+					// System.out.println(str.substring(0,index));
 					vecKeys.add(str.substring(0, index));
 					str = str.substring(index + 1, str.length());
 					index = str.indexOf(m_strSp);
@@ -381,24 +391,29 @@ public class ZmCrossTable {
 			iNewType = new int[iDataType.length + getCrsVals().length];
 			System.arraycopy(iDataType, 0, iNewType, 0, iDataType.length);
 			for (int i = 0; i < getCrsVals().length; i++) {
-				String colName = m_mwc.getAlColVal()[m_locType].get(i).toString();
+				String colName = m_mwc.getAlColVal()[m_locType].get(i)
+						.toString();
 				int index = getColIndexbyTypeVal(colName);
-				iNewType[iDataType.length + i] = getMrsOrg().getMetaData0().getColumnType(index + 1);
+				iNewType[iDataType.length + i] = getMrsOrg().getMetaData0()
+						.getColumnType(index + 1);
 				if (getMrsOrgDisNames() != null)
 					al.add(getMrsOrgDisNames()[index]
-							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes().getStrByID("102401", "UC000-0001146")/*
-							 * @res
-							 * "合计"
-							 */);
+							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes()
+									.getStrByID("102401", "UC000-0001146")/*
+																		 * @res
+																		 * "合计"
+																		 */);
 				else
 					al.add(colName
-							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes().getStrByID("102401", "UC000-0001146")/*
-							 * @res
-							 * "合计"
-							 */);
+							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes()
+									.getStrByID("102401", "UC000-0001146")/*
+																		 * @res
+																		 * "合计"
+																		 */);
 			}
 		}
-		MemoryResultSetMetaData mrsmdNew = new MemoryResultSetMetaData(iNewType, al);
+		MemoryResultSetMetaData mrsmdNew = new MemoryResultSetMetaData(
+				iNewType, al);
 		return mrsmdNew;
 	}
 
@@ -411,8 +426,8 @@ public class ZmCrossTable {
 	 * @param mrsmdCrs
 	 *            nc.vo.pub.rs.MemoryResultSetMetaData
 	 */
-	private MemoryResultSet changeCrsMrs(MemoryResultSet mrsOrg, MemoryResultSetMetaData mrsmdCrs)
-			throws Exception {
+	private MemoryResultSet changeCrsMrs(MemoryResultSet mrsOrg,
+			MemoryResultSetMetaData mrsmdCrs) throws Exception {
 		if (mrsOrg == null || mrsmdCrs == null)
 			return null;
 		ArrayList al = new ArrayList();
@@ -477,92 +492,94 @@ public class ZmCrossTable {
 		al.add("&value");
 		iDataType[strRows.length + strCols.length] = Types.VARCHAR;
 		iDataType[iDataType.length - 1] = Types.DOUBLE;
-		MemoryResultSetMetaData mrsmdNew = new MemoryResultSetMetaData(iDataType, al);
+		MemoryResultSetMetaData mrsmdNew = new MemoryResultSetMetaData(
+				iDataType, al);
 		return mrsmdNew;
 	}
 
-    /**
-     * 此处插入方法说明。 创建日期：(2002-12-12 10:14:45)
-     * @modified by jl on 2006-2-28 -- 用默认的排序器会把用户设置的旋转交叉顺序冲掉，故改成
-     * 对于交叉值来说，不排列
-     * 
-     * @return nc.vo.pub.util1.MutilWeiClass
-     * @exception java.lang.Exception
-     *                异常说明。
-     */
-    private MutilWeiClass createMutilWeiClass() throws java.lang.Exception {
-        if (m_mwc != null)
-            return m_mwc;
-        else {
-            MemoryResultSet mrsCrs = getCrsMemoryResultSet();
-            String allTitle[] = new String[getCrsRows().length + getCrsCols().length];
-            
-            //jl+ 交叉砝码在维度信息中的位置
-            int typePos = 0;
-            for (int i = 0; i < allTitle.length; i++) {
-                if (i < getCrsRows().length)
-                    allTitle[i] = getCrsRows()[i];
-                else
-                    allTitle[i] = getCrsCols()[i - getCrsRows().length];
-                
-                //jl+
-                //if (allTitle[i].indexOf("&type") != -1) {
-                //zjb改，用此方法在设置列复合维度的情况下导致多表头构造混乱
-                if (allTitle[i].equals("&type")) {
-                    typePos = i;
-                }
-            }
-            
-            MutilWeiClass mwc = new MutilWeiClass();
-            mwc.setAlCol(allTitle);
-            int weiIndexs[][] = new int[allTitle.length][];
-            //for (int i = 0; i < weiIndexs.length; i++)
-            //weiIndexs[i] = mrsCrs.getMetaData0().getNameIndex(allTitle[i]);
-            weiIndexs = getWeiIndexArray(mrsCrs, allTitle);
-            mwc.setIndex(weiIndexs);
-            /** 先扫描出来有多少列便于处理 */
-            for (int i = 0; i < mrsCrs.getResultArrayList().size(); i++) {
-                mrsCrs.skipTo(i);
-                ArrayList curAlRow = (ArrayList) mrsCrs.getRowArrayList();
-                mwc.appendWeidu(curAlRow);
-            }
+	/**
+	 * 此处插入方法说明。 创建日期：(2002-12-12 10:14:45)
+	 * 
+	 * @modified by jl on 2006-2-28 -- 用默认的排序器会把用户设置的旋转交叉顺序冲掉，故改成 对于交叉值来说，不排列
+	 * 
+	 * @return nc.vo.pub.util1.MutilWeiClass
+	 * @exception java.lang.Exception
+	 *                异常说明。
+	 */
+	private MutilWeiClass createMutilWeiClass() throws java.lang.Exception {
+		if (m_mwc != null)
+			return m_mwc;
+		else {
+			MemoryResultSet mrsCrs = getCrsMemoryResultSet();
+			String allTitle[] = new String[getCrsRows().length
+					+ getCrsCols().length];
 
-            for (int i = 0; i < mwc.getAlColVal().length; i++) {
-                Vector v = new Vector();
-                v.addAll(mwc.getAlColVal()[i]);
-                Comparator comparator = m_userDefComparator;
-                if (comparator == null) {
-                    comparator = DEFAULTCOMPARATOR;
-                }
-                
-                //jl+ 交叉值不排序
-                //zjb改
-                if (i != typePos) {
-                	java.util.Collections.sort(v, comparator);
-                }
-                
-                ArrayList al = new ArrayList(v);
-                mwc.getAlColVal()[i] = al;
-            }
+			// jl+ 交叉砝码在维度信息中的位置
+			int typePos = 0;
+			for (int i = 0; i < allTitle.length; i++) {
+				if (i < getCrsRows().length)
+					allTitle[i] = getCrsRows()[i];
+				else
+					allTitle[i] = getCrsCols()[i - getCrsRows().length];
 
-            //打印：
-            //System.out.println("---------AlColVal()---------");
-            //for (int i = 0; i < mwc.getAlColVal().length; i++) {
-            //System.out.println(mwc.getAlColVal()[i]);
-            //}
-            mwc.buildDataSource();
-            /** 列扫描完成 */
-            /** 添加数据 */
-            for (int i = 0; i < mrsCrs.getResultArrayList().size(); i++) {
-                mrsCrs.skipTo(i);
-                ArrayList curAlRow = (ArrayList) mrsCrs.getRowArrayList();
-                int index = mrsCrs.getMetaData0().getColumnCount();
-                mwc.append(curAlRow, index - 1);
-            }
-            m_mwc = mwc;
-            return m_mwc;
-        }
-    }
+				// jl+
+				// if (allTitle[i].indexOf("&type") != -1) {
+				// zjb改，用此方法在设置列复合维度的情况下导致多表头构造混乱
+				if (allTitle[i].equals("&type")) {
+					typePos = i;
+				}
+			}
+
+			MutilWeiClass mwc = new MutilWeiClass();
+			mwc.setAlCol(allTitle);
+			int weiIndexs[][] = new int[allTitle.length][];
+			// for (int i = 0; i < weiIndexs.length; i++)
+			// weiIndexs[i] = mrsCrs.getMetaData0().getNameIndex(allTitle[i]);
+			weiIndexs = getWeiIndexArray(mrsCrs, allTitle);
+			mwc.setIndex(weiIndexs);
+			/** 先扫描出来有多少列便于处理 */
+			for (int i = 0; i < mrsCrs.getResultArrayList().size(); i++) {
+				mrsCrs.skipTo(i);
+				ArrayList curAlRow = (ArrayList) mrsCrs.getRowArrayList();
+				mwc.appendWeidu(curAlRow);
+			}
+
+			for (int i = 0; i < mwc.getAlColVal().length; i++) {
+				Vector v = new Vector();
+				v.addAll(mwc.getAlColVal()[i]);
+				Comparator comparator = m_userDefComparator;
+				if (comparator == null) {
+					comparator = DEFAULTCOMPARATOR;
+				}
+
+				// jl+ 交叉值不排序
+				// zjb改
+				if (i != typePos) {
+					java.util.Collections.sort(v, comparator);
+				}
+
+				ArrayList al = new ArrayList(v);
+				mwc.getAlColVal()[i] = al;
+			}
+
+			// 打印：
+			// System.out.println("---------AlColVal()---------");
+			// for (int i = 0; i < mwc.getAlColVal().length; i++) {
+			// System.out.println(mwc.getAlColVal()[i]);
+			// }
+			mwc.buildDataSource();
+			/** 列扫描完成 */
+			/** 添加数据 */
+			for (int i = 0; i < mrsCrs.getResultArrayList().size(); i++) {
+				mrsCrs.skipTo(i);
+				ArrayList curAlRow = (ArrayList) mrsCrs.getRowArrayList();
+				int index = mrsCrs.getMetaData0().getColumnCount();
+				mwc.append(curAlRow, index - 1);
+			}
+			m_mwc = mwc;
+			return m_mwc;
+		}
+	}
 
 	/**
 	 * 此处插入方法说明。 创建日期：(2002-12-13 10:04:37)
@@ -628,16 +645,18 @@ public class ZmCrossTable {
 		try {
 			MutilWeiClass mwc = createMutilWeiClass();
 			ArrayList[] listsOrg = mwc.getAlColVal();
-			ArrayList[] lists = new ArrayList[listsOrg.length - getCrsRows().length];
-			System.arraycopy(listsOrg, getCrsRows().length, lists, 0, lists.length);
-			//FldgroupVO数组的长度
+			ArrayList[] lists = new ArrayList[listsOrg.length
+					- getCrsRows().length];
+			System.arraycopy(listsOrg, getCrsRows().length, lists, 0,
+					lists.length);
+			// FldgroupVO数组的长度
 			int iLength = 0;
 			for (int i = lists.length - 1; i > 0; i--) {
 				int n = lists[0].size();
 				for (int j = 1; j < i; j++) {
 					n *= lists[j].size();
 				}
-				//处理某列取值唯一的情况 yx add
+				// 处理某列取值唯一的情况 yx add
 				int dim = (lists[i].size() - 1 > 0) ? (lists[i].size() - 1) : 1;
 				iLength += dim * n;
 			}
@@ -645,35 +664,39 @@ public class ZmCrossTable {
 			fldGrps = new FldgroupVO[iLength];
 
 			int iGId = 1;
-			//记录多表头当前行的列数
+			// 记录多表头当前行的列数
 			int iCurLen = 0;
 			int iLen = getCrsValColCount();
 			java.util.List lst = new ArrayList();
 			java.util.List lstNext = new ArrayList();
-			//从最后一列往上处理，组合多表头
+			// 从最后一列往上处理，组合多表头
 			for (int i = lists.length - 1; i > 0; i--) {
-				//如果是最后一列，初始化lst
+				// 如果是最后一列，初始化lst
 				if (i == lists.length - 1) {
 					iCurLen = iLen;
 					for (int m = 0; m < iLen; m++)
-						lst.add(Integer.toString(m + splitFuHeRows(getCrsRows()).length));
+						lst.add(Integer.toString(m
+								+ splitFuHeRows(getCrsRows()).length));
 				} else
 					iCurLen = iCurLen / lists[i + 1].size();
 
 				for (int j = 0; j < iCurLen / lists[i].size(); j++) {
-					//记录lstNext
+					// 记录lstNext
 					String strGrpName = null;
 					if (i == 1)
 						strGrpName = lists[0].get(j).toString();
 					else {
-						StringBuffer sb = new StringBuffer(lists[i - 1].get(j % lists[i - 1].size()).toString());
+						StringBuffer sb = new StringBuffer(lists[i - 1].get(
+								j % lists[i - 1].size()).toString());
 						for (int p = i - 2; p >= 0; p--) {
-							//zjb改
+							// zjb改
 							int iSize = 1;
 							for (int x = p + 1; x < i; x++)
 								iSize *= lists[x].size();
-							sb.insert(0, lists[p].get((j / iSize) % lists[p].size()) + m_strSp);
-							//sb.insert(0, lists[p].get((j / lists[i -
+							sb.insert(0, lists[p].get((j / iSize)
+									% lists[p].size())
+									+ m_strSp);
+							// sb.insert(0, lists[p].get((j / lists[i -
 							// 1].size()) % lists[p].size()) + ".");
 						}
 						strGrpName = sb.toString();
@@ -681,7 +704,7 @@ public class ZmCrossTable {
 
 					lstNext.add(strGrpName);
 
-					//处理取值唯一的情况 yx add
+					// 处理取值唯一的情况 yx add
 					if (lists[i].size() == 1) {
 						FldgroupVO fldGroup = new FldgroupVO();
 						fldGroup.setGroupid(new Integer(iGId));
@@ -713,10 +736,12 @@ public class ZmCrossTable {
 							else
 								fldGroup.setGrouptype("3");
 							if (k == 0)
-								fldGroup.setItem1(lst.get(j * lists[i].size() + k).toString());
+								fldGroup.setItem1(lst.get(
+										j * lists[i].size() + k).toString());
 							else
 								fldGroup.setItem1(strGrpName);
-							fldGroup.setItem2(lst.get(j * lists[i].size() + k + 1).toString());
+							fldGroup.setItem2(lst.get(
+									j * lists[i].size() + k + 1).toString());
 							if (i == 1 && k == lists[i].size() - 2)
 								fldGroup.setToplevelflag("Y");
 							else
@@ -749,12 +774,12 @@ public class ZmCrossTable {
 		if (getCrsVals() == null)
 			return null;
 		MemoryResultSet mrs = null;
-//		MemoryResultSet mrsResult = null;
+		// MemoryResultSet mrsResult = null;
 		try {
 			init();
 			MutilWeiClass mwc = createMutilWeiClass();
 			Object oa[][] = mwc.breakTo2Wei0(getCrsRows().length, m_locType);
-			//生成交叉后的MemoryResultSet
+			// 生成交叉后的MemoryResultSet
 			int nCol = 0;
 			if (oa != null) {
 				if (m_isTypeAtCol)
@@ -764,11 +789,11 @@ public class ZmCrossTable {
 			}
 			MemoryResultSetMetaData mrsmdNew = changeCrossTableMrsmd(nCol, mwc);
 			mrs = arrayToMrs(oa, mrsmdNew);
-			//根据需要合计的列的定义数组组织最终的mrs
+			// 根据需要合计的列的定义数组组织最终的mrs
 			if (m_isTypeAtCol)
-				/*mrsResult =*/ removeCols(mrs);
-//			else
-//				mrsResult = mrs;
+				/* mrsResult = */removeCols(mrs);
+			// else
+			// mrsResult = mrs;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -877,7 +902,8 @@ public class ZmCrossTable {
 	 * @exception java.lang.Exception
 	 *                异常说明。
 	 */
-	private int[][] getWeiIndexArray(MemoryResultSet mrs, String[] title) throws java.lang.Exception {
+	private int[][] getWeiIndexArray(MemoryResultSet mrs, String[] title)
+			throws java.lang.Exception {
 		int[][] ia = new int[title.length][];
 		for (int i = 0; i < title.length; i++) {
 			StringTokenizer st = new StringTokenizer(title[i], " ,|");
@@ -907,7 +933,8 @@ public class ZmCrossTable {
 			setCrsCols(new String[] {});
 		MemoryResultSetMetaData mrsmdOrg = getMrsOrg().getMetaData0();
 		String[] strDisNameOrgs = new String[mrsmdOrg.getColumnCount()];
-		if (getMrsOrgDisNames() == null || getMrsOrgDisNames().length < mrsmdOrg.getColumnCount()) {
+		if (getMrsOrgDisNames() == null
+				|| getMrsOrgDisNames().length < mrsmdOrg.getColumnCount()) {
 			for (int i = 0; i < mrsmdOrg.getColumnCount(); i++)
 				strDisNameOrgs[i] = mrsmdOrg.getColumnName(i + 1);
 			setMrsOrgColDisNames(strDisNameOrgs);
@@ -952,16 +979,19 @@ public class ZmCrossTable {
 				vec.add(mrsmd.getColumnName(mrsmd.getColumnCount() - i));
 		} else {
 			for (int i = 0; i < getCrsVals().length; i++) {
-				String colName = m_mwc.getAlColVal()[m_locType].get(i).toString();
+				String colName = m_mwc.getAlColVal()[m_locType].get(i)
+						.toString();
 				int index = getColIndexbyTypeVal(colName);
-				String realName = getMrsOrg().getMetaData0().getColumnName(index + 1);
+				String realName = getMrsOrg().getMetaData0().getColumnName(
+						index + 1);
 				if (!needSum(realName))
-					//vec.add("crosssum_" + colName);
+					// vec.add("crosssum_" + colName);
 					vec.add(colName
-							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes().getStrByID("102401", "UC000-0001146")/*
-							 * @res
-							 * "合计"
-							 */); //zjb改
+							+ nc.vo.ml.NCLangRes4VoTransl.getNCLangRes()
+									.getStrByID("102401", "UC000-0001146")/*
+																		 * @res
+																		 * "合计"
+																		 */); // zjb改
 			}
 		}
 		for (int i = 0; i < vec.size(); i++)
@@ -1068,29 +1098,29 @@ public class ZmCrossTable {
 		String[] strRows = (String[]) vec.toArray(new String[0]);
 		return strRows;
 
-		//MutilWeiClass mwc = createMutilWeiClass();
-		//String[] strRowsTemp = getCrsRows();
-		//int iRowCnt = 0;
-		//for (int i = 0; i < strRowsTemp.length; i++)
-		//if (i == 0)
-		//iRowCnt = mwc.getIndex()[i].length;
-		//else
-		//iRowCnt += mwc.getIndex()[i].length;
+		// MutilWeiClass mwc = createMutilWeiClass();
+		// String[] strRowsTemp = getCrsRows();
+		// int iRowCnt = 0;
+		// for (int i = 0; i < strRowsTemp.length; i++)
+		// if (i == 0)
+		// iRowCnt = mwc.getIndex()[i].length;
+		// else
+		// iRowCnt += mwc.getIndex()[i].length;
 
-		//String[] strRows = new String[iRowCnt];
-		//int iCur = 0;
-		//for (int i = 0; i < strRowsTemp.length; i++) {
-		//if (mwc.getIndex()[i].length > 1) {
-		//StringTokenizer st = new StringTokenizer(strRowsTemp[i], " ,|");
-		//while (st.hasMoreTokens()) {
-		//strRows[iCur] = st.nextToken();
-		//iCur++;
-		//}
-		//} else {
-		//strRows[iCur] = strRowsTemp[i];
-		//iCur++;
-		//}
-		//}
-		//return strRows;
+		// String[] strRows = new String[iRowCnt];
+		// int iCur = 0;
+		// for (int i = 0; i < strRowsTemp.length; i++) {
+		// if (mwc.getIndex()[i].length > 1) {
+		// StringTokenizer st = new StringTokenizer(strRowsTemp[i], " ,|");
+		// while (st.hasMoreTokens()) {
+		// strRows[iCur] = st.nextToken();
+		// iCur++;
+		// }
+		// } else {
+		// strRows[iCur] = strRowsTemp[i];
+		// iCur++;
+		// }
+		// }
+		// return strRows;
 	}
 }
