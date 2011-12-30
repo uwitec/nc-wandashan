@@ -331,22 +331,6 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 						.setCellForeGround(i, field, Color.black);	
 					}
 				}
-				//yf end
-				
-				
-//				if(b1.sub(b2).doubleValue() > 0 ){
-//					//»ÒÉ«
-//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-//					.setCellBackGround(i, "invcode", Color.blue);	
-//				}else if(b1.sub(b2).doubleValue() == b1.doubleValue()){
-//					//ºìÉ«
-//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-//					.setCellBackGround(i, "invcode", Color.red);	
-//				}else if(b1.sub(b2).doubleValue() == 0){
-//					//°×É«
-//					getBillCardPanelWrapper().getBillCardPanel().getBodyPanel()
-//					.setCellBackGround(i, "invcode", Color.white);	
-//				}
 			}
 		}
 	}
