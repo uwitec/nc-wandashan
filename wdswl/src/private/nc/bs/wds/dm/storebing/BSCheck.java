@@ -99,7 +99,7 @@ public class BSCheck implements IBDBusiCheck {
                 			stordocid ="";
                 		}
                 		if(!stordocid.equalsIgnoreCase(pk_stordoc)){
-                			throw new BusinessException("客户在[仓库="+getCustCode(stordocid)+",发货地="+geAreaname(head.getPk_sendareacl())+"]已经绑定");
+                			throw new BusinessException("客户["+getCustName(pk_cumandoc)+"],在[仓库="+getCustCode(stordocid)+",发货地="+geAreaname(head.getPk_sendareacl())+"]已经绑定");
                 		}
                 	}
                 }
@@ -122,6 +122,22 @@ public class BSCheck implements IBDBusiCheck {
 //                 }           
 //              }
         }		
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目:获得客商名称
+	 * @时间：2011-12-23下午02:21:59
+	 * @param pk_cusmandoc
+	 * @return
+	 * @throws DAOException 
+	 */
+	private String getCustName(String pk_cumandoc)throws DAOException{
+		String object  ="";
+		String sql =" select custname from bd_cubasdoc where isnull(dr,0)=0 and pk_cubasdoc =(" +
+				"select pk_cubasdoc from bd_cumandoc where isnull(dr,0)=0 and pk_cumandoc='"+pk_cumandoc+"')";
+		object = (String)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR);
+		return object;
 	}
 	/**
 	 * 
