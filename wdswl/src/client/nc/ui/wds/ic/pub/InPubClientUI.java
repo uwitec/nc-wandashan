@@ -8,6 +8,8 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComponent;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
@@ -25,6 +27,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
@@ -320,12 +323,58 @@ public class InPubClientUI extends WdsBillManagUI {
 	}
 	
 	public boolean beforeEdit(BillEditEvent e) {
+
+		int row  = e.getRow();
+		String key=e.getKey();
+
+		String csourcetype = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
+				.getBodyValueAt(row, "csourcetype"));
+		//如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
+		if ("invcode".equalsIgnoreCase(key)) {
+			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+				return false;
+			if (csourcetype != null) {
+				return false;
+			} else {
+				String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+				if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
+					showWarningMessage("前选择入库货位");
+					return false;
+				}			
+				JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
+				if( c instanceof UIRefPane){
+					UIRefPane ref = (UIRefPane)c;
+					ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
+				}
+				return true;
+			}
+		}
+		if("geb_snum".equalsIgnoreCase(key)){
+			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 应收数量
+				return false;
+			if (csourcetype != null) {
+				return false;
+			} else {
+				return true;
+			}		
+		}
+		if("geb_bsnum".equalsIgnoreCase(key)){
+			if(getBillOperate() == IBillOperate.OP_EDIT){//zhf add 20110624  修改时 应收辅数量
+				if (csourcetype != null) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+			return true;
+		}
 		if(e.getKey().equalsIgnoreCase("geb_vbatchcode")){
 			if(getBillOperate() == IBillOperate.OP_EDIT){
 				return false;
 			}
 		}
-		return true;
+
+		return super.beforeEdit(e);
 	}
 	
 }

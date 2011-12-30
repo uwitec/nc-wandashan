@@ -1,4 +1,5 @@
 package nc.ui.wds.ic.other.in;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
@@ -16,8 +17,8 @@ import nc.uif.pub.exception.UifException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
+
 public class OtherInEventHandler extends InPubEventHandler {
 	public OtherInEventHandler(MutiInPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
@@ -109,13 +110,6 @@ public class OtherInEventHandler extends InPubEventHandler {
 		if (getBillManageUI().isListPanelSelected())
 			getBillManageUI().setCurrentPanel(BillTemplateWrapper.CARDPANEL);
 		getBillUI().setBillOperate(IBillOperate.OP_ADD);
-	}
-
-	@Override
-	protected void onBoLineAdd() throws Exception {
-		super.onBoLineAdd();
-		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
-				WdsWlPubConst.BILLTYPE_OTHER_IN, "geb_crowno");
 	}
 
 	public BillManageUI getBillManageUI() {

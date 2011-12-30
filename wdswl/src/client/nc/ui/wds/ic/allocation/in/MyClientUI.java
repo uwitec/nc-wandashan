@@ -77,11 +77,11 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 		}
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 	}	
-	@Override
-	public boolean beforeEdit(BillEditEvent e) {
-		super.beforeEdit(e);
-		return true;
-	}
+//	@Override
+//	public boolean beforeEdit(BillEditEvent e) {
+//		super.beforeEdit(e);
+//		return true;
+//	}
 	
 	/**
 	 * 注册自定义按钮

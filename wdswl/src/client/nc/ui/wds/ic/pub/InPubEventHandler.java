@@ -55,6 +55,8 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoLineAdd() throws Exception {
 		super.onBoLineAdd();
 		setBodySpace();
+		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
+				getBillType(), "geb_crowno");
 	}
 	@Override
 	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
@@ -62,6 +64,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		getBillManageUI().setDefaultData();
 		setBodySpace();//表体赋默认值
 		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
+		getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		getBillUI().updateButtons();
 	}
 	//表体赋货位
 	protected void setBodySpace()throws BusinessException{
@@ -90,14 +95,6 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				}
 				AggregatedValueObject aObject  = getBufferData().getCurrentVOClone();
 				TbGeneralHVO tbGeneralHVOss = (TbGeneralHVO)aObject.getParentVO();
-//				if(tbGeneralHVOss.getFisload() != null &&tbGeneralHVOss.getFisload().equals(UFBoolean.TRUE)){
-//					getBillUI().showWarningMessage("已经形成装卸费核算单，不能取消签字");
-//					return ;
-//				}
-//				if(tbGeneralHVOss.getFistran() != null &&tbGeneralHVOss.getFistran().equals(UFBoolean.TRUE)){
-//					getBillUI().showWarningMessage("已经形成运费核算单，不能取消签字");
-//					return ;
-//				}
 				tbGeneralHVOss.setGeh_storname(null);// 库房签字人
 				tbGeneralHVOss.setTaccounttime(null);// 签字时间
 				tbGeneralHVOss.setClastmodiid(_getOperator());// 最后修改人
@@ -160,10 +157,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	 * 指定托盘
 	 */
 	protected int onZdtp() throws Exception {
-		//校验批次号
-		if(! validateBachCode()){
-		   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-		}
+		getBillCardPanelWrapper().getBillCardPanel().stopEditing();
+		
+		
 		String pk_cargdoc =  getPk_cargDoc();//货位
 		if(pk_cargdoc == null || "".equals(pk_cargdoc))
 			throw new BusinessException("请指定货位信息");
@@ -174,6 +170,13 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		for(TbGeneralBVO vo : bvo){
 			vo.validateOnZdrk(false);
 		}
+		
+		//校验批次号
+		if(! validateBachCode()){
+		   throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+		}
+		
+		
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(WdsWlPubConst.DLG_IN_TRAY_APPOINT,_getOperator(), 
 				_getCorp().getPrimaryKey(), null,ui,true);
 		int retflag = UIDialog.ID_CANCEL;

@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.out.in;
 
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -22,7 +21,6 @@ import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -139,61 +137,61 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 
 	
 	
-	@Override
-	public boolean beforeEdit(BillEditEvent e) {
-		int row  = e.getRow();
-		String key=e.getKey();
-		
-		  String csourcetype = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
-					.getBodyValueAt(row, "csourcetype"));
-	     //如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
-		if ("invcode".equalsIgnoreCase(key)) {
-			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
-				return false;
-			if (csourcetype != null) {
-				return false;
-			} else {
-				String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
-				if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
-					showWarningMessage("前选择入库货位");
-					return false;
-				}			
-				JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
-				if( c instanceof UIRefPane){
-					UIRefPane ref = (UIRefPane)c;
-					ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
-				}
-				return true;
-			}
-		}
-		if("geb_snum".equalsIgnoreCase(key)){
-			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
-				return false;
-			if (csourcetype != null) {
-				return false;
-			} else {
-				return true;
-			}		
-		}if("geb_bsnum".equalsIgnoreCase(key)){
-			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
-				return false;
+//	@Override
+//	public boolean beforeEdit(BillEditEvent e) {
+//		int row  = e.getRow();
+//		String key=e.getKey();
+//		
+//		  String csourcetype = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
+//					.getBodyValueAt(row, "csourcetype"));
+//	     //如果是参照过来的不可以编辑 ，如果是自制单据可以编辑
+//		if ("invcode".equalsIgnoreCase(key)) {
+//			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+//				return false;
 //			if (csourcetype != null) {
 //				return false;
 //			} else {
-				return true;
-//			}		
-		}
-			
-//		//过滤当前货位下的存货
-//		if("invcode".equalsIgnoreCase(key)){
-//			
-//			return true;	
-//						
+//				String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+//				if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
+//					showWarningMessage("前选择入库货位");
+//					return false;
+//				}			
+//				JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
+//				if( c instanceof UIRefPane){
+//					UIRefPane ref = (UIRefPane)c;
+//					ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
+//				}
+//				return true;
+//			}
 //		}
-	
-
-		return super.beforeEdit(e);
-	}
+//		if("geb_snum".equalsIgnoreCase(key)){
+//			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+//				return false;
+//			if (csourcetype != null) {
+//				return false;
+//			} else {
+//				return true;
+//			}		
+//		}if("geb_bsnum".equalsIgnoreCase(key)){
+//			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 存货编码不能修改
+//				return false;
+////			if (csourcetype != null) {
+////				return false;
+////			} else {
+//				return true;
+////			}		
+//		}
+//			
+////		//过滤当前货位下的存货
+////		if("invcode".equalsIgnoreCase(key)){
+////			
+////			return true;	
+////						
+////		}
+//	
+//
+//		return super.beforeEdit(e);
+//	}
 	/**
 	 * 注册自定义按钮
 	 */

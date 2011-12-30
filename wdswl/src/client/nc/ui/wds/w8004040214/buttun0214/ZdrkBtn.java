@@ -18,10 +18,8 @@ public class ZdrkBtn {
 		btnVo.setChildAry(new int[] { 
 				
 		});
-		
-//		btnVo.setOperateStatus(new int[]{IBillOperate.OP_ADD,IBillOperate.OP_EDIT,IBillOperate.OP_REFADD});
 //		zhf add  µ÷Õû °´Å¥×´Ì¬
-		btnVo.setOperateStatus(new int[]{IBillOperate.OP_ADD,IBillOperate.OP_REFADD});
+		btnVo.setOperateStatus(new int[]{IBillOperate.OP_ADD,IBillOperate.OP_REFADD,IBillOperate.OP_EDIT});
 
 		return btnVo;
 	}
