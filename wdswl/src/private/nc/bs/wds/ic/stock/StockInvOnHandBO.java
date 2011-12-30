@@ -213,6 +213,8 @@ public class StockInvOnHandBO {
 			}
 			item.setWhs_stockpieces(nhandassnum.sub(noutassistnum));
 			item.setWhs_stocktonnage(nhandnum.sub(noutnum));
+			item.setWhs_oanum(nhandassnum.sub(noutassistnum));
+			item.setWhs_omnum(nhandnum.sub(noutnum));
 			item.setStatus(VOStatus.UPDATED);
 			this.updateWarehousestock(item);
 		}
@@ -295,13 +297,20 @@ public class StockInvOnHandBO {
 	 */
 	public void updateWarehousestock(StockInvOnHandVO item) throws Exception {
 		// TODO Auto-generated method stub
-		if (null != item) {
-			if(PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces()).doubleValue()<0|| PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage()).doubleValue()<0){
-			//	throw new BusinessException("出现负结存");
-			}
-//			this.getIvo().updateVO(item);
-			getDao().updateVO(item,StockInvOnHandVO.update_fields);
+		if(item == null)
+			return;
+
+		if(PuPubVO.getUFDouble_NullAsZero(item.getWhs_stockpieces()).doubleValue()<0|| PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage()).doubleValue()<0){
+			throw new BusinessException("出现负结存");
 		}
+
+		item.setWhs_status(1);
+		if(PuPubVO.getUFDouble_NullAsZero(item.getWhs_stocktonnage()).doubleValue()>0){
+			item.setWhs_status(0);
+		}
+		
+		getDao().updateVO(item,StockInvOnHandVO.update_fields);
+
 		check(item.getWhs_pk());
 	}
 	
