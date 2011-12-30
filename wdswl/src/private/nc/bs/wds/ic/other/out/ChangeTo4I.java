@@ -87,18 +87,16 @@ public class ChangeTo4I {
 		if(pk_billtype == null){
 			return null;
 		}
-		
-		setLocatorVO(bvos); //设置货位信息
+		//1.设置货位信息
+		setLocatorVO(bvos); 
+		//2.交换生成ERP其他出库单
 		GeneralBillVO vo = (GeneralBillVO)PfUtilTools.runChangeData(pk_billtype, s_billtype, billVO,null); //其它出库
 		//		setSpcGenBillVO(vo,coperator,date);
-
 		WdsWlIcPubDealTool.appFieldValueForIcNewBill(vo, l_map, corp,coperator, date, isReturn,getBaseDAO());
-
 		if(!isReturn.booleanValue()){
-			//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
+			//如果不回传批次号 应该按照  来源订单id + 批次号  进行汇总处理------zhf		
 			WdsWlIcPubDealTool.combinItemsBySourceAndInv(vo, false);
 		}
-
 		return vo;
 	}
 	

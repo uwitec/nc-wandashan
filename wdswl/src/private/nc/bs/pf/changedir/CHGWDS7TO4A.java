@@ -66,17 +66,16 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 						"B_flargess->B_geb_flargess",//是否赠品
 						"B_cspaceid->B_geb_space",//货位ID
 
-						"B_csourcebillhid->B_geh_pk",//[保存 供应链 其他出字段]
+						"B_csourcebillhid->B_geh_pk",//[保存  其他出字段]
 						"B_csourcebillbid->B_geb_pk",//[保存  供应链 其他出字段]
 						"B_vsourcebillcode->H_geh_billcode",//[保存 供应链 其他出字段]
 						"B_csourcetype->H_geh_billtype",//[保存  供应链 其他出字段]
 						"B_"+WdsWlPubConst.csourcehid_wds+"->B_geh_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 						"B_"+WdsWlPubConst.csourcebid_wds+"->B_geb_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
-						"B_cfirstbillhid->B_geh_pk",// [保存  物流 其他入字段]，
-						"B_cfirstbillbid->B_geb_pk",//   [保存  物流 其他入字段]
-						"B_vfirstbillcode->H_geh_billcode",//[保存  物流 其他入字段 ]
-						"B_cfirsttype->H_geh_billtype",//[保存  物流 其他入字段 ]
-						
+						"B_cfirstbillhid->B_cfirstbillhid",// [供应链字段 [其他入库]-------为空或者发运计划主键]
+						"B_cfirstbillbid->B_cfirstbillbid",//  [供应链字段 [其他入库]-------为空或者发运计划表体主键] 
+						"B_vfirstbillcode->B_vfirstbillcode",//[供应链字段 [其他入库]-------为空或者发运计划编码]
+						"B_cfirsttype->B_cfirsttyp",//[供应链字段 [其他入库]-------为空或者发运计划编码]
 						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						
 		

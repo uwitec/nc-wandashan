@@ -36,8 +36,7 @@ public class WdsWlIcPubDealTool {
 	 * @param isin 是否入库类型
 	 */
 	public static void combinItemsBySourceAndInv(GeneralBillVO bill,boolean isin){
-
-		//		如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
+		//如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
 		String key = null;
 		GeneralBillItemVO[] items = bill.getItemVOs();
 		GeneralBillItemVO tmp = null;
@@ -72,19 +71,19 @@ public class WdsWlIcPubDealTool {
 	
 	private static void adjustBillData(GeneralBillVO bill,String corp,String date,String coperator,BaseDAO dao)
 	throws BusinessException{
-		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
-		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 		Integer dates= getDefaultDay(corp,dao);
 		Date dqdate= new Date();
 		int dqday= dqdate.getDay();
 		int jzday=dates.intValue();
-
 		//如果当前期小于等于结账期，则传ERP的出入库单单据期为当前期；
 		//如果当前期大于结账期，则传EPR单据为下一个月1号
-		if(dqday<=jzday){
-			bill.getHeaderVO().setDbilldate(new UFDate(date));//单据日期
-		}else{
+		UFDate dbilldate = new UFDate(date);
+		if(dqday >jzday){
 			bill.getHeaderVO().setDbilldate(NextMonth());//单据日期
+		}
+		bill.getHeaderVO().setDbilldate(dbilldate);
+		for(GeneralBillItemVO itemvo :bill.getItemVOs()){
+			itemvo.setDbizdate(dbilldate);
 		}
 	}
 	
@@ -135,19 +134,13 @@ public class WdsWlIcPubDealTool {
 			BaseDAO dao) throws BusinessException{
 		if(bill == null)
 			return;
-		
-		
-		
-		
+		//根据结账期设置，修改传ERP的单据单据日期，和表体出入库日期
 		adjustBillData(bill, corp, sdate, coperator, dao);
-		
-		
-		
 		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 		bill.getHeaderVO().setDbilldate(new UFDate(sdate));//单据日期
 		bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态
-		String returnBatchcode = getDefaultVbatchCode(corp);
+		String returnBatchcode = getDefaultVbatchCode(corp);//物流传ERP默认的批次号
 		GeneralBillItemVO[] items = bill.getItemVOs();
 		if(items == null || items.length == 0)
 			return;
@@ -158,7 +151,7 @@ public class WdsWlIcPubDealTool {
 			if(item.getDbizdate() == null){
 				item.setDbizdate(new UFDate(sdate));//业务日期
 			}	
-			if(fisvbatchcontorl == null || !fisvbatchcontorl.booleanValue()){
+			if(!fisvbatchcontorl.booleanValue()){
 				item.setVbatchcode(returnBatchcode);
 			}
 			//设置货位信息

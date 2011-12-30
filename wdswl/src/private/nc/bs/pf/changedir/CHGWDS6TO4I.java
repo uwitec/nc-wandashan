@@ -68,10 +68,10 @@ public class CHGWDS6TO4I  extends nc.bs.pf.change.VOConversion {
 				"B_vsourcebillcode->H_vbillno",//[供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]
 				"B_csourcetype->H_vbilltype",//[供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]
 				
-				"B_cfirstbillhid->B_cfirstbillhid",// [供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]
-				"B_cfirstbillbid->B_cfirstbillbid",//  [供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值] 
-				"B_vfirstbillcode->B_vfirstbillcode",//[供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]
-				"B_cfirsttype->B_cfirsttyp",//[供应链字段 [其他出库]-------理论为空，实际保存 本地其他出库值]				
+				"B_cfirstbillhid->B_cfirstbillhid",// [供应链字段 [其他出库]-------为空或者发运计划主键]
+				"B_cfirstbillbid->B_cfirstbillbid",//  [供应链字段 [其他出库]-------为空或者发运计划表体主键] 
+				"B_vfirstbillcode->B_vfirstbillcode",//[供应链字段 [其他出库]-------为空或者发运计划编码]
+				"B_cfirsttype->B_cfirsttyp",//[供应链字段 [其他出库]-------为空或者发运计划编码]				
 				"B_dbizdate->B_dbizdate",//出库日期->业务日期-------------------------zpm
 				"B_"+WdsWlPubConst.csourcehid_wds+"->B_general_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 				"B_"+WdsWlPubConst.csourcebid_wds+"->B_general_b_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
