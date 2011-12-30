@@ -275,8 +275,12 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
              setQueryAfter();
 	  	} catch (BusinessException e) {
 			e.printStackTrace();
+			this.showErrorMessage(e.getMessage());
+
 		} catch (Exception e) {			
 			e.printStackTrace();
+			this.showErrorMessage(e.getMessage());
+
 		} 
 	   }  
 	}	

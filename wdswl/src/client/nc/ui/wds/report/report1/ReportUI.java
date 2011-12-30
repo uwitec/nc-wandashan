@@ -159,8 +159,11 @@ public class ReportUI extends ZmReportBaseUI {
 
 			} catch (BusinessException e) {
 				e.printStackTrace();
+				this.showErrorMessage(e.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
+				this.showErrorMessage(e.getMessage());
+
 			}
 		}
 
