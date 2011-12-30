@@ -1,4 +1,5 @@
 package nc.ui.wds.report.report2;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,10 @@ import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.report.ReportBaseVO;
+
 /**
  * 各仓库总库存报表
+ * 
  * @author mlr
  */
 public class ReportUI extends ZmReportBaseUI {
@@ -34,7 +37,7 @@ public class ReportUI extends ZmReportBaseUI {
 	// 合并字段
 	private static String[] combinNums = { "num", "bnum" };
 	// 计算库龄
-	private static int[][] hdays = { {0, 60 }, { 61, 90 } };
+	private static int[][] hdays = { { 0, 60 }, { 61, 90 } };
 	private AccountCalendar ac = AccountCalendar.getInstance();
 	private ClientEnvironment ce = ClientEnvironment.getInstance();
 
@@ -51,6 +54,7 @@ public class ReportUI extends ZmReportBaseUI {
 	public String getQuerySQL() throws Exception {
 		return WDSWLReportSql.getStoreSql(getQueryDlg().getWhereSQL());
 	}
+
 	@Override
 	public void onQuery() {
 		getQueryDlg().showModal();
@@ -66,7 +70,7 @@ public class ReportUI extends ZmReportBaseUI {
 				setColumn();
 				// 设置vo
 				vos = getReportVO(getQuerySQL());
-				ReportBaseVO[] rvos=deal(vos);
+				ReportBaseVO[] rvos = deal(vos);
 				if (rvos == null || rvos.length == 0)
 					return;
 				if (rvos != null) {
@@ -83,7 +87,7 @@ public class ReportUI extends ZmReportBaseUI {
 	}
 
 	private void setTolal1() throws Exception {
-		   new LevelSubTotalAction(this).atuoexecute2();  			
+		new LevelSubTotalAction(this).atuoexecute2();
 
 	}
 
@@ -111,7 +115,7 @@ public class ReportUI extends ZmReportBaseUI {
 		// 计算0-90天库存
 		calDay1(jichus, rvos);
 		calYear(jichus, rvos);
-		calDaiJian(jichus,rvos);
+		calDaiJian(jichus, rvos);
 		return jichus;
 	}
 
@@ -225,7 +229,8 @@ public class ReportUI extends ZmReportBaseUI {
 			ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qus
 					.toArray(new ReportBaseVO[0]), jcombinFields, combinNums,
 					ReportBaseVO.class);
-			CombinVO.addByContion1(jichus, nevos, jcombinFields, (loc+1) + "");
+			CombinVO
+					.addByContion1(jichus, nevos, jcombinFields, (loc + 1) + "");
 		}
 		if (qis.size() != 0) {
 			ReportBaseVO[] nevos = (ReportBaseVO[]) CombinVO.combinData(qis
@@ -250,51 +255,44 @@ public class ReportUI extends ZmReportBaseUI {
 		// 大的分组 有效
 		ColumnGroup zgroup = new ColumnGroup("有效");
 		int i = -1;// 设置变化赋值量
-	
-		zgroup.add(cardTcm.getColumn(3+ i));
-		zgroup.add(cardTcm.getColumn(4+ i));
-		
-		zgroup.add(cardTcm.getColumn(5+ i));
-		zgroup.add(cardTcm.getColumn(6+ i));
-		
 
-		zgroup.add(cardTcm.getColumn(7+ i));
-		zgroup.add(cardTcm.getColumn(8+ i));
-		
+		zgroup.add(cardTcm.getColumn(3 + i));
+		zgroup.add(cardTcm.getColumn(4 + i));
 
-		zgroup.add(cardTcm.getColumn(9+ i));
-		zgroup.add(cardTcm.getColumn(10+ i));
-		
+		zgroup.add(cardTcm.getColumn(5 + i));
+		zgroup.add(cardTcm.getColumn(6 + i));
+
+		zgroup.add(cardTcm.getColumn(7 + i));
+		zgroup.add(cardTcm.getColumn(8 + i));
+
+		zgroup.add(cardTcm.getColumn(9 + i));
+		zgroup.add(cardTcm.getColumn(10 + i));
+
 		shiji.add(zgroup);
 
-		
 		ColumnGroup zgroup1 = new ColumnGroup("无效");
-	
-		zgroup1.add(cardTcm.getColumn(11+ i));
-		zgroup1.add(cardTcm.getColumn(12+ i));
-		
-		zgroup1.add(cardTcm.getColumn(13+ i));
-		
+
+		zgroup1.add(cardTcm.getColumn(11 + i));
+		zgroup1.add(cardTcm.getColumn(12 + i));
+
+		zgroup1.add(cardTcm.getColumn(13 + i));
+
 		shiji.add(zgroup1);
 
+		shiji.add(cardTcm.getColumn(14 + i));
 
-		shiji.add(cardTcm.getColumn(14+ i));
-		
 		cardHeader.addColumnGroup(shiji);
-		
+
 		ColumnGroup zgroup2 = new ColumnGroup("原料粉(吨)");
-        i=3;
+		i = 3;
 
-		zgroup2.add(cardTcm.getColumn(15+ i));
-		zgroup2.add(cardTcm.getColumn(16+ i));
-		
+		zgroup2.add(cardTcm.getColumn(15 + i));
+		zgroup2.add(cardTcm.getColumn(16 + i));
 
-		zgroup2.add(cardTcm.getColumn(17+ i));
+		zgroup2.add(cardTcm.getColumn(17 + i));
 		cardHeader.addColumnGroup(zgroup2);
 
-		
 		getReportBase().getBillModel().updateValue();
-	
 
 	}
 
