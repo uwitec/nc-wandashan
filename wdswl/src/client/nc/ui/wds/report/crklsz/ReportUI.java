@@ -155,11 +155,17 @@ public class ReportUI extends ZmReportBaseUI2 {
 				if ("dbilldate".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("dbilldate");
 				}
+				if ("srl_pk".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("srl_pk");
+				}
 			}
 		} else if (type == 1) {
 			for (int i = 0; i < vos.length; i++) {
 				if ("dbilldate".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("geh_dbilldate");
+				}
+				if ("srl_pk".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("geh_cwarehouseid");
 				}
 			}
 		}
