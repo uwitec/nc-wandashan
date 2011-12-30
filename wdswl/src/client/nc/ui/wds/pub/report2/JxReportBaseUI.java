@@ -242,6 +242,8 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
      * (设置数据到ui之后处理)
      * 交叉  
      * 
+     * 二次处理
+     * 
      * 合计
      *
      */

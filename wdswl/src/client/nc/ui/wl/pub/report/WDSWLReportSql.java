@@ -465,31 +465,41 @@ public class WDSWLReportSql {
 		sql.append(" iv.fuesed chtype,");//存货类型 常用0  不常用1		
 		sql.append(" cl.pk_invcl pk_invcl,");//存货分类主键
 		sql.append(" b.cinventoryid pk_invmandoc,");  //存货管理id
-		sql.append(" b1.pk_soorder_b  b_pk,");//销售订单子表id
+		sql.append(" b.corder_bid  b_pk,");//销售订单子表id
 		sql.append(" b1.pk_soorder_b b_pk1,");//销售运单子表id
 		sql.append(" b.cinvbasdocid pk_invbasdoc, ");  //存货基本id 
 		sql.append(" h1.vcardno carcode,");//车号
 		sql.append(" h1.vdriver vdrivername,");//承运人
 		sql.append(" h1.pk_transcorp pk_transcorp,");//承运公司
 		sql.append(" h.dapprovedate sorderdate,");//收订单日期 （订单的签字时间）
-
 	//	sql.append(" h1.dacceptdate sorderdate,");//收订单日期
 		sql.append(" h1.ddispachdate cartime,");//派车时间
 		sql.append(" h1.dbilldate forderdate,");//发订单日期
 		sql.append(" h1.dsenddate djrfh,");//第几日发货
 		sql.append(" h1.pk_sendareal pk_sendareal,");//销售区域
 		sql.append(" h1.vtelphone jxstel,");//客商电话
-		sql.append(" h1.nruntime zcyxtime,");//正常运行时间		
+		sql.append(" h1.nruntime zcyxtime,");//正常运行时间	
 	//	sql.append(" b.nnumber, ");  //订单数量
 	//	sql.append(" b1.noutnum num,");//物流销售出库单实发数量
 	//	sql.append(" b.ntaldcnum,"); //订单累积出库数量  
 		sql.append(" b1.noutnum num, ");  //运单累积出库数量
+	    sql.append(" h1.ntranprice yfprice,");//运费单价
+	    sql.append(" h1.ngls yfgls,");//公里数
+	    sql.append(" h1.ntransmny yfhj,");//运费		
+	    sql.append(" b3.pk_loadprice_b1 b_pk2 ,");//装卸费核算单 表体id
+	    sql.append(" b3.pk_loadprice h_pk,");//装卸费核算单 主表id
+	    sql.append(" b3.nloadprice   zxfzx,");//装货费
+	    sql.append(" b3.nunloadprice zxfzx1,");//卸货费
+	    sql.append(" b3.ncodeprice zxftq,");//采码费
+	    sql.append(" b3.ntagprice zxfcm,");//贴签费
 	//	sql.append(" b1.nassoutnum ,");//累积出库辅数量	
 		sql.append(" ich.pk_defdoc11");//出入库标示
 		sql.append(" from so_sale h ");
 		sql.append(" join so_saleorder_b b on h.csaleid = b.csaleid ");
 		sql.append(" join wds_soorder_b b1 on b.corder_bid=b1.csourcebillbid ");
-		sql.append(" join wds_soorder h1 on b1.pk_soorder=b1.pk_soorder ");
+		sql.append(" join wds_soorder h1 on b1.pk_soorder=h1.pk_soorder ");
+		sql.append(" join tb_outgeneral_b b2 on b1.pk_soorder_b=b2.csourcebillbid");//关联销售出库单  
+		sql.append(" left join wds_loadprice_b1 b3 on b2.general_b_pk=b3.csourcebillbid and isnull(b3.dr,0)=0 ");//关联装卸费核算单
 		sql.append(" left join ic_general_b icb on b.corder_bid=icb.csourcebillbid and isnull(icb.dr,0)=0");
 		sql.append(" left join ic_general_h ich on icb.cgeneralhid=ich.cgeneralhid and isnull(ich.dr,0)=0");
 		sql.append(" left join wds_invbasdoc iv");//关联存货档案
@@ -500,6 +510,7 @@ public class WDSWLReportSql {
 		sql.append(" and isnull(b.dr, 0) = 0 ");
 		sql.append(" and isnull(b1.dr,0) = 0");
 		sql.append(" and isnull(h1.dr,0) =0 ");
+		sql.append(" and isnull(b2.dr,0)=0");
 		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
 		if(whereSql!=null && whereSql.length()!=0)
 		sql.append(" and "+whereSql);
