@@ -41,8 +41,14 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 	
 	public MyClientUI() {
 		super();
+		init();
 	}
 
+	private void init(){
+		getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+		updateButtons();
+	}
+	
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}
@@ -75,12 +81,12 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		//除去行操作多余按钮
 		ButtonObject btnobj = getButtonManager().getButton(IBillButton.Line);
 		if (btnobj != null) {
-//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
-//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
+			//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
+			//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
 			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
-			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
+			//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.AddLine));
 		}
-	
+		super.initSelfData();
 	}
 
 
