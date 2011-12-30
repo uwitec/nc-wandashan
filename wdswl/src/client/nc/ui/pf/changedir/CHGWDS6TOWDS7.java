@@ -19,7 +19,7 @@ public class CHGWDS6TOWDS7 extends VOConversionUI {
 			"H_geh_cwarehouseid->H_srl_pkr",//入库仓库						
 			"H_geh_cotherwhid->H_srl_pk",//出库仓库			
 			"H_geh_cbiztype->H_cbiztype",//业务类型			
-			"H_geh_cdispatcherid->H_cdispatcherid",//收发类别
+//			"H_geh_cdispatcherid->H_cdispatcherid",//收发类别
 			"H_geh_cwhsmanagerid->H_cwhsmanagerid",//库管员											
 			"H_geh_cdptid->H_cdptid",//部门
 			"H_geh_cbizid->H_cbizid",//业务员			

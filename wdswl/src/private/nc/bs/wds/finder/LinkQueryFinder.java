@@ -15,10 +15,6 @@ public class LinkQueryFinder extends AbstractBillFinder2{
 			return new String[]{WdsWlPubConst.WDS3};
 		}else if(WdsWlPubConst.WDS3.equals(type)){//发运订单
 			return new String[]{WdsWlPubConst.BILLTYPE_OTHER_OUT};
-		}else if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equals(type)){//其它出库
-			return new String[]{WdsWlPubConst.BILLTYPE_OTHER_IN,WdsWlPubConst.WDSF};
-		}else if(WdsWlPubConst.BILLTYPE_OTHER_IN.equals(type)){//其它入库
-			return new String[]{WdsWlPubConst.WDSF};
 		}else if(WdsWlPubConst.WDS5.equals(type)){//销售运单
 			return new String[]{WdsWlPubConst.BILLTYPE_SALE_OUT};
 		}else if(WdsWlPubConst.BILLTYPE_SALE_OUT.equals(type)){//销售出库
@@ -36,7 +32,7 @@ public class LinkQueryFinder extends AbstractBillFinder2{
 		}else if(WdsWlPubConst.BILLTYPE_OUT_IN.equals(type)){//退货入库
 			return new String[]{WdsWlPubConst.WDSF,"4C"};//销售出库单
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equals(type)){//其他出库
-			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4I};//ERP其他出库，物流其他入库
+			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4I,WdsWlPubConst.BILLTYPE_OTHER_IN};//ERP其他出库，物流其他入库
 		}else if(WdsWlPubConst.BILLTYPE_OTHER_IN.equals(type)){//其他入库
 			return new String[]{WdsWlPubConst.WDSF,WdsWlPubConst.GYL4A};//销售出库单
 		}

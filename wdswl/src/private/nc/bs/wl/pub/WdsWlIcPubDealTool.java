@@ -79,7 +79,7 @@ public class WdsWlIcPubDealTool {
 		//如果当前期大于结账期，则传EPR单据为下一个月1号
 		UFDate dbilldate = new UFDate(date);
 		if(dqday >jzday){
-			bill.getHeaderVO().setDbilldate(NextMonth());//单据日期
+			dbilldate = NextMonth();
 		}
 		bill.getHeaderVO().setDbilldate(dbilldate);
 		for(GeneralBillItemVO itemvo :bill.getItemVOs()){

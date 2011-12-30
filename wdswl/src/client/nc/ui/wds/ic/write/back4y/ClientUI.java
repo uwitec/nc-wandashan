@@ -20,7 +20,6 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 	public ClientUI() {
 		super();
 	}
-
 	@Override
 	protected void initPrivateButton() {
 		super.initPrivateButton();
@@ -72,6 +71,11 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 	protected void initEventListener() {
 		super.initEventListener();
 	}
+	@Override
+	public boolean isSaveAndCommitTogether() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	@Override
 	public void setDefaultData() throws Exception {
@@ -99,10 +103,5 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 	public boolean beforeEdit(BillItemEvent e) {
 		return false;
 	}
-
-	
-	
-	
-	
 
 }
