@@ -159,6 +159,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 				if ("srl_pk".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("srl_pk");
 				}
+				if ("cinventoryid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("cinventoryid");
+				}
+				if ("vbillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("vbillcode");
+				}
+				
 			}
 		} else if (type == 1) {
 			for (int i = 0; i < vos.length; i++) {
@@ -167,6 +174,12 @@ public class ReportUI extends ZmReportBaseUI2 {
 				}
 				if ("srl_pk".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("geh_cwarehouseid");
+				}
+				if ("cinventoryid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("geb_cinventoryid");
+				}
+				if ("vbillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("geh_billcode");
 				}
 			}
 		}
