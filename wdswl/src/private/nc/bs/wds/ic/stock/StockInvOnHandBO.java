@@ -280,11 +280,11 @@ public class StockInvOnHandBO {
 			if(tmps == null || tmps.length ==0){
 				getDao().insertVO(stock);
 			}else if(tmps.length == 1){
-				stock.setWhs_oanum(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_oanum()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_oanum())));
-				stock.setWhs_omnum(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_omnum()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_omnum())));
-				stock.setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stockpieces())));
-				stock.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stocktonnage()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stocktonnage())));
-				updateWarehousestock(stock);
+				tmps[0].setWhs_oanum(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_oanum()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_oanum())));
+				tmps[0].setWhs_omnum(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_omnum()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_omnum())));
+				tmps[0].setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stockpieces())));
+				tmps[0].setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stocktonnage()).add(PuPubVO.getUFDouble_NullAsZero(tmps[0].getWhs_stocktonnage())));
+				updateWarehousestock(tmps[0]);
 			}else
 				throw new BusinessException("获取存货状态异常");
 		}		
@@ -300,8 +300,19 @@ public class StockInvOnHandBO {
 			//	throw new BusinessException("出现负结存");
 			}
 //			this.getIvo().updateVO(item);
-			getDao().updateVO(item);
+			getDao().updateVO(item,StockInvOnHandVO.update_fields);
 		}
+		check(item.getWhs_pk());
+	}
+	
+	public void check(String id) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(id)==null)
+			throw new BusinessException("数据异常，库存状态id为空");
+		String sql = "select count(0) from tb_warehousestock where isnull(dr,0) = 0 and whs_pk = '"+id+"'" +
+				" and coalesce(whs_stockpieces,0.0)<0 or coalesce(whs_stocktonnage,0.0)<0";
+		
+		if(PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0)>0)
+			throw new BusinessException("数据异常，库存状态表存量出现红字");
 	}
 	
 	// 更新托盘状态

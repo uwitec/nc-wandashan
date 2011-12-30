@@ -78,6 +78,8 @@ public class StockInvOnHandVO extends SuperVO {
 	public String pk_customize2;
 	public String pk_customize5;
 	public String pk_customize4;
+	
+	public static String[] update_fields = new String[]{"whs_oanum","whs_omnum","whs_stockpieces","whs_stocktonnage"};
 
 
 	/**
