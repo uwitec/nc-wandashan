@@ -102,7 +102,7 @@ public class ChangToWDSO {
 				if(xnvo.length ==0){
 					continue;
 				}
-				if(PuPubVO.getUFBoolean_NullAs(xnvo[0], UFBoolean.FALSE).booleanValue()){
+				if(PuPubVO.getUFBoolean_NullAs(xnvo[0].getIsxnap(), UFBoolean.FALSE).booleanValue()){
 					updateZgjzNum(head,xnvo,true);
 				}
 			}
@@ -173,7 +173,7 @@ public class ChangToWDSO {
 			return;
 		}
 		//查询当期的暂估记账 
-			String strWhere = " pk_outwhouse='"+pk_outwhouse+" and  isnull(dr,0)=0  and isnull(ilacktype,0)=0 and vbillstatus='"+IBillStatus.FREE+"'";
+			String strWhere = " pk_outwhouse='"+pk_outwhouse+"' and  isnull(dr,0)=0  and isnull(ilacktype,0)=0 and vbillstatus='"+IBillStatus.FREE+"'";
 			SuperVO[] heads = getHypubBO().queryByCondition(ZgjzHVO.class, strWhere);
 			if(heads == null || heads.length ==0){
 				throw new BusinessException("未查询到该出库仓库的销售虚拟欠发数据");
