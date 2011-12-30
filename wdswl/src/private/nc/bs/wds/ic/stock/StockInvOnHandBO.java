@@ -309,7 +309,7 @@ public class StockInvOnHandBO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(id)==null)
 			throw new BusinessException("数据异常，库存状态id为空");
 		String sql = "select count(0) from tb_warehousestock where isnull(dr,0) = 0 and whs_pk = '"+id+"'" +
-				" and coalesce(whs_stockpieces,0.0)<0 or coalesce(whs_stocktonnage,0.0)<0";
+				" and (coalesce(whs_stockpieces,0.0)<0 or coalesce(whs_stocktonnage,0.0)<0)";
 		
 		if(PuPubVO.getInteger_NullAs(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0)>0)
 			throw new BusinessException("数据异常，库存状态表存量出现红字");
