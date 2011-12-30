@@ -127,7 +127,7 @@ public class WdsIcInPubBillSave extends BillSave {
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		
 		if(!isAdd && oldbillVo.getChildrenVO().length>0){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
-			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),(TbGeneralBVO[])oldbillVo.getChildrenVO());
+			getOutBO().deleteOtherInforOnDelBill(head.getPrimaryKey(),null);
 		}
 		
 		//回写必须在保存之前，保存之后再在同一事务中新数据和旧数据会完全一样，并且保存之后vo的状态不再是修改状态
