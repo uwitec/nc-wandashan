@@ -16,7 +16,7 @@ import nc.vo.pub.rs.MemoryResultSetMetaData;
 /**
  * 交叉处理
  * 原先报表自带的交叉处理不好使
- * 现在对数据交叉对话框进行了重新 
+ * 现在对数据交叉对话框进行了重新构造
  * 借鉴了查询引擎的交叉对话框
  * @author mlr
  */

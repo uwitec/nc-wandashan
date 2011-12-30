@@ -8,7 +8,6 @@ package nc.ui.wds.pub.button.report2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
