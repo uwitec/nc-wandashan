@@ -275,22 +275,36 @@ public class IcInPubBO {
 			if(WdsWlPubConst.BILLTYPE_OTHER_OUT.equalsIgnoreCase(sourcetype)){		
 				sql = " update tb_outgeneral_b set nacceptnum=coalesce(nacceptnum,0)+? ,nassacceptnum=coalesce(nassacceptnum,0)+?" +
 				" where general_b_pk=? ";
+//				BaseDAO dao = new BaseDAO();
+				SQLParameter para = null;
+				for(String key:numInfor.keySet()){
+					if(para == null)
+						para = new SQLParameter();
+					else
+						para.clearParams();
+					para.addParam(numInfor.get(key));
+					para.addParam(numassInfor.get(key));
+					para.addParam(key);
+					getDao().executeUpdate(sql, para);
+					para.clearParams();
+				}		
 			}else if(ScmConst.m_allocationOut.equalsIgnoreCase(sourcetype)){
 				sql = " update ic_general_b set "+WdsWlPubConst.erp_allo_outnum_fieldname+" = coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+",0)+? where cgeneralbid = ?";
-			}
-			//				BaseDAO dao = new BaseDAO();
-			SQLParameter para = null;
-			for(String key:numInfor.keySet()){
-				if(para == null)
-					para = new SQLParameter();
-				else
+//				BaseDAO dao = new BaseDAO();
+				SQLParameter para = null;
+				for(String key:numInfor.keySet()){
+					if(para == null)
+						para = new SQLParameter();
+					else
+						para.clearParams();
+					para.addParam(numInfor.get(key));
+//					para.addParam(numassInfor.get(key));
+					para.addParam(key);
+					getDao().executeUpdate(sql, para);
 					para.clearParams();
-				para.addParam(numInfor.get(key));
-				para.addParam(numassInfor.get(key));
-				para.addParam(key);
-				getDao().executeUpdate(sql, para);
-				para.clearParams();
-			}			
+				}		
+			}
+				
 			//			控制不能超数量发货
 			checkNoutNumByOrderNum(sourcetype, numInfor.keySet().toArray(new String[0]));
 		}
