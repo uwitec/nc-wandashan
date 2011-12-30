@@ -7,6 +7,7 @@ import java.util.Map;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
+import nc.bs.pub.SuperDMO;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wds.tray.lock.LockTrayBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
@@ -362,6 +363,15 @@ public class IcInPubBO {
 	 */
 	public void deleteOtherInforOnDelBill(String inbillid,TbGeneralBVO[] bvos) throws BusinessException{
 //		zhf   modify 20110627   支持虚拟托盘后算法调整
+		
+		if(PuPubVO.getString_TrimZeroLenAsNull(inbillid)==null)
+			throw new BusinessException("数据异常");
+		if(bvos == null || bvos.length == 0){
+			SuperDMO dmo = new SuperDMO();
+			bvos = (TbGeneralBVO[])dmo.queryByWhereClause(TbGeneralBVO.class, "isnull(dr,0) = 0 and geh_pk = '"+inbillid+"'");
+			if(bvos == null || bvos.length == 0)
+				return;
+		}
 		
 //		托盘存量校验   入库的量 是否已经  出库了  如果已 出库该 入库单 不能再次作废
 		List<TbGeneralBBVO> ltray = checkOnDelBill(inbillid, bvos);
