@@ -113,7 +113,7 @@ public class ReportUI extends JxReportBaseUI {
 	 * @throws Exception 
 	 */
 	public void dealQueryAfter() throws Exception{		
-		ReportRowColCrossTool.onCross(this, new String[]{"custcode","custname","ordercode","vbillno","isxuni"
+		ReportRowColCrossTool.onCross(this, new String[]{"storname","custcode","custname","ordercode","vbillno","isxuni"
 				,"carcode","vdrivername","vdrivercorp","sorderdate","cartime","forderdate",
 				"djrfh","xsadress","jxstel","zcyxtime","daodz",
 				"yfprice","yfgls","yfhj",
