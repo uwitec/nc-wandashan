@@ -8,6 +8,7 @@ import nc.bs.trade.business.HYPubBO;
 import nc.bs.trade.business.IBDBusiCheck;
 import nc.bs.wl.pub.BsUniqueCheck;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
@@ -60,14 +61,18 @@ public class BSCheck implements IBDBusiCheck {
 			return ;
 		}
 		//新增保存和 修改保存 区分校验
+		String pk_corp = ivo.getPk_corp();
+		if(pk_corp == null || "".equalsIgnoreCase(pk_corp)){
+			pk_corp = SQLHelper.getCorpPk();
+		}
 		if(primary == null){//新增校验
-			String condition = " pk_sendareacl='" + pk_sendareacl+"' and pk_stordoc='"+pk_stordoc+"' and  isnull(dr,0)=0";
+			String condition = " pk_sendareacl='" + pk_sendareacl+"' and pk_stordoc='"+pk_stordoc+"' and  isnull(dr,0)=0 and pk_corp='"+pk_corp+"'";
 	        List list = (List) getDao().retrieveByClause(BdStordocVO.class,condition);
 	        if(list != null &&  list.size() >0){
 	        	throw new BusinessException("同一仓库同一发货地区已经存在");
 	        }
 		}else{//修改校验 
-			String condition = " pk_sendareacl='" + pk_sendareacl+"' and pk_stordoc='"+pk_stordoc+"' and  isnull(dr,0)=0";
+			String condition = " pk_sendareacl='" + pk_sendareacl+"' and pk_stordoc='"+pk_stordoc+"' and  isnull(dr,0)=0 and pk_corp='"+pk_corp+"'";
 	        List list = (List) getDao().retrieveByClause(BdStordocVO.class,condition);
 	        if(list != null &&  list.size() >1){
 	        	throw new BusinessException("同一仓库同一发货地区已经存在");
@@ -90,7 +95,8 @@ public class BSCheck implements IBDBusiCheck {
         	HYPubBO pubvo = new HYPubBO();
             String 	pk_cumandoc=(String) vos[i].getAttributeValue("pk_cumandoc");
             if(pk_cumandoc!=null&&pk_cumandoc.length()>0){
-                String strWhere=" select pk_wds_storecust_h from tb_storcubasdoc where isnull(dr,0)=0 and pk_cumandoc='"+pk_cumandoc+"'";
+                String strWhere=" select wds_storecust_h.pk_wds_storecust_h from wds_storecust_h join tb_storcubasdoc  on wds_storecust_h.pk_wds_storecust_h=tb_storcubasdoc.pk_wds_storecust_h " +
+                		" where isnull(wds_storecust_h.dr,0)=0  and isnull(tb_storcubasdoc.dr,0)=0 and tb_storcubasdoc.pk_cumandoc='"+pk_cumandoc+"' and wds_storecust_h.pk_corp='"+pk_corp+"'";
                 BdStordocVO[] heads= ( BdStordocVO[]) pubvo.queryByCondition(BdStordocVO.class, " pk_wds_storecust_h in( "+strWhere+")");
                 if(heads !=null){
                 	for(BdStordocVO head:heads){

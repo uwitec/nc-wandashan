@@ -279,7 +279,7 @@ public class ChangToWDSP {
 	 */
 	public Writeback4yHVO getWrirteBackHvo(String cgeneralhid, String vbillno) {
 		Writeback4yHVO head = new Writeback4yHVO();
-		head.setCgeneralhid(cgeneralhid);// 调拨出库单单据号
+		head.setCgeneralhid(cgeneralhid);// 调拨出库单主键
 		head.setVbillno(vbillno);// 调拨出库单据号
 		head.setVbillstatus(IBillStatus.FREE);// 单据状态
 		head.setPk_billtype(WdsWlPubConst.WDSP);// 单据类型

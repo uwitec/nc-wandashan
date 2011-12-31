@@ -12,6 +12,7 @@ import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.SoDealVO;
@@ -103,6 +104,7 @@ public class SoDealBO {
 			generalSql.append(" ic_general_h.cgeneralhid = ic_general_b.cgeneralhid");
 			generalSql.append(" where isnull(ic_general_h.dr,0)=0 ");
 			generalSql.append(" and isnull(ic_general_b.dr,0)=0 ");
+			generalSql.append(" and ic_general_h.fbillflag='"+BillStatus.AUDIT+"' ");
 			generalSql.append(" and ic_general_h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//ÐéÄâ³ö¿â
 			generalSql.append(" and ic_general_b.csourcebillbid='"+pk + "'");
 			UFDouble noutnum =PuPubVO.getUFDouble_NullAsZero( getDao().executeQuery(generalSql.toString(),

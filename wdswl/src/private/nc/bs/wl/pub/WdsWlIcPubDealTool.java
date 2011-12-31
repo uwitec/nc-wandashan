@@ -2,7 +2,6 @@ package nc.bs.wl.pub;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,19 +71,18 @@ public class WdsWlIcPubDealTool {
 	private static void adjustBillData(GeneralBillVO bill,String corp,String date,String coperator,BaseDAO dao)
 	throws BusinessException{
 		Integer dates= getDefaultDay(corp,dao);
-		Date dqdate= new Date();
-		int dqday= dqdate.getDay();
 		int jzday=dates.intValue();
 		//如果当前期小于等于结账期，则传ERP的出入库单单据期为当前期；
 		//如果当前期大于结账期，则传EPR单据为下一个月1号
 		UFDate dbilldate = new UFDate(date);
+		int dqday=Integer.parseInt(dbilldate.getStrDay()) ;
 		if(dqday >jzday){
 			dbilldate = NextMonth();
 		}
 		bill.getHeaderVO().setDbilldate(dbilldate);
-		for(GeneralBillItemVO itemvo :bill.getItemVOs()){
-			itemvo.setDbizdate(dbilldate);
-		}
+//		for(GeneralBillItemVO itemvo :bill.getItemVOs()){
+//			itemvo.setDbizdate(dbilldate);
+//		}
 	}
 	
 
@@ -106,7 +104,7 @@ public class WdsWlIcPubDealTool {
 	 */
 	private static Integer getDefaultDay(String corp,BaseDAO dao) throws BusinessException{
 		StringBuffer sql = new StringBuffer();
-		sql.append(" select datavale from wds_periodsetting_h ");
+		sql.append(" select datavale+1 from wds_periodsetting_h ");
 		sql.append(" where isnull(dr,0) =0 ");
 		sql.append(" and pk_corp='"+corp+"'");
 		Object value = dao.executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR);

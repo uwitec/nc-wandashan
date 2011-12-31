@@ -437,6 +437,9 @@ public class SoDealEventHandler{
 		for(SoDealBillVO cust:lcust){
 			bodys = cust.getBodyVos();
 			SoDealVO[] newBodys = (SoDealVO[])VOUtil.filter(bodys, new FilterNullNum("nnum"));
+			if(newBodys == null || newBodys.length==0){
+				continue;
+			}
 			for(SoDealVO body:newBodys){
 				body.validataOnDeal();
 				ldeal.add(body);

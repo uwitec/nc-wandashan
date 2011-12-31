@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
@@ -23,6 +24,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.write.back4y.MultiBillVO;
@@ -98,6 +100,34 @@ public class ChangeTo4E {
 		
 		return vo;
 	}
+	/**
+	 * @功能：取消签字动作
+	 */
+	public GeneralBillVO[] canelSignQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws Exception {
+		if(bill==null){
+			return null;
+		}
+		this.coperator = coperator;
+		this.date = date;
+		MultiBillVO billvo = (MultiBillVO)bill;
+		Writeback4yHVO hvo = (Writeback4yHVO)billvo.getParentVO();
+		String csaleid = hvo.getCgeneralhid()==null ?"":hvo.getCgeneralhid();
+		String where  = " csourcebillhid = '"+csaleid+"' ";
+		QryConditionVO voCond = new QryConditionVO(where);
+	    ArrayList alListData = (ArrayList)queryBills("4E", voCond);
+	    GeneralBillVO[] gbillvo = null;
+		if(alListData!=null && alListData.size()>0){
+			for(int i = 0;i<alListData.size();i++){
+				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
+				gvo.getHeaderVO().setCoperatoridnow(coperator);
+				gvo.getHeaderVO().setDaccountdate(new UFDate(date));
+				gvo.getHeaderVO().setClogdatenow(date);
+			}
+			gbillvo = (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
+		}
+		return gbillvo;
+	}
+	
 	/**
 	 * 
 	 * @作者：liuys
