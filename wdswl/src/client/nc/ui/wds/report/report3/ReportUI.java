@@ -66,6 +66,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 		        		querys2=querys2+"and (geh_cwarehouseid ="+query[1];
 		        	}
 		        }
+		        if("(cinventoryid".equals(query[j].trim())){
+		        	if(querys2==null){
+		        		querys2="(cinventoryid ="+query[1];
+		        	}else{
+		        		querys2=querys2+"and (geb_cinventoryid ="+query[1];
+		        	}
+		        }
 		    }
 		    String[] query1=que[i].split(">=");
 		         if("(dbilldate".equals(query1[0].trim())){
