@@ -104,8 +104,8 @@ public class ReportUI extends ZmReportBaseUI2 {
 			sql.append("b." + select_fields_out_b[i]);
 		}
 		sql.append(" , ");
-		sql.append(" bb.stockpieces  ninnum ,");
-		sql.append(" bb.stocktonnage  nassinnum ");
+		sql.append(" bb.stockpieces  noutnum ,");
+		sql.append(" bb.stocktonnage nassoutnum  ");
 		
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
@@ -205,8 +205,8 @@ public class ReportUI extends ZmReportBaseUI2 {
 			sql.append("b." + select_fields_in_b[i]);
 		}
 		sql.append(" , ");
-		sql.append(" bb.gebb_num  ninnum ,");
-		sql.append(" bb.ninassistnum  nassinnum ");
+		sql.append(" bb.gebb_num ninnum  ,");
+		sql.append(" bb.ninassistnum nassinnum   ");
 		
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
@@ -246,6 +246,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 				if (vos != null) {
 					super.updateBodyDigits();
 					setBodyVO(vos);
+					updateVOFromModel();
 					setTolal1();
 				}
 			} catch (BusinessException e) {
@@ -255,9 +256,25 @@ public class ReportUI extends ZmReportBaseUI2 {
 			}
 		}
 	}
+	  /**
+     * 执行公式后 将billmodel的数据更新到vo中
+     * @author mlr
+     * @说明：（鹤岗矿业）
+     * 2011-12-22上午09:26:46
+     */
+	public void updateVOFromModel() {	
+		    getReportBase().getBillModel().execLoadFormula();
+	        getReportBase().getBillModel().updateValue();			
+			ReportBaseVO[]  vos=new ReportBaseVO[getReportBase().getBillModel().getRowCount()];
+			for(int i=0;i<vos.length;i++){
+				vos[i]=new ReportBaseVO();
+			}			
+			getReportBase().getBillModel().getBodyValueVOs(vos);
+			setBodyDataVO(vos, true);		
+	}
 
 	private void setTolal1() throws Exception {
-		   new LevelSubTotalAction(this).atuoexecute2();  			
+		   new LevelSubTotalAction(this).atuoexecute2(true, true, new String[]{"cmonth","dbilldate"},new String[]{"月份","日期"}) ; 			
 		
 	}
 
@@ -292,9 +309,9 @@ public class ReportUI extends ZmReportBaseUI2 {
 		if(combinvo==null || combinvo.length==0)
 			return null;
 		if(iscat){
-			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
+			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
 		}else{
-			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum"}, ReportBaseVO.class);
+			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
 		}	
  		return rvos;
 		// return setVoByContion(combinvo, voCombinConds);
