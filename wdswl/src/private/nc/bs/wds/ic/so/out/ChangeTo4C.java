@@ -172,8 +172,8 @@ public class ChangeTo4C {
 		this.date = date;
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
-		String csaleid = hvo.getCsaleid()==null ?"":hvo.getCsaleid();
-		String where  = " csourcebillhid = '"+csaleid+"' ";
+		String csaleid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
+		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+csaleid+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
 	    ArrayList alListData = (ArrayList)queryBills("4C", voCond);
 	    GeneralBillVO[] gbillvo = null;

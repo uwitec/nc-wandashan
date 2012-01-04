@@ -111,8 +111,8 @@ public class ChangeTo4E {
 		this.date = date;
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4yHVO hvo = (Writeback4yHVO)billvo.getParentVO();
-		String csaleid = hvo.getCgeneralhid()==null ?"":hvo.getCgeneralhid();
-		String where  = " csourcebillhid = '"+csaleid+"' ";
+		String csaleid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
+		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+csaleid+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
 	    ArrayList alListData = (ArrayList)queryBills("4E", voCond);
 	    GeneralBillVO[] gbillvo = null;

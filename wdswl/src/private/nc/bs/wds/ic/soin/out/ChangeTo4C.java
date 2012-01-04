@@ -23,6 +23,7 @@ import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
@@ -139,8 +140,8 @@ BaseDAO dao = null;
 		this.date = date;
 		OtherInBillVO billvo = (OtherInBillVO)bill;
 		TbGeneralHVO hvo = (TbGeneralHVO)billvo.getParentVO();
-		String cid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
-		String where  = " body.cfirstbillhid = '"+cid+"'";
+		String csaleid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
+		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+csaleid+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
 		ArrayList alListData = (ArrayList)queryBills("4C", voCond);		
 
