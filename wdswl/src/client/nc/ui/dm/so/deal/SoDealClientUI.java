@@ -53,6 +53,17 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO, 2,
 			WdsWlPubConst.DM_PLANDEAL_BTNTAG_SELNO);
+	
+//	zhf add  支持销售订单物流关闭 和 打开
+	private ButtonObject m_btnClose = new ButtonObject(
+			"关闭",
+			"关闭", 2,
+			"关闭");
+	
+	private ButtonObject m_btnOpen = new ButtonObject(
+			"打开",
+			"打开", 2,
+			"打开");
 //	private ButtonObject m_btnXnDeal = new ButtonObject(
 //			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
 //			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
@@ -249,7 +260,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 
 	private void setButton() {
 		ButtonObject[] m_objs = new ButtonObject[] { 
-				m_btnQry,m_btnSelAll,m_btnSelno, m_btnDeal};
+				m_btnQry,m_btnSelAll,m_btnSelno, m_btnDeal,m_btnClose,m_btnOpen};
 		this.setButtons(m_objs);
 	}
 
@@ -260,7 +271,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	public void loadData(String billId) {
 		try {
 			SoDealVO[] billdatas = SoDealHealper.doQuery(" h.CSALEID = '"
-					+ billId + "' ",getWhid());
+					+ billId + "' ",getWhid(),UFBoolean.FALSE);
 			if (billdatas == null || billdatas.length == 0) {
 				showHintMessage("查询完成：没有满足条件的数据");
 				return;
@@ -291,8 +302,13 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			m_btnDeal.setEnabled(flag);
 		} else if (btnTag
 				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY)) {
-			m_btnQry.setEnabled(flag);
+			m_btnQry.setEnabled(flag);			
 		}
+		
+		UFBoolean isclose = event.getOrderType();
+		m_btnClose.setEnabled(!isclose.booleanValue());
+		m_btnOpen.setEnabled(isclose.booleanValue());
+		m_btnDeal.setEnabled(!isclose.booleanValue());
 		updateButtons();
 	}
 	//表头行切换事件

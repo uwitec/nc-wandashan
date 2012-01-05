@@ -67,6 +67,18 @@ public class SoDealBO {
 		sql.append(" inner join so_saleorder_b b on h.csaleid = b.csaleid");
 		sql.append(" where ");
 		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
+		
+		
+//		------------------------------------------------zhf add
+		sql.append(" and coalesce(b.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
+//		if(isclose.booleanValue())
+//			sql.append(" 'Y' ");
+//		else
+//			sql.append(" 'N' ");
+//		------------------------------------------------
+		
+		
+		
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}

@@ -6,6 +6,7 @@ import java.util.List;
 import nc.ui.pub.ToftPanel;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.dm.so.deal.SoDealVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 发运安排调用后台累
@@ -29,16 +30,27 @@ public class SoDealHealper {
 	 * @throws Exception
 	 */
 
-	public static SoDealVO[] doQuery(String wheresql,String pk_stordoc) throws Exception{
+	public static SoDealVO[] doQuery(String wheresql,String pk_stordoc,UFBoolean isclose) throws Exception{
 		SoDealVO[] dealVos=null;
-		Class[] ParameterTypes = new Class[] { String.class,String.class };
-		Object[] ParameterValues = new Object[] { wheresql,pk_stordoc };
+		Class[] ParameterTypes = new Class[] { String.class,String.class,UFBoolean.class };
+		Object[] ParameterValues = new Object[] { wheresql,pk_stordoc ,isclose};
 		Object o = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "doQuery", ParameterTypes, ParameterValues, 2);
 		if(o != null){
 			dealVos = (SoDealVO[])o;
 		}
 		return dealVos;
 	}
+	
+	public static void doCloseOrOpen(String[] ids, ToftPanel tp,UFBoolean isclose) throws Exception {
+		if (ids == null || ids.length == 0)
+			return;
+		Class[] ParameterTypes = new Class[] {String[].class,UFBoolean.class};
+		Object[] ParameterValues = new Object[] {ids,isclose};
+		LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, tp,
+				"正在处理...", 2, bo, null, "doCloseOrOpen", ParameterTypes,
+				ParameterValues);
+	}
+	
 	/**
 	 * 
 	 * @作者：zhf

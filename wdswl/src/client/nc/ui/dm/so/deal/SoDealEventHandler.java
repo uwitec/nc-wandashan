@@ -39,6 +39,14 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	private String whereSql = null;
 //	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
 	
+	UFBoolean getOrderType(){
+		if(getQryDlg().m_rbclose.isSelected()){
+			return UFBoolean.TRUE;
+		}else{
+			return UFBoolean.FALSE;
+		}
+	}
+	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
 		ui = parent;
@@ -46,9 +54,9 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		
 	}
 	
-	private BillModel getHeadDataPane(){
-		return ui.getPanel().getHeadBillModel();
-	}
+//	private BillModel getHeadDataPane(){
+//		return ui.getPanel().getHeadBillModel();
+//	}
 	
 	private BillModel getBodyDataPane(){
 		return ui.getPanel().getBodyBillModel();
@@ -75,6 +83,20 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		}else if (btnTag
 				.equalsIgnoreCase(WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL)) {
 //			onXNDeal();
+		}else if(btnTag.equalsIgnoreCase("关闭")){
+			try {
+				onClose();
+			} catch (Exception e) {
+				e.printStackTrace();
+				showErrorMessage(e.getMessage());
+			}
+		}else if(btnTag.equalsIgnoreCase("打开")){
+			try {
+				onOpen();
+			} catch (Exception e) {
+				e.printStackTrace();
+				showErrorMessage(e.getMessage());
+			}
 		}
 	}
 	
@@ -146,16 +168,10 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	}
 	private SoDealQryDlg getQryDlg(){
 		if(m_qrypanel == null){
-			m_qrypanel = new SoDealQryDlg(ui,
-					null,
-					ui.cl.getCorp(),
-					WdsWlPubConst.DM_SO_DEAL_NODECODE,
-					ui.cl.getUser(),
-					null
-				);
+			m_qrypanel = new SoDealQryDlg();
 			m_qrypanel.setTempletID(ui.cl.getCorp(), WdsWlPubConst.DM_SO_DEAL_NODECODE, ui.cl.getUser(), null);
 			m_qrypanel.hideUnitButton();
-			m_qrypanel.hideNormal();
+//			m_qrypanel.hideNormal();
 			//			m_qrypanel.setConditionEditable("h.pk_corp",true);
 			//			m_qrypanel.setValueRef("h.pk_corp", new UIRefPane("公司目录"));
 			//			m_qrypanel.changeValueRef("h.pk_corp", new UIRefPane("公司目录"));
@@ -192,8 +208,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		clearData();
 		SoDealVO[] billdatas = null; 
 		try{
-			String whereSql = getSQL();
-			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
+			whereSql = getSQL();
+			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -213,7 +229,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
 			try{
-				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
+				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
 			}catch(Exception e){
 				e.printStackTrace();
 				showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -303,6 +319,12 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	private void setDataBuffer(SoDealVO[] billdatas){
 		this.m_billdatas = billdatas;
 	}
+	
+	private AggregatedValueObject[] getSelectVos(){
+		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDeHeaderVo.class.getName(), SoDealVO.class.getName());
+		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
+		return newVos;
+	}
 	/**
 	 * 
 	 * @throws BusinessException 
@@ -321,8 +343,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 分单规则：计划号  发货站 收货站  存货   单据日期   安排日期
 		 * 
 		 */
-		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDeHeaderVo.class.getName(), SoDealVO.class.getName());
-		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
+//		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDeHeaderVo.class.getName(), SoDealVO.class.getName());
+		AggregatedValueObject[] newVos = getSelectVos();
 		if(newVos == null || newVos.length == 0){
 			showWarnMessage("未选中数据");
 			return;
@@ -449,5 +471,42 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void doCloseOrOpen(UFBoolean bclose) throws Exception {
+		AggregatedValueObject[] newVos = getSelectVos();
+		if(newVos == null || newVos.length == 0){
+			showWarnMessage("未选中数据");
+			return;
+		}
+		SoDealBillVO[] orders = (SoDealBillVO[])newVos;
+		SoDealVO[] bodys = null;
+		List<String> lbid = new ArrayList<String>();
+		String key = null;
+		for(SoDealBillVO order:orders){
+			bodys = order.getBodyVos();
+			for(SoDealVO body:bodys){
+				key = body.getCorder_bid();
+				if(lbid.contains(key))
+					continue;
+				lbid.add(key);				
+			}
+		}
 
+		if(lbid.size()<=0)
+			return;
+
+		//		远程调用
+		SoDealHealper.doCloseOrOpen(lbid.toArray(new String[0]), ui, bclose);
+
+		//		刷新界面数据
+		onRefresh();
+
+	}
+	
+	private void onClose()throws Exception{
+		doCloseOrOpen(UFBoolean.TRUE);
+	}
+    private void onOpen()throws Exception{
+    	doCloseOrOpen(UFBoolean.FALSE);
+    }
 }

@@ -11,6 +11,7 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
@@ -46,7 +47,7 @@ public class SoDealBO {
 	 * @return
 	 * @throws Exception
 	 */
-	public SoDealVO[] doQuery(String whereSql,String pk_storedoc) throws Exception {
+	public SoDealVO[] doQuery(String whereSql,String pk_storedoc,UFBoolean isclose) throws Exception {
 		SoDealVO[] datas = null;
 		// 实现查询发运计划的逻辑
 		StringBuffer sql = new StringBuffer();
@@ -65,11 +66,20 @@ public class SoDealBO {
 		sql.append(" inner join so_saleorder_b b on h.csaleid = b.csaleid");
 		sql.append(" where ");
 		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
+		
+//		------------------------------------------------zhf add
+		sql.append(" and coalesce(b.bisclose,'N') = ");
+		if(isclose.booleanValue())
+			sql.append(" 'Y' ");
+		else
+			sql.append(" 'N' ");
+//		------------------------------------------------
+		
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
 		sql.append(" and h.creceiptcustomerid in(");
-		sql.append(" select distinct tb_storcubasdoc.pk_cumandoc  ");
+		sql.append(" select distinct tb_storcubasdoc.pk_cumandoc ");
 		sql.append(" from wds_storecust_h ");
 		sql.append(" join tb_storcubasdoc ");
 		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");
@@ -273,5 +283,22 @@ public class SoDealBO {
 		return head;
 	}
 	//	
+	
+//	zhf add ---------------------------2012 1 4
+	public void doCloseOrOpen(String[] orderbids,UFBoolean isclose) throws BusinessException{
+		if(orderbids == null || orderbids.length == 0)
+			return;
+		TempTableUtil ut = new TempTableUtil();
+		String sflag = isclose.booleanValue()?"N":"Y";//---------------
+		String sql = "select corder_bid from so_saleorder_b where isnull(dr,0) = 0 " +
+				" and coalesce(bisclose,'N') = '"+sflag+"'" +
+				" and corder_bid in "+ut.getSubSql(orderbids);
+		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
+		if(ldata == null || ldata.size() == 0)
+			return;
+		sflag = isclose.booleanValue()?"Y":"N";//-------------------
+		sql = "update so_saleorder_b set bisclose = '"+sflag+"' where corder_bid in "+ut.getSubSql((ArrayList)ldata);
+		getDao().executeUpdate(sql);
+	}
 
 }
