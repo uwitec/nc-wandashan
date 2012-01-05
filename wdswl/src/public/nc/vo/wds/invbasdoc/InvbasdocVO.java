@@ -5,10 +5,12 @@
       	package nc.vo.wds.invbasdoc;
    	
 	import java.util.ArrayList;
-	import nc.vo.pub.*;
-import nc.vo.pub.lang.*;
+
+import nc.vo.pub.NullFieldException;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.invcl.WdsInvClVO;
 	
 /**
  * 
