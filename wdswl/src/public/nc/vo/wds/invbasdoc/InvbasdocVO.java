@@ -41,6 +41,8 @@ import nc.vo.wds.invcl.WdsInvClVO;
              public Integer 	db_waring_dyas2;//调拨警戒天数2
              public Integer  fuesed;//下拉 ：常用，不常用
              public String pk_wds_invbasdoc;
+             public UFDouble grossweight;  //毛重
+             public UFDouble  volume;     //体积
             
 //             public static final String  PK_INVBASDOC="pk_invbasdoc";   
 //             public static final String  VDEF2="vdef2";   
@@ -408,7 +410,27 @@ import nc.vo.wds.invcl.WdsInvClVO;
 			   super();	
 	  }    
     
-            /**
+            public UFDouble getGrossweight() {
+		return grossweight;
+	}
+
+
+	public void setGrossweight(UFDouble grossweight) {
+		this.grossweight = grossweight;
+	}
+
+
+	public UFDouble getVolume() {
+		return volume;
+	}
+
+
+	public void setVolume(UFDouble volume) {
+		this.volume = volume;
+	}
+
+
+			/**
 	 * 使用主键进行初始化的构造子.
 	 *
 	 * 创建日期:2011-4-22
