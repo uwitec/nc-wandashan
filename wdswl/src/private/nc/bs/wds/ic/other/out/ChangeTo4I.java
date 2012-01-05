@@ -17,6 +17,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
@@ -56,7 +57,7 @@ public class ChangeTo4I {
 		GeneralBillVO[] billvo = null;
 		//ÆäËü³ö¿â
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
-		String where  = " csourcebillhid = '"+outhvo.getPrimaryKey()+"' ";
+		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+outhvo.getPrimaryKey()+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
 	    ArrayList alListData = (ArrayList)queryBills("4I", voCond);
 		if(alListData!=null && alListData.size()>0){
