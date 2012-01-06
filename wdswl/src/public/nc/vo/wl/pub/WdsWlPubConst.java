@@ -240,6 +240,8 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_SALE_OUT = "WDS8";
 	/** 调拨入库*/
 	public static String BILLTYPE_ALLO_IN = "WDS9";
+	/** 调拨入库关闭*/
+	public static String BILLTYPE_ALLO_IN_CLOSE = "WDS9C";
 	/**出库入库*/
 	public static String BILLTYPE_OUT_IN = "WDSZ";
 	/** 供应链调拨出库 */
@@ -351,7 +353,8 @@ public class WdsWlPubConst {
 //    物流调拨入库单回写erp调拨出库单累计转入物流数量  字段
     public static String erp_allo_outnum_fieldname = "nkdnum";
 
-
+//    调拨入库单关闭 节点号
+    public static String allo_in_close_node = "8004040225";
    
 	
 	

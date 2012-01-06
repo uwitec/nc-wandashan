@@ -70,7 +70,7 @@ public class SoDealBO {
 		
 		
 //		------------------------------------------------zhf add
-		sql.append(" and coalesce(b.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
+		sql.append(" and coalesce(h.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
 //		if(isclose.booleanValue())
 //			sql.append(" 'Y' ");
 //		else

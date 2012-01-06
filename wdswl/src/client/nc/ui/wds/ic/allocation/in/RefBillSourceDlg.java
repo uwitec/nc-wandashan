@@ -91,7 +91,14 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	public String getHeadCondition() {
 		String  pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();		
 		StringBuffer hsql = new StringBuffer();
-		hsql.append(" isnull(head.dr,0)=0 and head.cothercorpid ='"+pk_corp+"' and head.cbilltypecode = '4Y' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
+		hsql.append(" isnull(head.dr,0)=0 and head.cothercorpid ='"+pk_corp+"' " +
+				" and head.cbilltypecode = '4Y' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
+		
+//		zhf   add  支持调拨出库 转 物流 关闭
+		hsql.append(" and coalesce(head.bisclose,'N') = 'N' ");
+//		zhf end
+		
+		
 		if(!isStock){
 			hsql.append("and head.cotherwhid='"+pk_stock+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
@@ -99,7 +106,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 //		if(inv_Pks !=null && inv_Pks.length>0){
 			hsql.append("(");
 			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
-			hsql.append(" and coalesce(nshouldoutnum,0)-coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0");//应入数量-转出数量>0
+			hsql.append(" and coalesce(noutnum,0)-coalesce("+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0");//应入数量-转出数量>0
 //			String sub = getTempTableUtil().getSubSql(inv_Pks);
 			hsql.append(" and cinvbasid in");
 //			hsql.append(")");
@@ -113,7 +120,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	@Override
 	public String getBodyCondition() {
 //		String sub = getTempTableUtil().getSubSql(inv_Pks);
-		return " coalesce(body.nshouldoutnum,0)-coalesce(body."+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0"+//应入数量-转出数量>0
+		return " coalesce(body.noutnum,0)-coalesce(body."+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0"+//应入数量-转出数量>0
 			" and body.cinvbasid in";}
 	@Override
 	protected boolean isHeadCanMultiSelect() {

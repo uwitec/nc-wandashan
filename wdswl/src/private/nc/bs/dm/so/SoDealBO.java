@@ -68,7 +68,7 @@ public class SoDealBO {
 		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
 		
 //		------------------------------------------------zhf add
-		sql.append(" and coalesce(b.bisclose,'N') = ");
+		sql.append(" and coalesce(h.bisclose,'N') = ");
 		if(isclose.booleanValue())
 			sql.append(" 'Y' ");
 		else
@@ -290,14 +290,14 @@ public class SoDealBO {
 			return;
 		TempTableUtil ut = new TempTableUtil();
 		String sflag = isclose.booleanValue()?"N":"Y";//---------------
-		String sql = "select corder_bid from so_saleorder_b where isnull(dr,0) = 0 " +
+		String sql = "select csaleid from so_sale where isnull(dr,0) = 0 " +
 				" and coalesce(bisclose,'N') = '"+sflag+"'" +
-				" and corder_bid in "+ut.getSubSql(orderbids);
+				" and csaleid in "+ut.getSubSql(orderbids);
 		List ldata = (List)getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNLISTROCESSOR);
 		if(ldata == null || ldata.size() == 0)
 			return;
 		sflag = isclose.booleanValue()?"Y":"N";//-------------------
-		sql = "update so_saleorder_b set bisclose = '"+sflag+"' where corder_bid in "+ut.getSubSql((ArrayList)ldata);
+		sql = "update so_sale set bisclose = '"+sflag+"' where csaleid in "+ut.getSubSql((ArrayList)ldata);
 		getDao().executeUpdate(sql);
 	}
 

@@ -480,23 +480,25 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		}
 		SoDealBillVO[] orders = (SoDealBillVO[])newVos;
 		SoDealVO[] bodys = null;
-		List<String> lbid = new ArrayList<String>();
+		List<String> lhid = new ArrayList<String>();
 		String key = null;
 		for(SoDealBillVO order:orders){
 			bodys = order.getBodyVos();
 			for(SoDealVO body:bodys){
-				key = body.getCorder_bid();
-				if(lbid.contains(key))
+				key = PuPubVO.getString_TrimZeroLenAsNull(body.getCsaleid());
+				if(key == null)
 					continue;
-				lbid.add(key);				
+				if(lhid.contains(key))
+					continue;
+				lhid.add(key);				
 			}
 		}
 
-		if(lbid.size()<=0)
+		if(lhid.size()<=0)
 			return;
 
 		//		远程调用
-		SoDealHealper.doCloseOrOpen(lbid.toArray(new String[0]), ui, bclose);
+		SoDealHealper.doCloseOrOpen(lhid.toArray(new String[0]), ui, bclose);
 
 		//		刷新界面数据
 		onRefresh();
