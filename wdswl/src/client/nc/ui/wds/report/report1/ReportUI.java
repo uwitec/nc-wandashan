@@ -1102,7 +1102,7 @@ public class ReportUI extends ZmReportBaseUI {
 		String startDate = ac.getMonthVO().getBegindate().toString();
 		String endDate = ac.getMonthVO().getEnddate().toString();
 		String wsql = "";
-		wsql = " h.dbilldate < '" + startDate + "' ";
+		wsql = " h.dbilldate = '" + startDate + "' ";
 		if (whereSql == null || whereSql.length() == 0) {
 			whereSql = wsql;
 		} else {
