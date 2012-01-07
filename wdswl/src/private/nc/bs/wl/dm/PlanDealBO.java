@@ -16,6 +16,7 @@ import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.SendplaninBVO;
 import nc.vo.dm.SendplaninVO;
@@ -76,6 +77,7 @@ public class PlanDealBO {
 	 */
 	@SuppressWarnings("unchecked")
 	public PlanDealVO[] doQuery(String whereSql) throws Exception{
+		String pk_corp = SQLHelper.getCorpPk();
 		PlanDealVO[] datas = null;
 		//实现查询发运计划的逻辑 
 		StringBuffer sql = new StringBuffer();
@@ -116,7 +118,10 @@ public class PlanDealBO {
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
 		sql.append(" on wds_sendplanin.pk_sendplanin = wds_sendplanin_b.pk_sendplanin ");
-		sql.append(" where "+whereSql);
+		sql.append(" where wds_sendplanin.pk_corp='"+pk_corp+"' ");
+		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql) != null){
+			sql.append(" and  "+whereSql);
+		}
 		Object o = getDao().executeQuery(sql.toString(), new BeanListProcessor(PlanDealVO.class));
 		if( o != null){
 			ArrayList<PlanDealVO> list = (ArrayList<PlanDealVO>)o;
@@ -135,28 +140,9 @@ public class PlanDealBO {
 				 return code1.compareTo(code2);
 			}
 		});
-		// 把库存量按照 运单 时间先后 分配
-		CircularlyAccessibleValueObject[][] splitVos = SplitBillVOs.getSplitVOs(
-				(CircularlyAccessibleValueObject[]) (datas),
-				new String[]{"bisdate"});//根据发货仓库和是否大日期分单
-		if(splitVos == null || splitVos.length==0){
-			return datas;
-		}
-		PlanDealVO[] vos = null;
-		for(int i=0;i<splitVos.length;i++){
-			vos = (PlanDealVO[])splitVos[i];
-			if(vos != null && vos.length>0){
-				UFBoolean fisdate = PuPubVO.getUFBoolean_NullAs(vos[0].getBisdate(), UFBoolean.FALSE);
-				PlanDealBOUtil util = new PlanDealBOUtil();
-				if(fisdate.booleanValue()){
-					util.arrangStornumout(true,vos);
-					util.arrangStornumin(true,vos);
-				}else{
-					util.arrangStornumout(false,vos);
-					util.arrangStornumin(false,vos);
-				}
-			}
-		}
+		PlanDealBOUtil util = new PlanDealBOUtil();
+		util.arrangStornumout(pk_corp,datas);
+		util.arrangStornumin(pk_corp,datas);
 		return datas;
 	}
 	

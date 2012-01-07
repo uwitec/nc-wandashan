@@ -35,12 +35,32 @@ public class PlanDealVO extends SendplaninBVO {
     public String pk_outwhouse;
     public UFDate dapprovedate;
     public String vapproveid; 
-    public UFDouble nstorenumout;//发货站库存数量
-    public UFDouble narrstorenumout;//发货站安排后库存数量
+	private UFDouble nstorenumout;//库存主数量
+	private UFDouble narrstorenumout;//安排后库存主数量
+	private UFDouble nusefulnumout;//可用量
+	private UFDouble narrusefulnumout;//安排后库存可用量
+	private UFDouble ndrqstorenumout;//大日期库存主数量
+	private UFDouble ndrqarrstorenumout;//大日期安排后库存主数量
+	private UFDouble ndrqusefulnumout;//大日期库可用量
+	private UFDouble ndrqarrusefulnumout;//大日期安排后可用量
     public UFDouble nstorenumin;//收货站库存数量
     public UFDouble narrstorenumin;//收货站安排后库存数量  
+    public UFDouble ndrqstorenumin;//收货站库存数量
+    public UFDouble ndrqarrstorenumin;//收货站安排后库存数量  
     public UFBoolean bisdate;   //是否大日期
    
+	public UFDouble getNdrqstorenumin() {
+		return ndrqstorenumin;
+	}
+	public void setNdrqstorenumin(UFDouble ndrqstorenumin) {
+		this.ndrqstorenumin = ndrqstorenumin;
+	}
+	public UFDouble getNdrqarrstorenumin() {
+		return ndrqarrstorenumin;
+	}
+	public void setNdrqarrstorenumin(UFDouble ndrqarrstorenumin) {
+		this.ndrqarrstorenumin = ndrqarrstorenumin;
+	}
 	@Override
     public Object getAttributeValue(String arg) {
     	if("nnum".equalsIgnoreCase(arg)){
@@ -51,10 +71,26 @@ public class PlanDealVO extends SendplaninBVO {
     		return this.getNstorenumout();
     	}else if("narrstorenumout".equalsIgnoreCase(arg)){
     		return this.getNarrstorenumout();
+    	}else if("nusefulnumout".equalsIgnoreCase(arg)){
+    		return this.getNusefulnumout();
+    	}else if("narrusefulnumout".equalsIgnoreCase(arg)){
+    		return this.getNarrusefulnumout();
+    	}else if("ndrqstorenumout".equalsIgnoreCase(arg)){
+    		return this.getNdrqstorenumout();
+    	}else if("ndrqarrstorenumout".equalsIgnoreCase(arg)){
+    		return this.getNdrqarrstorenumout();
+    	}else if("ndrqusefulnumout".equalsIgnoreCase(arg)){
+    		return this.getNdrqusefulnumout();
+    	}else if("ndrqarrusefulnumout".equalsIgnoreCase(arg)){
+    		return this.getNdrqarrusefulnumout();
     	}else if("nstorenumin".equalsIgnoreCase(arg)){
     		return this.getNstorenumin();
     	}else if("narrstorenumin".equalsIgnoreCase(arg)){
     		return this.getNarrstorenumin();
+    	}else if("ndrqstorenumin".equalsIgnoreCase(arg)){
+    		return this.getNdrqstorenumin();
+    	}else if("ndrqarrstorenumin".equalsIgnoreCase(arg)){
+    		return this.getNdrqarrstorenumin();
     	}else if("pk_corp".equalsIgnoreCase(arg)){
     		return this.getPk_corp();
     	}else if("dmakedate".equalsIgnoreCase(arg)){
@@ -100,13 +136,29 @@ public class PlanDealVO extends SendplaninBVO {
     	}else if("nassnum".equalsIgnoreCase(arg)){
     		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("nstorenumout".equalsIgnoreCase(arg)){
-    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    		setNstorenumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("narrusefulnumout".equalsIgnoreCase(arg)){
+    		setNarrusefulnumout(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("narrstorenumout".equalsIgnoreCase(arg)){
-    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    		setNarrstorenumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("nusefulnumout".equalsIgnoreCase(arg)){
+    		setNusefulnumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqstorenumout".equalsIgnoreCase(arg)){
+    		setNdrqstorenumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqarrusefulnumout".equalsIgnoreCase(arg)){
+    		setNdrqarrusefulnumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqarrstorenumout".equalsIgnoreCase(arg)){
+    		setNdrqarrstorenumout(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqusefulnumout".equalsIgnoreCase(arg)){
+    		setNdrqusefulnumout(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("nstorenumin".equalsIgnoreCase(arg)){
-    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    		setNstorenumin(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("narrstorenumin".equalsIgnoreCase(arg)){
-    		setNassnum(PuPubVO.getUFDouble_NullAsZero(value));
+    		setNarrstorenumin(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqstorenumin".equalsIgnoreCase(arg)){
+    		setNdrqstorenumin(PuPubVO.getUFDouble_NullAsZero(value));
+    	}else if("ndrqarrstorenumin".equalsIgnoreCase(arg)){
+    		setNdrqarrstorenumin(PuPubVO.getUFDouble_NullAsZero(value));
     	}else if("pk_corp".equalsIgnoreCase(arg)){
     		setPk_corp(PuPubVO.getString_TrimZeroLenAsNull(value));
     	}else if("dmakedate".equalsIgnoreCase(arg)){
@@ -371,6 +423,42 @@ public class PlanDealVO extends SendplaninBVO {
 	}
 	public void setNarrstorenumin(UFDouble narrstorenumin) {
 		this.narrstorenumin = narrstorenumin;
+	}
+	public UFDouble getNusefulnumout() {
+		return nusefulnumout;
+	}
+	public void setNusefulnumout(UFDouble nusefulnumout) {
+		this.nusefulnumout = nusefulnumout;
+	}
+	public UFDouble getNarrusefulnumout() {
+		return narrusefulnumout;
+	}
+	public void setNarrusefulnumout(UFDouble narrusefulnumout) {
+		this.narrusefulnumout = narrusefulnumout;
+	}
+	public UFDouble getNdrqstorenumout() {
+		return ndrqstorenumout;
+	}
+	public void setNdrqstorenumout(UFDouble ndrqstorenumout) {
+		this.ndrqstorenumout = ndrqstorenumout;
+	}
+	public UFDouble getNdrqarrstorenumout() {
+		return ndrqarrstorenumout;
+	}
+	public void setNdrqarrstorenumout(UFDouble ndrqarrstorenumout) {
+		this.ndrqarrstorenumout = ndrqarrstorenumout;
+	}
+	public UFDouble getNdrqusefulnumout() {
+		return ndrqusefulnumout;
+	}
+	public void setNdrqusefulnumout(UFDouble ndrqusefulnumout) {
+		this.ndrqusefulnumout = ndrqusefulnumout;
+	}
+	public UFDouble getNdrqarrusefulnumout() {
+		return ndrqarrusefulnumout;
+	}
+	public void setNdrqarrusefulnumout(UFDouble ndrqarrusefulnumout) {
+		this.ndrqarrusefulnumout = ndrqarrusefulnumout;
 	}
 	
 

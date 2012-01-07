@@ -127,7 +127,71 @@ public class SoDealVO extends SuperVO{
 	private String crowno;
 	private UFBoolean disdate;    //是否大日期
 	private UFBoolean isxnap;//是否虚拟安排 liuys add
-	
+	private UFDouble nstorenumout;//库存主数量
+	private UFDouble narrstorenumout;//安排后库存主数量
+	private UFDouble nusefulnumout;//可用量
+	private UFDouble narrusefulnumout;//安排后库存可用量
+	private UFDouble ndrqstorenumout;//大日期库存主数量
+	private UFDouble ndrqarrstorenumout;//大日期安排后库存主数量
+	private UFDouble ndrqusefulnumout;//大日期库可用量
+	private UFDouble ndrqarrusefulnumout;//大日期安排后可用量
+	public static String[] getSort_fields() {
+		return sort_fields;
+	}
+	public static void setSort_fields(String[] sort_fields) {
+		SoDealVO.sort_fields = sort_fields;
+	}
+	public UFDouble getNstorenumout() {
+		return nstorenumout;
+	}
+	public void setNstorenumout(UFDouble nstorenumout) {
+		this.nstorenumout = nstorenumout;
+	}
+	public UFDouble getNarrstorenumout() {
+		return narrstorenumout;
+	}
+	public void setNarrstorenumout(UFDouble narrstorenumout) {
+		this.narrstorenumout = narrstorenumout;
+	}
+	public UFDouble getNusefulnumout() {
+		return nusefulnumout;
+	}
+	public void setNusefulnumout(UFDouble nusefulnumout) {
+		this.nusefulnumout = nusefulnumout;
+	}
+	public UFDouble getNarrusefulnumout() {
+		return narrusefulnumout;
+	}
+	public void setNarrusefulnumout(UFDouble narrusefulnumout) {
+		this.narrusefulnumout = narrusefulnumout;
+	}
+	public UFDouble getNdrqstorenumout() {
+		return ndrqstorenumout;
+	}
+	public void setNdrqstorenumout(UFDouble ndrqstorenumout) {
+		this.ndrqstorenumout = ndrqstorenumout;
+	}
+	public UFDouble getNdrqarrstorenumout() {
+		return ndrqarrstorenumout;
+	}
+	public void setNdrqarrstorenumout(UFDouble ndrqarrstorenumout) {
+		this.ndrqarrstorenumout = ndrqarrstorenumout;
+	}
+	public UFDouble getNdrqusefulnumout() {
+		return ndrqusefulnumout;
+	}
+	public void setNdrqusefulnumout(UFDouble ndrqusefulnumout) {
+		this.ndrqusefulnumout = ndrqusefulnumout;
+	}
+	public UFDouble getNdrqarrusefulnumout() {
+		return ndrqarrusefulnumout;
+	}
+	public void setNdrqarrusefulnumout(UFDouble ndrqarrusefulnumout) {
+		this.ndrqarrusefulnumout = ndrqarrusefulnumout;
+	}
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 	public UFBoolean getIsxnap() {
 		return isxnap;
 	}

@@ -375,7 +375,7 @@ public class StockInvOnHandBO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)==null){
 			throw new BusinessException("仓库不能为空");
 		}
-		if(PuPubVO.getString_TrimZeroLenAsNull("cinvbasid")==null)
+		if(PuPubVO.getString_TrimZeroLenAsNull(cinvbasid)==null)
 			throw new BusinessException("存货为空");
 		
 		sql.append("select sum(whs_stocktonnage) nnum,sum(whs_stockpieces) nassnum ");
@@ -435,11 +435,9 @@ public class StockInvOnHandBO {
 	private void dealResultSet(Map<String,UFDouble[]> invNumInfor,List ldata){
 		if(ldata == null || ldata.size() ==0)
 			return;
-		//		if(ldata != null && ldata.size()!=0){
 		if(invNumInfor == null){
 			invNumInfor = new HashMap<String, UFDouble[]>();
 		}
-
 		String key = null;
 		Map oMap = null;
 		int len = ldata.size();
@@ -460,7 +458,6 @@ public class StockInvOnHandBO {
 			
 			invNumInfor.put(key, nums);
 		}
-		//		}
 	}
 	
 	/**
@@ -496,6 +493,75 @@ public class StockInvOnHandBO {
 		dealResultSet(retInfor, ldata);
 		return retInfor;
 	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目:查询当前公司当前仓库下的库存量所有存货的
+	 * @时间：2011-7-7下午07:18:34
+	 * @param corp：必须条件
+	 * @param cwarehouseid 必须条件
+	 * @param pk_cargdoc ：货位
+	 * @param cinvbasid 必须条件
+	 * @param vbatchcode:批次号
+	 * @param ctrayid:托盘id
+	 * @param strWhere 自定义查询条件
+	 * @returnMap<String, UFDouble[]>:<存货基本id，{库存主数量,库存辅数量}>
+	 * @throws BusinessException
+	 */
+	public Map<String, UFDouble[]> getStockNum(String corp,String cwarehouseid,
+			String pk_cargdoc,ArrayList<String> cinvbasid,String vbatchcode,String ctrayid ,String strWhere) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp)==null){
+			throw new BusinessException("公司不能为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)==null){
+			throw new BusinessException("仓库不能为空");
+		}
+		if(cinvbasid == null || cinvbasid.size() ==0)
+			throw new BusinessException("存货为空");
+		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select pk_invbasdoc inv, sum(whs_stocktonnage) nnum,sum(whs_stockpieces) nassnum ");
+		sql.append(" from tb_warehousestock");
+		sql.append(" where isnull(dr,0) = 0");
+		if(strWhere!= null && !"".equalsIgnoreCase(strWhere)){
+			sql.append(" and "+strWhere);
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp)!=null){
+			sql.append(" and pk_corp = '"+corp+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(cwarehouseid)!=null){
+			sql.append(" and pk_customize1 = '"+cwarehouseid+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)!=null){
+			sql.append(" and pk_cargdoc = '"+pk_cargdoc+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(vbatchcode)!=null){
+			sql.append(" and whs_batchcode = '"+vbatchcode+"'");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null)
+			sql.append(" and pplpt_pk = '"+ctrayid+"'");
+		TempTableUtil tt = new TempTableUtil();
+		sql.append(" and pk_invbasdoc  in"+ tt.getSubSql(cinvbasid));
+		sql.append(" group by ");//分组
+		sql.append(" pk_corp");// 公司
+		sql.append(",pk_customize1");//仓库
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)!=null){
+			sql.append(",pk_cargdoc");//货位
+		}
+		sql.append(",pk_invbasdoc");//存货
+		if(PuPubVO.getString_TrimZeroLenAsNull(vbatchcode)!=null){
+			sql.append(",whs_batchcode");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(ctrayid)!=null)
+			sql.append(",pplpt_pk");
+		/**
+		 * zhf  托盘和 批次的先后位置  可能存在问题 
+		 * 因为  实际托盘为 一个批次放多个托盘  但对于虚拟托盘 却是 一个托盘对多个批次
+		 */
+		List ldata = (List) getDao().executeQuery(sql.toString(), WdsPubResulSetProcesser.MAPLISTROCESSOR);
+		dealResultSet(retInfor, ldata);
+		return retInfor;
+	}
 	
 	/**
 	 * 
@@ -503,11 +569,18 @@ public class StockInvOnHandBO {
 	 * @说明：完达山物流项目 
 	 * @时间：2011-11-29上午09:58:57
 	 * @param corp:公司
+	 * @param pk_outwhous:出库仓库
 	 * @param strWhere：自定义where条件
 	 * @return Map<String, UFDouble[]>:<存货基本id，{主数量,辅数量}>
 	 * @throws BusinessException
 	 */
-	public Map<String, UFDouble[]> getSoOrderNdealNumInfor(String corp,String strWhere) throws BusinessException{
+	public Map<String, UFDouble[]> getSoOrderNdealNumInfor(String corp,String pk_outwhous,String strWhere) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp) == null ){
+			corp = SQLHelper.getCorpPk();
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_outwhous) == null ){
+			throw new BusinessException("出库仓库不能为空");
+		}
 		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
 		StringBuffer sql= new StringBuffer();
 		sql.append(" select ");
@@ -518,6 +591,7 @@ public class StockInvOnHandBO {
 		sql.append("  inner join wds_soorder h ");
 		sql.append("  on h.pk_soorder = b.pk_soorder ");
 		sql.append("  where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 ");
+		sql.append(" and h.pk_outwhouse='"+pk_outwhous+"'");
 		sql.append(" and h.pk_corp = '"+corp+"'");
 		sql.append(" and h.vbillstatus="+IBillStatus.FREE);
 		if(strWhere !=null && !"".equalsIgnoreCase(strWhere)){
@@ -537,7 +611,13 @@ public class StockInvOnHandBO {
 	 * @return
 	 * @throws BusinessException
 	 */
-	public Map<String, UFDouble[]> getPlanOrderNdealNumInfor(String corp,String strWhere) throws BusinessException{
+	public Map<String, UFDouble[]> getPlanOrderNdealNumInfor(String corp,String pk_outwhouse,String strWhere) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(corp) == null ){
+			corp = SQLHelper.getCorpPk();
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_outwhouse) == null ){
+			throw new BusinessException("出库仓库不能为空");
+		}
 		Map<String,UFDouble[]> retInfor = new HashMap<String, UFDouble[]>();
 		StringBuffer sql= new StringBuffer();
 		sql.append(" select ");
@@ -548,6 +628,7 @@ public class StockInvOnHandBO {
 		sql.append("  inner join wds_sendorder h ");
 		sql.append(" on h.pk_sendorder = b.pk_sendorder ");
 		sql.append("  where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 ");
+		sql.append(" and h.pk_outwhouse='"+pk_outwhouse+"'");
 		sql.append(" and h.pk_corp = '"+corp+"'");
 		sql.append(" and h.vbillstatus="+IBillStatus.FREE);
 		if(strWhere !=null && !"".equalsIgnoreCase(strWhere)){

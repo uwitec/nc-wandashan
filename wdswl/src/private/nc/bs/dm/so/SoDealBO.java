@@ -13,6 +13,7 @@ import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
@@ -93,7 +94,6 @@ public class SoDealBO {
 			return null;
 		ArrayList<SoDealVO> list = (ArrayList<SoDealVO>) o;
 		datas = list.toArray(new SoDealVO[0]);
-
 		/**
 		 * liuys add 
 		 * 虚拟流程查询, 根据销售订单查询ERP销售出库,如果有对应的销售出库单并且该单标识为虚拟安排,则在销售计划安排只能查询出虚拟流程的单据
@@ -138,7 +138,8 @@ public class SoDealBO {
 				}
 			}
 		}
-			
+		SoDealBoUtils util = new SoDealBoUtils();
+		util.arrangStornumout(SQLHelper.getCorpPk(), pk_storedoc, datas);
 		return datas;
 	}
 
