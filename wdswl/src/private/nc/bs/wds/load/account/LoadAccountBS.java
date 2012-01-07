@@ -166,7 +166,7 @@ public class LoadAccountBS {
 		    if(lodytype==LOADFEE){
 			bvo.setNloadprice(PuPubVO.getUFDouble_NullAsZero(loadPricvo.getNloadprice()).multiply(PuPubVO.getUFDouble_NullAsZero(bvo.getNassoutnum())));// 装货费用
 		    }else if(lodytype==UNLOADFEE){
-				bvo.setNunloadprice(PuPubVO.getUFDouble_NullAsZero(loadPricvo.getNunloadprice()).multiply(PuPubVO.getUFDouble_NullAsZero(bvo.getNassoutnum())));// 装货费用	              
+				bvo.setNunloadprice(PuPubVO.getUFDouble_NullAsZero(loadPricvo.getNunloadprice()).multiply(PuPubVO.getUFDouble_NullAsZero(bvo.getNassoutnum())));// 卸货费用	              
 		    }
 			bvo.setNtagprice(PuPubVO.getUFDouble_NullAsZero(loadPricvo.getNtagprice()).multiply(PuPubVO.getUFDouble_NullAsZero(bvo.getNtagnum())));// 贴签费用
 			if (loadPricvo.getFiscoded() != null&& loadPricvo.getFiscoded() == UFBoolean.TRUE) {
