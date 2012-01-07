@@ -1,6 +1,8 @@
 package nc.ui.wds.tranprice.freight;
 
+import nc.ui.pub.ButtonObject;
 import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -45,7 +47,15 @@ public class MyClientUI extends BillManageUI{
 
 	@Override
 	protected void initSelfData() {
-		// TODO Auto-generated method stub
+		ButtonObject btn = getButtonManager().getButton(IBillButton.Line);
+		if (btn != null) {
+			btn.removeChildButton(getButtonManager().getButton(
+					IBillButton.CopyLine));
+			btn.removeChildButton(getButtonManager().getButton(
+					IBillButton.PasteLine));
+			btn.removeChildButton(getButtonManager().getButton(
+					IBillButton.InsLine));
+		}
 		
 	}
 
