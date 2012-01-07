@@ -17,6 +17,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;
@@ -116,7 +117,9 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS5);
-		getBillCardPanel().setTailItem("dmakedate", _getDate());	
+		getBillCardPanel().setTailItem("dmakedate", _getDate());
+		getBillCardPanel().setHeadItem("reserve14", UFBoolean.TRUE);//ÊÇ·ñ·Ö¼ð²Ö
+
 	}
 
 	protected ManageEventHandler createEventHandler() {
