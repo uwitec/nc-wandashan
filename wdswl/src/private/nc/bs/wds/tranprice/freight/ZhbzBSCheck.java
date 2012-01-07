@@ -59,8 +59,6 @@ public class ZhbzBSCheck implements IBDBusiCheck {
 	        	throw new BusinessException("表头的字段存在重复!");
 	        }
 
-			
-			//BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"carriersid","standardtune","tuneunits"}, " 表头的字段存在重复！ ");
 			//对表体存货的唯一性效验
 			if(bvo==null||bvo.length==0){
 				throw new BusinessException("表体不能为空！");
@@ -131,11 +129,7 @@ public class ZhbzBSCheck implements IBDBusiCheck {
 					}
 				}
 			}
-	        
-			
-		
 		}
-	
 	}
 	
 	public void dealAfter(int intBdAction, AggregatedValueObject billVo,
