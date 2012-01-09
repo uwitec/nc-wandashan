@@ -304,7 +304,7 @@ private BaseDAO baseDAO = null;
 	 */
 	private Integer getDefaultDay() throws BusinessException{
 		StringBuffer sql = new StringBuffer();
-		sql.append(" select datavale from wds_periodsetting_h ");
+		sql.append(" select datavale+1 from wds_periodsetting_h ");
 		sql.append(" where isnull(dr,0) =0 ");
 		sql.append(" and pk_corp='"+pk_corp+"'");
 		Object value = getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
