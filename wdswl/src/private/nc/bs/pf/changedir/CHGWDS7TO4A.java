@@ -75,7 +75,7 @@ public class CHGWDS7TO4A extends nc.bs.pf.change.VOConversion {
 						"B_cfirstbillhid->B_cfirstbillhid",// [供应链字段 [其他入库]-------为空或者发运计划主键]
 						"B_cfirstbillbid->B_cfirstbillbid",//  [供应链字段 [其他入库]-------为空或者发运计划表体主键] 
 						"B_vfirstbillcode->B_vfirstbillcode",//[供应链字段 [其他入库]-------为空或者发运计划编码]
-						"B_cfirsttype->B_cfirsttyp",//[供应链字段 [其他入库]-------为空或者发运计划编码]
+						"B_cfirsttype->B_cfirsttype",//[供应链字段 [其他入库]-------为空或者发运计划编码]
 						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						
 		

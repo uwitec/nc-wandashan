@@ -70,7 +70,7 @@ public class CHGWDSZTO4C extends nc.bs.pf.change.VOConversion {
 				"B_cfirstbillhid->B_cfirstbillhid",//-- 
 				"B_cfirstbillbid->B_cfirstbillbid",//--
 				"B_vfirstbillcode->B_vfirstbillcode",//
-				"B_cfirsttype->B_cfirsttyp",//
+				"B_cfirsttype->B_cfirsttype",//
 				
 				"H_freplenishflag->H_freplenishflag",//是否退货
 				"H_boutretflag->H_boutretflag",//是否退回
