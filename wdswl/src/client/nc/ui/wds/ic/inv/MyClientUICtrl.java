@@ -27,7 +27,7 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	                              IBillButton.Refresh
 	                              ,IBillButton.Print,
 	                              WdsSelfButton.view_lock
-	                              ,WdsSelfButton.clean_zero
+	            //                  ,WdsSelfButton.clean_zero
 	                              };
   
 	}
@@ -43,7 +43,7 @@ public class MyClientUICtrl extends AbstractManageController implements ISingleC
 	           	         	           	 ,IBillButton.Print
 	           	         	         ,
 		                              WdsSelfButton.view_lock
-		                              ,WdsSelfButton.clean_zero
+		            //                  ,WdsSelfButton.clean_zero
 	        };
 	
 	}

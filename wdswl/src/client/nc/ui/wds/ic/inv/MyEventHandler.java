@@ -75,7 +75,26 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			return;// 用户放弃了查询
 
 		whereSql = strWhere.toString();
-		SuperVO[] queryVos = queryHeadVOs(whereSql);
+		String[] sql=whereSql.split("and");
+		StringBuffer strWhere1 = new StringBuffer();
+		int leng=sql.length;
+        for(int i=0;i<sql.length;i++){
+//        	leng--;
+        	if("(tb_warehousestock.whs_stocktonnage = 'Y'))".equals(sql[i].trim())){
+        		strWhere1.append(" (tb_warehousestock.whs_stocktonnage >0)) and ");
+        		continue;
+        	}
+        	if("(tb_warehousestock.whs_stocktonnage = 'N'))".equals(sql[i].trim())){
+        		strWhere1.append(" (tb_warehousestock.whs_stocktonnage >-100000)) and ");
+        	}else{
+               	strWhere1.append(sql[i]);
+               	if(leng-(i+1)>0){
+               		strWhere1.append(" and ");
+               	}
+        	}
+        	
+        }
+		SuperVO[] queryVos = queryHeadVOs(strWhere1.toString());
 
 		getBufferData().clear();
 		// 增加数据到Buffer
