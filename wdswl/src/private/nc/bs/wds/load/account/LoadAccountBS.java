@@ -192,7 +192,7 @@ public class LoadAccountBS {
 		if(mybill.getTableVO(mybill.getTableCodes()[1]).length==1){
 			mybill.getTableVO(mybill.getTableCodes()[1])[0].setAttributeValue("nloadprice",feess);
 			//liuys add 增加表体2装卸费金额
-			mybill.getTableVO(mybill.getTableCodes()[0])[0].setAttributeValue("nloadprice",feess);
+			//mybill.getTableVO(mybill.getTableCodes()[0])[0].setAttributeValue("nloadprice",feess);
 		}
 	}
 
