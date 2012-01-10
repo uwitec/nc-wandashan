@@ -1,13 +1,9 @@
 package nc.ui.wds.ic.allo.in.close;
 
-import java.awt.Container;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UILabel;
-import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRadioButton;
 import nc.ui.pub.query.QueryConditionClient;
-import nc.ui.trade.query.HYQueryDLG;
 
 public class AlloCloseQryDlg extends QueryConditionClient {
 	private static final long serialVersionUID = 1L;

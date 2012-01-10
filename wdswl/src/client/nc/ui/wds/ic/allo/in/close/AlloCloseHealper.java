@@ -11,6 +11,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author Administrator
  *
  */
+
 public class AlloCloseHealper {
 	
 	private static String bo = "nc.bs.wds.ic.allo.in.close.AlloCloseBO";

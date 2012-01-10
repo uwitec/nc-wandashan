@@ -75,7 +75,7 @@ public class AlloCloseBO {
 		if(!WdsWlPubTool.isZc(pk_storedoc)){
 			sql.append("and h.cotherwhid='"+pk_storedoc+"'");//分仓只能看到自己的，总仓可以看到总仓+分仓的
 		}
-		sql.append(" and coalesce(b.noutnum,0)-coalesce(b."+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0");//应入数量-转出数量>0
+//		sql.append(" and coalesce(b.noutnum,0)-coalesce(b."+WdsWlPubConst.erp_allo_outnum_fieldname+",0)>0");//应入数量-转出数量>0
 
 		//保管员绑定货位对应的存货
 		WdsWlPubBO wlbo = new WdsWlPubBO();
