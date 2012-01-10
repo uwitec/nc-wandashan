@@ -84,25 +84,25 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 
 	
 	
-	@Override
-	public boolean beforeEdit(BillEditEvent e) {
-//		String key=e.getKey();
-//		if(key==null){
-//			return false;
-//		}
-//		//过滤存货分类只属于粉类 的存货
-//		if(key.equalsIgnoreCase("invcode")){
-//			JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
-//			if( c instanceof UIRefPane){
-//				UIRefPane ref = (UIRefPane)c;
-//				
-//				ref.getRefModel().addWherePart(" and bd_invbasdoc.pk_invcl in " +
-//						"(select bd_invcl.pk_invcl from bd_invcl where bd_invcl.invclasscode like '30101%')" +
-//						"    and isnull(bd_invmandoc.dr,0) = 0");
-//			}		
-//		}
-		return true;
-	}
+//	@Override
+//	public boolean beforeEdit(BillEditEvent e) {
+////		String key=e.getKey();
+////		if(key==null){
+////			return false;
+////		}
+////		//过滤存货分类只属于粉类 的存货
+////		if(key.equalsIgnoreCase("invcode")){
+////			JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
+////			if( c instanceof UIRefPane){
+////				UIRefPane ref = (UIRefPane)c;
+////				
+////				ref.getRefModel().addWherePart(" and bd_invbasdoc.pk_invcl in " +
+////						"(select bd_invcl.pk_invcl from bd_invcl where bd_invcl.invclasscode like '30101%')" +
+////						"    and isnull(bd_invmandoc.dr,0) = 0");
+////			}		
+////		}
+//		return true;
+//	}
 
 	@Override
 	protected String getBillNo() throws Exception {
@@ -237,6 +237,28 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 						"  and tb_stockstaff.pk_cargdoc='" + pk_cargdoc + "' ");
 			}
 			return true;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		String key = e.getKey();				
+		if (e.getPos() == BillItem.BODY) {	
+			//在班组信息中   通过表头的仓库对班组进行参照过滤
+			if("teamcode".equals(key)){//班组
+				//仓库id
+				Object a = getBillCardPanel().getHeadItem("srl_pk").getValueObject();
+				if(a==null){
+					showWarningMessage("请选择仓库");
+					return false;
+				}
+				UIRefPane panel = (UIRefPane) this.getBillCardPanel().getBodyItem("teamcode").getComponent();
+				if (null != a && !"".equals(a)) {
+					//修改参照 条件 增加条件 指定仓库id
+					panel.getRefModel().addWherePart(" and wds_teamdoc_h.vdef1 = '"+a+"' ");
+				}
+			}
 		}
 		return true;
 	}
