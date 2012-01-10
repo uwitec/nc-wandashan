@@ -39,7 +39,7 @@ public class N_WDSO_UNAPPROVE extends AbstractCompiler2 {
 			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "canelSignQueryGenBillVO",
 					"&currentVo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
 			setParameter("AggObject",icBillVO);
-			runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "canelPushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
+			runClass("nc.bs.wds.ic.so.out.SoOutBO", "canelPushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
 			//更改本单据审批信息
 			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
 			head.setDapprovedate(null);
