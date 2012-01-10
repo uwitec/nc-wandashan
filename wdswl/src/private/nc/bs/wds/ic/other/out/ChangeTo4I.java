@@ -14,9 +14,12 @@ import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.ic.pub.bill.QryConditionVO;
 import nc.vo.ic.pub.locator.LocatorVO;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.BillQueryTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
@@ -54,9 +57,22 @@ public class ChangeTo4I {
 		if(value == null ){
 			return null;
 		}
-		GeneralBillVO[] billvo = null;
-		//其它出库
+		//查询物流其他入库单
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
+		String currbilltype = (String)value.getParentVO().getAttributeValue("vbilltype");
+		if(currbilltype == null || "".equals(currbilltype)){
+			currbilltype=(String)value.getParentVO().getAttributeValue("geh_billtype");
+		    if(currbilltype == null || "".equals(currbilltype))
+			throw new BusinessException("获取当前单据类型失败");
+		}
+		SuperVO vo = (SuperVO) value.getParentVO();
+		String currbillid=vo.getPrimaryKey();
+		nc.vo.trade.billsource.LightBillVO[] lvos=BillQueryTool.getForwardBills(currbilltype, currbillid,WdsWlPubConst.BILLTYPE_OTHER_IN);	
+		if(lvos != null && lvos.length >0){
+			throw new BusinessException("");
+		}
+		//查询ERP其他出库单
+		GeneralBillVO[] billvo = null;
 		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+outhvo.getPrimaryKey()+"' ";
 		QryConditionVO voCond = new QryConditionVO(where);
 	    ArrayList alListData = (ArrayList)queryBills("4I", voCond);

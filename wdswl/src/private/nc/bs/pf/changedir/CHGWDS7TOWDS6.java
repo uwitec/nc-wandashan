@@ -74,7 +74,7 @@ import nc.bs.pf.change.VOConversion;
 
 				"H_vuserdef15->H_geh_customize7",
 
-				"B_cfirsttyp->B_cfirsttype",
+				"B_cfirsttype->B_cfirsttype",
 				"B_cfirstbillhid->B_cfirstbillhid",
 				"B_cfirstbillbid->B_cfirstbillbid"
 				//					 "B_vfirstbillcode->B_",//源头单据号

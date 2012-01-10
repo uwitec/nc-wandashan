@@ -461,7 +461,7 @@ public class ChangToWDSO {
 			rowNo = rowNo+10;
 			b2vos[i].setCrowno("" +rowNo);// 行号
 			// 销售订单信息
-			b2vos[i].setCfirsttype(list.get(i).getCfirsttyp());
+			b2vos[i].setCfirsttype(list.get(i).getCfirsttype());
 			b2vos[i].setCfirstbillhid(list.get(i).getCfirstbillhid());
 			b2vos[i].setCfirstbillbid(list.get(i).getCfirstbillbid());
 			b2vos[i].setVfirstbillcode(list.get(i).getVfirstbillcode());

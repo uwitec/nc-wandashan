@@ -37,7 +37,7 @@ public class CHGWDS6TOWDS7 extends VOConversionUI {
 			"B_geb_backvbatchcode->B_lvbatchcode",//来源批次号
 			"H_isxnap->H_isxnap",//是否虚拟欠发	 
 			"B_vfirstbillcode->B_vfirstbillcode",
-			"B_cfirsttype->B_cfirsttyp",
+			"B_cfirsttype->B_cfirsttype",
 			"B_cfirstbillhid->B_cfirstbillhid",
 			"B_cfirstbillbid->B_cfirstbillbid",			
 			"B_vsourcebillcode->H_vbillcode",

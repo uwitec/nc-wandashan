@@ -41,7 +41,7 @@ public class CHGWDS5TOWDS8 extends VOConversionUI{
 				"B_csourcetype->H_pk_billtype",// 来源单据类型
 				"B_cfirstbillhid->B_cfirstbillhid", // 源头单据表头主键
 				"B_cfirstbillbid->B_cfirstbillbid",// 源头单据表体主键
-				"B_cfirsttyp->B_cfirsttype",//源头单据类型
+				"B_cfirsttype->B_cfirsttype",//源头单据类型
 				"B_vfirstbillcode->B_vfirstbillcode",//源头单据号
 			
 				"B_cinventoryid->B_pk_invmandoc",// 存货主键

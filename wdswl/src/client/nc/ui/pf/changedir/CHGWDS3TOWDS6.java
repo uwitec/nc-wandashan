@@ -52,7 +52,7 @@ public String[] getField() {
 			
 			"B_cfirstbillhid->B_cfirstbillhid",
 			"B_cfirstbillbid->B_cfirstbillbid",
-			"B_cfirsttyp->B_cfirsttype",
+			"B_cfirsttype->B_cfirsttype",
 			
 			"B_cinventoryid->B_pk_invmandoc",//
 			"B_cinvbasid->B_pk_invbasdoc",//

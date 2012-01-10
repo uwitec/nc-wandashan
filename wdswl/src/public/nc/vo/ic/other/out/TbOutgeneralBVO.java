@@ -22,7 +22,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String cfirstbillhid;//销售订单表头id
 	public String vfirstbillcode;//源头单据号
 	public String cfirstbillbid;//销售订单表头id
-	public String cfirsttyp;//--销售订单 
+	public String cfirsttype;//--销售订单 
 	public String vuserdef9;
 	public String castunitid;//辅单位
 	public String csourcebillhid;
@@ -483,8 +483,8 @@ public class TbOutgeneralBVO extends SuperVO {
 	 * 
 	 * @return String
 	 */
-	public String getCfirsttyp() {
-		return cfirsttyp;
+	public String getCfirsttype() {
+		return cfirsttype;
 	}
 
 	/**
@@ -495,9 +495,9 @@ public class TbOutgeneralBVO extends SuperVO {
 	 * @param newCfirsttyp
 	 *            String
 	 */
-	public void setCfirsttyp(String newCfirsttyp) {
+	public void setCfirsttype(String newCfirsttype) {
 
-		cfirsttyp = newCfirsttyp;
+		cfirsttype = newCfirsttype;
 	}
 
 	/**

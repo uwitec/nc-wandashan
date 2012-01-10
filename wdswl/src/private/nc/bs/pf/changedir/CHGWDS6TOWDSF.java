@@ -39,7 +39,7 @@ public class CHGWDS6TOWDSF extends VOConversion {
 				"B_cfirstbillhid->B_cfirstbillhid",
 				"B_cfirstbillbid->B_cfirstbillbid",
 				"B_vfirstbillcode->B_vfirstbillcode",
-				"B_cfirsttype->B_cfirsttyp",
+				"B_cfirsttype->B_cfirsttype",
 				"B_pk_invmandoc->B_cinventoryid",
 				"B_pk_invbasdoc->B_cinvbasid",
 				"B_cunitid->B_unitid",//主 计量单位
