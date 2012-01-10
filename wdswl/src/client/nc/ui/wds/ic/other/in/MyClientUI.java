@@ -6,6 +6,7 @@ import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
@@ -22,6 +23,8 @@ import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -285,6 +288,27 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 				ref.getRefModel().addWherePart("  and tb_stockstaff.pk_cargdoc='"+pk_cargdoc+"' ");
 			}
 			return true;		
+		}
+		return true;
+	}
+	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		String key = e.getKey();				
+		if (e.getPos() == BillItem.BODY) {	
+			//在班组信息中   通过表头的仓库对班组进行参照过滤
+			if("teamcode".equals(key)){//班组
+				//仓库id
+				Object a = getBillCardPanel().getHeadItem("geh_cwarehouseid").getValueObject();
+				if(a==null){
+					showWarningMessage("请选择仓库");
+					return false;
+				}
+				UIRefPane panel = (UIRefPane) this.getBillCardPanel().getBodyItem("teamcode").getComponent();
+				if (null != a && !"".equals(a)) {
+					//修改参照 条件 增加条件 指定仓库id
+					panel.getRefModel().addWherePart(" and wds_teamdoc_h.vdef1 = '"+a+"' ");
+				}
+			}
 		}
 		return true;
 	}
