@@ -64,7 +64,7 @@ public class CHGWDS8TO4C  extends nc.bs.pf.change.VOConversion {
 				"B_csourcebillhid->B_cfirstbillhid",//本地销售出库 源头单据表头ID[销售 订单]  
 				"B_csourcebillbid->B_cfirstbillbid",//本地销售出库 源头单据表体ID  [销售 订单]  
 				"B_vsourcebillcode->B_vfirstbillcode",//本地销售出库 源头单据号[销售 订单]   
-				"B_csourcetype->B_cfirsttyp",//本地销售出库 源头单据类型编码[销售 订单]   
+				"B_csourcetype->B_cfirsttype",//本地销售出库 源头单据类型编码[销售 订单]   
 				"B_"+WdsWlPubConst.csourcehid_wds+"->B_general_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 				"B_"+WdsWlPubConst.csourcebid_wds+"->B_general_b_pk",//Lyf:ERP出入库单，记录物流系统来源单据主键,以便物流的单据能够联查到ERP单据
 				///---------------------------用供应链 销售出库的源头记录 本地销售出库ID
