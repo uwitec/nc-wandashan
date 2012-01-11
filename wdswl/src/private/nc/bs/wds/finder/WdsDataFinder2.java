@@ -30,7 +30,7 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 		}else if(WdsWlPubConst.WDSF.equals(billType)){//WDSF 装卸费
 			sql = "select distinct h1.pk_loadprice, h1.vbillno from wds_loadprice_h h1, wds_loadprice_b1 b1 where h1.pk_loadprice = b1.pk_loadprice  and nvl(h1.dr, 0) = 0 and nvl(b1.dr, 0) = 0 and b1.csourcebillhid = ? ";
 		}else if(WdsWlPubConst.WDSO.equals(billType)){//WDSO 销售出库回传单
-			sql = "select distinct h1.general_pk, h1.vbillcode from tb_outgeneral_h h1, tb_outgeneral_b b1 where h1.general_pk = b1.general_pk and nvl(h1.dr, 0) = 0 and nvl(b1.dr, 0) = 0 and b1.csourcebillhid = ? ";
+			sql = " select distinct h1.pk_wds_writeback4c_h, h1.vbillno from wds_writeback4c_h h1, wds_writeback4c_b2 b1 where h1.pk_wds_writeback4c_h = b1.pk_wds_writeback4c_h and nvl(h1.dr, 0) = 0 and nvl(b1.dr, 0) = 0 and b1.csourcebillhid = ?  ";
 		}else if("4C".equals(billType)){//供应链销售出库
 			sql = " select distinct h1.cgeneralhid,h1.vbillcode from ic_general_h h1,ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1."+WdsWlPubConst.csourcehid_wds+" = ?  ";
 		}else if(WdsWlPubConst.GYL4E.equals(billType)){//供应链调拨入库

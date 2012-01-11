@@ -482,16 +482,37 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
 				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
 						._getCorp().getPrimaryKey(), ui, true);
-		int retflag = UIDialog.ID_CANCEL;
-		
+		int retflag = UIDialog.ID_CANCEL;	
+		Map<String, List<TbOutgeneralTVO>> oldInfor = ui.getTrayInfor();
 		if (tdpDlg.showModal() == UIDialog.ID_OK) {
-			Map<String, List<TbOutgeneralTVO>> map2 = tdpDlg.getBufferData();
-			ui.setTrayInfor(map2);
+			Map<String, List<TbOutgeneralTVO>> trayInfor = tdpDlg.getBufferData();
+			//lyf  2012-01-11 拆行
+			trayInfor = splitLine(trayInfor);
+			//lyf 2012-01-11  拆行
+			ui.setTrayInfor(trayInfor);
+			if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
+				// 将信息同步到缓存
+				TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) getBufferData()
+						.getCurrentVO().getChildrenVO();
+				if (bodys != null && bodys.length != 0) {
+					String key = null;
+					for (TbOutgeneralBVO body : bodys) {
+						key = body.getCrowno();
+						body.setTrayInfor(trayInfor.get(key));
+					}
+				}
+			}
+			
+
+			//zhf begin  设置 虚拟帮他托盘信息
 			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
 			ui.setLockTrayInfor(lockTrayInfor);
 			setBodyValueToft();
 			retflag = UIDialog.ID_OK;
 			chaneColor();
+		}else{
+			ui.setTrayInfor(oldInfor);
+			return retflag;
 		}
 		setBodyModelState();
 		return retflag;

@@ -82,27 +82,6 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 
 	}
 
-	
-	
-//	@Override
-//	public boolean beforeEdit(BillEditEvent e) {
-////		String key=e.getKey();
-////		if(key==null){
-////			return false;
-////		}
-////		//过滤存货分类只属于粉类 的存货
-////		if(key.equalsIgnoreCase("invcode")){
-////			JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
-////			if( c instanceof UIRefPane){
-////				UIRefPane ref = (UIRefPane)c;
-////				
-////				ref.getRefModel().addWherePart(" and bd_invbasdoc.pk_invcl in " +
-////						"(select bd_invcl.pk_invcl from bd_invcl where bd_invcl.invclasscode like '30101%')" +
-////						"    and isnull(bd_invmandoc.dr,0) = 0");
-////			}		
-////		}
-//		return true;
-//	}
 
 	@Override
 	protected String getBillNo() throws Exception {
