@@ -8,6 +8,7 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.wl.pub.WdsQueryDlg;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 
@@ -20,6 +21,10 @@ public class MyQueryDIG extends WdsQueryDlg {
 	
 	 public void initData() {
 		setDefaultValue("tb_warehousestock.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());
+		setDefaultValue("tb_warehousestock.whs_stocktonnage",null,"Y");
+	//	setFieldRef("setFieldRef.whs_stocktonnage", UFBoolean.TRUE);  //
+
+	
 		super.initData();
 	}
 	 

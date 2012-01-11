@@ -80,11 +80,11 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		int leng=sql.length;
         for(int i=0;i<sql.length;i++){
 //        	leng--;
-        	if("(tb_warehousestock.whs_stocktonnage = 'Y'))".equals(sql[i].trim())){
+        	if("(tb_warehousestock.whs_stocktonnage = 'N'))".equals(sql[i].trim())){
         		strWhere1.append(" (tb_warehousestock.whs_stocktonnage >0)) and ");
         		continue;
         	}
-        	if("(tb_warehousestock.whs_stocktonnage = 'N'))".equals(sql[i].trim())){
+        	if("(tb_warehousestock.whs_stocktonnage = 'Y'))".equals(sql[i].trim())){
         		strWhere1.append(" (tb_warehousestock.whs_stocktonnage >-100000)) and ");
         	}else{
                	strWhere1.append(sql[i]);
