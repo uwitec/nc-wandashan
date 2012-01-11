@@ -18,6 +18,7 @@ import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
+import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -262,12 +263,24 @@ public class SoDealBO {
 		AggregatedValueObject[] orderVos = (AggregatedValueObject[]) PfUtilTools
 				.runChangeDataAry(WdsWlPubConst.WDS4, WdsWlPubConst.WDS5,
 						planBillVos, paraVo);
+		
+		
 		//3.3 调用销售运单保存脚本，保存销售运单
 		if (orderVos == null || orderVos.length == 0) {
 			return;
 		}
+	
 		PfUtilBO pfbo = new PfUtilBO();
 		for (AggregatedValueObject bill : orderVos) {
+			
+			//设置为默认分拣仓
+			String[] heads=bill.getParentVO().getAttributeNames();
+			for(int i=0;i<heads.length;i++){
+			    if(("reserve14").equals(heads[i].trim())){
+				    bill.getParentVO().setAttributeValue("reserve14", UFBoolean.TRUE);
+			
+			     }
+			}
 			pfbo.processAction(WdsWlPubConst.DM_PLAN_TO_ORDER_SAVE,
 					WdsWlPubConst.WDS5, infor.get(2), null, bill, null);
 		}
