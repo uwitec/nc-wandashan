@@ -75,7 +75,7 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			return;// 用户放弃了查询
 
 		whereSql = strWhere.toString();
-		String[] sql=whereSql.split("and");
+		String[] sql=whereSql.split(" and ");
 		StringBuffer strWhere1 = new StringBuffer();
 		int leng=sql.length;
         for(int i=0;i<sql.length;i++){
