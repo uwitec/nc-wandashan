@@ -3,9 +3,11 @@ package nc.bs.wds.ic.other.out;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
+import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.bs.wl.pub.WdsWlIcPubDealTool;
 import nc.itf.ic.pub.IGeneralBill;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
@@ -19,7 +21,6 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.BillQueryTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
@@ -57,7 +58,7 @@ public class ChangeTo4I {
 		if(value == null ){
 			return null;
 		}
-		//查询物流其他入库单
+		
 		TbOutgeneralHVO outhvo = (TbOutgeneralHVO) value.getParentVO();
 		String currbilltype = (String)value.getParentVO().getAttributeValue("vbilltype");
 		if(currbilltype == null || "".equals(currbilltype)){
@@ -67,9 +68,18 @@ public class ChangeTo4I {
 		}
 		SuperVO vo = (SuperVO) value.getParentVO();
 		String currbillid=vo.getPrimaryKey();
-		nc.vo.trade.billsource.LightBillVO[] lvos=BillQueryTool.getForwardBills(currbilltype, currbillid,WdsWlPubConst.BILLTYPE_OTHER_IN);	
-		if(lvos != null && lvos.length >0){
-			throw new BusinessException("");
+		//查询物流其他入库单
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT DISTINCT tb_general_h.geh_pk, tb_general_h.geh_vbillcode ");
+		sql.append("  FROM tb_general_h, tb_general_b ");
+		sql.append(" Where  tb_general_h.geh_pk = tb_general_b.geh_pk ");
+		sql.append(" and tb_general_h.dr = 0 and tb_general_b.dr = 0 ");
+		sql.append("  and tb_general_h.geh_cbilltypecode = '"+WdsWlPubConst.BILLTYPE_OTHER_IN+"'");
+		sql.append("  and tb_general_b.csourcetype = '"+WdsWlPubConst.BILLTYPE_OTHER_OUT+"'");
+		sql.append("  and tb_general_b.csourcebillhid = '"+currbillid+"'");
+		ArrayList<Object> lvos =(ArrayList<Object>) getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.ARRAYLISTPROCESSOR);
+		if(lvos !=null && lvos.size()>0){
+			throw new BusinessException(" 已经生成其他入库单，不能取消签字");
 		}
 		//查询ERP其他出库单
 		GeneralBillVO[] billvo = null;
