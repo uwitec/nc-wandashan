@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.other.in;
 
 import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
@@ -23,8 +24,6 @@ import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;

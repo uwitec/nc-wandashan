@@ -10,8 +10,6 @@ import nc.vo.ic.pub.TbgeneralB2VO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
-
-
 public class OtherInClientUICtrl extends AbstractManageController {
 
 	public String[] getCardBodyHideCol() {

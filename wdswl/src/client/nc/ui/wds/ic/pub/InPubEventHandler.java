@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
@@ -621,11 +620,21 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
      
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
-//		zhf add
+		//		zhf add
 		setHeadPartEdit(false);
-		getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		getBillUI().updateButtons();
+		boolean isself = PuPubVO.getString_TrimZeroLenAsNull(
+				getBufferData().getCurrentVO().getChildrenVO()[0].getAttributeValue("csourcetype"))
+				==null?true:false;
+		if(!isself){
+			if(getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex() == 0){
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			}else{
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			}
+
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			getBillUI().updateButtons();
+		}
 	}	
 		
 	//如果 参照的入库仓库为空 设置默认仓库为当前保管员仓库

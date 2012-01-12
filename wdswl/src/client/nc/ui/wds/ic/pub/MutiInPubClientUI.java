@@ -395,14 +395,31 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 		return super.beforeEdit(e);
 	}
 	public  void stateChanged(javax.swing.event.ChangeEvent arg0){
-		if(getBillOperate() == IBillOperate.OP_REFADD){
-			if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
-				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-			}else{
-				getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
-				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		
+		boolean isrefAdd = getBillOperate() == IBillOperate.OP_REFADD;//是否参照新增
+		
+		boolean isedit = getBillOperate() == IBillOperate.OP_EDIT;
+		if(isedit && getBufferData().getCurrentVO() == null)
+			return;
+		boolean isEditSelf = false;//是否自制修改
+		if(isedit){
+			if(PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(0, "csourcetype"))==null){
+				isEditSelf = true;
 			}
+		}
+		
+		if(!("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode()))){
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			updateButtons();
+			return;
+		}
+		
+		if(isrefAdd || !isEditSelf){
+			//			if("tb_general_b".equals(getBillCardPanel().getBodyTabbedPane().getSelectedTableCode())){
+			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			//			}
 			updateButtons();
 		}
 	}
