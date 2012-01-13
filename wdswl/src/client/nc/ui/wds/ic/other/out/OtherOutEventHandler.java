@@ -268,8 +268,8 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		super.onBoEdit();
 //		zhf add
 	//	setHeadPartEdit(false);
-		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-		getBillUI().updateButtons();
+//		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//		getBillUI().updateButtons();
 		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 		
 	}

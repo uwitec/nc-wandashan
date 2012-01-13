@@ -289,9 +289,25 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoEdit() throws Exception {
 		// TODO Auto-generated method stub
 		super.onBoEdit();
-	    getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
-		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		getBillUI().updateButtons();
+//	    getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+//		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+		
+		boolean isself = PuPubVO.getString_TrimZeroLenAsNull(
+				getBufferData().getCurrentVO().getChildrenVO()[0].getAttributeValue("csourcetype"))
+				==null?true:false;
+		if(!isself){
+			if(getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex() == 0){
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+			}else{
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(true);
+			}
+
+			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+			getBillUI().updateButtons();
+		}
+		
+		
+//		getBillUI().updateButtons();
 	}
 	// 表体赋货位
 	protected void setBodySpace() throws BusinessException {
