@@ -11,7 +11,8 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.CombinVO;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report2.CombinVO;
 
 public class TpydBO {
 
@@ -63,7 +64,7 @@ public class TpydBO {
 			throw new Exception("表体数据为空");
 		SuperVO[] newVos = (SuperVO[]) CombinVO.combinVoByFields(vos,
 				new String[] { "pk_trayout" }, new int[] {
-						nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },
+						IUFTypes.UFD, IUFTypes.UFD },
 				new String[] { "nmovenum", "nmoveassnum" });
 		int size1 = newVos.length;
 		String pk_trayout = null;// 移出托盘主键
@@ -111,7 +112,7 @@ public class TpydBO {
 	private void valuteInCdt(SuperVO[] vos) throws Exception {
 		SuperVO[] newVos1 = (SuperVO[]) CombinVO.combinVoByFields(vos,
 				new String[] {"whs_pkin", "pk_trayin" }, new int[] {
-						nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },
+						IUFTypes.UFD, IUFTypes.UFD },
 				new String[] { "nmovenum", "nmoveassnum" });
 		int size1 = newVos1.length;
 		UFDouble rnum = null;// 移入托盘总量(主数量)
@@ -292,7 +293,7 @@ public class TpydBO {
 		// 将移出托盘编码相同的合并到一起 将移入数量 求和
 		SuperVO[] newVos = (SuperVO[]) CombinVO.combinVoByFields(vos,
 				new String[] { "whs_pkout","pk_trayout" }, new int[] {
-						nc.vo.wl.pub.IUFTypes.UFD, nc.vo.wl.pub.IUFTypes.UFD },
+						IUFTypes.UFD, IUFTypes.UFD },
 				new String[] { "nmovenum", "nmoveassnum" });
 
 		UFDouble rnum = null;// 移动数量(主数量)

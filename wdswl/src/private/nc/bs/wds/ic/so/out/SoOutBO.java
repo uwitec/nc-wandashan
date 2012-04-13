@@ -18,7 +18,7 @@ import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 
 /**
  * ÏúÊÛ³ö¿â(WDS8)

@@ -7,7 +7,7 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 
 public class ReportBO {
 	private BaseDAO dao = null;

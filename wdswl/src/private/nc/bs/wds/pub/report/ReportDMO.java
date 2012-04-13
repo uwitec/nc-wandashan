@@ -1,6 +1,5 @@
 package nc.bs.wds.pub.report;
 
-import nc.bs.pub.DataManageObject;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -10,10 +9,12 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import nc.bs.pub.DataManageObject;
 import nc.bs.pub.SystemException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 /**
  * 报表查询DMO类
  * @author Administrator

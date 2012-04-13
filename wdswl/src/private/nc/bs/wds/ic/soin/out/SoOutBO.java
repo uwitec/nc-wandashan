@@ -3,7 +3,9 @@ package nc.bs.wds.ic.soin.out;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.naming.NamingException;
+
 import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.SuperDMO;
@@ -16,7 +18,7 @@ import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 
 /**
  * ÕÀªı»Îø‚(WDSZ)

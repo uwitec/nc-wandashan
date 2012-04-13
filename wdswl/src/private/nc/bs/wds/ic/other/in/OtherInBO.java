@@ -23,14 +23,13 @@ import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.CombinVO;
-import nc.vo.wl.pub.IUFTypes;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report2.CombinVO;
 /**
  * ∆‰À¸»Îø‚(WDS7)
  * @author Administrator
