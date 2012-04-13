@@ -17,26 +17,26 @@ import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.report.query.QueryDLG;
-import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
-import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportPubTool;
 import nc.ui.wl.pub.report.WDSWLReportSql;
-import nc.ui.wl.pub.report.ZmReportBaseUI;
+import nc.ui.zmpub.pub.report.buttonaction2.LevelSubTotalAction;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report2.CombinVO;
+import nc.vo.zmpub.pub.report2.ReportPubTool;
+import nc.vo.zmpub.pub.report2.ZmReportBaseUI2;
 
 /**
  * 各仓产品库存 产品明细表
  * 
  * @author mlr
  */
-public class ReportUI extends ZmReportBaseUI {
+public class ReportUI extends ZmReportBaseUI2 {
 	private static final long serialVersionUID = -416464210087347398L;
 	// 待检状态主键
 	private static String pk_daijian = "1021S31000000009FS99";
@@ -1163,7 +1163,7 @@ public class ReportUI extends ZmReportBaseUI {
 	/**
 	 * 基本列合并
 	 */
-	private void setColumn() {
+	public void setColumn() {
 		// 表体栏目分组设置
 		UITable cardTable = getReportBase().getBillTable();
 		GroupableTableHeader cardHeader = (GroupableTableHeader) cardTable

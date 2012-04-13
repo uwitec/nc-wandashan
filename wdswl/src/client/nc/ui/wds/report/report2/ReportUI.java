@@ -3,7 +3,9 @@ package nc.ui.wds.report.report2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.table.TableColumnModel;
+
 import nc.bd.accperiod.AccountCalendar;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIDialog;
@@ -11,21 +13,21 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.table.ColumnGroup;
 import nc.ui.pub.beans.table.GroupableTableHeader;
 import nc.ui.scm.util.ObjectUtils;
-import nc.ui.wds.pub.button.report2.LevelSubTotalAction;
-import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.report.WDSWLReportSql;
-import nc.ui.wl.pub.report.ZmReportBaseUI;
+import nc.ui.zmpub.pub.report.buttonaction2.LevelSubTotalAction;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report2.CombinVO;
+import nc.vo.zmpub.pub.report2.ZmReportBaseUI2;
 
 /**
  * 各仓库总库存报表
  * 
  * @author mlr
  */
-public class ReportUI extends ZmReportBaseUI {
+public class ReportUI extends ZmReportBaseUI2 {
 
 	private static final long serialVersionUID = -5891956414451757118L;
 	// 待检状态主键
@@ -248,7 +250,7 @@ public class ReportUI extends ZmReportBaseUI {
 	/**
 	 * 基本列合并
 	 */
-	private void setColumn() {
+	public void setColumn() {
 
 		// 表体栏目分组设置
 		UITable cardTable = getReportBase().getBillTable();

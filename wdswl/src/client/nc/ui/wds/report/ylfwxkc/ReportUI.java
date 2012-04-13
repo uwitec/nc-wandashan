@@ -18,8 +18,6 @@ import nc.ui.pub.report.ReportItem;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportBaseUI;
-import nc.ui.wl.pub.report.ReportPubTool;
 import nc.ui.wl.pub.report.WDSWLReportSql;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -32,9 +30,11 @@ import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wds.ic.storestate.TbStockstateVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-import nc.vo.wl.pub.report.IUFTypes;
-import nc.vo.wl.pub.report.ReportBaseVO;
-import nc.vo.wl.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report2.ReportBaseUI;
+import nc.vo.zmpub.pub.report2.ReportPubTool;
 /**
  * 物流原料粉无效库存报表
  * @author yf

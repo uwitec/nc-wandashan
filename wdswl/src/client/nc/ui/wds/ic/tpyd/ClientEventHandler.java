@@ -11,8 +11,9 @@ import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.wl.pub.CombinVO;
 import nc.vo.wl.pub.WdsWlPubTool;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report2.CombinVO;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -109,7 +110,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		 *       对移入托盘的校验
 		 *       同一个托盘，移入的总量 不能 超出当前托盘的容量	       
 		 */ 
-		CircularlyAccessibleValueObject[] newVos1=CombinVO.combinVoByFields(vos,new String[]{"whs_pkin","pk_trayin"},new int[]{nc.vo.wl.pub.IUFTypes.UFD,nc.vo.wl.pub.IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
+		CircularlyAccessibleValueObject[] newVos1=CombinVO.combinVoByFields(vos,new String[]{"whs_pkin","pk_trayin"},new int[]{IUFTypes.UFD,IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
 		int  size1=newVos1.length;
 		UFDouble rnum = null;//移动主数量	
 		UFDouble rbnum = null;	//移动辅数量	
@@ -143,7 +144,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
     */
 	private void valuteOutCdt(SuperVO[] vos) throws Exception {
 		//将移出托盘编码相同的合并到一起   将移入数量 求和
-		CircularlyAccessibleValueObject[] newVos=CombinVO.combinVoByFields(vos,new String[]{"outtraycode"},new int[]{nc.vo.wl.pub.IUFTypes.UFD,nc.vo.wl.pub.IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
+		CircularlyAccessibleValueObject[] newVos=CombinVO.combinVoByFields(vos,new String[]{"outtraycode"},new int[]{IUFTypes.UFD,IUFTypes.UFD}, new String[]{"nmovenum","nmoveassnum"});	
 		if(newVos==null || newVos.length==0)
 			throw new ValidationException("数据为空");
 		int  size=newVos.length;	

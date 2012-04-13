@@ -10,7 +10,7 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.trade.pub.CardPanelPRTS;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 
 //  xjx   add  ø®∆¨–Õ¥Ú”°
 public class MyTpDateSource extends CardPanelPRTS {

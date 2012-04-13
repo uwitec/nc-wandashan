@@ -5,13 +5,13 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportBaseUI;
-import nc.ui.wl.pub.report.buttonaction.IReportButton;
+import nc.ui.zmpub.pub.report.buttonaction2.IReportButton;
 import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.IUFTypes;
-import nc.vo.wl.pub.report.ReportBaseVO;
-import nc.vo.wl.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report2.ReportBaseUI;
 /**
  * 库存实时状态报表（物流有效箱粉库存和物流无效箱粉库存）------------------报表
  * @author Administrator

@@ -8,11 +8,11 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportBaseUI;
-import nc.ui.wl.pub.report.buttonaction.IReportButton;
+import nc.ui.zmpub.pub.report.buttonaction2.IReportButton;
 import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report2.ReportBaseUI;
 /**
  * 装卸费月汇总表------------------报表
  * @author Administrator

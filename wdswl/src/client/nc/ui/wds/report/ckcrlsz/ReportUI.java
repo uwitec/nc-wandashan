@@ -1,18 +1,17 @@
 package nc.ui.wds.report.ckcrlsz;
 
 import javax.swing.ListSelectionModel;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ReportBaseUI;
 import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.IUFTypes;
-import nc.vo.wl.pub.report.ReportBaseVO;
-import nc.vo.wl.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report.IUFTypes;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.SubtotalVO;
+import nc.vo.zmpub.pub.report2.ReportBaseUI;
 
 /**
  * 各个仓库出入库流水账--报表

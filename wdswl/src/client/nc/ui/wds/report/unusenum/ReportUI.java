@@ -9,9 +9,8 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.report.query.QueryDLG;
-import nc.ui.wl.pub.CombinVO;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.ui.wl.pub.report.ZmReportBaseUI;
+import nc.ui.zmpub.pub.report.ZmReportBaseUI;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
@@ -20,7 +19,8 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report2.CombinVO;
 
 /**
  * 

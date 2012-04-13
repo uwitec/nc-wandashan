@@ -9,7 +9,7 @@ import nc.ui.pub.bill.BillListPanel;
 import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.report.ReportBaseVO;
+import nc.vo.zmpub.pub.report.ReportBaseVO;
 /**
  * ¡–±Ì¥Ú”°
  * @author xjx  
