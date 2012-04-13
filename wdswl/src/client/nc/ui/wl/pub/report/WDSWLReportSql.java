@@ -604,7 +604,7 @@ public class WDSWLReportSql {
 		sql.append(" left join wds_invbasdoc iv");//关联存货档案
 		sql.append(" on b.cinventoryid=iv.pk_invmandoc and isnull(iv.dr,0)=0");
 		sql.append(" left join wds_invcl cl ");//关联存货分类
-		sql.append(" on iv.vdef1=cl.pk_invcl and isnull(cl.dr, 0) = 0");
+		sql.append(" on iv.vdef1=cl.pk_invcl ");
 		sql.append(" where isnull(h.dr, 0) = 0 ");
 		sql.append(" and isnull(b.dr, 0) = 0 ");
 		sql.append(" and h.fstatus = '"+BillStatus.AUDIT+"'");//查询审批通过的销售订单
