@@ -45,7 +45,9 @@ import nc.vo.scm.pu.PuPubVO;
              public String pk_wds_invbasdoc;
              public UFDouble grossweight;  //毛重
              public UFDouble  volume;     //体积
-            
+             public Integer drqbzts;//大日期标准天数  -----liuys add 2012-05-23
+             
+             
 //             public static final String  PK_INVBASDOC="pk_invbasdoc";   
 //             public static final String  VDEF2="vdef2";   
 //             public static final String  VDEF4="vdef4";   
@@ -498,6 +500,16 @@ import nc.vo.scm.pu.PuPubVO;
 
 	public String getPk_corp() {
 		return pk_corp;
+	}
+
+
+	public Integer getDrqbzts() {
+		return drqbzts;
+	}
+
+
+	public void setDrqbzts(Integer drqbzts) {
+		this.drqbzts = drqbzts;
 	} 
 	
 	
