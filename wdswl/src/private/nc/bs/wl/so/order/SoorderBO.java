@@ -3,10 +3,8 @@ package nc.bs.wl.so.order;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.List;
 import javax.swing.ImageIcon;
-
-import oracle.sql.BLOB;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
@@ -15,9 +13,12 @@ import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.dm.corpseal.CorpsealVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+import oracle.sql.BLOB;
+
 /**
  * 销售运单（WDS5）后台查询类
  * @author Administrator
@@ -113,5 +114,27 @@ public class SoorderBO {
 			image = list.get(0).getCorpseal();
 		}
 		return image;
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf 
+	 * @说明：完达山物流项目 支持来源单据号查询
+	 * @时间：2012-5-23下午05:51:15
+	 * @param strWhere
+	 * @return
+	 * @throws BusinessException
+	 */
+	public SuperVO[] querySoOrders(String strWhere) throws BusinessException{
+		StringBuffer str = new StringBuffer();
+		str.append("select wds_soorder.* from wds_soorder inner join wds_soorder_b on wds_soorder.pk_soorder = " +
+				" wds_soorder_b.pk_soorder where nvl(wds_soorder.dr,0)=0 and nvl(wds_soorder_b.dr,0)=0");
+		if(PuPubVO.getString_TrimZeroLenAsNull(strWhere)!=null){
+			str.append(" and "+strWhere);
+		}
+		List ldata = (List)getBaseDAO().executeQuery(str.toString(), new BeanListProcessor(SoorderVO.class));
+		if(ldata == null || ldata.size() == 0)
+			return null;
+		return (SoorderVO[])ldata.toArray(new SoorderVO[0]);
 	}
 }

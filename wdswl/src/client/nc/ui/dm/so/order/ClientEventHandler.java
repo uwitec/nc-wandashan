@@ -50,7 +50,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		StringBuffer strWhere = new StringBuffer();
 		boolean isStock = true;
 		String pk_stordoc = WdsWlPubConst.WDS_WL_ZC;
-		strWhere.append(" isnull(dr,0) = 0 and pk_corp = '"
+		strWhere.append(" wds_soorder.pk_corp = '"
 				+ _getCorp().getPrimaryKey() + "' ");
 		try {
 			pk_stordoc = getLoginInforHelper().getCwhid(_getOperator());
