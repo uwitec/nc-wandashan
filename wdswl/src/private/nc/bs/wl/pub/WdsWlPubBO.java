@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import nc.bs.dao.BaseDAO;
 import nc.jdbc.framework.processor.BeanProcessor;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
@@ -121,7 +122,7 @@ public class WdsWlPubBO {
 	    if(o !=null){
 	    	Integer i=(Integer)o;
 	    	if(i.intValue()==0){
-	    		String sql1="select pk_cargdoc from tb_stockstaff where cuserid='"+userid+"'";
+	    		String sql1="select pk_cargdoc from tb_stockstaff where cuserid='"+userid+"' and isnull(dr,0)=0 and pk_corp='"+SQLHelper.getCorpPk()+"'";
 	    		String o1=PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql1, WdsPubResulSetProcesser.COLUMNPROCESSOR));
 	    		if(o1 == null)
 	    			throw new BusinessException("该保管员未指定货位");

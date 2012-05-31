@@ -22,8 +22,6 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubConsts;
-import nc.vo.wl.pub.WdsWlPubTool;
-
 /**
  * 
  * @author Administrator 其他出库后台类
@@ -353,40 +351,6 @@ public class OtherOutBO {
 	/**
 	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 出库单作废时校验（针对主仓库实际托盘存在）已被占用不能作废
-	 * @时间：2011-6-28下午08:04:17
-	 * @param ltray
-	 * @throws BusinessException
-	 */
-	private void checkTrayIsUse(List<TbOutgeneralTVO> ltray) throws BusinessException{
-		if(ltray == null || ltray.size() == 0)
-			return;
-		ArrayList<String> lid = new ArrayList<String>();
-		ArrayList<String> lwhsid = new ArrayList<String>();
-		for(TbOutgeneralTVO tray:ltray){
-			if(!lid.contains(tray.getCdt_pk()))
-				lid.add(tray.getCdt_pk());
-			if(!lwhsid.contains(tray.getWhs_pk()))
-				lwhsid.add(tray.getWhs_pk());
-		}
-		if(lid.size() == 0)
-			throw new BusinessException("数据异常");
-		
-		String sql = "select count(0) from tb_warehousestock  stock inner join bd_cargdoc_tray tray " +
-				" on stock.pplpt_pk = tray.cdt_pk " +
-				" where stock.pplpt_pk in "+getTempTableUtil().getSubSql(lid)+" and isnull(stock.dr,0)=0 and isnull(tray.dr,0) = 0" +
-						" and tray.cdt_traycode not like '"+WdsWlPubConst.XN_CARGDOC_TRAY_NAME+"%'" +
-								" and tray.cdt_traystatus = "+StockInvOnHandVO.stock_state_use+
-								" and stock.whs_pk not in "+getTempTableUtil().getSubSql(lwhsid);
-	   int iv = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
-	   if(iv>0)
-		   throw new BusinessException("存在托盘已被占用无法作废当前单据");
-	   
-	}
-	
-	/**
-	 * 
-	 * @作者：zhf
 	 * @说明：完达山物流项目 保存出库单时调整库存状态表
 	 * @时间：2011-6-28下午08:29:05
 	 * @param ltray
@@ -406,18 +370,14 @@ public class OtherOutBO {
 	 */
 	public void backTrayInforOnDelBill(String cwarehouseid,List<TbOutgeneralTVO> ltray)
 	throws BusinessException {
-		//		String whereSql = null;
 		StockInvOnHandVO stock = null;
 		if (ltray == null || ltray.size() == 0)
 			return;
-		//		如果是总仓的实际托盘恢复需要校验是否超最大量限制
-		if(WdsWlPubTool.isZc(cwarehouseid))
-			checkTrayIsUse(ltray);
 		List<StockInvOnHandVO> linvOnhand = new ArrayList<StockInvOnHandVO>();
 		StockInvOnHandVO[] stocks = null;
 		String pk_corp = SQLHelper.getCorpPk();
 		for (TbOutgeneralTVO tray : ltray) {
-
+			
 			stocks = getStockBO().getStockInvDatas(pk_corp, cwarehouseid, tray.getPk_cargdoc(), tray.getCdt_pk(), tray.getPk_invbasdoc(), tray.getVbatchcode()
 			);			
 
@@ -429,14 +389,14 @@ public class OtherOutBO {
 				throw new BusinessException("获取原货品托盘存放信息异常");
 
 			stock = stocks[0];
-
+	  			
 			stock.setWhs_stockpieces(PuPubVO.getUFDouble_NullAsZero(
 					stock.getWhs_stockpieces()).add(
 							PuPubVO.getUFDouble_NullAsZero(tray.getNoutassistnum())));
 			stock.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(
 					stock.getWhs_stocktonnage()).add(
 							PuPubVO.getUFDouble_NullAsZero(tray.getNoutnum())));
-
+			
 			stock.setWhs_status(0);
 			stock.setStatus(VOStatus.UPDATED);
 			linvOnhand.add(stock);
@@ -447,7 +407,5 @@ public class OtherOutBO {
 					linvOnhand.toArray(new StockInvOnHandVO[0]),
 					WdsWlPubConsts.stockinvonhand_fieldnames);
 
-	}
-	
-	
+	}	
 }
