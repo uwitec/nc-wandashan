@@ -166,10 +166,8 @@ public class StockInvOnHandBO {
 			naAllAssNum = naAllAssNum.add(PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces()));
 		}
 		if(nassnum.doubleValue()>naAllAssNum.doubleValue()){
-			
-		}
-			
-			//throw new  BusinessException("货位存量不足");
+			throw new  BusinessException("货位存量不足,无法删除入库单");
+		}			
 	}
 	
 	/**

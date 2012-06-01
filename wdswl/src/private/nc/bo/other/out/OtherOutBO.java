@@ -22,6 +22,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubConsts;
+import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 
  * @author Administrator 其他出库后台类
@@ -396,6 +397,7 @@ public class OtherOutBO {
 			stock.setWhs_stocktonnage(PuPubVO.getUFDouble_NullAsZero(
 					stock.getWhs_stocktonnage()).add(
 							PuPubVO.getUFDouble_NullAsZero(tray.getNoutnum())));
+			check(stock);
 			
 			stock.setWhs_status(0);
 			stock.setStatus(VOStatus.UPDATED);
@@ -407,5 +409,22 @@ public class OtherOutBO {
 					linvOnhand.toArray(new StockInvOnHandVO[0]),
 					WdsWlPubConsts.stockinvonhand_fieldnames);
 
+	}
+    /**
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-6-1上午11:06:09
+     * @param stock
+     * 
+     * 校验出库单删除时  恢复托盘存量后是否超过托盘的容量
+     * @throws BusinessException 
+     */
+	private void check(StockInvOnHandVO stock) throws BusinessException {
+	  String pk_invmandoc=stock.getPk_invmandoc();
+	  UFDouble uf=PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces());
+	  UFDouble uf1=PuPubVO.getUFDouble_NullAsZero( WdsWlPubTool.execFomular("val->getColValue(wds_invbasdoc,tray_volume,pk_invmandoc,pk_invmandoc)", new String[]{"pk_invmandoc"}, new String[]{pk_invmandoc}));
+	  if(uf.doubleValue()>uf1.doubleValue()){
+		  throw new BusinessException("超托盘容量 ,无法删除");
+	  }	
 	}	
 }
