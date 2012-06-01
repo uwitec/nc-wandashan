@@ -7,7 +7,6 @@ import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
@@ -25,13 +24,11 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
  * ÆäËû³ö¿â
  * @author author
  * @version tempProject version
  */
-
 public class OtherOutEventHandler extends OutPubEventHandler {
 
 
