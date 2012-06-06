@@ -35,7 +35,6 @@ import nc.vo.wl.pub.WdsWlPubConst;
  */
 public class MyClientUI extends OutPubClientUI implements
 		BillCardBeforeEditListener {
-
 	/**
 	 * 
 	 */
