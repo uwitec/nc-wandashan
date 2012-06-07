@@ -23,6 +23,21 @@ public class OtherInEventHandler extends InPubEventHandler {
 	public OtherInEventHandler(MutiInPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
+	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+		if(lt==null){
+			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+		}
+		return lt;
+	}
+
+	/**
+	 * 查询支持资源权限过滤
+	 * for add mlr
+	 */
+	protected void onBoQuery() throws Exception {
+		getETH().onBoQuery("geb_cinvbasid", "geb_cinventoryid");
+	}
 	protected void onBoElse(int intBtn) throws Exception {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
