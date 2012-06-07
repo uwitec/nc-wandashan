@@ -27,14 +27,26 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	public ClientUIQueryDlg queryDialog = null;
 	private LoginInforHelper helper = null;
-
+	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+		if(lt==null){
+			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+		}
+		return lt;
+	}
 	public LoginInforHelper getLoginInforHelper() {
 		if (helper == null) {
 			helper = new LoginInforHelper();
 		}
 		return helper;
 	}
-
+	/**
+	 * 查询支持资源权限过滤
+	 * for add mlr
+	 */
+	protected void onBoQuery() throws Exception {
+		getETH().onBoQuery("pk_invbasdoc", "pk_invmandoc");
+	}
 	public ClientEventHandler(ClientUI clientUI, IControllerBase control) {
 		super(clientUI, control);
 	}
