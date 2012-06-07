@@ -27,8 +27,19 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	protected void onBoSave() throws Exception {
 		super.onBoSave();
 	}
-	
-	
-
+	/**
+	 * 查询支持资源权限过滤
+	 * for add mlr
+	 */
+	protected void onBoQuery() throws Exception {
+		getETH().onBoQuery1("pk_invbasdoc", "pk_invmandoc");
+	}
+	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+		if(lt==null){
+			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+		}
+		return lt;
+	}
 
 }
