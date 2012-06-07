@@ -25,6 +25,7 @@ import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
@@ -46,6 +47,16 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super(billUI, control);
 		ui = billUI;
 	}
+
+	
+	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+		if(lt==null){
+			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+		}
+		return lt;
+	}
+
 
 	private LoginInforHelper getLoginInfoHelper(){
 		if(login==null){
