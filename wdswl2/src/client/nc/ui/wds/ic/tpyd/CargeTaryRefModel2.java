@@ -1,0 +1,141 @@
+package nc.ui.wds.ic.tpyd;
+
+import nc.ui.bd.ref.AbstractRefModel;
+/**
+ * 
+ * @author Administrator
+ *托盘档案   出库拣货时 使用  zhf
+ */
+public class CargeTaryRefModel2 extends AbstractRefModel {
+	private String m_sRefTitle = "出库托盘档案";
+	/**
+	 * RouteRefModel 构造子注解。
+	 */
+	public CargeTaryRefModel2() {
+		super();
+	}
+
+	/**
+	 * getDefaultFieldCount 方法注解。
+	 */
+	public int getDefaultFieldCount() {
+		return 8;
+	}
+
+	/**
+	 * 显示字段列表 创建日期：(01-4-4 0:57:23)
+	 * 
+	 * @return java.lang.String
+	 */
+	public java.lang.String[] getFieldCode() {
+		return new String[] {
+				"bd_cargdoc_tray.cdt_traycode",
+				"bd_invbasdoc.invcode",
+				"bd_invbasdoc.invname",
+				"tb_warehousestock.whs_stocktonnage",
+				"tb_warehousestock.whs_stockpieces",
+				"tb_warehousestock.whs_batchcode",
+				"tb_warehousestock.whs_lbatchcode",
+				"tb_stockstate.ss_state",
+				"tb_warehousestock.pk_invmandoc",
+				"tb_warehousestock.pk_invbasdoc",
+//				"tb_warehousestock.whs_pk",//zhf add  库存状态表ID
+				"bd_cargdoc_tray.cdt_pk",
+				"tb_warehousestock.ss_pk",
+				"tb_stockstate.ss_pk"
+		};
+	}
+
+	/**
+	 * 显示字段中文名 创建日期：(01-4-4 0:57:23)
+	 * 
+	 * @return java.lang.String
+	 */
+	public java.lang.String[] getFieldName() {
+		return new String[] {
+				"托盘编码",
+				"存货编码",
+				"存货名称",
+				"库存主数量",
+				"库存辅数量",
+				"批次号",
+				"来源批次号",
+				"状态"
+		};
+	}
+
+	/**
+	 * Order子句。
+	 * 
+	 * @return java.lang.String
+	 */
+	public String getOrderPart() {
+		StringBuffer strWhere = new StringBuffer();
+		strWhere.append(" cdt_traycode,substr(cdt_traycode,length(cdt_traycode),1) desc, substr(cdt_traycode,length(cdt_traycode)-1,1) ");
+		return strWhere.toString();
+	}
+	/**
+	 * 此处插入方法说明。 创建日期：(2001-9-6 10:56:48)
+	 */
+	public String[] getHiddenFieldCode() {
+		return new String[] { 
+				"tb_warehousestock.pk_invmandoc",
+				"tb_warehousestock.pk_invbasdoc",
+				"bd_cargdoc_tray.cdt_pk",
+				"tb_warehousestock.ss_pk",
+				"tb_stockstate.ss_pk"};
+	}
+
+	/**
+	 * 主键字段名
+	 * 
+	 * @return java.lang.String
+	 */
+	public String getPkFieldCode() {
+		return "tb_warehousestock.whs_pk";
+	}
+
+	/**
+	 * 参照标题 创建日期：(01-4-4 0:57:23)
+	 * 
+	 * @return java.lang.String
+	 */
+	public String getRefTitle() {
+		return m_sRefTitle;
+	}
+	@Override
+	public String getWherePart() {
+		StringBuffer strWhere = new StringBuffer();
+		strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
+		strWhere.append(" and isnull(tb_warehousestock.dr,0)=0 ");
+		strWhere.append(" and isnull(bd_invmandoc.dr,0)=0 ");
+		strWhere.append(" and isnull(bd_invbasdoc.dr,0)=0 ");
+		strWhere.append(" and isnull(tb_stockstate.dr,0)=0");
+		strWhere.append(" and tb_warehousestock.pk_corp='"+getPk_corp()+"'");
+		return strWhere.toString();
+	}
+	/**
+	 * 参照数据库表或者视图名 创建日期：(01-4-4 0:57:23)
+	 * 
+	 * @return java.lang.String
+	 */
+	public String getTableName() {
+		StringBuffer m_sTableName = new StringBuffer();
+		m_sTableName.append(" bd_cargdoc_tray ");//托盘档案
+		m_sTableName.append(" join tb_warehousestock ");//存货状态（库存信息）
+		m_sTableName.append(" on bd_cargdoc_tray.cdt_pk = tb_warehousestock.pplpt_pk");
+		m_sTableName.append(" join bd_invmandoc ");//存货管理档案
+		m_sTableName.append(" on tb_warehousestock.pk_invmandoc =bd_invmandoc.pk_invmandoc ");
+		m_sTableName.append(" join bd_invbasdoc ");//存货基本档案
+		m_sTableName.append(" on tb_warehousestock.pk_invbasdoc =bd_invbasdoc.pk_invbasdoc ");
+		m_sTableName.append(" join tb_stockstate ");//存货状态档案
+		m_sTableName.append(" on tb_warehousestock.ss_pk=tb_stockstate.ss_pk");
+		return m_sTableName.toString();
+	}
+	@Override
+	public boolean isCacheEnabled() {
+
+		return false;
+	}
+
+}
