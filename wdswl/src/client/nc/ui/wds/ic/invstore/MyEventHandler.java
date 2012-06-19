@@ -6,6 +6,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wl.pub.HgQueryDIG;
 import nc.ui.wl.pub.LoginInforHelper;
 
 import nc.vo.pub.SuperVO;
@@ -30,11 +31,8 @@ public class MyEventHandler extends ManageEventHandler {
 	}
 	@Override
 	protected UIDialog createQueryUI() {
-		return new MyQueryDIG(
-				getBillUI(), null, 
-				_getCorp().getPk_corp(), getBillUI().getModuleCode()
-				, getBillUI()._getOperator(), null		
-		);
+		return new HgQueryDIG(getBillUI(), null, _getCorp().getPrimaryKey(),getBillUI()._getModuleCode(), _getOperator(), null,"pk_cargdoc","pk_stordoc");
+	
 	}
 	
 

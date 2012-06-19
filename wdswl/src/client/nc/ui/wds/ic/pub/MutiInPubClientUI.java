@@ -42,69 +42,69 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 	
 
 	
-	private Map<String,List<TbGeneralBBVO>> trayInfor = null;//缓存下  保存后更新到 行号 + 托盘流水
+//	private Map<String,List<TbGeneralBBVO>> trayInfor = null;//缓存下  保存后更新到 行号 + 托盘流水
 	
-	private Map<String,SmallTrayVO[]> lockTrayInfor = null;//虚拟托盘绑定的实际托盘信息 zhf add
-	public Map<String,SmallTrayVO[]> getLockTrayInfor(){
-		return lockTrayInfor;
-	}
-	public void setLockTrayInfor(Map<String,SmallTrayVO[]>  newInfor){
-		lockTrayInfor = newInfor;
-	}
+//	private Map<String,SmallTrayVO[]> lockTrayInfor = null;//虚拟托盘绑定的实际托盘信息 zhf add
+//	public Map<String,SmallTrayVO[]> getLockTrayInfor(){
+//		return lockTrayInfor;
+//	}
+//	public void setLockTrayInfor(Map<String,SmallTrayVO[]>  newInfor){
+//		lockTrayInfor = newInfor;
+//	}
 	public MutiInPubClientUI() {
 		super();
-		setObserve();
+		//setObserve();
 	}
 	public MutiInPubClientUI(String pk_corp, String pk_billType,String pk_busitype, String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
 	}
-	/**
-	 * 利用内部类，给当前ui类注册一个观察者监听器
-	 * 来监听 缓存的变化 如果缓存发生变化 则利用观察者监听器
-	 * 对ui界面中的托盘信息 进行更新 
-	 * 主要监听BillUIBuffer 的 setCurrentRow() 方法 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 * @时间：2011-9-27下午03:10:37
-	 */
-	private void setObserve() {
-		getBufferData().addObserver(new Observer(){
-			public void update(Observable arg0, Object arg1) {
-				if (!getBufferData().isVOBufferEmpty()){
-					int row = getBufferData().getCurrentRow();
-					if(row < 0){
-						return;
-					}
-					//更新缓存
-					AggregatedValueObject obj = getBufferData().getCurrentVO();
-					if(obj != null){
-						AggregatedValueObject billvo = getBufferData().getCurrentVO();
-						TbGeneralBVO[] bvo = (TbGeneralBVO[])billvo.getChildrenVO();
-						setList(bvo);
-					}
-				}				
-			}
-		});		
-	}
-	public void setList(TbGeneralBVO[] bvo){
-		Map<String,List<TbGeneralBBVO>> m = new HashMap<String,List<TbGeneralBBVO>>();
-		if(bvo!=null && bvo.length>0){
-			for(TbGeneralBVO b : bvo){
-				String crowno = b.getGeb_crowno();//行号
-				m.put(crowno, b.getTrayInfor());
-			}
-		}
-		setTrayInfor(m);
-	}
-	public void setTrayInfor(Map<String,List<TbGeneralBBVO>> trayInfor2){
-		trayInfor = trayInfor2;
-	}
-	
-	public Map<String,List<TbGeneralBBVO>> getTrayInfor(){
-		if(trayInfor == null)
-			trayInfor = new HashMap<String, List<TbGeneralBBVO>>();
-		return trayInfor;
-	}
+//	/**
+//	 * 利用内部类，给当前ui类注册一个观察者监听器
+//	 * 来监听 缓存的变化 如果缓存发生变化 则利用观察者监听器
+//	 * 对ui界面中的托盘信息 进行更新 
+//	 * 主要监听BillUIBuffer 的 setCurrentRow() 方法 
+//	 * @作者：mlr
+//	 * @说明：完达山物流项目 
+//	 * @时间：2011-9-27下午03:10:37
+//	 */
+//	private void setObserve() {
+//		getBufferData().addObserver(new Observer(){
+//			public void update(Observable arg0, Object arg1) {
+//				if (!getBufferData().isVOBufferEmpty()){
+//					int row = getBufferData().getCurrentRow();
+//					if(row < 0){
+//						return;
+//					}
+//					//更新缓存
+//					AggregatedValueObject obj = getBufferData().getCurrentVO();
+//					if(obj != null){
+//						AggregatedValueObject billvo = getBufferData().getCurrentVO();
+//						TbGeneralBVO[] bvo = (TbGeneralBVO[])billvo.getChildrenVO();
+//						setList(bvo);
+//					}
+//				}				
+//			}
+//		});		
+//	}
+//	public void setList(TbGeneralBVO[] bvo){
+//		Map<String,List<TbGeneralBBVO>> m = new HashMap<String,List<TbGeneralBBVO>>();
+//		if(bvo!=null && bvo.length>0){
+//			for(TbGeneralBVO b : bvo){
+//				String crowno = b.getGeb_crowno();//行号
+//				m.put(crowno, b.getTrayInfor());
+//			}
+//		}
+//		setTrayInfor(m);
+//	}
+//	public void setTrayInfor(Map<String,List<TbGeneralBBVO>> trayInfor2){
+//		trayInfor = trayInfor2;
+//	}
+//	
+//	public Map<String,List<TbGeneralBBVO>> getTrayInfor(){
+//		if(trayInfor == null)
+//			trayInfor = new HashMap<String, List<TbGeneralBBVO>>();
+//		return trayInfor;
+//	}
 	@Override
 	protected void setBillNo() throws Exception {
 	
@@ -113,41 +113,41 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 	protected AbstractManageController createController() {
 		return null;
 	}
-	protected void setTotalUIState(int intOpType) throws Exception {
-		super.setTotalUIState(intOpType);
-		switch (intOpType) {
-			case OP_ADD: 
-			case OP_REFADD: {
-				HashMap<String, List<TbGeneralBBVO>> map = 
-					new HashMap<String, List<TbGeneralBBVO>>();
-				setTrayInfor(map);
-			}
-			break;
-				
-		}
-	}
-	/**
-	 * 初始化
-	 */
-	private void initlize() {
-		getBufferData().addObserver(new Observer() {
-			public void update(Observable o, Object arg) {
-				if (!getBufferData().isVOBufferEmpty()){
-					int row = getBufferData().getCurrentRow();
-					if(row < 0){
-						return;
-					}
-					//更新缓存
-					AggregatedValueObject obj = getBufferData().getCurrentVO();
-					if(obj != null){
-						OtherInBillVO billvo = (OtherInBillVO)getBufferData().getCurrentVO();
-						TbGeneralBVO[] bvo = (TbGeneralBVO[])billvo.getChildrenVO();
-						setList(bvo);
-					}
-				}
-			}		
-		});
-	}
+//	protected void setTotalUIState(int intOpType) throws Exception {
+//		super.setTotalUIState(intOpType);
+//		switch (intOpType) {
+//			case OP_ADD: 
+//			case OP_REFADD: {
+//				HashMap<String, List<TbGeneralBBVO>> map = 
+//					new HashMap<String, List<TbGeneralBBVO>>();
+//				setTrayInfor(map);
+//			}
+//			break;
+//				
+//		}
+//	}
+//	/**
+//	 * 初始化
+//	 */
+//	private void initlize() {
+//		getBufferData().addObserver(new Observer() {
+//			public void update(Observable o, Object arg) {
+//				if (!getBufferData().isVOBufferEmpty()){
+//					int row = getBufferData().getCurrentRow();
+//					if(row < 0){
+//						return;
+//					}
+//					//更新缓存
+//					AggregatedValueObject obj = getBufferData().getCurrentVO();
+//					if(obj != null){
+//						OtherInBillVO billvo = (OtherInBillVO)getBufferData().getCurrentVO();
+//						TbGeneralBVO[] bvo = (TbGeneralBVO[])billvo.getChildrenVO();
+//						setList(bvo);
+//					}
+//				}
+//			}		
+//		});
+//	}
 	
 
 	
@@ -181,30 +181,30 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 	public void setDefaultData() throws Exception {
 
 	}
-	public AggregatedValueObject getChangedVOFromUI() throws java.lang.Exception {
-		OtherInBillVO billvo = (OtherInBillVO)this.getBillCardWrapper().getChangedVOFromUI();	
-		OtherInBillVO billvo2 = (OtherInBillVO)this.getBillCardWrapper().getBillVOFromUI();	
-		if(getBillOperate() == IBillOperate.OP_ADD){//新增时 应使用 界面 vo 数据  不考虑删行情况
-			billvo = billvo2;
-		}
-		if(billvo == null)
-			return null;
-		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();		
-		if(bodys == null || bodys.length==0)
-			return billvo;
-		
-		if(trayInfor == null)
-			return billvo;
-		String key = null;
-		for(TbGeneralBVO body:bodys){
-			key = body.getGeb_crowno();
-			if(trayInfor.containsKey(key)){
-				body.setTrayInfor(trayInfor.get(key));
-			}
-		}		
-		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘绑定信息
-		return billvo;
-	}
+//	public AggregatedValueObject getChangedVOFromUI() throws java.lang.Exception {
+//		OtherInBillVO billvo = (OtherInBillVO)this.getBillCardWrapper().getChangedVOFromUI();	
+//		OtherInBillVO billvo2 = (OtherInBillVO)this.getBillCardWrapper().getBillVOFromUI();	
+//		if(getBillOperate() == IBillOperate.OP_ADD){//新增时 应使用 界面 vo 数据  不考虑删行情况
+//			billvo = billvo2;
+//		}
+//		if(billvo == null)
+//			return null;
+//		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();		
+//		if(bodys == null || bodys.length==0)
+//			return billvo;
+//		
+//		if(trayInfor == null)
+//			return billvo;
+//		String key = null;
+//		for(TbGeneralBVO body:bodys){
+//			key = body.getGeb_crowno();
+//			if(trayInfor.containsKey(key)){
+//				body.setTrayInfor(trayInfor.get(key));
+//			}
+//		}		
+//		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘绑定信息
+//		return billvo;
+//	}
 	
 	public AggregatedValueObject getBillVOFromUI() throws Exception {
 		AggregatedValueObject billvo = getBillCardWrapper().getBillVOFromUI();
@@ -318,27 +318,10 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 			getBillCardPanel().getBillModel().setValueAt(pk_cargdoc, i, "geb_space");//货位
 		}
 		//清除当前缓存
-		getTrayInfor().clear();
+		//getTrayInfor().clear();
 		getBillCardPanel().getBillModel().execLoadFormula();
 	}
-	public void afterUpdate() {
-		if (!getBufferData().isVOBufferEmpty()){
-			int row = getBufferData().getCurrentRow();
-			if(row < 0){
-				return;
-			}
-		    //	getBillCardPanel().getBillModel().getBodyItems();
-			Object o = getBufferData().getCurrentVO().getParentVO().getAttributeValue(getBillField().getField_BillStatus());
-			if(o.equals(IBillStatus.FREE)){//自由
-				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
-				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(true);
-			}else{//签字
-				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(false);
-				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(true);
-			}
-			updateButtons();
-		}
-	}
+
 	
 	public boolean beforeEdit(BillEditEvent e) {
 

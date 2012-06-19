@@ -3,6 +3,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -12,6 +13,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 
@@ -23,7 +25,13 @@ import nc.vo.wl.pub.WdsWlPubTool;
 public class N_WDS7_DELETE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
-
+	private BillStockBO1 stock=null;
+	private BillStockBO1 getStock(){
+		if(stock==null){
+			stock=new BillStockBO1();
+		}
+		return stock;
+	}
 
 	public N_WDS7_DELETE() {
 		super();
@@ -38,6 +46,11 @@ public class N_WDS7_DELETE extends AbstractCompiler2 {
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
 			AggregatedValueObject  bill = getVo();
+			
+			
+			//更新现存量		 
+			getStock().updateStockByBill(bill,WdsWlPubConst.BILLTYPE_OTHER_IN_1);
+			
 			if(bill == null || bill.getParentVO() == null){
 				throw new BusinessException("传入数据为空");
 			}
@@ -58,14 +71,14 @@ public class N_WDS7_DELETE extends AbstractCompiler2 {
 //			}
 			// ##################################################
 			IcInPubBO bo = new IcInPubBO();
-			bo.deleteAdjustBill((OtherInBillVO)bill);
+			//bo.deleteAdjustBill((OtherInBillVO)bill);
 			bo.writeBackForInBill((OtherInBillVO)bill, IBDACTION.DELETE, false); //参照情况，[回写本地其他出库]
 			// ##################################################
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);// 方法说明:行业公共删除
 			// ##################################################
-			bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);//回写托盘，删除孙表
+		//	bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);//回写托盘，删除孙表
 			// ##################################################
 			return retObj;
 		} catch (Exception ex) {
@@ -74,6 +87,7 @@ public class N_WDS7_DELETE extends AbstractCompiler2 {
 			else
 				throw new PFBusinessException(ex.getMessage(), ex);
 		}
+		
 	}
 
 	/*

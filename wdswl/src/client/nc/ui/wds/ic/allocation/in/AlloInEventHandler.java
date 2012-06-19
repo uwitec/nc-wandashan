@@ -46,10 +46,10 @@ public class AlloInEventHandler extends InPubEventHandler {
 
 				valuteRowNum();
 
-				onZdtp();
+			//	onZdtp();
 				break;
 			case ISsButtun.Ckmx:
-				onCkmx();
+			//	onCkmx();
 				break;
 			case ISsButtun.Zdrk:
 
@@ -60,9 +60,9 @@ public class AlloInEventHandler extends InPubEventHandler {
 						new String[]{"存货编码","批次号"});
 
 				valuteRowNum();
-				setTrayCatNUll();
+			//	setTrayCatNUll();
 
-				onZdrk();
+				//onZdrk();
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz:
 				onQxqz();
@@ -83,19 +83,19 @@ public class AlloInEventHandler extends InPubEventHandler {
 		setInitWarehouse("geh_cwarehouseid");
 	}
 	
-	/**
-	 * 
-	 * @作者：mlr
-	 * @说明：完达山物流项目 
-	 *       自动拣货前设定托盘信息为空    
-	 * @时间：2011-7-26下午12:58:02
-	 */
-	private void setTrayCatNUll() {		
-	  if(getBillInPubUI()==null){
-		  return;
-	  }
-	  getBillInPubUI().setTrayInfor(null);
-	}
+//	/**
+//	 * 
+//	 * @作者：mlr
+//	 * @说明：完达山物流项目 
+//	 *       自动拣货前设定托盘信息为空    
+//	 * @时间：2011-7-26下午12:58:02
+//	 */
+//	private void setTrayCatNUll() {		
+//	  if(getBillInPubUI()==null){
+//		  return;
+//	  }
+//	//  getBillInPubUI().setTrayInfor(null);
+//	}
 
 	@Override
 	protected UIDialog createQueryUI() {
@@ -286,19 +286,18 @@ public class AlloInEventHandler extends InPubEventHandler {
 		getPringTool().print(bill);
 
 	}
-	@Override
-	protected void onBoLineCopy() throws Exception {
-		int selectedRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
-		UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(selectedRow, "geb_anum"));
-		if(num.doubleValue()>0){
-			throw new BusinessException("已拣货入库,该行不可再复制");
-		}
-		super.onBoLineCopy();
-	}
+//	@Override
+//	protected void onBoLineCopy() throws Exception {
+//		int selectedRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
+//		UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(selectedRow, "geb_anum"));
+//		if(num.doubleValue()>0){
+//			throw new BusinessException("已拣货入库,该行不可再复制");
+//		}
+//		super.onBoLineCopy();
+//	}
 
 	@Override
 	protected String getBillType() {
-		// TODO Auto-generated method stub
 		return WdsWlPubConst.BILLTYPE_ALLO_IN;
 	}
 	

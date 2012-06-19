@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -11,6 +12,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 
 /**
@@ -22,7 +24,13 @@ public class N_WDS9_DELETE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
 
-
+	private BillStockBO1 stock=null;
+	private BillStockBO1 getStock(){
+		if(stock==null){
+			stock=new BillStockBO1();
+		}
+		return stock;
+	}
 	public N_WDS9_DELETE() {
 		super();
 	}
@@ -36,6 +44,10 @@ public class N_WDS9_DELETE extends AbstractCompiler2 {
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
 			AggregatedValueObject  bill = getVo();
+			
+			//更新现存量		 
+			getStock().updateStockByBill(bill,WdsWlPubConst.BILLTYPE_ALLO_IN_1);
+			
 			if(bill == null || bill.getParentVO() == null){
 				throw new BusinessException("传入数据为空");
 			}
@@ -60,7 +72,7 @@ public class N_WDS9_DELETE extends AbstractCompiler2 {
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);
-			bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);
+		//	bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);
 			// ##################################################
 			return retObj;
 		} catch (Exception ex) {

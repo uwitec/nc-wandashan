@@ -2,6 +2,7 @@ package nc.ui.wds.ic.pub;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 
 import nc.bs.logging.Logger;
@@ -17,6 +19,7 @@ import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -27,10 +30,12 @@ import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralTVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
@@ -40,80 +45,141 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Map<String,List<TbOutgeneralTVO>> trayInfor = null;//缓存下  保存后更新到 buffer 行号+托盘流水表信息
-	public void setTrayInfor(Map<String,List<TbOutgeneralTVO>> trayInfor2){
-		trayInfor = trayInfor2;
+	
+	
+	
+	private nc.ui.wdsnew.pub.LogNumRefUFPanel ivjLotNumbRefPane=null;
+	//批次档案所需数据
+	private String m_strCorpID=null;
+	private String m_strWareHouseID=null;
+	private String m_spaceId=null;
+	private String m_strInventoryID=null;
+   
+	protected nc.ui.wdsnew.pub.LogNumRefUFPanel getLotNumbRefPane() {
+		if (ivjLotNumbRefPane == null) {
+			try {
+				ivjLotNumbRefPane = new nc.ui.wdsnew.pub.LogNumRefUFPanel();
+				ivjLotNumbRefPane.setName("LotNumbRefPane");
+				ivjLotNumbRefPane.setLocation(38, 1);
+			//	ivjLotNumbRefPane.setIsMutiSel(true);
+				// user code begin {1}
+				// user code end
+			} catch (java.lang.Throwable ivjExc) {
+				// user code begin {2}
+				// user code end
+				//handleException(ivjExc);
+			}
+		}
+		return ivjLotNumbRefPane;
 	}
-	public Map<String,List<TbOutgeneralTVO>> getTrayInfor(){
-		if(trayInfor == null)
-			trayInfor = new HashMap<String, List<TbOutgeneralTVO>>();
-		return trayInfor;
+	
+	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		String key = e.getKey();		
+		int row = e.getRow();
+		if (e.getPos() == BillItem.BODY) {
+			if("vbatchcode".equalsIgnoreCase(key)){
+				nc.ui.pub.bill.BillItem biCol = getBillCardPanel().getBodyItem(key);
+						getLotNumbRefPane().setMaxLength(biCol.getLength());
+						getBillCardPanel().getBodyPanel().getTable().getColumn(
+								biCol.getName()).setCellEditor(
+								new nc.ui.pub.bill.BillCellEditor(
+										getLotNumbRefPane()));
+//						private String m_strCorpID=null;
+//						private String m_strWareHouseID=null;
+//						private String m_strWareHouseName=null;
+//						private String m_strWareHouseCode=null;
+//						private String m_spaceId=null;
+//						private String m_spaceCode=null;
+//						private String m_spaceName=null;
+//						private String m_strInventoryID=null;
+//						private String m_strInventoryName=null;
+//						private String m_strInventoryCode=null;
+						m_strCorpID=getClientEnvironment().getInstance().getCorporation().getPrimaryKey();
+						m_strWareHouseID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("srl_pk").getValueObject());
+						m_spaceId=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+						m_strInventoryID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row, "cinventoryid"));
+						String[] datas ={m_strCorpID,m_strWareHouseID,m_spaceId,m_strInventoryID};						
+						getLotNumbRefPane().setDatas(datas);
+			
+			}
+		}
+		return super.beforeEdit(e);
 	}
-	private Map<String,SmallTrayVO[]> lockTrayInfor = null;//虚拟托盘绑定的实际托盘信息 zhf add
-	public Map<String,SmallTrayVO[]> getLockTrayInfor(){
-		return lockTrayInfor;
-	}
-	public void setLockTrayInfor(Map<String,SmallTrayVO[]>  newInfor){
-		lockTrayInfor = newInfor;
-	}
+//	private Map<String,List<TbOutgeneralTVO>> trayInfor = null;//缓存下  保存后更新到 buffer 行号+托盘流水表信息
+//	public void setTrayInfor(Map<String,List<TbOutgeneralTVO>> trayInfor2){
+//		trayInfor = trayInfor2;
+//	}
+//	public Map<String,List<TbOutgeneralTVO>> getTrayInfor(){
+//		if(trayInfor == null)
+//			trayInfor = new HashMap<String, List<TbOutgeneralTVO>>();
+//		return trayInfor;
+//	}
+//	private Map<String,SmallTrayVO[]> lockTrayInfor = null;//虚拟托盘绑定的实际托盘信息 zhf add
+//	public Map<String,SmallTrayVO[]> getLockTrayInfor(){
+//		return lockTrayInfor;
+//	}
+//	public void setLockTrayInfor(Map<String,SmallTrayVO[]>  newInfor){
+//		lockTrayInfor = newInfor;
+//	}
 	public OutPubClientUI(){
 		super();
-		initlize();
+		//initlize();
 	}
 	public OutPubClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
 		super(pk_corp, pk_billType, pk_busitype, operater, billId);
-		initlize();
+		//initlize();
 	}
-	/**
-	 * 初始化
-	 */
-	private void initlize() {
-		getBufferData().addObserver(new Observer() {
-			public void update(Observable o, Object arg) {
-				if (!getBufferData().isVOBufferEmpty()){
-					int row = getBufferData().getCurrentRow();
-					if(row < 0){
-						return;
-					}
-					//更新缓存
-					AggregatedValueObject obj = getBufferData().getCurrentVO();
-					if(obj != null){
-						AggregatedValueObject billvo = getBufferData().getCurrentVO();
-						TbOutgeneralBVO[] bvo = (TbOutgeneralBVO[])billvo.getChildrenVO();
-						setList(bvo);
-					}
-				}
-			}		
-		});
-	}
+//	/**
+//	 * 初始化
+//	 */
+//	private void initlize() {
+//		getBufferData().addObserver(new Observer() {
+//			public void update(Observable o, Object arg) {
+//				if (!getBufferData().isVOBufferEmpty()){
+//					int row = getBufferData().getCurrentRow();
+//					if(row < 0){
+//						return;
+//					}
+//					//更新缓存
+//					AggregatedValueObject obj = getBufferData().getCurrentVO();
+//					if(obj != null){
+//						AggregatedValueObject billvo = getBufferData().getCurrentVO();
+//						TbOutgeneralBVO[] bvo = (TbOutgeneralBVO[])billvo.getChildrenVO();
+//						setList(bvo);
+//					}
+//				}
+//			}		
+//		});
+//	}
 	
-	protected void setTotalUIState(int intOpType) throws Exception {
-		super.setTotalUIState(intOpType);
-		switch (intOpType) {
-			case OP_ADD: 
-			case OP_REFADD: {
-				HashMap<String, List<TbOutgeneralTVO>> map = 
-					new HashMap<String, List<TbOutgeneralTVO>>();
-				setTrayInfor(map);
-			}
-		}
-	}
+//	protected void setTotalUIState(int intOpType) throws Exception {
+//		super.setTotalUIState(intOpType);
+//		switch (intOpType) {
+//			case OP_ADD: 
+//			case OP_REFADD: {
+//				HashMap<String, List<TbOutgeneralTVO>> map = 
+//					new HashMap<String, List<TbOutgeneralTVO>>();
+//				setTrayInfor(map);
+//			}
+//		}
+//	}
 	@Override
 	protected void setBillNo() throws Exception {
 	
 	}
 	
-	public void setList(TbOutgeneralBVO[] bvo){
-		Map<String,List<TbOutgeneralTVO>> m = new HashMap<String,List<TbOutgeneralTVO>>();
-		if(bvo!=null && bvo.length>0){
-			for(TbOutgeneralBVO b : bvo){
-				String crowno = b.getCrowno();//行号
-				m.put(crowno, b.getTrayInfor());
-			}
-		}
-		setTrayInfor(m);
-	}
+//	public void setList(TbOutgeneralBVO[] bvo){
+//		Map<String,List<TbOutgeneralTVO>> m = new HashMap<String,List<TbOutgeneralTVO>>();
+//		if(bvo!=null && bvo.length>0){
+//			for(TbOutgeneralBVO b : bvo){
+//				String crowno = b.getCrowno();//行号
+//				m.put(crowno, b.getTrayInfor());
+//			}
+//		}
+//		setTrayInfor(m);
+//	}
 
 	@Override
 	protected AbstractManageController createController() {
@@ -161,28 +227,28 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	 * @exception java.lang.Exception
 	 *                异常说明。
 	 */
-	public AggregatedValueObject getChangedVOFromUI()
-	throws java.lang.Exception {
-		MyBillVO billvo = (MyBillVO)this.getBillCardWrapper().getChangedVOFromUI();
-		MyBillVO billvo2 = (MyBillVO)this.getBillCardWrapper().getBillVOFromUI();
-		if(getBillOperate() == IBillOperate.OP_ADD)
-			billvo = billvo2;
-		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billvo.getChildrenVO();
-
-		if(bodys == null || bodys.length==0)
-			return billvo;
-		if(trayInfor == null)
-			return billvo;
-		String key = null;
-		for(TbOutgeneralBVO body:bodys){
-			key = body.getCrowno();
-			if(trayInfor.containsKey(key)){
-				body.setTrayInfor(trayInfor.get(key));
-			}
-		}
-		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘解除绑定信息
-		return billvo;
-	}
+//	public AggregatedValueObject getChangedVOFromUI()
+//	throws java.lang.Exception {
+//		MyBillVO billvo = (MyBillVO)this.getBillCardWrapper().getChangedVOFromUI();
+//		MyBillVO billvo2 = (MyBillVO)this.getBillCardWrapper().getBillVOFromUI();
+//		if(getBillOperate() == IBillOperate.OP_ADD)
+//			billvo = billvo2;
+//		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billvo.getChildrenVO();
+//
+//		if(bodys == null || bodys.length==0)
+//			return billvo;
+//		if(trayInfor == null)
+//			return billvo;
+//		String key = null;
+//		for(TbOutgeneralBVO body:bodys){
+//			key = body.getCrowno();
+//			if(trayInfor.containsKey(key)){
+//				body.setTrayInfor(trayInfor.get(key));
+//			}
+//		}
+//		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘解除绑定信息
+//		return billvo;
+//	}
 	
 	@Override
 	protected IBillField createBillField() {
@@ -289,7 +355,10 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 					UFBoolean b = vo.getQualitymanflag();//是否保质期
 					if(b!=null && b.booleanValue()){
 						getBillCardPanel().setBodyValueAt(date.getDateAfter(num), row, "cshixiaoriqi");//失效日期
-					}			
+					}	
+			      //支持批次号 多选拆行  for add mlr
+					List<StockInvOnHandVO> vos=getLotNumbRefPane().getLotNumbDlg().getLis();
+					autoPick(vos,row);					
 			}	
 				
 			super.afterEdit(e);
@@ -297,7 +366,87 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 			Logger.info(e1);
 		}
 	}
-	
+	/**
+	 * 完达山物流 出库自动按批次拣货
+	 * 支持按批次自动拆行拣货
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-6-15下午03:33:56
+	 * @param vos
+	 * @param row 
+	 */
+	public void autoPick(List<StockInvOnHandVO> vos, int row) {
+		//取出本次出库的总的数量 
+		UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBillModel().getValueAt(row, "nshouldoutassistnum"));
+		if(zbnum.doubleValue()==0)
+			return;
+		//进行分量 
+		if(vos==null )
+			return;
+		List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
+		for(int i=0;i<vos.size();i++){
+			UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos.get(i).getAttributeValue("whs_stockpieces"));	
+			if(zbnum.doubleValue()>bnum.doubleValue()){
+				zbnum=zbnum.sub(bnum);
+				vos.get(i).setAttributeValue("whs_omnum", bnum);//设置应发数量 (辅数量)
+				if(vos.size()==0){
+				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)	
+				}
+				vos.get(i).setAttributeValue("whs_oanum", bnum);//设置实发数量(辅数量)
+				list.add(vos.get(i));
+			}else if(zbnum.doubleValue()<bnum.doubleValue()){
+				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
+				vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
+				list.add(vos.get(i));
+				break;
+			}else{
+				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
+				vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
+				list.add(vos.get(i));
+				break;
+			}		
+		}
+		//插入行		
+			BillModel bm = getBillCardPanel().getBillModel();						
+			if(vos == null || vos.size() == 0){
+				return ;
+			}
+			if(vos.size()==1){
+				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量  应发nshouldoutassistnum    实发noutassistnum
+			}else{
+				//最后一行
+				if(row==bm.getRowCount()-1){
+					//处理第一行
+					bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+					bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
+					bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
+					for(int i=1;i<vos.size();i++){
+					   bm.addLine();
+					   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
+					   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+					   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
+					   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
+					}
+				}else{
+					//处理第一行
+					bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+					bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
+					bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
+					for(int i=1;i<vos.size();i++){
+					   bm.insertRow(row+i);
+					   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
+					   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+					   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
+					   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
+					}				
+				}
+			}
+
+		getBillCardPanel().getBillModel().execLoadFormula();
+	   //////////for end mlr
+  }
+
 	public void afterHeadCargDoc(Object pk_cargdoc){
 		//清空库管员
 		getBillCardPanel().setHeadItem("cwhsmanagerid", null);
@@ -310,7 +459,7 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 			getBillCardPanel().getBillModel().setValueAt(pk_cargdoc, i, "cspaceid");//货位
 		}
 		//清除当前缓存
-		getTrayInfor().clear();
+	//	getTrayInfor().clear();
 		getBillCardPanel().getBillModel().execLoadFormula();
 	}
 	/**
@@ -404,7 +553,56 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 			//			}
 			updateButtons();
 		}
-	
 		
 	}
+
+	public nc.ui.wdsnew.pub.LogNumRefUFPanel getIvjLotNumbRefPane() {
+		return ivjLotNumbRefPane;
+	}
+
+	public void setIvjLotNumbRefPane(
+			nc.ui.wdsnew.pub.LogNumRefUFPanel ivjLotNumbRefPane) {
+		this.ivjLotNumbRefPane = ivjLotNumbRefPane;
+	}
+
+	public String getM_strCorpID() {
+		return m_strCorpID;
+	}
+
+	public void setM_strCorpID(String corpID) {
+		m_strCorpID = corpID;
+	}
+
+	public String getM_strWareHouseID() {
+		return m_strWareHouseID;
+	}
+
+	public void setM_strWareHouseID(String wareHouseID) {
+		m_strWareHouseID = wareHouseID;
+	}
+
+
+
+	public String getM_spaceId() {
+		return m_spaceId;
+	}
+
+	public void setM_spaceId(String id) {
+		m_spaceId = id;
+	}
+
+
+
+	public String getM_strInventoryID() {
+		return m_strInventoryID;
+	}
+
+	public void setM_strInventoryID(String inventoryID) {
+		m_strInventoryID = inventoryID;
+	}
+
+
+	
+	
+	
 }

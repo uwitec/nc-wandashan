@@ -61,7 +61,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				
 				break;
 			case ISsButtun.ckmx:
-				onckmx();
+			//	onckmx();
 				break;
 			case nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz:
 				onQxqz();

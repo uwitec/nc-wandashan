@@ -48,7 +48,6 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 
 	@Override
 	public BillCardPanelWrapper createBillCardPanelWrapper() throws Exception {
-		// TODO Auto-generated method stub
 		return super.createBillCardPanelWrapper();
 	}
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)

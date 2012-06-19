@@ -1,7 +1,5 @@
 package nc.ui.wds.ic.other.out;
-
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -23,13 +21,13 @@ import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
+import nc.vo.ic.pub.BillTypeConst;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
  * 其他出库
  */
@@ -39,8 +37,10 @@ public class MyClientUI extends OutPubClientUI implements
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+ 
 
 	private String curRefBilltype = null;
+
 
 	protected ManageEventHandler createEventHandler() {
 		return new OtherOutEventHandler(this, getUIControl());
@@ -169,10 +169,8 @@ public class MyClientUI extends OutPubClientUI implements
 					return true;
 				}
 			}
+			
 		}
-
-		
-
 		return super.beforeEdit(e);
 	}
 
@@ -285,12 +283,9 @@ public class MyClientUI extends OutPubClientUI implements
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 
 	}
-
 	/**
 	 * 表头的编辑前事件
-	 */
-	
-	
+	 */	
 	public boolean beforeEdit(BillItemEvent e) {
 		String key = e.getItem().getKey();
 		if (e.getItem().getPos() == BillItem.HEAD) {
@@ -383,12 +378,12 @@ public class MyClientUI extends OutPubClientUI implements
 		// addPrivateButton(customizeButton4.getButtonVO());
 		fzgnBtn customizeButton5 = new fzgnBtn();
 		addPrivateButton(customizeButton5.getButtonVO());
-		tpzdBtn customizeButton6 = new tpzdBtn();
-		addPrivateButton(customizeButton6.getButtonVO());
+//		tpzdBtn customizeButton6 = new tpzdBtn();
+//		addPrivateButton(customizeButton6.getButtonVO());
 		zdqhBtn customizeButton7 = new zdqhBtn();
 		addPrivateButton(customizeButton7.getButtonVO());
-		ckmxBtn customizeButton8 = new ckmxBtn();
-		addPrivateButton(customizeButton8.getButtonVO());
+//		ckmxBtn customizeButton8 = new ckmxBtn();
+//		addPrivateButton(customizeButton8.getButtonVO());
 
 		QxqzBtn customizeButton9 = new QxqzBtn();
 		addPrivateButton(customizeButton9.getButtonVO());

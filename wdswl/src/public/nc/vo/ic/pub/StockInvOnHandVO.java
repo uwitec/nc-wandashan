@@ -20,15 +20,18 @@ public class StockInvOnHandVO extends SuperVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public String pk_corp; //公司
 	public String pk_customize1;//----------------------仓库ID  zhf add
 	public String pk_cargdoc;//货位
 	public String pplpt_pk;//托盘id
-	public String whs_batchcode;// 批次号
-	public String pk_invbasdoc; //存货基本ID
 	public String pk_invmandoc; //存货管理ID
+	public String pk_invbasdoc; //存货基本ID
+
+	public String whs_batchcode;// 批次号
+
 	public UFDate creadate;//生成日期	
 	public UFDate expdate;//失效日期
-	public String pk_corp; //公司
+
 	public String whs_munit;//主单位
 	public String whs_aunit;//辅单位
 	public UFDouble whs_omnum;//原始入库主数量

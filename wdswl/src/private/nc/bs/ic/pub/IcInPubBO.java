@@ -375,52 +375,52 @@ public class IcInPubBO {
 	 * @param inbillid
 	 * @throws BusinessException
 	 */
-	public void deleteOtherInforOnDelBill(String inbillid,TbGeneralBVO[] bvos) throws BusinessException{
-//		zhf   modify 20110627   支持虚拟托盘后算法调整
-		
-		if(PuPubVO.getString_TrimZeroLenAsNull(inbillid)==null)
-			throw new BusinessException("数据异常");
-		if(bvos == null || bvos.length == 0){
-			SuperDMO dmo = new SuperDMO();
-			bvos = (TbGeneralBVO[])dmo.queryByWhereClause(TbGeneralBVO.class, "isnull(dr,0) = 0 and geh_pk = '"+inbillid+"'");
-			if(bvos == null || bvos.length == 0)
-				return;
-		}
-		
-//		托盘存量校验   入库的量 是否已经  出库了  如果已 出库该 入库单 不能再次作废
-		List<TbGeneralBBVO> ltray = checkOnDelBill(inbillid, bvos);
-//		调整托盘状态  如果是总仓实际托盘  状态调整为 未占用    虚拟托盘 和 分仓托盘  状态 不进行维护
-		if(ltray!=null && ltray.size()>0){
-			try {
-				getStockBO().updateStockOnDelForIn(ltray);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				if(e instanceof BusinessException)
-					throw (BusinessException)e;
-				else
-					throw new BusinessException(e);
-			}			
-			
-//			存在虚拟托盘  入库的话  校验是否 绑定了 实际托盘 如果绑定  进行解锁
-			
-			List<String> lbbid = new ArrayList<String>();
-			for(TbGeneralBBVO bb:ltray){
-				lbbid.add(bb.getPrimaryKey());
-			}
-			LockTrayBO lockbo = new LockTrayBO(getDao(),getStockBO());
-			lockbo.reLockTray(lbbid.toArray(new String[0]));
-		}
-		
-//		删除托盘明细流水表
-		if(bvos!=null && bvos.length>0){
-			for(TbGeneralBVO bvo:bvos){
-				String bodyid = bvo.getGeb_pk();
-				getDao().deleteByClause(TbGeneralBBVO.class, " geb_pk = '"+bodyid+"'");
-			}
-		}
-		
-	}
+//	public void deleteOtherInforOnDelBill(String inbillid,TbGeneralBVO[] bvos) throws BusinessException{
+////		zhf   modify 20110627   支持虚拟托盘后算法调整
+//		
+//		if(PuPubVO.getString_TrimZeroLenAsNull(inbillid)==null)
+//			throw new BusinessException("数据异常");
+//		if(bvos == null || bvos.length == 0){
+//			SuperDMO dmo = new SuperDMO();
+//			bvos = (TbGeneralBVO[])dmo.queryByWhereClause(TbGeneralBVO.class, "isnull(dr,0) = 0 and geh_pk = '"+inbillid+"'");
+//			if(bvos == null || bvos.length == 0)
+//				return;
+//		}
+//		
+////		托盘存量校验   入库的量 是否已经  出库了  如果已 出库该 入库单 不能再次作废
+//		List<TbGeneralBBVO> ltray = checkOnDelBill(inbillid, bvos);
+////		调整托盘状态  如果是总仓实际托盘  状态调整为 未占用    虚拟托盘 和 分仓托盘  状态 不进行维护
+//		if(ltray!=null && ltray.size()>0){
+//			try {
+//				getStockBO().updateStockOnDelForIn(ltray);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				if(e instanceof BusinessException)
+//					throw (BusinessException)e;
+//				else
+//					throw new BusinessException(e);
+//			}			
+//			
+////			存在虚拟托盘  入库的话  校验是否 绑定了 实际托盘 如果绑定  进行解锁
+//			
+//			List<String> lbbid = new ArrayList<String>();
+//			for(TbGeneralBBVO bb:ltray){
+//				lbbid.add(bb.getPrimaryKey());
+//			}
+//			LockTrayBO lockbo = new LockTrayBO(getDao(),getStockBO());
+//			lockbo.reLockTray(lbbid.toArray(new String[0]));
+//		}
+//		
+////		删除托盘明细流水表
+//		if(bvos!=null && bvos.length>0){
+//			for(TbGeneralBVO bvo:bvos){
+//				String bodyid = bvo.getGeb_pk();
+//				getDao().deleteByClause(TbGeneralBBVO.class, " geb_pk = '"+bodyid+"'");
+//			}
+//		}
+//		
+//	}
 	
 	/**
 	 * 
@@ -444,72 +444,72 @@ public class IcInPubBO {
 			throw new  BusinessException("货位存量不足");
 	}
 	
-	public void deleteAdjustBill(OtherInBillVO billvo) throws BusinessException{
-		if(billvo == null)
-			return;
-		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();
-		if(bodys == null || bodys.length ==0){
-			return;
-		}
-		
-//		判断入库仓库 是否 自动调整类仓库
-//		判断仓库 属性 是否自动调整偏差量
-		String cinstoreid = PuPubVO.getString_TrimZeroLenAsNull(((TbGeneralHVO)billvo.getParentVO()).getGeh_cwarehouseid());
-		if(cinstoreid == null){
-			throw new BusinessException("入库仓库为空");
-		}
-		boolean flag = WdsWlPubTool.isAutoAdjustStore(cinstoreid); 
-		if(!flag)
-			return;
-		
-		List<String> lid = null;
-		UFDouble nsnum = null;
-		UFDouble nanum = null;
-		for(TbGeneralBVO body:bodys){
-			nsnum = PuPubVO.getUFDouble_NullAsZero(body.getGeb_bsnum());
-			nanum = PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum());
-			if(nsnum.equals(nanum)){
-				continue;
-			}
-			if(lid == null){
-				lid = new ArrayList<String>();
-			}
-			lid.add(body.getPrimaryKey());
-		}
-		
-		if(lid == null || lid.size() <= 0)
-			return;
-		
-		String sql = "select geh_pk from tb_general_b where isnull(dr,0)=0" +
-				" and cfirstbillbid = '"+lid.get(0)+"'";
-		String adjustinid = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
-		if(adjustinid == null){
-			throw new BusinessException("数据异常");
-		}
-		sql =  "select geh_billcode from tb_general_h where isnull(dr,0) = 0 and pwb_fbillflag = "+IBillStatus.CHECKPASS+" and geh_pk = '"+adjustinid+"'";
-		String billcode = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
-		if(billcode!=null){
-			throw new BusinessException("存在已签字的下游入库单据["+billcode+"]");
-		}
-		
-		sql = "select vbillcode from tb_outgeneral_h where isnull(dr,0)=0 and vbillstatus = "+IBillStatus.CHECKPASS
-		+" and csourcebillhid = '"+adjustinid+"'";
-		billcode = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
-		if(billcode != null){
-			throw new BusinessException("存在已签字的下游出库单据["+billcode+"]");
-		}
+//	public void deleteAdjustBill(OtherInBillVO billvo) throws BusinessException{
+//		if(billvo == null)
+//			return;
+//		TbGeneralBVO[] bodys = (TbGeneralBVO[])billvo.getChildrenVO();
+//		if(bodys == null || bodys.length ==0){
+//			return;
+//		}
+//		
+////		判断入库仓库 是否 自动调整类仓库
+////		判断仓库 属性 是否自动调整偏差量
+//		String cinstoreid = PuPubVO.getString_TrimZeroLenAsNull(((TbGeneralHVO)billvo.getParentVO()).getGeh_cwarehouseid());
+//		if(cinstoreid == null){
+//			throw new BusinessException("入库仓库为空");
+//		}
+//		boolean flag = WdsWlPubTool.isAutoAdjustStore(cinstoreid); 
+//		if(!flag)
+//			return;
+//		
+//		List<String> lid = null;
+//		UFDouble nsnum = null;
+//		UFDouble nanum = null;
+//		for(TbGeneralBVO body:bodys){
+//			nsnum = PuPubVO.getUFDouble_NullAsZero(body.getGeb_bsnum());
+//			nanum = PuPubVO.getUFDouble_NullAsZero(body.getGeb_banum());
+//			if(nsnum.equals(nanum)){
+//				continue;
+//			}
+//			if(lid == null){
+//				lid = new ArrayList<String>();
+//			}
+//			lid.add(body.getPrimaryKey());
+//		}
+//		
+//		if(lid == null || lid.size() <= 0)
+//			return;
+//		
+//		String sql = "select geh_pk from tb_general_b where isnull(dr,0)=0" +
+//				" and cfirstbillbid = '"+lid.get(0)+"'";
+//		String adjustinid = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
+//		if(adjustinid == null){
+//			throw new BusinessException("数据异常");
+//		}
+//		sql =  "select geh_billcode from tb_general_h where isnull(dr,0) = 0 and pwb_fbillflag = "+IBillStatus.CHECKPASS+" and geh_pk = '"+adjustinid+"'";
+//		String billcode = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
+//		if(billcode!=null){
+//			throw new BusinessException("存在已签字的下游入库单据["+billcode+"]");
+//		}
+//		
+//		sql = "select vbillcode from tb_outgeneral_h where isnull(dr,0)=0 and vbillstatus = "+IBillStatus.CHECKPASS
+//		+" and csourcebillhid = '"+adjustinid+"'";
+//		billcode = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql, WdsPubResulSetProcesser.COLUMNPROCESSOR));
+//		if(billcode != null){
+//			throw new BusinessException("存在已签字的下游出库单据["+billcode+"]");
+//		}
 		
 //		删除
 //		下游调整 入库单据
-		sql = " update tb_general_h set dr=1 where isnull(dr,0)=0 and geh_pk = '"+adjustinid+"'";
-		getDao().executeUpdate(sql);
-		sql = " update tb_general_b set dr = 1 where isnull(dr,0)=0 and  geh_pk = '"+adjustinid+"'";
-		getDao().executeUpdate(sql);
-		
-//		下游调整出库单据
-		sql = " update tb_outgeneral_h set dr = 1 where isnull(dr,0)=0 and csourcebillhid = '"+adjustinid+"'";
-		getDao().executeUpdate(sql);
-		sql = " update tb_outgeneral_b set dr = 1 where isnull(dr,0)=0 and csourcebillhid = '"+adjustinid+"'";
-		getDao().executeUpdate(sql);
-	}	
+//		sql = " update tb_general_h set dr=1 where isnull(dr,0)=0 and geh_pk = '"+adjustinid+"'";
+//		getDao().executeUpdate(sql);
+//		sql = " update tb_general_b set dr = 1 where isnull(dr,0)=0 and  geh_pk = '"+adjustinid+"'";
+//		getDao().executeUpdate(sql);
+//		
+////		下游调整出库单据
+//		sql = " update tb_outgeneral_h set dr = 1 where isnull(dr,0)=0 and csourcebillhid = '"+adjustinid+"'";
+//		getDao().executeUpdate(sql);
+//		sql = " update tb_outgeneral_b set dr = 1 where isnull(dr,0)=0 and csourcebillhid = '"+adjustinid+"'";
+//		getDao().executeUpdate(sql);
+//	}	
 }

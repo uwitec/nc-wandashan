@@ -19,15 +19,15 @@ public class OtherOutDelegator extends nc.ui.trade.bsdelegate.BusinessDelegator{
 	public Hashtable loadChildDataAry(String[] tableCodes,String key)throws Exception{	
 		// 根据主表主键，取得子表的数据
 		TbOutgeneralBVO[] b1vos = (TbOutgeneralBVO[]) this.queryByCondition(TbOutgeneralBVO.class, "general_pk='" + key + "' and isnull(dr,0)=0");	
-		for(TbOutgeneralBVO body:b1vos){
-			TbOutgeneralTVO[] ctmps=(TbOutgeneralTVO[]) this.queryByCondition(TbOutgeneralTVO.class, " general_b_pk = '"+body.getPrimaryKey()+"'");
-			if(ctmps == null||ctmps.length==0)
-				continue;
-			List<TbOutgeneralTVO> list=new ArrayList<TbOutgeneralTVO>();
-			list.addAll(Arrays.asList(ctmps));
-	
-			body.setTrayInfor(list);
-		}
+//		for(TbOutgeneralBVO body:b1vos){
+//			TbOutgeneralTVO[] ctmps=(TbOutgeneralTVO[]) this.queryByCondition(TbOutgeneralTVO.class, " general_b_pk = '"+body.getPrimaryKey()+"'");
+//			if(ctmps == null||ctmps.length==0)
+//				continue;
+//			List<TbOutgeneralTVO> list=new ArrayList<TbOutgeneralTVO>();
+//			list.addAll(Arrays.asList(ctmps));
+//	
+//			body.setTrayInfor(list);
+//		}
 		
 		// 根据主表主键，取得子的数据
 		TbOutgeneralB2VO[] b2vos = (TbOutgeneralB2VO[]) this.queryByCondition(TbOutgeneralB2VO.class, "general_pk='" + key + "' and isnull(dr,0)=0");

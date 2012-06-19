@@ -1,13 +1,14 @@
 package nc.bs.pub.action;
-
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  其他出库单
  * @author Administrator
@@ -16,6 +17,13 @@ import nc.vo.uap.pf.PFBusinessException;
 public class N_WDS6_WRITE extends AbstractCompiler2 {
 private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 private Hashtable m_keyHas=null;
+private BillStockBO1 stock=null;
+private BillStockBO1 getStock(){
+	if(stock==null){
+		stock=new BillStockBO1();
+	}
+	return stock;
+}
 
 public N_WDS6_WRITE() {
 	super();
@@ -37,6 +45,9 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 		billVo.setULogDate(new UFDate(System.currentTimeMillis()));
 		Object retObj = null;
 		retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+		//更新现存量		 
+		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OTHER_OUT);
+		
 		return retObj;
 	} catch (Exception ex) {
 			if (ex instanceof BusinessException)

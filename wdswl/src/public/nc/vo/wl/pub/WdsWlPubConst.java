@@ -234,12 +234,15 @@ public class WdsWlPubConst {
 	public static String WDS5="WDS5";
 	/**其他出库 */
 	public static String BILLTYPE_OTHER_OUT = "WDS6";
+	public static String BILLTYPE_OTHER_OUT_1 = "WDS6_1";
 	/**其他入库*/
 	public static String BILLTYPE_OTHER_IN = "WDS7";
+	public static String BILLTYPE_OTHER_IN_1 = "WDS7_1";//更新现存量 处理其他入库删除
 	/** 销售出库 */
 	public static String BILLTYPE_SALE_OUT = "WDS8";
 	/** 调拨入库*/
 	public static String BILLTYPE_ALLO_IN = "WDS9";
+	public static String BILLTYPE_ALLO_IN_1 = "WDS9_1";//更新现存量 处理调拨入库删除
 	/** 调拨入库关闭*/
 	public static String BILLTYPE_ALLO_IN_CLOSE = "WDS9C";
 	/**出库入库*/

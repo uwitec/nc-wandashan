@@ -12,6 +12,7 @@ import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
+import nc.ui.wl.pub.HgQueryDIG;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
 import nc.vo.pub.SuperVO;
@@ -27,6 +28,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
 		if(lt==null){
 			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+			lt.setQueryUI1(this.createQueryUI());
 		}
 		return lt;
 	}
@@ -49,10 +51,10 @@ public class OtherInEventHandler extends InPubEventHandler {
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 					new String[]{"invcode","geb_vbatchcode"},
 					new String[]{"存货编码","批次号"});
-			onZdtp();
+		//	onZdtp();
 			break;
 		case ISsButtun.Ckmx:
-			onCkmx();
+			//onCkmx();
 			break;
 		case ISsButtun.Zdrk://自动拣货
 			valudateWhereYeqian();
@@ -61,7 +63,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 					new String[]{"invcode","geb_vbatchcode"},
 					new String[]{"存货编码","批次号"});
-			onZdrk();
+		//	onZdrk();
 			break;
 		case ISsButtun.Zzdj:
 			onZzdj();
@@ -168,11 +170,8 @@ public class OtherInEventHandler extends InPubEventHandler {
 
 	@Override
 	protected UIDialog createQueryUI() {
-		return new MyQueryDIG(
-				getBillUI(), null, 
-				_getCorp().getPk_corp(), getBillUI().getModuleCode()
-				, getBillUI()._getOperator(), null		
-		);
+		return new HgQueryDIG(getBillUI(), null, _getCorp().getPrimaryKey(),getBillUI()._getModuleCode(), _getOperator(), null,"pk_cargdoc","geh_cwarehouseid");
+	
 	}
 
 	protected void onBoEdit() throws Exception {

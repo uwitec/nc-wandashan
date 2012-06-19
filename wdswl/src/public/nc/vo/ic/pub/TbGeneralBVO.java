@@ -46,7 +46,8 @@ public class TbGeneralBVO extends SuperVO {
 	public String geb_pk;//ID
 	public String geb_cinvbasid;//存货基本id
 
-	public String cdt_pk;
+	public String cdt_pk;//存货状态
+	
 	public String geh_pk;
 	public String geb_cinventoryid;//存货管理id
 
@@ -1404,35 +1405,29 @@ public class TbGeneralBVO extends SuperVO {
 	}
 
 	public void validateOnSave() throws ValidationException{
-		validateOnZdrk(false);
+	//	validateOnZdrk(false);
 		validateBodySave();		
 	}
 	
 	public void validateBodySave()  throws ValidationException{
-		List<TbGeneralBBVO> list = getTrayInfor();
-		if(list == null || list.size() == 0)
-			throw new ValidationException("托盘信息为空！请指定！");
-//		UFDouble v = new UFDouble(0);//实入数量
-		UFDouble v1 = new UFDouble(0);//实入辅数量
-		for(TbGeneralBBVO l :list ){
-//			UFDouble b = l.getGebb_num();//实入数量
-//			if(b==null || b.doubleValue() == 0)
-//				throw new ValidationException("托盘指定实入数量为0或者为空!");
-			UFDouble b1 = l.getNinassistnum();//实入辅数量
-			if(b1==null || b1.doubleValue() == 0)
-				throw new ValidationException("托盘指定实入辅数量为0或者为空!");
-//			v = v.add(b);
-			v1 = v1.add(b1);
-//			zhf   add---------------
-			if(PuPubVO.getString_TrimZeroLenAsNull(l.getGebb_vbatchcode())==null)
-				throw new ValidationException("批次号为空");
-			if(!l.getGebb_vbatchcode().equalsIgnoreCase(getGeb_vbatchcode())){
-				throw new ValidationException("拣货出错,批次号不一致");
-			}
+		if(geb_snum==null || geb_snum.doubleValue() <=0){
+			throw new ValidationException("应收数量必须大于零");
 		}
-		if(v1.sub(getGeb_bsnum()).doubleValue() > 0){
-			throw new ValidationException("托盘指定实入数量大于应收数量!");
+		if(geb_bsnum==null || geb_bsnum.doubleValue() <=0){
+			throw new ValidationException("应收辅数量必须大于零");
 		}
+		if(geb_anum==null || geb_anum.doubleValue() <=0){
+			throw new ValidationException("实收数量必须大于零");
+		}
+		if(geb_banum==null || geb_banum.doubleValue() <=0){
+			throw new ValidationException("实收辅数量必须大于零");
+		}
+		if(geb_anum.doubleValue()>geb_snum.doubleValue()){
+			throw new ValidationException("实收数量大于应收数量");
+		}
+		if(geb_banum.doubleValue()>geb_bsnum.doubleValue()){
+			throw new ValidationException("实收辅数量大于应收辅数量");
+		}	
 	}
 	
 	

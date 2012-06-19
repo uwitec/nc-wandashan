@@ -56,20 +56,20 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 		if(billVo==null)
 			throw new BusinessException("传入数据为空");
 		MyBillVO old_billVo = null;
-		try {
-			old_billVo = (MyBillVO)ObjectUtils.serializableClone(billVo);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			throw new BusinessException(e1);
-		}
+//		try {
+//			old_billVo = (MyBillVO)ObjectUtils.serializableClone(billVo);
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//			throw new BusinessException(e1);
+//		}
 
-		//		zhf add
-		Map<String, SmallTrayVO[]> trayInfor = (Map<String,SmallTrayVO[]>)((MyBillVO)billVo).getOUserObj();
-
-		//		校验  进行了 绑定实际托盘的虚拟托盘 必须  指定  解除绑定信息
-		LockTrayBO lockbo = new LockTrayBO();
-		lockbo.checkIsLock((MyBillVO)billVo);
+//		//		zhf add
+//		Map<String, SmallTrayVO[]> trayInfor = (Map<String,SmallTrayVO[]>)((MyBillVO)billVo).getOUserObj();
+//
+//		//		校验  进行了 绑定实际托盘的虚拟托盘 必须  指定  解除绑定信息
+//		LockTrayBO lockbo = new LockTrayBO();
+//		lockbo.checkIsLock((MyBillVO)billVo);
 		//		zhf end
 
 		boolean isAdd = false;
@@ -77,11 +77,11 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 		TbOutgeneralHVO head = (TbOutgeneralHVO)billVo.getParentVO();
 		if(PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())==null)
 			isAdd = true;
-
-
+//
+//
 		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billVo.getChildrenVO();
-		//过滤掉删除行  zhf add
-		bodys = (TbOutgeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(bodys, new filterDelLine());
+//		//过滤掉删除行  zhf add
+//		bodys = (TbOutgeneralBVO[])nc.vo.trade.voutils.VOUtil.filter(bodys, new filterDelLine());
 
 		if(bodys!=null && bodys.length > 0){
 			bodyChanged = true;
@@ -90,53 +90,53 @@ public class OtherOutSave  extends nc.bs.trade.comsave.BillSave {
 			}
 		}
 
-		if(!isAdd && old_billVo.getChildrenVO().length>0){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
-			TbOutgeneralBVO[] bb = (TbOutgeneralBVO[])old_billVo.getChildrenVO();
-			for(TbOutgeneralBVO b : bb){
-				String wheresql = " general_b_pk = '"+b.getPrimaryKey()+"' and isnull(dr,0)=0";
-				List<TbOutgeneralTVO> ltray = (List<TbOutgeneralTVO> )getOutBO().getBaseDAO().retrieveByClause(TbOutgeneralTVO.class, wheresql);
-				if(ltray!=null && ltray.size()>0)
-					getOutBO().deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
-			}
-		}
+//		if(!isAdd && old_billVo.getChildrenVO().length>0){//修改保存先删除  已存在的托盘明细子表信息  和 回复托盘存量信息
+//			TbOutgeneralBVO[] bb = (TbOutgeneralBVO[])old_billVo.getChildrenVO();
+//			for(TbOutgeneralBVO b : bb){
+//				String wheresql = " general_b_pk = '"+b.getPrimaryKey()+"' and isnull(dr,0)=0";
+//				List<TbOutgeneralTVO> ltray = (List<TbOutgeneralTVO> )getOutBO().getBaseDAO().retrieveByClause(TbOutgeneralTVO.class, wheresql);
+//				if(ltray!=null && ltray.size()>0)
+//					getOutBO().deleteOtherInforOnDelBill(head.getSrl_pk(),ltray);
+//			}
+//		}
 
 		//保存后  回写数据来源
 		getOutBO().writeBack(old_billVo,IBDACTION.SAVE,isAdd);
 		//---------------------------保存前校验结束----------------------------------------	
 		java.util.ArrayList retAry = super.saveBill(old_billVo);
 
-		if(retAry == null || retAry.size() == 0){
-			throw new BusinessException("保存失败");
-		}
-		MyBillVO newBillVo = (MyBillVO)retAry.get(1);
-		if(newBillVo == null){
-			throw new BusinessException("保存失败");
-		}	
-		if(bodyChanged){
-			//插入托盘信息流水表
-			insertTrayInfor(newBillVo, old_billVo);
-			//更新库存存量状态表
-			try {
-				TbOutgeneralBVO[] newbodys = (TbOutgeneralBVO[])newBillVo.getChildrenVO();
-				List<TbOutgeneralTVO> ltray = new ArrayList<TbOutgeneralTVO>();
-				for(TbOutgeneralBVO newbody:newbodys){
-					ltray.addAll(newbody.getTrayInfor());
-				}
-				if(ltray.size()>0)
-					getOutBO().updateStockOnSaveBill(head.getPk_corp(),head.getSrl_pk(),ltray);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				if(e instanceof BusinessException){
-					throw (BusinessException)e;
-				}
-				throw new BusinessException(e);
-			}		
-		}
+//		if(retAry == null || retAry.size() == 0){
+//			throw new BusinessException("保存失败");
+//		}
+//		MyBillVO newBillVo = (MyBillVO)retAry.get(1);
+//		if(newBillVo == null){
+//			throw new BusinessException("保存失败");
+//		}	
+//		if(bodyChanged){
+//			//插入托盘信息流水表
+//			insertTrayInfor(newBillVo, old_billVo);
+//			//更新库存存量状态表
+//			try {
+//				TbOutgeneralBVO[] newbodys = (TbOutgeneralBVO[])newBillVo.getChildrenVO();
+//				List<TbOutgeneralTVO> ltray = new ArrayList<TbOutgeneralTVO>();
+//				for(TbOutgeneralBVO newbody:newbodys){
+//					ltray.addAll(newbody.getTrayInfor());
+//				}
+//				if(ltray.size()>0)
+//					getOutBO().updateStockOnSaveBill(head.getPk_corp(),head.getSrl_pk(),ltray);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				if(e instanceof BusinessException){
+//					throw (BusinessException)e;
+//				}
+//				throw new BusinessException(e);
+//			}		
+//		}
 
-		if(trayInfor != null && trayInfor.size()>0){
-			//			解锁  实际托盘
-			lockbo.doDelLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)), head.getSrl_pk(), trayInfor);
-		}
+//		if(trayInfor != null && trayInfor.size()>0){
+//			//			解锁  实际托盘
+//			lockbo.doDelLockTrayInfor(PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0)), head.getSrl_pk(), trayInfor);
+//		}
 
 		return retAry;
 	}

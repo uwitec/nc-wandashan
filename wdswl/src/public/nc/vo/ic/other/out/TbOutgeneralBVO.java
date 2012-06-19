@@ -23,7 +23,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String vfirstbillcode;//源头单据号
 	public String cfirstbillbid;//销售订单表头id
 	public String cfirsttype;//--销售订单 
-	public String vuserdef9;
+	public String vuserdef9;//存货状态 
 	public String castunitid;//辅单位
 	public String csourcebillhid;
 	public String vuserdef12;
@@ -67,7 +67,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFDouble nshouldoutnum;//应发数量
 	public String pk_defdoc2;
 	public String pk_defdoc7;
-	public String vuserdef7;
+	public String vuserdef7;//生产日期
 	public UFDouble nshouldoutassistnum;//应发辅数量
 	public String vuserdef6;
 	public String vuserdef13;
@@ -1508,9 +1508,9 @@ public class TbOutgeneralBVO extends SuperVO {
 		if(PuPubVO.getUFDouble_NullAsZero(getNoutnum()).equals(WdsWlPubTool.DOUBLE_ZERO)){
 			throw new ValidationException("实出数量不能为空，行号为："+getCrowno());
 		}
-		if(getTrayInfor() == null || getTrayInfor().size() == 0){
-			throw new ValidationException("托盘信息为空，行号为"+getCrowno());
-		}
+//		if(getTrayInfor() == null || getTrayInfor().size() == 0){
+//			throw new ValidationException("托盘信息为空，行号为"+getCrowno());
+//		}
 	}
 	
 	public void validationOnZdck() throws ValidationException{
