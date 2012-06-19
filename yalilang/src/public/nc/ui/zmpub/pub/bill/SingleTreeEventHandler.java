@@ -438,8 +438,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 				getButtonManager().getButton(IBillButton.Action),
 				getUIController().getBillType(), staticACTION);
 
-		getButtonManager().setActionButtonVO(
-				getBillUI().isSaveAndCommitTogether());
+//		getButtonManager().setActionButtonVO(
+//				getBillUI().isSaveAndCommitTogether());
 
 		String oldtype = getBillUI().getBusinessType();
 		String newtype = vo.getPrimaryKey();
@@ -644,10 +644,6 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 		}
 		case IBillButton.PasteLine: {
 			onBoLinePaste();
-			break;
-		}
-		case IBillButton.PasteLinetoTail: {
-			onBoLinePasteToTail();
 			break;
 		}
 		default:

@@ -652,30 +652,30 @@ public class FlowManageEventHandler extends ManageEventHandler {
 			return;
 		}
 
-		getSourceDlg().showModal();
+		//getSourceDlg().showModal();
 	}
 
-	/**
-	 * 联查对话框
-	 */
-	public SourceBillFlowDlg getSourceDlg() throws BusinessException {
-		try {
-			soureDlg = new SourceBillFlowDlg(getBillManageUI(),
-					getUIController().getBillType(),/* 当前单据类型 */
-					getBufferData().getCurrentVO().getParentVO()
-							.getPrimaryKey(), /* 当前单据ID */
-					null, /* 当前业务类型 */
-					_getOperator(), /* 当前用户ID */
-					(String) getBufferData().getCurrentVO().getParentVO()
-							.getAttributeValue("vbillno") /* 单据号 */);
-			soureDlg
-					.setBillFinderClassname("nc.bs.scm.sourcebill.SCMBillFinder");
-		} catch (BusinessException e) {
-			Logger.error(e);
-			throw new BusinessException("获取联查对话框出错! ");
-		}
-		return soureDlg;
-	}
+//	/**
+//	 * 联查对话框
+//	 */
+//	public SourceBillFlowDlg getSourceDlg() throws BusinessException {
+////		try {
+////			soureDlg = new SourceBillFlowDlg(getBillManageUI(),
+////					getUIController().getBillType(),/* 当前单据类型 */
+////					getBufferData().getCurrentVO().getParentVO()
+////							.getPrimaryKey(), /* 当前单据ID */
+////					null, /* 当前业务类型 */
+////					_getOperator(), /* 当前用户ID */
+////					(String) getBufferData().getCurrentVO().getParentVO()
+////							.getAttributeValue("vbillno") /* 单据号 */);
+////			soureDlg
+////					.setBillFinderClassname("nc.bs.scm.sourcebill.SCMBillFinder");
+////		} catch (BusinessException e) {
+////			Logger.error(e);
+////			throw new BusinessException("获取联查对话框出错! ");
+////		}
+////		return soureDlg;
+//	}
 
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {

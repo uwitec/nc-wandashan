@@ -143,7 +143,7 @@ public abstract class AccountModBOTool {
 		 String[] fields=getSetNumFields();
 		 for(int i=0;i<fields.length;i++){
 		   if(isNumCirl[i]==null){
-			   vos[j].setAttributeValue(fields[i], UFDouble.ZERO_DBL);
+			   vos[j].setAttributeValue(fields[i], new UFDouble(0));
 		   }else if(isNumCirl[i].booleanValue()==true){
 			   UFDouble num=PuPubVO.getUFDouble_NullAsZero(vos[j].getAttributeValue(fields[i]));
 			   vos[j].setAttributeValue(fields[i],num.multiply(-1) );
@@ -432,7 +432,7 @@ public abstract class AccountModBOTool {
 			 boolean isNull=true;
 			 for(int j=0;j<fnames.length;j++){
 				 UFDouble num=PuPubVO.getUFDouble_NullAsZero(vos[i].getAttributeValue(fnames[j]));
-				 if(!num.equals(UFDouble.ZERO_DBL)){
+				 if(!num.equals(new UFDouble(0))){
 					 isNull=false;
 				 }
 			 }

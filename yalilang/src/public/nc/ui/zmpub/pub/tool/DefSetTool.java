@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import nc.bs.logging.Logger;
-import nc.ui.bd.def.DefquoteQueryUtil;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
@@ -75,7 +74,8 @@ public class DefSetTool {
 			String objbodycode = "MD_"+cbilltypecode+"_body";
 			if(objheadcode==null && objbodycode==null)
 				return null;
-			List<DefVO[]> l = DefquoteQueryUtil.getInstance().queryDefusedVOByCodes(new String[]{objheadcode,objbodycode}, pk_corp);
+			List<DefVO[]> l=null;
+	//		List<DefVO[]> l = DefquoteQueryUtil.getInstance().queryDefusedVOByCodes(new String[]{objheadcode,objbodycode}, pk_corp);
 			if(l!=null)
 				return l.toArray();
 		} catch (Exception e) {

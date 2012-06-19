@@ -92,7 +92,7 @@ private static void writeBackDete() throws Exception {
 		WriteBackVO vo=delemap.get(key);
 		UFDouble[] oldnums=getOldNums(vo);//¾ÉÊý¾Ý    
 		for(int i=0;i<oldnums.length;i++){
-			oldnums[i]=UFDouble.ZERO_DBL.sub(oldnums[i]);
+			oldnums[i]=new UFDouble(0).sub(oldnums[i]);
 		}
 		vo.setNums(oldnums);      
 	} 
