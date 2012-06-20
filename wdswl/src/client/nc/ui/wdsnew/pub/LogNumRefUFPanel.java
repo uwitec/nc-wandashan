@@ -13,6 +13,7 @@ public class LogNumRefUFPanel extends UIRefPane {
 	protected String m_strWareHouseID = null; //²Ö¿âID
 	protected String m_spaceId = null; //»õÎ»id
 	protected String m_strInventoryID = null; //´æ»õID
+	private boolean m_bisClicked;
     private   String[] datas=null;
 	private nc.ui.wdsnew.pub.LotNumbDlg m_dlgLotNumb = null;
     
@@ -64,12 +65,13 @@ public class LogNumRefUFPanel extends UIRefPane {
 	
 
 		if (getLotNumbDlg().showModal() == UIDialog.ID_OK) {
-//			getUITextField().setText(getRefLotNumb());
-//			m_bisClicked = true;
+			if(getLotNumbDlg().getLis().size()>0)
+			getUITextField().setText(getLotNumbDlg().getLis().get(0).getWhs_batchcode());
+			m_bisClicked = true;
 
 		} else {
 			getLotNumbDlg().destroy();
-//			m_bisClicked = false;
+			m_bisClicked = false;
 		}
 		getUITextField().setRequestFocusEnabled(true);
 		getUITextField().grabFocus();
