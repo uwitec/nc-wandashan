@@ -40,15 +40,13 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	public OutPubClientUI ui = null;
 	private LoginInforHelper login=null;
-	//liuys  add 	取托盘选择界面批次号
-	private String uiVbatchcode;
+
 	
 	public OutPubEventHandler(OutPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
 		ui = billUI;
 	}
-
-	
+	//权限过滤查询处理类
 	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
 	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
 		if(lt==null){
@@ -64,14 +62,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 		return login;
 	}
-	
-	//当前行应发数量--拆行使用
-	private UFDouble nshoutnum = new UFDouble(0);
-	//当前应发辅数量--拆行使用
-	private UFDouble nassshoutnum = new UFDouble(0);
-	//是否最后一行
-	private boolean flastLine = false;
 	/*
+	 * mlr
 	 * 自动取货(non-Javadoc)
 	 */
 	@SuppressWarnings("unchecked")
@@ -89,131 +81,24 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		WdsWlPubTool.validationOnPickAction(getBillCardPanelWrapper().getBillCardPanel(), generalbVOs);
 		// 数据校验end
 		String pk_stordoc = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
-		Map<String, List<TbOutgeneralTVO>> trayInfor = null;
-		// ui.showProgressBar(true);
+		
+		String pk_cargdoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+		TbOutgeneralBVO[] bvos=null;
 		try {
-			Class[] ParameterTypes = new Class[] { String.class,
-					AggregatedValueObject.class, String.class };
-			Object[] ParameterValues = new Object[] { ui._getOperator(),
-					billvo, pk_stordoc };
+			Class[] ParameterTypes = new Class[] { String.class,String.class,TbOutgeneralBVO[].class };
+			Object[] ParameterValues = new Object[] {pk_stordoc,
+					pk_cargdoc, generalbVOs };
 			Object o = LongTimeTask.callRemoteService(
 					WdsWlPubConst.WDS_WL_MODULENAME,
-					"nc.bs.wds.w8004040204.W8004040204Impl", "autoPickAction",
+					"nc.vo.wdsnew.pub.PickTool.PickTool", "autoPick",
 					ParameterTypes, ParameterValues, 2);
 			if (o != null) {
-				trayInfor = (Map<String, List<TbOutgeneralTVO>>) o;
+				bvos = (TbOutgeneralBVO[]) o;
 			}
 		} catch (Exception e) {
 			throw e;
 		}
-		if (null == trayInfor || trayInfor.size() == 0) {
-			chaneColor();
-			return;
-		}
-		trayInfor = splitLine(trayInfor);
-		Map<String, List<TbOutgeneralTVO>> oldInfor = ui.getTrayInfor();
-		ui.setTrayInfor(trayInfor);
-		if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
-			// 将信息同步到缓存
-			TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) getBufferData()
-					.getCurrentVO().getChildrenVO();
-			if (bodys != null && bodys.length != 0) {
-				String key = null;
-				for (TbOutgeneralBVO body : bodys) {
-					key = body.getCrowno();
-					body.setTrayInfor(trayInfor.get(key));
-				}
-			}
-		}
-		
-		int ret = ontpzd();
-		if(ret != UIDialog.ID_OK){
-			ui.setTrayInfor(oldInfor);
-			return;
-		}	
-
-    	chaneColor();
-		setBodyModelState();
-//		ontpzd();
-	}
-
-	/**
-	 * 
-	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 * 拣货完成后，根据批次号拆行
-	 * @时间：2011-6-17下午08:48:24
-	 * @param trayInfor
-	 * @return
-	 * @throws Exception
-	 */
-	private Map<String,List<TbOutgeneralTVO>> splitLine(Map<String,List<TbOutgeneralTVO>> trayInfor) throws Exception{
-		AggregatedValueObject billvo = getBillUI().getVOFromUI();
-		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) billvo
-				.getChildrenVO();
-		if(bodys == null && bodys.length ==0) return null;
-		Integer crowno =10;	//初始行号
-		String key = null;
-		ArrayList<TbOutgeneralBVO> newBodys = new ArrayList<TbOutgeneralBVO>();
-		Map<String,List<TbOutgeneralTVO>> lmap = new HashMap<String,List<TbOutgeneralTVO>>();
-		for(TbOutgeneralBVO body:bodys){
-			flastLine = false;
-			nshoutnum = PuPubVO.getUFDouble_NullAsZero(body.getNshouldoutnum());
-			nassshoutnum =PuPubVO.getUFDouble_NullAsZero( body.getNshouldoutassistnum());
-			key = body.getCrowno();
-			List<TbOutgeneralTVO> list = trayInfor.get(key);
-			int row = geLineRowByCrowno(key);
-			Map<String,ArrayList<TbOutgeneralTVO>> map = new HashMap<String,ArrayList<TbOutgeneralTVO>>();
-			ArrayList<String> vbatchCode = new ArrayList<String>();
-			for(int i=0;i<list.size();i++){
-				String code = list.get(i).getVbatchcode();
-				if(map.containsKey(code)){
-					map.get(code).add(list.get(i));
-				}else{
-					ArrayList<TbOutgeneralTVO> list2 = new ArrayList<TbOutgeneralTVO>();
-					list2.add(list.get(i));
-					map.put(code, list2);
-					vbatchCode.add(code);
-				}
-			}
-			if(map.size()>0){
-				for(int i=0;i<map.size();i++){
-					String key2 = vbatchCode.get(i);
-					if(i == map.size()-1){
-						flastLine=true;
-					}
-					ArrayList<TbOutgeneralTVO> list3 = map.get(key2);
-					UFDouble noutnum = new UFDouble(0);
-					UFDouble nassistnum = new UFDouble(0);
-					for(TbOutgeneralTVO v:list3){
-						noutnum = noutnum.add(PuPubVO.getUFDouble_NullAsZero(v.getNoutnum()));// 实出数量
-						nassistnum = nassistnum.add(PuPubVO.getUFDouble_NullAsZero(v.getNoutassistnum()));// 实出辅数量
-					}
-					lmap.put(""+crowno, list3);
-					//复制行
-					TbOutgeneralBVO vo =(TbOutgeneralBVO) getSelectedBodyVO(row);//复制行	
-					if(flastLine){
-						vo.setNoutnum(noutnum);
-						vo.setNoutassistnum(nassistnum);
-						vo.setNshouldoutnum(nshoutnum);
-						vo.setNshouldoutassistnum(nassshoutnum);
-					}else{
-						vo.setNoutnum(noutnum);
-						vo.setNoutassistnum(nassistnum);
-						vo.setNshouldoutnum(noutnum);
-						vo.setNshouldoutassistnum(nassistnum);
-						nshoutnum = nshoutnum.sub(noutnum);
-						nassshoutnum = nassshoutnum.sub(nassistnum);
-					}
-					vo.setCrowno(""+crowno);
-					newBodys.add(vo);
-					crowno=crowno+10;
-				}
-			}
-		}
-		getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(newBodys.toArray(new TbOutgeneralBVO[0]));
-		getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
-		return lmap;
+        getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
 	}
 	/**
 	 * 
@@ -362,59 +247,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		
 		tdpDlg.showModal();
 	}
-
-	/**
-	 * 
-	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 * @时间：2011-6-14下午09:43:54
-	 * @throws Exception
-	 */
-	public void chaneColor() throws Exception {
-		TbOutgeneralBVO[] generalbVO = (TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
-		OutPubClientUI ui= (OutPubClientUI)getBillUI();
-		Map<String,List<TbOutgeneralTVO>> tmap=ui.getTrayInfor();//行号  托盘信息
-		// 获取并判断表体是否有值，进行循环
-		if (null != generalbVO && generalbVO.length > 0) {
-			for (int i = 0; i < generalbVO.length; i++) {
-				if(tmap.containsKey(generalbVO[i].getCrowno())){
-					generalbVO[i].setTrayInfor(tmap.get(generalbVO[i].getCrowno()));
-				}	
-				// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
-				// 红色：实发小于应发：红色；蓝色：包含大日期的为蓝色
-				UFDouble num = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"nshouldoutassistnum"));// 应发辅数量
-				UFDouble tatonum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i,"noutassistnum"));// 实发辅数量
-				//yf add
-				//实发小于应发：红色
-				if(tatonum.sub(num, 8).doubleValue() < 0) {
-					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
-					for (String field : changFields) {getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.red);
-					}					
-				}	
-				//大日期:蓝色 add mlr
- 				List<TbOutgeneralTVO>  trays=generalbVO[i].getTrayInfor();//获取托盘信息
- 				if(trays==null || trays.size()==0){
- 					return;
- 				}
- 				boolean isWarningDays = false;//是否包含大日期
- 				for(TbOutgeneralTVO tvo:trays){ 
- 					if(isWarningDays)
- 						break;
- 					//查询大日期状态的主键
- 	 				String whs_pk= PuPubVO.getString_TrimZeroLenAsNull(WdsWlPubTool.execFomularClient("ss_pk->getColValue(tb_warehousestock,ss_pk,whs_pk,whs_pk)", new String[]{"whs_pk"}, new String[]{tvo.getCdt_pk()}));		
- 					if(WdsWlPubConst.WDS_STORSTATE_PK.equalsIgnoreCase(whs_pk)){
- 						isWarningDays = true;	
- 					}
- 				}
- 				if(isWarningDays){
- 					String[] changFields = {"nshouldoutassistnum","nshouldoutnum","noutassistnum","noutnum"};
-						for (String field : changFields) {
-						  getBillCardPanelWrapper().getBillCardPanel().getBodyPanel().setCellForeGround(i,field, Color.BLUE);
-						}	
- 				}
-			}
-		}
-	}
 	protected void onBoCancel() throws Exception {
 		super.onBoCancel();
 		onBoRefresh();
@@ -490,126 +322,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			ex.printStackTrace();
 		}
 	}
-	/*
-	 * 托盘指定(non-Javadoc)
-	 * 
-	 * @see nc.ui.wds.w8004040208.AbstractMyEventHandler#ontpzd()
-	 */
-	protected int ontpzd() throws Exception {
-		String pk_cargdoc = getPk_cargDoc();// 货位
-		if (pk_cargdoc == null || "".equals(pk_cargdoc))
-			throw new BusinessException("请指定货位信息");
-		AggregatedValueObject aggvo = getBillUI().getVOFromUI();
-		TbOutgeneralBVO[] bvo = (TbOutgeneralBVO[]) aggvo.getChildrenVO();
-		if (bvo == null || bvo.length == 0)
-			throw new BusinessException("没有表体数据，不允许操作! ");
-		for (TbOutgeneralBVO vo : bvo) {
-			vo.validationOnZdck();
-		}
-		TrayDisposeDlg tdpDlg = new TrayDisposeDlg(
-				WdsWlPubConst.DLG_OUT_TRAY_APPOINT, ui._getOperator(), ui
-						._getCorp().getPrimaryKey(), ui, true);
-		int retflag = UIDialog.ID_CANCEL;	
-		Map<String, List<TbOutgeneralTVO>> oldInfor = ui.getTrayInfor();
-		if (tdpDlg.showModal() == UIDialog.ID_OK) {
-			Map<String, List<TbOutgeneralTVO>> trayInfor = tdpDlg.getBufferData();
-			//lyf  2012-01-11 拆行
-			trayInfor = splitLine(trayInfor);
-			//lyf 2012-01-11  拆行
-			ui.setTrayInfor(trayInfor);
-			if (getBillUI().getBillOperate() == IBillOperate.OP_EDIT) {
-				// 将信息同步到缓存
-				TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[]) getBufferData()
-						.getCurrentVO().getChildrenVO();
-				if (bodys != null && bodys.length != 0) {
-					String key = null;
-					for (TbOutgeneralBVO body : bodys) {
-						key = body.getCrowno();
-						body.setTrayInfor(trayInfor.get(key));
-					}
-				}
-			}
-			
-
-			//zhf begin  设置 虚拟帮他托盘信息
-			Map<String,SmallTrayVO[]> lockTrayInfor = tdpDlg.getTrayLockInfor(false);
-			ui.setLockTrayInfor(lockTrayInfor);
-			setBodyValueToft();
-			retflag = UIDialog.ID_OK;
-			chaneColor();
-		}else{
-			ui.setTrayInfor(oldInfor);
-			return retflag;
-		}
-		setBodyModelState();
-		return retflag;
-	}
-
-	public void setBodyValueToft() {
-		int row = getBodyRowCount();
-		Map<String, List<TbOutgeneralTVO>> map = ((OutPubClientUI) getBillUI())
-				.getTrayInfor();
-		if (row > 0) {
-			for (int i = 0; i < row; i++) {
-				String crowno = (String) getBillCardPanelWrapper()
-						.getBillCardPanel().getBillModel().getValueAt(i,
-								"crowno");// 行号
-				UFDouble[] d = getDFromBuffer(crowno);
-				getBillCardPanelWrapper().getBillCardPanel().getBillModel()
-						.setValueAt(d[0], i, "noutnum");// 主数量
-				getBillCardPanelWrapper().getBillCardPanel().getBillModel()
-						.setValueAt(d[1], i, "noutassistnum");// 辅数量
-				List<TbOutgeneralTVO> list = map.get(crowno);
-				if (list == null || list.size() <= 0) {
-					return;
-				}
-				// 获取批次号// 批次号
-				String vbachcode = "";
-				// 来源批次号
-				String svbachcode = "";
-				// 存取批次
-				List vbp = new ArrayList();
-				// 存取来源批次
-				List vbl = new ArrayList();
-				for (int j = 0; j < list.size(); j++) {
-					TbOutgeneralTVO vo = list.get(j);
-					if (vo.getVbatchcode() != null
-							&& !vo.getVbatchcode().equalsIgnoreCase("")) {
-						if (!vbp.contains(vo.getVbatchcode())) {
-							vbachcode = vbachcode + "," + vo.getVbatchcode();
-							vbp.add(vo.getVbatchcode());
-						}
-					}
-					if (vo.getLvbatchcode() != null
-							&& !vo.getLvbatchcode().equalsIgnoreCase("")) {
-						if (!vbl.contains(vo.getVbatchcode())) {
-							svbachcode = svbachcode + "," + vo.getLvbatchcode();
-							vbl.add(vo.getLvbatchcode());
-						}
-					}
-					//liuys add 记录托盘选择的批次号
-					setUiVbatchcode(vo.getVbatchcode());
-				}
-				if (vbachcode.length() > 1) {
-					// 给界面的批次号赋值
-					getBillCardPanelWrapper().getBillCardPanel()
-							.setBodyValueAt(
-									vbachcode.substring(1, vbachcode.length()),
-									i, "vbatchcode");
-				}
-
-				if (svbachcode.length() > 1) {
-					// 给界面的来源批次号赋值
-					getBillCardPanelWrapper().getBillCardPanel()
-							.setBodyValueAt(
-									svbachcode
-											.substring(1, svbachcode.length()),
-									i, "lvbatchcode");
-				}
-			}
-		}
-	}
-
 	public int getBodyRowCount() {
 		int rowcount = -1;
 		if (ui.getBillListPanel().isShowing()) {
@@ -618,22 +330,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			rowcount = ui.getBillCardPanel().getBillModel().getRowCount();
 		}
 		return rowcount;
-	}
-
-	public UFDouble[] getDFromBuffer(String crowno) {
-		UFDouble[] d = new UFDouble[2];
-		d[0] = new UFDouble(0);// 实入数量
-		d[1] = new UFDouble(0);// 实入辅数量
-		List<TbOutgeneralTVO> list = ui.getTrayInfor().get(crowno);
-		if (list != null && list.size() > 0) {
-			for (TbOutgeneralTVO l : list) {
-				UFDouble b = l.getNoutnum();
-				UFDouble b1 = l.getNoutassistnum();// 实入辅数量
-				d[0] = d[0].add(b);
-				d[1] = d[1].add(b1);
-			}
-		}
-		return d;
 	}	
 	/**
 	 * @author yf
@@ -677,20 +373,4 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
 	}
-	/**
-	 * 提供获取批次方法
-	 * @作者：liuys
-	 * @说明：完达山物流项目 
-	 * @时间：2011-11-10下午04:11:04
-	 * @return
-	 */
-
-	public String getUiVbatchcode() {
-		return uiVbatchcode;
-	}
-
-	public void setUiVbatchcode(String uiVbatchcode) {
-		this.uiVbatchcode = uiVbatchcode;
-	}
-	
 }

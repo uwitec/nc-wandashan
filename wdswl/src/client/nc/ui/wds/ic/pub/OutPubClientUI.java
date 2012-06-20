@@ -39,6 +39,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
+import nc.vo.wdsnew.pub.PickTool.PickTool;
 
 public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListener{
 	/**
@@ -46,7 +47,7 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
+	private PickTool pick=null;
 	
 	private nc.ui.wdsnew.pub.LogNumRefUFPanel ivjLotNumbRefPane=null;
 	//批次档案所需数据
@@ -72,6 +73,12 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 		}
 		return ivjLotNumbRefPane;
 	}
+	private PickTool getPick(){
+		if(pick==null){
+			pick=new PickTool();
+		}
+		return pick;
+	}
 	
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
@@ -85,16 +92,6 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 								biCol.getName()).setCellEditor(
 								new nc.ui.pub.bill.BillCellEditor(
 										getLotNumbRefPane()));
-//						private String m_strCorpID=null;
-//						private String m_strWareHouseID=null;
-//						private String m_strWareHouseName=null;
-//						private String m_strWareHouseCode=null;
-//						private String m_spaceId=null;
-//						private String m_spaceCode=null;
-//						private String m_spaceName=null;
-//						private String m_strInventoryID=null;
-//						private String m_strInventoryName=null;
-//						private String m_strInventoryCode=null;
 						m_strCorpID=getClientEnvironment().getInstance().getCorporation().getPrimaryKey();
 						m_strWareHouseID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("srl_pk").getValueObject());
 						m_spaceId=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
@@ -312,62 +309,19 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 				}
 			}
 			
-			if("vbatchcode".equalsIgnoreCase(key)){			
-				// 验证批次号是否正确
-				String va=(String) e.getValue();
-				if(va==null ||va.equalsIgnoreCase("")){
-					this.showErrorMessage("批次号不能为空");
-					return;
-				}
-				if (va.trim().length() < 8) {
-					this.showErrorMessage("批次号不能小于8位");
-				     return ;
-				}
-		
-				Pattern p = Pattern
-				.compile(
-						"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
-						+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
-						+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
-						+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
-						Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-				Matcher m = p.matcher(va.trim().substring(0, 8));
-				if (!m.find()) {
-					this.showErrorMessage(
-					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-					return;
-		
-				}
-			    //如果批次号输入格式正确就给生产日期赋值
-				String year=va.substring(0,4);
-				String month=va.substring(4,6);
-				String day=va.substring(6,8);
-				String startdate=year+"-"+month+"-"+day;
-				UFDate date=new UFDate(startdate);
-				getBillCardPanel().setBodyValueAt(date, row, "cshengchanriqi");
-				
-				//给失效的日期赋值
-				String cinventoryid = (String)getBillCardPanel().getBodyValueAt(row, "cinventoryid");		
-					if(cinventoryid == null) 
-						return;
-					InvmandocVO vo = (InvmandocVO)HYPubBO_Client.queryByPrimaryKey(InvmandocVO.class, cinventoryid);
-					Integer num = vo.getQualitydaynum();//保质期天数
-					UFBoolean b = vo.getQualitymanflag();//是否保质期
-					if(b!=null && b.booleanValue()){
-						getBillCardPanel().setBodyValueAt(date.getDateAfter(num), row, "cshixiaoriqi");//失效日期
-					}	
+			if("vbatchcode".equalsIgnoreCase(key)){				
 			      //支持批次号 多选拆行  for add mlr
 					List<StockInvOnHandVO> vos=getLotNumbRefPane().getLotNumbDlg().getLis();
-					autoPick(vos,row);					
-			}	
-				
+					pick(vos,row);	
+					getLotNumbRefPane().getLotNumbDlg().setLis(null);
+			}					
 			super.afterEdit(e);
 		}catch(Exception e1){
 			Logger.info(e1);
 		}
 	}
 	/**
-	 * 完达山物流 出库自动按批次拣货
+	 * 完达山物流 出库手动拣货
 	 * 支持按批次自动拆行拣货
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
@@ -375,77 +329,69 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	 * @param vos
 	 * @param row 
 	 */
-	public void autoPick(List<StockInvOnHandVO> vos, int row) {
+	public void pick(List<StockInvOnHandVO> vos, int row) {
 		//取出本次出库的总的数量 
 		UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBillModel().getValueAt(row, "nshouldoutassistnum"));
 		if(zbnum.doubleValue()==0)
 			return;
-		//进行分量 
+		//进行分量  
+		//按 批次号  由小到大 依次分量
 		if(vos==null )
 			return;
-		List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
-		for(int i=0;i<vos.size();i++){
-			UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos.get(i).getAttributeValue("whs_stockpieces"));	
-			if(zbnum.doubleValue()>bnum.doubleValue()){
-				zbnum=zbnum.sub(bnum);
-				vos.get(i).setAttributeValue("whs_omnum", bnum);//设置应发数量 (辅数量)
-				if(vos.size()==0){
-				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)	
-				}
-				vos.get(i).setAttributeValue("whs_oanum", bnum);//设置实发数量(辅数量)
-				list.add(vos.get(i));
-			}else if(zbnum.doubleValue()<bnum.doubleValue()){
-				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
-				vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-				list.add(vos.get(i));
-				break;
-			}else{
-				vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
-				vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-				list.add(vos.get(i));
-				break;
-			}		
-		}
-		//插入行		
-			BillModel bm = getBillCardPanel().getBillModel();						
-			if(vos == null || vos.size() == 0){
-				return ;
-			}
-			if(vos.size()==1){
-				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
-				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量  应发nshouldoutassistnum    实发noutassistnum
-			}else{
-				//最后一行
-				if(row==bm.getRowCount()-1){
-					//处理第一行
-					bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
-					bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
-					bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
-					for(int i=1;i<vos.size();i++){
-					   bm.addLine();
-					   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
-					   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
-					   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
-					   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
-					}
-				}else{
-					//处理第一行
-					bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
-					bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
-					bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
-					for(int i=1;i<vos.size();i++){
-					   bm.insertRow(row+i);
-					   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
-					   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
-					   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
-					   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
-					}				
-				}
-			}
-
-		getBillCardPanel().getBillModel().execLoadFormula();
-	   //////////for end mlr
+		getPick().spiltNum(vos,row,zbnum);//进行拣货分量
+		//重新构建表体	
+		createBill(vos,row);			
   }
+	/**
+	 * 根据批次拆行 重新新构建表体数据
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-6-20上午11:11:57
+	 * @param vos
+	 * @param row
+	 */
+   public  void createBill(List<StockInvOnHandVO> vos, int row) {
+	   BillModel bm = getBillCardPanel().getBillModel();						
+		if(vos == null || vos.size() == 0){
+			return ;
+		}
+		if(vos.size()==1){
+			bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+			bm.setValueAt(vos.get(0).getWhs_omnum(), row, "noutassistnum");//设置实发辅数量  
+		}else{
+			//最后一行
+			if(row==bm.getRowCount()-1){
+				//处理第一行
+				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
+				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
+				for(int i=1;i<vos.size();i++){
+				   bm.addLine();
+				   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
+				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
+				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
+				}
+			}else{
+				//处理第一行
+				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
+				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
+				for(int i=1;i<vos.size();i++){
+				   bm.insertRow(row+i);
+				   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
+				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
+				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
+				}				
+			}
+		}
+   bm.updateValue();//更新刚刚设置的 bm 的值
+   getBillCardPanel().getBillModel().execLoadFormula();
+  //for end mlr
+		
+	}
+
 
 	public void afterHeadCargDoc(Object pk_cargdoc){
 		//清空库管员
