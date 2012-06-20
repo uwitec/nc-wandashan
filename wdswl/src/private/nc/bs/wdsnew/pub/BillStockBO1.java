@@ -9,6 +9,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 完达山项目 业务单据先存量更新类
  * 其他出库 其他入库 调拨出库 调拨入库 都通过该入口 更新现存量
+ * 一般查询现存量 也通过该入口
  * @author mlr
  */
 public class BillStockBO1 extends BillStockBO{
