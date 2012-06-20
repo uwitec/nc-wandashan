@@ -1,7 +1,6 @@
 package nc.vo.zmpub.pub.tool;
 import java.util.ArrayList;
 import java.util.List;
-import nc.bs.framework.common.NCLocator;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.ui.dbcache.DBCacheFacade;
 import nc.vo.pub.BusinessException;
