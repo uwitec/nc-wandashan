@@ -11,7 +11,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
 /**
  * 用于回写的工具类
- * @author mlr
+ * @author mlr zhf
  * @date 2011-9-13
  */
 public class WriteBackTool{

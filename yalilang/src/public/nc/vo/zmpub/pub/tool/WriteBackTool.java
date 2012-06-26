@@ -279,6 +279,8 @@ public class WriteBackTool{
 	/**
 	 * 回写后的数据校验
 	 * @throws Exception
+	 * @param checkfieldnames 来源表 数量字段  例如 ： 其他入库 回写 其他出库  checkfieldnames为其他出库 实际出的数量
+	 * @param  backfieldnames 来源表的 累计数量 例如： 如上,backfieldnames为其他出库 累计入库数量
 	 */
 	public static void check(
 			SuperVO[] vos,
