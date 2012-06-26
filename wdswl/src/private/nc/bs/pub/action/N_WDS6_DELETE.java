@@ -1,10 +1,13 @@
 package nc.bs.pub.action;
 import java.util.Hashtable;
+
+import nc.bo.other.out.OtherOutBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
@@ -41,21 +44,14 @@ public class N_WDS6_DELETE extends AbstractCompiler2 {
 			}
 			//更新现存量		 
 			getStock().updateStockByBill(billVo, WdsWlPubConst.BILLTYPE_OTHER_OUT_1);
-
-//			MyBillVO billVo2 = (MyBillVO)nc.ui.scm.util.ObjectUtils.serializableClone(billVo);
-//			
-//			//删除后需要处理的逻辑
-//			/**
-//			 * 删除单据
-//			 * 删除存量缓存表
-//			 * 回撤托盘存量表   
-//			 *  
-//			 */			
-//			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
-//					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
-//					m_methodReturnHas);
-//			OtherOutBO bo = new OtherOutBO();
-//			bo.deleteOutBill(billVo2);
+		    //进行数据会写
+			OtherOutBO bo = new OtherOutBO();
+			bo.writeBack(billVo, IBDACTION.DELETE);
+			//进行单据的删除操作
+			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
+					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
+					m_methodReturnHas);
+		
 			
 			// ##################################################
 			return retObj;

@@ -4,22 +4,30 @@ import java.util.Hashtable;
 
 import nc.bo.other.out.OtherOutBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.CanelDeleteWDF;
-import nc.bs.wds.load.pub.PushSaveWDSF;
+import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
+
 /**
- *  销售出库单删除
+ * 销售出库单删除
  * @author zpm
- *
+ * 
  */
 public class N_WDS8_DELETE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
+	private BillStockBO1 stock = null;
 
+	private BillStockBO1 getStock() {
+		if (stock == null) {
+			stock = new BillStockBO1();
+		}
+		return stock;
+	}
 
 	public N_WDS8_DELETE() {
 		super();
@@ -34,29 +42,25 @@ public class N_WDS8_DELETE extends AbstractCompiler2 {
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
 			// 方法说明:行业公共删除
-			
-			MyBillVO billVo = (MyBillVO)getVo();
-			if(billVo == null){
+
+			MyBillVO billVo = (MyBillVO) getVo();
+			if (billVo == null) {
 				throw new BusinessException("传入数据为空");
 			}
-			
-			MyBillVO billVo2 = (MyBillVO)nc.ui.scm.util.ObjectUtils.serializableClone(billVo);
-			
-			//删除后需要处理的逻辑
-			/**
-			 * 删除单据
-			 * 删除存量缓存表
-			 * 回撤托盘存量表   
-			 *  
-			 */			
+			// 进行数据回写
+			OtherOutBO bo = new OtherOutBO();
+			bo.writeBack(billVo, IBDACTION.DELETE);
+			// 进行单据保存
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);
-			OtherOutBO bo = new OtherOutBO();
-			bo.deleteOutBill(billVo2);
-			CanelDeleteWDF pu=new CanelDeleteWDF();
-			pu.canelDeleteWDF(vo.m_preValueVo, vo.m_operator,  vo.m_currentDate);
-			
+
+			// 更新现存量
+			getStock().updateStockByBill(vo.m_preValueVo,
+					WdsWlPubConst.BILLTYPE_SALE_OUT_1);
+			// CanelDeleteWDF pu=new CanelDeleteWDF();
+			// pu.canelDeleteWDF(vo.m_preValueVo, vo.m_operator,
+			// vo.m_currentDate);
 			// ##################################################
 			return retObj;
 		} catch (Exception ex) {

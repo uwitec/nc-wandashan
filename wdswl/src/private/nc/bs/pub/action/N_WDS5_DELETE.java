@@ -1,13 +1,12 @@
 package nc.bs.pub.action;
 
 import java.util.Hashtable;
-
+import nc.bs.dm.so.order.SoOrderBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
-
-
 /**
  *  销售运单
  * @author Administrator
@@ -27,19 +26,17 @@ public class N_WDS5_DELETE extends AbstractCompiler2 {
 	 */
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
 		try {
-			super.m_tmpVo = vo;
-			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
+			super.m_tmpVo = vo;		
 			Object retObj = null;
-			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
-			runClass("nc.bs.wl.so.order.SoorderBO", "beforeUnApprove","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
-			/**begin---------弃审前校验 是否已经安排生产下游其他出库单------end */
-			//##################################################回写销售订单	
-			runClass("nc.bs.wl.so.order.SoorderBO", "backSoleOrder","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
-			// ##################################################方法说明:行业公共删除
+			//校验下游是否有数据
+			runClass("nc.bs.dm.so.order.SoOrderBO", "beforeUnApprove","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			//进行数据回写
+			SoOrderBO bo=new SoOrderBO();
+			bo.writeBack(getVo(), IBDACTION.DELETE);
+			//进行单据删除操作
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);
-			// ##################################################
 			return retObj;
 		} catch (Exception ex) {
 			if (ex instanceof BusinessException)

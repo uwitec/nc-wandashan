@@ -63,7 +63,7 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);// 方法说明:行业公共删除
 			// ##################################################
-			bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);//回写托盘，删除孙表
+		//	bo.deleteOtherInforOnDelBill(bill.getParentVO().getPrimaryKey(),bodys);//回写托盘，删除孙表
 			// ##################################################
 			return retObj;
 		} catch (Exception ex) {

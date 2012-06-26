@@ -1,12 +1,14 @@
 package nc.bs.pub.action;
 import java.util.Hashtable;
 
+import nc.bo.other.out.OtherOutBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
@@ -44,7 +46,11 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 		billVo.setSLogCorp(vo.m_coId);
 		billVo.setULogDate(new UFDate(System.currentTimeMillis()));
 		Object retObj = null;
-		retObj = runClass("nc.bo.other.out.OtherOutSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+	    //进行数据会写
+		OtherOutBO bo = new OtherOutBO();
+		bo.writeBack(billVo, IBDACTION.SAVE);
+		//进行单据的保存操作
+		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
 		//更新现存量		 
 		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OTHER_OUT);
 		

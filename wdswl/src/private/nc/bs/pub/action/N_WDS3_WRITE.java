@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wl.plan.order.PlanOrderBO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 /**
  *  发运订单
@@ -35,6 +37,13 @@ try{
 				vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 1);//运单状态在途
 				vo.m_preValueVo.getParentVO().setAttributeValue("fisended", UFBoolean.TRUE);//运单冻结
 			}
+			
+			PlanOrderBO bo=new PlanOrderBO();
+			//校验是否存在下游数据
+			bo.beforeUnDel(getVo());
+			//进行数据回写
+			bo.writeBack(getVo(), IBDACTION.SAVE);			
+			//进行单据保存操作
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			return retObj;
 		} catch (Exception ex) {
