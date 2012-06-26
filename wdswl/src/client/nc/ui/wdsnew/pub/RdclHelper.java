@@ -3,7 +3,11 @@ package nc.ui.wdsnew.pub;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wds.rdcl.RdclVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
+/**
+ * 
+ * @author yf
+ *
+ */
 public class RdclHelper {
 
 	private static String bo = "nc.bs.wds.rdcl.RdclDMO";
