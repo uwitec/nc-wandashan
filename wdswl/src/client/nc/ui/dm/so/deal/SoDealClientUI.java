@@ -27,7 +27,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 销售计划安排
  * 
- * @author Administrator
+ * @author zhf
  * 
  */
 public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEditListener2 {
