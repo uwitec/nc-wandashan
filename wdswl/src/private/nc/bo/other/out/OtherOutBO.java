@@ -1,5 +1,4 @@
 package nc.bo.other.out;
-
 import nc.ui.scm.util.ObjectUtils;
 import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
@@ -53,6 +52,13 @@ public class OtherOutBO {
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });
 			}
+			if(sourcetype.equalsIgnoreCase(WdsWlPubConst.WDS5)){
+				WriteBackTool.writeBack(bodys, "wds_soorder_b",
+						"pk_soorder_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });			
+			}
 		} else if (iBdAction == IBDACTION.DELETE) {
 			for (int i = 0; i < bodys.length; i++) {
 				bodys[i].setStatus(VOStatus.DELETED);
@@ -64,6 +70,14 @@ public class OtherOutBO {
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });
 			}
+			if(sourcetype.equalsIgnoreCase(WdsWlPubConst.WDS5)){
+				WriteBackTool.writeBack(bodys, "wds_soorder_b",
+						"pk_soorder_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });			
+			}
+			
 		}
 	}
 }
