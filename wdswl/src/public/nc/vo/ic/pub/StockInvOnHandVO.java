@@ -34,10 +34,10 @@ public class StockInvOnHandVO extends SuperVO {
 
 	public String whs_munit;//主单位
 	public String whs_aunit;//辅单位
-	public UFDouble whs_omnum;//原始入库主数量
+	public UFDouble whs_omnum;// 用于出库自动拣货 或 手动拣货  设置应发辅数量的 临时载体 mlr
 	public UFDouble whs_stocktonnage;//库存主数量
 	public UFDouble whs_stockpieces;//库存辅数量
-	public UFDouble whs_oanum;//原始入库实收辅数量
+	public UFDouble whs_oanum;// 用于出库自动拣货 或 手动拣货  设置实发发辅数量的 临时载体 mlr
 	public Integer whs_type;// 类型
 
 	public String ss_pk;//库存状态id

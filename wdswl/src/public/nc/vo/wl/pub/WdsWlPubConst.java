@@ -240,6 +240,8 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_OTHER_IN_1 = "WDS7_1";//更新现存量 处理其他入库删除
 	/** 销售出库 */
 	public static String BILLTYPE_SALE_OUT = "WDS8";
+	public static String BILLTYPE_SALE_OUT_1 = "WDS8_1";
+
 	/** 调拨入库*/
 	public static String BILLTYPE_ALLO_IN = "WDS9";
 	public static String BILLTYPE_ALLO_IN_1 = "WDS9_1";//更新现存量 处理调拨入库删除
