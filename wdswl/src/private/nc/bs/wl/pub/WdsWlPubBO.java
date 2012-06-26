@@ -36,43 +36,15 @@ public class WdsWlPubBO {
 		sql.append(" select cuserid loguser,"); //人员id
 		sql.append(" pk_stordoc whid,");// 仓库id
 		sql.append(" pk_cargdoc spaceid,");//货位信息
-		sql.append(" istepi bistp,");//是否特批
-		sql.append(" st_type type ");//人员类型
+//		sql.append(" istepi bistp,");//是否特批
+//		sql.append(" st_type type ");//人员类型
 		sql.append(" from tb_stockstaff");
 		sql.append(" where isnull(dr,0)=0 ");
+		sql.append(" and pk_corp='"+SQLHelper.getCorpPk()+"'");
 		sql.append(" and  cuserid='" + userid +"'");
 	    LoginInforVO lif=(LoginInforVO)getDao().executeQuery(sql.toString(),new BeanProcessor(LoginInforVO.class));
 		return lif;
 	}
-	/**
-	 * 
-	 * @作者：yf
-	 * @说明：完达山物流项目 
-	 * 登陆信息加入 公司pk_corp过滤条件
-	 * @时间：2011-8-3上午10:10:43
-	 * @param userid
-	 * @param pk_corp
-	 * @return
-	 * @throws Exception
-	 */
-	public  LoginInforVO getLogInfor(String userid,String pk_corp)
-			throws Exception {
-		StringBuffer sql = new StringBuffer();
-		sql.append(" select cuserid loguser,"); //人员id
-		sql.append(" pk_stordoc whid,");// 仓库id
-		sql.append(" pk_cargdoc spaceid,");//货位信息
-		sql.append(" istepi bistp,");//是否特批
-		sql.append(" st_type type ");//人员类型
-		sql.append(" from tb_stockstaff");
-		sql.append(" where isnull(dr,0)=0 ");
-		sql.append(" and  cuserid='" + userid +"'");
-		if(PuPubVO.getString_TrimZeroLenAsNull(pk_corp) != null){
-			sql.append(" and pk_corp = '"+ pk_corp +"'");
-		}		
-		LoginInforVO lif=(LoginInforVO)getDao().executeQuery(sql.toString(),new BeanProcessor(LoginInforVO.class));
-		return lif;
-	}
-	
 	
 	/**
 	 * 
