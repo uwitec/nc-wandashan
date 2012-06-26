@@ -1,4 +1,4 @@
-package nc.ui.wds.rdcl;
+package nc.ui.wdsnew.pub;
 
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.wds.rdcl.RdclVO;
