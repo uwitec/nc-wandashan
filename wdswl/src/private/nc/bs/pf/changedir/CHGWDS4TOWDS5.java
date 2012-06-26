@@ -53,6 +53,7 @@ public String[] getField() {
 			"B_csourcebillhid->B_csaleid",
 			"B_csourcebillbid->B_corder_bid",
 			"B_vsourcebillcode->B_vreceiptcode",
+			"B_csourcetype->H_creceipttype",//单据类型
 			"B_vsourcerowno->B_crowno",
 			"B_cfirstbillhid->B_csaleid",
 			"B_cfirstbillbid->B_corder_bid",
