@@ -46,7 +46,9 @@ public class BillStockBO1 extends BillStockBO{
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_ALLO_IN, "nc.bs.wds.self.changedir.CHGWDS9TOACCOUNTNUM");//处理调拨入库保存
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_ALLO_IN_1, "nc.bs.wds.self.changedir.CHGWDS9TOACCOUNTNUM");//处理调拨入库删除
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_OTHER_OUT, "nc.bs.wds.self.changedir.CHGWDS6TOACCOUNTNUM");//处理其他出库保存
-			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_OTHER_OUT_1, "nc.bs.wds.self.changedir.CHGWDS6TOACCOUNTNUM");//处理其他出库保存
+			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_OTHER_OUT_1, "nc.bs.wds.self.changedir.CHGWDS6TOACCOUNTNUM");//处理其他出库删除
+			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_SALE_OUT, "nc.bs.wds.self.changedir.CHGWDS8TOACCOUNTNUM");//处理销售出库保存
+			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_SALE_OUT_1, "nc.bs.wds.self.changedir.CHGWDS8TOACCOUNTNUM");//处理销售出库删除			
 		}	
 		return typetoChangeclass;
 	}
@@ -60,6 +62,9 @@ public class BillStockBO1 extends BillStockBO{
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_ALLO_IN_1, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_OTHER_OUT, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_OTHER_OUT_1, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});
+			typetosetnum.put(WdsWlPubConst.BILLTYPE_SALE_OUT, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
+			typetosetnum.put(WdsWlPubConst.BILLTYPE_SALE_OUT_1, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});
+
 		}
 		return typetosetnum;
 	}
