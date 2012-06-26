@@ -17,15 +17,18 @@ import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
+import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.tool.WriteBackTool;
 
 public class SoDealBO {
 	
@@ -222,20 +225,6 @@ public class SoDealBO {
 				}
 			}
 		}
-		//2.回写销售订单累计安排数量
-		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
-		for (int i = 0; i < ldata.size(); i++) {
-			String key = ldata.get(i).getCorder_bid();
-			UFDouble num = PuPubVO.getUFDouble_NullAsZero(ldata.get(i)
-					.getNnum());
-			if (map.containsKey(key)) {
-				UFDouble oldValue = PuPubVO
-						.getUFDouble_NullAsZero(map.get(key));
-				map.put(key, oldValue.add(num));
-			}
-			map.put(key, num);
-		}
-		reWriteDealNumForPlan(map);
 		// 3.销售计划安排vo---》销售订单
 		// 3.1按  发货站 客户 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
