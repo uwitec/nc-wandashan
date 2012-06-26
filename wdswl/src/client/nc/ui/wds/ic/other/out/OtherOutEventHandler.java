@@ -52,7 +52,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 //						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 //						new String[]{"ccunhuobianma","batchcode"},
 //						new String[]{"´æ»õ±àÂë","Åú´ÎºÅ"});
-				ontpzd();
+			///	ontpzd();
 				
 				break;
 			case ISsButtun.zdqh:
