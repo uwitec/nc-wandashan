@@ -7,6 +7,7 @@ import javax.swing.ListSelectionModel;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.pub.report.ReportItem;
+import nc.ui.scm.util.ObjectUtils;
 import nc.ui.trade.report.query.QueryDLG;
 import nc.ui.zmpub.pub.report.buttonaction2.LevelSubTotalAction;
 import nc.vo.pub.BusinessException;
@@ -29,55 +30,51 @@ public class ReportUI extends ZmReportBaseUI2 {
 	 * 
 	 */
 	private static final long serialVersionUID = 2193523266502400113L;
-   //托盘不展开的合并维度
-	private String[]  combinFields={"billtype","pk_bill","dbilldate",
-			                        "coutwarehouseid","psnid","vbillcode"
-			                        ,"coperatorid","cregister","pk_bill_b"
-			                        ,"pk_cargdoc","vsourcebillcode","pk_invmandoc"
-			                        ,"vbatchcode","isxnap","isgift"
-			                       };
-   //托盘展开的合并维度
-	private String[]  combinFields1={"billtype","pk_bill","dbilldate",
-            "coutwarehouseid","psnid","vbillcode"
-            ,"coperatorid","cregister","pk_bill_b"
-            ,"pk_cargdoc","vsourcebillcode","pk_invmandoc"
-            ,"vbatchcode","isxnap","isgift"
-            ,"cdt_pk"};
+	// 托盘不展开的合并维度
+	private String[] combinFields = { "billtype", "pk_bill", "dbilldate",
+			"coutwarehouseid", "psnid", "vbillcode", "coperatorid",
+			"cregister", "pk_bill_b", "pk_cargdoc", "vsourcebillcode",
+			"pk_invmandoc", "vbatchcode", "isxnap", "isgift" };
+	// 托盘展开的合并维度
+	private String[] combinFields1 = { "billtype", "pk_bill", "dbilldate",
+			"coutwarehouseid", "psnid", "vbillcode", "coperatorid",
+			"cregister", "pk_bill_b", "pk_cargdoc", "vsourcebillcode",
+			"pk_invmandoc", "vbatchcode", "isxnap", "isgift", "cdt_pk" };
 	// 表头：制单日期、出入库仓库、库管员、来源单据号、单据号、制单人、签字人
 	private String[] select_fields_out_h = new String[] { "vbilltype billtype",
-			"general_pk pk_bill", "dbilldate dbilldate","vnote",//备注
+			"general_pk pk_bill",
+			"dbilldate dbilldate",
+			"vnote",// 备注
 			"srl_pk coutwarehouseid", "cwhsmanagerid psnid",
 			"vbillcode vbillcode", "coperatorid coperatorid",
 			"cregister cregister" };// 销售出库，其他出库
 
 	private String[] select_fields_in_h = new String[] {
 			"geh_billtype billtype", "geh_pk pk_bill",
-			"geh_dbilldate dbilldate", "geh_cwarehouseid cinwarehouseid","vnote",//备注
+			"geh_dbilldate dbilldate",
+			"geh_cwarehouseid cinwarehouseid",
+			"vnote",// 备注
 			"geh_cwhsmanagerid psnid", "geh_billcode vbillcode",
 			"coperatorid coperatorid", "geh_storname cregister" };// 调拨入库,其他入库
 
 	// 表体：货位、托盘、存货、批次、虚拟、出入库数量
 	private String[] select_fields_out_b = new String[] {
-			"general_b_pk pk_bill_b",
-			"cspaceid pk_cargdoc",
+			"general_b_pk pk_bill_b", "cspaceid pk_cargdoc",
 			"vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
-			"cinvbasid pk_invbasdoc", "vbatchcode vbatchcode",
-			"isxnap isxnap", "flargess isgift"
-			 };// 销售出库,其他出库
+			"cinvbasid pk_invbasdoc", "vbatchcode vbatchcode", "isxnap isxnap",
+			"flargess isgift" };// 销售出库,其他出库
 
 	private String[] select_fields_in_b = new String[] { "geb_pk pk_bill_b",
 			"geb_space pk_cargdoc", "vfirstbillcode vsourcebillcode",
 			// "",//没有托盘信息
 			"geb_cinvbasid pk_invbasdoc", "geb_vbatchcode vbatchcode",
 			// "isxnap isxnap",//没有虚拟属性
-			"geb_flargess isgift"};// 调拨入库,其他入库
+			"geb_flargess isgift" };// 调拨入库,其他入库
 
 	// 孙表：托盘
 	private String[] select_fields_out_bb = new String[] { "cdt_pk" };// 销售出库,其他出库
 	private String[] select_fields_in_bb = new String[] { "cdt_pk" };// 销售出库,其他出库
-	
-	
 
 	public ReportUI() {
 		super();
@@ -108,12 +105,11 @@ public class ReportUI extends ZmReportBaseUI2 {
 		sql.append(" , ");
 		sql.append(" bb.stockpieces  noutnum ,");
 		sql.append(" bb.stocktonnage nassoutnum  ");
-		
+
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
 			sql.append(" , bb.cdt_pk ");
 		}
-	
 
 		sql.append(" from ");
 		sql.append(" tb_outgeneral_h h,tb_outgeneral_b b,tb_outgeneral_t bb");
@@ -144,7 +140,8 @@ public class ReportUI extends ZmReportBaseUI2 {
 	protected String getQueryConditon(int type) throws Exception {
 		QueryDLG querylg = getQueryDlg();// 获取查询对话框
 		ConditionVO[] vos = querylg.getConditionVO();// 获取已被用户填写的查询条件
-		ConditionVO[] vos1 = filterQuery(vos);
+		ConditionVO[] vos1 = (ConditionVO[]) ObjectUtils
+				.serializableClone(filterQuery(vos));
 		filterQuery2(vos1, type);
 		String sql = querylg.getWhereSQL(vos1);
 		return sql;
@@ -155,8 +152,45 @@ public class ReportUI extends ZmReportBaseUI2 {
 			return;
 		if (type == 0) {
 			for (int i = 0; i < vos.length; i++) {
-				if ("dbilldate".equals(vos[i].getFieldCode())) {
-					vos[i].setFieldCode("dbilldate");
+				if ("sdate".equals(vos[i].getFieldCode())
+						|| "edate".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.dbilldate");
+				} else if ("pk_cargdoc".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.pk_cargdoc");
+				} else if ("psnid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.cwhsmanagerid");
+				} else if ("pk_invbasdoc".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.cinvbasid");
+				} else if ("vsourcebillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.vfirstbillcode");
+				} else if ("vbillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.vbillcode");
+				} else if ("vbatchcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.vbatchcode");
+				} else if ("xnap".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.isxnap");
+					if ("0".equals(vos[i].getValue())) {
+						vos[i].setFieldCode("1");
+						vos[i].setValue("1");
+					} else if ("1".equals(vos[i].getValue())) {
+						vos[i].setValue("'Y'");
+					} else if ("2".equals(vos[i].getValue())) {
+						vos[i].setValue("'N'");
+					}
+				} else if ("gift".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.flargess");
+					if ("0".equals(vos[i].getValue())) {
+						vos[i].setFieldCode("1");
+						vos[i].setValue("1");
+					} else if ("1".equals(vos[i].getValue())) {
+						vos[i].setValue("'Y'");
+					} else if ("2".equals(vos[i].getValue())) {
+						vos[i].setValue("'N'");
+					}
+				} else if ("coperatorid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.coperatorid");
+				} else if ("cregister".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.cregister");
 				}
 				if ("srl_pk".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("srl_pk");
@@ -171,8 +205,40 @@ public class ReportUI extends ZmReportBaseUI2 {
 			}
 		} else if (type == 1) {
 			for (int i = 0; i < vos.length; i++) {
-				if ("dbilldate".equals(vos[i].getFieldCode())) {
-					vos[i].setFieldCode("geh_dbilldate");
+				if ("sdate".equals(vos[i].getFieldCode())
+						|| "edate".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.geh_dbilldate");
+				} else if ("pk_cargdoc".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.geb_space");
+				} else if ("psnid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.geh_cwhsmanagerid");
+				} else if ("pk_invbasdoc".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.geb_cinvbasid");
+				} else if ("vsourcebillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.vfirstbillcode");
+				} else if ("vbillcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.geh_billcode");
+				} else if ("vbatchcode".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.geb_vbatchcode");
+					// }else if("isxnap".equals(vos[i].getFieldCode())){
+					// vos[i].setFieldCode("b.isxnap");
+				} else if ("xnap".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("1");
+					vos[i].setValue("1");
+				} else if ("gift".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("b.geb_flargess");
+					if ("0".equals(vos[i].getValue())) {
+						vos[i].setFieldCode("1");
+						vos[i].setValue("1");
+					} else if ("1".equals(vos[i].getValue())) {
+						vos[i].setValue("'Y'");
+					} else if ("2".equals(vos[i].getValue())) {
+						vos[i].setValue("'N'");
+					}
+				} else if ("coperatorid".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.coperatorid");
+				} else if ("cregister".equals(vos[i].getFieldCode())) {
+					vos[i].setFieldCode("h.geh_storname");
 				}
 				if ("srl_pk".equals(vos[i].getFieldCode())) {
 					vos[i].setFieldCode("geh_cwarehouseid");
@@ -209,7 +275,7 @@ public class ReportUI extends ZmReportBaseUI2 {
 		sql.append(" , ");
 		sql.append(" bb.gebb_num ninnum  ,");
 		sql.append(" bb.ninassistnum nassinnum   ");
-		
+
 		if (getGroupByOrSelectConditon() != null
 				&& getGroupByOrSelectConditon().trim().length() > 0) {
 			sql.append(" , bb.cdt_pk ");
@@ -225,12 +291,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 			sql.append(" and ");
 			sql.append(getQueryConditon(1));
 		}
-		
+
 		return sql.toString();
 	}
 
 	@Override
 	public void onQuery() {
+		setDefaultQueryData();
 		getQueryDlg().showModal();
 		if (getQueryDlg().getResult() == UIDialog.ID_OK) {
 			try {
@@ -275,6 +342,16 @@ public class ReportUI extends ZmReportBaseUI2 {
 			setBodyDataVO(vos, true);		
 	}
 
+	private void setDefaultQueryData() {
+		getQueryDlg().setDefaultValue("iscdt_pk", UFBoolean.TRUE.toString(),
+				UFBoolean.TRUE.toString());
+		getQueryDlg().setDefaultValue("pk_corp", _getCorpID(), _getCorpID());
+		getQueryDlg().setDefaultValue("sdate", _getCurrDate().toString(), "");
+		getQueryDlg().setDefaultValue("edate", _getCurrDate().toString(), "");
+		getQueryDlg().setDefaultValue("xnap", "0", "全部");
+		getQueryDlg().setDefaultValue("gift", "0", "全部");
+	}
+
 	private void setTolal1() throws Exception {
 		   new LevelSubTotalAction(this).atuoexecute2(true, true, new String[]{"cmonth","dbilldate"},new String[]{"月份","日期"}) ; 			
 		
@@ -297,25 +374,47 @@ public class ReportUI extends ZmReportBaseUI2 {
 		// if (list.get(2) != null || list.get(2).length > 0) {
 		// vos3 = list.get(2);
 		// }
-		ReportBaseVO[] rvos=null;
+		ReportBaseVO[] rvos = null;
 		ReportBaseVO[] combinvo = null;
 		combinvo = CombinVO.comin(combinvo, vos1);
 		combinvo = CombinVO.comin(combinvo, vos2);
-		ConditionVO[] conds=getQueryDlg().getConditionVOsByFieldCode("iscdt_pk");
-		boolean iscat=false;
-		if(conds==null || conds.length==0)
-			iscat=false;
-		else{
-			iscat=PuPubVO.getUFBoolean_NullAs(getQueryDlg().getConditionVOsByFieldCode("iscdt_pk")[0].getValue(), UFBoolean.FALSE).booleanValue(); //是否展开
+		UFBoolean isCat = UFBoolean.TRUE;
+		if (getQueryDlg().getConditionVOsByFieldCode("iscdt_pk") != null) {
+			try {
+				isCat = PuPubVO.getUFBoolean_NullAs(getQueryDlg()
+						.getConditionVOsByFieldCode("iscdt_pk")[0].getValue(),
+						UFBoolean.FALSE); // 是否展开
+			} catch (Exception e) {
+				isCat = UFBoolean.TRUE;
+				e.printStackTrace();// 出错不处理
+			}
 		}
+
+//		if (combinvo == null || combinvo.length == 0)
+//		ConditionVO[] conds=getQueryDlg().getConditionVOsByFieldCode("iscdt_pk");
+//		boolean iscat=false;
+//		if(conds==null || conds.length==0)
+//			iscat=false;
+//		else{
+//			iscat=PuPubVO.getUFBoolean_NullAs(getQueryDlg().getConditionVOsByFieldCode("iscdt_pk")[0].getValue(), UFBoolean.FALSE).booleanValue(); //是否展开
+//		}
 		if(combinvo==null || combinvo.length==0)
 			return null;
-		if(iscat){
-			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
-		}else{
-			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
-		}	
- 		return rvos;
+		if (isCat.booleanValue()) {
+			rvos = (ReportBaseVO[]) CombinVO.combinData(combinvo,
+					combinFields1, new String[] { "ninnum", "nassinnum" },
+					ReportBaseVO.class);
+		} else {
+			rvos = (ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields,
+					new String[] { "ninnum", "nassinnum" }, ReportBaseVO.class);
+		}
+		return rvos;
+//		if(iscat){
+//			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields1, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
+//		}else{
+//			rvos=(ReportBaseVO[]) CombinVO.combinData(combinvo, combinFields, new String[]{"ninnum","nassinnum","noutnum","nassoutnum"}, ReportBaseVO.class);
+//		}	
+// 		return rvos;
 		// return setVoByContion(combinvo, voCombinConds);
 	}
 
