@@ -265,7 +265,7 @@ public class PlanDealBO {
 				map.put(key, list);
 			}
 		}
-		reWriteDealNumForPlan(map);
+	//	reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 收货站 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
