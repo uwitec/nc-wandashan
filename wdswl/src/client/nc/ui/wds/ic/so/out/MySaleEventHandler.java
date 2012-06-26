@@ -73,9 +73,9 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
 //						new String[]{"ccunhuobianma","batchcode"},
 //						new String[]{"存货编码","批次号"});
-				int ii = ontpzd();
-				if(ii != UIDialog.ID_CANCEL)
-					onBatchCodeChange();
+		//		int ii = ontpzd();
+			//	if(ii != UIDialog.ID_CANCEL)
+		//			onBatchCodeChange();
 				break;
 			case ISsButtun.zdqh://自动取货
 				valudateWhereYeqian();
@@ -85,7 +85,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //						new String[]{"ccunhuobianma","batchcode"},
 //						new String[]{"存货编码","批次号"});
 				onzdqh();
-				onBatchCodeChange();
+			//	onBatchCodeChange();
 				break;
 			case ISsButtun.ckmx://查看明细
 				onckmx();
@@ -160,54 +160,54 @@ public class MySaleEventHandler extends OutPubEventHandler {
 	 * 手动拣货、自动拣货后执行
 	 * 对批次号进行拆分，添加生产日期和失效日期
 	 */
-	private void onBatchCodeChange() throws Exception{
-		UITable table = getBillCardPanelWrapper().getBillCardPanel().getBillTable();
-		BillModel model = getBillCardPanelWrapper().getBillCardPanel().getBillModel();
-		int rowCount =table.getRowCount();
-		String str = "vbatchcode";
-		String va = "";
-		if(rowCount>0){
-			for(int i = 0 ;i<rowCount; i++){
-				//liuys 原获取批次是从出库单界面,注销掉,应该从托盘选择界面获得批次号
-//				Object o1 =model.getValueAt(i, str);
-//				va = String.valueOf(o1);		
-				if(getUiVbatchcode() == null || getUiVbatchcode().length()==0 ||getUiVbatchcode().trim().equals(""))
-					return;
-				va = getUiVbatchcode();
-				Pattern p = Pattern
-				.compile(
-						"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
-						+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
-						+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
-						+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
-						Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-				Matcher m = p.matcher(va.trim().substring(0, 8));
-				if (!m.find()) {
-					getBillUI().showErrorMessage(
-					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-					return;		
-				}
-			    //如果批次号输入格式正确就给生产日期赋值
-				String year=va.substring(0,4);
-				String month=va.substring(4,6);
-				String day=va.substring(6,8);
-				String startdate=year+"-"+month+"-"+day;
-				UFDate date=new UFDate(startdate);
-				getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date, i, "cshengchanriqi");
-				
-				//给失效的日期赋值
-				String cinventoryid = (String)getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "cinventoryid");		
-					if(cinventoryid == null) 
-						return;
-					InvmandocVO vo = (InvmandocVO)HYPubBO_Client.queryByPrimaryKey(InvmandocVO.class, cinventoryid);
-					Integer num = vo.getQualitydaynum();//保质期天数
-					UFBoolean b = vo.getQualitymanflag();//是否保质期
-					if(b!=null && b.booleanValue()){
-						getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date.getDateAfter(num), i, "cshixiaoriqi");//失效日期
-					}
-			}
-		}
-	}
+//	private void onBatchCodeChange() throws Exception{
+//		UITable table = getBillCardPanelWrapper().getBillCardPanel().getBillTable();
+//		BillModel model = getBillCardPanelWrapper().getBillCardPanel().getBillModel();
+//		int rowCount =table.getRowCount();
+//		String str = "vbatchcode";
+//		String va = "";
+//		if(rowCount>0){
+//			for(int i = 0 ;i<rowCount; i++){
+//				//liuys 原获取批次是从出库单界面,注销掉,应该从托盘选择界面获得批次号
+////				Object o1 =model.getValueAt(i, str);
+////				va = String.valueOf(o1);		
+//				if(getUiVbatchcode() == null || getUiVbatchcode().length()==0 ||getUiVbatchcode().trim().equals(""))
+//					return;
+//				va = getUiVbatchcode();
+//				Pattern p = Pattern
+//				.compile(
+//						"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+//						+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+//						+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+//						+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+//						Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+//				Matcher m = p.matcher(va.trim().substring(0, 8));
+//				if (!m.find()) {
+//					getBillUI().showErrorMessage(
+//					"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+//					return;		
+//				}
+//			    //如果批次号输入格式正确就给生产日期赋值
+//				String year=va.substring(0,4);
+//				String month=va.substring(4,6);
+//				String day=va.substring(6,8);
+//				String startdate=year+"-"+month+"-"+day;
+//				UFDate date=new UFDate(startdate);
+//				getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date, i, "cshengchanriqi");
+//				
+//				//给失效的日期赋值
+//				String cinventoryid = (String)getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "cinventoryid");		
+//					if(cinventoryid == null) 
+//						return;
+//					InvmandocVO vo = (InvmandocVO)HYPubBO_Client.queryByPrimaryKey(InvmandocVO.class, cinventoryid);
+//					Integer num = vo.getQualitydaynum();//保质期天数
+//					UFBoolean b = vo.getQualitymanflag();//是否保质期
+//					if(b!=null && b.booleanValue()){
+//						getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date.getDateAfter(num), i, "cshixiaoriqi");//失效日期
+//					}
+//			}
+//		}
+//	}
 	
 	@Override
 	public void onBillRef() throws Exception {

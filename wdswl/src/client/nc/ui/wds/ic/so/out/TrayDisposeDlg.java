@@ -637,30 +637,30 @@ ActionListener, BillEditListener,BillEditListener2{
 	//	}
 	public Map<String,List<TbOutgeneralTVO>> getBufferData(){
 		if(map == null){
-			map = cloneBufferData();
+			//map = cloneBufferData();
 		}
 		return map;
 	}
 	
-	public Map<String,List<TbOutgeneralTVO>> cloneBufferData(){
-		Map<String,List<TbOutgeneralTVO>> map1 = ((OutPubClientUI)myClientUI).getTrayInfor();
-		Map<String,List<TbOutgeneralTVO>> map2 = new HashMap<String, List<TbOutgeneralTVO>>();
-		if(map1.size()>0){
-			Iterator<String> it = map1.keySet().iterator();
-			while(it.hasNext()){
-				String key = it.next();
-				List<TbOutgeneralTVO> list = map1.get(key);
-				map2.put(key, cloneBBVO(list));
-			}	
-			//liuys add 初始化map,key为行号,value为空,用于校验
-		}else{
-			int rowCout = getbillListPanel().getHeadTable().getRowCount();
-			for(int i=0;i<rowCout;i++){
-				map2.put(i+1+"0", null);
-			}
-		}
-		return map2;
-	}
+//	public Map<String,List<TbOutgeneralTVO>> cloneBufferData(){
+//		Map<String,List<TbOutgeneralTVO>> map1 = ((OutPubClientUI)myClientUI).getTrayInfor();
+//		Map<String,List<TbOutgeneralTVO>> map2 = new HashMap<String, List<TbOutgeneralTVO>>();
+//		if(map1.size()>0){
+//			Iterator<String> it = map1.keySet().iterator();
+//			while(it.hasNext()){
+//				String key = it.next();
+//				List<TbOutgeneralTVO> list = map1.get(key);
+//				map2.put(key, cloneBBVO(list));
+//			}	
+//			//liuys add 初始化map,key为行号,value为空,用于校验
+//		}else{
+//			int rowCout = getbillListPanel().getHeadTable().getRowCount();
+//			for(int i=0;i<rowCout;i++){
+//				map2.put(i+1+"0", null);
+//			}
+//		}
+//		return map2;
+//	}
 	public List<TbOutgeneralTVO> cloneBBVO(List<TbOutgeneralTVO> list){
 		List<TbOutgeneralTVO> list1 = new ArrayList<TbOutgeneralTVO>();
 		if(list!=null&& list.size()>0){
