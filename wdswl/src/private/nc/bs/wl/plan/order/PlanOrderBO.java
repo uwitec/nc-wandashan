@@ -6,7 +6,11 @@ import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.VOStatus;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.IBDACTION;
+import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.tool.WriteBackTool;
 /**
  * 发运订单（WDS3）后台类
  * @author Administrator
@@ -54,32 +58,40 @@ public class PlanOrderBO {
 	}
 	/**
 	 * 
-	 * @作者：LYF
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2011-11-30下午06:19:59
 	 * @param obj
-	 * @throws BusinessException
+	 * @throws Exception 
 	 */
-	public void reWriteSendPlan(AggregatedValueObject obj) throws BusinessException{
+	public void writeBack(AggregatedValueObject obj,int ibdaction) throws Exception{
 		if(obj == null ||obj.getChildrenVO()==null ||obj.getChildrenVO().length==0 ){
 			return ;
 		}
-		// liuys add 作废前增加下游单据校验
-		beforeUnDel(obj);
 		SendorderBVO[] bodys= (SendorderBVO[])obj.getChildrenVO();
-		StringBuffer sql = new StringBuffer();
-		for(SendorderBVO body:bodys){			
-			sql.append(" update wds_sendplanin_b set ndealnum=coalesce(ndealnum,0)-");
-			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNdealnum())+",");
-			sql.append(" nassdealnum = coalesce(nassdealnum,0)-");
-			sql.append(PuPubVO.getUFDouble_NullAsZero(body.getNassdealnum()));
-			sql.append(" where pk_sendplanin_b='"+body.getCsourcebillbid()+"'");
-			sql.append(" and pk_sendplanin='"+body.getCsourcebillhid()+"'");
-			if(getBaseDAO().executeUpdate(sql.toString())==0){
-				throw new BusinessException("数据异常：该发运计划可能已作废");
-			};
-			sql.setLength(0);//清空buffer
+		String csourcetype=PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype());
+		//自制单据不需要回写
+		if(csourcetype==null){
+			return;
+		}
+		if(ibdaction==IBDACTION.SAVE){
+		  if(csourcetype.equals(WdsWlPubConst.WDS1)){
+			  WriteBackTool.writeBack(bodys, "wds_sendplanin_b", "pk_sendplanin_b",
+					  new String[]{"ndealnum","nassdealnum"}, 
+					  new String[]{"ndealnum","nassdealnum"},
+					  new String[]{"ndealnum","nassdealnum"});
+			
+		  }
+		}else if(ibdaction==IBDACTION.DELETE){
+		   for (int i = 0; i < bodys.length; i++) {
+			 bodys[i].setStatus(VOStatus.DELETED);
+		   }	
+		  if(csourcetype.equals(WdsWlPubConst.WDS1)){
+			  WriteBackTool.writeBack(bodys, "wds_sendplanin_b", "pk_sendplanin_b",
+					  new String[]{"ndealnum","nassdealnum"}, 
+					  new String[]{"ndealnum","nassdealnum"},
+					  new String[]{"ndealnum","nassdealnum"});	
+		  }			
 		}
 	}
-
 }
