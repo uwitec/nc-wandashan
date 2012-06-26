@@ -39,10 +39,10 @@ public class OutInEventHandler extends InPubEventHandler {
 					new String[]{"存货编码","批次号"});
 			
 			valuteRowNum();
-			onZdtp();
+		//	onZdtp();
 			break;
 		case ISsButtun.Ckmx:
-			onCkmx();
+	//		onCkmx();
 			break;
 		case ISsButtun.Zdrk://自动拣货
 			valudateWhereYeqian();
@@ -54,7 +54,7 @@ public class OutInEventHandler extends InPubEventHandler {
 			
 			valuteRowNum();
 			setTrayCatNUll();
-			onZdrk();
+		//	onZdrk();
 			break;
 		case ISsButtun.Zzdj:
 			onZzdj();
@@ -91,7 +91,7 @@ public class OutInEventHandler extends InPubEventHandler {
 	  if(getBillInPubUI()==null){
 		  return;
 	  }
-	  getBillInPubUI().setTrayInfor(null);
+	//  getBillInPubUI().setTrayInfor(null);
 	}
 	
 	/**

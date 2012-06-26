@@ -181,24 +181,24 @@ public class TrayDisposeDlg extends nc.ui.pub.beans.UIDialog implements
 
 	public Map<String, List<TbGeneralBBVO>> getBufferData() {
 		if (map == null) {
-			map = cloneBufferData();
+			//map = cloneBufferData();
 		}
 		return map;
 	}
 
-	public Map<String, List<TbGeneralBBVO>> cloneBufferData() {
-		Map<String, List<TbGeneralBBVO>> map1 = myClientUI.getTrayInfor();
-		Map<String, List<TbGeneralBBVO>> map2 = new HashMap<String, List<TbGeneralBBVO>>();
-		if (map1.size() > 0) {
-			Iterator<String> it = map1.keySet().iterator();
-			while (it.hasNext()) {
-				String key = it.next();
-				List<TbGeneralBBVO> list = map1.get(key);
-				map2.put(key, cloneBBVO(list));
-			}
-		}
-		return map2;
-	}
+//	public Map<String, List<TbGeneralBBVO>> cloneBufferData() {
+//	//	Map<String, List<TbGeneralBBVO>> map1 = myClientUI.getTrayInfor();
+//		Map<String, List<TbGeneralBBVO>> map2 = new HashMap<String, List<TbGeneralBBVO>>();
+//	//	if (map1.size() > 0) {
+//			Iterator<String> it = map1.keySet().iterator();
+//			while (it.hasNext()) {
+//				String key = it.next();
+//				List<TbGeneralBBVO> list = map1.get(key);
+//				map2.put(key, cloneBBVO(list));
+//			}
+//		}
+//		return map2;
+//	}
 
 	public List<TbGeneralBBVO> cloneBBVO(List<TbGeneralBBVO> list) {
 		List<TbGeneralBBVO> list1 = new ArrayList<TbGeneralBBVO>();
