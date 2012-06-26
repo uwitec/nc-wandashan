@@ -1,47 +1,14 @@
 package nc.ui.wl.pub;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.vo.pub.BusinessException;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
-public class LoginInforHelper {	
-	
-	
-	private static String bo = "nc.bs.wl.pub.WdsWlPubBO";
-	
-	private  LoginInforVO m_loginInfor = null;
-	
-	/**
-	 * 
-	 * @作者：zhf
-	 * @说明：完达山物流项目 根据当前登陆用户 获取用户的 绑定信息 隶属仓库  隶属货位（仓储人员） 等等
-	 * @时间：2011-3-23下午05:02:45
-	 * @param userid
-	 * @return
-	 * @throws Exception
-	 */
-//	public  LoginInforVO getLogInfor(String userid)
-//			throws Exception {
-//		if (m_loginInfor == null
-//				|| PuPubVO.getString_TrimZeroLenAsNull(m_loginInfor
-//						.getLoguser()) == null
-//				|| !m_loginInfor.getLoguser().equalsIgnoreCase(userid)) {
-//			Class[] ParameterTypes = new Class[]{String.class};
-//			Object[] ParameterValues = new Object[]{userid};
-//			Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getLogInfor", ParameterTypes, ParameterValues, 2);
-//      if ( os == null){
-//				throw new BusinessException("当前登录人员没有绑定仓库");
-//			}
-//			m_loginInfor = (LoginInforVO)os;
-//		}
-//		return m_loginInfor;
-//	}
-	
+public class LoginInforHelper {		
+	private static String bo = "nc.bs.wl.pub.WdsWlPubBO";	
+	private  LoginInforVO m_loginInfor = null;	
 	/**
 	 * @author yf
 	 * 当前登陆信息 采用pk_corp过滤条件 原bo中重载登陆方法 双字符串参数userid，pk_corp
@@ -55,8 +22,8 @@ public class LoginInforHelper {
 			//当前登陆公司
 			String pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();
 			
-			Class[] ParameterTypes = new Class[]{String.class,String.class};
-			Object[] ParameterValues = new Object[]{userid,pk_corp};
+			Class[] ParameterTypes = new Class[]{String.class};
+			Object[] ParameterValues = new Object[]{userid};
 			Object os = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "getLogInfor", ParameterTypes, ParameterValues, 2);
 			if ( os == null){	
 				throw new BusinessException("当前登录人员没有绑定仓库");
