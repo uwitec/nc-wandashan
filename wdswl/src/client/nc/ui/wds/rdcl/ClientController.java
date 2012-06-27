@@ -45,7 +45,7 @@ public class ClientController implements ITreeCardController,ISingleController {
 	}
 
 	public String getBillType() {
-		return "80021001";
+		return RdclVO.billtype;
 	}
 
 	public String[] getBillVoName() {

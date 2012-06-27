@@ -26,6 +26,8 @@ public class RdclVO extends SuperVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 4515927399519896468L;
+
+	public static String billtype = "80021001";
 	
 	public String pk_rdcl;//收发类型pk
 	public String pk_corp;//公司
