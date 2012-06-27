@@ -35,9 +35,7 @@ public class WdsWlPubBO {
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select cuserid loguser,"); //人员id
 		sql.append(" pk_stordoc whid,");// 仓库id
-		sql.append(" pk_cargdoc spaceid,");//货位信息
-//		sql.append(" istepi bistp,");//是否特批
-//		sql.append(" st_type type ");//人员类型
+		sql.append(" pk_cargdoc spaceid ");//货位信息
 		sql.append(" from tb_stockstaff");
 		sql.append(" where isnull(dr,0)=0 ");
 		sql.append(" and pk_corp='"+SQLHelper.getCorpPk()+"'");

@@ -104,10 +104,11 @@ public class LoginInforHelper {
 	 */
 	public  String getSpaceByLogUserForStore(String userid) throws Exception{
 		LoginInforVO infor = getLogInfor(userid);
-		//liuys add for 完达山项目  增加内勤带出货位
-		if(infor.getType()==0||infor.getType()==3)
+		
+		if(infor==null )
+			return null;
 			return infor.getSpaceid();
-		return null;
+		
 	}
 	
 	/**

@@ -20,11 +20,7 @@ public class MyQueryDIG extends WdsQueryDlg {
 	}
 	
 	 public void initData() {
-		setDefaultValue("tb_warehousestock.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());
-		setDefaultValue("tb_warehousestock.whs_stocktonnage",null,"Y");
-	//	setFieldRef("setFieldRef.whs_stocktonnage", UFBoolean.TRUE);  //
-
-	
+		setDefaultValue("tb_warehousestock.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());	
 		super.initData();
 	}
 	 

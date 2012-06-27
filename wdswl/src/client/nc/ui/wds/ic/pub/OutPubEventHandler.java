@@ -90,7 +90,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 					pk_cargdoc, generalbVOs };
 			Object o = LongTimeTask.callRemoteService(
 					WdsWlPubConst.WDS_WL_MODULENAME,
-					"nc.vo.wdsnew.pub.PickTool.PickTool", "autoPick",
+					"nc.vo.wdsnew.pub.PickTool", "autoPick",
 					ParameterTypes, ParameterValues, 2);
 			if (o != null) {
 				bvos = (TbOutgeneralBVO[]) o;
@@ -99,6 +99,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			throw e;
 		}
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
+        getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
+        getBillCardPanelWrapper().getBillCardPanel().getBillModel().updateValue();
 	}
 	/**
 	 * 

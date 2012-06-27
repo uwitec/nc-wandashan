@@ -103,7 +103,7 @@ public class PickTool implements Serializable{
 	private void pick(String pk_stordoc, String pk_cargdoc,
 			TbOutgeneralBVO vo) throws Exception {
 		//构建查询条件
-		String whereSql= " pk_customize1 = '"+pk_cargdoc+"' " +
+		String whereSql= " pk_customize1 = '"+pk_stordoc+"' " +
 				        " and  pk_cargdoc = '"+pk_cargdoc+"' "+
 						" and pk_invmandoc='"+vo.getCinventoryid()+"'"+
 						" and isnull(dr,0)=0 "+
@@ -125,7 +125,7 @@ public class PickTool implements Serializable{
 	 */
 	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo) {
 		
-	    UFDouble zbnum=vo.getNoutassistnum();//取得出库单实发辅数量	
+	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
 	    if(vos==null|| vos.length==0){
 	    	mpick.put(vo.getPrimaryKey(), null);//如果现存量为空   则该行拣货单设置为空
 	    	return;

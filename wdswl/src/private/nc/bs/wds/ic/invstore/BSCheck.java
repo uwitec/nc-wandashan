@@ -32,11 +32,11 @@ public class BSCheck implements IBDBusiCheck {
 		// bd_cargdoc货位编码30 pk = pk_cargdoc_30
 		// 校验表体存货是否在当前货位和分拣仓货位以外货位中是唯一的
 		if(!WdsWlPubConst.pk_cargdoc_30.equals(hvo.getPk_cargdoc())){
-			BsUniqueCheck.FieldUniqueChecks(bvos, new String[] { "pk_invmandoc" },
-					" and pk_cargdoc not in ( '" + WdsWlPubConst.pk_cargdoc_30
-							+ "' ,'" + hvo.getPk_cargdoc()
-							+ "') and pk_storedoc = '" + hvo.getPk_stordoc() + "'",
-					"有存货已绑定其他货位");
+//			BsUniqueCheck.FieldUniqueChecks(bvos, new String[] { "pk_invmandoc" },
+//					" and pk_cargdoc not in ( '" + WdsWlPubConst.pk_cargdoc_30
+//							+ "' ,'" + hvo.getPk_cargdoc()
+//							+ "') and pk_storedoc = '" + hvo.getPk_stordoc() + "'",
+//					"有存货已绑定其他货位");
 		}
 		
 	}

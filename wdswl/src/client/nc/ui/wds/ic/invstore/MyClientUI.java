@@ -105,14 +105,8 @@ public class MyClientUI extends WdsBillManagUI implements
 					.getComponent();
 			if (jc instanceof UIRefPane) {
 				UIRefPane ref = (UIRefPane) jc;
-				// yf modify 存货参照不过滤分拣仓存货
-				// ref.getRefModel().addWherePart(" and wds_invbasdoc.pk_invmandoc not in ( select pk_invmandoc from tb_spacegoods "
-				// +
-				// " where isnull(dr,0)=0 and pk_storedoc ='"+pk_stordoc+" ' and pk_invmandoc is not null"
-				// +
-				// " and tb_spacegoods.pk_cargdoc <>'"+pk_cargdoc+"')");
 				if (WdsWlPubConst.pk_cargdoc_30.equals(pk_cargdoc)) {
-					ref.getRefModel().addWherePart("");
+					//ref.getRefModel().addWherePart("");
 				} else {
 					ref
 							.getRefModel()
@@ -121,7 +115,7 @@ public class MyClientUI extends WdsBillManagUI implements
 											+ " where isnull(dr,0)=0 and pk_storedoc ='"
 											+ pk_stordoc
 											+ " ' and pk_invmandoc is not null"
-											+ " and tb_spacegoods.pk_cargdoc <>'"
+											+ " and tb_spacegoods.pk_cargdoc ='"
 											+ pk_cargdoc
 											+ "' "
 											+ " and tb_spacegoods.pk_cargdoc <> '"
