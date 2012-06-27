@@ -8,7 +8,6 @@ import nc.ui.wdsnew.pub.PowerGetTool;
  * 销售出库参照销售运单(WDS5)对话框
  * 按 操作员 绑定货位 过滤存货
  * @author mlr
- *
  */
 public class RefBillSourceDlg extends MBillSourceDLG{
 	
