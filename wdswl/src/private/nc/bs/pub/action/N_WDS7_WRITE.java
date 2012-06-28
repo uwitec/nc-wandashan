@@ -44,10 +44,11 @@ try{
 		//进行数据回写
 		IcInPubBO bo=new IcInPubBO();
 		bo.writeBackForInBill((OtherInBillVO) getVo(),IBDACTION.SAVE);
-		//进行单据保存
-		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		//更新现存量		 
 		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OTHER_IN);
+		//进行单据保存
+		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+		
 		return retObj;
 	} catch (Exception ex) {
 			if (ex instanceof BusinessException)

@@ -306,7 +306,7 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 			bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 			setDate(vos.get(0).getWhs_batchcode(),row);
 			bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
-			bm.setValueAt(vos.get(0).getWhs_omnum(), row, "noutassistnum");//设置实发辅数量  
+			bm.setValueAt(vos.get(0).getWhs_oanum(), row, "noutassistnum");//设置实发辅数量  
 		}else{
 			//最后一行
 			if(row==bm.getRowCount()-1){

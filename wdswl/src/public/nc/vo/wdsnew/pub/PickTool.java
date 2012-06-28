@@ -193,7 +193,7 @@ public class PickTool implements Serializable{
 	    * @param zbnum
 	    */
 		public  void spiltNum(List<StockInvOnHandVO> vos, int row, UFDouble zbnum) {
-			List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
+		//	List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
 			for(int i=0;i<vos.size();i++){
 				UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos.get(i).getAttributeValue("whs_stockpieces"));	
 				if(zbnum.doubleValue()>bnum.doubleValue()){
@@ -205,16 +205,16 @@ public class PickTool implements Serializable{
 						vos.get(i).setAttributeValue("whs_omnum", bnum);// 设置应发数量																	// (辅数量)
 						vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
 					}
-					list.add(vos.get(i));
+				//	list.add(vos.get(i));
 				}else if(zbnum.doubleValue()<bnum.doubleValue()){
 					vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
 					vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-					list.add(vos.get(i));
+				//	list.add(vos.get(i));
 					break;
 				}else{
 					vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
 					vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-					list.add(vos.get(i));
+				//	list.add(vos.get(i));
 					break;
 				}		
 			}		

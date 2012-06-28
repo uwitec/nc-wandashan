@@ -49,10 +49,11 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 	    //进行数据会写
 		OtherOutBO bo = new OtherOutBO();
 		bo.writeBack(billVo, IBDACTION.SAVE);
-		//进行单据的保存操作
-		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
 		//更新现存量		 
 		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OTHER_OUT);
+		//进行单据的保存操作
+		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
+	
 		
 		return retObj;
 	} catch (Exception ex) {
