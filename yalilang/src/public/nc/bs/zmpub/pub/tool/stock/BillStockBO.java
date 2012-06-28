@@ -1,12 +1,19 @@
 package nc.bs.zmpub.pub.tool.stock;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import nc.bs.zmpub.pub.tool.SingleVOChangeDataBsTool;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.HYBillVO;
 /**
  * 是对现存量更新类的扩展 
  * 针对 业务单据更新现存量的操作
@@ -67,9 +74,8 @@ public abstract class BillStockBO extends StockBO{
 	  String changeClName=getClassName();
 	  if(changeClName==null || changeClName.length()==0)
 		  throw new Exception("没有注册现存量实现类的全路径");
-	 //
-	  
-	  
+	  //处理单据修改操作  删行数据 和 修改行数据
+	  dealMod(vos,pk_billtype);	  
 	  Class cl=Class.forName(changeClName);
 	  SuperVO[] numvos=SingleVOChangeDataBsTool.runChangeVOAry(vos, cl, className);
 	  if(numvos==null || numvos.length==0){
@@ -78,6 +84,56 @@ public abstract class BillStockBO extends StockBO{
 	  setAccountNumChange(numvos,pk_billtype);	
 	  updateStock(numvos);
   }
+  /**
+   * 处理单据修改操作  删行数据 和 修改行数据
+ * @param pk_billtype 
+   * @作者：mlr
+   * @说明：完达山物流项目 
+   * @时间：2012-6-28下午12:39:13
+   *
+   */
+	private void dealMod(AggregatedValueObject vos, String pk_billtype) throws Exception {
+		 if(vos.getParentVO()==null){
+			  throw new Exception("单据表头为空");
+		  }
+		 if(vos.getChildrenVO()==null || vos.getChildrenVO().length==0)
+			 throw new Exception("单据表体为空");
+		 SuperVO[] bodys=(SuperVO[]) ObjectUtils.serializableClone(vos.getChildrenVO());
+		 //存放修改 删除的vo
+		 List<SuperVO>  list=new ArrayList<SuperVO>();
+		 for(int i=0;i<bodys.length;i++){
+			 if(bodys[i].getStatus()==VOStatus.DELETED || bodys[i].getStatus()==VOStatus.UPDATED){
+				 list.add(bodys[i]);
+			 }			 
+		 }
+		 //存放修改删除的记录的   数据库对应记录 vo
+		 SuperVO[]  ovos=(SuperVO[]) java.lang.reflect.Array.newInstance(list.get(0).getClass(), list.size());
+		 for(int i=0;i<list.size();i++){
+			 List li=(List) getDao().retrieveByClause(list.get(0).getClass(),list.get(0).getPKFieldName()+" = '"+list.get(i).getPrimaryKey()+"'" );
+			 if(li!=null&&li.size()!=0)
+			 ovos[i]=(SuperVO) li.get(0);
+		 }
+		  Map<String,String> map=getTypetoChangeClass();
+		  String changeClName=getClassName();
+		  Class cl=Class.forName(changeClName);
+		  String className=map.get(pk_billtype);
+		  SuperVO headVo=(SuperVO) ObjectUtils.serializableClone(vos.getParentVO());
+		  SuperVO[] bodyVos=(SuperVO[]) ObjectUtils.serializableClone(ovos);
+		  AggregatedValueObject billvo=new  HYBillVO();
+		  billvo.setParentVO(headVo);
+		  billvo.setChildrenVO(bodyVos);	  
+		  SuperVO[] numvos=SingleVOChangeDataBsTool.runChangeVOAry(billvo, cl, className);
+		  if(getChangeNums()==null || getChangeNums().length==0)
+			  throw new  Exception("没有注册现存量变化字段");
+		  for(int i=0;i<numvos.length;i++){
+			  for(int j=0;j<getChangeNums().length;j++){
+				UFDouble uf= PuPubVO.getUFDouble_NullAsZero(numvos[i].getAttributeValue(getChangeNums()[j]));
+				numvos[i].setAttributeValue(getChangeNums()[j], new UFDouble(0).sub(uf));
+			  }
+		  }
+		  setAccountNumChange(numvos,pk_billtype);	
+		  updateStock(numvos);
+    }
 	/**
 	 * 设置现存量数据变化量
 	 * @param map
