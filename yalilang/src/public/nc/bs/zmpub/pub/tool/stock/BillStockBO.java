@@ -55,7 +55,7 @@ public abstract class BillStockBO extends StockBO{
    * 业务单据更新现存量 传来的是业务单据的数据
    * @param vos 业务单据数据
    * @param pk_billtype 更新现存量单据类型
- * @throws Exception 
+   * @throws Exception 
    */
   public void updateStockByBill(AggregatedValueObject vos,String pk_billtype) throws Exception{
 	  Map<String,String> map=getTypetoChangeClass();
@@ -66,7 +66,10 @@ public abstract class BillStockBO extends StockBO{
 		  throw new Exception(" 单据类型为:"+pk_billtype+" 没有注册交换类");	
 	  String changeClName=getClassName();
 	  if(changeClName==null || changeClName.length()==0)
-		  throw new Exception("没有注册现存量实现类的全路径");	
+		  throw new Exception("没有注册现存量实现类的全路径");
+	 //
+	  
+	  
 	  Class cl=Class.forName(changeClName);
 	  SuperVO[] numvos=SingleVOChangeDataBsTool.runChangeVOAry(vos, cl, className);
 	  if(numvos==null || numvos.length==0){
