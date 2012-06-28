@@ -21,6 +21,7 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 				sql = PowerGetTool.queryClassPowerSql(ClientEnvironment
 						.getInstance().getUser().getPrimaryKey());
 			} catch (Exception e) {
+				this.getClientUI().showErrorMessage(e.getMessage());		
 				e.printStackTrace();
 			}
 		return sql;
@@ -43,12 +44,12 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 	public String getHeadCondition() {
 			
 		return "  coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
-				" and wds_soorder_b.pk_invmandoc in ('"+getPowerSql()+"')";
+				" and wds_soorder_b.pk_invmandoc in ("+getPowerSql()+")";
 		
 	}	
 	public String getBodyContinos(){
 		return " isnull(wds_soorder_b.dr,0)=0 and coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0"+//安排数量-出库数量>0
-			" and pk_invmandoc in ('"+getPowerSql()+"')";
+			" and pk_invmandoc in ("+getPowerSql()+")";
 	}
 	@Override
 	public String getPk_invbasdocName() {

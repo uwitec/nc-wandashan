@@ -89,9 +89,9 @@ public class LoginInforHelper {
 	 */
 	public  String[] getSpaceByLogUser(String userid) throws Exception{
 		LoginInforVO infor = getLogInfor(userid);
-		if(infor.getType()==0)//如果是仓管员
+	//	if(infor.getType()==0)//如果是仓管员
 			return new String[]{infor.getSpaceid()};
-		return getSpaceByWhid(infor.getWhid());
+		//return getSpaceByWhid(infor.getWhid());
 	}
 	/**
 	 * 

@@ -100,7 +100,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
-        getBillCardPanelWrapper().getBillCardPanel().getBillModel().updateValue();
 	}
 	/**
 	 * 

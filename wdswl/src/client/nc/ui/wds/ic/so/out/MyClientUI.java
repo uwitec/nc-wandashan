@@ -239,6 +239,7 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 				}
 			}
 		}
+		super.beforeEdit(e);
 		return true;
 	}
 	

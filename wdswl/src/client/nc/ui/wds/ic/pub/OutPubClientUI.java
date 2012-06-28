@@ -374,8 +374,8 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 				}				
 			}
 		}
-   bm.updateValue();//更新刚刚设置的 bm 的值
    getBillCardPanel().getBillModel().execLoadFormula();
+  // this.updateUI();
   //for end mlr
 		
 	}

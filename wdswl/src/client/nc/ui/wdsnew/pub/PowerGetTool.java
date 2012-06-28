@@ -34,9 +34,13 @@ public class PowerGetTool {
 		if(pk_user==null || pk_user.length()==0)
 			throw new Exception("操作员为空");
 		//如果不是报关员 报错
-		if(getLoginInfor().getLogInfor(pk_user).getType()!=0){
-			throw new Exception("该操作员不是报管员");
+		if(getLoginInfor().getLogInfor(pk_user)==null){
+			throw new Exception("该操作员没有绑定货位");
 		}
+		
+//		if(getLoginInfor().getLogInfor(pk_user).getType()!=0){
+//			throw new Exception("该操作员不是报管员");
+//		}
 		String[] pk_cargdocs=getLoginInfor().getSpaceByLogUser(pk_user);
 		if(pk_cargdocs==null ||pk_cargdocs.length==0)
 			throw new Exception("该操作员没有绑定货位");
