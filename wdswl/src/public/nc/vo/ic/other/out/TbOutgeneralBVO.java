@@ -1576,4 +1576,55 @@ public class TbOutgeneralBVO extends SuperVO {
 		this.isxnap = isxnap;
 	}
 	
+	/***************货位调整单TransferBVO*****************/
+	private String pk_cargdoc2;//调入货位
+	private String vlastbilltype;// 上层单据类型
+	private String vlastbillid;// 上层单据ID
+	private String vlastbillrowid;// 上层单据RowID
+	private String vsourcebilltype;// 来源单据类型
+	private String vsourcebillid;// 来源单据ID
+	private String vsourcebillrowid;// 来源单据RowID
+	public String getPk_cargdoc2() {
+		return pk_cargdoc2;
+	}
+	public void setPk_cargdoc2(String pk_cargdoc2) {
+		this.pk_cargdoc2 = pk_cargdoc2;
+	}
+	public String getVlastbilltype() {
+		return vlastbilltype;
+	}
+	public void setVlastbilltype(String vlastbilltype) {
+		this.vlastbilltype = vlastbilltype;
+	}
+	public String getVlastbillid() {
+		return vlastbillid;
+	}
+	public void setVlastbillid(String vlastbillid) {
+		this.vlastbillid = vlastbillid;
+	}
+	public String getVlastbillrowid() {
+		return vlastbillrowid;
+	}
+	public void setVlastbillrowid(String vlastbillrowid) {
+		this.vlastbillrowid = vlastbillrowid;
+	}
+	public String getVsourcebilltype() {
+		return vsourcebilltype;
+	}
+	public void setVsourcebilltype(String vsourcebilltype) {
+		this.vsourcebilltype = vsourcebilltype;
+	}
+	public String getVsourcebillid() {
+		return vsourcebillid;
+	}
+	public void setVsourcebillid(String vsourcebillid) {
+		this.vsourcebillid = vsourcebillid;
+	}
+	public String getVsourcebillrowid() {
+		return vsourcebillrowid;
+	}
+	public void setVsourcebillrowid(String vsourcebillrowid) {
+		this.vsourcebillrowid = vsourcebillrowid;
+	}
+	/***************货位调整单TransferBVO*****************/
 }
