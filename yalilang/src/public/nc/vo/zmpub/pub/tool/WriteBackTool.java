@@ -1,6 +1,9 @@
 package nc.vo.zmpub.pub.tool;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.jdt.internal.compiler.flow.FinallyFlowContext;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.jdbc.framework.processor.ArrayProcessor;
@@ -55,11 +58,18 @@ public class WriteBackTool{
 	public static void writeBack(SuperVO[] vos,String soutablename,String soutableidname,String[] fieldnames,String[] backfieldnames)throws Exception{
 		if(vos == null || vos.length == 0)
 			return;
-		//区分回写的vo类型 
-		splitSetMap(vos,soutablename,soutableidname,fieldnames,backfieldnames);
-		//进行数据的回写
-		writeBackSou();
-		clearMap();
+		clearMap1();
+		try {
+			splitSetMap(vos, soutablename, soutableidname, fieldnames,
+					backfieldnames);
+			// 进行数据的回写
+			writeBackSou();
+		} catch (Exception e) {
+			clearMap();
+			throw new Exception(e.getMessage());
+		}finally{
+			clearMap();
+		}
 	}
 
 	/**
@@ -80,6 +90,7 @@ public class WriteBackTool{
 			String[] fieldnames,
 			String[] backfieldnames,
 			String[] checkfieldnames)throws Exception{
+		clearMap1();
 		//区分回写的vo类型 
 		splitSetMap(vos,soutablename,soutableidname,fieldnames,backfieldnames);
 		//进行数据的回写
@@ -95,6 +106,11 @@ public class WriteBackTool{
 		setVsourcebillrowid("vsourcebillrowid");//设置为默认值
 		setVsourcebillid("vsourcebillid");
 		setVsourcebilltype("vsourcebilltype");
+	}
+	private static void clearMap1(){
+		ladd.clear();
+		ledit.clear();	
+		ldel.clear();	
 	}
 	/**
 	 * 进行数据的回写

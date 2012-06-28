@@ -65,7 +65,7 @@ public class WriteBackVO implements Serializable{
 			
 			queryOldSql.append( numsnames1[i]);
 			if (i < numsnames1.length - 1) {
-				writeBackSql.append(" ,");
+				queryOldSql.append(" ,");
 			}
 		}
 		queryOldSql.append(" from "+tablename+" ");
