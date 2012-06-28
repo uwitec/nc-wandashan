@@ -50,14 +50,15 @@ public class N_WDS8_DELETE extends AbstractCompiler2 {
 			// 进行数据回写
 			OtherOutBO bo = new OtherOutBO();
 			bo.writeBack(billVo, IBDACTION.DELETE);
+			// 更新现存量
+			getStock().updateStockByBill(vo.m_preValueVo,
+					WdsWlPubConst.BILLTYPE_SALE_OUT_1);
 			// 进行单据保存
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);
 
-			// 更新现存量
-			getStock().updateStockByBill(vo.m_preValueVo,
-					WdsWlPubConst.BILLTYPE_SALE_OUT_1);
+		
 			// CanelDeleteWDF pu=new CanelDeleteWDF();
 			// pu.canelDeleteWDF(vo.m_preValueVo, vo.m_operator,
 			// vo.m_currentDate);

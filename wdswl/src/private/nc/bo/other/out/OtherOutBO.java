@@ -71,6 +71,7 @@ public class OtherOutBO {
 								"nassoutnum" });
 			}
 			if(sourcetype.equalsIgnoreCase(WdsWlPubConst.WDS5)){
+				//noutnumnoutassistnum
 				WriteBackTool.writeBack(bodys, "wds_soorder_b",
 						"pk_soorder_b", new String[] { "noutnum",
 								"noutassistnum" }, new String[] { "noutnum",

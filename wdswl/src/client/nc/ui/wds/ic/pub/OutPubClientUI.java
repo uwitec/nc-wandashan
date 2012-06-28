@@ -18,6 +18,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.ic.other.out.BillField;
 import nc.ui.wl.pub.MutiChildForOutInUI;
+import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
@@ -205,53 +206,11 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	public void setDefaultData() throws Exception {
 		super.setDefaultData();
 	}
-	/**
-	 * 获得界面变化数据VO。 创建日期：(2004-1-7 10:01:01)
-	 *
-	 * @return nc.vo.pub.AggregatedValueObject
-	 * @exception java.lang.Exception
-	 *                异常说明。
-	 */
-//	public AggregatedValueObject getChangedVOFromUI()
-//	throws java.lang.Exception {
-//		MyBillVO billvo = (MyBillVO)this.getBillCardWrapper().getChangedVOFromUI();
-//		MyBillVO billvo2 = (MyBillVO)this.getBillCardWrapper().getBillVOFromUI();
-//		if(getBillOperate() == IBillOperate.OP_ADD)
-//			billvo = billvo2;
-//		TbOutgeneralBVO[] bodys = (TbOutgeneralBVO[])billvo.getChildrenVO();
-//
-//		if(bodys == null || bodys.length==0)
-//			return billvo;
-//		if(trayInfor == null)
-//			return billvo;
-//		String key = null;
-//		for(TbOutgeneralBVO body:bodys){
-//			key = body.getCrowno();
-//			if(trayInfor.containsKey(key)){
-//				body.setTrayInfor(trayInfor.get(key));
-//			}
-//		}
-//		billvo.setOUserObj(getLockTrayInfor());//设置虚拟托盘解除绑定信息
-//		return billvo;
-//	}
-	
 	@Override
 	protected IBillField createBillField() {
 		// TODO Auto-generated method stub
 		return new BillField();
 	}
-	
-//	public void afterEdit(nc.ui.pub.bill.BillEditEvent e) {
-//		if(e.getPos() == BillItem.BODY){
-//			String key = e.getKey();
-//			int row = e.getRow();
-//			if("nshouldoutnum".equalsIgnoreCase(key)||"nshouldoutassistnum".equalsIgnoreCase(key)){
-//				getBillListPanel().getBodyBillModel().setValueAt(null, row, "noutnum");
-//				getBillListPanel().getBodyBillModel().setValueAt(null, row, "noutassistnum");
-//			}
-//		}
-//		super.afterEdit(e);
-//	}
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		try{
@@ -345,30 +304,42 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 		}
 		if(vos.size()==1){
 			bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+			setDate(vos.get(0).getWhs_batchcode(),row);
+			bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
 			bm.setValueAt(vos.get(0).getWhs_omnum(), row, "noutassistnum");//设置实发辅数量  
 		}else{
 			//最后一行
 			if(row==bm.getRowCount()-1){
 				//处理第一行
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+				setDate(vos.get(0).getWhs_batchcode(),row);
+				bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
+
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
 				   bm.addLine();
 				   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
 				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+				   setDate(vos.get(i).getWhs_batchcode(),row+i);
+					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "vuserdef9");
+
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
 				}
 			}else{
 				//处理第一行
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
+				setDate(vos.get(0).getWhs_batchcode(),row);
+				bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
 				   bm.insertRow(row+i);
 				   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
 				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
+				   bm.setValueAt(vos.get(i).getSs_pk(), row+i, "vuserdef9");
+				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
 				}				
@@ -380,7 +351,23 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 		
 	}
 
-
+    /**
+     * 设置生产失效日期
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-6-28下午02:07:45
+     * @param whs_batchcode
+     * @param row
+     * @throws UifException 
+     */
+	private void setDate(String va, int row)  {
+	    //如果批次号输入格式正确就给生产日期赋值
+		String year=va.substring(0,4);
+		String month=va.substring(4,6);
+		String day=va.substring(6,8);
+		String startdate=year+"-"+month+"-"+day;	
+		getBillCardPanel().setBodyValueAt(startdate, row, "vuserdef7");		
+	}
 	public void afterHeadCargDoc(Object pk_cargdoc){
 		//清空库管员
 		getBillCardPanel().setHeadItem("cwhsmanagerid", null);

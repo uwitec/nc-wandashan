@@ -7,6 +7,7 @@ import java.util.Map;
 import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.scm.util.ObjectUtils;
+import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.lang.UFDouble;
@@ -80,6 +81,8 @@ public class PickTool implements Serializable{
 			 for(int j=0;j<li.size();j++){
 				 TbOutgeneralBVO vo=(TbOutgeneralBVO) ObjectUtils.serializableClone(bvos[i]);
 				 vo.setVbatchcode(li.get(j).getWhs_batchcode());//设置批次
+				 vo.setVuserdef7(getDate(li.get(j).getWhs_batchcode()));//设置生成日期
+				 vo.setVuserdef9(li.get(j).getSs_pk());//设置存货状态
 				 vo.setAttributeValue("nshouldoutassistnum", li.get(j).getAttributeValue("whs_omnum"));//设置应发辅数量
 				 vo.setAttributeValue("noutassistnum", li.get(j).getAttributeValue("whs_oanum"));//设置实发辅数量
 				 list.add(vo);
@@ -87,6 +90,23 @@ public class PickTool implements Serializable{
 		   }	   
 		}
 		return list.toArray(new TbOutgeneralBVO[0]);		
+	}
+	 /**
+     * 设置生产失效日期
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-6-28下午02:07:45
+     * @param whs_batchcode
+     * @param row
+     * @throws UifException 
+     */
+	private String getDate(String va)  {
+	    //如果批次号输入格式正确就给生产日期赋值
+		String year=va.substring(0,4);
+		String month=va.substring(4,6);
+		String day=va.substring(6,8);
+		String startdate=year+"-"+month+"-"+day;	
+	    return startdate;
 	}
 	/**
 	 * 前台必须远程调用 (查询数据库)
