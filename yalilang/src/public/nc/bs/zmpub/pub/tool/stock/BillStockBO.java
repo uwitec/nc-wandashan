@@ -72,10 +72,12 @@ public abstract class BillStockBO extends StockBO{
 	  String changeClName=getClassName();
 	  if(changeClName==null || changeClName.length()==0)
 		  throw new Exception("没有注册现存量实现类的全路径");
-	  //处理单据修改操作  删行数据 和 修改行数据
-	  dealMod(vos,pk_billtype);	  
+	  //处理单据修改操 修改行数据  处理单据修改操 删行数据
+	  dealMod(vos,pk_billtype);	
 	  Class cl=Class.forName(changeClName);
-	  SuperVO[] numvos=SingleVOChangeDataBsTool.runChangeVOAry(vos, cl, className);
+	  //过滤掉删除行
+	  AggregatedValueObject billvo= filterDel(vos);
+	  SuperVO[] numvos=SingleVOChangeDataBsTool.runChangeVOAry(billvo, cl, className);
 	  if(numvos==null || numvos.length==0){
 		  return;
 	  }
@@ -83,7 +85,30 @@ public abstract class BillStockBO extends StockBO{
 	  updateStock(numvos);
   }
   /**
-   * 处理单据修改操作  删行数据 和 修改行数据
+   * 过滤掉删除行
+ * @throws Exception 
+   * @作者：mlr
+   * @说明：完达山物流项目 
+   * @时间：2012-6-28下午05:20:24
+   *
+   */
+  private AggregatedValueObject filterDel(AggregatedValueObject vos) throws Exception {
+	if(vos==null || vos.getParentVO()==null || vos.getChildrenVO()==null || vos.getChildrenVO().length==0)
+		throw new Exception("数据为空");
+	AggregatedValueObject billvo=(AggregatedValueObject) ObjectUtils.serializableClone(vos);
+	SuperVO[] bvos=(SuperVO[]) billvo.getChildrenVO();
+	List<SuperVO>  list=new ArrayList<SuperVO>();
+	for(int i=0;i<bvos.length;i++){
+		if(bvos[i].getStatus()!=VOStatus.DELETED){
+			list.add(bvos[i]);
+		}
+	}
+	billvo.setChildrenVO(list.toArray((SuperVO[]) java.lang.reflect.Array.newInstance(bvos[0].getClass(), 0))) ;	
+	return billvo;
+  }
+/**
+   * 处理单据修改操作   修改行数据
+   * 处理单据修改操作    删行数据
  * @param pk_billtype 
    * @作者：mlr
    * @说明：完达山物流项目 
@@ -100,10 +125,12 @@ public abstract class BillStockBO extends StockBO{
 		 //存放修改 删除的vo
 		 List<SuperVO>  list=new ArrayList<SuperVO>();
 		 for(int i=0;i<bodys.length;i++){
-			 if(bodys[i].getStatus()==VOStatus.DELETED || bodys[i].getStatus()==VOStatus.UPDATED){
+			 if(bodys[i].getStatus()==VOStatus.UPDATED || bodys[i].getStatus()==VOStatus.DELETED){
 				 list.add(bodys[i]);
 			 }			 
 		 }
+		 if(list==null|| list.size()==0)
+			 return ;
 		 //存放修改删除的记录的   数据库对应记录 vo
 		 SuperVO[]  ovos=(SuperVO[]) java.lang.reflect.Array.newInstance(list.get(0).getClass(), list.size());
 		 for(int i=0;i<list.size();i++){
@@ -132,6 +159,7 @@ public abstract class BillStockBO extends StockBO{
 		  setAccountNumChange(numvos,pk_billtype);	
 		  updateStock(numvos);
     }
+
 	/**
 	 * 设置现存量数据变化量
 	 * @param map
