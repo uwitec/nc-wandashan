@@ -492,7 +492,7 @@ private static Map<String,String> custNameInfor = new HashMap<String, String>();
 	/**
 	 * 
 	 * @author zhf
-	 * @说明：（鹤岗矿业）公用组件 返回传入单据vo 的表头vo
+	 * @说明：（鹤岗矿业）公用组件 返回传入单据vo 的表体vo
 	 * 2011-5-5上午10:17:20
 	 * @param billvos  单据vo 数组
 	 * @return

@@ -1,23 +1,15 @@
 package nc.ui.dm.so.deal;
-
-import java.awt.Container;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UILabel;
-import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRadioButton;
 import nc.ui.pub.query.QueryConditionClient;
-import nc.ui.trade.query.HYQueryDLG;
-
 public class SoDealQryDlg extends QueryConditionClient {
 	private static final long serialVersionUID = 1L;
 	
 	UIRadioButton m_rbclose = null;
 	UIRadioButton m_rbopen = null;
-//	UIRadioButton m_rbmny = null;
 	
 	public SoDealQryDlg() {
-//		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
 		super();
 		getConditionDatas();
 		init();
@@ -47,17 +39,10 @@ public class SoDealQryDlg extends QueryConditionClient {
 		UILabel label3 = new UILabel("已关闭");
 		label3.setBounds(146, 95, 100, 25);
 
-//		m_rbmny = new UIRadioButton();
-//		m_rbmny.setBounds(130, 125, 16, 16);
-//		
-//		UILabel label4 = new UILabel("专项资金计划");
-//		label4.setBounds(146, 125, 100, 25);
-
 		javax.swing.ButtonGroup buttonGroup = new javax.swing.ButtonGroup();
 		buttonGroup.add(m_rbopen);
 		buttonGroup.add(m_rbclose);
 		
-//		buttonGroup.add(m_rbmny);
 
 		getUIPanelNormal().add(label1);
 		getUIPanelNormal().add(label2);
@@ -65,7 +50,6 @@ public class SoDealQryDlg extends QueryConditionClient {
 //		getUIPanelNormal().add(label4);
 		getUIPanelNormal().add(m_rbopen);
 		getUIPanelNormal().add(m_rbclose);		
-//		getUIPanelNormal().add(m_rbmny);
 	}
 
 }

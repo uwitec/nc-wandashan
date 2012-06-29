@@ -1,7 +1,5 @@
 package nc.ui.dm.so.deal;
-
 import javax.swing.JComponent;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
@@ -23,12 +21,9 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
  * 销售计划安排
- * 
  * @author zhf
- * 
  */
 public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEditListener2 {
 
@@ -64,11 +59,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			"打开",
 			"打开", 2,
 			"打开");
-//	private ButtonObject m_btnXnDeal = new ButtonObject(
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL, 2,
-//			WdsWlPubConst.DM_PLANDEAL_BTNTAG_XNDEAL);
-
 	protected ClientEnvironment m_ce = null;
 	protected ClientLink cl = null;
 	private SoDealEventHandler event = null;
@@ -286,13 +276,11 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void onButtonClicked(ButtonObject btn) {
-		// TODO Auto-generated method stub
 		event.onButtonClicked(btn.getCode());
 	}
 	

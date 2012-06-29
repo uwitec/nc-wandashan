@@ -53,11 +53,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		getDataPane().addSortRelaObjectListener2(this);
 		
 	}
-	
-//	private BillModel getHeadDataPane(){
-//		return ui.getPanel().getHeadBillModel();
-//	}
-	
 	private BillModel getBodyDataPane(){
 		return ui.getPanel().getBodyBillModel();
 	}
@@ -171,10 +166,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			m_qrypanel = new SoDealQryDlg();
 			m_qrypanel.setTempletID(ui.cl.getCorp(), WdsWlPubConst.DM_SO_DEAL_NODECODE, ui.cl.getUser(), null);
 			m_qrypanel.hideUnitButton();
-//			m_qrypanel.hideNormal();
-			//			m_qrypanel.setConditionEditable("h.pk_corp",true);
-			//			m_qrypanel.setValueRef("h.pk_corp", new UIRefPane("公司目录"));
-			//			m_qrypanel.changeValueRef("h.pk_corp", new UIRefPane("公司目录"));
 		}
 		return m_qrypanel;
 	}
