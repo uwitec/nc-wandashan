@@ -194,7 +194,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	public void onQuery(){		
 		/**
 		 * 满足什么条件的计划呢？人员和仓库已经绑定了   登陆人只能查询他的权限仓库  总仓的人可以安排分仓的
-		 * 校验登录人是否为总仓库德人 如果是可以安排任何仓库的  转分仓  计划 
+		 * 校验登录人是否为总仓库的人 如果是可以安排任何仓库的  转分仓  计划 
 		 * 如果是分仓的人 只能 安排  本分仓内部的  发运计划
 		 * 
 		 */	
@@ -220,7 +220,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
-		setDate(billdatas);
+		setData(billdatas);
 	}
 	
 	private void onRefresh() throws Exception{
@@ -240,7 +240,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				showHintMessage("查询完成：没有满足条件的数据");
 				return;
 			}
-			setDate(billdatas);
+			setData(billdatas);
 		}
 		showHintMessage("操作完成");
 	}
@@ -252,7 +252,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	 * @时间：2011-11-10下午11:57:53
 	 * @param billdatas
 	 */
-	void setDate(SoDealVO[] billdatas ){
+	void setData(SoDealVO[] billdatas ){
 		CircularlyAccessibleValueObject[][]  voss = SplitBillVOs.getSplitVOs(billdatas, SoDeHeaderVo.split_fields);
 		if(voss == null || voss.length ==0)
 			return ;
@@ -372,21 +372,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		}
 		//安排  安排前   数据校验:赠品单不能被拆分
 		checkIsGiftSpilt((SoDealBillVO[])newVos);
-		ArrayList<String> corder_bids = new ArrayList<String>();
-		for(int i=0;i<ldata.size();i++){
-			String corder_bid = (String) ldata.get(i).getAttributeValue("corder_bid");
-			if(corder_bids.contains(corder_bid))
-				continue;
-			corder_bids.add(corder_bid);
-		}
-		List<SoDealVO > left = new ArrayList<SoDealVO>();
-		for(SoDealVO buf:m_billdatas){
-			String key = buf.getCorder_bid();
-			if(corder_bids.contains(key))
-				continue;
-			left.add(buf);
-			
-		}
 		try{
 			for(SuperVO vo:ldata){
 				((SoDealVO)vo).validataOnDeal();
