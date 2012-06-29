@@ -4,6 +4,7 @@ import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
@@ -132,24 +133,31 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	private class BodyEditListener  implements BillEditListener,BillEditListener2{
 		public void afterEdit(BillEditEvent e) {
 			String key  = e.getKey();//不允许输入负数
-			Object value = e.getValue();
+			
+			int row =e.getRow();
 			if("nassnum".equalsIgnoreCase(key)){
-				UFDouble num = PuPubVO.getUFDouble_NullAsZero(value);
+				UFDouble num = PuPubVO.getUFDouble_NullAsZero(getPanel().getBodyBillModel().getValueAt(row, "nassnum"));
 				if(num.doubleValue() <0){
 					showWarningMessage("不允许安排负数");
 					getPanel().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
 					return;
 				}
-			}else if("nnum".equalsIgnoreCase(key)){
-				UFDouble num = PuPubVO.getUFDouble_NullAsZero(value);
-				if(num.doubleValue() <0){
-					showWarningMessage("不允许安排负数");
-					getPanel().getBodyBillModel().setValueAt(e.getOldValue(), e.getRow(), key);
+                //安排辅数量 编辑后 拆行 for add mlr 
+				UFDouble oldvalue = e.getOldValue() == null ? new UFDouble(0) : (UFDouble)e.getOldValue();
+				if(num == null || num.doubleValue() == 0
+						|| num.doubleValue() > oldvalue.doubleValue()){
+					MessageDialog.showHintDlg(getPanel(), "错误", "所输入的值错误,必须比之前的值要小!");
+					getPanel().getBodyBillModel().setValueAt(oldvalue, row, "nassnum");
+					getPanel().getBodyBillModel().execEditFormulasByKey(row, "nassnum");
 					return;
 				}
+				String tablecode=getPanel().getChildListPanel().getTableCode();
+			    getPanel().getBodyScrollPane(tablecode).copyLine();
+			    getPanel().getBodyScrollPane(tablecode).pasteLine();
+			    getPanel().getBodyBillModel().setValueAt(oldvalue.sub(num), row, "nassnum");
+			    getPanel().getBodyBillModel().execEditFormulasByKey(row, "nassnum");			
 			}
 		}
-
 		public void bodyRowChange(BillEditEvent e) {
 			
 		}
