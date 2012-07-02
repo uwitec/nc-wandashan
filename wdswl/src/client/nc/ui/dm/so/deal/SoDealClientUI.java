@@ -170,18 +170,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 				}else{
 					return true;
 				}
-			}else if("nnum".equalsIgnoreCase(key)){
-				if(isGift()){
-					return false;
-				}else{
-					return true;
-				}
-			}else if("disdate".equalsIgnoreCase(key)){
-			
-					return true;
-				
 			}
-			return false;
+			return true;
 		}
 		/**
 		 * 

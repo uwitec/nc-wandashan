@@ -75,7 +75,7 @@ public class SoDealVO extends SuperVO{
 	private String cprojectid;
 	// 收货地区
 	private String creceiptareaid;
-	private String vdef1;
+	private String vdef1;//存货状态主键
 	private String vdef2;
 	private String vdef3;
 	private String vdef4;

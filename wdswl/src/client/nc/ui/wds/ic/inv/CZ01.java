@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.inv;
 
 import nc.ui.bd.ref.AbstractRefModel;
+import nc.ui.pub.ClientEnvironment;
 /**
  * 
  * @author Administrator
@@ -73,7 +74,7 @@ public class CZ01 extends AbstractRefModel{
 		return m_sTableName;
 	}
 	public String getWherePart() {
-		return " isnull(dr,0) = 0";
+		return " isnull(dr,0) = 0 and pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'";
 	}
 
 }
