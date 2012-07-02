@@ -9,9 +9,11 @@ import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.FilterNullBody;
+import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -20,16 +22,18 @@ import nc.vo.pub.VOStatus;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.VOUtil;
+import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class SoDealEventHandler implements BillEditListener,IBillRelaSortListener2{
 
-
+	
 	private SoDealClientUI ui = null;
 	private SoDealQryDlg m_qrypanel = null;
 	
@@ -37,6 +41,16 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	//数据缓存
 	private SoDealVO[] m_billdatas = null;
 	private String whereSql = null;
+	
+	private BillStockBO1 stock=null;
+	
+	public BillStockBO1 getStock(){
+		if(stock ==null){
+			stock =new BillStockBO1();
+		}
+		return stock ;
+	}
+	
 //	private List<SoDealVO> lseldata = new ArrayList<SoDealVO>();
 	
 	UFBoolean getOrderType(){
@@ -211,9 +225,45 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
+		try {
+			setStock(billdatas);
+		} catch (Exception e) {
+			e.printStackTrace();
+			showErrorMessage("设置库存量异常");
+			return ;
+		}
 		setData(billdatas);
 	}
-	
+	/**
+	 * 设置先存量信息
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-2下午01:31:22
+	 * @param billdatas
+	 * @throws Exception 
+	 */
+	private void setStock(SoDealVO[] billdatas) throws Exception {
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		//获得现存量
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getStock().queryStockCombinForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
+				billdatas[i].setNstorenumout(uf1);
+			}
+		}
+	}
+
 	private void onRefresh() throws Exception{
 		SoDealVO[] billdatas = null;
 		clearData();
