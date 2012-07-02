@@ -1,5 +1,4 @@
 package nc.vo.wdsnew.pub;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +6,6 @@ import nc.bs.zmpub.pub.tool.stock.BillStockBO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.zmpub.pub.tool.CombinVO;
 /**
  * 完达山项目 业务单据先存量更新类
  * 其他出库 其他入库 调拨出库 调拨入库 都通过该入口 更新现存量
