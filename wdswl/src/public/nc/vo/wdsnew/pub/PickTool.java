@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import nc.bs.wdsnew.pub.BillStockBO1;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.scm.util.ObjectUtils;
 import nc.uif.pub.exception.UifException;
