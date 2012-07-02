@@ -60,7 +60,7 @@ public class TbStockstaffVO extends SuperVO {
 	public static final String ST_DEF8 = "st_def8";
 	public static final String ST_DEF5 = "st_def5";
 	
-	public static String[] uniquecheckfields = {"pk_corp","pk_stordoc","pk_cargdoc","cuserid"};//货位人员绑定维度，公司-仓库-货位-人员//add by yf 2012-06-26
+	public static String[] uniquecheckfields = {"pk_corp","cuserid"};//货位人员绑定维度，公司+人员//add by yf 2012-06-26
 
 	/**
 	 * 属性st_def3的Getter方法.

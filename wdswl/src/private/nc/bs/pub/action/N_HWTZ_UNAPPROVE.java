@@ -4,6 +4,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.transfer.TransferDMO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
@@ -28,6 +29,8 @@ public class N_HWTZ_UNAPPROVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
+			TransferDMO bo = new TransferDMO();
+			bo.beforeUnApprove(this.getVo().getParentVO().getPrimaryKey());
 			procUnApproveFlow(vo);
 			Object retObj = runClass("nc.bs.wl.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",

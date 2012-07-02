@@ -1,5 +1,6 @@
 package nc.ui.wds.ic.other.out;
 import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -16,12 +17,9 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
-import nc.ui.wds.w8004040204.ssButtun.ckmxBtn;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
-import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
-import nc.vo.ic.pub.BillTypeConst;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
@@ -405,12 +403,20 @@ public class MyClientUI extends OutPubClientUI implements
 		redSoorder.setBtnName("采购取样");
 		redSoorder.setBtnChinaName("采购取样");
 		addPrivateButton(redSoorder);
+		
+		ButtonVO btransfer = new ButtonVO();
+		btransfer.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.RefHWTZ);
+		btransfer.setBtnCode(null);
+		btransfer.setBtnName("货位调整单");
+		btransfer.setBtnChinaName("货位调整单");
+		addPrivateButton(btransfer);
+		
 		ButtonVO refbill = ButtonVOFactory.getInstance().build(
 				IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT,
 				IBillOperate.OP_INIT });
 		refbill.setChildAry(new int[] { soOrder.getBtnNo(),
-				redSoorder.getBtnNo() });
+				redSoorder.getBtnNo(),btransfer.getBtnNo() });
 		addPrivateButton(refbill);
 	}
 

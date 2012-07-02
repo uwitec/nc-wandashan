@@ -30,4 +30,6 @@ package nc.ui.wds.w80020206.buttun0206;
 	 	public final static int all_not_selected=208;//全消
 	 	
 	 	public final static int Reduc_lastmonth= 209;//冲上月欠发
+	 	
+		public final static int RefHWTZ = 225;//参照货位调整单 add by yf 2012-06-29
   }

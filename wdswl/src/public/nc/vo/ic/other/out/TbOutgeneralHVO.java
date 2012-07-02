@@ -116,7 +116,7 @@ public class TbOutgeneralHVO extends SuperVO {
 	public String vuserdef1;
 	public String clastmodiid;
 	public String pk_calbody;
-	public String pk_defdoc1;
+	public String pk_defdoc1;//其他出库单参照货位调整单，存放调入货位
 	
 	public String pk_defdoc4;
 	public String pk_defdoc5;

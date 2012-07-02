@@ -32,7 +32,7 @@ public class BSCheck implements IBDBusiCheck{
 			TbStockstaffVO head=(TbStockstaffVO)vo.getParentVO();
 			if(head ==null)
 				return;
-			BsUniqueCheck.FieldUniqueCheck((SuperVO)head, TbStockstaffVO.uniquecheckfields,"该人员已经和当前货位绑定");//modify by yf 2012-06-26增加 操作员+货位的 唯一校验
+			BsUniqueCheck.FieldUniqueCheck((SuperVO)head, TbStockstaffVO.uniquecheckfields,"该人员已经绑定过货位");//modify by yf 2012-06-26增加 操作员+公司的 唯一校验
 		}
 	}
 

@@ -51,6 +51,8 @@ public class WdsWlPubConst {
    public static String  OTHER_OUT_REFWDS3_NODECODE="800404028WDS3";
    /**参照发运订单的节点标示 */
    public static String  OTHER_OUT_REFWDSC_NODECODE="800404028WDSC";
+   /**参照货位调整单的节点标示 */
+   public static String  OTHER_OUT_REFHWTZ_NODECODE="800404028HWTZ";//add by yf 2012-06-29
 	/**销售运单节点号 */
 	public static String DM_SO_ORDER_NODECODE="80060425";
 	/**销售订单安排节点号 */
@@ -316,6 +318,8 @@ public class WdsWlPubConst {
 	public static String WDSP="WDSP";
 	/**暂估记账 */
 	public static String WDSQ="WDSQ";
+	/**货位调整单**/
+	public static String HWTZ="HWTZ";//add by yf 2012-06-29
 	
 	//---------------仓储管理中涉及的 几个对话框注册模板类型
 //	出库单据  出库托盘指定

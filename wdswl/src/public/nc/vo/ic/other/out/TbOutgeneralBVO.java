@@ -48,7 +48,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String pk_defdoc10;
 	public String pk_defdoc6;
 	public String csourcebillbid;
-	public String pk_defdoc1;
+	public String pk_defdoc1;//表体调入货位
 	public UFDouble hsl;
 	public String pk_defdoc4;
 

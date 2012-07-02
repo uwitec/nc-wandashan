@@ -80,6 +80,12 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 				setInitWarehouse("srl_pk");
 				break;
+			case nc.ui.wds.w80020206.buttun0206.ISsButtun.RefHWTZ:
+				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.HWTZ);
+				onBillRef();	
+				getButtonManager().getButton(ISsButtun.zdqh).setEnabled(false);
+				getBillCardPanelWrapper().getBillCardPanel().getBodyItem("ss_state").setEdit(false);
+				break;
 			}
 	}
 	/**

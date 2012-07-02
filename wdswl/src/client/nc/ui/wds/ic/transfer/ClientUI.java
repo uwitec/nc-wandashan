@@ -48,7 +48,7 @@ public class ClientUI extends OutPubClientUI implements
 	}
 
 	public String getBillType() {
-		return "HWTZ";
+		return WdsWlPubConst.HWTZ;
 	}
 
 	protected void initSelfData() {
