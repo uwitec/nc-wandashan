@@ -21,6 +21,10 @@ import nc.vo.zmpub.pub.tool.CombinVO;
  * @author mlr
  */
 public abstract class BillStockBO extends StockBO{
+	   /**
+	    * 获得继承类的名字
+	    */
+	 public   abstract   String getThisClassName();
 	/**
 	 * 
 	 */
@@ -37,6 +41,7 @@ public abstract class BillStockBO extends StockBO{
     * @return Map<String,boolean[]> 
     * @throws Exception
     */
+   
    public abstract Map<String,UFBoolean[]> getTypetosetnum()throws Exception; 	
 	//抽象方法的扩展结束	
   /**
@@ -45,6 +50,7 @@ public abstract class BillStockBO extends StockBO{
    * @param pk_billtype 更新现存量单据类型
  * @throws Exception 
    */
+
   public void updateStockByBill(SuperVO[] vos,String pk_billtype) throws Exception{
 	  Map<String,String> map=getTypetoChangeClass();
 	  if(map==null || map.size()==0)
@@ -338,14 +344,14 @@ public abstract class BillStockBO extends StockBO{
 	 * @时间：2012-7-2下午12:25:52
 	 *
 	 */
-    public static ArrayList<SuperVO[]> queryStockDetailForClient(SuperVO[] vos) throws Exception{
+    public  ArrayList<SuperVO[]> queryStockDetailForClient(SuperVO[] vos) throws Exception{
 		 ArrayList<SuperVO[]> list=null;
     	try {
 			Class[] ParameterTypes = new Class[] { SuperVO[].class };
 			Object[] ParameterValues = new Object[] { vos };
 			Object o = LongTimeTask.calllongTimeService(
 					"zmpub", null, "正在查询...", 1,
-					"nc.bs.zmpub.pub.tool.stock.BillStockBO", null, "queryStockDetail",
+					getThisClassName(), null, "queryStockDetail",
 					ParameterTypes, ParameterValues);
 			if (o != null) {
 				list = (ArrayList<SuperVO[]>) o;
@@ -366,14 +372,14 @@ public abstract class BillStockBO extends StockBO{
      * @时间：2012-7-2下午12:27:29
      *
      */
- 	public static SuperVO[] queryStockCombinForClient(SuperVO[] vos) throws Exception {
+ 	public  SuperVO[] queryStockCombinForClient(SuperVO[] vos) throws Exception {
 		 SuperVO[] nvos=null;
 	    	try {
 				Class[] ParameterTypes = new Class[] { SuperVO[].class };
 				Object[] ParameterValues = new Object[] { vos };
 				Object o = LongTimeTask.calllongTimeService(
 						"zmpub", null, "正在查询...", 1,
-						"nc.bs.zmpub.pub.tool.stock.BillStockBO", null, "queryStockCombin",
+						getThisClassName(), null, "queryStockCombin",
 						ParameterTypes, ParameterValues);
 				if (o != null) {
 					nvos = (SuperVO[]) o;
@@ -391,14 +397,14 @@ public abstract class BillStockBO extends StockBO{
 	 * @param whereSql
 	 * @return
 	 */
-	public static  SuperVO[] queryStockForClient(String whereSql)throws Exception{
+	public   SuperVO[] queryStockForClient(String whereSql)throws Exception{
 		 SuperVO[] nvos=null;
 	    	try {
 				Class[] ParameterTypes = new Class[] { String.class };
 				Object[] ParameterValues = new Object[] { whereSql };
 				Object o = LongTimeTask.calllongTimeService(
 						"zmpub", null, "正在查询...", 1,
-						"nc.bs.zmpub.pub.tool.stock.BillStockBO", null, "queryStock",
+						getThisClassName(), null, "queryStock",
 						ParameterTypes, ParameterValues);
 				if (o != null) {
 					nvos = (SuperVO[]) o;
