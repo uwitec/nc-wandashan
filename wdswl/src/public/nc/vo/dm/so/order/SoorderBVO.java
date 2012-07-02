@@ -107,7 +107,7 @@ import nc.vo.wl.pub.WdsWlPubTool;
              public String vmemo;
              //来源单据号
              public String vsourcebillcode;
-             public String vdef1;
+             public String vdef1;//存货状态
              public String reserve3;
              //源头单据表体id
              public String csourcebillbid;

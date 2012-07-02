@@ -1,4 +1,5 @@
 package nc.vo.wdsnew.pub;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -6,6 +7,7 @@ import nc.bs.zmpub.pub.tool.stock.BillStockBO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.tool.CombinVO;
 /**
  * 完达山项目 业务单据先存量更新类
  * 其他出库 其他入库 调拨出库 调拨入库 都通过该入口 更新现存量
@@ -13,6 +15,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author mlr
  */
 public class BillStockBO1 extends BillStockBO{
+	
 	/**
 	 * 单据类型 ->交换类 对应关系
 	 */
@@ -102,5 +105,23 @@ public class BillStockBO1 extends BillStockBO{
 		
 		return def_fields;
 	}
+
+	@Override
+	public String getThisClassName() {
+		
+		return this.getClass().getName();
+	}
+	/**
+	    * 根据传入的现存量vo  取出维度 查询现存量   
+		 * SuperVO[]  存放每个查询维度查询出来的现存量(按查询维度合并后)
+	 * @throws Exception 
+	    * @作者：mlr
+	    * @说明：完达山物流项目 
+	    * @时间：2012-7-2下午12:27:29
+	    *
+	    */
+		public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
+			return super.queryStockCombin(vos);
+		}
 
 }
