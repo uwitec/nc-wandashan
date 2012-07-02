@@ -2,8 +2,8 @@ package nc.bs.zmpub.pub.tool.stock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import nc.bs.zmpub.pub.tool.SingleVOChangeDataBsTool;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.scm.util.ObjectUtils;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
@@ -12,6 +12,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.zmpub.pub.tool.CombinVO;
 /**
  * 是对现存量更新类的扩展 
  * 针对 业务单据更新现存量的操作
@@ -159,7 +160,126 @@ public abstract class BillStockBO extends StockBO{
 		  setAccountNumChange(numvos,pk_billtype);	
 		  updateStock(numvos);
     }
+	/**
+	 * 根据传入的现存量vo  取出维度 查询现存量   
+	 * ArrayList<SuperVO[]> 存放每个查询维度查询出来的现存量
+	 * @throws Exception 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-2下午12:25:52
+	 *
+	 */
+    public ArrayList<SuperVO[]> queryStockDetail(SuperVO[] vos) throws Exception{
+    	ArrayList<SuperVO[]> list=new ArrayList<SuperVO[]>();
+    	if(vos==null || vos.length==0)
+    		return null;
+    	
+    	for(int i=0;i<vos.length;i++){
+    		String whereSql=getWheresql(vos[i]);
+    		if(whereSql==null || whereSql.length()==0){
+    			list.add(null);
+    		}else{
+    			list.add(queryStock(whereSql));
+    		}	 		
+    	}
+      return list;	
+    }
+    
+   public  String getWheresql(SuperVO vos) throws Exception {
+	   if (vos == null)
+			return null;
+		String[] fields = getDef_Fields();
+		if (fields == null || fields.length == 0)
+			throw new Exception("没有注册现存量维度");
+		String wsql = null;
+		for (int i = 0; i < fields.length; i++) {
+			String value = PuPubVO.getString_TrimZeroLenAsNull(vos
+					.getAttributeValue(fields[i]));
+			if (value != null) {
+				if (wsql == null) {
+					wsql = fields[i] + " = '" + value + "'";
+				} else {
+					wsql = wsql + " and " + fields[i] + " = '" + value + "'";
+				}
+			}
+		}
+		if (wsql == null) {
+			return null;
+		} else {
+			wsql = wsql + " and isnull(dr,0)=0 and pk_corp='"
+					+ SQLHelper.getCorpPk() + "'";
+		}
+	  return wsql;
+	}
+/**
+    * 根据传入的现存量vo  取出维度 查询现存量   
+	 * SuperVO[]  存放每个查询维度查询出来的现存量(按查询维度合并后)
+ * @throws Exception 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    * @时间：2012-7-2下午12:27:29
+    *
+    */
+	public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
+		ArrayList<SuperVO> nlist = new ArrayList<SuperVO>();
+		ArrayList<SuperVO[]> list = queryStockDetail(vos);
+		if (vos == null || vos.length == 0)
+			return null;
+		if (list == null || list.size() == 0)
+			return null;
+		for (int i = 0; i < vos.length; i++) {
+			if (list.get(i) == null || list.get(i).length == 0) {
+				nlist.add(null);
+			} else {
+				SuperVO[] vss = list.get(i);
+				String[] conds = getConminFields(vos[i]);
+				if (conds == null || conds.length == 0) {
+					nlist.add(null);
+				} else {
+					SuperVO[] coms = (SuperVO[]) CombinVO.combinData(vss,
+							conds, getChangeNums(), vos[0].getClass());
+					if (coms == null || coms.length == 0) {
+						nlist.add(null);
+					} else {
+						nlist.add(coms[0]);
+					}
 
+				}
+
+			}
+		}
+		if(nlist==null || nlist.size()==0)
+			return null;
+		return nlist.toArray((SuperVO[]) java.lang.reflect.Array.newInstance(
+				vos[0].getClass(), 0));
+	}
+	
+	/**
+	 * 获得数据合并维度
+	 * @throws Exception 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-2下午12:52:49
+	 *
+	 */
+	public  String[] getConminFields(SuperVO vo) throws Exception {
+		ArrayList<String> list=new ArrayList<String>();
+		String[] fields =getDef_Fields();
+		   if(fields==null || fields.length==0)
+		   		throw new Exception("没有注册现存量维度");	
+		if(vo==null )
+			return null;
+		for(int i=0;i<fields.length;i++){
+			String value=PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(fields[i]));
+			if(value!=null){
+				list.add(fields[i]);
+			}
+		}
+		if(list==null || list.size()==0)
+			return null;
+	
+	  return list.toArray(new String[0]);
+}
 	/**
 	 * 设置现存量数据变化量
 	 * @param map
