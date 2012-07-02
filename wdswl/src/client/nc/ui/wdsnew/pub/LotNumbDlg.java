@@ -521,7 +521,7 @@ public class LotNumbDlg extends UIDialog implements java.awt.event.ActionListene
 			Class[] ParameterTypes = new Class[] { String.class };
 			Object[] ParameterValues = new Object[] { wheresql };
 			Object o = LongTimeTask.calllongTimeService("wds", this, "ÕýÔÚ²éÑ¯...",
-					1, "nc.bs.wdsnew.pub.BillStockBO1", null, "queryStock",
+					1, "nc.vo.wdsnew.pub.BillStockBO1", null, "queryStock",
 					ParameterTypes, ParameterValues);
 			if (o != null) {
 				vos = (StockInvOnHandVO[]) o;
