@@ -34,7 +34,7 @@ public class CHGWDS5TOWDS8 extends VOConversionUI{
 //				"H_vsourcebillcode->H_vbillno",// 来源单据号
 //				"H_csourcebillhid->H_pk_soorder",// 来源单据表头主键
 				
-				
+				"B_vuserdef9->B_vdef1",//存货状态
 				"B_csourcebillhid->B_pk_soorder",// 来源单据表头主键
 				"B_csourcebillbid->B_pk_soorder_b",// 来源单据表体主键
 				"B_vsourcebillcode->H_vbillno", // 来源单据号
