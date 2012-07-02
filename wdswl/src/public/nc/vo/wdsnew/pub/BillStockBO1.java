@@ -17,6 +17,10 @@ import nc.vo.zmpub.pub.tool.CombinVO;
 public class BillStockBO1 extends BillStockBO{
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6683129237534928560L;
+	/**
 	 * 单据类型 ->交换类 对应关系
 	 */
 	private Map<String ,String > typetoChangeclass=new HashMap<String, String>();
