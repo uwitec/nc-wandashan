@@ -19,6 +19,10 @@ import nc.vo.zmpub.pub.tool.CombinVO;
  * @author mlr
  */
 public abstract class BillStockBO extends StockBO{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3404341684522482080L;
 	//抽象方法的扩展开始
     /**
      * 单据类型 与 数据交换类 对应map
