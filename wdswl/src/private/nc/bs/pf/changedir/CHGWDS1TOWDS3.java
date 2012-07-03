@@ -121,7 +121,7 @@ public String[] getField() {
 			"B_vdef4->B_vdef4",
 			"B_vdef3->B_vdef3",
 			"B_vdef2->B_vdef2",
-			"B_vdef1->B_vdef1",
+			"B_vdef1->B_vdef1",//´æ»õ×´Ì¬
 			"B_vdef5->B_vdef5",
 			"B_vdef6->B_vdef6",
 			"B_vdef7->B_vdef7",

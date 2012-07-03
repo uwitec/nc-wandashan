@@ -62,7 +62,7 @@ public String[] getField() {
 			
 			"B_pk_invmandoc->B_cinventoryid",
 			"B_pk_invbasdoc->B_cinvbasdocid",
-			"B_vdef1->B_vdef1",
+			"B_vdef1->B_vdef1",//存货状态
 			"B_uint->B_cunitid",//主计量单位
 			"B_assunit->B_cpackunitid",//辅计量单位			
 			"B_picicode->B_cbatchid",//批次
