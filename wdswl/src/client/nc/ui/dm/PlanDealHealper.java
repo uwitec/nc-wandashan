@@ -1,8 +1,6 @@
 package nc.ui.dm;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.ToftPanel;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.vo.dm.PlanDealVO;
