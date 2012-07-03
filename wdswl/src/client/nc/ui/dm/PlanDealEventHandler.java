@@ -11,13 +11,16 @@ import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillRelaSortListener2;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
 import nc.vo.dm.PlanDealVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -39,6 +42,14 @@ public class PlanDealEventHandler implements BillEditListener,
 
 	}
 
+	private BillStockBO1 stock=null;
+	
+	public BillStockBO1 getStock(){
+		if(stock ==null){
+			stock =new BillStockBO1();
+		}
+		return stock ;
+	}
 	private BillModel getDataPane() {
 		return ui.getPanel().getHeadBillModel();
 	}
@@ -140,7 +151,43 @@ public class PlanDealEventHandler implements BillEditListener,
 					.getMessage()));
 			return;
 		}
+		try {
+			setStock(billdatas);
+		} catch (Exception e) {
+			e.printStackTrace();
+			showErrorMessage("设置库存量失败");
+			return;
+		}
 		setDataToUI(billdatas);
+	}
+	/**
+	 * 设置库存 量
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-3上午10:36:27
+	 * @param billdatas
+	 * @throws Exception 
+	 */
+	private void setStock(PlanDealVO[] billdatas) throws Exception {		
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		//获得现存量
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getStock().queryStockCombinForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
+				billdatas[i].setNstorenumout(uf1);
+			}
+		}
 	}
 	/**
 	 * 
