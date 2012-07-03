@@ -12,8 +12,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * 一般查询现存量 也通过该入口
  * @author mlr
  */
-public class BillStockBO1 extends BillStockBO{
-	
+public class BillStockBO1 extends BillStockBO{	
 	/**
 	 * 
 	 */
