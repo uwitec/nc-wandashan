@@ -9,7 +9,6 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.zmpub.pub.bill.DefBillManageUI;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -81,13 +80,11 @@ private LoginInforHelper helper = null;
 	@Override
 	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setDefaultData() throws Exception {
-		// TODO Auto-generated method stub
 		super.setDefaultData();
 		LoginInforVO infor = null;
 		try{

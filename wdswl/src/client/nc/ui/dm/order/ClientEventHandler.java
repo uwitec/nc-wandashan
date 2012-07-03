@@ -21,6 +21,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -45,11 +46,18 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		return queryDialog;
 	}
 
-//	@Override
-//	protected String getHeadCondition() {
-//		return null;
-//	}
 	
+	protected String getHeadCondition() {
+		// ¹«Ë¾
+		String whereSql=null;
+		whereSql=super.getHeadCondition();
+		if(whereSql==null || whereSql.length()==0){		
+			whereSql=" pk_billtype='"+WdsWlPubConst.WDS3+"'";
+		}else{
+			whereSql=whereSql+" and pk_billtype='"+WdsWlPubConst.WDS3+"'";
+		}		
+		return whereSql;
+	}
 	@Override
 	protected void onBoSave() throws Exception {
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("itransstatus", 1);

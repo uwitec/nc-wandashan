@@ -28,6 +28,7 @@ import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.pub.pf.BillSourceDLG;
 import nc.ui.pub.pf.PfUtilBO_Client;
 import nc.ui.querytemplate.IBillReferQuery;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.zmpub.pub.tool.LongTimeTask;
 import nc.vo.pub.AggregatedValueObject;
@@ -240,6 +241,43 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 	}
 
 
-	
+	/**
+	 * 根据主表获取子表数据
+	 * 
+	 * @param row
+	 *            选中的表头行
+	 */
+	public void loadBodyData(int row) {
+		try {
+			// 获得主表ID
+			String id = getbillListPanel().getHeadBillModel().getValueAt(row,
+					getpkField()).toString();
+			// 查询子表VO数组
+//			CircularlyAccessibleValueObject[] tmpBodyVo = PfUtilBO_Client
+//					.queryBodyAllData(getBillType(), id, getBodyCondition());
+		   
+			IControllerBase ctrl=getUIController();
+			if(ctrl==null){
+				return;
+			}
+			String sqlWhere=null;
+					
+			sqlWhere= sqlWhere +getpkField()+ " = '"+id+"' and isnull(dr,0=0)";
+			if(getBodyCondition()!=null){
+				sqlWhere=sqlWhere+" and "+getBodyCondition();
+			}
+			Class c=Class.forName(ctrl.getBillVoName()[2])	;
+			//查询表体数据
+			CircularlyAccessibleValueObject[] tmpBodyVo=HYPubBO_Client.queryByCondition(c, sqlWhere);
+			
+			// 表头界面数据加载前业务扩展
+		//	tmpBodyVo = beforeLoadBodyData(row, tmpBodyVo);
+
+			getbillListPanel().setBodyValueVO(tmpBodyVo);
+			getbillListPanel().getBodyBillModel().execLoadFormula();
+		} catch (Exception e) {
+			Logger.error(e.getMessage(), e);
+		}
+	}
 
 }

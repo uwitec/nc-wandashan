@@ -5,7 +5,6 @@ import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
 import nc.ui.trade.business.HYPubBO_Client;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.pub.CardPanelPRTS;
@@ -21,6 +20,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -44,11 +44,19 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		}
 		return queryDialog;
 	}
-
-//	@Override
-//	protected String getHeadCondition() {
-//		return null;
-//	}
+	
+	protected String getHeadCondition() {
+		// 公司
+		String whereSql=null;
+		whereSql=super.getHeadCondition();
+		if(whereSql==null || whereSql.length()==0){		
+			whereSql=" pk_billtype='"+WdsWlPubConst.WDSS+"'";
+		}else{
+			whereSql=whereSql+" and pk_billtype='"+WdsWlPubConst.WDSS+"'";
+		}		
+		return whereSql;
+	}
+	
 	
 	@Override
 	protected void onBoDel() throws Exception {
@@ -211,34 +219,34 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	@Override
 	public void onButton(ButtonObject bo){
 		
-	   // 冻结后 不允许单据修改的处理
-		Object o = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-				"fisended").getValueObject();
-		ButtonObject parentBtn = bo.getParent();
-		if (parentBtn != null ) {
-			int intParentBtn = Integer.parseInt(parentBtn.getTag());
-			if(IBillButton.Action == intParentBtn){
-				if (o != null && ((String) o).equalsIgnoreCase("true")) {
-					getBillUI().showErrorMessage("该单据已冻结不允许操作");
-					return;
-
-				}
-			}
-
-		} else {
-			Integer intbtn = Integer.valueOf(bo.getTag());
-			if (IBillButton.Edit == intbtn || IBillButton.Del == intbtn
-					|| IBillButton.Delete == intbtn
-					
-					|| ButtonCommon.TRAN_COL == intbtn) {
-				if (o != null && ((String) o).equalsIgnoreCase("true")) {
-					getBillUI().showErrorMessage("该单据已冻结不允许操作");
-					return;
-
-				}
-			}
-
-		}
+//	   // 冻结后 不允许单据修改的处理
+//		Object o = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+//				"fisended").getValueObject();
+//		ButtonObject parentBtn = bo.getParent();
+//		if (parentBtn != null ) {
+//			int intParentBtn = Integer.parseInt(parentBtn.getTag());
+//			if(IBillButton.Action == intParentBtn){
+//				if (o != null && ((String) o).equalsIgnoreCase("true")) {
+//					getBillUI().showErrorMessage("该单据已冻结不允许操作");
+//					return;
+//
+//				}
+//			}
+//
+//		} else {
+//			Integer intbtn = Integer.valueOf(bo.getTag());
+//			if (IBillButton.Edit == intbtn || IBillButton.Del == intbtn
+//					|| IBillButton.Delete == intbtn
+//					
+//					|| ButtonCommon.TRAN_COL == intbtn) {
+//				if (o != null && ((String) o).equalsIgnoreCase("true")) {
+//					getBillUI().showErrorMessage("该单据已冻结不允许操作");
+//					return;
+//
+//				}
+//			}
+//
+//		}
 		super.onButton(bo);
 	}
 	
