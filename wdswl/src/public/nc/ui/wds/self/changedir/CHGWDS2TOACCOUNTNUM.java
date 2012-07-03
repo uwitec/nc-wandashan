@@ -13,7 +13,7 @@ public class CHGWDS2TOACCOUNTNUM extends VOConversionUI{
 	public String[] getField() {
 		return new String[]{
 				 "H_pk_corp->H_pk_corp",
-				 "H_pk_customize1->H_cbodywarehouseid",
+				 "H_pk_customize1->H_pk_outwhouse",
 				 "H_pk_invmandoc->H_pk_invmandoc",
 				 "H_pk_invbasdoc->H_pk_invbasdoc",
 				 "H_ss_pk->H_vdef1"//´æ»õ×´Ì¬

@@ -12,14 +12,12 @@ import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
-import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 发运计划安排
  * @author mlr
  */
-public class PlanDealClientUI extends ToftPanel implements BillEditListener,
-BillEditListener2{
+public class PlanDealClientUI extends ToftPanel implements BillEditListener,BillEditListener2 {
 	private static final long serialVersionUID = 1L;
 	//定义按钮
 	private ButtonObject m_btnQry = new ButtonObject(WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY,WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY,2,WdsWlPubConst.DM_PLANDEAL_BTNTAG_QRY);
@@ -75,11 +73,10 @@ BillEditListener2{
 		initListener();	
 	}
 	private void initListener(){
-		getPanel().addEditListener(m_handler);	
+		// 表体编辑前后监听
 		getPanel().addBodyEditListener(this);
 		getPanel().getBodyScrollPane("body").addEditListener2(this);
-	}
-	
+}
 	private void setButton(){
 		ButtonObject[] m_objs = new ButtonObject[]{m_btnSelAll,m_btnSelno,m_btnQry,m_btnDeal
 				};
@@ -224,9 +221,10 @@ BillEditListener2{
 	public void bodyRowChange(BillEditEvent e) {
 		
 	}
-
 	public boolean beforeEdit(BillEditEvent e) {
+		// TODO Auto-generated method stub
 		return false;
 	}
+
 
 }

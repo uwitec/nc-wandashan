@@ -51,7 +51,7 @@ public class PlanDealEventHandler implements BillEditListener,
 		return stock ;
 	}
 	private BillModel getDataPane() {
-		return ui.getPanel().getHeadBillModel();
+		return ui.getPanel().getBodyBillModel();
 	}
 
 	public void onButtonClicked(String btnTag) {
@@ -175,7 +175,7 @@ public class PlanDealEventHandler implements BillEditListener,
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
 		}
 		//构造现存量查询条件
-		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
 		if(vos==null || vos.length==0)
 			return;
 		//获得现存量

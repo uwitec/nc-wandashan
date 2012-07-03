@@ -74,6 +74,9 @@ public class PlanOrderBO {
 		if(csourcetype==null){
 			return;
 		}
+		WriteBackTool.setVsourcebillid("csourcebillhid");
+		WriteBackTool.setVsourcebillrowid("csourcebillbid");
+		WriteBackTool.setVsourcebilltype("csourcetype");
 		if(ibdaction==IBDACTION.SAVE){
 		  if(csourcetype.equals(WdsWlPubConst.WDS1)){
 			  WriteBackTool.writeBack(bodys, "wds_sendplanin_b", "pk_sendplanin_b",
