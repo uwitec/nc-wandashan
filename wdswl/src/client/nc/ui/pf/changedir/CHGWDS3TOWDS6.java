@@ -49,7 +49,7 @@ public String[] getField() {
 			"B_csourcebillbid->B_pk_sendorder_b",
 			"B_vsourcebillcode->H_vbillno",
 			"B_csourcetype->H_pk_billtype",
-			
+			"B_vuserdef9->B_vdef1",//´æ»õ×´Ì¬
 			"B_cfirstbillhid->B_cfirstbillhid",
 			"B_cfirstbillbid->B_cfirstbillbid",
 			"B_cfirsttype->B_cfirsttype",
