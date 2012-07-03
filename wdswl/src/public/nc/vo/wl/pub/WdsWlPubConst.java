@@ -226,6 +226,8 @@ public class WdsWlPubConst {
 	public static String DM_PLAN_DEAL_BILLTYPE="WDS2";
 	/**发运订单 */
 	public static String WDS3="WDS3";
+	/**特殊订单 */
+	public static String WDSS="WDSS";
 	/**销售运单安排 */
 	public static String WDS4 = "WDS4";//销售计划安排  原版
 	public static String WDS4_2 = "WDS42";//销售计划安排2
