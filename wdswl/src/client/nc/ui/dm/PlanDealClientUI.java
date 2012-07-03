@@ -75,7 +75,7 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 	private void initListener(){
 		// 表体编辑前后监听
 		getPanel().addBodyEditListener(this);
-		getPanel().getBodyScrollPane("body").addEditListener2(this);
+		getPanel().getBodyScrollPane("wds_sendplanin_b").addEditListener2(this);
 }
 	private void setButton(){
 		ButtonObject[] m_objs = new ButtonObject[]{m_btnSelAll,m_btnSelno,m_btnQry,m_btnDeal
@@ -202,7 +202,7 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 				e1.printStackTrace();
 				showErrorMessage("获取现存量失败");
 			}
-			if (vos == null || vos.length == 0) {
+			if (vos == null || vos.length == 0 || vos[0]==null) {
 				getPanel().getBodyBillModel().setValueAt(null, row,
 						"nstorenumout");// 库存主数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
@@ -222,8 +222,7 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 		
 	}
 	public boolean beforeEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 

@@ -193,12 +193,9 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 	}
 
 
-	public String getPk_invbasdocName() {
-		return null;
-	}
-	public String getPk_invmandocName() {
-		return null;
-	}
+	public abstract String getPk_invbasdocName();
+
+	public abstract String getPk_invmandocName() ;
 	/**
 	 * "确定"按钮的响应，从界面获取被选单据VO
 	 */

@@ -225,7 +225,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 					e1.printStackTrace();
 					showErrorMessage("获取现存量失败");
 				}
-				if (vos == null || vos.length == 0) {
+				if (vos == null || vos.length == 0 || vos[0]==null) {
 					getPanel().getBodyBillModel().setValueAt(null, row,
 							"nstorenumout");// 库存主数量
 					getPanel().getBodyBillModel().setValueAt(null, row,

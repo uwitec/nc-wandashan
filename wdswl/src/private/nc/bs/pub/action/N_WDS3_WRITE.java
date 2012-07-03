@@ -39,8 +39,6 @@ try{
 			}
 			
 			PlanOrderBO bo=new PlanOrderBO();
-			//校验是否存在下游数据
-			bo.beforeUnDel(getVo());
 			//进行数据回写
 			bo.writeBack(getVo(), IBDACTION.SAVE);			
 			//进行单据保存操作
