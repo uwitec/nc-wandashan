@@ -128,9 +128,6 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 				_getCorp().getPrimaryKey(), null, null);
 	}
 
-	protected BusinessDelegator createBusinessDelegator() {
-		return new ClientBusinessDelegator(this);
-	}
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {

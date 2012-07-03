@@ -51,6 +51,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 //	}
 	
 	@Override
+	protected void onBoDel() throws Exception {
+		super.onBoDel();
+	}
+	
+	@Override
 	protected void onBoSave() throws Exception {
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("itransstatus", 1);
 		beforeSaveCheck();
