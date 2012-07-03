@@ -14,6 +14,7 @@ import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillCardPanelWrapper;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.zmpub.pub.freeitem.FreeItemRefPane;
@@ -23,6 +24,7 @@ import nc.vo.bd.def.DefVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.bill.BillRendererVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
@@ -434,6 +436,15 @@ public abstract class DefBillManageUI extends BillManageUI implements ILinkQuery
 				btn.setBusinessStatus(new int[]{IBillStatus.FREE});
 			}
 		}
+		
+		btnobj = getButtonManager().getButton(IBillButton.Line);
+		if (btnobj != null) {
+			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.CopyLine));
+			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLine));
+			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.InsLine));
+//			btnobj.removeChildButton(getButtonManager().getButton(IBillButton.PasteLinetoTail));
+		}
+		getBillCardPanel().setBodyMenuShow(false);
 	}
 	
 //  支持联查
@@ -478,5 +489,23 @@ public abstract class DefBillManageUI extends BillManageUI implements ILinkQuery
 
 		super.initPrivateButton();
 	}
-
+	
+	abstract public String getBillType();
+	
+	protected String getBillNo() throws java.lang.Exception {
+		return HYPubBO_Client.getBillNo(getBillType(), _getCorp().getPrimaryKey(), null, null);
+	}
+	
+	@Override
+	public void setDefaultData() throws Exception {
+		// TODO Auto-generated method stub
+		getBillCardPanel().setHeadItem("pk_corp",_getCorp().getPk_corp());//公司	
+		getBillCardPanel().setHeadItem("vbillstatus",IBillStatus.FREE);//单据状态
+		getBillCardPanel().setHeadItem("dbilldate",_getDate());//单据日期
+		getBillCardPanel().setTailItem("dmakedate",_getDate());//制单日期
+		getBillCardPanel().setTailItem("voperatorid",_getOperator());//制单人		
+		getBillCardPanel().setHeadItem("fisself",UFBoolean.TRUE);//数据来源
+		getBillCardPanel().setHeadItem("fisclose",UFBoolean.FALSE);//数据来源
+		getBillCardPanel().setHeadItem("pk_billtype",getBillType());//数据来源
+	}
 }
