@@ -1,18 +1,14 @@
 package nc.bs.wl.dm;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
-import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.BeanListProcessor;
@@ -24,21 +20,16 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-
 /**
  * 发运计划处理后台类
- * @author Administrator
- *
+ * @author zhf
  */
-
 public class PlanDealBO {
 
 	private BaseDAO m_dao = null;
@@ -146,40 +137,6 @@ public class PlanDealBO {
 		return datas;
 	}
 	
-	/**
-	 * 
-	 * @作者：lyf
-	 * @说明：完达山物流项目 
-	 * 将本次安排数量，回写到发运计划安排累计发运数量
-	 * @时间：2011-3-25下午04:44:08
-	 * @param dealnumInfor
-	 * @throws BusinessException
-	 */
-	private void reWriteDealNumForPlan(Map<String,ArrayList<UFDouble>> map) throws BusinessException{
-		if(map == null || map.size()==0)
-			return;
-		for(Entry<String, ArrayList<UFDouble>> entry:map.entrySet()){
-			String sql = "update wds_sendplanin_b set ndealnum =coalesce(ndealnum,0)+"
-				+entry.getValue().get(0)+" where pk_sendplanin_b='"+entry.getKey()+"'";
-			if(getDao().executeUpdate(sql)==0){
-				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
-			};
-			String sql1 = "update wds_sendplanin_b set nassdealnum =coalesce(nassdealnum,0)+"
-				+entry.getValue().get(1)+" where pk_sendplanin_b='"+entry.getKey()+"'";
-			if(getDao().executeUpdate(sql1)==0){
-				throw new BusinessException("数据异常：该发运计划可能已被删除，请重新查询数据");
-			};
-			//将计划数量（nplannum）和累计安排数量(ndealnum)比较
-			//如果累计安排数量大于计划数量将抛出异常
-
-			String sql2="select count(0) from wds_sendplanin_b where pk_sendplanin_b='"+entry.getKey()+ "'and (coalesce(nplannum,0)-coalesce(ndealnum,0))>=0";			
-			Object o=getDao().executeQuery(sql2,WdsPubResulSetProcesser.COLUMNPROCESSOR);
-			if(o==null){
-				throw new BusinessException("累计安排数量不能大于计划数量！");
-			}
-		}
-	}
-	
 	private void checkTs(Map<String,UFDateTime> tsInfor) throws Exception{
 		if(tsInfor == null || tsInfor.size() ==0)
 			return;
@@ -212,60 +169,13 @@ public class PlanDealBO {
 	public void doDeal(List<PlanDealVO> ldata, List<String> infor)
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
-			return;		
+			return;	
+		//校验数据并发
 		Map<String,UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
 		for(PlanDealVO data:ldata){
 			tsInfor.put(data.getPrimaryKey(), data.getTs());
 		}	
 		checkTs(tsInfor);
-//		//1.将明细按照 是否大日期 分单，然后分别按照现存量来过滤
-		PlanDealBOUtil util= new PlanDealBOUtil();
-		CircularlyAccessibleValueObject[][] splitVos = SplitBillVOs.getSplitVOs(
-				(CircularlyAccessibleValueObject[]) (ldata
-						.toArray(new PlanDealVO[0])),
-				new String[]{"pk_outwhouse","bisdate"});//根据发货仓库和是否大日期分单
-		if(splitVos == null || splitVos.length==0){
-			return ;
-		}
-		PlanDealVO[] vos = null;
-		for(int i=0;i<splitVos.length;i++){
-			vos = (PlanDealVO[])splitVos[i];
-			if(vos != null && vos.length>0){
-				String pk_outwhouse= PuPubVO.getString_TrimZeroLenAsNull(vos[0].getPk_outwhouse());
-				if(pk_outwhouse  == null){
-					throw  new BusinessException("发货仓库不能未空");
-				}
-				UFBoolean fisdate = PuPubVO.getUFBoolean_NullAs(vos[0].getBisdate(), UFBoolean.FALSE);
-				if(fisdate.booleanValue()){
-					util.initInvNumInfor(true,infor.get(1), pk_outwhouse,Arrays.asList(vos));
-				}else{
-					util.initInvNumInfor(false,infor.get(1), pk_outwhouse, Arrays.asList(vos));
-
-				}
-			}
-		}
-		// 发运安排vo---》发运计划vo
-		Map<String,ArrayList<UFDouble>> map = new HashMap<String, ArrayList<UFDouble>>();
-		for(int i=0;i<ldata.size();i++){
-			String key = ldata.get(i).getPk_sendplanin_b();
-			ArrayList<UFDouble> list = new ArrayList<UFDouble>();
-			UFDouble num= PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNnum());
-			UFDouble nassnum = PuPubVO.getUFDouble_NullAsZero(ldata.get(i).getNassnum());
-			if(map.containsKey(key)){
-				UFDouble oldValue =PuPubVO.getUFDouble_NullAsZero(map.get(key).get(0));
-				UFDouble oldAssValue =PuPubVO.getUFDouble_NullAsZero(map.get(key).get(1));
-				num = num.add(oldValue);
-				nassnum = nassnum.add(oldAssValue);
-				list.add(num);
-				list.add(nassnum);
-				map.put(key, list);
-			}else{
-				list.add(num);
-				list.add(nassnum);
-				map.put(key, list);
-			}
-		}
-	//	reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 收货站 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
@@ -275,6 +185,7 @@ public class PlanDealBO {
 			return;
 		int len = datas.length;
 		PlanDealVO[] tmpVOs = null;
+		//构造发运计划 聚合vo
 		HYBillVO[] planBillVos = new HYBillVO[len];
 		for (int i = 0; i < len; i++) {
 			tmpVOs = (PlanDealVO[]) datas[i];
@@ -282,7 +193,7 @@ public class PlanDealBO {
 			planBillVos[i].setParentVO(getPlanHead(tmpVOs[0]));
 			planBillVos[i].setChildrenVO(tmpVOs);
 		}
-		// 发运计划vo---》发运订单vo
+		// 进行数据交换  发运计划->发运定单
 		PfParameterVO paraVo = new PfParameterVO();
 		paraVo.m_operator = infor.get(0);
 		paraVo.m_coId = infor.get(1);
@@ -291,10 +202,11 @@ public class PlanDealBO {
 		HYBillVO[] orderVos = (HYBillVO[]) PfUtilTools.runChangeDataAry(
 				WdsWlPubConst.WDS1,
 				WdsWlPubConst.WDS3, planBillVos, paraVo);
-		// 分单---》保存订单
+	  
 		if(orderVos ==null || orderVos.length==0){
 			return;
 		}
+		//保存发运订单
 		PfUtilBO pfbo = new PfUtilBO();
 		for(HYBillVO bill: orderVos){
 			pfbo.processAction(WdsWlPubConst.DM_PLAN_TO_ORDER_SAVE, WdsWlPubConst.WDS3, infor.get(2), null, bill, null);
