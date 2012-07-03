@@ -2,11 +2,17 @@ package nc.ui.dm;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillListPanel;
+import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.ic.pub.StockInvOnHandVO;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
+import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 发运计划安排
@@ -26,6 +32,16 @@ BillEditListener2{
 	//定义界面模板
 	private BillListPanel m_panel = null;	
 	//按钮事件处理	
+	
+
+	private LoginInforHelper helper = null;
+
+	public LoginInforHelper getLoginInforHelper() {
+		if (helper == null) {
+			helper = new LoginInforHelper();
+		}
+		return helper;
+	}
 	public PlanDealClientUI(){
 		super();
 		m_ce = ClientEnvironment.getInstance();
@@ -101,17 +117,115 @@ BillEditListener2{
 	}
 
 	public void afterEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
+
+		String key = e.getKey();// 不允许输入负数
+
+		String value = PuPubVO.getString_TrimZeroLenAsNull(e.getValue());
+		int row = e.getRow();
+		if ("nassnum".equalsIgnoreCase(key)) {
+			UFDouble num = PuPubVO.getUFDouble_NullAsZero(getPanel()
+					.getBodyBillModel().getValueAt(row, "nassnum"));
+			if (num.doubleValue() < 0) {
+				showWarningMessage("不允许安排负数");
+				getPanel().getBodyBillModel().setValueAt(e.getOldValue(),
+						e.getRow(), key);
+				return;
+			}
+			// 安排辅数量 编辑后 拆行 for add mlr
+			UFDouble oldvalue = e.getOldValue() == null ? new UFDouble(0)
+					: (UFDouble) e.getOldValue();
+			if (num == null || num.doubleValue() == 0
+					|| num.doubleValue() > oldvalue.doubleValue()) {
+				MessageDialog.showHintDlg(getPanel(), "错误",
+						"所输入的值错误,必须比之前的值要小!");
+				getPanel().getBodyBillModel().setValueAt(oldvalue, row,
+						"nassnum");
+				getPanel().getBodyBillModel().execEditFormulasByKey(row,
+						"nassnum");
+				return;
+			}
+			String tablecode = getPanel().getChildListPanel()
+					.getTableCode();
+			getPanel().getBodyScrollPane(tablecode).copyLine();
+			getPanel().getBodyScrollPane(tablecode).pasteLine();
+			getPanel().getBodyBillModel().setValueAt(oldvalue.sub(num),
+					row, "nassnum");
+			getPanel().getBodyBillModel().execEditFormulasByKey(row,
+					"nassnum");
+		}
+		if ("ss_state".equalsIgnoreCase(key)) {
+			if (value == null) {
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"nstorenumout");// 库存主数量
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"anstorenumout");// 库存辅数量
+
+			}
+			String pk_corp = ClientEnvironment.getInstance()
+					.getCorporation().getPrimaryKey();
+			String pk_strodoc = null;
+			try {
+				pk_strodoc = PuPubVO.getString_TrimZeroLenAsNull(getLoginInforHelper()
+						.getLogInfor(m_ce.getUser().getPrimaryKey())
+						.getWhid());
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			String pk_invmandoc = PuPubVO
+					.getString_TrimZeroLenAsNull(getPanel()
+							.getBodyBillModel().getValueAt(row,
+									"pk_invmandoc"));
+			String pk_invbasdoc = PuPubVO
+					.getString_TrimZeroLenAsNull(getPanel()
+							.getBodyBillModel().getValueAt(row,
+									"pk_invbasdoc"));
+			String pk_ss = PuPubVO.getString_TrimZeroLenAsNull(getPanel()
+					.getBodyBillModel().getValueAt(row, "vdef1"));
+			if (pk_corp == null || pk_strodoc == null
+					|| pk_invmandoc == null || pk_invbasdoc == null
+					|| pk_ss == null) {
+				return;
+			}
+			StockInvOnHandVO vo = new StockInvOnHandVO();
+			vo.setPk_corp(pk_corp);
+			vo.setPk_customize1(pk_strodoc);
+			vo.setPk_invmandoc(pk_invmandoc);
+			vo.setPk_invbasdoc(pk_invbasdoc);
+			vo.setSs_pk(pk_ss);
+			StockInvOnHandVO[] vos = null;
+			try {
+				vos = (StockInvOnHandVO[]) m_handler.getStock()
+						.queryStockCombinForClient(
+								new StockInvOnHandVO[] { vo });
+			} catch (Exception e1) {
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"nstorenumout");// 库存主数量
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"anstorenumout");// 库存辅数量
+				e1.printStackTrace();
+				showErrorMessage("获取现存量失败");
+			}
+			if (vos == null || vos.length == 0) {
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"nstorenumout");// 库存主数量
+				getPanel().getBodyBillModel().setValueAt(null, row,
+						"anstorenumout");// 库存辅数量
+				return;
+			}
+			getPanel().getBodyBillModel().setValueAt(
+					vos[0].getWhs_stocktonnage(), row, "nstorenumout");// 库存主数量
+			getPanel().getBodyBillModel().setValueAt(
+					vos[0].getWhs_stocktonnage(), row, "anstorenumout");// 库存辅数量
+		}
+	
 		
 	}
 
 	public void bodyRowChange(BillEditEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public boolean beforeEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
