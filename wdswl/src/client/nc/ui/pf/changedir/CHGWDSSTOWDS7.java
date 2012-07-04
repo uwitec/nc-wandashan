@@ -30,14 +30,15 @@ public class CHGWDSSTOWDS7 extends VOConversionUI {
 			"B_csourcetype->H_pk_billtype",
 			"B_csourcebillhid->B_pk_sendorder",
 			"B_csourcebillbid->B_pk_sendorder_b",
+			"B_cdt_pk->B_vdef1",//存货状态
 		};
 	}
 	
 	@Override
 	public String[] getFormulas() {	
 		return new String[]{
-			"B_geb_snum->B_noutnum-B_nacceptnum",  //实出库数量-已入库数量
-			"B_geb_bsnum->B_noutassistnum-nassacceptnum",//实出辅数量-已入库辅数量
+			"B_geb_snum->B_ndealnum-B_noutnum",  //实出库数量-已入库数量
+			"B_geb_bsnum->B_nassdealnum-B_nassoutnum",//实出辅数量-已入库辅数量
 		};
 	}
 	
