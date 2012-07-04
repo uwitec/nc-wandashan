@@ -161,7 +161,7 @@ public class SoorderVO extends SuperVO {
 	//发运状态
 	public Integer 	itransstatus;
 	//计算类型
-	public Integer icoltype;
+	public Integer icoltype;//特殊运单 出入库 类型  0 出库 1入库
 	//----运单跟踪信息
 	public UFDate ddispachdate;//派车日期
 	public Integer idispachtime;//派车时间[0,23]整数，值当天派车小时
