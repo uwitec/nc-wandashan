@@ -145,7 +145,7 @@ private LoginInforHelper helper = null;
 	 */
 	public void pick(List<StockInvOnHandVO> vos, int row) {
 		//取出本次出库的总的数量 
-		UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBillModel().getValueAt(row, "nshouldoutassistnum"));
+		UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBillModel().getValueAt(row, "nassnum"));
 		if(zbnum.doubleValue()==0)
 			return;
 		//进行分量  
