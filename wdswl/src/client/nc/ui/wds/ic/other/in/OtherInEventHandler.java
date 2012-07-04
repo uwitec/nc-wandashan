@@ -91,7 +91,15 @@ public class OtherInEventHandler extends InPubEventHandler {
 //			zhf  参照新增时 不能增行
 			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 			getBillUI().updateButtons();
-			break;		
+			break;	
+		case  nc.ui.wds.w80020206.buttun0206.ISsButtun.refwds:
+			   ((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSS);
+				onBillRef();
+				setBusidate();//设置业务日期
+//				zhf  参照新增时 不能增行
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+				getBillUI().updateButtons();
+				break;	
 		}
 	}
     /**

@@ -227,10 +227,17 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		refwds6.setBtnName("其他出库");
 		refwds6.setBtnChinaName("其他出库");
 		addPrivateButton(refwds6);
+		//添加参照   其他出库 按钮    for add mlr
+		ButtonVO refwds = new ButtonVO();
+		refwds.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.refwds);
+		refwds.setBtnCode(null);
+		refwds.setBtnName("特殊运单");
+		refwds.setBtnChinaName("特殊运单");
+		addPrivateButton(refwds);
 		
 		ButtonVO refbill =ButtonVOFactory.getInstance().build(IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT, IBillOperate.OP_INIT });
-		refbill.setChildAry(new int[]{ref4i.getBtnNo(),refwds6.getBtnNo()});		
+		refbill.setChildAry(new int[]{ref4i.getBtnNo(),refwds6.getBtnNo(),refwds.getBtnNo()});		
 		addPrivateButton(refbill);
 	}
 	@Override

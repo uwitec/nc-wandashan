@@ -538,38 +538,8 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				item.setValue(cargdoc);
 			}
 			getBillInPubUI().afterHeadCargDoc(item.getValueObject());
-		}
-		
-		// 验证批次号是否正确
-		int num = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getRowCount();
-		for(int i=0;i<num;i++){
-			int row=i;
-		String va=(String)getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "geb_vbatchcode");
-		if( !validateBachCode(va)){
-			return;
-		}
-	    //如果批次号输入格式正确就给生产日期赋值
-		String year=va.substring(0,4);
-		String month=va.substring(4,6);
-		String day=va.substring(6,8);
-		String startdate=year+"-"+month+"-"+day;
-		UFDate date=new UFDate(startdate);
-		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date, row, "geb_proddate");
-		
-		//给失效的日期赋值
-		String cinventoryid = (String)getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(row, "geb_cinventoryid");		
-			if(cinventoryid == null) 
-				return;
-			InvmandocVO vo = (InvmandocVO)HYPubBO_Client.queryByPrimaryKey(InvmandocVO.class, cinventoryid);
-			Integer num1 = vo.getQualitydaynum();//保质期天数
-			UFBoolean b = vo.getQualitymanflag();//是否保质期
-			if(b!=null && b.booleanValue()){
-				getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(date.getDateAfter(num1), row, "geb_dvalidate");//失效日期
-			}			
-	}	
-
-		
-		
+		}		
+				
 	}
 	//批量验证批次号是否正确mlr
 	protected boolean validateBachCode(){		
@@ -607,7 +577,6 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	private void setHeadPartEdit(boolean flag){
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("geh_cwarehouseid").setEdit(flag);
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").setEdit(flag);
-//		项目主键	pk_cargdoc
 	}	
      
 	protected void onBoEdit() throws Exception {

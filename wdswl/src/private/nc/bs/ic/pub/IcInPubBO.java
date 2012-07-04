@@ -114,6 +114,36 @@ public class IcInPubBO {
 				}
 			}
 
+		}else{
+			WriteBackTool.setVsourcebillid("csourcebillhid");
+			WriteBackTool.setVsourcebillrowid("csourcebillbid");
+			WriteBackTool.setVsourcebilltype("csourcetype");
+			String sourcetype = PuPubVO.getString_TrimZeroLenAsNull(bodys[0]
+					.getCsourcetype());
+			// 自制单据不进行回写
+			if (sourcetype == null) {
+				return;
+			}
+			if (iBdAction == IBDACTION.SAVE) {
+				if (sourcetype.equals(WdsWlPubConst.WDSS)) {
+					WriteBackTool.writeBack(bodys, "wds_sendorder_b",
+							"pk_sendorder_b", new String[] { "geb_anum",
+									"geb_banum" }, new String[] { "noutnum",
+									"nassoutnum" }, new String[] { "noutnum",
+									"nassoutnum" });
+				}
+			} else if (iBdAction == IBDACTION.DELETE) {
+				for (int i = 0; i < bodys.length; i++) {
+					bodys[i].setStatus(VOStatus.DELETED);
+				}
+				if (sourcetype.equals(WdsWlPubConst.WDSS)) {
+					WriteBackTool.writeBack(bodys, "wds_sendorder_b",
+							"pk_sendorder_b", new String[] { "geb_anum",
+									"geb_banum" }, new String[] { "noutnum",
+									"nassoutnum" }, new String[] { "noutnum",
+									"nassoutnum" });
+				}
+			}		
 		}
 	}
 
