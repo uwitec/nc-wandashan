@@ -5,6 +5,7 @@ import java.util.Map;
 import nc.bs.zmpub.pub.tool.stock.BillStockBO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * 完达山项目 业务单据先存量更新类
@@ -52,7 +53,11 @@ public class BillStockBO1 extends BillStockBO{
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_OTHER_OUT, "nc.bs.wds.self.changedir.CHGWDS6TOACCOUNTNUM");//处理其他出库保存
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_OTHER_OUT_1, "nc.bs.wds.self.changedir.CHGWDS6TOACCOUNTNUM");//处理其他出库删除
 			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_SALE_OUT, "nc.bs.wds.self.changedir.CHGWDS8TOACCOUNTNUM");//处理销售出库保存
-			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_SALE_OUT_1, "nc.bs.wds.self.changedir.CHGWDS8TOACCOUNTNUM");//处理销售出库删除			
+			typetoChangeclass.put(WdsWlPubConst.BILLTYPE_SALE_OUT_1, "nc.bs.wds.self.changedir.CHGWDS8TOACCOUNTNUM");//处理销售出库删除	
+			typetoChangeclass.put(Wds2WlPubConst.billtype_statusupdate, "nc.bs.wds.self.changedir.CHGWS20TOACCOUNTNUM");//处理状态变更单保存  状态变化前减少量
+			typetoChangeclass.put(Wds2WlPubConst.billtype_statusupdate_1, "nc.bs.wds.self.changedir.CHGWS20TOACCOUNTNUM1");//处理状态变更单保存  状态变化后 新增量	
+			typetoChangeclass.put(Wds2WlPubConst.billtype_statusupdate_2, "nc.bs.wds.self.changedir.CHGWS20TOACCOUNTNUM");//处理状态变更单删除  状态变化前减少量
+			typetoChangeclass.put(Wds2WlPubConst.billtype_statusupdate_3, "nc.bs.wds.self.changedir.CHGWS20TOACCOUNTNUM1");//处理状态变更单删除   状态变化后 新增量
 		}	
 		return typetoChangeclass;
 	}
@@ -68,7 +73,10 @@ public class BillStockBO1 extends BillStockBO{
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_OTHER_OUT_1, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_SALE_OUT, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
 			typetosetnum.put(WdsWlPubConst.BILLTYPE_SALE_OUT_1, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});
-
+			typetosetnum.put(Wds2WlPubConst.billtype_statusupdate, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
+			typetosetnum.put(Wds2WlPubConst.billtype_statusupdate_1, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});			
+			typetosetnum.put(Wds2WlPubConst.billtype_statusupdate_2, new UFBoolean[]{new UFBoolean(false),new UFBoolean(false)});
+			typetosetnum.put(Wds2WlPubConst.billtype_statusupdate_3, new UFBoolean[]{new UFBoolean(true),new UFBoolean(true)});
 		}
 		return typetosetnum;
 	}

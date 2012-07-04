@@ -17,7 +17,15 @@ public class StatusUpdateBodyVO extends HYChildSuperVO {
 	public String cunitid;//主计量单位
 	public String cassunitid;//辅计量单位
 	
-	
+	public String vdef1; //入库日期
+
+	public String getVdef1() {
+		return vdef1;
+	}
+
+	public void setVdef1(String vdef1) {
+		this.vdef1 = vdef1;
+	}
 
 	public String getCbillid() {
 		return cbillid;

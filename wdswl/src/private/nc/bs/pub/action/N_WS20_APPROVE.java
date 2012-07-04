@@ -6,6 +6,8 @@ import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wdsnew.pub.BillStockBO1;
+import nc.vo.wl.pub.Wds2WlPubConst;
 
 /**
  *  状态变更
@@ -18,6 +20,13 @@ public class N_WS20_APPROVE extends AbstractCompiler2 {
 
 	public N_WS20_APPROVE() {
 		super();
+	}
+	private BillStockBO1 stock=null;
+	private BillStockBO1 getStock(){
+		if(stock==null){
+			stock=new BillStockBO1();
+		}
+		return stock;
 	}
 
 	/*
@@ -34,6 +43,10 @@ public class N_WS20_APPROVE extends AbstractCompiler2 {
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
+			//更新现存量
+			getStock().updateStockByBill(vo.m_preValueVo, Wds2WlPubConst.billtype_statusupdate);//处理状态变更单保存  状态变化前减少量
+			getStock().updateStockByBill(vo.m_preValueVo, Wds2WlPubConst.billtype_statusupdate_1);//处理状态变更单保存  状态变化后 新增量
+			
 			retObj = runClass("nc.bs.wl.pub.HYBillApprove", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);
