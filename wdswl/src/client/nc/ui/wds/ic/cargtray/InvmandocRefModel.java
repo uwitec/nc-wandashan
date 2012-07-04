@@ -3,7 +3,9 @@ package nc.ui.wds.ic.cargtray;
 import nc.ui.bd.ref.AbstractRefModel;
 
 public class InvmandocRefModel extends AbstractRefModel{
-	
+
+	// 该条件会根据环境变量变化，同时在setpk时不带此条件
+	private String envWherePart = null;
 	
 	 private String m_sRefTitle = "当前货位下存货";
 	 
@@ -99,6 +101,74 @@ public class InvmandocRefModel extends AbstractRefModel{
 	    	
 	    	return false;
 	    }
-	    
+		/**
+		 * 构造基本 SQL
+		 */
+		protected String buildBaseSql(String patch, String[] columns,
+				String[] hiddenColumns, String tableName, String whereCondition) {
+			StringBuffer whereClause = new StringBuffer();
+			StringBuffer sql = new StringBuffer("select distinct").append(patch)
+					.append(" ");
+			int columnCount = columns == null ? 0 : columns.length;
+			addQueryColumn(columnCount, sql, columns, hiddenColumns);
+			// 加入FROM子句
+			sql.append(" from ").append(tableName);
+			// 加入WHERE子句
+			if (whereCondition != null && whereCondition.trim().length() != 0) {
+				whereClause.append(" where (").append(whereCondition).append(" )");
+			} else
+				whereClause.append(" where 11=11 ");
+
+			appendAddWherePartCondition(whereClause);
+
+			addDataPowerCondition(getTableName(), whereClause);
+			addSealCondition(whereClause);
+			addEnvWherePart(whereClause);
+			sql.append(" ").append(whereClause.toString());
+
+			return sql.toString();
+		}
+		private void appendAddWherePartCondition(StringBuffer whereClause) {
+
+			if (getAddWherePart() == null) {
+				return;
+			}
+
+			if (isPKMatch() && !isMatchPkWithWherePart()) {
+
+				return;
+
+			}
+			whereClause.append(" ").append(getAddWherePart());
+
+		}
+		private void addEnvWherePart(StringBuffer whereClause) {
+			// setpk ,不包含此条件
+			if (isPKMatch()) {
+				return;
+			}
+			String wherePart = getEnvWherePart();
+			if (wherePart != null) {
+
+				whereClause.append(" and (").append(wherePart).append(") ");
+
+			}
+
+		}
+		/**
+		 * @return 返回 envWherePart。
+		 */
+		private String getEnvWherePart() {
+			return envWherePart;
+		}
+		/**
+		 * 设置条件时，要利用参照的环境变量的方法去拼条件，否则无法根据环境变量的变化而变化。 例如：
+		 * 
+		 * @param envWherePart
+		 *            要设置的 envWherePart。
+		 */
+		public void setEnvWherePart(String envWherePart) {
+			this.envWherePart = envWherePart;
+		}
 
 }

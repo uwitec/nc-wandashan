@@ -411,12 +411,19 @@ public class MyClientUI extends OutPubClientUI implements
 		btransfer.setBtnChinaName("货位调整单");
 		addPrivateButton(btransfer);
 		
+		ButtonVO tsyd = new ButtonVO();
+		tsyd.setBtnNo(nc.ui.wds.w80020206.buttun0206.ISsButtun.tsyd);
+		tsyd.setBtnCode(null);
+		tsyd.setBtnName("特殊运单");
+		tsyd.setBtnChinaName("特殊运单");
+		addPrivateButton(tsyd);
+		
 		ButtonVO refbill = ButtonVOFactory.getInstance().build(
 				IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT,
 				IBillOperate.OP_INIT });
 		refbill.setChildAry(new int[] { soOrder.getBtnNo(),
-				redSoorder.getBtnNo(),btransfer.getBtnNo() });
+				redSoorder.getBtnNo(),btransfer.getBtnNo(),tsyd.getBtnNo() });
 		addPrivateButton(refbill);
 	}
 

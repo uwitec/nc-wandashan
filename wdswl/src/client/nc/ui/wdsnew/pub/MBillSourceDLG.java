@@ -48,9 +48,10 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 
 	//返回分担后的vo数组
 	protected AggregatedValueObject[] spiltBillVos = null;
-	//分担维度
+	//分担维度 表头
 	protected String[] spiltFields=null;
-
+	//分担维度 表体
+	protected String[] spiltFields1=null;
 	public String[] getSpiltFields() {
 		return spiltFields;
 	}
@@ -64,6 +65,12 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 		this.spiltBillVos = spiltBillVos;
 	}
 
+	public String[] getSpiltFields1() {
+		return spiltFields1;
+	}
+	public void setSpiltFields1(String[] spiltFields1) {
+		this.spiltFields1 = spiltFields1;
+	}
 	public SuperVO[] queryHeadAndBodyVOs(String strWhere,
 			String pk_invbasdocName, String pk_invmandocName) throws Exception {
 		String headVoName = getUIController().getBillVoName()[1];
@@ -222,15 +229,13 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 			AggregatedValueObject[] selectedBillVOs) {
 		if(selectedBillVOs==null || selectedBillVOs.length==0)
 			return selectedBillVOs;
-		if(spiltFields==null ||spiltFields.length==0)
-			return selectedBillVOs;		
 		spiltBillVos=SplitBillVOs.getSplitVOs(
 				getUIController().getBillVoName()[0],
 				getUIController().getBillVoName()[1], 
 				getUIController().getBillVoName()[2], 
 				selectedBillVOs, 
 				spiltFields,
-				null);	
+				spiltFields1);	
 		return spiltBillVos;
 	}
 
@@ -260,9 +265,9 @@ public abstract class MBillSourceDLG extends MutiBillSourceDLG {
 			if(ctrl==null){
 				return;
 			}
-			String sqlWhere=null;
+			String sqlWhere="";
 					
-			sqlWhere= sqlWhere +getpkField()+ " = '"+id+"' and isnull(dr,0=0)";
+			sqlWhere= sqlWhere +getpkField()+ " = '"+id+"' and isnull(dr,0)=0 ";
 			if(getBodyCondition()!=null){
 				sqlWhere=sqlWhere+" and "+getBodyCondition();
 			}

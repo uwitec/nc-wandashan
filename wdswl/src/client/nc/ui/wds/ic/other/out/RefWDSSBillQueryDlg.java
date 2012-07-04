@@ -8,7 +8,7 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
- * @author Administrator
+ * @author mlr
  *其他出库 参照 特殊订单（WDS3）的查询对话框
  */
 public class RefWDSSBillQueryDlg extends WdsBillQueryDlg{
@@ -22,7 +22,7 @@ public class RefWDSSBillQueryDlg extends WdsBillQueryDlg{
 	
 	public RefWDSSBillQueryDlg(Container parent) {
 		super(parent,null,pk_corp,
-				WdsWlPubConst.OTHER_OUT_FUNCODE,userid,null,WdsWlPubConst.OTHER_OUT_REFWDS3_NODECODE);
+				WdsWlPubConst.OTHER_OUT_FUNCODE,userid,null,WdsWlPubConst.OTHER_OUT_REFWDSS_NODECODE);
 	}
 	@Override
 	public String getWhereSQL() {

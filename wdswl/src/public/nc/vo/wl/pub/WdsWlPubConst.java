@@ -49,6 +49,8 @@ public class WdsWlPubConst {
 	public static String  OTHER_OUT_FUNCODE="8004040208";
 	/**参照发运订单的节点标示 */
    public static String  OTHER_OUT_REFWDS3_NODECODE="800404028WDS3";
+	/**参照特殊订单的节点标示 */
+   public static String  OTHER_OUT_REFWDSS_NODECODE="800404028WDSS";
    /**参照发运订单的节点标示 */
    public static String  OTHER_OUT_REFWDSC_NODECODE="800404028WDSC";
    /**参照货位调整单的节点标示 */

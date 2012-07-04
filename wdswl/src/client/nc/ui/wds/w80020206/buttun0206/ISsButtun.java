@@ -32,4 +32,6 @@ package nc.ui.wds.w80020206.buttun0206;
 	 	public final static int Reduc_lastmonth= 209;//冲上月欠发
 	 	
 		public final static int RefHWTZ = 225;//参照货位调整单 add by yf 2012-06-29
+		
+		public final static int tsyd = 227;//其他出库 参照特殊运单
   }

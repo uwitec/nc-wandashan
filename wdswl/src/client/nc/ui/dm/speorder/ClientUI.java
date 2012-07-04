@@ -114,7 +114,7 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		getBillCardPanel().setHeadItem("vbillstatus", IBillStatus.FREE);
 		getBillCardPanel().setHeadItem("pk_corp", _getCorp().getPk_corp());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
-		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDS3);
+		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSS);
 		getBillCardPanel().setTailItem("dmakedate", _getDate());	
 	}
 

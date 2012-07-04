@@ -12,7 +12,7 @@ import nc.vo.zmpub.pub.tool.WriteBackTool;
  */
 public class OtherOutBO {
 	/**
-	 * 其他出库单 作废时 会写来源数据
+	 * 其他出库单  销售出库单 回写数据来源
 	 * 
 	 * @作者：mlr
 	 * @时间：2011-4-8下午06:52:43
@@ -59,6 +59,13 @@ public class OtherOutBO {
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });			
 			}
+			if (sourcetype.equalsIgnoreCase(WdsWlPubConst.WDSS)) {
+				WriteBackTool.writeBack(bodys, "wds_sendorder_b",
+						"pk_sendorder_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });
+			}
 			if(sourcetype.equalsIgnoreCase(WdsWlPubConst.HWTZ)){
 				WriteBackTool.writeBack(bodys, "wds_transfer_b",
 						"general_b_pk", new String[] { "noutnum",
@@ -84,6 +91,13 @@ public class OtherOutBO {
 								"noutassistnum" }, new String[] { "noutnum",
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });			
+			}
+			if (sourcetype.equalsIgnoreCase(WdsWlPubConst.WDSS)) {
+				WriteBackTool.writeBack(bodys, "wds_sendorder_b",
+						"pk_sendorder_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });
 			}
 			if(sourcetype.equalsIgnoreCase(WdsWlPubConst.HWTZ)){
 				WriteBackTool.writeBack(bodys, "wds_transfer_b",
