@@ -1,25 +1,34 @@
 package nc.ui.wds.ic.other.in;
 import java.awt.Container;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wdsnew.pub.MBillSourceDLG;
+import nc.ui.wdsnew.pub.PowerGetTool;
 import nc.ui.wl.pub.LoginInforHelper;
-import nc.ui.wl.pub.WdsBillSourceDLG;
-import nc.vo.pub.BusinessException;
-import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * @author mlr
  * 其他入库 参照 其他出库 界面
  */
-public class RefBillSourceDlgWDS7 extends WdsBillSourceDLG{
+public class RefBillSourceDlgWDS7 extends MBillSourceDLG{
 	private static final long serialVersionUID = 4237270665256372871L;
-	private boolean isStock = false; //是否是总仓 true=是 false=否	
-	private String m_logUser = null;	
-	private String pk_stock = null; // 当前登录者对应的仓库主键	
-	private int iType = -1;	
-	private String[] inv_Pks = null;// 根据当前登录者查询所属仓库和其仓库所存储的产品	
+
 	private LoginInforHelper helper = null;
+	
+
+	//获得权限过滤的sql
+	String sql=null;
+	private String getPowerSql(){
+		if (sql == null || sql.length() == 0)
+			try {
+				sql = PowerGetTool.queryClassPowerSql(ClientEnvironment
+						.getInstance().getUser().getPrimaryKey());
+			} catch (Exception e) {
+				this.getClientUI().showErrorMessage(e.getMessage());		
+				e.printStackTrace();
+			}
+		return sql;
+	}
 	
 	public LoginInforHelper getLoginInforHelper(){
 		if(helper == null){
@@ -43,74 +52,66 @@ public class RefBillSourceDlgWDS7 extends WdsBillSourceDLG{
 				templateId, currentBillType, nodeKey, userObj, parent);
 		init();
 	}
-	public void init(){try{
-		m_logUser = ClientEnvironment.getInstance().getUser().getPrimaryKey();
-		pk_stock = getLoginInforHelper().getWhidByUser(m_logUser); // 当前登录者对应的仓库主键
-		if(pk_stock== null || "".equalsIgnoreCase(pk_stock)){
-			throw new BusinessException("当前登录人员没有绑定仓库");
+	public void init() {
+		try {
+			setSpiltFields(new String[] { "srl_pkr" });// 按入库仓库分担
+			setSpiltFields1(new String[] { "pk_defdoc1" });// 按表体入库货位分担
+		} catch (Exception e) {
+			Logger.error(e);
 		}
-		iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
-		inv_Pks = getLoginInforHelper().getInvBasDocIDsByUserID(m_logUser);
-		if(inv_Pks ==null || inv_Pks.length==0){
-			throw new BusinessException("当前登录人员货位下没有绑定存货");
-		}
-		isStock = WdsWlPubTool.isZc(getLoginInforHelper().getCwhid(m_logUser));//是否是总仓
-	}catch(Exception e){
-		Logger.error(e);
-	}}	
+	}	
 	@Override
 	public String getTitle() {
 		return "参照其他出库单";
 	}
 	@Override
 	public String getHeadCondition() {
-		String  pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();		
-		StringBuffer hsql = new StringBuffer();
-		hsql.append(" isnull(tb_outgeneral_h.dr,0)=0 and tb_outgeneral_h.pk_corp ='"+pk_corp+"' and tb_outgeneral_h.vbilltype = '"+WdsWlPubConst.BILLTYPE_OTHER_OUT+"' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
-		hsql.append(" and tb_outgeneral_h.srl_pkr='"+pk_stock+"'");//
-		hsql.append("");//审批通过的出库单
-		hsql.append(" and tb_outgeneral_h.general_pk not in(select distinct csourcebillhid from tb_general_b where csourcebillhid is not null and csourcebillhid is not null and isnull(dr,0)=0)");
-		hsql.append(" and tb_outgeneral_h.general_pk in");//只能看到包含当前登录人绑定货位下存货的单据
-		//if(inv_Pks !=null && inv_Pks.length>0){
-			hsql.append("(");
-			hsql.append("select distinct general_pk from tb_outgeneral_b where isnull(tb_outgeneral_b.dr,0)=0");
-			//hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(nacceptnum,0)>0");//应入数量-转出数量>0
-		    //	String sub = getIvnSubSql(inv_Pks);
-			hsql.append(" and cinventoryid in");
-		//	hsql.append(")");
-		//}else{
-		//	hsql.append("('')");
-		//}	
-		return hsql.toString();
 		//head.fbillflag=3 签字状态
+			String sql=null;
+			try {
+				sql= "  coalesce(tb_outgeneral_b.noutnum,0)-coalesce(tb_outgeneral_b.nacceptnum,0)>0 " +//实发数量-已入库数量>0
+				" and tb_outgeneral_b.cinventoryid in ("+getPowerSql()+")" +
+				" and tb_outgeneral_h.srl_pkr= '"+getLoginInforHelper().getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'"+//过滤入库仓库
+			    " and ( tb_outgeneral_b.pk_defdoc1 is null or " +
+			    " tb_outgeneral_b.pk_defdoc1 ='"+getLoginInforHelper().getSpaceByLogUserForStore(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"' )";//过滤出入库货位  不过滤空货位
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		return sql;	
 		}
 	@Override
 	public String getBodyCondition() {
 		
-	    return "  tb_outgeneral_b.general_b_pk  not in(select distinct csourcebillbid from tb_general_b where csourcebillbid is not null and csourcebillbid is not null and isnull(dr,0)=0) and tb_outgeneral_b.cinventoryid in ";	
+	    return " isnull(tb_outgeneral_b.dr,0)=0 and coalesce(tb_outgeneral_b.noutnum,0)-coalesce(tb_outgeneral_b.nacceptnum,0)>0"+//实发数量-已入库数量>0
+		       " and pk_invmandoc in ("+getPowerSql()+")";
 	}
-	@Override
-	public boolean isSelfLoadHead(){
-		return true;
-	}		
-	@Override
-	public boolean isSelfLoadBody(){
-		return true;
-	}	
+	
 	@Override
 	protected boolean isHeadCanMultiSelect() {
-		return false;
+		return true;
 	}
 	@Override
 	protected boolean isBodyCanSelected() {
 		return true;
 	}
+	
+
 	@Override
-	public Object getUseObjOnRef() throws Exception{	
-		return inv_Pks;
-	}	
+	public String getPk_invbasdocName() {
+		return "geb_cinvbasid";
+	}
 	@Override
-	public boolean getIsBusinessType() {
-		return false;
-	}	
+	public String getPk_invmandocName() {
+		return "geb_cinventoryid";
+	}
+	@Override
+	public IControllerBase getUIController() {
+		return new nc.ui.dm.speorder.ClientController();
+	}
+	
+
+		
+	
+	
+	
 }

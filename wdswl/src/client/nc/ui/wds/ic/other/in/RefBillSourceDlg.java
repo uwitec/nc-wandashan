@@ -70,7 +70,7 @@ public class RefBillSourceDlg extends WdsBillSourceDLG{
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
-		return "参照其他出库单";
+		return "参照供应链其他出库单";
 	}
 	@Override
 	public String getHeadCondition() {
