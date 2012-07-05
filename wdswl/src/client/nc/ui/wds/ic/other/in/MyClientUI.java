@@ -316,6 +316,7 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 				}
 			}
 		}
+		super.beforeEdit(e);
 		return true;
 	}
 	@Override
