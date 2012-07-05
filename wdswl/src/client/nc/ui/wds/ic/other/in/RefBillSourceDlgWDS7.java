@@ -98,15 +98,15 @@ public class RefBillSourceDlgWDS7 extends MBillSourceDLG{
 
 	@Override
 	public String getPk_invbasdocName() {
-		return "geb_cinvbasid";
+		return "cinvbasid";
 	}
 	@Override
 	public String getPk_invmandocName() {
-		return "geb_cinventoryid";
+		return "cinventoryid";
 	}
 	@Override
 	public IControllerBase getUIController() {
-		return new nc.ui.dm.speorder.ClientController();
+		return new nc.ui.wds.ic.other.out.OtherOutClientUICtrl();
 	}
 	
 
