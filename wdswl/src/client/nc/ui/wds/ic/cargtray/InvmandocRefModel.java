@@ -1,26 +1,26 @@
 package nc.ui.wds.ic.cargtray;
 
 import nc.ui.bd.ref.AbstractRefModel;
-
+/**
+ * 完达山存货档案参照 
+ * @author mlr
+ */
 public class InvmandocRefModel extends AbstractRefModel{
-
-	// 该条件会根据环境变量变化，同时在setpk时不带此条件
-	private String envWherePart = null;
 	
 	 private String m_sRefTitle = "当前货位下存货";
 	 
-	 private String tablename="tb_spacegoods join " +
-	 		"wds_invbasdoc on tb_spacegoods.pk_invmandoc=wds_invbasdoc.pk_invmandoc  join " +
-	 		"bd_invmandoc on tb_spacegoods.pk_invmandoc=bd_invmandoc.pk_invmandoc  join  " +
-	 		"bd_invbasdoc on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc ";
+
+	 private String tablename1="wds_invbasdoc join " +
+		" tb_spacegoods on wds_invbasdoc.pk_invmandoc=tb_spacegoods.pk_invmandoc   " +
+		" join bd_invbasdoc on wds_invbasdoc.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc "+
+	    " join wds_cargdoc1 on tb_spacegoods.pk_wds_cargdoc=wds_cargdoc1.pk_wds_cargdoc ";
 	
-	 private String[] fieldcode={"invcode","invname","invspec","invtype",
-			 "tb_spacegoods.pk_invbasdoc","tb_spacegoods.pk_invmandoc"};
+	 private String[] fieldcode={"invcode","invname","invspec","invtype"};
 	 
 	 
 	 private String[] fieldname={"存货编码","存货名称","规格","型号"};
 	
-	 private String[] hidecode={"tb_spacegoods.pk_invbasdoc","tb_spacegoods.pk_invmandoc"};
+	 private String[] hidecode={"wds_invbasdoc.pk_invmandoc","wds_invbasdoc.pk_invbasdoc"};
 	 
 	 private int defaultFieldCount=4;
 	    /**
@@ -68,7 +68,7 @@ public class InvmandocRefModel extends AbstractRefModel{
 	     * @return java.lang.String
 	     */
 	    public String getPkFieldCode() {
-		return "tb_spacegoods.pk_invmandoc";
+		return "wds_invbasdoc.pk_invmandoc";
 	    }
 
 	    /**
@@ -82,9 +82,12 @@ public class InvmandocRefModel extends AbstractRefModel{
 	    @Override
 	    public String getWherePart() {
 	    	StringBuffer strWhere = new StringBuffer();
-	    	strWhere.append(" isnull(tb_spacegoods.dr,0)=0 and isnull(wds_invbasdoc.dr,0) = 0 and isnull(bd_invbasdoc.dr,0) = 0" +
-	    			" and isnull(bd_invmandoc.dr,0) = 0 ")   
-	    	        .append(" and bd_invmandoc.pk_corp='"+getPk_corp()+"'");
+	    	strWhere.append(" isnull(tb_spacegoods.dr,0)=0 and isnull(wds_invbasdoc.dr,0) = 0 " +
+	    			        " and isnull(bd_invbasdoc.dr,0) = 0 and isnull(wds_cargdoc1.dr,0) = 0 ")  ;
+	        strWhere.append(" and wds_invbasdoc.pk_corp='"+getPk_corp()+"'");
+	        strWhere.append(" and wds_cargdoc1.pk_corp='"+getPk_corp()+"'");
+
+
 	    	return strWhere.toString();
 	    }
 	    /**
@@ -94,81 +97,11 @@ public class InvmandocRefModel extends AbstractRefModel{
 	     */
 	    public String getTableName() {
 	    
-		return tablename;
+		return tablename1;
 	    }
 	    @Override
 	    public boolean isCacheEnabled() {
 	    	
 	    	return false;
 	    }
-		/**
-		 * 构造基本 SQL
-		 */
-		protected String buildBaseSql(String patch, String[] columns,
-				String[] hiddenColumns, String tableName, String whereCondition) {
-			StringBuffer whereClause = new StringBuffer();
-			StringBuffer sql = new StringBuffer("select distinct").append(patch)
-					.append(" ");
-			int columnCount = columns == null ? 0 : columns.length;
-			addQueryColumn(columnCount, sql, columns, hiddenColumns);
-			// 加入FROM子句
-			sql.append(" from ").append(tableName);
-			// 加入WHERE子句
-			if (whereCondition != null && whereCondition.trim().length() != 0) {
-				whereClause.append(" where (").append(whereCondition).append(" )");
-			} else
-				whereClause.append(" where 11=11 ");
-
-			appendAddWherePartCondition(whereClause);
-
-			addDataPowerCondition(getTableName(), whereClause);
-			addSealCondition(whereClause);
-			addEnvWherePart(whereClause);
-			sql.append(" ").append(whereClause.toString());
-
-			return sql.toString();
-		}
-		private void appendAddWherePartCondition(StringBuffer whereClause) {
-
-			if (getAddWherePart() == null) {
-				return;
-			}
-
-			if (isPKMatch() && !isMatchPkWithWherePart()) {
-
-				return;
-
-			}
-			whereClause.append(" ").append(getAddWherePart());
-
-		}
-		private void addEnvWherePart(StringBuffer whereClause) {
-			// setpk ,不包含此条件
-			if (isPKMatch()) {
-				return;
-			}
-			String wherePart = getEnvWherePart();
-			if (wherePart != null) {
-
-				whereClause.append(" and (").append(wherePart).append(") ");
-
-			}
-
-		}
-		/**
-		 * @return 返回 envWherePart。
-		 */
-		private String getEnvWherePart() {
-			return envWherePart;
-		}
-		/**
-		 * 设置条件时，要利用参照的环境变量的方法去拼条件，否则无法根据环境变量的变化而变化。 例如：
-		 * 
-		 * @param envWherePart
-		 *            要设置的 envWherePart。
-		 */
-		public void setEnvWherePart(String envWherePart) {
-			this.envWherePart = envWherePart;
-		}
-
 }
