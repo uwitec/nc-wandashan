@@ -18,6 +18,8 @@ public class StatusUpdateBodyVO extends HYChildSuperVO {
 	public String cassunitid;//辅计量单位
 	
 	public String vdef1; //入库日期
+	public static String[] split_keys = new String[]{"cinvmanid","vbatchcode","cinvstatusid","cinvstatusid2"};
+	
 
 	public String getVdef1() {
 		return vdef1;
