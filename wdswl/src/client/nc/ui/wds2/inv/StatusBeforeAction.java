@@ -37,6 +37,9 @@ public class StatusBeforeAction implements IUIBeforeProcAction {
 			if(bodys == null || bodys.length == 0)
 				throw new BusinessException("表体数据为空");
 			
+			if(bodys.length == 1)
+				return;
+			
 			CircularlyAccessibleValueObject[][] datas=
 				SplitBillVOs.getSplitVOs(bodys, StatusUpdateBodyVO.split_keys);
 			
