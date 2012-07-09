@@ -8,6 +8,8 @@ import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wds2.inv.StatusUpdateBillVO;
+import nv.bs.wds2.inv.StatusUpdateBO;
 /**
  *  ×´Ì¬µ÷Õûµ¥
  * @author Administrator
@@ -30,6 +32,11 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 	try {
 		super.m_tmpVo = vo;
 		Object retObj = null;
+		
+		StatusUpdateBillVO bill = (StatusUpdateBillVO)this.getVo();
+		StatusUpdateBO bo = new StatusUpdateBO();
+		bo.checkDataOnSave(bill);
+		
 		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		return retObj;
 	} catch (Exception ex) {

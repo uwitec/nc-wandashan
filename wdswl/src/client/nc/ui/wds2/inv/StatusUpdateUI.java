@@ -30,6 +30,9 @@ private LoginInforHelper helper = null;
 		}
 		return helper;
 	}
+	public boolean isSaveAndCommitTogether() {
+		return true;
+	}
 	
 	private nc.ui.wdsnew.pub.LogNumRefUFPanel ivjLotNumbRefPane=null;
 	
@@ -115,6 +118,8 @@ private LoginInforHelper helper = null;
 				String o2 = WdsWlPubTool.getString_NullAsTrimZeroLen(getBillCardPanel().getBodyValueAt(row, "cinvstatusid2"));
 				if(o.equalsIgnoreCase(o2)){
 					showErrorMessage("调整后状态和调整前相同");
+					getBillCardPanel().setBodyValueAt(null, row, "cinvstatusid2");
+					getBillCardPanel().setBodyValueAt(null, row, "invstatus2");
 					return;
 				}				
 			}else if("vbatchcode".equalsIgnoreCase(key)){				
@@ -146,13 +151,13 @@ private LoginInforHelper helper = null;
 	public void pick(List<StockInvOnHandVO> vos, int row) {
 		//取出本次出库的总的数量 
 		UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBillModel().getValueAt(row, "nassnum"));
-		if(zbnum.doubleValue()==0)
-			return;
+//		if(zbnum.doubleValue()==0)
+//			return;
 		//进行分量  
 		//按 批次号  由小到大 依次分量
 		if(vos==null )
 			return;
-		getPick().spiltNum(vos,row,zbnum);//进行拣货分量
+		getPick().spiltNum(vos,row,zbnum,false);//进行拣货分量
 		//重新构建表体	
 		createBill(vos,row);			
   }
@@ -225,6 +230,7 @@ private LoginInforHelper helper = null;
 			//			setDate(vos.get(0).getWhs_batchcode(),row);
 			bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
 			bm.setValueAt(vos.get(0).getWhs_oanum(), row, "nassnum");//设置实发辅数量  
+			bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量
 		}else{
 			//最后一行
 			if(row==bm.getRowCount()-1){
@@ -232,7 +238,7 @@ private LoginInforHelper helper = null;
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 				//				setDate(vos.get(0).getWhs_batchcode(),row);
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
-
+				bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量
 				//				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "nassnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
@@ -241,7 +247,7 @@ private LoginInforHelper helper = null;
 					bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
 					//				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "cinvstatusid");
-
+					bm.setValueAt(vos.get(i).getCreadate().toString(), row+i, "vdef1");//设置实发辅数量
 					//				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 					bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "nassnum");//设置实发辅数量					
 				}
@@ -249,6 +255,7 @@ private LoginInforHelper helper = null;
 				//处理第一行
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 				//				setDate(vos.get(0).getWhs_batchcode(),row);
+				bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量+
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
 				//				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "nassnum");//设置实发辅数量
@@ -257,6 +264,7 @@ private LoginInforHelper helper = null;
 					bm.setBodyRowVO(bm.getBodyValueRowVO(row, StatusUpdateBodyVO.class.getName()), row+i);
 					bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
 					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "cinvstatusid");
+					bm.setValueAt(vos.get(i).getCreadate().toString(), row+i, "vdef1");//设置实发辅数量
 					//				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 					//				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 					bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "nassnum");//设置实发辅数量					
@@ -264,6 +272,7 @@ private LoginInforHelper helper = null;
 			}
 		}
 		getBillCardPanel().getBillModel().execLoadFormula();
+		getBillCardPanel().getBillModel().execEditFormulaByKey(row, "nassnum");
 		// this.updateUI();
 		//for end mlr
 

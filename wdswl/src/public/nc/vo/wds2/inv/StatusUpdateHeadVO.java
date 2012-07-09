@@ -1,10 +1,12 @@
 package nc.vo.wds2.inv;
 
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 
 public class StatusUpdateHeadVO extends SuperVO {
 	
@@ -452,5 +454,20 @@ public class StatusUpdateHeadVO extends SuperVO {
 
 	public void setUreserve3(UFBoolean ureserve3) {
 		this.ureserve3 = ureserve3;
+	}
+	
+	public void validation() throws ValidationException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(getPk_corp())==null){
+			throw new ValidationException("公司为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(getPk_billtype())==null){
+			throw new ValidationException("单据类型为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(getCwarehouseid())==null){
+			throw new ValidationException("仓库为空");
+		}
+		if(PuPubVO.getString_TrimZeroLenAsNull(getCcargdocid())==null){
+			throw new ValidationException("货位为空");
+		}
 	}
 }

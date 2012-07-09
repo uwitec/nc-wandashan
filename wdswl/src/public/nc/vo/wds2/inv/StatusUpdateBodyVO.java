@@ -50,7 +50,7 @@ public class StatusUpdateBodyVO extends SuperVO {
     public String  vsourcebillrowid;//源头单据RowID	
 	//记录来源 和 源头数据的字段  结束
     public String vmemo;//备注
-	public String vdef1;
+	public String vdef1;//---------------生产日期
 	public String vdef2;
 	public String vdef3;
 	public String vdef4;

@@ -38,6 +38,7 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 	}	
 	@Override
 	protected void onBoSave() throws Exception {
+		getBillCardPanelWrapper().getBillCardPanel().stopEditing();
 		try {
 			dataNotNullValidate();
 		} catch (ValidationException e) {

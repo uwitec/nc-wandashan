@@ -29,10 +29,14 @@ public class StatusBeforeAction implements IUIBeforeProcAction {
 //			保存前数据校验  表体：存货 批次 调整前状态  调整后状态  不能重复  调整数量不能为0
 			if(vo == null)
 				return;
+			
 			if(!(vo instanceof StatusUpdateBillVO))
 				throw new BusinessException("传入数据非法");
+			
 			StatusUpdateBillVO bill = (StatusUpdateBillVO)vo;
 			StatusUpdateHeadVO head = bill.getHeader();
+			head.validation();
+			
 			StatusUpdateBodyVO[] bodys = bill.getBodys();
 			if(bodys == null || bodys.length == 0)
 				throw new BusinessException("表体数据为空");

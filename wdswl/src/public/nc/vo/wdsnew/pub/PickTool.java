@@ -11,6 +11,7 @@ import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 完达山物流出库单自动拣货
  * @author mlr
@@ -182,6 +183,46 @@ public class PickTool implements Serializable{
 		}
 		mpick.put(vo.getPrimaryKey(), list);
 	}
+	
+	/**
+	    * 拣货分量 
+	    * @作者：mlr
+	    * @说明：完达山物流项目   zhf modify存货状态调整单特殊处理  特殊支持
+	    * @时间：2012-6-20上午11:08:10
+	    * @param vos
+	    * @param row
+	    * @param zbnum
+	    */
+		public  void spiltNum(List<StockInvOnHandVO> vos, int row, UFDouble zbnum,boolean isfromic) {
+		//	List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
+			int len = vos.size();
+			for(int i=0;i<len;i++){
+				UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos.get(i).getAttributeValue("whs_stockpieces"));
+				
+//				为zhf存货状态调整单特殊处理  特殊支持
+				if(PuPubVO.getUFDouble_NullAsZero(zbnum).equals(new UFDouble(0.0))&&!isfromic){
+					vos.get(i).setAttributeValue("whs_omnum", bnum);// 设置应发数量																		// (辅数量)
+					vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
+					continue;
+				}
+				
+				if(zbnum.doubleValue()>bnum.doubleValue()){
+					if (i == len - 1) {
+						vos.get(i).setAttributeValue("whs_omnum", zbnum);// 设置应发数量																		// (辅数量)
+						vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
+					} else {
+						zbnum = zbnum.sub(bnum);
+						vos.get(i).setAttributeValue("whs_omnum", bnum);// 设置应发数量																	// (辅数量)
+						vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
+					}
+				}else{
+					vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
+					vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
+					break;
+				}		
+			}		
+		}
+	
 	/**
 	    * 拣货分量 
 	    * @作者：mlr
@@ -192,30 +233,6 @@ public class PickTool implements Serializable{
 	    * @param zbnum
 	    */
 		public  void spiltNum(List<StockInvOnHandVO> vos, int row, UFDouble zbnum) {
-		//	List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
-			for(int i=0;i<vos.size();i++){
-				UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(vos.get(i).getAttributeValue("whs_stockpieces"));	
-				if(zbnum.doubleValue()>bnum.doubleValue()){
-					if (i == vos.size() - 1) {
-						vos.get(i).setAttributeValue("whs_omnum", zbnum);// 设置应发数量																		// (辅数量)
-						vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
-					} else {
-						zbnum = zbnum.sub(bnum);
-						vos.get(i).setAttributeValue("whs_omnum", bnum);// 设置应发数量																	// (辅数量)
-						vos.get(i).setAttributeValue("whs_oanum", bnum);// 设置实发数量(辅数量)
-					}
-				//	list.add(vos.get(i));
-				}else if(zbnum.doubleValue()<bnum.doubleValue()){
-					vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
-					vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-				//	list.add(vos.get(i));
-					break;
-				}else{
-					vos.get(i).setAttributeValue("whs_omnum", zbnum);//设置应发数量 (辅数量)
-					vos.get(i).setAttributeValue("whs_oanum", zbnum);//设置实发数量(辅数量)
-				//	list.add(vos.get(i));
-					break;
-				}		
-			}		
+			spiltNum(vos,row,zbnum,true);
 		}
 }
