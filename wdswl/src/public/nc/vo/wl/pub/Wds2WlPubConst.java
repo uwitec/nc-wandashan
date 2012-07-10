@@ -8,7 +8,7 @@ public class Wds2WlPubConst {
 //	存货状态调整单
 	public final static  String  billtype_statusupdate = "WS20";   //处理状态变更单保存  状态变化前减少量
 	
-	
+	public final static  String  billtype_alloinsendorder = "WS21";   //调入运单
 	
 	
 	//库存现存量更新

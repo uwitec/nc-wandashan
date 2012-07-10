@@ -1,36 +1,23 @@
 package nc.bs.pub.action;
 
 import java.util.Hashtable;
-
-import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
-import nc.vo.wdsnew.pub.BillStockBO1;
-import nc.vo.wl.pub.WdsWlPubConst;
+
 /**
- *  其他入库
+ *  调入运单
  * @author Administrator
  *
  */
-public class N_WDS7_WRITE extends AbstractCompiler2 {
+public class N_WS21_WRITE extends AbstractCompiler2 {
 private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 private Hashtable m_keyHas=null;
 
-public N_WDS7_WRITE() {
+public N_WS21_WRITE() {
 	super();
 }
-private BillStockBO1 stock=null;
-private BillStockBO1 getStock(){
-	if(stock==null){
-		stock=new BillStockBO1();
-	}
-	return stock;
-}
-
 /*
 * 备注：平台编写规则类
 * 接口执行类
@@ -38,23 +25,19 @@ private BillStockBO1 getStock(){
 public Object runComClass(PfParameterVO vo) throws BusinessException {
 
 	try {
-		super.m_tmpVo = vo;
-		Object retObj = null;
-		//进行数据回写
-		IcInPubBO bo=new IcInPubBO();
-		bo.writeBackForInBill((OtherInBillVO) getVo(),IBDACTION.SAVE);
-		//更新现存量		 
-		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OTHER_IN);
-		//进行单据保存
-		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			super.m_tmpVo = vo;
+			Object retObj = null;
+						
+			//进行单据保存操作
+			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+			return retObj;
+		} catch (Exception ex) {
+			if (ex instanceof BusinessException)
+				throw (BusinessException) ex;
+			else
+				throw new PFBusinessException(ex.getMessage(), ex);
+		}
 
-		return retObj;
-	} catch (Exception ex) {
-		if (ex instanceof BusinessException)
-			throw (BusinessException) ex;
-		else
-			throw new PFBusinessException(ex.getMessage(), ex);
-	}
 }
 /*
 * 备注：平台编写原始脚本
