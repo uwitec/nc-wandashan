@@ -6,13 +6,13 @@ import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.ButtonCommon;
-import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.Wds2WlPubConst;
 
 public class ClientController extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Del,
+				//				IBillButton.Del,
 				IBillButton.Edit,
 				IBillButton.Save,
 				IBillButton.Cancel,
@@ -23,15 +23,16 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Action,
 				ButtonCommon.joinup,
 				IBillButton.Print,
-				ButtonCommon.TRAN_COL,
-				ButtonCommon.LOCK,
-				ButtonCommon.UNLOCK};
+				//				ButtonCommon.TRAN_COL,
+				//				ButtonCommon.LOCK,
+				//				ButtonCommon.UNLOCK
+		};
 		return buttonArray;
 	}
 
 	public int[] getListButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Del,
+				//				IBillButton.Del,
 				IBillButton.Edit,
 				IBillButton.Query, 				 
 				IBillButton.Card,
@@ -40,11 +41,11 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Action,
 				ButtonCommon.joinup,
 				IBillButton.Print,
-				ButtonCommon.TRAN_COL,
-				ButtonCommon.LOCK,
-				ButtonCommon.UNLOCK
+				//				ButtonCommon.TRAN_COL,
+				//				ButtonCommon.LOCK,
+				//				ButtonCommon.UNLOCK
 		}
-				;
+		;
 		return buttonArray;
 	}
 
@@ -53,7 +54,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public String getBillType() {
-		return WdsWlPubConst.WDS3;
+		return Wds2WlPubConst.billtype_alloinsendorder;
 	}
 
 	public String[] getBillVoName() {
@@ -61,7 +62,7 @@ public class ClientController extends AbstractManageController {
 				HYBillVO.class.getName(),
 				SendorderVO.class.getName(),
 				SendorderBVO.class.getName()
-				};
+		};
 	}
 
 	public String getBodyCondition() {

@@ -21,23 +21,18 @@ public class ClientUIQueryDlg extends HYQueryDLG {
 	public void init(){
 		setDefaultValue("wds_sendorder.dmakedate",null,ClientEnvironment.getInstance().getDate().toString());
 	}
-	private static final long serialVersionUID = 645772211659590777L;
+	
 	@Override
 	public String getWhereSql() {
 		String sql=super.getWhereSql();
-		
+
 		if(sql==null){
-	      return null;
+			return null;
 		}
 		if(sql.contains("wds_sendorder.vbillstatus = 0")){
-			
-		  return sql.replace("wds_sendorder.vbillstatus = 0", "wds_sendorder.vbillstatus = 8");
+
+			return sql.replace("wds_sendorder.vbillstatus = 0", "wds_sendorder.vbillstatus = 8");
 		}
 		return sql;
 	}
-	
-   
-	
-	
-	
 }
