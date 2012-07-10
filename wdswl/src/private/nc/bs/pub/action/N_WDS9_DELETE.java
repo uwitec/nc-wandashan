@@ -3,6 +3,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds2.send.AlloInSendBO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -55,6 +56,10 @@ public class N_WDS9_DELETE extends AbstractCompiler2 {
 			if (bodys == null || bodys.length == 0) {
 				throw new BusinessException("传入数据为空");
 			}
+			
+//			zhf add  调拨入库单是删除时 系统自动删除其对应的调入运单  
+			new AlloInSendBO().deleteAlloInSendBill(bodys[0].getGeh_pk());
+			
 			// 方法说明:行业公共删除
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
