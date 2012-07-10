@@ -1,11 +1,9 @@
 package nc.bs.wds.ic.so.out;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.trade.business.HYPubBO;
 import nc.jdbc.framework.processor.BeanListProcessor;
@@ -15,14 +13,11 @@ import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.so.so001.SaleOrderVO;
 import nc.vo.so.so001.SaleorderBVO;
 import nc.vo.so.so001.SaleorderHVO;
@@ -35,7 +30,6 @@ import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
 import nc.vo.wds.ic.zgjz.ZgjzBVO;
 import nc.vo.wds.ic.zgjz.ZgjzHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -88,25 +82,13 @@ public class ChangToWDSO {
 		this.coperator = coperator;
 		this.pk_corp = pk_corp;
 		this.logDate = new UFDate(date);		
+		//按销售订单 主键分担
 		HashMap<String, ArrayList<TbOutgeneralBVO>> map = new HashMap<String, ArrayList<TbOutgeneralBVO>>();
 		TbOutgeneralHVO head = null;
 		if (billVO instanceof IExAggVO) {
 			MyBillVO bill = (MyBillVO) billVO;
 			head = (TbOutgeneralHVO) bill.getParentVO();
-			TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) bill.getTableVO(bill
-					.getTableCodes()[0]);
-			//将虚拟的销售出库单表体 根据单品汇总数量，更新 销售暂估 已安排数量
-			CircularlyAccessibleValueObject[][]  xnvos = SplitBillVOs.getSplitVOs(bvos, new String[]{"isxnap"});
-			for(int i=0;i<xnvos.length;i++){
-				TbOutgeneralBVO[] xnvo = (TbOutgeneralBVO[])xnvos[i];
-				if(xnvo.length ==0){
-					continue;
-				}
-				if(PuPubVO.getUFBoolean_NullAs(xnvo[0].getIsxnap(), UFBoolean.FALSE).booleanValue()){
-					updateZgjzNum(head,xnvo,true);
-				}
-			}
-			// 表体按照销售订单来分组（当前一般只有一个销售订单）
+			TbOutgeneralBVO[] bvos = (TbOutgeneralBVO[]) bill.getTableVO(bill.getTableCodes()[0]);
 			for (TbOutgeneralBVO bvo : bvos) {
 				String key = PuPubVO.getString_TrimZeroLenAsNull(bvo
 						.getCfirstbillhid());
@@ -122,10 +104,11 @@ public class ChangToWDSO {
 				}
 			}
 		}
-		// 将 销售出库单 转换 成销售出库回传单
+		
 		if (map.size() == 0) {
 			return;
 		}
+		//生成销售出库回传单
 		for (String key : map.keySet()) {
 			MultiBillVO writeBillVO = getMutiBillvo(key, head, map.get(key));
 			// 将来源明细上的数量汇总加到订单汇总上（Writeback4cB2VO-->Writeback4cB1VO）
@@ -264,7 +247,7 @@ public class ChangToWDSO {
 		this.coperator = coperator;
 		this.pk_corp = pk_corp;
 		this.logDate = new UFDate(date);
-		//查询销售出库单对应的 下游单据
+		//查询销售出库单 下游 销售出库回传表头
 		TbOutgeneralHVO head = (TbOutgeneralHVO) billVO.getParentVO();
 		StringBuffer bur = new StringBuffer();
 		bur.append(" isnull(dr,0)=0  ");
@@ -275,20 +258,26 @@ public class ChangToWDSO {
 		bur.append(" )");
 		Writeback4cHVO[] writeHvos = (Writeback4cHVO[]) getHypubBO()
 		.queryByCondition(Writeback4cHVO.class, bur.toString());
+		//如果有下游
 		if (writeHvos != null && writeHvos.length > 0) {
 			for(Writeback4cHVO writeHead:writeHvos){
+				//查看销售出库回传单是否 已经审批
 				Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHvos[0].getVbillstatus(), IBillStatus.FREE);
 				if (vbillstatus == IBillStatus.CHECKPASS) {
 					throw new BusinessException("下游销售出库台账回写已经审批完成,不能再弃审");
 				}
+				//创建销售出库回传单 聚合vo
 				MultiBillVO writeBillVO = new MultiBillVO();
 				String where = " isnull(dr,0)=0 and pk_wds_writeback4c_h = '"
 						+ writeHead.getPrimaryKey() + "'";
+				//获得 销售出库回传单表体 1
 				Writeback4cB1VO[] b1vos = (Writeback4cB1VO[]) getHypubBO()
 						.queryByCondition(Writeback4cB1VO.class, where);
+				//获得 销售出库回传单表体 2
 				Writeback4cB2VO[] b2vos = (Writeback4cB2VO[]) getHypubBO()
 				.queryByCondition(Writeback4cB2VO.class, where);
-				//将由该销售出库单生成 销售出库回写来源明细 删除
+				//删除 销售出库回传单  对应 销售出库的来源明细
+				//判断是否 整单作废销售出库回传单
 				boolean isDel =false;
 				int count =0;
 				if(b2vos !=null ){
@@ -300,16 +289,20 @@ public class ChangToWDSO {
 						}
 					}
 				}
+				//如果销售出库回传单 来源明细  都是本次弃审的 销售出库单 将销售出库回传单设置为整单删除
 				if(count == b2vos.length)
 					isDel = true;
+				//设置 销售出库回传单 表头 表体
 				writeBillVO.setParentVO(writeHvos[0]);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[0], b1vos);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[1], b2vos);
 				if(isDel){
 					getHypubBO().deleteBill(writeBillVO);
 				}else{
-					//将来源明细上的数量汇总加到订单汇总上（Writeback4cB2VO-->Writeback4cB1VO）
+					//将 销售出库回传单   表体2 来源明细为  本次弃审的销售出库单的   记录   设置为删除状态
+					//将  销售出库回传单  表体1 汇总信息 对应的  来源明细新为删除态的记录  的汇总量  减掉  并设置vo状态为修改态
 					sumNumsDel(writeBillVO);
+					//保存销售出库回传单
 					getHypubBO().saveBill(writeBillVO);
 				}
 			}
@@ -323,53 +316,72 @@ public class ChangToWDSO {
 	 * @作者：lyf
 	 * @说明：完达山物流项目
 	 * @时间：2011-10-27上午10:15:42
-	 * @param key
-	 * @param head
-	 * @param list
+	 * @param key  销售订单主键
+	 * @param head 物流销售出库表头vo
+	 * @param list 物流销售出库表体vo
 	 * @return
 	 * @throws BusinessException
 	 */
 	public MultiBillVO getMutiBillvo(String key, TbOutgeneralHVO head,
 			ArrayList<TbOutgeneralBVO> list) throws BusinessException {
+	   //创建销售出库回传单 聚合vo
 		MultiBillVO writeBillVO = new MultiBillVO();
+		//根据销售订单主键  构造销售订单聚合vo
 		SaleOrderVO orderVO = getSaleOrder(key);
+		//订单表头
 		SaleorderHVO orderHead = orderVO.getHeadVO();
+		//订单表体
 		SaleorderBVO[] orderBods = orderVO.getBodyVOs();
 		if (orderBods == null || orderBods.length == 0) {
 			throw new BusinessException("查询销售订单表体失败");
 		}
-		// 根据销售订单 主键，查询是否已经生成销售销售出库回传单（销售出库回传单 表头保存销售订单id,一一对应关系）
+		// 根据订单主键 查询销售出库回传单 表头
 		String strWhere = " isnull(dr,0)=0 and csaleid='" + key
 				+ "' and pk_corp='" + pk_corp + "'";
 		Writeback4cHVO[] writeHvos = (Writeback4cHVO[]) getHypubBO()
 				.queryByCondition(Writeback4cHVO.class, strWhere);
-		if (writeHvos != null && writeHvos.length > 0) {// --如果下游单据已存在
+		
+		if (writeHvos != null && writeHvos.length > 0) {
+			//如果存在销售出库回传单 
 			Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHvos[0]
 					.getVbillstatus(), IBillStatus.FREE);
+			//查看是否已经审批
 			if (vbillstatus == IBillStatus.CHECKPASS) {
 				throw new BusinessException("下游销售出库台账回写已经审批完成,不能再审核");
 			}
+			//查询出 销售出库回传单表体数据
 			String where = " isnull(dr,0)=0 and pk_wds_writeback4c_h = '"
 					+ writeHvos[0].getPrimaryKey() + "'";
+			//销售出库 回传表体 1(按销售订单 表体行id 汇总的信息)
 			Writeback4cB1VO[] b1vos = (Writeback4cB1VO[]) getHypubBO()
 					.queryByCondition(Writeback4cB1VO.class, where);
+			//销售出库 回传表体 2（物流销售出库单表体明细）
 			Writeback4cB2VO[] b2vos = (Writeback4cB2VO[]) getHypubBO()
 			.queryByCondition(Writeback4cB2VO.class, where);
 			int i=0;
+			//设置  销售出库 回传表体 2 初始行号
 			if(b2vos != null){
 				i = 10*b2vos.length;
 			}
+			//物流销售出库 表体 --->  销售出库 回传表体 2  数据交换  设置vo状态为新增
 			Writeback4cB2VO[] b2vosNew = getWriteBackB2vo(i,head, list);
+			//将 新增  销售出库 回传表体 2 数据  追加到 已存在的 销售出库 回传表体 2 数据上 
 			ArrayList<Writeback4cB2VO> b2list = new ArrayList<Writeback4cB2VO>();
 			b2list.addAll(Arrays.asList(b2vos));
 			b2list.addAll(Arrays.asList(b2vosNew));
+			//设置销售出库回传单 表头
 			writeBillVO.setParentVO(writeHvos[0]);
+			//设置销售出库回传单  表体1
 			writeBillVO.setTableVO(writeBillVO.getTableCodes()[0], b1vos);
+			//设置销售出库回传单 表体 2
 			writeBillVO.setTableVO(writeBillVO.getTableCodes()[1], b2list.toArray(new Writeback4cB2VO[0]));
-		} else {// ---如果下游单据不存在
-			Writeback4cHVO hvo = getWrirteBackHvo(key, orderHead
-					.getVreceiptcode());
+		} else {
+			//如果不存在销售出库 回传单
+			//创建 销售出库回传单表头 设置vo状态为新增
+			Writeback4cHVO hvo = getWrirteBackHvo(key, orderHead.getVreceiptcode());
+		    // 创建销售出库回传单表体 1 	设置vo状态为新增		
 			Writeback4cB1VO[] b1vos = getWriteBackB1vo(orderBods);
+			//创建销售出库回传单表体 2  设置vo状态为新增
 			Writeback4cB2VO[] b2vos = getWriteBackB2vo(0,head, list);
 			writeBillVO.setParentVO(hvo);
 			writeBillVO.setTableVO(writeBillVO.getTableCodes()[0], b1vos);
@@ -438,6 +450,7 @@ public class ChangToWDSO {
 			b1vos[i].setPk_invbasdoc(orderBodys[i].getCinvbasdocid());// 存货基本id
 			b1vos[i].setUnit(orderBodys[i].getCunitid());// 存货主计量单位
 			b1vos[i].setAssunit(orderBodys[i].getCpackunitid());// 存货辅计量单位
+			b1vos[i].setStatus(VOStatus.NEW);
 		}
 		return b1vos;
 	}
@@ -552,6 +565,7 @@ public class ChangToWDSO {
 			return;
 		} else {
 			for (Writeback4cB2VO b2vo : b2vos) {
+				//取出 销售出库 应出数量  和 实际出数量
 				String corder_bid = PuPubVO.getString_TrimZeroLenAsNull(b2vo
 						.getCfirstbillbid());
 				String primaryKey = PuPubVO.getString_TrimZeroLenAsNull(b2vo.getPrimaryKey());
@@ -565,6 +579,7 @@ public class ChangToWDSO {
 						.getNoutnum());// 实际出口数量
 				UFDouble noutassistnum = PuPubVO.getUFDouble_NullAsZero(b2vo
 						.getNoutassistnum());
+				//根据  订单表体 id   将销售出库 回传 单 表体2 的明细  的 应出数量  和 实际出数量    汇总到  销售出库 回传 单 表体1 
 				for (Writeback4cB1VO b1vo : b1vos) {
 					UFDouble nnumber = PuPubVO.getUFDouble_NullAsZero(b1vo
 							.getNnumber());// 累计运单数量

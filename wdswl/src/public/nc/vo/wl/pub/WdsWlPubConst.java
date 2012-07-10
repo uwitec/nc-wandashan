@@ -218,10 +218,14 @@ public class WdsWlPubConst {
 
 	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid"};//"vbillno",
 	
+	public static String[] DB_PLAN_DEAL_SPLIT_FIELDS = new String[]{"coutwhid"};//"vbillno",
+	
 	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 	public static String DM_PLAN_TO_ORDER_SAVE="SAVE";
 	
 	public static String DM_SO_DEALNUM_FIELD_NAME = "ntaldcnum";//利用系统销售订单  已参与价保数量 作为  累计发运数量
+	
+	public static String DM_DB_DEALNUM_FIELD_NAME = "ndealnum";//调拨订单累计安排数量
 
 	public static String DEFAULT_CALBODY = "1021B1100000000001JL";//默认库存组织---------------------select * from BD_CALBODY where PK_CALBODY ='1021B1100000000001JL'
 	
@@ -233,11 +237,14 @@ public class WdsWlPubConst {
 	public static String WDS3="WDS3";
 	/**特殊订单 */
 	public static String WDSS="WDSS";
+	/**调出订单 */
+	public static String WDSG="WDSG";
 	/**销售运单安排 */
 	public static String WDS4 = "WDS4";//销售计划安排  原版
 	public static String WDS4_2 = "WDS42";//销售计划安排2
 	public static String WDS4_2_1 = "cust";//销售计划安排2
 	public static String WDS4_2_2 = "deal";//销售计划安排2
+	public static String WDSB = "WDSB";//调拨订单安排  
 	public static String WDS30 = "30";//销售订单
 	/**销售运单 */
 	public static String WDS5="WDS5";

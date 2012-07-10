@@ -1,11 +1,8 @@
 package nc.bs.wds.ic.allocation.in;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import javax.naming.NamingException;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.scm.pub.smart.SmartDMO;
 import nc.bs.trade.business.HYPubBO;
@@ -28,14 +25,10 @@ import nc.vo.wds.ic.write.back4y.Writeback4yB1VO;
 import nc.vo.wds.ic.write.back4y.Writeback4yB2VO;
 import nc.vo.wds.ic.write.back4y.Writeback4yHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 import org.apache.tools.ant.BuildException;
-
 /**
  * 物流调拨入库单签字 推式生成调拨入库回传单
- * 
  * @author lxg
- * 
  */
 public class ChangToWDSP {
 	HYPubBO pubbo = null;

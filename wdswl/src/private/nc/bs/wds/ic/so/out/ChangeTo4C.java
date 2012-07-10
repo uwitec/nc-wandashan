@@ -81,26 +81,26 @@ public class ChangeTo4C {
 		MultiBillVO billvo = (MultiBillVO)bill;
 		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
 		fisvbatchcontorl= PuPubVO.getUFBoolean_NullAs(hvo.getFisvbatchcontorl(), UFBoolean.FALSE);
-		//装载非虚拟流程表体
-		List<Writeback4cB2VO>  listbvos = new ArrayList<Writeback4cB2VO>();
+////		//装载非虚拟流程表体
+//		List<Writeback4cB2VO>  listbvos = new ArrayList<Writeback4cB2VO>();
 		//原销售出库回传单表体vo
 		Writeback4cB2VO[] bvos = (Writeback4cB2VO[])billvo.getTableVO(billvo.getTableCodes()[1]);
 		if(bvos == null || bvos.length ==0){
 			return null;
 		}
-		// liuys add 判断是否为虚拟安排  , 如果是,那么不回传erp销售出库
-		for(int i=0;i<bvos.length;i++){
-			UFBoolean isxnap=PuPubVO.getUFBoolean_NullAs(bvos[i].getIsxnap(), UFBoolean.FALSE);
-			if(!isxnap.booleanValue())
-				listbvos.add(bvos[i]);
-		}
-		//liuys add 如果整单都是虚拟安排,那么直接返回null,不处理
-		if(listbvos==null || listbvos.size()==0)
-			return null;
-		Writeback4cB2VO[] b2vos  = listbvos.toArray(new Writeback4cB2VO[0]);
+//		// liuys add 判断是否为虚拟安排  , 如果是,那么不回传erp销售出库
+//		for(int i=0;i<bvos.length;i++){
+//			UFBoolean isxnap=PuPubVO.getUFBoolean_NullAs(bvos[i].getIsxnap(), UFBoolean.FALSE);
+//			if(!isxnap.booleanValue())
+//				listbvos.add(bvos[i]);
+//		}
+//		//liuys add 如果整单都是虚拟安排,那么直接返回null,不处理
+//		if(listbvos==null || listbvos.size()==0)
+//			return null;
+//		Writeback4cB2VO[] b2vos  = listbvos.toArray(new Writeback4cB2VO[0]);
 
 		List<String> general_hs = new ArrayList<String>();
-		for(Writeback4cB2VO b2vo:b2vos){
+		for(Writeback4cB2VO b2vo:bvos){
 			String general_h = b2vo.getCsourcebillhid();
 			if(general_h == null || "".equalsIgnoreCase(general_h) 
 					|| general_hs.contains(general_h)){
@@ -109,7 +109,7 @@ public class ChangeTo4C {
 			general_hs.add(general_h);
 		}
 		//根据销售出库回传单，查找上有销售出库单（WDS8），分别对应交换成erp销售出库单(4C)
-		GeneralBillVO vo = getGeneralBillVO( hvo,general_hs);
+		GeneralBillVO vo = getGeneralBillVO(hvo,general_hs);
 		
 		return vo;
 	}
@@ -141,7 +141,6 @@ public class ChangeTo4C {
 			//设置货位信息
 			setLocatorVO(billVO);
 			GeneralBillVO vo =(GeneralBillVO) PfUtilTools.runChangeData(pk_billtype, "4C", billVO,null); //销售出库
-			//			setSpcGenBillVO(vo,coperator,date);
 			if(i == 0){
 				head = vo.getHeaderVO();
 			}
