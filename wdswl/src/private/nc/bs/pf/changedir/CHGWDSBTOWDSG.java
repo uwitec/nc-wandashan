@@ -93,7 +93,7 @@ public String[] getField() {
 			"B_csourcebillhid->B_cbillid",
 			"B_csourcebillbid->B_cbill_bid",
 			"B_vsourcebillcode->B_vcode",
-			"B_csourcetype->B_cbilltype ",			
+			"B_csourcetype->B_ctypecode",			
 			"B_cfirstbillhid->B_cbillid",
 			"B_cfirstbillbid->B_cbill_bid",
 			"B_vfirstbillcode->H_vcode",			
@@ -121,7 +121,7 @@ public String[] getField() {
 			"B_reserve2->B_cprojectphase",//项目阶段
 			"B_reserve3->B_cprojectid",//项目主键
 			"B_reserve4->B_cvendorid",//供应商
-			"B_reserve5->B_ctypecode",//订单类型	
+			//"B_reserve5->B_ctypecode",//订单类型	
 		};
 }
 /**

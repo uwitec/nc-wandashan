@@ -28,7 +28,7 @@ public class N_WDSG_SAVE extends AbstractCompiler2 {
 		try {
 			super.m_tmpVo = vo;
 		    setParameter ( "INCURVO",vo.m_preValueVo);
-		    setParameter ( "BillType", WdsWlPubConst.WDS3); 
+		    setParameter ( "BillType", WdsWlPubConst.WDSG); 
 		    setParameter ( "BillDate",getUserDate ().toString ());
 		    setParameter ( "ActionName", "WRITE");
 		    setParameter ( "P3",null);

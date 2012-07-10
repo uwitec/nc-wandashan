@@ -50,9 +50,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		String whereSql=null;
 		whereSql=super.getHeadCondition();
 		if(whereSql==null || whereSql.length()==0){		
-			whereSql=" pk_billtype='"+WdsWlPubConst.WDSS+"'";
+			whereSql=" pk_billtype='"+WdsWlPubConst.WDSG+"'";
 		}else{
-			whereSql=whereSql+" and pk_billtype='"+WdsWlPubConst.WDSS+"'";
+			whereSql=whereSql+" and pk_billtype='"+WdsWlPubConst.WDSG+"'";
 		}		
 		return whereSql;
 	}

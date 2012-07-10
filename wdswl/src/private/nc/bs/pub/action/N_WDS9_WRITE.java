@@ -2,9 +2,12 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 
+import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -35,9 +38,13 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 	try {
 		super.m_tmpVo = vo;
 		Object retObj = null;
-		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+		//进行数据回写
+		IcInPubBO bo=new IcInPubBO();
+		bo.writeBackForInBill((OtherInBillVO) getVo(),IBDACTION.SAVE);	
 		//更新现存量		 
 		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_ALLO_IN);
+		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+	
 		return retObj;
 	} catch (Exception ex) {
 			if (ex instanceof BusinessException)

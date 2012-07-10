@@ -12,7 +12,7 @@ public class ClientController extends AbstractManageController {
 
 	public int[] getCardButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Add,
+			//	IBillButton.Add,
 				IBillButton.Del,
 				IBillButton.Edit,
 				IBillButton.Line,
@@ -34,7 +34,7 @@ public class ClientController extends AbstractManageController {
 
 	public int[] getListButtonAry() {
 		int[] buttonArray = new int[] {
-				IBillButton.Add,
+			//	IBillButton.Add,
 				IBillButton.Del,
 				IBillButton.Edit,
 				IBillButton.Line,

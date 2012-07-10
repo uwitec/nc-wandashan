@@ -75,7 +75,6 @@ public class DbDealVO extends SuperVO{
 	private String cincorpid;//调入公司
 	private String cincbid;//调入库存组织
 	private Integer fallocflag;//调拨类型标志
-	private String cbilltype ;//单据类型
 	private String vnote;//备注
 	private String vcode ;//单据号
 	private UFDate dbilldate;//单据日期
@@ -131,18 +130,11 @@ public class DbDealVO extends SuperVO{
 		}
 	}
 	
-	public String getCbilltype() {
-		return cbilltype;
-	}
-	public void setCbilltype(String cbilltype) {
-		this.cbilltype = cbilltype;
-	}
-
 	public transient static String[] m_headNames = new String[]{
 		"h.cincorpid",
 		"h.cincbid",
 		"h.fallocflag",
-		"h.cbilltype ",
+		"h.ctypecode",
 		"h.vnote",
 
 	};

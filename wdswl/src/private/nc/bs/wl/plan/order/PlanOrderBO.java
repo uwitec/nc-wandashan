@@ -7,6 +7,7 @@ import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
+import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -85,6 +86,13 @@ public class PlanOrderBO {
 					  new String[]{"ndealnum","nassdealnum"});
 			
 		  }
+		  if(csourcetype.equals(ScmConst.m_sBillGSJDBDD)){
+			  WriteBackTool.writeBack(bodys, "to_bill_b", "cbill_bid",
+					  new String[]{"ndealnum","nassdealnum"}, 
+					  new String[]{"ndealnum","ndealnumb"},
+					  new String[]{"ndealnum","ndealnumb"});
+			
+		  }
 		}else if(ibdaction==IBDACTION.DELETE){
 		   for (int i = 0; i < bodys.length; i++) {
 			 bodys[i].setStatus(VOStatus.DELETED);
@@ -94,7 +102,13 @@ public class PlanOrderBO {
 					  new String[]{"ndealnum","nassdealnum"}, 
 					  new String[]{"ndealnum","nassdealnum"},
 					  new String[]{"ndealnum","nassdealnum"});	
-		  }			
+		  }	
+		  if(csourcetype.equals(ScmConst.m_sBillGSJDBDD)){
+			  WriteBackTool.writeBack(bodys, "to_bill_b", "cbill_bid",
+					  new String[]{"ndealnum","nassdealnum"}, 
+					  new String[]{"ndealnum","ndealnumb"},
+					  new String[]{"ndealnum","ndealnumb"});	
+		  }
 		}
 	}
 }
