@@ -1,16 +1,9 @@
 package nc.ui.wds.ic.pub;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
-import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
@@ -21,21 +14,16 @@ import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
-import nc.vo.ic.other.out.TbOutgeneralTVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wds.ic.cargtray.SmallTrayVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-
 public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	public OutPubClientUI ui = null;
