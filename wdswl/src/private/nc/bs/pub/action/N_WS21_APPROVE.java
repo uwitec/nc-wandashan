@@ -34,7 +34,9 @@ public class N_WS21_APPROVE extends AbstractCompiler2 {
 			// ####该组件为单动作工作流处理结束...不能进行修改####
 			Object retObj = null;
 			setParameter("currentVo", vo.m_preValueVo);
-			vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 2);
+//			vo.m_preValueVo.getParentVO().setAttributeValue("itransstatus", 2);
+			if(vo.m_preValueVo.getParentVO().getAttributeValue("ntransmny")==null)
+				throw new BusinessException("请录入运费");
 			retObj = runClass("nc.bs.wl.pub.HYBillApproveForwds3", "approveHYBill",
 					"&currentVo:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,
 					m_methodReturnHas);

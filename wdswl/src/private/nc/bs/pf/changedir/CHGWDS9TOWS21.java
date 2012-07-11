@@ -49,7 +49,7 @@ public class CHGWDS9TOWS21 extends nc.bs.pf.change.VOConversion {
 						
 						
 						"B_noutnum->B_geb_snum",//应入数量
-						"B_nnassoutnum->B_geb_bsnum",//应入辅数量  
+						"B_nassoutnum->B_geb_bsnum",//应入辅数量  
 						"B_ninacceptnum->B_geb_anum",//实入数量
 //						"B_ninassistnum->B_geb_banum",//实入辅数量   
 						
@@ -73,7 +73,7 @@ public class CHGWDS9TOWS21 extends nc.bs.pf.change.VOConversion {
 //						"B_vfirstbillcode->B_vfirstbillcode",//[保存  物流 调拨入库单字段]
 						"B_csourcetype->H_geh_billtype",//[保存  物流 调拨入库单字段]
 						
-						"B_vdef1->B_vdef1",//存货状态
+						"B_vdef1->B_cdt_pk",//存货状态
 						
 //						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期
 						
