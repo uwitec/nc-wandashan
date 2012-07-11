@@ -14,8 +14,7 @@ public class DbDeHeaderVo extends SuperVO {
 	private String vdef5;
 	private String vdef6;
 	private String vdef7;
-	
-	
+		
 	public String getVdef1() {
 		return vdef1;
 	}

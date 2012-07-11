@@ -2,9 +2,7 @@ package nc.vo.dm.db.deal;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.pub.HYBillVO;
 /**
- * 
  * @author mlr
- *
  */
 public class DbDealBillVO extends HYBillVO {
 	private static final long serialVersionUID = 1L;

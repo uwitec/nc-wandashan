@@ -12,61 +12,7 @@ public class DbDealVO extends SuperVO{
 	/**
 	 * alter table  to_bill_b add(ndealnum number(20,8))//调拨订单新增字段  已安排数量
 	 * alter table  to_bill_b add(ndealnumb number(20,8))//调拨订单新增字段  已安排辅数量
-	 */
-///调拨订单 --->调拨出库
-//	"H_cdptid->coutdeptid",
-//	"H_pk_corp->coutcorpid",
-//	"H_pk_calbody->coutcbid",
-//	"H_cwarehouseid->coutwhid",
-//	"H_cotherwhid->cinwhid",
-//	"H_coperatorid->SYSOPERATOR",
-//	"H_dbilldate->SYSDATE",
-//	"H_coperatoridnow->SYSOPERATOR",
-//	"H_cbizid->coutpsnid",
-//	"H_freplenishflag->bretractflag",
-//"freplenishflag->bretractflag",
-//	"H_cdilivertypeid->pk_sendtype",
-//	"H_vdiliveraddress->vreceiveaddress",
-//"vdiliveraddress->vreceiveaddress",   
-//	"H_ccustomerid->ccustomerid",
-//	"H_clogdatenow->SYSDATE",
-//	"vfree2->vfree2",
-//	"vfree1->vfree1",
-//	"cinventoryid->ctakeoutinvid",
-//	"cinvbasid->cinvbasid",
-//	"cprojectphaseid->cprojectphase",
-//	"cprojectid->cprojectid",
-//	"csourcebillhid->cbillid",
-//	"csourcebillbid->cbill_bid",
-//	"vbatchcode->vbatch",
-//	"vsourcebillcode->vcode",
-//	"vsourcerowno->crowno",
-//	"cfirstbillbid->cbill_bid",
-//	"cfirstbillhid->cbillid",
-//	"vfirstbillcode->vcode",
-//	"cfirsttype->ctypecode",
-//	"castunitid->castunitid",
-//	"creceieveid->creceieveid",
-//	"hsl->nchangerate",
-//	"cspaceid->ctakeoutspaceid",
-//	"dvalidate->dvalidate",
-//	"csourcebodyts->ts",
-//	"cinvbasid->cinvbasid",
-//	"cinvmanid->cinvbasid",
-//	"cquoteunitid->cquoteunitid",		
-//	"nquoteunitrate->nquoteunitrate",
-//	"bsourcelargess->flargess",
-//	"flargess->flargess",
-//	"cvendorid->cvendorid"
-//	"H_ts->H_ts",
-//	"H_vnote->H_vnote",
-//	"H_fallocflag->H_fallocflag",
-//	"H_cothercorpid->H_cincorpid",
-//	"H_cothercalbodyid->H_cincbid",
-//	"H_coutcorpid->H_coutcorpid",
-//	"H_coutcalbodyid->H_coutcbid",
-//	"csourceheadts->H_ts",	
-	
+	 */	
 	private static final long serialVersionUID = -5056426465421488586L;
 	public static String[] num_fields = new String[]{"num","nassnum","nnum","nassistnum","ndealnum","ndealnumb"};//本次安排数量  订单数量     订单已安排数量
 	private UFDouble num;//本次安排数量

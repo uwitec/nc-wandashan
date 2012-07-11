@@ -12,11 +12,10 @@ import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
- *  其他出库单
+ * 调拨出库单
  * @author mlr
- *
  */
-public class N_WDS6_WRITE extends AbstractCompiler2 {
+public class N_WDSH_WRITE extends AbstractCompiler2 {
 private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 private Hashtable m_keyHas=null;
 private BillStockBO1 stock=null;
@@ -27,7 +26,7 @@ private BillStockBO1 getStock(){
 	return stock;
 }
 
-public N_WDS6_WRITE() {
+public N_WDSH_WRITE() {
 	super();
 }
 /*
