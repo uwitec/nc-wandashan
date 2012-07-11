@@ -58,7 +58,7 @@ public class MyClientUI extends OutPubClientUI implements
 	}
 
 	protected String getBillNo() throws java.lang.Exception {
-		return HYPubBO_Client.getBillNo(WdsWlPubConst.BILLTYPE_OTHER_OUT,
+		return HYPubBO_Client.getBillNo(WdsWlPubConst.BILLTYPE_ALLO_OUT,
 				_getOperator(), null, null);
 	}
 
@@ -233,7 +233,7 @@ public class MyClientUI extends OutPubClientUI implements
 		getBillCardPanel().setHeadItem("dbilldate", _getDate());
 		getBillCardPanel().setTailItem("coperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("vbilltype",
-				WdsWlPubConst.BILLTYPE_OTHER_OUT);
+				WdsWlPubConst.BILLTYPE_ALLO_OUT);
 		//getBillCardPanel().setHeadItem("is_yundan", UFBoolean.TRUE);
 		setBillNo();
 		// getBillCardPanel().setHeadItem("pwb_fbillflag",2);
@@ -366,22 +366,11 @@ public class MyClientUI extends OutPubClientUI implements
 	protected void initPrivateButton() {
 
 		super.initPrivateButton();
-		// zjBtn customizeButton1 = new zjBtn();
-		// addPrivateButton(customizeButton1.getButtonVO());
-		// zkBtn customizeButton2 = new zkBtn();
-		// addPrivateButton(customizeButton2.getButtonVO());
-		// cgqyBtn customizeButton3 = new cgqyBtn();
-		// addPrivateButton(customizeButton3.getButtonVO());
-		// zzdjBtn customizeButton4 = new zzdjBtn();
-		// addPrivateButton(customizeButton4.getButtonVO());
 		fzgnBtn customizeButton5 = new fzgnBtn();
 		addPrivateButton(customizeButton5.getButtonVO());
-//		tpzdBtn customizeButton6 = new tpzdBtn();
-//		addPrivateButton(customizeButton6.getButtonVO());
+
 		zdqhBtn customizeButton7 = new zdqhBtn();
 		addPrivateButton(customizeButton7.getButtonVO());
-//		ckmxBtn customizeButton8 = new ckmxBtn();
-//		addPrivateButton(customizeButton8.getButtonVO());
 
 		QxqzBtn customizeButton9 = new QxqzBtn();
 		addPrivateButton(customizeButton9.getButtonVO());
@@ -389,7 +378,7 @@ public class MyClientUI extends OutPubClientUI implements
 		addPrivateButton(customizeButton10.getButtonVO());
 
 		getButtonManager().getButtonAry(
-				new int[] { ISsButtun.Qzqr, ISsButtun.Qxqz });// 取消签字,签字确认
+				new int[] { ISsButtun.Qzqr, ISsButtun.Qxqz});// 取消签字,签字确认
 
 
 		

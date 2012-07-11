@@ -53,11 +53,11 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.tsyd:
 				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSG);
 				onBillRef();	
-				getButtonManager().getButton(ISsButtun.zdqh).setEnabled(false);
 				getBillCardPanelWrapper().getBillCardPanel().getBodyItem("ss_state").setEdit(false);
 				break;	
 			}
 	}
+	
 	/**
 	 * 拣货对应的页签
 	 * 必须在出库子表页签
@@ -94,7 +94,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	}
 	@Override
 	protected String getHeadCondition() {
-		return " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 and vbilltype = '"+WdsWlPubConst.BILLTYPE_OTHER_OUT+"' ";
+		return " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 and vbilltype = '"+WdsWlPubConst.BILLTYPE_ALLO_OUT+"' ";
 	}
 
 	protected void onBoLineAdd() throws Exception {
@@ -102,6 +102,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	    BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),WdsWlPubConst.BILLTYPE_OTHER_OUT, "crowno");
 	    
 	}
+
 	
 	// 签字确认
 	protected void onQzqr() throws Exception {
