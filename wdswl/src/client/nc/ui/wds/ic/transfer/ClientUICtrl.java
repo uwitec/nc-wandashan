@@ -3,7 +3,6 @@ package nc.ui.wds.ic.transfer;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.businessaction.IBusinessActionType;
 import nc.ui.trade.button.IBillButton;
-import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.transfer.MyBillVO;
 import nc.vo.wds.transfer.TransferBVO;
 import nc.vo.wds.transfer.TransferVO;

@@ -376,5 +376,15 @@ public class InPubClientUI extends WdsBillManagUI {
 
 		return super.beforeEdit(e);
 	}
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

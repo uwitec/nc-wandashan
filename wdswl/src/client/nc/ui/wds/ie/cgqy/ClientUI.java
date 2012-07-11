@@ -176,5 +176,17 @@ public class ClientUI extends WdsBillManagUI implements  BillCardBeforeEditListe
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 	}
 
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.WDSC;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 
 }

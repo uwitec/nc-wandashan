@@ -221,4 +221,16 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		return true;
 	}
 
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.WDSG;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

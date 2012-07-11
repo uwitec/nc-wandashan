@@ -152,4 +152,16 @@ public class MyClientUI extends WdsBillManagUI implements
 		return true;
 	}
 
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

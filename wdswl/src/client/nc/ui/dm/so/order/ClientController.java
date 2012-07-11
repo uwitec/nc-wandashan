@@ -7,6 +7,7 @@ import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
 public class ClientController extends AbstractManageController {
 
@@ -22,7 +23,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				ButtonCommon.joinup,
+				ZmpubBtnConst.ASSQUERY,
 				IBillButton.Action,
 				ButtonCommon.TRAN_COL,
 				ButtonCommon.LOCK,
@@ -39,7 +40,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Card,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				ButtonCommon.joinup,
+				ZmpubBtnConst.ASSQUERY,
 				IBillButton.Action,
 				ButtonCommon.TRAN_COL,
 				ButtonCommon.LOCK,

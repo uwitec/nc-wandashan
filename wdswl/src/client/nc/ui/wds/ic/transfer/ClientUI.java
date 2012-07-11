@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.transfer;
 
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -10,7 +9,6 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
@@ -18,12 +16,16 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.trade.field.BillField;
-import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+
+/**
+ * 
+ * @author yf  货位调整单
+ *
+ */
 
 public class ClientUI extends OutPubClientUI implements
 		BillCardBeforeEditListener {
@@ -35,12 +37,12 @@ public class ClientUI extends OutPubClientUI implements
 
 	public ClientUI() {
 		super();
-		initSelfData();
-		init();
+//		initSelfData();
+//		init();
 	}
 
-	private void init() {
-	}
+//	private void init() {
+//	}
 
 	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
@@ -75,10 +77,10 @@ public class ClientUI extends OutPubClientUI implements
 	protected ManageEventHandler createEventHandler() {
 		return new EventHandler(this, getUIControl());
 	}
-	@Override
-	protected IBillField createBillField() {
-		return BillField.getInstance();
-	}
+//	@Override
+//	protected IBillField createBillField() {
+//		return BillField.getInstance();
+//	}
 	protected String getBillNo() throws java.lang.Exception {
 		return HYPubBO_Client.getBillNo(getBillType(), _getOperator(), null,
 				null);
@@ -87,88 +89,40 @@ public class ClientUI extends OutPubClientUI implements
 	public boolean isSaveAndCommitTogether() {
 		return true;
 	}
+	
+	private boolean beforeEditByInvCode(int row){
+		String pk_cargdoc = (String) getBillCardPanel()
+		.getHeadItem("pk_cargdoc").getValueObject();
+		if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
+			showWarningMessage("前选择调出货位");
+			return false;
+		}
+		JComponent c = getBillCardPanel().getBodyItem(
+		"ccunhuobianma").getComponent();
+		if (c instanceof UIRefPane) {
+			UIRefPane ref = (UIRefPane) c;
+			ref.getRefModel().addWherePart(
+					"  and tb_spacegoods.pk_cargdoc='" + pk_cargdoc
+					+ "' ");
+		}
+		return true;
+	
+	}
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		int row = e.getRow();
-		if (e.getPos() == BillItem.BODY) {
-			if ("ntagnum".equalsIgnoreCase(key)) {
-				UFBoolean fistag = PuPubVO.getUFBoolean_NullAs(
-						getBillCardPanel().getBodyValueAt(row, "fistag"),
-						UFBoolean.FALSE);
-				if (fistag.booleanValue()) {
-					return true;
-				}
+
+		// 如果是参照过来的存货不可以编辑 ，如果是自制单据可以编辑
+		if ("ccunhuobianma".equalsIgnoreCase(key)) {
+			return beforeEditByInvCode(row);
+		} else if ("vbatchcode".equalsIgnoreCase(key)) {
+			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "nshouldoutnum"));
+			if(nnum.doubleValue() == 0.0 )
 				return false;
-			}
-			String csourcetype = PuPubVO
-					.getString_TrimZeroLenAsNull(getBillCardPanel()
-							.getBodyValueAt(row, "csourcetype"));
+		} 
 
-			// 在班组信息中 通过表头的仓库对班组进行参照过滤
-			if ("teamcode".equals(key)) {// 班组
-				// 仓库id
-				Object a = getBillCardPanel().getHeadItem("srl_pk")
-						.getValueObject();
-				if (a == null) {
-					showWarningMessage("请选择仓库");
-					return false;
-				}
-				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
-						.getBodyItem("teamcode").getComponent();
-				if (null != a && !"".equals(a)) {
-					// 修改参照 条件 增加条件 指定仓库id
-					panel.getRefModel().addWherePart(
-							" and wds_teamdoc_h.vdef1 = '" + a + "' ");
-				}
-			}
-
-			// 如果是参照过来的存货不可以编辑 ，如果是自制单据可以编辑
-			if ("ccunhuobianma".equalsIgnoreCase(key)) {
-				if (getBillOperate() == IBillOperate.OP_REFADD)
-					return false;
-				if (csourcetype != null) {
-					return false;
-				} else {
-					String pk_cargdoc = (String) getBillCardPanel()
-							.getHeadItem("pk_cargdoc").getValueObject();
-					if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
-						showWarningMessage("前选择入库货位");
-						return false;
-					}
-					JComponent c = getBillCardPanel().getBodyItem(
-							"ccunhuobianma").getComponent();
-					if (c instanceof UIRefPane) {
-						UIRefPane ref = (UIRefPane) c;
-						ref.getRefModel().addWherePart(
-								"  and tb_spacegoods.pk_cargdoc='" + pk_cargdoc
-										+ "' ");
-					}
-					return true;
-				}
-			} else if ("nshouldoutnum".equalsIgnoreCase(key)) {
-				// zhf add
-				if (getBillOperate() == IBillOperate.OP_REFADD)
-					return false;
-				if (csourcetype != null) {
-
-					return false;
-				} else {
-					return true;
-				}
-			} else if ("nshouldoutassistnum".equalsIgnoreCase(key)) {
-				// zhf add
-				if (getBillOperate() == IBillOperate.OP_REFADD)
-					return false;
-				if (csourcetype != null) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-
-		}
 		return super.beforeEdit(e);
 	}
 
@@ -193,6 +147,7 @@ public class ClientUI extends OutPubClientUI implements
 		}
 		// 制单人 制单日期
 		getBillCardPanel().setTailItem("tmaketime", _getServerTime());
+		getBillCardPanel().setTailItem("tmakedate", _getDate());
 		getBillCardPanel().setHeadItem("dbilldate", _getDate());
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", getBillType());
@@ -201,7 +156,7 @@ public class ClientUI extends OutPubClientUI implements
 		getBillCardPanel().getHeadTailItem("vbillstatus").setValue(
 				IBillStatus.FREE); // 自由状态
 		try {
-			getBillCardPanel().setHeadItem("vbillno", getBillNo());
+			getBillCardPanel().setHeadItem("vbillcode", getBillNo());
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -230,52 +185,59 @@ public class ClientUI extends OutPubClientUI implements
 				getBillCardPanel().execHeadTailLoadFormulas();
 			} else if (key.equalsIgnoreCase("pk_cargdoc2")) {// 表头调入货位
 				String cargdoc = PuPubVO
-						.getString_TrimZeroLenAsNull(getBillCardPanel()
-								.getHeadItem("pk_cargdoc2").getValueObject());
-				if (cargdoc != null) {
-					int rowcount = getBillCardPanel().getBillTable()
-							.getRowCount();
-					for (int i = 0; i < rowcount; i++) {
-						if (PuPubVO
-								.getString_TrimZeroLenAsNull(getBillCardPanel()
-										.getBodyValueAt(i, "pk_cargdoc2")) == null) {
-							getBillCardPanel().setBodyValueAt(cargdoc, i,
-									"pk_cargdoc2");
-							getBillCardPanel().execBodyFormula(i,
-									"pk_cargdoc2");
-						}
+				.getString_TrimZeroLenAsNull(getBillCardPanel()
+						.getHeadItem("pk_cargdoc2").getValueObject());
+				if (cargdoc == null)
+					return;
+				int rowcount = getBillCardPanel().getBillTable()
+				.getRowCount();
+				for (int i = 0; i < rowcount; i++) {
+					if (PuPubVO
+							.getString_TrimZeroLenAsNull(getBillCardPanel()
+									.getBodyValueAt(i, "pk_cargdoc2")) == null) {
+						getBillCardPanel().setBodyValueAt(cargdoc, i,
+						"pk_cargdoc2");
+						getBillCardPanel().execBodyFormula(i,
+						"pk_cargdoc2");
 					}
 				}
 			}
 		} else {
-			if ("fistag".equalsIgnoreCase(key)) {// 不勾选贴签的时候，贴签数量清空
-				int row = e.getRow();
-				Object o = e.getValue();
-				if (UFBoolean.FALSE.equals(o)) {
-					getBillCardPanel().setBodyValueAt(null, row, "ntagnum");
-				}
-			} else if ("ccunhuobianma".equalsIgnoreCase(key)) {// 不勾选贴签的时候，贴签数量清空
-				int row = e.getRow();
+			int row = e.getRow();
+			if ("ccunhuobianma".equalsIgnoreCase(key)) {// 不勾选贴签的时候，贴签数量清空
 				if (null == PuPubVO
 						.getString_TrimZeroLenAsNull(getBillCardPanel()
 								.getBodyValueAt(row, "pk_cargdoc2"))) {
 					String cargdoc = PuPubVO
-							.getString_TrimZeroLenAsNull(getBillCardPanel()
-									.getHeadItem("pk_cargdoc2")
-									.getValueObject());
+					.getString_TrimZeroLenAsNull(getBillCardPanel()
+							.getHeadItem("pk_cargdoc2")
+							.getValueObject());
 					if (cargdoc != null) {
 						getBillCardPanel().setBodyValueAt(cargdoc, row,
-								"pk_cargdoc2");
+						"pk_cargdoc2");
 						getBillCardPanel().execBodyFormula(row, "pk_cargdoc2");
 					}
 				}
 			}
+//			else if("vbatchcode".equalsIgnoreCase(key)){
+//				afterEditByVbatchcode(row);
+//			}
 		}
 	}
+	
+//	/**
+//	 * 
+//	 * @作者：zhf
+//	 * @说明：完达山物流项目 批次编辑后处理
+//	 * @时间：2012-7-11下午08:27:30
+//	 * @param row
+//	 */
+//	private void afterEditByVbatchcode(int row){
+//		super.after
+//	}
 
 	@Override
 	protected void initEventListener() {
-
 		super.initEventListener();
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 
@@ -356,12 +318,12 @@ public class ClientUI extends OutPubClientUI implements
 		addPrivateButton(customizeButton7.getButtonVO());
 	}
 
-	public void afterUpdate() {
+//	public void afterUpdate() {
+//
+//	}
 
-	}
-
-	protected BusinessDelegator createBusinessDelegator() {
-		return new Delegator();
-	}
+//	protected BusinessDelegator createBusinessDelegator() {
+//		return new Delegator();
+//	}
 
 }

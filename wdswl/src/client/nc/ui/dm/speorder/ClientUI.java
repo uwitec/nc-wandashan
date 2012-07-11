@@ -1,25 +1,24 @@
 package nc.ui.dm.speorder;
+
 import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
-import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * 特殊运单
@@ -34,10 +33,6 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		super();
 	}
 
-	public ClientUI(Boolean useBillSource) {
-		super(useBillSource);
-	}
-
 	@Override
 	protected void initEventListener() {
 		// TODO Auto-generated method stub
@@ -47,10 +42,6 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		getBillListPanel().getHeadTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
-	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
-			String operater, String billId) {
-		super(pk_corp, pk_billType, pk_busitype, operater, billId);
-	}
 	@Override
 	protected AbstractManageController createController() {
 		return new ClientController();
@@ -83,30 +74,30 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 	protected void initPrivateButton() {
 		// TODO Auto-generated method stub
 		super.initPrivateButton();
-		ButtonVO col = new ButtonVO();
-		col.setBtnNo(ButtonCommon.TRAN_COL);
-		col.setBtnCode(null);
-		col.setBtnName("运费核算");
-		col.setBtnChinaName("运费核算");
-		col.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
-		col.setBusinessStatus(new int[]{IBillStatus.FREE});
-		addPrivateButton(col);
-		ButtonVO lock = new ButtonVO();
-		lock.setBtnNo(ButtonCommon.LOCK);
-		lock.setBtnCode(null);
-		lock.setBtnName("冻结");
-		lock.setBtnChinaName("冻结");
-		lock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
-		lock.setBusinessStatus(new int[]{IBillStatus.FREE});
-		addPrivateButton(lock);
-		ButtonVO unlock = new ButtonVO();
-		unlock.setBtnNo(ButtonCommon.UNLOCK);
-		unlock.setBtnCode(null);
-		unlock.setBtnName("解冻");
-		unlock.setBtnChinaName("解冻");
-		unlock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
-		unlock.setBusinessStatus(new int[]{IBillStatus.FREE});
-		addPrivateButton(unlock);
+//		ButtonVO col = new ButtonVO();
+//		col.setBtnNo(ButtonCommon.TRAN_COL);
+//		col.setBtnCode(null);
+//		col.setBtnName("运费核算");
+//		col.setBtnChinaName("运费核算");
+//		col.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+//		col.setBusinessStatus(new int[]{IBillStatus.FREE});
+//		addPrivateButton(col);
+//		ButtonVO lock = new ButtonVO();
+//		lock.setBtnNo(ButtonCommon.LOCK);
+//		lock.setBtnCode(null);
+//		lock.setBtnName("冻结");
+//		lock.setBtnChinaName("冻结");
+//		lock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+//		lock.setBusinessStatus(new int[]{IBillStatus.FREE});
+//		addPrivateButton(lock);
+//		ButtonVO unlock = new ButtonVO();
+//		unlock.setBtnNo(ButtonCommon.UNLOCK);
+//		unlock.setBtnCode(null);
+//		unlock.setBtnName("解冻");
+//		unlock.setBtnChinaName("解冻");
+//		unlock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+//		unlock.setBusinessStatus(new int[]{IBillStatus.FREE});
+//		addPrivateButton(unlock);
 	}
 
 	@Override
@@ -116,6 +107,25 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		getBillCardPanel().setTailItem("voperatorid", _getOperator());
 		getBillCardPanel().setHeadItem("pk_billtype", WdsWlPubConst.WDSS);
 		getBillCardPanel().setTailItem("dmakedate", _getDate());	
+		getBillCardPanel().setHeadItem("dbegindate", _getDate());	
+		getBillCardPanel().setHeadItem("itransstatus", 0);
+		LoginInforVO infor = null;
+		try{
+			infor = getLoginInforHelper().getLogInfor(_getOperator());
+		}catch(BusinessException be){
+			be.printStackTrace();
+			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(be.getMessage()));
+			return;
+		}
+		 
+		
+		if(infor == null){
+			showErrorMessage("当前操作人未设置绑定关系");
+			return;
+		}
+		
+		getBillCardPanel().setHeadItem("pk_outwhouse", infor.getWhid());
+//		getBillCardPanel().setHeadItem("ccargdocid", infor.getSpaceid());
 	}
 
 	protected ManageEventHandler createEventHandler() {
@@ -219,6 +229,18 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 				
 			}
 		}else if(e.getItem().getPos() ==BillItem.BODY){}
+		return true;
+	}
+
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.WDSS;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 

@@ -384,4 +384,16 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		super.initPrivateButton();		
 	}
 
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return WdsWlPubConst.WDS1;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

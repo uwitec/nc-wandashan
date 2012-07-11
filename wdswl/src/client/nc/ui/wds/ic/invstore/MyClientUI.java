@@ -180,4 +180,16 @@ public class MyClientUI extends WdsBillManagUI implements
 	public Object getUserObject() {
 		return new InvstoreCheck();
 	}
+
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

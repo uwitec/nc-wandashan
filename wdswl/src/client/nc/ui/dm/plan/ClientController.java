@@ -7,6 +7,7 @@ import nc.vo.dm.SendplaninVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
 public class ClientController extends AbstractManageController {
 
@@ -23,7 +24,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				ButtonCommon.joinup,				
+				ZmpubBtnConst.LINKQUERY,				
 //				ButtonCommon.FZGN,
 		IBillButton.Print		
 		};
@@ -39,7 +40,7 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Action,
-				ButtonCommon.joinup,
+				ZmpubBtnConst.LINKQUERY,
 				IBillButton.Print
 		};
 		return buttonArray;

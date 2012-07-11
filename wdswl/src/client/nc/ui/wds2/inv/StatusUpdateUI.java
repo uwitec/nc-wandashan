@@ -1,14 +1,12 @@
 package nc.ui.wds2.inv;
 
 import java.util.List;
-
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.ui.wl.pub.LoginInforHelper;
-import nc.ui.zmpub.pub.bill.DefBillManageUI;
+import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -20,16 +18,8 @@ import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-public class StatusUpdateUI extends DefBillManageUI {
-	
-private LoginInforHelper helper = null;
-	
-	public LoginInforHelper getLoginInforHelper(){
-		if(helper == null){
-			helper = new LoginInforHelper();
-		}
-		return helper;
-	}
+public class StatusUpdateUI extends WdsBillManagUI {
+
 	public boolean isSaveAndCommitTogether() {
 		return true;
 	}

@@ -5,6 +5,7 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
@@ -89,5 +90,17 @@ public class ClientUI extends WdsBillManagUI {
 	throws Exception {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String getBillType() {
+		// TODO Auto-generated method stub
+		return Wds2WlPubConst.billtype_alloinsendorder;
+	}
+
+	@Override
+	public boolean isLinkQueryEnable() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }
