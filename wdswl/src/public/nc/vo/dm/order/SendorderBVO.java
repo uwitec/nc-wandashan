@@ -1167,9 +1167,13 @@ public class SendorderBVO extends SuperVO {
 		// fields that cannot be null.
 		// 检查是否为不允许空的字段赋了空值,你可能需要修改下面的提示信息:
 
-		if (pk_sendorder_b == null) {
-			errFields.add(new String("pk_sendorder_b"));
-		}
+//		if (pk_sendorder_b == null) {
+//			errFields.add("pk_sendorder_b");
+//		}
+		if(pk_invbasdoc == null || pk_invmandoc == null)
+			errFields.add("存货信息");
+		
+		
 
 		StringBuffer message = new StringBuffer();
 		message.append("下列字段不能为空:");
