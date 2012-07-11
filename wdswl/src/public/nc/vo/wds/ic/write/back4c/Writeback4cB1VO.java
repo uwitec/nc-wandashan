@@ -26,8 +26,8 @@ import nc.vo.pub.lang.*;
 	 */
 	private static final long serialVersionUID = 1L;
 	 public String crowno; //行号
-	 public String csaleid;//销售订单id
-	 public String corder_bid;//销售订单表体id
+	 public String csaleid;//销售订单id  调拨订单id
+	 public String corder_bid;//销售订单表体id  调拨订单id
 	 public String pk_invmandoc;//存货管理id 
 	 public String pk_invbasdoc;//存货基本id           
 	 public String unit;//存货主计量单位id

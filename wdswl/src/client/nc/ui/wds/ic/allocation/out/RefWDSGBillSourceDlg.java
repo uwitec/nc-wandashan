@@ -6,6 +6,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wdsnew.pub.MBillSourceDLG;
 import nc.ui.wdsnew.pub.PowerGetTool;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * @author mlr
  *其他出库 参照 调出运单
@@ -67,7 +68,7 @@ public class RefWDSGBillSourceDlg  extends MBillSourceDLG {
 	
 	@Override
 	public String getTitle() {
-		return "参照发运订单";
+		return "参照调出订单";
 	}
 	@Override
 	public String getHeadCondition() {
@@ -76,8 +77,8 @@ public class RefWDSGBillSourceDlg  extends MBillSourceDLG {
 		try {
 			sql= "  coalesce(wds_sendorder_b.ndealnum,0)-coalesce(wds_sendorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
 			" and wds_sendorder_b.pk_invmandoc in ("+getPowerSql()+")" +
-			" and wds_sendorder.icoltype= 0"+//出入库类型为  出库
-			" and wds_sendorder.pk_outwhouse= '"+getLoginInfor().getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'";
+			" and wds_sendorder.pk_outwhouse= '"+getLoginInfor().getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'"+
+			" and wds_sendorder.pk_billtype='"+WdsWlPubConst.WDSG+"'";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -107,7 +108,7 @@ public class RefWDSGBillSourceDlg  extends MBillSourceDLG {
 
 	@Override
 	public IControllerBase getUIController() {
-		return new nc.ui.dm.order.ClientController();
+		return new nc.ui.dm.db.order.ClientController();
 	}
 	@Override
 	public String getPk_invbasdocName() {

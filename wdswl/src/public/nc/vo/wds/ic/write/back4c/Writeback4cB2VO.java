@@ -27,10 +27,10 @@ import nc.vo.pub.lang.*;
 	private static final long serialVersionUID = 1L;
 	
 	 public String crowno; //行号
-	 public String cfirsttype;//销售订单
-     public String vfirstbillcode;//销售订单编码
-     public String cfirstbillhid;//销售订单主键
-     public String cfirstbillbid;//销售订单字表主键
+	 public String cfirsttype;//销售订单  调拨订单
+     public String vfirstbillcode;//销售订单编码  调拨订单编码
+     public String cfirstbillhid;//销售订单主键     调拨订单主键
+     public String cfirstbillbid;//销售订单字表主键  调拨订单子表主键
 	
      public String pk_invmandoc;//存货管理id 
 	 public String pk_invbasdoc;//存货基本id           
@@ -43,10 +43,10 @@ import nc.vo.pub.lang.*;
     public UFDouble narrangnum;//销售运单数量安排数量
     public UFDouble nassarrangnum;//销售运单安排辅数量
 	//上下游信息字段
-	public String vsourcebillcode;//物流销售出库单单据号（WDS8.....）
-	public String csourcetype;//物流销售出库类型（WDS8）
-	public String csourcebillhid;//物流销售出库单主键
-	public String csourcebillbid;//物流销售出库单子表主键
+	public String vsourcebillcode;//物流销售出库单单据号（WDS8.....）  物流调拨出库单单据号
+	public String csourcetype;//物流销售出库类型（WDS8）  物流调拨出库单单据类型
+	public String csourcebillhid;//物流销售出库单主键  物流调拨出库单主键
+	public String csourcebillbid;//物流销售出库单子表主键  物流调拨出库单子表主键
     public UFDouble noutnum;
     public UFDouble noutassistnum;      
     public String pk_wds_writeback4c_b2;

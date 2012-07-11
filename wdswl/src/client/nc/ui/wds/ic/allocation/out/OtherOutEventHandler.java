@@ -51,7 +51,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				onQzqr();
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.tsyd:
-				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSH);
+				((MyClientUI)getBillUI()).setRefBillType(WdsWlPubConst.WDSG);
 				onBillRef();	
 				getButtonManager().getButton(ISsButtun.zdqh).setEnabled(false);
 				getBillCardPanelWrapper().getBillCardPanel().getBodyItem("ss_state").setEdit(false);

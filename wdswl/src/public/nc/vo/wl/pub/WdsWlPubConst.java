@@ -46,19 +46,15 @@ public class WdsWlPubConst {
 	/**发运订单节点号  */
 	public static String DM_ORDER_NODECODE="80060415";
 	/**其他出库单节点号 */
-	public static String  OTHER_OUT_FUNCODE="8004040208";
-	
+	public static String  OTHER_OUT_FUNCODE="8004040208";	
 	/**调拨出库单节点号 */
-	public static String  ALLO_OUT_FUNCODE="8004040217";
-	
-	
-	
+	public static String  ALLO_OUT_FUNCODE="8004040217";	
 	/**参照发运订单的节点标示 */
    public static String  OTHER_OUT_REFWDS3_NODECODE="800404028WDS3";
 	/**参照特殊订单的节点标示 */
    public static String  OTHER_OUT_REFWDSS_NODECODE="800404028WDSS";
 	/**参照调出订单的节点标示 */
-   public static String  ALLO_OUT_REFWDSS_NODECODE="8004040217WDSG";
+   public static String  ALLO_OUT_REFWDSG_NODECODE="8004040217WDSG";
    /**参照发运订单的节点标示 */
    public static String  OTHER_OUT_REFWDSC_NODECODE="800404028WDSC";
    /**参照货位调整单的节点标示 */
@@ -340,6 +336,8 @@ public class WdsWlPubConst {
 	public static String WDSN="WDSN";	
 	/**销售出库回传 */
 	public static String WDSO="WDSO";
+	/**调拨出库回传 */
+	public static String WDSX="WDSX";
 	/**调拨入库回传 */
 	public static String WDSP="WDSP";
 	/**暂估记账 */

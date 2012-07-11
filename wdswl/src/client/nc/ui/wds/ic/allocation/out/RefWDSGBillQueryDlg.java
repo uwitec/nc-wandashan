@@ -1,13 +1,9 @@
 package nc.ui.wds.ic.allocation.out;
-
 import java.awt.Container;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.WdsBillQueryDlg;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
- * 
  * @author mlr
  *其他出库 参照 调出订单（WDSG）的查询对话框
  */
@@ -22,7 +18,7 @@ public class RefWDSGBillQueryDlg extends WdsBillQueryDlg{
 	
 	public RefWDSGBillQueryDlg(Container parent) {
 		super(parent,null,pk_corp,
-				WdsWlPubConst.ALLO_OUT_FUNCODE,userid,null,WdsWlPubConst.ALLO_OUT_REFWDSS_NODECODE);
+				WdsWlPubConst.ALLO_OUT_FUNCODE,userid,null,WdsWlPubConst.ALLO_OUT_REFWDSG_NODECODE);
 	}
 	@Override
 	public String getWhereSQL() {

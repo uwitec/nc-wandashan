@@ -41,7 +41,7 @@ public String[] getField() {
 			"H_pk_calbody->H_vdef2",// 出库库存组织
 			"H_srl_pk->H_pk_outwhouse",// 出库仓库	
 			"H_pk_fcorp->B_vdef5",//调入公司
-			"H_pk_fcalbody->B_vdef7",//调入库存组织
+			"H_pk_calbodyr->B_vdef7",//调入库存组织
 			"H_srl_pkr->B_vdef9",//入库仓库
 			"H_creceiptcustomerid->B_vdef3",//收货单位
 			"H_vdiliveraddress->B_reserve1",// 收货地址

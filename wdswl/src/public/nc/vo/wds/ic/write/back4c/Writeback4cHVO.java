@@ -30,7 +30,7 @@
 	//公司
 	 public String pk_corp;     
 	 //单据号
-	 public String vbillno;//保存销售订单号
+	 public String vbillno;//保存销售订单号  销售订单主键
 	 //单据日期
 	 public UFDate dbilldate;
 	 //单据类型
@@ -54,7 +54,7 @@
 	 //审批批语
 	 public String vapprovenote;
 	  public String pk_wds_writeback4c_h;//主键
-     public String csaleid; //保存销售订单主键
+     public String csaleid; //保存销售订单主键  调拨订单主键
      public UFBoolean fisvbatchcontorl;//是否批次管理(勾选的时候，回写批次号)
 	//预留字段
 	public String reserve1;

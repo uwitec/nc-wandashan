@@ -1,24 +1,16 @@
 package nc.bs.pub.action;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.ic.other.out.OtherOutBO_XN;
-import nc.bs.wds.load.account.LoadAccountBS;
-import nc.bs.wds.load.pub.PushSaveWDSF;
+import nc.bs.wds.ic.allocation.out.AlloutBO;
+import nc.bs.wds.ic.allocation.out.ChangToWDSX;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.uap.pf.PFBusinessException;
-
 /**
- *  其它出库单签字
+ *  调拨出库单签字
  * @author mlr
- *
  */
 public class N_WDSH_SIGN extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
@@ -44,36 +36,19 @@ public class N_WDSH_SIGN extends AbstractCompiler2 {
 					 date = list.get(0);
 					 operate = list.get(1);
 				}
-				TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
-				UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
-				if(isxnap.booleanValue()){
-					OtherOutBO_XN bo = new OtherOutBO_XN();
-					bo.updateZgjzNum(vo.m_preValueVo, true);
-				}else{
-					//数据交换前  按存货批次进行合并  for add mlr
-					setParameter("AggObj",vo.m_preValueVo);
-					AggregatedValueObject billvo=(AggregatedValueObject) runClass("nc.bs.wds.ic.other.out.OtherOutBO", "combinVO",
-							"&AggObj:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);	
-					// ##################################################数据交换
-					setParameter("billvo", billvo);
-					setParameter("date", date);
-					setParameter("operator", operate);
-					AggregatedValueObject icBillVO = (AggregatedValueObject) runClass("nc.bs.wds.ic.other.out.ChangeTo4I", "signQueryGenBillVO",
-							"&billvo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-					// ##################################################推式保存、签字
-					setParameter("AggObject",icBillVO);
-					runClass("nc.bs.wds.ic.other.out.OtherOutBO", "pushSign4I",
-							"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
-					// ##################################################保存[其他出库]签字内容
+				//推式生成调拨出库回传单
+				ChangToWDSX bo=new ChangToWDSX();
+				bo.onSign(vo.m_preValueVo, operate,vo.m_coId, date);
 				
-				}
+				//签字动作
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
-				retObj = runClass("nc.bs.wds.ic.other.out.OtherOutBO", "updateHVO",
-						"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
-				//生成装卸费核算单
-				PushSaveWDSF pu=new PushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);
+				AlloutBO bo1=new AlloutBO();
+				bo1.updateHVO(headvo);
+				
+//				//生成装卸费核算单
+//				PushSaveWDSF pu=new PushSaveWDSF();
+//				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)
