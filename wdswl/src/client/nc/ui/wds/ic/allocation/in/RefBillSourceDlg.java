@@ -29,7 +29,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	private String pk_stock = null; // 当前登录者对应的仓库主键
 	
-	private int iType = -1;
+//	private int iType = -1;
 	
 	private String[] inv_Pks = null;// 根据当前登录者查询所属仓库和其仓库所存储的产品
 	
@@ -72,7 +72,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 			if(pk_stock== null || "".equalsIgnoreCase(pk_stock)){
 				throw new BusinessException("当前登录人员没有绑定仓库");
 			}
-			iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
+//			iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
 			inv_Pks = getLoginInforHelper().getInvbasDocIDsByUserID(m_logUser);
 			if(inv_Pks ==null || inv_Pks.length==0){
 				throw new BusinessException("当前登录人员货位下没有绑定存货");

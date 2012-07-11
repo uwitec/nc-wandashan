@@ -189,9 +189,9 @@ public class LoginInforHelper {
 			if(invbasInfor.containsKey(userid))
 				return invbasInfor.get(userid);
 			LoginInforVO infor = getLogInfor(userid);
-			if(infor.getType()!=0){
-				throw new BusinessException("当前登陆人员不是保管员");
-			}
+//			if(infor.getType()!=0){
+//				throw new BusinessException("当前登陆人员不是保管员");
+//			}
 			invbasInfor.put(userid, getInvbasdocIDsBySpaceID(infor.getSpaceid())) ;
 			return invbasInfor.get(userid);
 	}
