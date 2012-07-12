@@ -38,6 +38,19 @@ import nc.vo.zmpub.pub.freeitem.VInvVO;
  * 
  */
 public abstract class DefBillManageUI extends BillManageUI implements ILinkQuery{
+	
+	public DefBillManageUI(){
+		super();
+	}
+	
+	public DefBillManageUI(Boolean useBillSource) {
+		super(useBillSource);
+	}
+
+	public DefBillManageUI(String pk_corp, String pk_billType, String pk_busitype,
+			String operater, String billId) {
+		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+	}
 
 	private DefVO[] m_defBody = null;
 
