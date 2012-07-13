@@ -37,10 +37,10 @@ public class N_WDSX_UNAPPROVE extends AbstractCompiler2 {
 			setParameter("date", vo.m_currentDate);
 			setParameter("operator", vo.m_operator);
 			setParameter("pk_corp",vo.m_coId);
-//			//删除供应链 调拨出库单
-//			SoBackBO bo=new SoBackBO();			
-//			GeneralBillVO[] billvos= bo.canelSignQueryGenBillVO( vo.m_preValueVo,  vo.m_operator, vo.m_currentDate);
-//			bo.canelPushSign4Y(vo.m_currentDate, billvos);			
+			//删除供应链 调拨出库单
+			SoBackBO bo=new SoBackBO();			
+			GeneralBillVO[] billvos= bo.canelSignQueryGenBillVO( vo.m_preValueVo,  vo.m_operator, vo.m_currentDate);
+			bo.canelPushSign4Y(vo.m_currentDate, billvos);			
 			//更改本单据审批信息
 			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
 			head.setDapprovedate(null);

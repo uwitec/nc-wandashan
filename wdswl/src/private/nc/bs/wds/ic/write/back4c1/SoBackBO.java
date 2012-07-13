@@ -98,13 +98,9 @@ public class SoBackBO{
 			if(orderVos[i].getChildrenVO()==null || orderVos[i].getChildrenVO().length==0)
 				continue;
 			// 执行保存操作
-			orderVos[0].getItemVOs()[0].getLocator();
-			orderVos[0].getItemVOs()[0].getCinvmanid();
-			orderVos[0].getItemVOs()[0].getCinvbasid();
-			orderVos[0].getItemVOs()[0].getVbatchcode();
 			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator
 					.getInstance().lookup(IPFBusiAction.class.getName());
-			ArrayList retList = (ArrayList) bsBusiAction.processAction("PUSHSAVE",
+			ArrayList retList = (ArrayList) bsBusiAction.processAction("SAVE",
 					"4Y", date, null, orderVos[i], null, null);
 			//执行签字操作
 			SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);
