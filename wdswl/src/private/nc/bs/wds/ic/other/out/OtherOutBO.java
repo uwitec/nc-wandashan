@@ -86,7 +86,7 @@ public class OtherOutBO  {
 		 }
 		 CircularlyAccessibleValueObject[] vos=billvo.getChildrenVO();
 		 CircularlyAccessibleValueObject[] svos=CombinVO.combinVoByFields(vos,new String[]{"cinventoryid"},new int[]{IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD,IUFTypes.UFD},new String[]{"noutnum","noutassistnum","nacceptnum","nassacceptnum","nshouldoutnum","nshouldoutassistnum","ntagnum"});
-		 setSpaceAllon(svos);
+//		 setSpaceAllon(svos);
 		 billvo.setChildrenVO(svos);
 		 return billvo;				
 	}

@@ -54,6 +54,8 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 					);
 			m_panel.setEnabled(true);
 			m_panel.getParentListPanel().setTotalRowShow(true);
+			m_panel.setMultiSelect(true);
+			m_panel.getBodyTable().removeSortListener();
 		}
 		return m_panel;
 	}
@@ -215,7 +217,7 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 					vos[0].getWhs_stocktonnage(), row, "anstorenumout");// ¿â´æ¸¨ÊýÁ¿
 		}
 	
-		
+//		m_handler.afterEdit(e);
 	}
 
 	public void bodyRowChange(BillEditEvent e) {
