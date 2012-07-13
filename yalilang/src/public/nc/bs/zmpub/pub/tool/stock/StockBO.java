@@ -86,6 +86,7 @@ public abstract class StockBO implements Serializable{
 	   SuperVO[] accounts=(SuperVO[]) CombinVO.combinData(accounts1, getDef_Fields(), getChangeNums(), cl);
 	   if(accounts==null || accounts.length==0)
 		   return;
+	   checkBeforeUpdate(accounts);
 	   int size=accounts.length;
 	   String whereSql=null;
 	   for(int i=0;i<size;i++){
@@ -115,6 +116,29 @@ public abstract class StockBO implements Serializable{
 	   //现存量更新完了之后,校验现存量是否会出现负值
 	   //如果出现负值 进行数据回滚 
 	   check(accounts);
+	}
+	/**
+	 * 现存量更新前校验  校验现存量最小维度不能为空
+	 * @throws Exception 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-13下午07:43:21
+	 */
+	private void checkBeforeUpdate(SuperVO[] accounts) throws Exception {
+		String[] fields=getDef_Fields();
+		if(fields==null || fields.length==0)
+			throw new Exception("没有注册现存量最小维度字段");
+		for (int i = 0; i < accounts.length; i++) {
+			SuperVO vo = accounts[i];
+			for (int j = 0; j < fields.length; j++) {
+				String value = PuPubVO.getString_TrimZeroLenAsNull(vo
+						.getAttributeValue(fields[j]));
+				if(value==null){
+					throw new Exception("现存量更新时 存在最小维度为空的字段");
+				}
+			}
+		}
+		
 	}
 	private String getWhereSql(SuperVO superVO) throws Exception {
 	   String whereSql="";
