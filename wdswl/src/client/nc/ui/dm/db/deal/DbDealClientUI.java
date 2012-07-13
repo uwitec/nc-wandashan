@@ -226,8 +226,6 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 							"anstorenumout");// 库存辅数量
 					return;
 				}
-			//	anstorenumout->nstorenumout/hsl;
-
 				getPanel().getBodyBillModel().setValueAt(
 						vos[0].getWhs_stocktonnage(), row, "nstorenumout");// 库存主数量
 				getPanel().getBodyBillModel().setValueAt(
@@ -241,37 +239,37 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 
 		public boolean beforeEdit(BillEditEvent e) {
 			String key = e.getKey();
-			if ("nassnum".equalsIgnoreCase(key)) {
-				if (isGift()) {
-					return false;
-				} else {
-					return true;
-				}
-			}
+//			if ("nassnum".equalsIgnoreCase(key)) {
+//				if (isGift()) {
+//					return false;
+//				} else {
+//					return true;
+//				}
+//			}
 			return true;
 		}
 
-		/**
-		 * 
-		 * @作者：lyf:判断是否赠品单
-		 * @说明：完达山物流项目
-		 * @时间：2011-11-17下午09:41:46
-		 * @return
-		 */
-		public boolean isGift() {
-			boolean isGift = false;
-			int count = getPanel().getBodyBillModel().getRowCount();
-			for (int row = 0; row < count; row++) {
-				Object value = getPanel().getBodyBillModel().getValueAt(row,
-						"flargess");
-				isGift = PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE)
-						.booleanValue();
-				if (isGift) {
-					return isGift;
-				}
-			}
-			return isGift;
-		}
+//		/**
+//		 * 
+//		 * @作者：lyf:判断是否赠品单
+//		 * @说明：完达山物流项目
+//		 * @时间：2011-11-17下午09:41:46
+//		 * @return
+//		 */
+//		public boolean isGift() {
+//			boolean isGift = false;
+//			int count = getPanel().getBodyBillModel().getRowCount();
+//			for (int row = 0; row < count; row++) {
+//				Object value = getPanel().getBodyBillModel().getValueAt(row,
+//						"flargess");
+//				isGift = PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE)
+//						.booleanValue();
+//				if (isGift) {
+//					return isGift;
+//				}
+//			}
+//			return isGift;
+//		}
 	}
 
 	protected BillListPanel getPanel() {
@@ -423,15 +421,15 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 				}
 			}
 		} else {// 表体编辑
-			if ("nassnum".equalsIgnoreCase(key) || "nnum".equalsIgnoreCase(key)) {// 控制赠品不可以被拆分
-				Object value = getPanel().getBodyBillModel().getValueAt(row,
-						"blargessflag");
-				if (PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE)
-						.booleanValue()) {
-					return false;
-				}
-			}
-		}
+//			if ("nassnum".equalsIgnoreCase(key) || "nnum".equalsIgnoreCase(key)) {// 控制赠品不可以被拆分
+//				Object value = getPanel().getBodyBillModel().getValueAt(row,
+//						"blargessflag");
+//				if (PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE)
+//						.booleanValue()) {
+//					return false;
+//				}
+//			}
+	}
 
 		return true;
 	}

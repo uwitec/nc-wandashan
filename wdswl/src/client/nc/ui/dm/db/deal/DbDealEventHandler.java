@@ -13,6 +13,7 @@ import nc.vo.dm.db.deal.DbDeHeaderVo;
 import nc.vo.dm.db.deal.DbDealBillVO;
 import nc.vo.dm.db.deal.DbDealVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
+import nc.vo.ic.pub.bill.BillStatus;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -111,7 +112,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	}
 	/**
 	 * 
-	 * @作者：lyf:根据表头单据号，加载表体
+	 * @作者：mlr:根据表头单据号，加载表体
 	 * @说明：完达山物流项目 
 	 * @时间：2011-11-10下午08:10:37
 	 * @param key
@@ -188,7 +189,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	}
 	/**
 	 * 
-	 * @作者：lyf
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * 查询动作相应方法
 	 * @时间：2011-3-25上午09:49:04
@@ -324,11 +325,8 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	}
 	/**
 	 * 
-	 * @作者：lyf
+	 * @作者：mlr
 	 * @说明：完达山物流项目 
-	 * 获得 对 发运计划的查询条件
-	 * wds_sendplanin发运计划主表
-	 * wds_sendplanin_b 发运计划子表
 	 * @时间：2011-3-25上午09:47:50
 	 * @return
 	 * @throws Exception
@@ -336,6 +334,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	private String getSQL() throws Exception{
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" b.coutcorpid='"+ui.cl.getCorp());
+		whereSql.append(" h.fstatusflag='"+BillStatus.ADJUST+"'");//审批通过的
 		whereSql.append("' and (coalesce(b.nnum,0) -  coalesce(b."+WdsWlPubConst.DM_DB_DEALNUM_FIELD_NAME+",0)) > 0 ");
 		String where = getQryDlg().getWhereSQL();
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
@@ -396,19 +395,19 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 				}
 			}
 		}
-		//校验只有相同的客户可以合单
-		CircularlyAccessibleValueObject[][]  splitVos = SplitBillVOs.getSplitVOs(WdsWlPubTool.getParentVOFromAggBillVo(newVos, DbDeHeaderVo.class), new String[]{"ccustomerid"});
-		if(splitVos !=null && splitVos.length>1){
-			showErrorMessage("只能安排相同的客户合单");
-			return ;
-		}
+//		//校验只有相同的客户可以合单
+//		CircularlyAccessibleValueObject[][]  splitVos = SplitBillVOs.getSplitVOs(WdsWlPubTool.getParentVOFromAggBillVo(newVos, DbDeHeaderVo.class), new String[]{"ccustomerid"});
+//		if(splitVos !=null && splitVos.length>1){
+//			showErrorMessage("只能安排相同的客户合单");
+//			return ;
+//		}
 		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(WdsWlPubTool.getBodysVOFromAggBillVo(newVos, DbDealVO.class),"nnum");
 		if(ldata == null||ldata.size() == 0){
 			showErrorMessage("选中数据没有安排");
 			return;
 		}
 		//安排  安排前   数据校验:赠品单不能被拆分
-		checkIsGiftSpilt((DbDealBillVO[])newVos);
+	//	checkIsGiftSpilt((DbDealBillVO[])newVos);
 		try{
 			for(SuperVO vo:ldata){
 				//((DbDealVO)vo).validataOnDeal();
@@ -434,43 +433,43 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	 * @param dealBills
 	 * @throws BusinessException 
 	 */
-	private void checkIsGiftSpilt(DbDealBillVO[] dealBills) throws BusinessException{		
-		for(DbDealBillVO dealBill:dealBills){
-			DbDealVO[] bodys = dealBill.getBodyVos();
-			if(bodys == null || bodys.length ==0){
-				throw  new BusinessException("表体不能为空");
-			}
-			//将表体数据按照订单分单
-			CircularlyAccessibleValueObject[][] vos = SplitBillVOs.getSplitVOs(bodys, new String[]{"csaleid"});
-			if(vos == null || vos.length ==0){
-				return;
-			}
-			//判断赠品是否拆单
-			for(int i=0;i<vos.length;i++){
-				DbDealVO[] splitBodys =(DbDealVO[])vos[i];
-			//	String csaleid = splitBodys[0].getCsaleid();
-//				if(csaleid == null || "".equalsIgnoreCase(csaleid)){
-//					continue;
+//	private void checkIsGiftSpilt(DbDealBillVO[] dealBills) throws BusinessException{		
+//		for(DbDealBillVO dealBill:dealBills){
+//			DbDealVO[] bodys = dealBill.getBodyVos();
+//			if(bodys == null || bodys.length ==0){
+//				throw  new BusinessException("表体不能为空");
+//			}
+//			//将表体数据按照订单分单
+//			CircularlyAccessibleValueObject[][] vos = SplitBillVOs.getSplitVOs(bodys, new String[]{"csaleid"});
+//			if(vos == null || vos.length ==0){
+//				return;
+//			}
+//			//判断赠品是否拆单
+//			for(int i=0;i<vos.length;i++){
+//				DbDealVO[] splitBodys =(DbDealVO[])vos[i];
+//			//	String csaleid = splitBodys[0].getCsaleid();
+////				if(csaleid == null || "".equalsIgnoreCase(csaleid)){
+////					continue;
+////				}
+//				int count =0;
+//				boolean fisgift = false;
+////				for(DbDealVO dealvo:getDataBuffer()){//跟缓存中的数据比较
+////					String csaleid2 = dealvo.getCsaleid();
+////					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
+////					if(csaleid.equalsIgnoreCase(csaleid2)){
+////						count= count+1;
+////						if(blargessflag){
+////							fisgift = blargessflag;
+////						}
+////					}
+////				}
+//				if(fisgift && (splitBodys.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
+//					throw new BusinessException("赠品必须整单安排，不能拆单安排");
 //				}
-				int count =0;
-				boolean fisgift = false;
-//				for(DbDealVO dealvo:getDataBuffer()){//跟缓存中的数据比较
-//					String csaleid2 = dealvo.getCsaleid();
-//					boolean  blargessflag = PuPubVO.getUFBoolean_NullAs(dealvo.getBlargessflag(), UFBoolean.FALSE).booleanValue();
-//					if(csaleid.equalsIgnoreCase(csaleid2)){
-//						count= count+1;
-//						if(blargessflag){
-//							fisgift = blargessflag;
-//						}
-//					}
-//				}
-				if(fisgift && (splitBodys.length-count)<0){//如果是赠品单，则必须整单安排，不能拆单据
-					throw new BusinessException("赠品必须整单安排，不能拆单安排");
-				}
-			}
-		}
-
-	}
+//			}
+//		}
+//
+//	}
 	public void bodyRowChange(BillEditEvent e) {		
 	}
 	
@@ -536,7 +535,6 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 
 
 	public boolean beforeEdit(BillEditEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
