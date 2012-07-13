@@ -72,7 +72,7 @@ import nc.vo.pub.lang.*;
 	public String vdef1;
 	public String vdef2;
 	public String vdef3;
-	public String vdef4;	
+	public String vdef4;	//»õÎ»
 	public String vdef5;
 	public String vdef6;
 	public String vdef7;

@@ -180,6 +180,8 @@ public class WdsWlIcPubDealTool {
 			SysInitVO vo =sysinitQry.queryByParaCode(corp, "WDS00");
 			if(vo != null){
 				m_batchcode = vo.getValue();
+			}else{
+				return "2009";
 			}
 		} catch (BusinessException e) {
 			e.printStackTrace();

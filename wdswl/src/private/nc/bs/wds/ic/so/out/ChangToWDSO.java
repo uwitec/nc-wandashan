@@ -495,6 +495,7 @@ public class ChangToWDSO {
 			b2vos[i].setNoutnum(list.get(i).getNoutnum());
 			b2vos[i].setNoutassistnum(list.get(i).getNoutassistnum());
 			b2vos[i].setStatus(VOStatus.NEW);
+			b2vos[i].setVdef4(head.getPk_cargdoc());//货位
 			b2vos[i].setIsxnap(list.get(i).getIsxnap());//是否虚拟安排 liuys add
 		}
 		return b2vos;

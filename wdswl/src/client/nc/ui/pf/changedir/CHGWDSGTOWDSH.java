@@ -7,7 +7,7 @@ import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * mlr
- * 调出订单－其它出库
+ * 调出订单－调拨出库
  * 
  */
 public class CHGWDSGTOWDSH extends nc.ui.pf.change.VOConversionUI {
