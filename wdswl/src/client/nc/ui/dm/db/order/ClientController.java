@@ -27,8 +27,8 @@ public class ClientController extends AbstractManageController {
 				ZmpubBtnConst.LINKQUERY,
 				IBillButton.Print,
 			//	ButtonCommon.TRAN_COL,
-			//	ButtonCommon.LOCK,
-			//	ButtonCommon.UNLOCK
+				ButtonCommon.LOCK,
+				ButtonCommon.UNLOCK
 				};
 		return buttonArray;
 	}
@@ -47,8 +47,8 @@ public class ClientController extends AbstractManageController {
 				ZmpubBtnConst.LINKQUERY,
 				IBillButton.Print,
 			//	ButtonCommon.TRAN_COL,
-			//	ButtonCommon.LOCK,
-			//	ButtonCommon.UNLOCK
+				ButtonCommon.LOCK,
+				ButtonCommon.UNLOCK
 		}
 				;
 		return buttonArray;

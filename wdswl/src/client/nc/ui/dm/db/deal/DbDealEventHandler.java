@@ -332,9 +332,9 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	 */
 	private String getSQL() throws Exception{
 		StringBuffer whereSql = new StringBuffer();
-		whereSql.append(" b.coutcorpid='"+ui.cl.getCorp());
-		whereSql.append(" h.fstatusflag='"+BillStatus.ADJUST+"'");//审批通过的
-		whereSql.append("' and (coalesce(b.nnum,0) -  coalesce(b."+WdsWlPubConst.DM_DB_DEALNUM_FIELD_NAME+",0)) > 0 ");
+		whereSql.append(" b.coutcorpid='"+ui.cl.getCorp()+"'");
+		whereSql.append(" and h.fstatusflag="+BillStatus.ADJUST);//审批通过的
+		whereSql.append(" and (coalesce(b.nnum,0) -  coalesce(b."+WdsWlPubConst.DM_DB_DEALNUM_FIELD_NAME+",0)) > 0 ");
 		String where = getQryDlg().getWhereSQL();
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);

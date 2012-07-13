@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.scm.util.ObjectUtils;
 import nc.uif.pub.exception.UifException;
@@ -11,7 +12,6 @@ import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 完达山物流出库单自动拣货
  * @author mlr
@@ -55,7 +55,7 @@ public class PickTool implements Serializable{
 		if(bvos==null || bvos.length==0)
 			return null;
 		for(int i=0;i<bvos.length;i++){
-			pick(pk_stordoc,pk_cargdoc,bvos[i]);
+			pick(pk_stordoc,pk_cargdoc,bvos[i],i);
 		}	
 		return createBill(bvos);
 	}
@@ -70,9 +70,8 @@ public class PickTool implements Serializable{
 	private  TbOutgeneralBVO[] createBill(TbOutgeneralBVO[] bvos) throws Exception {
 		List<TbOutgeneralBVO> list=new ArrayList<TbOutgeneralBVO>();//存货重新构建的表体数据
 		for(int i=0;i<bvos.length;i++){
-		   String pk=bvos[i].getPrimaryKey();	
 		   //取出该行的拣货单
-		   List<StockInvOnHandVO> li= mpick.get(pk);	
+		   List<StockInvOnHandVO> li= mpick.get(i+"");	
 		   //如果没有现存量 该行保持不动
 		   if(li==null|| li.size()==0){
 			   list.add(bvos[i]);
@@ -117,11 +116,12 @@ public class PickTool implements Serializable{
 	 * @时间：2012-6-20上午10:04:23
 	 * @param pk_stordoc
 	 * @param pk_cargdoc
+	 * @param i 
 	 * @param tbOutgeneralBVO
 	 * @throws Exception 
 	 */
 	private void pick(String pk_stordoc, String pk_cargdoc,
-			TbOutgeneralBVO vo) throws Exception {
+			TbOutgeneralBVO vo, int i) throws Exception {
 		//构建查询条件
 		String whereSql= " pk_customize1 = '"+pk_stordoc+"' " +
 				        " and  pk_cargdoc = '"+pk_cargdoc+"' "+
@@ -129,11 +129,20 @@ public class PickTool implements Serializable{
 						" and isnull(dr,0)=0 "+
 						" and pk_corp='"+SQLHelper.getCorpPk()+"'"+
 		                " and whs_stockpieces >0 ";//库存主数量大于0
+		String vbantcode=PuPubVO.getString_TrimZeroLenAsNull(vo.getVbatchcode());//获得批次号
+		String sspk=PuPubVO.getString_TrimZeroLenAsNull(vo.getVuserdef9());//获得存货状态
+		if(sspk!=null){
+			whereSql=whereSql+" and ss_pk='"+sspk+"'";
+		}
+		if(vbantcode!=null){
+			whereSql=whereSql+" and whs_batchcode='"+vbantcode+"'";
+		}
+		
 		//查询现存量
-		StockInvOnHandVO[] stocks=(StockInvOnHandVO[]) getStock().queryStock(whereSql);
+		StockInvOnHandVO[] stocks=(StockInvOnHandVO[]) getStock().queryStock(whereSql);		
 		//开始拣货
 		   //拣货分量  构造拣货单
-		   spiltNum(stocks,vo);				
+		   spiltNum(stocks,vo,i);				
 	}
 	/**
 	 * 拣货分量  
@@ -143,9 +152,10 @@ public class PickTool implements Serializable{
 	 * @param stocks 现存量 
 	 * @param vo  出库单表体
 	 */
-	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo) {
+	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo,int index) {
 		
 	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
+	    UFDouble noutnum=PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());//获得实发数量
 	    if(vos==null|| vos.length==0){
 	    	mpick.put(vo.getPrimaryKey(), null);//如果现存量为空   则该行拣货单设置为空
 	    	return;
@@ -153,7 +163,11 @@ public class PickTool implements Serializable{
 		if(zbnum.doubleValue()==0){
 			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发辅数量为0  则该行拣货单设置为空
 			return;
-		}	
+		}
+		if(noutnum.doubleValue()>0){
+			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发数量有值    不再参与 自动拣货    则该行拣货单设置为空
+			return;
+		}
 		//进行分量  
 		//按 批次号  由小到大 依次分量
 		List<StockInvOnHandVO> list=new ArrayList<StockInvOnHandVO>();
@@ -181,7 +195,7 @@ public class PickTool implements Serializable{
 				break;
 			}		
 		}
-		mpick.put(vo.getPrimaryKey(), list);
+		mpick.put(index+"", list);
 	}
 	
 	/**

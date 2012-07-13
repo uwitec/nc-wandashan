@@ -13,6 +13,7 @@ public class LogNumRefUFPanel extends UIRefPane {
 	protected String m_strWareHouseID = null; //仓库ID
 	protected String m_spaceId = null; //货位id
 	protected String m_strInventoryID = null; //存货ID
+	protected String pk_sspk=null;//存货状态
 	private boolean m_bisClicked;
     private   String[] datas=null;
 	private nc.ui.wdsnew.pub.LotNumbDlg m_dlgLotNumb = null;
@@ -41,6 +42,8 @@ public class LogNumRefUFPanel extends UIRefPane {
 //    	 m_spaceName=datas[6];//货位名称
 //    	 
     	 m_strInventoryID = datas[3]; //存货ID
+    	 
+    	 pk_sspk=datas[4];
 //    	 m_strInventoryName = datas[8]; //存货名称
 //    	 m_strInventoryCode = datas[9]; //存货编码
     	
@@ -54,6 +57,7 @@ public class LogNumRefUFPanel extends UIRefPane {
 		getLotNumbDlg().setWareHouseID(m_strWareHouseID);
 		getLotNumbDlg().setM_strCorpID(m_strCorpID);
 		getLotNumbDlg().setM_spaceId(m_spaceId);
+		getLotNumbDlg().setPk_sspk(pk_sspk);
 		//查库
 		try {
 			getLotNumbDlg().setData();

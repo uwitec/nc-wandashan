@@ -77,6 +77,8 @@ public class RefWDSGBillSourceDlg  extends MBillSourceDLG {
 		try {
 			sql= "  coalesce(wds_sendorder_b.ndealnum,0)-coalesce(wds_sendorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
 			" and wds_sendorder_b.pk_invmandoc in ("+getPowerSql()+")" +
+			" and coalesce(wds_sendorder.fisended,'N')='Y' "+//过滤已经被冻结的
+			" and wds_sendorder.iprintcount>0 "+//打印次数大于零
 			" and wds_sendorder.pk_outwhouse= '"+getLoginInfor().getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'"+
 			" and wds_sendorder.pk_billtype='"+WdsWlPubConst.WDSG+"'";
 		} catch (Exception e) {

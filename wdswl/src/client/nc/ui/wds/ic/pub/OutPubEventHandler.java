@@ -8,6 +8,7 @@ import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
+import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.MutiChildForOutInUI;
@@ -19,6 +20,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.LoginInforVO;
@@ -176,7 +178,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super.onBoEdit();
 //	    getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 //		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		
+		getButtonManager().getButton(ISsButtun.fzgn).setEnabled(false);
 		boolean isself = PuPubVO.getString_TrimZeroLenAsNull(
 				getBufferData().getCurrentVO().getChildrenVO()[0].getAttributeValue("csourcetype"))
 				==null?true:false;
@@ -258,8 +260,44 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
+		valudate();
 		super.onBoSave();
 	}
+	/**
+	 * 保存前进行数据校验
+	 * @throws Exception 
+	 * @throws BusinessException 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-13下午07:33:33
+	 */
+	private void valudate() throws BusinessException, Exception {
+		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
+			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
+			for(int i=0;i<tbs.length;i++){
+				//校验贴签数量    不能大于  实出数量
+				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());//实发数量
+				UFDouble u2=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNtagnum());//贴签数量
+				if(u1.sub(u2).doubleValue()<0){
+					throw new BusinessException("贴签数量   不能大于 实出数量");
+				}	
+				//校验应发数量 不能小于实出数量
+				UFDouble u3=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNshouldoutnum());//应发数量
+				UFDouble u4=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutnum());//实出数量
+				if(u3.sub(u4).doubleValue()<0){
+					throw new BusinessException("应发数量   不能小于  实出数量");
+				}
+				//校验生成日期不能为空 
+				String  date=PuPubVO.getString_TrimZeroLenAsNull(tbs[i].getVuserdef7());
+				if(date==null){
+					throw new Exception("生成日期不能为空");
+				}
+			}			
+		}
+		
+	}
+
+
 	protected void onPasteLineToTail(int line,String[] vbatchcodes) throws Exception{
 		if(vbatchcodes!=null && vbatchcodes.length>0){
 			for(int i = 0 ;i<vbatchcodes.length;i++){

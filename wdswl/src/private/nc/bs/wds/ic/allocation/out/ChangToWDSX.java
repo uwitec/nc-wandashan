@@ -2,8 +2,7 @@ package nc.bs.wds.ic.allocation.out;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.trade.business.HYPubBO;
 import nc.jdbc.framework.processor.BeanListProcessor;
@@ -13,7 +12,6 @@ import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
@@ -27,9 +25,8 @@ import nc.vo.wds.ic.write.back4c.MultiBillVO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB1VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cB2VO;
 import nc.vo.wds.ic.write.back4c.Writeback4cHVO;
-import nc.vo.wds.ic.zgjz.ZgjzBVO;
-import nc.vo.wds.ic.zgjz.ZgjzHVO;
 import nc.vo.wl.pub.WdsWlPubConst;
+
 import org.apache.tools.ant.BuildException;
 /**
  * 调拨出库推式生成调拨出库回传单据
@@ -113,92 +110,92 @@ public class ChangToWDSX {
 			getHypubBO().saveBill(writeBillVO);
 		}
 	}
-	/**
-	 * 
-	 * @throws BusinessException 
-	 * @作者：lyf
-	 * @说明：完达山物流项目:更新调拨暂估记账的累计安排数量
-	 * @时间：2011-12-22下午09:50:16
-	 */
-	public void updateZgjzNum(TbOutgeneralHVO head,TbOutgeneralBVO[] xnvo,boolean isAudit) throws BusinessException{
-		if(xnvo == null || xnvo.length ==0){
-			return ;
-		}
-		String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getSrl_pk());
-		if(pk_outwhouse == null){
-			throw new BusinessException("更新暂估记账数据：出库仓库不能为空");
-		}
-		//按照存货汇总出库数量
-		Map<String, UFDouble[]> map = new HashMap<String, UFDouble[]>();
-		for(TbOutgeneralBVO bvo:xnvo){
-			String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getCinventoryid());
-			if(pk_invmandoc == null){
-				continue;
-			}
-			UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(bvo.getNoutnum());
-			UFDouble noutassistnum = PuPubVO.getUFDouble_NullAsZero(bvo.getNoutassistnum());
-			if(map.containsKey(pk_invmandoc)){
-				UFDouble noutnum_old = map.get(pk_invmandoc)[0].add(noutnum);
-				UFDouble noutassistnum_old = map.get(pk_invmandoc)[1].add(noutassistnum);
-				map.get(pk_invmandoc)[0] = noutnum_old;
-				map.get(pk_invmandoc)[1] = noutassistnum_old;
-			}else{
-				UFDouble[]  nums= new UFDouble[2];
-				nums[0]=noutnum;
-				nums[1]=noutassistnum;
-				map.put(pk_invmandoc,nums );
-			}
-		}
-		if(map.size()==0){
-			return;
-		}
-		//查询当期的暂估记账 
-			String strWhere = " pk_outwhouse='"+pk_outwhouse+"' and  isnull(dr,0)=0  and isnull(ilacktype,0)=0 and vbillstatus='"+IBillStatus.FREE+"'";
-			SuperVO[] heads = getHypubBO().queryByCondition(ZgjzHVO.class, strWhere);
-			if(heads == null || heads.length ==0){
-				throw new BusinessException("未查询到该出库仓库的调拨虚拟欠发数据");
-			}else if(heads.length >1){
-				throw new BusinessException("查询到该出库仓库多条自由态调拨虚拟欠发数据");
-			}
-			ZgjzHVO hvo = (ZgjzHVO)heads[0]; 
-			ZgjzBVO[] bodys = (ZgjzBVO[])getHypubBO().queryByCondition(ZgjzBVO.class, " isnull(dr,0)=0 and pk_wds_zgjz_h='"+hvo.getPrimaryKey()+"'");
-			Set<String> keys = map.keySet();
-			for(String key:keys){
-				boolean falge = false;
-				for(ZgjzBVO body:bodys){
-					String pk_invmandoc =PuPubVO.getString_TrimZeroLenAsNull(body.getPk_invmandoc()) ;
-					if(pk_invmandoc == null){
-						continue;
-					}
-					if(key.equalsIgnoreCase(pk_invmandoc)){
-						//更新出库数量
-						UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(body.getNoutnum());
-						UFDouble noutassnum = PuPubVO.getUFDouble_NullAsZero(body.getNoutassnum());
-						UFDouble noutnum_add= map.get(key)[0];
-						UFDouble noutassnum_add= map.get(key)[1];
-						if(!isAudit){
-							noutnum_add = noutnum_add.multiply(-1);
-							noutassnum_add = noutassnum_add.multiply(-1);
-						}
-						body.setNoutnum(noutnum.add(noutnum_add));
-						body.setNoutassnum(noutassnum.add(noutassnum_add));
-						//校验 不能超量
-						UFDouble nlastnum= PuPubVO.getUFDouble_NullAsZero(body.getNlastnum());//暂估欠发量
-						UFDouble nreducnum_new= PuPubVO.getUFDouble_NullAsZero(body.getNreducnum());//冲减量
-						UFDouble noutnum_new= PuPubVO.getUFDouble_NullAsZero(body.getNoutnum());//出库量
-						if(nlastnum.sub(nreducnum_new).sub(noutnum_new).doubleValue()<0){
-							throw new BusinessException("存货:"+getInvCode(key)+"，超过暂估未出库数量");
-						}
-						falge = true;
-					}
-				}
-				if(!falge){
-					throw new BusinessException("存货:"+getInvCode(key)+"，无暂估");
-				}
-			}
-			getHypubBO().updateAry(bodys);
-		
-	}
+//	/**
+//	 * 
+//	 * @throws BusinessException 
+//	 * @作者：lyf
+//	 * @说明：完达山物流项目:更新调拨暂估记账的累计安排数量
+//	 * @时间：2011-12-22下午09:50:16
+//	 */
+//	public void updateZgjzNum(TbOutgeneralHVO head,TbOutgeneralBVO[] xnvo,boolean isAudit) throws BusinessException{
+//		if(xnvo == null || xnvo.length ==0){
+//			return ;
+//		}
+//		String pk_outwhouse = PuPubVO.getString_TrimZeroLenAsNull(head.getSrl_pk());
+//		if(pk_outwhouse == null){
+//			throw new BusinessException("更新暂估记账数据：出库仓库不能为空");
+//		}
+//		//按照存货汇总出库数量
+//		Map<String, UFDouble[]> map = new HashMap<String, UFDouble[]>();
+//		for(TbOutgeneralBVO bvo:xnvo){
+//			String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(bvo.getCinventoryid());
+//			if(pk_invmandoc == null){
+//				continue;
+//			}
+//			UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(bvo.getNoutnum());
+//			UFDouble noutassistnum = PuPubVO.getUFDouble_NullAsZero(bvo.getNoutassistnum());
+//			if(map.containsKey(pk_invmandoc)){
+//				UFDouble noutnum_old = map.get(pk_invmandoc)[0].add(noutnum);
+//				UFDouble noutassistnum_old = map.get(pk_invmandoc)[1].add(noutassistnum);
+//				map.get(pk_invmandoc)[0] = noutnum_old;
+//				map.get(pk_invmandoc)[1] = noutassistnum_old;
+//			}else{
+//				UFDouble[]  nums= new UFDouble[2];
+//				nums[0]=noutnum;
+//				nums[1]=noutassistnum;
+//				map.put(pk_invmandoc,nums );
+//			}
+//		}
+//		if(map.size()==0){
+//			return;
+//		}
+//		//查询当期的暂估记账 
+//			String strWhere = " pk_outwhouse='"+pk_outwhouse+"' and  isnull(dr,0)=0  and isnull(ilacktype,0)=0 and vbillstatus='"+IBillStatus.FREE+"'";
+//			SuperVO[] heads = getHypubBO().queryByCondition(ZgjzHVO.class, strWhere);
+//			if(heads == null || heads.length ==0){
+//				throw new BusinessException("未查询到该出库仓库的调拨虚拟欠发数据");
+//			}else if(heads.length >1){
+//				throw new BusinessException("查询到该出库仓库多条自由态调拨虚拟欠发数据");
+//			}
+//			ZgjzHVO hvo = (ZgjzHVO)heads[0]; 
+//			ZgjzBVO[] bodys = (ZgjzBVO[])getHypubBO().queryByCondition(ZgjzBVO.class, " isnull(dr,0)=0 and pk_wds_zgjz_h='"+hvo.getPrimaryKey()+"'");
+//			Set<String> keys = map.keySet();
+//			for(String key:keys){
+//				boolean falge = false;
+//				for(ZgjzBVO body:bodys){
+//					String pk_invmandoc =PuPubVO.getString_TrimZeroLenAsNull(body.getPk_invmandoc()) ;
+//					if(pk_invmandoc == null){
+//						continue;
+//					}
+//					if(key.equalsIgnoreCase(pk_invmandoc)){
+//						//更新出库数量
+//						UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(body.getNoutnum());
+//						UFDouble noutassnum = PuPubVO.getUFDouble_NullAsZero(body.getNoutassnum());
+//						UFDouble noutnum_add= map.get(key)[0];
+//						UFDouble noutassnum_add= map.get(key)[1];
+//						if(!isAudit){
+//							noutnum_add = noutnum_add.multiply(-1);
+//							noutassnum_add = noutassnum_add.multiply(-1);
+//						}
+//						body.setNoutnum(noutnum.add(noutnum_add));
+//						body.setNoutassnum(noutassnum.add(noutassnum_add));
+//						//校验 不能超量
+//						UFDouble nlastnum= PuPubVO.getUFDouble_NullAsZero(body.getNlastnum());//暂估欠发量
+//						UFDouble nreducnum_new= PuPubVO.getUFDouble_NullAsZero(body.getNreducnum());//冲减量
+//						UFDouble noutnum_new= PuPubVO.getUFDouble_NullAsZero(body.getNoutnum());//出库量
+//						if(nlastnum.sub(nreducnum_new).sub(noutnum_new).doubleValue()<0){
+//							throw new BusinessException("存货:"+getInvCode(key)+"，超过暂估未出库数量");
+//						}
+//						falge = true;
+//					}
+//				}
+//				if(!falge){
+//					throw new BusinessException("存货:"+getInvCode(key)+"，无暂估");
+//				}
+//			}
+//			getHypubBO().updateAry(bodys);
+//		
+//	}
 	
 	/**
 	 * 

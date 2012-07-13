@@ -30,6 +30,7 @@ public class LotNumbDlg extends UIDialog implements java.awt.event.ActionListene
 	private String m_strWareHouseID = null; // 仓库ID
 	private String m_spaceId = null; // 货位id
 	private String m_strInventoryID = null; // 存货ID
+	private String pk_sspk=null;
 	private StockInvOnHandVO[] vos = null;// 先存量vo
 	private List<StockInvOnHandVO> lis = new ArrayList<StockInvOnHandVO>();// 被选中的先存量vo
 	private String m_sRNodeName = "PCDA";
@@ -515,8 +516,11 @@ public class LotNumbDlg extends UIDialog implements java.awt.event.ActionListene
 		String wheresql = " pk_corp = '" + m_strCorpID
 				+ "'  and pk_customize1='" + m_strWareHouseID + "' "
 				+ "and pk_cargdoc ='" + m_spaceId + "' and pk_invmandoc ='"
-				+ m_strInventoryID + "' and isnull(dr,0)=0";
-
+				+ m_strInventoryID + "' and isnull(dr,0)=0 and whs_stocktonnage>0 ";
+		if(pk_sspk!=null && pk_sspk.length()!=0){
+			wheresql=wheresql+" and ss_pk='"+pk_sspk+"'";
+		}
+		
 		try {
 			Class[] ParameterTypes = new Class[] { String.class };
 			Object[] ParameterValues = new Object[] { wheresql };
@@ -708,6 +712,10 @@ public class LotNumbDlg extends UIDialog implements java.awt.event.ActionListene
 			onOK();
 		if (e.getSource() == LotNumbDlg.this.getBtnCancel())
 			onCancel();		
+	}
+
+	public void setPk_sspk(String pk_sspk) {
+		this.pk_sspk=pk_sspk;		
 	}
 
 }

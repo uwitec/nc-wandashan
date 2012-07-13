@@ -92,7 +92,7 @@ public class DbDealBO {
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;	
-		//按  仓库
+		//按  出库仓库  和 入库仓库
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
 						.toArray(new DbDealVO[0])),
@@ -109,7 +109,7 @@ public class DbDealBO {
 			planBillVos[i].setParentVO(getPlanHead(tmpVOs[0]));
 			planBillVos[i].setChildrenVO(tmpVOs);
 		}
-		//进行数据交换，生成销售运单
+		//进行数据交换，生成调出运单
 		PfParameterVO paraVo = new PfParameterVO();
 		paraVo.m_operator = infor.get(0);
 		paraVo.m_coId = infor.get(1);
@@ -119,7 +119,7 @@ public class DbDealBO {
 						planBillVos, paraVo);
 		
 		
-		//调用销售运单保存脚本，保存销售运单
+		//调用销售运单保存脚本，保存调出运单
 		if (orderVos == null || orderVos.length == 0) {
 			return;
 		}	

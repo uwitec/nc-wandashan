@@ -138,24 +138,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	
 	
 	@Override
-	protected void onBoSave() throws Exception {
-		//对贴签数量    小于    实入数量的校验
-		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
-			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
-			for(int i=0;i<tbs.length;i++){
-				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());
-				UFDouble u2=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNtagnum());
-				if(u1.sub(u2).doubleValue()<0){
-					throw new BusinessException("贴签数量   不能大于 实入数量");
-				}
-				
-				
-			}			
-		}
-		
-		
-		
-		
+	protected void onBoSave() throws Exception {	
 		super.onBoSave();
 	}
 

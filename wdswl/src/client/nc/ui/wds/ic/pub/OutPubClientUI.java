@@ -3,6 +3,8 @@ package nc.ui.wds.ic.pub;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.event.ChangeListener;
 
@@ -44,6 +46,7 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 	private String m_strWareHouseID=null;
 	private String m_spaceId=null;
 	private String m_strInventoryID=null;
+	private String pk_sspk=null;
    
 	protected nc.ui.wdsnew.pub.LogNumRefUFPanel getLotNumbRefPane() {
 		if (ivjLotNumbRefPane == null) {
@@ -85,7 +88,8 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 						m_strWareHouseID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("srl_pk").getValueObject());
 						m_spaceId=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
 						m_strInventoryID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row, "cinventoryid"));
-						String[] datas ={m_strCorpID,m_strWareHouseID,m_spaceId,m_strInventoryID};						
+						pk_sspk=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row, "vuserdef9"));
+						String[] datas ={m_strCorpID,m_strWareHouseID,m_spaceId,m_strInventoryID,pk_sspk};						
 						getLotNumbRefPane().setDatas(datas);
 			
 			}
@@ -259,6 +263,13 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 			if("vbatchcode".equalsIgnoreCase(key)){				
 			      //支持批次号 多选拆行  for add mlr
 					List<StockInvOnHandVO> vos=getLotNumbRefPane().getLotNumbDlg().getLis();
+					if(vos==null || vos.size()==0){
+					   String vbatchcode=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(row, "vbatchcode"));
+					   if(vbatchcode!=null&& vbatchcode.length()!=0){
+						   setVbatchcode(e);
+					   }
+					}
+					
 					pick(vos,row);	
 					getLotNumbRefPane().getLotNumbDlg().setLis(null);
 			}					
@@ -266,6 +277,44 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 		}catch(Exception e1){
 			Logger.info(e1);
 		}
+	}
+	
+	private void setVbatchcode(BillEditEvent e) {			
+		// 验证批次号是否正确
+		String va=(String) e.getValue();
+		if(va==null ||va.equalsIgnoreCase("")){
+			getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "vbatchcode");
+			this.showErrorMessage("批次号不能为空");
+			return;
+		}
+		if (va.trim().length() < 8) {
+			getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "vbatchcode");
+			this.showErrorMessage("批次号不能小于8位");
+		     return ;
+		}
+
+		Pattern p = Pattern
+		.compile(
+				"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
+				+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
+				+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
+				+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
+				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(va.trim().substring(0, 8));
+		if (!m.find()) {
+			getBillCardPanel().getBillModel().setValueAt(null, e.getRow(), "vbatchcode");
+			this.showErrorMessage(
+			"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+			return;
+
+		}
+	    //如果批次号输入格式正确  就给生成日期赋值
+		String year=va.substring(0,4);
+		String month=va.substring(4,6);
+		String day=va.substring(6,8);
+		String startdate=year+"-"+month+"-"+day;
+		UFDate date=new UFDate(startdate);
+		getBillCardPanel().setBodyValueAt(date, e.getRow(), "vuserdef7");		
 	}
 	/**
 	 * 完达山物流 出库手动拣货

@@ -41,8 +41,11 @@ public class WdsWlPubConst {
 	public static String WDS_IC_FLAG_you="0001S3100000000MPNIF";
 	/**发运计划录入节点号 */
 	public static String DM_PLAN_LURU_NODECODE="80060405";
+	
 	/**发运计划处理节点号  */
 	public static String DM_PLAN_DEAL_NODECODE = "80060410";
+	/**调拨订单处理节点号  */
+	public static String DB_PLAN_DEAL_NODECODE = "80060207";
 	/**发运订单节点号  */
 	public static String DM_ORDER_NODECODE="80060415";
 	/**其他出库单节点号 */
@@ -222,7 +225,7 @@ public class WdsWlPubConst {
 
 	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid"};//"vbillno",
 	
-	public static String[] DB_PLAN_DEAL_SPLIT_FIELDS = new String[]{"coutwhid"};//"vbillno",
+	public static String[] DB_PLAN_DEAL_SPLIT_FIELDS = new String[]{"coutwhid","cincorpid","cincbid","cinwhid"};//"vbillno",
 	
 	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 	public static String DM_PLAN_TO_ORDER_SAVE="SAVE";

@@ -4,7 +4,9 @@ package nc.ui.dm.db.order;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.pub.CardPanelPRTS;
@@ -12,6 +14,7 @@ import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.order.SendorderVO;
+import nc.vo.ic.pub.PubVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -214,40 +217,49 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		HYPubBO_Client.update(head);
 		onBoRefresh();		
 	}
-
+    
 
 	@Override
 	public void onButton(ButtonObject bo){
-		
-//	   // 冻结后 不允许单据修改的处理
-//		Object o = getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-//				"fisended").getValueObject();
-//		ButtonObject parentBtn = bo.getParent();
-//		if (parentBtn != null ) {
-//			int intParentBtn = Integer.parseInt(parentBtn.getTag());
-//			if(IBillButton.Action == intParentBtn){
-//				if (o != null && ((String) o).equalsIgnoreCase("true")) {
-//					getBillUI().showErrorMessage("该单据已冻结不允许操作");
-//					return;
-//
-//				}
-//			}
-//
-//		} else {
-//			Integer intbtn = Integer.valueOf(bo.getTag());
-//			if (IBillButton.Edit == intbtn || IBillButton.Del == intbtn
-//					|| IBillButton.Delete == intbtn
-//					
-//					|| ButtonCommon.TRAN_COL == intbtn) {
-//				if (o != null && ((String) o).equalsIgnoreCase("true")) {
-//					getBillUI().showErrorMessage("该单据已冻结不允许操作");
-//					return;
-//
-//				}
-//			}
-//
-//		}
+	   // 冻结处理
+		UFBoolean uf = PuPubVO.getUFBoolean_NullAs(getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+		"fisended").getValueObject(), new UFBoolean(false));
+		ButtonObject parentBtn = bo.getParent();
+		if (parentBtn != null ) {
+			int intParentBtn = Integer.parseInt(parentBtn.getTag());
+			if(IBillButton.Action == intParentBtn){
+				if (uf.booleanValue()==false) {
+					getBillUI().showErrorMessage("冻结后才允许审批");
+					return;
+
+				}
+			}
+			if(IBillButton.Line == intParentBtn){
+				if (uf.booleanValue()==true) {
+					getBillUI().showErrorMessage("冻结后不允许行操作");
+					return;
+
+				}
+			}
+
+		} else {
+			Integer intbtn = Integer.valueOf(bo.getTag());
+            if(uf.booleanValue()==true){
+            	if(intbtn.intValue()==IBillButton.Del ||intbtn.intValue()==IBillButton.Delete ){
+            		getBillUI().showErrorMessage("冻结后不允许删除");
+					return;
+            	}
+            }  
+		}
 		super.onButton(bo);
+	}
+	protected void onBoEdit() throws Exception {		
+		super.onBoEdit();
+		UFBoolean uf = PuPubVO.getUFBoolean_NullAs(getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
+		"fisended").getValueObject(), new UFBoolean(false));
+		if(uf.booleanValue()==true){
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel().setEnabled(false);
+		}
 	}
 	
 
