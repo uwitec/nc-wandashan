@@ -7,15 +7,20 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.framework.common.NCLocator;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsWlIcPubDealTool;
+import nc.itf.ic.pub.IGeneralBill;
 import nc.itf.uap.pf.IPFBusiAction;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.pub.bill.GeneralBillItemVO;
 import nc.vo.ic.pub.bill.GeneralBillVO;
+import nc.vo.ic.pub.bill.QryConditionVO;
 import nc.vo.ic.pub.locator.LocatorVO;
+import nc.vo.ic.pub.smallbill.SMGeneralBillVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
@@ -33,7 +38,8 @@ import nc.vo.zmpub.pub.report2.CombinVO;
  * @author mlr
  */
 public class SoBackBO{
-	
+	private  String beanName = IGeneralBill.class.getName(); 
+
 	private Map<String,ArrayList<LocatorVO>> l_map =  new HashMap<String,ArrayList<LocatorVO>>();	
 	BaseDAO dao = null;
 	private String corp=null;
@@ -100,15 +106,16 @@ public class SoBackBO{
 					.getInstance().lookup(IPFBusiAction.class.getName());
 			ArrayList retList = (ArrayList) bsBusiAction.processAction("PUSHSAVE",
 					"4Y", date, null, orderVos[i], null, null);
+			//执行签字操作
+			SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);
+			orderVos[i].setSmallBillVO(smbillvo);
+			//签字检查 <->[签字日期和表体业务日期]
+			//当前操作人<->[业务加锁，锁定当前操作人员]
+			//空货位检查 bb1表
+			bsBusiAction.processAction("SIGN", "4Y",date,null,orderVos[i], null,null); //签字后续放开
 		}
 	//	throw new Exception("css");
-//		//执行签字操作
-//		SMGeneralBillVO smbillvo = (SMGeneralBillVO) retList.get(2);
-//		orderVos[0].setSmallBillVO(smbillvo);
-//		//签字检查 <->[签字日期和表体业务日期]
-//		//当前操作人<->[业务加锁，锁定当前操作人员]
-//		//空货位检查 bb1表
-//		bsBusiAction.processAction("SIGN", "4Y",date,null,orderVos[0], null,null); //签字后续放开
+
 
 	}
 	/**
@@ -124,6 +131,7 @@ public class SoBackBO{
 		if(orderVos==null  || orderVos.length==0){
 			return;
 		}
+		String pk=billvo.getHeadVO().getPrimaryKey();
 		for (int k = 0; k < orderVos.length; k++) {
 			GeneralBillVO bill = orderVos[k];
 			bill.getParentVO().setStatus(VOStatus.NEW);
@@ -149,6 +157,7 @@ public class SoBackBO{
 						vo.setNoutnum(bvos[j].getNoutnum());
 						vo.setNoutassistnum(bvos[j].getNpacknumber());
 						vo.setStatus(VOStatus.NEW);
+						vo.setAttributeValue(WdsWlPubConst.csourcehid_wds, pk);
 					}
 				}
 			}
@@ -273,5 +282,57 @@ public class SoBackBO{
 		bill.setParentVO(headList.get(0));
 		bill.setChildrenVO(bodyList.toArray(new BillItemVO[0]));
 		return bill;
+	}
+	/**
+	 * @功能：取消签字动作
+	 */
+	public GeneralBillVO[] canelSignQueryGenBillVO(AggregatedValueObject bill,String coperator,String date) throws Exception {
+		if(bill==null){
+			return null;
+		}
+		this.coperator = coperator;
+		this.date = date;
+		MultiBillVO billvo = (MultiBillVO)bill;
+		Writeback4cHVO hvo = (Writeback4cHVO)billvo.getParentVO();
+		String csaleid = hvo.getPrimaryKey()==null ?"":hvo.getPrimaryKey();
+		String where  = "body."+WdsWlPubConst.csourcehid_wds+"='"+csaleid+"' ";
+		QryConditionVO voCond = new QryConditionVO(where);
+	    ArrayList alListData = (ArrayList)queryBills("4Y", voCond);
+	    GeneralBillVO[] gbillvo = null;
+		if(alListData!=null && alListData.size()>0){
+			for(int i = 0;i<alListData.size();i++){
+				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
+				gvo.getHeaderVO().setCoperatoridnow(coperator);
+				gvo.getHeaderVO().setDaccountdate(new UFDate(date));
+				gvo.getHeaderVO().setClogdatenow(date);
+			}
+			gbillvo = (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
+		}
+		return gbillvo;
+	}
+	public void canelPushSign4Y(String date, AggregatedValueObject[] billvo)
+			throws Exception {
+		// 取消销售出库签字
+		if (billvo != null && billvo[0] != null
+				&& billvo[0] instanceof GeneralBillVO) {
+			IPFBusiAction bsBusiAction = (IPFBusiAction) NCLocator
+					.getInstance().lookup(IPFBusiAction.class.getName());
+			for (int i = 0; i < billvo.length; i++) {
+				//取消签字
+				ArrayList retList = (ArrayList) bsBusiAction.processAction(
+						"CANCELSIGN", "4Y", date, null, billvo[i], null,
+						null);
+				//单据删除
+				if (retList.get(0) != null && (Boolean) retList.get(0)) {
+					bsBusiAction.processAction("CANELDELETE", "4Y", date,
+							null, billvo[i], null, null);
+				}
+			}
+		}
+	}
+	public  ArrayList queryBills(String arg0 ,QryConditionVO arg1 ) throws Exception{
+		IGeneralBill bo = (IGeneralBill)NCLocator.getInstance().lookup(beanName);    
+		ArrayList o =  bo.queryBills(arg0 ,arg1 );					
+		return o;
 	}
 }

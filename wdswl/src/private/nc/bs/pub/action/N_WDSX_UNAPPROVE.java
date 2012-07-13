@@ -4,6 +4,8 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.write.back4c1.SoBackBO;
+import nc.vo.ic.pub.bill.GeneralBillVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -35,11 +37,10 @@ public class N_WDSX_UNAPPROVE extends AbstractCompiler2 {
 			setParameter("date", vo.m_currentDate);
 			setParameter("operator", vo.m_operator);
 			setParameter("pk_corp",vo.m_coId);
-			//
-			AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.so.out.ChangeTo4C", "canelSignQueryGenBillVO",
-					"&currentVo:nc.vo.pub.AggregatedValueObject,&operator:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-			setParameter("AggObject",icBillVO);
-			runClass("nc.bs.wds.ic.so.out.SoOutBO", "canelPushSign4C","&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
+//			//删除供应链 调拨出库单
+//			SoBackBO bo=new SoBackBO();			
+//			GeneralBillVO[] billvos= bo.canelSignQueryGenBillVO( vo.m_preValueVo,  vo.m_operator, vo.m_currentDate);
+//			bo.canelPushSign4Y(vo.m_currentDate, billvos);			
 			//更改本单据审批信息
 			Writeback4cHVO head = (Writeback4cHVO)vo.m_preValueVo.getParentVO();
 			head.setDapprovedate(null);
