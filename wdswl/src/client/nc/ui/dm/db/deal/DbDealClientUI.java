@@ -369,10 +369,10 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 			m_btnQry.setEnabled(flag);
 		}
 
-		UFBoolean isclose = event.getOrderType();
-		m_btnClose.setEnabled(!isclose.booleanValue());
-		m_btnOpen.setEnabled(isclose.booleanValue());
-		m_btnDeal.setEnabled(!isclose.booleanValue());
+	//	UFBoolean isclose = event.getOrderType();
+	//	m_btnClose.setEnabled(!isclose.booleanValue());
+//		m_btnOpen.setEnabled(isclose.booleanValue());
+//		m_btnDeal.setEnabled(!isclose.booleanValue());
 		updateButtons();
 	}
 

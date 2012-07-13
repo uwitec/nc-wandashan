@@ -1,18 +1,26 @@
 package nc.ui.dm.db.deal;
+import java.awt.Container;
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRadioButton;
-import nc.ui.pub.query.QueryConditionClient;
-public class DbDealQryDlg extends QueryConditionClient {
+import nc.ui.trade.query.HYQueryDLG;
+//QueryConditionClient
+public class DbDealQryDlg extends HYQueryDLG {
+	public DbDealQryDlg(Container parent, UIPanel normalPnl, String pk_corp,
+			String moduleCode, String operator, String busiType) {
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
+	}
+
 	private static final long serialVersionUID = 1L;
 	
 	UIRadioButton m_rbclose = null;
 	UIRadioButton m_rbopen = null;
 	
-	public DbDealQryDlg() {
-		super();
-		getConditionDatas();
-		init();
-	}
+//	public DbDealQryDlg() {
+//		super();
+//	//	getConditionDatas();
+//		init();
+//	}
 	public void init(){
 		//changeQueryModelLayout();
 		setDefaultValue("h.dbilldate",null,ClientEnvironment.getInstance().getDate().toString());

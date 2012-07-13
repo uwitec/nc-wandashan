@@ -51,13 +51,13 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	}
 	
 	
-	UFBoolean getOrderType(){
-		if(getQryDlg().m_rbclose.isSelected()){
-			return UFBoolean.TRUE;
-		}else{
-			return UFBoolean.FALSE;
-		}
-	}
+//	UFBoolean getOrderType(){
+////		if(getQryDlg().m_rbclose.isSelected()){
+////			return UFBoolean.TRUE;
+////		}else{
+////			return UFBoolean.FALSE;
+////		}
+//	}
 	
 	public DbDealEventHandler(DbDealClientUI parent){
 		super();
@@ -175,10 +175,9 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	}
 	private DbDealQryDlg getQryDlg(){
 		if(m_qrypanel == null){
-			m_qrypanel = new DbDealQryDlg();
-			m_qrypanel.setTempletID(ui.cl.getCorp(), WdsWlPubConst.DM_SO_DEAL_NODECODE, ui.cl.getUser(), null);
-			m_qrypanel.hideUnitButton();
-		}
+			m_qrypanel = new DbDealQryDlg(ui, null, ui.cl.getCorp(),
+					WdsWlPubConst.DB_PLAN_DEAL_NODECODE, ui.cl.getUser(), null);
+			}
 		return m_qrypanel;
 	}
 	
@@ -212,7 +211,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 		DbDealVO[] billdatas = null; 
 		try{
 			whereSql = getSQL();
-			billdatas = DbDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
+			billdatas = DbDealHealper.doQuery(whereSql,ui.getWhid(),null);
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -270,7 +269,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
 			try{
-				billdatas = DbDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
+				billdatas = DbDealHealper.doQuery(whereSql,ui.getWhid(),null);
 			}catch(Exception e){
 				e.printStackTrace();
 				showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
