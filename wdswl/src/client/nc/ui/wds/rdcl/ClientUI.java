@@ -17,13 +17,13 @@ public class ClientUI extends BillTreeCardUI {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-	public ClientUI(){
+
+	public ClientUI() {
 		super();
-		init();
 	}
-	private void init(){
+
+	@Override
+	public void afterInit() throws Exception {
 		getBillTreeData().modifyRootNodeShowName("收发类别");
 	}
 
@@ -36,12 +36,12 @@ public class ClientUI extends BillTreeCardUI {
 	protected ICardController createController() {
 		return new ClientController();
 	}
-	
+
 	public void setDefaultData() throws Exception {
 		super.setDefaultData();
-		setPanelValue("pk_corp",_getCorp().getPrimaryKey());
+		setPanelValue("pk_corp", _getCorp().getPrimaryKey());
 	}
-	
+
 	public java.lang.Object getUserObject() {
 		return new checkClassInterface();
 	}
@@ -51,15 +51,15 @@ public class ClientUI extends BillTreeCardUI {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	private void setPanelValue(String fieldname,Object oValue){
+
+	private void setPanelValue(String fieldname, Object oValue) {
 		getBillCardPanel().getHeadItem(fieldname).setValue(oValue);
 	}
 
 	@Override
 	protected void initSelfData() {
 		// TODO Auto-generated method stub
-	
+
 	}
 
 }
