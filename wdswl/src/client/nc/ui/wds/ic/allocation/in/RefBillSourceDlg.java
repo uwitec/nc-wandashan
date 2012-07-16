@@ -29,8 +29,6 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	private String pk_stock = null; // 当前登录者对应的仓库主键
 	
-//	private int iType = -1;
-	
 	private String[] inv_Pks = null;// 根据当前登录者查询所属仓库和其仓库所存储的产品
 	
 	private LoginInforHelper helper = null;
@@ -84,7 +82,6 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 	
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return "参照调拨出库单";
 	}
 	@Override
