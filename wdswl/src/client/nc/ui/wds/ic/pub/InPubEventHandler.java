@@ -612,7 +612,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 //		设置默认收发类别
 		String outintype = OutInSetHelper.getDefaultOutInTypeID(
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 
-				"geb_customize9", true);
+				"geb_customize9", false);
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("geh_cdispatcherid", outintype);	
 	}
 

@@ -38,7 +38,10 @@ public class OutInSetHelper {
 			return getDefaultOutInTypeID(Wds2WlPubConst.other, isout);
 		if(bm.getItemByKey(orderFieldName) == null)
 			return null;
-		if(bm.getRowCount() <= 0)
+		if(bm.getRowCount() == 0){
+			return getDefaultOutInTypeID(Wds2WlPubConst.other, isout);
+		}
+		if(bm.getRowCount() < 0)
 			return null;
 		String ordertype = PuPubVO.getString_TrimZeroLenAsNull(bm.getValueAt(0, orderFieldName));
 		
@@ -61,23 +64,24 @@ public class OutInSetHelper {
 	public static String getDefaultOutInTypeID(String ordertype,boolean isout) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(ordertype) == null)
 			return null;
-		if(getTypeInfor().containsKey(ordertype)){
-			return getTypeInfor().get(ordertype);
+		String key = ordertype+isout;
+		if(getTypeInfor().containsKey(key)){
+			return getTypeInfor().get(key);
 		}
 
 		//		从数据库获取信息
 
-		OutInSetVO[] vos = (OutInSetVO[])HYPubBO_Client.queryByCondition(OutInSetVO.class, " isnull(dr,0)=0 " +
-				"and pk_corp = '"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
+		OutInSetVO[] vos = (OutInSetVO[])HYPubBO_Client.queryByCondition(OutInSetVO.class, 
+				" pk_corp = '"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
 
 		if(vos == null || vos.length == 0)
 			return null;
 
 		for(OutInSetVO vo:vos){
-			getTypeInfor().put(getKey(vo.getIbiztype()),isout?vo.getCouttypeid():vo.getCintypeid());
+			getTypeInfor().put(getKey(vo.getIbiztype())+isout,isout?vo.getCouttypeid():vo.getCintypeid());
 		}
 
-		return getTypeInfor().get(ordertype);
+		return getTypeInfor().get(key);
 	}
 
 	public static int tw = 0;//转分仓
