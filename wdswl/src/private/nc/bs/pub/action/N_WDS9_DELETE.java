@@ -2,12 +2,15 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 
+import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds2.send.AlloInSendBO;
+import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.uap.pf.PFBusinessException;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -43,6 +46,10 @@ public class N_WDS9_DELETE extends AbstractCompiler2 {
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
 			AggregatedValueObject bill = getVo();
+			//进行数据回写
+			IcInPubBO bo=new IcInPubBO();
+			bo.writeBackForInBill((OtherInBillVO) bill,IBDACTION.DELETE);	
+	
 
 			// 更新现存量
 			getStock()
