@@ -10,7 +10,7 @@ public class RdclRefTreeModel extends AbstractRefTreeModel {
 	private String[] hidecode = {"pk_rdcl","pk_frdcl"};
 	private String pkFieldCode = "pk_rdcl";
 	private String pkFatherfield = "pk_frdcl";
-	private String sqlWherePart = " isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"' ";
+	private String sqlWherePart = " isnull(dr,0)=0 and pk_corp = '"+getPk_corp()+"' and isnull(sealflag,'N') = 'N' ";
 
 	/**
 	 * RouteRefModel 构造子注解。
