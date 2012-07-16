@@ -1,13 +1,9 @@
 package nc.ui.wds.ic.so.out;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import java.util.ArrayList;
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
-import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillItem;
-import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -18,7 +14,6 @@ import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
-import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.ScaleKey;
@@ -27,12 +22,11 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.WdsWlPubConst;
+
 /** 
  *  0 保管员 1 信息科 2 发运科 3内勤 
  * 	用户类型0---------可以进行出库

@@ -2,6 +2,7 @@ package nc.ui.wds.ic.pub;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -9,6 +10,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
+import nc.ui.wds2.set.OutInSetHelper;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.MutiChildForOutInUI;
@@ -399,5 +401,27 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			String  geh_cwarehouseid = ((MutiChildForOutInUI) getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
+	}
+	
+	private void setOutType() throws BusinessException{
+//		设置默认收发类别
+		String outintype = OutInSetHelper.getDefaultOutInTypeID(
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 
+				"csourcetype", true);
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("cdispatcherid", outintype);	
+	}
+	
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		super.onBoAdd(bo);
+		
+//		设置默认收发类别
+		setOutType();
+	}
+	
+	public void onBillRef() throws Exception {
+		super.onBillRef();
+		
+//		设置默认收发类别
+		setOutType();	
 	}
 }

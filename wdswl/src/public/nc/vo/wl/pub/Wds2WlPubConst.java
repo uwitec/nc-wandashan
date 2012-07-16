@@ -10,6 +10,9 @@ public class Wds2WlPubConst {
 	
 	public final static  String  billtype_alloinsendorder = "WS21";   //调入运单
 	
+	public final static String virtual = "virtual";
+	public final static String other = "other";
+	
 	
 	//库存现存量更新
 	public final static  String  billtype_statusupdate_1 = "WS20_1";//处理状态变更单  保存 状态变化后 新增量

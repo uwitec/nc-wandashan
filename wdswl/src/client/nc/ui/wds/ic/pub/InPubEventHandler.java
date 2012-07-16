@@ -1,4 +1,5 @@
 package nc.ui.wds.ic.pub;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -9,19 +10,16 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.base.IBillOperate;
-import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wds2.set.OutInSetHelper;
 import nc.ui.wl.pub.MutiChildForInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
-import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -39,6 +37,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	
 	public void onBoAdd(ButtonObject bo) throws Exception {
 		super.onBoAdd(bo);
+		setInType();
 		setHeadPartEdit(true);
 	}
 
@@ -531,6 +530,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	@Override
 	public void onBillRef() throws Exception {		
 		super.onBillRef();	   
+		setInType();
 		if(getBillUI().getBillOperate() == IBillOperate.OP_REFADD){
 			BillItem item = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc");
 			if(item.getValueObject() == null){
@@ -605,6 +605,15 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 			String  geh_cwarehouseid = ((MutiInPubClientUI )getBillUI()).getLoginInforHelper().getCwhid(_getOperator());
 			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(warehouseid, geh_cwarehouseid);
 		}
+	}
+	
+	
+	private void setInType() throws BusinessException{
+//		设置默认收发类别
+		String outintype = OutInSetHelper.getDefaultOutInTypeID(
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 
+				"geb_customize9", true);
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("geh_cdispatcherid", outintype);	
 	}
 
 }

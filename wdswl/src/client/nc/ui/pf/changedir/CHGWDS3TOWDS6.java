@@ -41,7 +41,7 @@ public String[] getField() {
 			"_vsourcebillcode->H_vbillno",
 //			"H_voperatorid->H_voperatorid",
 			"H_srl_pk->H_pk_outwhouse",//³ö¿â²Ö¿â
-			"H_srl_pkr->B_vdef9",//Èë¿â²Ö¿â
+			"H_srl_pkr->H_pk_inwhouse",//Èë¿â²Ö¿â
 			"H_vdiliveraddress->H_vinaddress",//ÊÕ»õµØÖ·
 			"H_isxnap->H_reserve15",//ÊÇ·ñÐéÄâÇ··¢
 			"H_vnote->H_vmemo",			

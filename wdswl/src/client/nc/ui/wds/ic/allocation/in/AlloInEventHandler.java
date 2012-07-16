@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.allocation.in;
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.util.ObjectUtils;
@@ -20,7 +19,6 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.bill.BillRendererVO;
-import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.allo.in.AlloInBodyPrintVO;

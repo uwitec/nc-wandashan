@@ -44,6 +44,8 @@ public class CHGWDS6TOWDS7 extends VOConversionUI {
 			"B_csourcetype->H_vbilltype",
 			"B_csourcebillhid->B_general_pk",
 			"B_csourcebillbid->B_general_b_pk",
+//			zhf add 运单类型
+			"B_geb_customize9->B_csourcetype"
 		};
 	}
 	

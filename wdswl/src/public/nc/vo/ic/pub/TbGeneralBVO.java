@@ -114,7 +114,7 @@ public class TbGeneralBVO extends SuperVO {
 	public String geb_customize2;
 	public String pk_customize9;
 	public String pk_customize6;
-	public String geb_customize9;
+	public String geb_customize9;//zhf 20120716启用  用作 存储来源运单的单据类型
 	public String pk_customize4;
 	public String geb_customize4;
 	public String geb_customize7;
