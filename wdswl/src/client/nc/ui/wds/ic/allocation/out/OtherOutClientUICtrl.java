@@ -20,7 +20,7 @@ public class OtherOutClientUICtrl extends AbstractManageController {
 	public int[] getCardButtonAry() {
 
 		return new int[] { IBillButton.Refbill,
-				IBillButton.Add,IBillButton.Edit,
+				IBillButton.Edit,
 				IBillButton.Line, IBillButton.Save, IBillButton.Query,IBillButton.Del,IBillButton.Cancel,
 				IBillButton.Return, IBillButton.Refresh,
 				IBillButton.Print,
@@ -35,7 +35,7 @@ public class OtherOutClientUICtrl extends AbstractManageController {
 
 	public int[] getListButtonAry() {
 		return new int[] { 
-				IBillButton.Refbill,IBillButton.Add,IBillButton.Edit,
+				IBillButton.Refbill,IBillButton.Edit,
 				IBillButton.Save, IBillButton.Query,IBillButton.Del,IBillButton.Cancel, 
 				IBillButton.Card,IBillButton.Refresh,
 				ButtonCommon.joinup,
