@@ -226,15 +226,15 @@ public class PickTool implements Serializable{
 	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
 	    UFDouble noutnum=PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());//获得实发数量
 	    if(vos==null|| vos.length==0){
-	    	mpick.put(vo.getPrimaryKey(), null);//如果现存量为空   则该行拣货单设置为空
+	    	mpick.put(""+index, null);//如果现存量为空   则该行拣货单设置为空
 	    	return;
 	    }	
 		if(zbnum.doubleValue()==0){
-			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发辅数量为0  则该行拣货单设置为空
+			mpick.put(""+index, null);//如果出库单实发辅数量为0  则该行拣货单设置为空
 			return;
 		}
 		if(noutnum.doubleValue()>0){
-			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发数量有值    不再参与 自动拣货    则该行拣货单设置为空
+			mpick.put(""+index, null);//如果出库单实发数量有值    不再参与 自动拣货    则该行拣货单设置为空
 			return;
 		}
 		//进行分量  
@@ -279,15 +279,15 @@ public class PickTool implements Serializable{
 	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
 	    UFDouble noutnum=PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());//获得实发数量
 	    if(vos==null|| vos.length==0){
-	    	mpick.put(vo.getPrimaryKey(), null);//如果现存量为空   则该行拣货单设置为空
+	    	mpick.put(""+index, null);//如果现存量为空   则该行拣货单设置为空
 	    	return;
 	    }	
 		if(zbnum.doubleValue()==0){
-			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发辅数量为0  则该行拣货单设置为空
+			mpick.put(""+index, null);//如果出库单应发辅数量为0  则该行拣货单设置为空
 			return;
 		}
 		if(noutnum.doubleValue()>0){
-			mpick.put(vo.getPrimaryKey(), null);//如果出库单实发数量有值    不再参与 自动拣货    则该行拣货单设置为空
+			mpick.put(""+index, null);//如果出库单实发数量有值    不再参与 自动拣货    则该行拣货单设置为空
 			return;
 		}
 		//进行分量  

@@ -3,7 +3,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 public class DbDeHeaderVo extends SuperVO {
 	private static final long serialVersionUID = -5983083411953222727L;
-	public static String[] split_fields={"coutwhid"};// 按调出仓库  调出部门分单  
+	public static String[] split_fields={"vcode","coutwhid"};// 按调出仓库  调出部门分单  
 	private UFDate dbilldate;
 	private String vcode;
 	private String cincorpid;

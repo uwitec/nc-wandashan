@@ -4,6 +4,8 @@ import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.ic.allocation.out.AlloutBO;
 import nc.bs.wds.ic.allocation.out.ChangToWDSX;
+import nc.bs.wds.load.account.LoadAccountBS;
+import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -44,11 +46,10 @@ public class N_WDSH_SIGN extends AbstractCompiler2 {
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
 				AlloutBO bo1=new AlloutBO();
-				bo1.updateHVO(headvo);
-				
-//				//生成装卸费核算单
-//				PushSaveWDSF pu=new PushSaveWDSF();
-//				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);
+				bo1.updateHVO(headvo);				
+				//生成装卸费核算单
+				PushSaveWDSF pu=new PushSaveWDSF();
+				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

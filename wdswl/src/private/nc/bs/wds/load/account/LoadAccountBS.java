@@ -26,8 +26,8 @@ import nc.vo.wl.pub.WdsWlPubConst;
  */
 public class LoadAccountBS {
 	// 当前登录公司
-	public static int LOADFEE=0;//出库装货类型
-	public static int UNLOADFEE=1;//入库卸货类型
+	public static int LOADFEE=0;//装货类型
+	public static int UNLOADFEE=1;//卸货类型
 	
 	private String pk_corp = null;
 //	当前登录仓库

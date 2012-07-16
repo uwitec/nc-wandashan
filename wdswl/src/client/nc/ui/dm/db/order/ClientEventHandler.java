@@ -207,7 +207,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if(billVo == null){
 			getBillUI().showWarningMessage("请选择要操作的数据");
 		}
-		BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
+	//	BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
 		SendorderVO head = (SendorderVO)billVo.getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
 		if(fisended == UFBoolean.TRUE ){

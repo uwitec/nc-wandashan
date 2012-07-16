@@ -1516,10 +1516,10 @@ public class TbOutgeneralBVO extends SuperVO {
 	public void validationOnZdck() throws ValidationException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(getCinventoryid())==null)
 			throw new ValidationException("货品不能为空，行号为："+getCrowno());
-		if(PuPubVO.getString_TrimZeroLenAsNull(getUnitid())==null)
-			throw new ValidationException("计量单位为空，行号为："+getCrowno());
-		if(PuPubVO.getString_TrimZeroLenAsNull(getCastunitid())==null)
-			throw new ValidationException("辅计量单位为空，行号为："+getCrowno());
+//		if(PuPubVO.getString_TrimZeroLenAsNull(getUnitid())==null)
+//			throw new ValidationException("计量单位为空，行号为："+getCrowno());
+//		if(PuPubVO.getString_TrimZeroLenAsNull(getCastunitid())==null)
+//			throw new ValidationException("辅计量单位为空，行号为："+getCrowno());
 		if(PuPubVO.getUFDouble_NullAsZero(getNshouldoutnum()).equals(WdsWlPubTool.DOUBLE_ZERO))
 			throw new ValidationException("应发数量不能为空，行号为："+getCrowno());
 		if(PuPubVO.getUFDouble_NullAsZero(getNshouldoutassistnum()).equals(WdsWlPubTool.DOUBLE_ZERO))
