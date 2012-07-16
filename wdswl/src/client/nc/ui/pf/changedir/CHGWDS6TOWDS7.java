@@ -46,6 +46,8 @@ public class CHGWDS6TOWDS7 extends VOConversionUI {
 			"B_csourcebillbid->B_general_b_pk",
 //			zhf add 运单类型
 			"B_geb_customize9->B_csourcetype"
+			,"B_cdt_pk->B_vuserdef9"//存货状态
+			,"B_geb_proddate->B_vuserdef7"//生产日期
 		};
 	}
 	

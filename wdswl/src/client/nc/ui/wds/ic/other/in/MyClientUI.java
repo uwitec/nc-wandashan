@@ -237,7 +237,7 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		
 		ButtonVO refbill =ButtonVOFactory.getInstance().build(IBillButton.Refbill);
 		refbill.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT, IBillOperate.OP_INIT });
-		refbill.setChildAry(new int[]{ref4i.getBtnNo(),refwds6.getBtnNo(),refwds.getBtnNo()});		
+		refbill.setChildAry(new int[]{refwds6.getBtnNo(),refwds.getBtnNo()});		
 		addPrivateButton(refbill);
 	}
 	@Override

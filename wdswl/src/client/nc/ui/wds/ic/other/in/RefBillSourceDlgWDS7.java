@@ -83,7 +83,7 @@ public class RefBillSourceDlgWDS7 extends MBillSourceDLG{
 	public String getBodyCondition() {
 		
 	    return " isnull(tb_outgeneral_b.dr,0)=0 and coalesce(tb_outgeneral_b.noutnum,0)-coalesce(tb_outgeneral_b.nacceptnum,0)>0"+//实发数量-已入库数量>0
-		       " and pk_invmandoc in ("+getPowerSql()+")";
+		       " and cinventoryid in ("+getPowerSql()+")";
 	}
 	
 	@Override
