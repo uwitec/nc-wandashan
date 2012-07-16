@@ -3,6 +3,7 @@ package nc.ui.wds.rdcl;
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.pub.IVOTreeData;
 import nc.ui.trade.treecard.BillTreeCardUI;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.wds.rdcl.checkClassInterface;
 
 public class ClientUI extends BillTreeCardUI {
@@ -40,6 +41,7 @@ public class ClientUI extends BillTreeCardUI {
 	public void setDefaultData() throws Exception {
 		super.setDefaultData();
 		setPanelValue("pk_corp", _getCorp().getPrimaryKey());
+		setPanelValue("uisreturn", UFBoolean.TRUE);
 	}
 
 	public java.lang.Object getUserObject() {
