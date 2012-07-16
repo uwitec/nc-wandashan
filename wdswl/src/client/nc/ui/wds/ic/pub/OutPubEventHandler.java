@@ -380,7 +380,8 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 		String  pk_stordoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
 	    if(pk_stordoc==null ||pk_stordoc.length()==0){
-	    	throw new Exception("仓库为空");
+	    	return;
+//	    	throw new Exception("仓库为空");
 	    }
 		if(!pk_stordoc.equalsIgnoreCase(getLoginInfoHelper().getCwhid(_getOperator()))){
 	    	 throw new Exception("当前保管员  未绑定 当前 被参照的销售运单的出库仓库");

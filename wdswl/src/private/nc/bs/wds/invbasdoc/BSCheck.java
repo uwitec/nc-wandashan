@@ -37,6 +37,8 @@ public class BSCheck implements IBDBusiCheck{
 		
 		//唯一校验增加pk_corp条件
 		BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"pk_invbasdoc","pk_corp"}, " 该存货在数据库中已经存在 ");
+		//add by yf 2012-07-16 关联存货基本档案的存货唯一
+		BsUniqueCheck.FieldUniqueCheck(ivo, new String[]{"pk_invmandoc","pk_corp"}, " 该存货在数据库中已经存在 ");
 		
 		//如果是新增后的保存执行下面的代码
 //		if(ivo.getPrimaryKey()==null ||ivo.getPrimaryKey().trim().equals("")){

@@ -35,7 +35,7 @@ public class RdclVO extends SuperVO {
 	public String rdcode;//编码
 	public String rdname;//名称
 	public String pk_frdcl;//上级pk
-	public UFBoolean sealflag;//封存标志
+	public UFBoolean sealflag;//封存标志-true 封存，false 未封存
 	public UFBoolean uisreturn;//是否回传erp
 	public UFDateTime ts;
 	public Integer dr;

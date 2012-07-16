@@ -23,8 +23,8 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
- * @author yf  货位调整单
- *
+ * @author yf 货位调整单
+ * 
  */
 
 public class ClientUI extends OutPubClientUI implements
@@ -37,12 +37,12 @@ public class ClientUI extends OutPubClientUI implements
 
 	public ClientUI() {
 		super();
-//		initSelfData();
-//		init();
+		// initSelfData();
+		// init();
 	}
 
-//	private void init() {
-//	}
+	// private void init() {
+	// }
 
 	public ClientUI(String pk_corp, String pk_billType, String pk_busitype,
 			String operater, String billId) {
@@ -77,10 +77,11 @@ public class ClientUI extends OutPubClientUI implements
 	protected ManageEventHandler createEventHandler() {
 		return new EventHandler(this, getUIControl());
 	}
-//	@Override
-//	protected IBillField createBillField() {
-//		return BillField.getInstance();
-//	}
+
+	// @Override
+	// protected IBillField createBillField() {
+	// return BillField.getInstance();
+	// }
 	protected String getBillNo() throws java.lang.Exception {
 		return HYPubBO_Client.getBillNo(getBillType(), _getOperator(), null,
 				null);
@@ -89,24 +90,23 @@ public class ClientUI extends OutPubClientUI implements
 	public boolean isSaveAndCommitTogether() {
 		return true;
 	}
-	
-	private boolean beforeEditByInvCode(int row){
-		String pk_cargdoc = (String) getBillCardPanel()
-		.getHeadItem("pk_cargdoc").getValueObject();
+
+	private boolean beforeEditByInvCode(int row) {
+		String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
+				"pk_cargdoc").getValueObject();
 		if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
 			showWarningMessage("前选择调出货位");
 			return false;
 		}
-		JComponent c = getBillCardPanel().getBodyItem(
-		"ccunhuobianma").getComponent();
+		JComponent c = getBillCardPanel().getBodyItem("ccunhuobianma")
+				.getComponent();
 		if (c instanceof UIRefPane) {
 			UIRefPane ref = (UIRefPane) c;
 			ref.getRefModel().addWherePart(
-					"  and tb_spacegoods.pk_cargdoc='" + pk_cargdoc
-					+ "' ");
+					"  and tb_spacegoods.pk_cargdoc='" + pk_cargdoc + "' ");
 		}
 		return true;
-	
+
 	}
 
 	@Override
@@ -118,10 +118,28 @@ public class ClientUI extends OutPubClientUI implements
 		if ("ccunhuobianma".equalsIgnoreCase(key)) {
 			return beforeEditByInvCode(row);
 		} else if ("vbatchcode".equalsIgnoreCase(key)) {
-			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "nshouldoutnum"));
-			if(nnum.doubleValue() == 0.0 )
+			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel()
+					.getBodyValueAt(row, "nshouldoutnum"));
+			if (nnum.doubleValue() == 0.0)
 				return false;
-		} 
+		}// add by yf 2012-07-16 根据仓库过滤表头入库货位
+		else if ("cargdocname2".equals(key)) {// 出库货位
+			// 仓库id
+			Object a = getBillCardPanel().getHeadItem("srl_pk")
+					.getValueObject();
+			if (a == null) {
+				showWarningMessage("请选择仓库");
+				return false;
+			}
+			UIRefPane panel = (UIRefPane) this.getBillCardPanel().getBodyItem(
+					"cargdocname2").getComponent();
+			if (null != a && !"".equals(a)) {
+				// 修改参照 条件 增加条件 指定仓库id
+				panel.getRefModel().addWherePart(
+						" and bd_stordoc.pk_stordoc = '" + a + "' ");
+			}
+		}
+		// end
 
 		return super.beforeEdit(e);
 	}
@@ -178,6 +196,16 @@ public class ClientUI extends OutPubClientUI implements
 				getBillCardPanel().getHeadItem("pk_cargdoc").setEnabled(
 						isEditable);
 				getBillCardPanel().getHeadItem("pk_cargdoc").setValue(null);
+				// add by yf 2012-07-16 修改仓库后，清空表头表体入库货位
+				getBillCardPanel().getHeadItem("pk_cargdoc2").setEnabled(
+						isEditable);
+				getBillCardPanel().getHeadItem("pk_cargdoc2").setValue(null);
+				int rowcount = getBillCardPanel().getBillTable().getRowCount();
+				for (int i = 0; i < rowcount; i++) {
+					getBillCardPanel().setBodyValueAt(null, i, "pk_cargdoc2");
+					getBillCardPanel().execBodyFormula(i, "pk_cargdoc2");
+				}
+				// end
 			}
 			if ("cdptid".equalsIgnoreCase(key)) {
 				getBillCardPanel().getHeadItem("cbizid").setValue(null);
@@ -185,20 +213,17 @@ public class ClientUI extends OutPubClientUI implements
 				getBillCardPanel().execHeadTailLoadFormulas();
 			} else if (key.equalsIgnoreCase("pk_cargdoc2")) {// 表头调入货位
 				String cargdoc = PuPubVO
-				.getString_TrimZeroLenAsNull(getBillCardPanel()
-						.getHeadItem("pk_cargdoc2").getValueObject());
+						.getString_TrimZeroLenAsNull(getBillCardPanel()
+								.getHeadItem("pk_cargdoc2").getValueObject());
 				if (cargdoc == null)
 					return;
-				int rowcount = getBillCardPanel().getBillTable()
-				.getRowCount();
+				int rowcount = getBillCardPanel().getBillTable().getRowCount();
 				for (int i = 0; i < rowcount; i++) {
-					if (PuPubVO
-							.getString_TrimZeroLenAsNull(getBillCardPanel()
-									.getBodyValueAt(i, "pk_cargdoc2")) == null) {
+					if (PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
+							.getBodyValueAt(i, "pk_cargdoc2")) == null) {
 						getBillCardPanel().setBodyValueAt(cargdoc, i,
-						"pk_cargdoc2");
-						getBillCardPanel().execBodyFormula(i,
-						"pk_cargdoc2");
+								"pk_cargdoc2");
+						getBillCardPanel().execBodyFormula(i, "pk_cargdoc2");
 					}
 				}
 			}
@@ -209,32 +234,32 @@ public class ClientUI extends OutPubClientUI implements
 						.getString_TrimZeroLenAsNull(getBillCardPanel()
 								.getBodyValueAt(row, "pk_cargdoc2"))) {
 					String cargdoc = PuPubVO
-					.getString_TrimZeroLenAsNull(getBillCardPanel()
-							.getHeadItem("pk_cargdoc2")
-							.getValueObject());
+							.getString_TrimZeroLenAsNull(getBillCardPanel()
+									.getHeadItem("pk_cargdoc2")
+									.getValueObject());
 					if (cargdoc != null) {
 						getBillCardPanel().setBodyValueAt(cargdoc, row,
-						"pk_cargdoc2");
+								"pk_cargdoc2");
 						getBillCardPanel().execBodyFormula(row, "pk_cargdoc2");
 					}
 				}
 			}
-//			else if("vbatchcode".equalsIgnoreCase(key)){
-//				afterEditByVbatchcode(row);
-//			}
+			// else if("vbatchcode".equalsIgnoreCase(key)){
+			// afterEditByVbatchcode(row);
+			// }
 		}
 	}
-	
-//	/**
-//	 * 
-//	 * @作者：zhf
-//	 * @说明：完达山物流项目 批次编辑后处理
-//	 * @时间：2012-7-11下午08:27:30
-//	 * @param row
-//	 */
-//	private void afterEditByVbatchcode(int row){
-//		super.after
-//	}
+
+	// /**
+	// *
+	// * @作者：zhf
+	// * @说明：完达山物流项目 批次编辑后处理
+	// * @时间：2012-7-11下午08:27:30
+	// * @param row
+	// */
+	// private void afterEditByVbatchcode(int row){
+	// super.after
+	// }
 
 	@Override
 	protected void initEventListener() {
@@ -287,6 +312,24 @@ public class ClientUI extends OutPubClientUI implements
 							" and bd_stordoc.pk_stordoc = '" + a + "' ");
 				}
 			}
+			// add by yf 2012-07-16 根据仓库过滤表头入库货位
+			if ("pk_cargdoc2".equals(key)) {// 出库货位
+				// 仓库id
+				Object a = getBillCardPanel().getHeadItem("srl_pk")
+						.getValueObject();
+				if (a == null) {
+					showWarningMessage("请选择仓库");
+					return false;
+				}
+				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
+						.getHeadItem("pk_cargdoc2").getComponent();
+				if (null != a && !"".equals(a)) {
+					// 修改参照 条件 增加条件 指定仓库id
+					panel.getRefModel().addWherePart(
+							" and bd_stordoc.pk_stordoc = '" + a + "' ");
+				}
+			}
+			// end
 			// 对当前货位下的管理员进行过滤
 			if ("cwhsmanagerid".equalsIgnoreCase(key)) {
 				String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
@@ -318,12 +361,12 @@ public class ClientUI extends OutPubClientUI implements
 		addPrivateButton(customizeButton7.getButtonVO());
 	}
 
-//	public void afterUpdate() {
-//
-//	}
+	// public void afterUpdate() {
+	//
+	// }
 
-//	protected BusinessDelegator createBusinessDelegator() {
-//		return new Delegator();
-//	}
+	// protected BusinessDelegator createBusinessDelegator() {
+	// return new Delegator();
+	// }
 
 }
