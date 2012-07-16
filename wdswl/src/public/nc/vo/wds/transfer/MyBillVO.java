@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
@@ -96,7 +95,7 @@ public class  MyBillVO extends HYBillVO implements IExAggVO{
 	}
 
 	public void setParentVO(CircularlyAccessibleValueObject parent) {
-		super.setParentVO((TbOutgeneralHVO)parent);
+		super.setParentVO((TransferVO)parent);
 	}
 
 	public CircularlyAccessibleValueObject[] getAllChildrenVO() {

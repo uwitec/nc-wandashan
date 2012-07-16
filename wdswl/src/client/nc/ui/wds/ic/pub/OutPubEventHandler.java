@@ -262,7 +262,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		valudate();
+		if(!getUIController().getBillType().equals(WdsWlPubConst.HWTZ)){
+			valudate();
+		}		
 		super.onBoSave();
 	}
 	/**

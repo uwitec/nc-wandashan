@@ -37,7 +37,7 @@ public class N_WDSX_APPROVE extends AbstractCompiler2 {
 			setParameter("date", vo.m_currentDate);
 			setParameter("operator", operator);
 			setParameter("pk_corp",vo.m_coId);
-			//审批生成ERP销售出库单
+			//审批生成ERP调拨出库单
 			SoBackBO bo=new SoBackBO();
 			bo.changeTo4Y(vo);
 			//执行审批操作
