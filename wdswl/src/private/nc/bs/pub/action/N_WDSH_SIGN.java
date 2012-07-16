@@ -26,43 +26,37 @@ public class N_WDSH_SIGN extends AbstractCompiler2 {
 	* 接口执行类
 	*/
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
-	try{
-		super.m_tmpVo=vo;
+
 		try {
-				super.m_tmpVo = vo;
-				Object retObj = null;
-				String date = null;
-				String operate = null;
-				ArrayList<String> list = (ArrayList<String>)vo.m_userObj;
-				if(list != null && list.size()>0){
-					 date = list.get(0);
-					 operate = list.get(1);
-				}
-				//推式生成调拨出库回传单
-				ChangToWDSX bo=new ChangToWDSX();
-				bo.onSign(vo.m_preValueVo, operate,vo.m_coId, date);
-				
-				//签字动作
-				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
-				setParameter("hvo", headvo);
-				AlloutBO bo1=new AlloutBO();
-				bo1.updateHVO(headvo);				
-				//生成装卸费核算单
-				PushSaveWDSF pu=new PushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
-				return retObj;
-			} catch (Exception ex) {
-				if (ex instanceof BusinessException)
-					throw (BusinessException) ex;
-				else
-					throw new PFBusinessException(ex.getMessage(), ex);
+			super.m_tmpVo = vo;
+			Object retObj = null;
+			String date = null;
+			String operate = null;
+			ArrayList<String> list = (ArrayList<String>)vo.m_userObj;
+			if(list != null && list.size()>0){
+				date = list.get(0);
+				operate = list.get(1);
 			}
-	} catch (Exception ex) {
-		if (ex instanceof BusinessException)
-			throw (BusinessException) ex;
-		else 
-	    throw new PFBusinessException(ex.getMessage(), ex);
-	}
+			//推式生成调拨出库回传单
+			ChangToWDSX bo=new ChangToWDSX();
+			bo.onSign(vo.m_preValueVo, operate,vo.m_coId, date);
+
+			//签字动作
+			TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
+			setParameter("hvo", headvo);
+			AlloutBO bo1=new AlloutBO();
+			bo1.updateHVO(headvo);				
+			//生成装卸费核算单
+			PushSaveWDSF pu=new PushSaveWDSF();
+			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
+			return retObj;
+		} catch (Exception ex) {
+			if (ex instanceof BusinessException)
+				throw (BusinessException) ex;
+			else
+				throw new PFBusinessException(ex.getMessage(), ex);
+		}
+
 	}
 	/*
 	* 备注：平台编写原始脚本

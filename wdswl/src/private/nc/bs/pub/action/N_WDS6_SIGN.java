@@ -42,12 +42,12 @@ public class N_WDS6_SIGN extends AbstractCompiler2 {
 					 date = list.get(0);
 					 operate = list.get(1);
 				}
-				TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
-				UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
-				if(isxnap.booleanValue()){
-					OtherOutBO_XN bo = new OtherOutBO_XN();
-					bo.updateZgjzNum(vo.m_preValueVo, true);
-				}else{
+//				TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
+//				UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
+//				if(isxnap.booleanValue()){
+//					OtherOutBO_XN bo = new OtherOutBO_XN();
+//					bo.updateZgjzNum(vo.m_preValueVo, true);
+//				}else{
 					//数据交换前  按存货批次进行合并  for add mlr
 					setParameter("AggObj",vo.m_preValueVo);
 					AggregatedValueObject billvo=(AggregatedValueObject) runClass("nc.bs.wds.ic.other.out.OtherOutBO", "combinVO",
@@ -64,7 +64,10 @@ public class N_WDS6_SIGN extends AbstractCompiler2 {
 							"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject", vo, m_keyHas,m_methodReturnHas);
 					// ##################################################保存[其他出库]签字内容
 				
-				}
+//				}
+				
+				
+//				本单签字
 				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 				setParameter("hvo", headvo);
 				retObj = runClass("nc.bs.wds.ic.other.out.OtherOutBO", "updateHVO",

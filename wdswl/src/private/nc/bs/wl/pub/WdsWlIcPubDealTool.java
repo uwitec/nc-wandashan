@@ -33,6 +33,7 @@ public class WdsWlIcPubDealTool {
 	 * @时间：2011-12-28下午03:26:41
 	 * @param bill 待处理的库存单据
 	 * @param isin 是否入库类型
+	 * zhf 2012 07 16 应该加上货位的维度
 	 */
 	public static void combinItemsBySourceAndInv(GeneralBillVO bill,boolean isin){
 		//如果不回传批次号  应该按照  来源订单id + 批次号  进行汇总处理------zhf		
@@ -41,7 +42,9 @@ public class WdsWlIcPubDealTool {
 		GeneralBillItemVO tmp = null;
 		LocatorVO locavo = null;		
 		for(GeneralBillItemVO item:items){
-			key = WdsWlPubTool.getString_NullAsTrimZeroLen(item.getCsourcebillbid())+WdsWlPubTool.getString_NullAsTrimZeroLen(item.getVbatchcode());
+			key = WdsWlPubTool.getString_NullAsTrimZeroLen(item.getCsourcebillbid())
+			+WdsWlPubTool.getString_NullAsTrimZeroLen(item.getVbatchcode())
+			+WdsWlPubTool.getString_NullAsTrimZeroLen(item.getLocator()==null?null:item.getLocator()[0].getCspaceid());
 			locavo = item.getLocator()[0];
 			if(dataMap.containsKey(key)){
 				tmp = (GeneralBillItemVO)(dataMap.get(key));

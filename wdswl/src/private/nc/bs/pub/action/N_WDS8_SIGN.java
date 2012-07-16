@@ -29,35 +29,35 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 	* 接口执行类
 	*/
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
-	try{
-		super.m_tmpVo=vo;
-				super.m_tmpVo = vo;
-				Object retObj = null;				
-				List userObject = (ArrayList)getUserObj();
-				// ##################################################数据交换
-				setParameter("AggObj",vo.m_preValueVo);
-				setParameter("date", userObject.get(0));
-				setParameter("operator", userObject.get(1));
-				setParameter("pk_corp",vo.m_coId);
-				// ##################################################推式保存生成销售出库回传
-				runClass("nc.bs.wds.ic.so.out.ChangToWDSO", "onSign",
-						"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-				// ##################################################保存[销售出库]签字内容
-				//更新签字信息
-				TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
-				setParameter("hvo", headvo);
-				runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",
-						"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
-				//生成装卸费核算单
-				PushSaveWDSF pu=new PushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
-				return retObj;
-	} catch (Exception ex) {
-		if (ex instanceof BusinessException)
-			throw (BusinessException) ex;
-		else 
-	    throw new PFBusinessException(ex.getMessage(), ex);
-	}
+		try{
+
+			super.m_tmpVo = vo;
+			Object retObj = null;				
+			List userObject = (ArrayList)getUserObj();
+			// ##################################################数据交换
+			setParameter("AggObj",vo.m_preValueVo);
+			setParameter("date", userObject.get(0));
+			setParameter("operator", userObject.get(1));
+			setParameter("pk_corp",vo.m_coId);
+			// ##################################################推式保存生成销售出库回传
+			runClass("nc.bs.wds.ic.so.out.ChangToWDSO", "onSign",
+					"&AggObj:nc.vo.pub.AggregatedValueObject,&operator:String,&pk_corp:String,&date:String", vo, m_keyHas,m_methodReturnHas);
+			// ##################################################保存[销售出库]签字内容
+			//更新签字信息
+			TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
+			setParameter("hvo", headvo);
+			runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",
+					"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
+			//生成装卸费核算单
+			PushSaveWDSF pu=new PushSaveWDSF();
+			pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
+			return retObj;
+		} catch (Exception ex) {
+			if (ex instanceof BusinessException)
+				throw (BusinessException) ex;
+			else 
+				throw new PFBusinessException(ex.getMessage(), ex);
+		}
 	}
 	/*
 	* 备注：平台编写原始脚本
