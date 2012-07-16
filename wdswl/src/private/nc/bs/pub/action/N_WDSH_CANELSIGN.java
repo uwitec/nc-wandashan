@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.ic.other.out.OtherOutBO_XN;
+import nc.bs.wds.ic.allocation.out.ChangToWDSX;
+import nc.bs.wds.ic.write.back4c1.SoBackBO;
 import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
@@ -46,21 +44,10 @@ public class N_WDSH_CANELSIGN extends AbstractCompiler2 {
 			setParameter("operate",operate);
 			setParameter("date", date);
 			TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
-			UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
-			if(isxnap.booleanValue()){
-				OtherOutBO_XN bo = new OtherOutBO_XN();
-				bo.updateZgjzNum(vo.m_preValueVo, true);
-			}else{
-				// #################################################
-				AggregatedValueObject[] icBillVO = (AggregatedValueObject[]) runClass("nc.bs.wds.ic.other.out.ChangeTo4I", "canelSignQueryGenBillVO",
-						"&AggObj:nc.vo.pub.AggregatedValueObject,&operate:String,&date:String", vo, m_keyHas,m_methodReturnHas);
-				// ##################################################
-				setParameter("AggObject",icBillVO);
-				retObj = runClass("nc.bs.wds.ic.other.out.OtherOutBO", "canelPushSign4I",
-						"&date:String,&AggObject:nc.vo.pub.AggregatedValueObject[]", vo, m_keyHas,m_methodReturnHas);
-				// ##################################################保存[其它出库]取消签字内容
-			
-			}
+	        //删除下游装调拨出库回传
+			ChangToWDSX bo=new ChangToWDSX();
+			bo.onCanclSign(vo.m_preValueVo, operate, vo.m_coId, date);
+			//取消签字
 			TbOutgeneralHVO headvo = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 			setParameter("hvo", headvo);
 			runClass("nc.bs.wds.ic.other.out.OtherOutBO", "updateHVO",

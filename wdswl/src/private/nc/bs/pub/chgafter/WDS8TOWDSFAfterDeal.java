@@ -40,14 +40,6 @@ public class WDS8TOWDSFAfterDeal implements IchangeVO {
     				  throw new BusinessException(e.getMessage());			
     			  } 		   
     	   }
-    	  
-//    	   for(int i=0;i<vos.length;i++){
-//    		   LoadpriceB2VO newvo=new LoadpriceB2VO();
-//    		   BeanProTool.copyBeanParm(vos[i], newvo);
-//    		   newvo.setPrimaryKey(null);
-//    		   newvo.setPk_loadprice(null);
-//    		   newvos[i]=newvo; 		   
-//    	   }
     	   nvo.setTableVO(nvo.getTableCodes()[1], newvos);
        }	
        nvo.setTableVO(nvo.getTableCodes()[0],nvo.getChildrenVO()); 

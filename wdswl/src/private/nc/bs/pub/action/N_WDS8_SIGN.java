@@ -49,8 +49,8 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 				runClass("nc.bs.wds.ic.so.out.SoOutBO", "updateHVO",
 						"&hvo:nc.vo.ic.other.out.TbOutgeneralHVO", vo, m_keyHas,m_methodReturnHas);
 				//生成装卸费核算单
-//				PushSaveWDSF pu=new PushSaveWDSF();
-//				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
+				PushSaveWDSF pu=new PushSaveWDSF();
+				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.LOADFEE);		
 				return retObj;
 	} catch (Exception ex) {
 		if (ex instanceof BusinessException)
