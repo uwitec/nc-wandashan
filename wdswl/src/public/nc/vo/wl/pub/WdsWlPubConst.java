@@ -81,7 +81,7 @@ public class WdsWlPubConst {
 	public static String  IC_OTHER_IN_REFWDSS_NODECODE = "8004040214WDSS";
 
 	/**其他入库参照  其他出库 参照查询 NODEKEY  **/
-	public static String  IC_OTHER_IN_REFWDS7_NODECODE = "8004040214WDS7";
+	public static String  IC_OTHER_IN_REFWDS7_NODECODE = "8004040214WDS6";
 	/**其他入库 货位调整 参照模板节点标示*/
 	public static String  IC_OTHER_IN_REFHWTZ_NODECODE= "02140288";
 	/**其他入库 运单确认 参照模板节点标示*/

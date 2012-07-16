@@ -20,7 +20,7 @@ private static final long serialVersionUID = 1L;
 	private static String userid = ClientEnvironment.getInstance().getUser().getPrimaryKey();
 	
 	public RefBillQueryDlgWDS7(Container parent) {
-		super(parent,null,pk_corp,WdsWlPubConst.OTHER_OUT_FUNCODE,userid,null,null);
+		super(parent,null,pk_corp,WdsWlPubConst.IC_OTHER_IN_NODECODE,userid,null,WdsWlPubConst.IC_OTHER_IN_REFWDS7_NODECODE);
 	}
 	@Override
 	public String getWhereSQL() {
