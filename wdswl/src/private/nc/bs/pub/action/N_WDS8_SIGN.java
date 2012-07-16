@@ -17,6 +17,7 @@ import nc.vo.uap.pf.PFBusinessException;
  * @author zpm
  *
  */
+
 public class N_WDS8_SIGN extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 	private Hashtable m_keyHas=null;
