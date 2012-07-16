@@ -1,11 +1,13 @@
 package nc.vo.wds.transfer;
 
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pub.lang.UFTime;
+import nc.vo.scm.pu.PuPubVO;
 
 /**
  * 转货位
@@ -1654,6 +1656,15 @@ public class TransferVO extends SuperVO {
 	public String getParentPKFieldName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void validate() throws ValidationException {
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)==null)
+			throw new ValidationException("调出货位为空");
+		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc2)==null)
+			throw new ValidationException("调入货位为空");
+		if(pk_cargdoc == pk_cargdoc2)
+			throw new ValidationException("调出货位和调入货位不能相同");
 	}
 
 }

@@ -7,16 +7,16 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.wds.transfer.TransferBVO;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.transfer.MyBillVO;
+import nc.vo.wds.transfer.TransferBVO;
+import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.WdsWlPubTool;
 
 
 /**
@@ -118,30 +118,42 @@ public class EventHandler extends OutPubEventHandler {
 	 * @说明：完达山物流项目 
 	 * @时间：2012-7-13下午07:33:33
 	 */
-	private void valudate() throws BusinessException, Exception {
-		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
-			TransferBVO[] tbs=(TransferBVO[]) getBillUI().getVOFromUI().getChildrenVO();
-			for(int i=0;i<tbs.length;i++){
-				//校验贴签数量    不能大于  实出数量
-				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());//实发数量
-				UFDouble u2=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNtagnum());//贴签数量
-				if(u1.sub(u2).doubleValue()<0){
-					throw new BusinessException("贴签数量   不能大于 实出数量");
-				}	
-				//校验应发数量 不能小于实出数量
-				UFDouble u3=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNshouldoutnum());//应发数量
-				UFDouble u4=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutnum());//实出数量
-				if(u3.sub(u4).doubleValue()<0){
-					throw new BusinessException("应发数量   不能小于  实出数量");
-				}
-				//校验生成日期不能为空 
-				String  date=PuPubVO.getString_TrimZeroLenAsNull(tbs[i].getVuserdef7());
-				if(date==null){
-					throw new Exception("生成日期不能为空");
-				}
-			}			
-		}
+	private void valudate() throws Exception {
 		
+		getBillCardPanelWrapper().getBillCardPanel().stopEditing();
+
+		MyBillVO bill=(MyBillVO) getBillUI().getVOFromUI();
+		
+		if(bill == null)
+			throw new BusinessException("数据异常");
+		
+		TransferVO head = (TransferVO)bill.getParentVO();
+		
+		if(head == null)
+			throw new BusinessException("数据异常");
+		head.validate();
+		
+		TransferBVO[] tbs = (TransferBVO[])bill.getChildrenVO();
+
+		if(tbs == null || tbs.length == 0)
+			throw new BusinessException("表体数据为空");
+
+
+		for(TransferBVO tb:tbs){	
+			//校验应发数量 不能小于实出数量
+			UFDouble u3=PuPubVO.getUFDouble_NullAsZero(tb.getNshouldoutnum());//应发数量
+			UFDouble u4=PuPubVO.getUFDouble_NullAsZero(tb.getNoutnum());//实出数量
+			if(u3.sub(u4).doubleValue()<0){
+				throw new BusinessException("应发数量   不能小于  实出数量");
+			}
+			//校验生成日期不能为空 
+			String  date=PuPubVO.getString_TrimZeroLenAsNull(tb.getVuserdef7());
+			if(date==null){
+				throw new Exception("生成日期不能为空");
+			}
+		}			
+
+
 	}
 	@Override
 	protected UIDialog createQueryUI() {
