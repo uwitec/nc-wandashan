@@ -8,7 +8,6 @@ public class OutInSetEvent extends DBTManageEventHandler {
 
 	public OutInSetEvent(BillCardUI billUI, ICardController control) {
 		super(billUI, control);
-		// TODO Auto-generated constructor stub
 	}
 
 }
