@@ -48,8 +48,8 @@ public abstract class DBTManageEventHandler extends CardEventHandler{
 		}
 		
 		getBillUI().setBillOperate(IBillOperate.OP_EDIT);
-		getBillCardPanelWrapper().deleteSelectedLines();
-//		onBoLineDel();
+//		getBillCardPanelWrapper().getBillCardPanel().getBillModel().delLine(new int[]{selectRow});
+		onBoLineDel();
 		try {
 			onBoSave();
 		} catch (Exception e) {
