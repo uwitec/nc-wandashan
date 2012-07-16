@@ -2,6 +2,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wds.ic.transfer.TransferBO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.trade.pub.HYBillVO;
@@ -22,7 +23,13 @@ private BillStockBO1 getStock(){
 	}
 	return stock;
 }
-
+private TransferBO bo = null;
+private TransferBO getBO(){
+	if( null == bo ){
+		bo = new TransferBO();
+	}
+	return bo;
+}
 public N_HWTZ_WRITE() {
 	super();
 }
@@ -39,6 +46,7 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 			throw new BusinessException("传入数据为空");
 		}
 		Object retObj = null;
+		getBO().beforeSave(billVo);
 		//进行单据的保存操作
 		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,m_methodReturnHas);
 		
