@@ -41,8 +41,8 @@
 	public UFDouble reserve8;
 	public UFDouble reserve9;	
 	public UFDouble reserve10;
-	public UFDate reserve11;
-	public UFDate reserve12;
+	public UFDate reserve11;//零工费用单，开工时间
+	public UFDate reserve12;//零工费用单，完工时间
 	public UFDate reserve13;	
 	public UFBoolean reserve14;
 	public UFBoolean reserve15;

@@ -1,18 +1,21 @@
 package nc.bs.wds.ic.transfer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.vo.pub.BusinessException;
-import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.transfer.MyBillVO;
 import nc.vo.wds.transfer.TransferBVO;
 import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 
+/**
+ * 货位调整单
+ * @author yf
+ *
+ */
 public class TransferBO {
 	private BaseDAO dao = null;
 
@@ -22,6 +25,14 @@ public class TransferBO {
 		return dao;
 	}
 
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目 保存前校验
+	 * @时间：2012-7-17上午09:25:52
+	 * @param billVo nc.vo.wds.transfer.MyBillVO
+	 * @throws BusinessException
+	 */
 	public void beforeSave(HYBillVO billVo) throws BusinessException {
 		if (!(billVo instanceof MyBillVO)) {
 			return;
@@ -35,6 +46,16 @@ public class TransferBO {
 		checkHeadCargdoc2Inv(bvos, hvo);
 	}
 
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目 
+	 * 校验表头入库货位是否绑定存货
+	 * @时间：2012-7-17上午09:30:07
+	 * @param bvos
+	 * @param hvo
+	 * @throws BusinessException
+	 */
 	private void checkHeadCargdoc2Inv(TransferBVO[] bvos, TransferVO hvo)
 			throws BusinessException {
 		String pk_cargdoc = hvo.getPk_cargdoc2();

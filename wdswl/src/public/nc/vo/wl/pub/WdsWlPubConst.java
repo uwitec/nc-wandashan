@@ -349,6 +349,9 @@ public class WdsWlPubConst {
 	public static String WDSQ="WDSQ";
 	/**货位调整单**/
 	public static String HWTZ="HWTZ";//add by yf 2012-06-29
+	/**零工费用单 */
+	public static String WDSV="WDSV";//add by yf 2012-07-17
+	
 	
 	//---------------仓储管理中涉及的 几个对话框注册模板类型
 //	出库单据  出库托盘指定

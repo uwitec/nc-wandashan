@@ -29,27 +29,35 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	protected UIDialog createQueryUI() {
 		if (queryDialog == null) {
-			queryDialog=new ClientUIQueryDlg(	getBillUI(),
-					null,
-					_getCorp().getPrimaryKey(),
-					getBillUI()._getModuleCode(),
-					_getOperator(),
-					getBillUI().getBusinessType(),
-					getBillUI().getNodeKey());
-			//queryDialog = new ClientUIQueryDlg(getBillUI(), null, tempinfo);
+			queryDialog = new ClientUIQueryDlg(getBillUI(), null, _getCorp()
+					.getPrimaryKey(), getBillUI()._getModuleCode(),
+					_getOperator(), getBillUI().getBusinessType(), getBillUI()
+							.getNodeKey());
+			// queryDialog = new ClientUIQueryDlg(getBillUI(), null, tempinfo);
 		}
 		return queryDialog;
 	}
+
+	@Override
+	protected String getHeadCondition() {
+		if (super.getHeadCondition() == null) {
+			return " and pk_billtype = '" + getUIController().getBillType()
+					+ "' ";
+		}
+		return super.getHeadCondition() + " and pk_billtype = '"
+				+ getUIController().getBillType() + "' ";
+	}
+
 	/**
-	 * @author yf
-	 * 加行之前进行表体判定
-	 * 如果是来源明细表体便签 = 0，不增行
-	 * int tab = getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex();
+	 * @author yf 加行之前进行表体判定 如果是来源明细表体便签 = 0，不增行 int tab =
+	 *         getBillCardPanelWrapper
+	 *         ().getBillCardPanel().getBodyTabbedPane().getSelectedIndex();
 	 */
 	@Override
 	protected void onBoLineAdd() throws Exception {
-		int tab = getBillCardPanelWrapper().getBillCardPanel().getBodyTabbedPane().getSelectedIndex();
-		if(0 == tab){
+		int tab = getBillCardPanelWrapper().getBillCardPanel()
+				.getBodyTabbedPane().getSelectedIndex();
+		if (0 == tab) {
 			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "不能在此新增来源明细");
 			return;
 		}
@@ -58,119 +66,132 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	protected void onBoSave() throws Exception {
-		//对总费用  分配给班组的费用校验
-		ExaggLoadPricVO   billvo= (ExaggLoadPricVO) getBillUI().getVOFromUI();
-		LoadpriceHVO h= (LoadpriceHVO) billvo.getParentVO();
-		LoadpriceB2VO[] b= (LoadpriceB2VO[]) billvo.getTableVO("wds_loadprice_b2");
+		// 对总费用 分配给班组的费用校验
+		ExaggLoadPricVO billvo = (ExaggLoadPricVO) getBillUI().getVOFromUI();
+		LoadpriceHVO h = (LoadpriceHVO) billvo.getParentVO();
+		LoadpriceB2VO[] b = (LoadpriceB2VO[]) billvo
+				.getTableVO("wds_loadprice_b2");
 		/**
-		 * @author yf
-		 * 校验 录入时表体数据不能为空
+		 * @author yf 校验 录入时表体数据不能为空
 		 */
-		if(b==null||b.length <= 0){
+		if (b == null || b.length <= 0) {
 			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "保存前请先分配班组");
 			return;
 		}
-	    UFDouble zfee=h.getVzfee();
-	    if(h !=null){
-	    	UFDouble zbz=new UFDouble();
-	    	for(int i=0;i<b.length;i++){
-	    		/**
-	    		 * @author yf
-	    		 * 校验 班组编码不能为空 同时 避免空指针异常
-	    		 */
-	    		if(BeforeSaveValudate.isEmpty(b[i].getPk_wds_teamdoc_h())){
-	    			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "班组编码不能为空");
-	    			return;
-	    		}
-	    		if(BeforeSaveValudate.isEmpty(b[i].getNloadprice())){
-	    			MessageDialog.showWarningDlg(getBillUI(), "录入错误", "班组费用不能为空");
-	    			return;
-	    		}
-	    		zbz=zbz.add(b[i].getNloadprice());
-	    	}
-	    	if(zbz!=null){
-	    		if(zfee.sub(zbz).intValue()<0){
-	    			throw new BusinessException(" 班组装卸费用不能大于总费用");
-	    		}
-	    	}
-	    	
-	    }
-		
-		
-		
+		UFDouble zfee = h.getVzfee();
+		if (h != null) {
+			UFDouble zbz = new UFDouble();
+			for (int i = 0; i < b.length; i++) {
+				/**
+				 * @author yf 校验 班组编码不能为空 同时 避免空指针异常
+				 */
+				if (BeforeSaveValudate.isEmpty(b[i].getPk_wds_teamdoc_h())) {
+					MessageDialog.showWarningDlg(getBillUI(), "录入错误",
+							"班组编码不能为空");
+					return;
+				}
+				if (BeforeSaveValudate.isEmpty(b[i].getNloadprice())) {
+					MessageDialog.showWarningDlg(getBillUI(), "录入错误",
+							"班组费用不能为空");
+					return;
+				}
+				zbz = zbz.add(b[i].getNloadprice());
+			}
+			if (zbz != null) {
+				if (zfee.sub(zbz).intValue() < 0) {
+					throw new BusinessException(" 班组装卸费用不能大于总费用");
+				}
+			}
+
+		}
+
 		super.onBoSave();
 	}
+
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {
 		// TODO Auto-generated method stub
 		super.onBoElse(intBtn);
-		switch (intBtn){
-			case ButtonCommon.REFWDS6:
-				((ClientUI)getBillUI()).setRefBillType(WdsWlPubConst.BILLTYPE_OTHER_OUT);
-				onBillRef();
-				break;
-			case ButtonCommon.REFWDS7:
-				((ClientUI)getBillUI()).setRefBillType(WdsWlPubConst.BILLTYPE_OTHER_IN);
-				onBillRef();
-				break;
-			case ButtonCommon.REFWDS8:
-				((ClientUI)getBillUI()).setRefBillType(WdsWlPubConst.BILLTYPE_SALE_OUT);
-				onBillRef();
-				break;
-			case ButtonCommon.REFWDS9:
-				((ClientUI)getBillUI()).setRefBillType(WdsWlPubConst.BILLTYPE_ALLO_IN);
-				onBillRef();
-				break;
+		switch (intBtn) {
+		case ButtonCommon.REFWDS6:
+			((ClientUI) getBillUI())
+					.setRefBillType(WdsWlPubConst.BILLTYPE_OTHER_OUT);
+			onBillRef();
+			break;
+		case ButtonCommon.REFWDS7:
+			((ClientUI) getBillUI())
+					.setRefBillType(WdsWlPubConst.BILLTYPE_OTHER_IN);
+			onBillRef();
+			break;
+		case ButtonCommon.REFWDS8:
+			((ClientUI) getBillUI())
+					.setRefBillType(WdsWlPubConst.BILLTYPE_SALE_OUT);
+			onBillRef();
+			break;
+		case ButtonCommon.REFWDS9:
+			((ClientUI) getBillUI())
+					.setRefBillType(WdsWlPubConst.BILLTYPE_ALLO_IN);
+			onBillRef();
+			break;
 		}
 	}
-	
-	
-	
+
 	@Override
 	protected boolean isDataChange() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
 		// 设置单据状态
-		
-		//项目主键	nloadprice 项目主键	nunloadprice 项目主键	ncodeprice 项目主键	ntagprice
+
+		// 项目主键 nloadprice 项目主键 nunloadprice 项目主键 ncodeprice 项目主键 ntagprice
 		getBillUI().setCardUIState();
 		AggregatedValueObject vo = refVOChange(vos);
 		if (vo == null)
 			throw new BusinessException("未选择参照单据");
-		LoginInforHelper login = new LoginInforHelper();//zhf
-		Class[] ParameterTypes = new Class[]{AggregatedValueObject[].class,String.class,String.class};
-		Object[] ParameterValues = new Object[]{vos,_getCorp().getPk_corp(),login.getWhidByUser(_getOperator())};
-		Object o =LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.wds.load.account.LoadAccountBS", "accoutLoadPrice", ParameterTypes, ParameterValues, 2);
-		ExaggLoadPricVO billVo =(ExaggLoadPricVO) o;
-	
-		//设置表头字段的总费用
-	     if(billVo.getTableVO("wds_loadprice_b1")!=null){
-	    	 LoadpriceB1VO[]  vss=(LoadpriceB1VO[]) billVo.getTableVO("wds_loadprice_b1");
-	    	 UFDouble feess=new UFDouble();
-	    	 for(int i=0;i<vss.length;i++){   
-	    		 UFDouble fees=new UFDouble();		    	
-	    		  fees=PuPubVO.getUFDouble_NullAsZero(vss[i].getNloadprice())
-	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNunloadprice()))
-	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNcodeprice()))
-	    		 .add(PuPubVO.getUFDouble_NullAsZero(vss[i].getNtagprice()));
-	    		 feess=feess.add(fees);
-	    	 }
-//	    	if(billVo.getParentVO()!=null){
-//	    		LoadpriceHVO l=	(LoadpriceHVO)(billVo.getParentVO());
-//	    	    l.setVzfee(feess);
-//	       }	    	 
-		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vzfee", feess);	
-		// 设置为新增处理
-		getBillUI().setBillOperate(IBillOperate.OP_REFADD);
-		// 填充界面
-		getBillCardPanelWrapper().setCardData(billVo);
-		//设置界面默认值
-		((ClientUI)getBillUI()).setRefDefalutData();
-	}
-	
+		LoginInforHelper login = new LoginInforHelper();// zhf
+		Class[] ParameterTypes = new Class[] { AggregatedValueObject[].class,
+				String.class, String.class };
+		Object[] ParameterValues = new Object[] { vos, _getCorp().getPk_corp(),
+				login.getWhidByUser(_getOperator()) };
+		Object o = LongTimeTask.callRemoteService(
+				WdsWlPubConst.WDS_WL_MODULENAME,
+				"nc.bs.wds.load.account.LoadAccountBS", "accoutLoadPrice",
+				ParameterTypes, ParameterValues, 2);
+		ExaggLoadPricVO billVo = (ExaggLoadPricVO) o;
 
- }
-} 
+		// 设置表头字段的总费用
+		if (billVo.getTableVO("wds_loadprice_b1") != null) {
+			LoadpriceB1VO[] vss = (LoadpriceB1VO[]) billVo
+					.getTableVO("wds_loadprice_b1");
+			UFDouble feess = new UFDouble();
+			for (int i = 0; i < vss.length; i++) {
+				UFDouble fees = new UFDouble();
+				fees = PuPubVO.getUFDouble_NullAsZero(vss[i].getNloadprice())
+						.add(
+								PuPubVO.getUFDouble_NullAsZero(vss[i]
+										.getNunloadprice())).add(
+								PuPubVO.getUFDouble_NullAsZero(vss[i]
+										.getNcodeprice())).add(
+								PuPubVO.getUFDouble_NullAsZero(vss[i]
+										.getNtagprice()));
+				feess = feess.add(fees);
+			}
+			// if(billVo.getParentVO()!=null){
+			// LoadpriceHVO l= (LoadpriceHVO)(billVo.getParentVO());
+			// l.setVzfee(feess);
+			// }
+			getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vzfee",
+					feess);
+			// 设置为新增处理
+			getBillUI().setBillOperate(IBillOperate.OP_REFADD);
+			// 填充界面
+			getBillCardPanelWrapper().setCardData(billVo);
+			// 设置界面默认值
+			((ClientUI) getBillUI()).setRefDefalutData();
+		}
+
+	}
+}

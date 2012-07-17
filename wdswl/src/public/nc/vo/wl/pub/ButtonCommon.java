@@ -23,4 +23,6 @@ public class ButtonCommon {
 	public static final int BILLCLOSE= 231;//整单关闭
 	public static final int ROWCLOSE= 232;//行关闭
 	
+	public static final int WDSVYGXX= 277;//零工费用单编辑员工信息
+	
 }
