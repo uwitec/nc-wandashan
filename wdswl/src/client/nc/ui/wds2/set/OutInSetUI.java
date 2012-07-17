@@ -6,6 +6,7 @@ import nc.ui.trade.card.BillCardUI;
 import nc.ui.trade.card.CardEventHandler;
 import nc.uif.pub.exception.UifException;
 import nc.vo.pub.SuperVO;
+import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds2.set.OutInSetVO;
 
 public class OutInSetUI extends BillCardUI {
@@ -25,6 +26,9 @@ public class OutInSetUI extends BillCardUI {
 		}
 		getBillCardPanel().getBillModel().setBodyDataVO(vos);
 		getBillCardPanel().getBillModel().execLoadFormula();
+		HYBillVO bill = new HYBillVO();
+		bill.setChildrenVO(vos);
+		getBufferData().addVOToBuffer(bill);
 	}
 
 	@Override

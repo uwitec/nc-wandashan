@@ -20,7 +20,7 @@ public class OutInSetCtrl implements ICardController,ISingleController {
 					IBillButton.Save,
 					IBillButton.Cancel,
 					IBillButton.Delete,
-					IBillButton.Query,
+//					IBillButton.Query,
 					IBillButton.Refresh
 			};
 	}

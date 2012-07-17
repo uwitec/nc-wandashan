@@ -156,6 +156,11 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	// 参照数据交换完毕后， 设置默认值
 	@Override
 	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
+
+
+		WdsWlPubTool.setVOsRowNoByRule(vos, "crowno");
+
+
 		super.setRefData(vos);
 		getBillUI().setDefaultData();
 		setBodySpace();
