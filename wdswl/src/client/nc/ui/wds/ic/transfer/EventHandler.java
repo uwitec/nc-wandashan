@@ -170,8 +170,8 @@ public class EventHandler extends OutPubEventHandler {
 
 	protected void onBoLineAdd() throws Exception {
 		super.onBoLineAdd();
-		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
-				getUIController().getBillType(), "crowno");
+//		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
+//				getUIController().getBillType(), "crowno");
 
 	}
 
