@@ -182,7 +182,8 @@ public class StatusUpdateUI extends WdsBillManagUI {
 			String m_strWareHouseID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("cwarehouseid").getValueObject());
 			String m_spaceId=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("ccargdocid").getValueObject());
 			String m_strInventoryID=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row, "cinvmanid"));
-			String[] datas ={m_strCorpID,m_strWareHouseID,m_spaceId,m_strInventoryID};						
+			String invstatu = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(row, "cinvstatusid"));
+			String[] datas ={m_strCorpID,m_strWareHouseID,m_spaceId,m_strInventoryID,invstatu};						
 			getLotNumbRefPane().setDatas(datas);
 			return true;
 		}
