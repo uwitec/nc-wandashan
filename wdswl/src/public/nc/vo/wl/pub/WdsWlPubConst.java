@@ -310,7 +310,7 @@ public class WdsWlPubConst {
 	public static String WDSC="WDSC";
 
 	/**托盘移动 */
-	public static String WDSD="WDSD";
+	public static String WDSD="WDSD";//zhf ------废弃
 	/** 货位存货*/
 	public static String INVSTORE="80040602";
 	/**装卸费价格 */
