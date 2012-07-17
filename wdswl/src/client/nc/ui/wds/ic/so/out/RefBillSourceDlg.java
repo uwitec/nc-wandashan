@@ -47,10 +47,15 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 				" and wds_soorder_b.pk_invmandoc in ("+getPowerSql()+")";
 		
 	}	
-	public String getBodyContinos(){
+	public String getBodyCondition(){
 		return " isnull(wds_soorder_b.dr,0)=0 and coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0"+//安排数量-出库数量>0
 			" and pk_invmandoc in ("+getPowerSql()+")";
 	}
+
+	protected boolean isHeadCanMultiSelect() {
+		return false;
+	}
+
 	@Override
 	public String getPk_invbasdocName() {
 		
