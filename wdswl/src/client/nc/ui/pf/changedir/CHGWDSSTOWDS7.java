@@ -31,6 +31,7 @@ public class CHGWDSSTOWDS7 extends VOConversionUI {
 			"B_csourcebillhid->B_pk_sendorder",
 			"B_csourcebillbid->B_pk_sendorder_b",
 			"B_cdt_pk->B_vdef1",//´æ»õ×´Ì¬
+			"B_geb_customize9->H_pk_billtype"
 		};
 	}
 	
