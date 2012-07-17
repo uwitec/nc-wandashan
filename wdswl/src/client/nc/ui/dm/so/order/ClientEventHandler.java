@@ -44,9 +44,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	 * 查询支持资源权限过滤
 	 * for add mlr
 	 */
-	protected void onBoQuery() throws Exception {
-		getETH().onBoQuery("pk_invbasdoc", "pk_invmandoc");
-	}
+//	protected void onBoQuery() throws Exception {
+//		getETH().onBoQuery("pk_invbasdoc", "pk_invmandoc");
+//	}
 	public ClientEventHandler(ClientUI clientUI, IControllerBase control) {
 		super(clientUI, control);
 	}
