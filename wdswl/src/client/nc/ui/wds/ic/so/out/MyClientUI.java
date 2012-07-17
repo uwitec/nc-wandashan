@@ -132,12 +132,14 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 		super.initPrivateButton();
 		fzgnBtn customizeButton1 = new fzgnBtn();//辅助功能
 		addPrivateButton(customizeButton1.getButtonVO());
-		tpzdBtn customizeButton2 = new tpzdBtn();//手动拣货
-		addPrivateButton(customizeButton2.getButtonVO());
+//		tpzdBtn customizeButton2 = new tpzdBtn();//手动拣货
+//		addPrivateButton(customizeButton2.getButtonVO());
+//		ckmxBtn customizeButton4 = new ckmxBtn();//查看明细
+//		addPrivateButton(customizeButton4.getButtonVO());
+		
 		zdqhBtn customizeButton3 = new zdqhBtn();//自动拣货
 		addPrivateButton(customizeButton3.getButtonVO());
-		ckmxBtn customizeButton4 = new ckmxBtn();//查看明细
-		addPrivateButton(customizeButton4.getButtonVO());
+
 
 		QxqzBtn customizeButton5 = new QxqzBtn();//取消签字
 		addPrivateButton(customizeButton5.getButtonVO());
