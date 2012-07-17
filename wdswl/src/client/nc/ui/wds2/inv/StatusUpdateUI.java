@@ -1,14 +1,11 @@
 package nc.ui.wds2.inv;
 
 import java.util.List;
-
 import javax.swing.JComponent;
-
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillModel;
-import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;

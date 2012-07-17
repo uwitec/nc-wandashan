@@ -20,7 +20,10 @@ public class StatusUpdateCtrl extends AbstractManageController {
         int[] buttonArray = new int[] { IBillButton.Add, IBillButton.Edit, IBillButton.Save,
                 IBillButton.Cancel, IBillButton.Query, IBillButton.Action, IBillButton.Del,
                 IBillButton.Line, IBillButton.Brow, IBillButton.Refresh, IBillButton.Return,
-                IBillButton.Print, IBillButton.DirectPrint, ZmpubBtnConst.LINKQUERY,IBillButton.ApproveInfo };
+//                IBillButton.Print, IBillButton.DirectPrint, 
+                ZmpubBtnConst.ASSPRINT,
+                ZmpubBtnConst.ASSQUERY 
+                };
         return buttonArray;
     }
 
@@ -102,7 +105,9 @@ public class StatusUpdateCtrl extends AbstractManageController {
         int[] buttonArray = new int[] { IBillButton.Add, IBillButton.Edit, IBillButton.Save,
                 IBillButton.Cancel, IBillButton.Query, IBillButton.Action, IBillButton.Del,
                 IBillButton.Line, IBillButton.Brow, IBillButton.Refresh, IBillButton.Card,
-                IBillButton.Print, IBillButton.DirectPrint, ZmpubBtnConst.LINKQUERY,IBillButton.ApproveInfo };
+                ZmpubBtnConst.ASSPRINT,
+                ZmpubBtnConst.ASSQUERY
+                };
         return buttonArray;
     }
 

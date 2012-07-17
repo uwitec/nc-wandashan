@@ -21,8 +21,8 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Action,
-				ZmpubBtnConst.LINKQUERY,
-				IBillButton.Print,
+				ZmpubBtnConst.ASSPRINT,
+                ZmpubBtnConst.ASSQUERY
 				//				ButtonCommon.TRAN_COL,
 				//				ButtonCommon.LOCK,
 				//				ButtonCommon.UNLOCK
@@ -39,8 +39,8 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Brow,
 				IBillButton.Refresh,
 				IBillButton.Action,
-				ZmpubBtnConst.LINKQUERY,
-				IBillButton.Print,
+				ZmpubBtnConst.ASSPRINT,
+                ZmpubBtnConst.ASSQUERY
 				//				ButtonCommon.TRAN_COL,
 				//				ButtonCommon.LOCK,
 				//				ButtonCommon.UNLOCK
