@@ -23,6 +23,7 @@ import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
 import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
+import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
@@ -99,6 +100,24 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		}
 		
 		
+	}
+	public void afterUpdate() {
+		if (!getBufferData().isVOBufferEmpty()) {
+			int row = getBufferData().getCurrentRow();
+			if (row < 0) {
+				return;
+			}
+			Object o = getBufferData().getCurrentVO().getParentVO()
+					.getAttributeValue(getBillField().getField_BillStatus());
+			if (o.equals(IBillStatus.FREE)) {// 自由
+				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
+				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(true);
+			} else {// 签字
+				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(false);
+				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(true);
+			}
+			updateButtons();
+		}
 	}
 	public void setDefaultData() throws Exception {
 		//当前公司 当前库存组织  当前仓库  当前货位
