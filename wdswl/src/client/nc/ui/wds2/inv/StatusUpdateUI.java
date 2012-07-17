@@ -1,9 +1,14 @@
 package nc.ui.wds2.inv;
 
 import java.util.List;
+
+import javax.swing.JComponent;
+
+import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
@@ -181,11 +186,19 @@ public class StatusUpdateUI extends WdsBillManagUI {
 			getLotNumbRefPane().setDatas(datas);
 			return true;
 		}
-		if("invcode".equalsIgnoreCase(key)){//表头货位
-			Object o = getBillCardPanel().getHeadItem("ccargdocid").getValueObject();
-			if(o == null)
-				return false;
-			return true;
+		if ("invcode".equalsIgnoreCase(key)) {
+		
+				String pk_cargdoc=(String) getBillCardPanel().getHeadItem("ccargdocid").getValueObject();
+				if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
+					showWarningMessage("前选择货位");
+					return false;
+				}			
+				JComponent c =getBillCardPanel().getBodyItem("invcode").getComponent();
+				if( c instanceof UIRefPane){
+					UIRefPane ref = (UIRefPane)c;
+					ref.getRefModel().addWherePart("  and tb_spacegoods.pk_cargdoc='"+pk_cargdoc+"' ");
+				}
+				return true;
 		}
 		return super.beforeEdit(e);
 	}
