@@ -51,12 +51,13 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			if(bodys == null || bodys.length ==0){
 				throw new BusinessException("传入数据为空");
 			}
-			
+			//更新现存量		 
+			getStock().updateStockByBill(vo.m_preValueVo,WdsWlPubConst.BILLTYPE_OUT_IN_1);
 			// ##################################################
-			IcInPubBO bo = new IcInPubBO();
+//			IcInPubBO bo = new IcInPubBO();
 //			bo.deleteAdjustBill((OtherInBillVO)bill);
 			
-//			修订来源单据累计量
+//			进行数据回写
 			for(TbGeneralBVO body:bodys){
 				body.setStatus(VOStatus.DELETED);
 			}
@@ -64,8 +65,7 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			WriteBackTool.setVsourcebillid("cfirstbillhid");
 			WriteBackTool.setVsourcebilltype("cfirsttype");
 			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
-			//更新现存量		 
-			getStock().updateStockByBill(vo.m_preValueVo,WdsWlPubConst.BILLTYPE_OUT_IN_1);
+		
 			// ##################################################
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
