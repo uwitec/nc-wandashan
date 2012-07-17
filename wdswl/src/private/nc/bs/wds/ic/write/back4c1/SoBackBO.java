@@ -320,7 +320,7 @@ public class SoBackBO{
 						null);
 				//µ¥¾ÝÉ¾³ý
 				if (retList.get(0) != null && (Boolean) retList.get(0)) {
-					bsBusiAction.processAction("CANELDELETE", "4Y", date,
+					bsBusiAction.processAction("DELETE", "4Y", date,
 							null, billvo[i], null, null);
 				}
 			}
