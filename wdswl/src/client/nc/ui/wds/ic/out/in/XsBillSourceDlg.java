@@ -1,20 +1,13 @@
 package nc.ui.wds.ic.out.in;
-
 import java.awt.Container;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsBillSourceDLG;
 import nc.vo.pub.BusinessException;
 import nc.vo.wl.pub.WdsWlPubTool;
-
 public class XsBillSourceDlg extends WdsBillSourceDLG{
 	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private boolean isStock = false; //是否是总仓 true=是 false=否
 	
@@ -57,7 +50,6 @@ public class XsBillSourceDlg extends WdsBillSourceDLG{
 		if(pk_stock== null || "".equalsIgnoreCase(pk_stock)){
 			throw new BusinessException("当前登录人员没有绑定仓库");
 		}
-		iType = getLoginInforHelper().getITypeByUser(m_logUser);//人员类型
 		inv_Pks = getLoginInforHelper().getInvBasDocIDsByUserID(m_logUser);
 		if(inv_Pks ==null || inv_Pks.length==0){
 			throw new BusinessException("当前登录人员货位下没有绑定存货");
@@ -69,34 +61,30 @@ public class XsBillSourceDlg extends WdsBillSourceDLG{
 	
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return "参照销售订单";
 	}
 	@Override
 	public String getHeadCondition() {
 		String  pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();		
 		StringBuffer hsql = new StringBuffer();
-		hsql.append(" isnull(head.dr,0)=0 and head.pk_corp ='"+pk_corp+"' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
-		
-//		hsql.append("and head.cotherwhid='"+pk_stock+"'");//
-//		hsql.append(" and head.cgeneralhid not in(select distinct gylbillhid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)");
-//		hsql.append("and head.cgeneralhid in");//只能看到包含当前登录人绑定货位下存货的单据
-		//if(inv_Pks !=null && inv_Pks.length>0){
-//			hsql.append("(");
-//			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
-			//hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(nacceptnum,0)>0");//应入数量-转出数量>0
-		    //	String sub = getIvnSubSql(inv_Pks);
-//			hsql.append(" and cinventoryid in");
-		//	hsql.append(")");
-		//}else{
-		//	hsql.append("('')");
-		//}	
+		hsql.append(" isnull(head.dr,0)=0 and head.pk_corp ='"+pk_corp+"' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y		
+		hsql.append("and head.cotherwhid='"+pk_stock+"'");//
+		hsql.append(" and head.cgeneralhid not in(select distinct gylbillhid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0)");
+		hsql.append("and head.cgeneralhid in");//只能看到包含当前登录人绑定货位下存货的单据
+		if(inv_Pks !=null && inv_Pks.length>0){
+			hsql.append("(");
+			hsql.append("select distinct cgeneralhid from ic_general_b where isnull(ic_general_b.dr,0)=0");
+			hsql.append(" and coalesce(nshouldoutnum,0)-coalesce(nacceptnum,0)>0");//应入数量-转出数量>0
+			hsql.append(" and cinventoryid in");
+			hsql.append(")");
+		}else{
+			hsql.append("('')");
+		}	
 		return hsql.toString();
 		//head.fbillflag=3 签字状态
 		}
 	@Override
 	public String getBodyCondition() {
-		String sub =getInvSub(inv_Pks);
 	return " and body.cgeneralbid not in(select distinct gylbillbid from tb_general_b where gylbillhid is not null and gylbillbid is not null and isnull(dr,0)=0) and body.cinventoryid in ";
 	
 	}
@@ -135,12 +123,10 @@ public class XsBillSourceDlg extends WdsBillSourceDLG{
 		return true;
 	}
 	@Override
-	public Object getUseObjOnRef() throws Exception{
-		
+	public Object getUseObjOnRef() throws Exception{	
 		return inv_Pks;
 	}
 
-	
 	@Override
 	public boolean getIsBusinessType() {
 		return false;

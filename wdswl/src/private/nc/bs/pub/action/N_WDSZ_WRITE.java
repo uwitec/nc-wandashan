@@ -8,6 +8,8 @@ import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wdsnew.pub.BillStockBO1;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  退货入库
  * @author Administrator
@@ -16,6 +18,13 @@ import nc.vo.uap.pf.PFBusinessException;
 public class N_WDSZ_WRITE extends AbstractCompiler2 {
 private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 private Hashtable m_keyHas=null;
+private BillStockBO1 stock=null;
+private BillStockBO1 getStock(){
+	if(stock==null){
+		stock=new BillStockBO1();
+	}
+	return stock;
+}
 
 public N_WDSZ_WRITE() {
 	super();
@@ -38,9 +47,10 @@ public Object runComClass(PfParameterVO vo) throws BusinessException {
 			WriteBackTool.setVsourcebilltype("cfirsttype");
 			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
 		}
-		
-		//		回写结束
-		retObj = runClass("nc.bs.ic.pub.WdsIcInPubBillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
+		//更新现存量		 
+		getStock().updateStockByBill(vo.m_preValueVo, WdsWlPubConst.BILLTYPE_OUT_IN);
+		//进行单据保存
+		retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 		return retObj;
 	} catch (Exception ex) {
 		if (ex instanceof BusinessException)

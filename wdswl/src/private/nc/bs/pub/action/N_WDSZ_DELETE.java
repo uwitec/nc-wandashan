@@ -10,6 +10,8 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wdsnew.pub.BillStockBO1;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 
 /**
@@ -20,7 +22,13 @@ import nc.vo.uap.pf.PFBusinessException;
 public class N_WDSZ_DELETE extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas = new java.util.Hashtable();
 	private Hashtable m_keyHas = null;
-
+	private BillStockBO1 stock=null;
+	private BillStockBO1 getStock(){
+		if(stock==null){
+			stock=new BillStockBO1();
+		}
+		return stock;
+	}
 
 	public N_WDSZ_DELETE() {
 		super();
@@ -56,8 +64,8 @@ public class N_WDSZ_DELETE extends AbstractCompiler2 {
 			WriteBackTool.setVsourcebillid("cfirstbillhid");
 			WriteBackTool.setVsourcebilltype("cfirsttype");
 			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"geb_anum"}, new String[]{"ntaldcnum"},new String[]{"nnumber"});
-//			修订结束
-			
+			//更新现存量		 
+			getStock().updateStockByBill(vo.m_preValueVo,WdsWlPubConst.BILLTYPE_OUT_IN_1);
 			// ##################################################
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,

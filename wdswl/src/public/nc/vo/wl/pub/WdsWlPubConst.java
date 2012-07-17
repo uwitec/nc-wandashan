@@ -276,6 +276,8 @@ public class WdsWlPubConst {
 	public static String BILLTYPE_ALLO_IN_CLOSE = "WDS9C";
 	/**出库入库*/
 	public static String BILLTYPE_OUT_IN = "WDSZ";
+	
+	public static String BILLTYPE_OUT_IN_1 = "WDSZ_1";
 	/** 供应链调拨出库 */
 	public static String GYL4Y = "4Y";
 	/** 供应链调拨订单 */
