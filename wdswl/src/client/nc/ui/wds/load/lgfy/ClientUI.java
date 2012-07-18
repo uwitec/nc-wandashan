@@ -1,21 +1,27 @@
 package nc.ui.wds.load.lgfy;
 
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.uif.pub.exception.UifException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.SuperVO;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wds.load.account.LoadpirceTVO;
 import nc.vo.wl.pub.ButtonCommon;
 
 /**
  * 零工费用单
+ * 
  * @author yf
- *
+ * 
  */
 public class ClientUI extends BillManageUI {
 
@@ -103,5 +109,41 @@ public class ClientUI extends BillManageUI {
 		button.setBtnChinaName("编辑员工信息");
 		button.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
 		addPrivateButton(button);
+	}
+
+	@Override
+	public boolean beforeEdit(BillEditEvent e) {
+		String key = e.getKey();
+		if ("teamcode".equalsIgnoreCase(key)) {
+			return beforeEditTeamcode(e);
+		}
+		return super.beforeEdit(e);
+	}
+
+	private boolean beforeEditTeamcode(BillEditEvent e) {
+		String pk = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
+				.getBodyValueAt(e.getRow(), "pk_loadprice_b2"));
+		if (pk == null) {
+			return true;
+		}
+		if (hasWDSVYGXX(pk)) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean hasWDSVYGXX(String pk) {
+		try {
+			SuperVO[] tvos = HYPubBO_Client.queryByCondition(
+					LoadpirceTVO.class,
+					" isnull(dr,0) = 0 and pk_loadprice_b2 = '" + pk + "' ");
+			if (tvos != null && tvos.length > 0) {
+				return true;
+			}
+		} catch (UifException e) {
+			e.printStackTrace();
+			return true;
+		}
+		return false;
 	}
 }
