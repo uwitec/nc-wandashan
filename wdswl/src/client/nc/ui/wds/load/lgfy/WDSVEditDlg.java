@@ -1,16 +1,21 @@
 package nc.ui.wds.load.lgfy;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 
 import nc.ui.pub.ToftPanel;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIButton;
 import nc.ui.pub.beans.UIMenuItem;
+import nc.ui.pub.beans.UIPanel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillBodyMenuListener;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -81,14 +86,51 @@ public class WDSVEditDlg extends nc.ui.pub.beans.UIDialog implements
 		this.setName("QuickDlg");
 		setSize(800, 540);
 		setTitle("编辑人员信息");
-		setJMenuBar(getJMenuBar());
-		setContentPane(this.getBillCardPanel_q());
+//		setJMenuBar(getJMenuBar());
+		setContentPane(getUIDialogContentPane());
 		getBillCardPanel_q().addEditListener(this);
 		getBillCardPanel_q().addBillEditListenerHeadTail(this);
 		getBillCardPanel_q().setBillBeforeEditListenerHeadTail(this);
 		getBillCardPanel_q().addBodyEditListener2(this);
+		addListenerEvent();
 	}
-
+	private JPanel ivjUIDialogContentPane = null;
+	protected JPanel getUIDialogContentPane() {
+		if (ivjUIDialogContentPane == null) {
+			ivjUIDialogContentPane = new JPanel();
+			ivjUIDialogContentPane.setName("UIDialogContentPane");
+			ivjUIDialogContentPane.setLayout(new BorderLayout());
+			ivjUIDialogContentPane.add(this.getBillCardPanel_q(), BorderLayout.CENTER);
+			ivjUIDialogContentPane.add(getPanlCmd(), BorderLayout.SOUTH);
+		}
+		return ivjUIDialogContentPane;
+	}
+	
+	private UIPanel ivjPanlCmd = null;
+	private UIPanel getPanlCmd() {
+		if (ivjPanlCmd == null) {
+			ivjPanlCmd = new UIPanel();
+			ivjPanlCmd.setName("PanlCmd");
+			ivjPanlCmd.setPreferredSize(new Dimension(0, 40));
+			ivjPanlCmd.setLayout(new FlowLayout());
+			ivjPanlCmd.add(getSaveButton(), getSaveButton().getName());
+			ivjPanlCmd.add(getAddLineButton(), getAddLineButton().getName());
+			ivjPanlCmd.add(getDelLineButton(), getDelLineButton().getName());
+			ivjPanlCmd.add(getCancleButton(), getCancleButton().getName());
+			ivjPanlCmd.add(getReturnButton(), getReturnButton().getName());
+			
+		}
+		return ivjPanlCmd;
+	}
+	
+	public void addListenerEvent() {
+		getSaveButton().addActionListener(this);
+		getCancleButton().addActionListener(this);
+		getReturnButton().addActionListener(this);
+		getAddLineButton().addActionListener(this);
+		getDelLineButton().addActionListener(this);
+	}
+	
 	public JMenuBar getJMenuBar() {
 		JMenuBar menu = new JMenuBar();
 		getSaveButton().addActionListener(this);
