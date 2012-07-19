@@ -16,6 +16,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.ValidationException;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
 /**
  * 功能：针对单据审批--基类
@@ -242,7 +243,7 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {
-		if (ButtonCommon.joinup == intBtn) {
+		if (ZmpubBtnConst.LINKQUERY == intBtn) {
 			onJoinQuery();
 		} else {
 			super.onBoElse(intBtn);
