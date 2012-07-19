@@ -47,7 +47,7 @@ public abstract class DBTManageEventHandler extends CardEventHandler{
 			return;
 		}
 		
-		getBillUI().setBillOperate(IBillOperate.OP_EDIT);
+		super.onBoEdit();
 //		getBillCardPanelWrapper().getBillCardPanel().getBillModel().delLine(new int[]{selectRow});
 		onBoLineDel();
 		try {
@@ -90,9 +90,7 @@ public abstract class DBTManageEventHandler extends CardEventHandler{
 			throw new BusinessException(e.getMessage());
 		}
 	}
-	protected void onBoCancel() throws Exception {
-		super.onBoCancel();
-	}		
+			
 	protected void dataNotNullValidate() throws ValidationException {
 		StringBuffer message = null;
 		BillItem[] headtailitems = getBillCardPanelWrapper().getBillCardPanel().getBillData().getHeadTailItems();
