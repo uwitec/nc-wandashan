@@ -1,6 +1,10 @@
 package nc.vo.wl.pub;
 
+import nc.vo.pub.lang.UFDouble;
+
 public class WdsWlPubConst {
+	
+	public static UFDouble ufdouble_zero = new UFDouble(0.0);
 	
 	
 	public static String WDS_WL_MODULENAME = "wds";

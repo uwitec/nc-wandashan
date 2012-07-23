@@ -453,5 +453,5 @@ public class MyClientUI extends OutPubClientUI implements
 
 	public void setRefBillType(String curRefBilltype) {
 		this.curRefBilltype = curRefBilltype;
-	}
+	}	
 }

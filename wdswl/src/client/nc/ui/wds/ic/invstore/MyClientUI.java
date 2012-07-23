@@ -192,4 +192,16 @@ public class MyClientUI extends WdsBillManagUI implements
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

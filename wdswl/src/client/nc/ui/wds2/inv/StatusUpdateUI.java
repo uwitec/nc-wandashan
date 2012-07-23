@@ -278,4 +278,16 @@ public class StatusUpdateUI extends WdsBillManagUI {
 		//for end mlr
 
 	}
+
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "nassnum";
+	}
+
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "hsl";
+	}
 }

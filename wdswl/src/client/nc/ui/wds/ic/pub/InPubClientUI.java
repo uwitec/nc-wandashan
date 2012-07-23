@@ -31,7 +31,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.ic.cargtray.SmallTrayVO;
 
-public class InPubClientUI extends WdsBillManagUI {
+public  class InPubClientUI extends WdsBillManagUI {
 	
 	/**
 	 * 
@@ -385,6 +385,16 @@ public class InPubClientUI extends WdsBillManagUI {
 	public boolean isLinkQueryEnable() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "geb_bsnum";
+	}
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "geb_hsl";
 	}
 	
 }

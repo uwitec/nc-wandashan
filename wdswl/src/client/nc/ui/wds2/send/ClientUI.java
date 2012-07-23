@@ -103,4 +103,16 @@ public class ClientUI extends WdsBillManagUI {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "nonlinenum";
+	}
+
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "nhsl";
+	}
 }

@@ -2,7 +2,6 @@ package nc.ui.dm.so.order;
 
 import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -17,7 +16,6 @@ import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFBoolean;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;
@@ -237,6 +235,18 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 	public boolean isLinkQueryEnable() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "nassarrangnum";
+	}
+
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "nhgrate";
 	}
 
 }

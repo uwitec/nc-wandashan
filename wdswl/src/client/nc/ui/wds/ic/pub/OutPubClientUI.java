@@ -32,7 +32,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.wdsnew.pub.PickTool;
 
-public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListener{
+public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListener{
 	/**
 	 * 
 	 */
@@ -569,10 +569,17 @@ public class OutPubClientUI extends MutiChildForOutInUI implements ChangeListene
 
 	public void setM_strInventoryID(String inventoryID) {
 		m_strInventoryID = inventoryID;
+	}	
+	
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "nshouldoutassistnum";
 	}
 
-
-	
-	
-	
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "hsl";
+	}
 }

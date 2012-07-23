@@ -243,5 +243,17 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	@Override
+	public String getAssNumFieldName() {
+		// TODO Auto-generated method stub
+		return "nassdealnum";
+	}
+
+	@Override
+	public String getHslFieldName() {
+		// TODO Auto-generated method stub
+		return "nhsl";
+	}
 
 }
