@@ -109,6 +109,8 @@ public class AlloInSendBO {
 	}
 	
 	public void deleteAlloInSendBill(String alloinheadid) throws BusinessException{
-		
+		if(PuPubVO.getString_TrimZeroLenAsNull(alloinheadid)==null)
+			return;
+		String sql = " select h.vbillstatus,h.pk_sendorder from wds_sendorder h inner join wds_sendorder_b";
 	}
 }

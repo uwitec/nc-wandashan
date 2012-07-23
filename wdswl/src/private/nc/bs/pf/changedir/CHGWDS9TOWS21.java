@@ -31,8 +31,7 @@ public class CHGWDS9TOWS21 extends nc.bs.pf.change.VOConversion {
 
 	public String[] getField() {
 		return (
-				new String[] {
-						
+				new String[] {						
 						"H_pk_corp->H_pk_corp",//调入入公司
 						"H_pk_inwhouse->H_geh_cwarehouseid",//入库仓库
 						"H_vdef1->H_geh_cothercorpid",//调出公司
@@ -51,7 +50,7 @@ public class CHGWDS9TOWS21 extends nc.bs.pf.change.VOConversion {
 						"B_noutnum->B_geb_snum",//应入数量
 						"B_nassoutnum->B_geb_bsnum",//应入辅数量  
 						"B_ninacceptnum->B_geb_anum",//实入数量
-//						"B_ninassistnum->B_geb_banum",//实入辅数量   
+						"B_nonlinenum->B_geb_banum",//实入辅数量   
 						
 						
 //						"B_nprice->B_geb_nprice",//单价
