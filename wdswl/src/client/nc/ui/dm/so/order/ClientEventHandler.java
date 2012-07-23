@@ -27,13 +27,13 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	public ClientUIQueryDlg queryDialog = null;
 	private LoginInforHelper helper = null;
-	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
-	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
-		if(lt==null){
-			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
-		}
-		return lt;
-	}
+//	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+//	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+//		if(lt==null){
+//			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+//		}
+//		return lt;
+//	}
 	public LoginInforHelper getLoginInforHelper() {
 		if (helper == null) {
 			helper = new LoginInforHelper();
