@@ -1,5 +1,7 @@
 package nc.bs.wds2.send;
 
+import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
@@ -13,8 +15,10 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
 
 public class AlloInSendBO {
 	
@@ -108,9 +112,31 @@ public class AlloInSendBO {
 		
 	}
 	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-23下午01:16:47
+	 * @param alloinheadid
+	 * @throws BusinessException
+	 */
 	public void deleteAlloInSendBill(String alloinheadid) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(alloinheadid)==null)
 			return;
-		String sql = " select h.vbillstatus,h.pk_sendorder from wds_sendorder h inner join wds_sendorder_b";
+		String sql = " select h.vbillstatus,h.pk_sendorder from wds_sendorder h inner join wds_sendorder_b b" +
+				" on h.pk_sendorder = b.pk_sendorder where b.csourcebillhid = '"+alloinheadid+"'";
+		
+		Map o = (Map)getDao().executeQuery(sql, ResultSetProcessorTool.MAPPROCESSOR);
+		if(o == null || o.size() == 0)
+			return;
+		if(PuPubVO.getInteger_NullAs(o.get("vbillstatus"), -1).intValue() == IBillStatus.CHECKPASS)
+			throw new BusinessException("调入运单已经审批通过");
+//		删除运单
+		sql = "update wds_sendorder set dr = 1 where pk_sendorder = '"
+			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"'";
+		getDao().executeUpdate(sql);
+		sql = "update wds_sendorder_b set dr = 1 where pk_sendorder = '"
+			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"'";
+		getDao().executeUpdate(sql);
 	}
 }
