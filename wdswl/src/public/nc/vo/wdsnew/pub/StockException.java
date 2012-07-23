@@ -1,10 +1,11 @@
 package nc.vo.wdsnew.pub;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 /**
  * @author mlr
  */
-public class StockException extends Exception{
+public class StockException extends BusinessException{
 	private static final long serialVersionUID = 8347287898600164256L;
 	private SuperVO[] bvos=null;
 	

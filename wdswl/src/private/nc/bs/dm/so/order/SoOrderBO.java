@@ -13,8 +13,10 @@ import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.VOStatus;
 import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.IBDACTION;
 import nc.vo.wds.dm.corpseal.CorpsealVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.tool.WriteBackTool;
@@ -54,12 +56,23 @@ public class SoOrderBO implements Serializable{
 		if(csourcetype==null){
 			return ;
 		}
+		
 		WriteBackTool.setVsourcebillid("csourcebillhid");
 		WriteBackTool.setVsourcebillrowid("csourcebillbid");
 		WriteBackTool.setVsourcebilltype("csourcetype");
-		if(csourcetype.equals(ScmConst.SO_Order)){
+		if(iBdAction == IBDACTION.SAVE){
+			
+	       if(csourcetype.equals(ScmConst.SO_Order)){
 			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"narrangnmu"},
-					new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME}, new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME});
+		 			new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME}, new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME});
+		  }
+		}else if(iBdAction == IBDACTION.DELETE){
+			for (int i = 0; i < bodys.length; i++) {
+				bodys[i].setStatus(VOStatus.DELETED);
+			}
+			WriteBackTool.writeBack(bodys, "so_saleorder_b", "corder_bid", new String[]{"narrangnmu"},
+		 			new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME}, new String[]{WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME});
+
 		}		
 	} 
 

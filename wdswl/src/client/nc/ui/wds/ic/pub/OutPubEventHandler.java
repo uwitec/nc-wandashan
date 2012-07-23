@@ -98,6 +98,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				bvos = (TbOutgeneralBVO[]) o;
 			}
 		} catch (Exception e) {
+			
 			if(e instanceof StockException){
 				StockException se=(StockException) e;	
 				bvos=(TbOutgeneralBVO[]) se.getBvos();				

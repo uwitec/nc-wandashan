@@ -7,6 +7,7 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LongTimeTask;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
@@ -100,6 +101,7 @@ public class EventHandler extends OutPubEventHandler {
 				bvos = (TransferBVO[]) o;
 			}
 		} catch (Exception e) {
+			
 			if(e instanceof StockException){
 				StockException se=(StockException) e;	
 				bvos=(TransferBVO[]) se.getBvos();				
