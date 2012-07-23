@@ -27,6 +27,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wdsnew.pub.BillStockBO1;
+import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -97,7 +98,12 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				bvos = (TbOutgeneralBVO[]) o;
 			}
 		} catch (Exception e) {
-			throw e;
+			if(e instanceof StockException){
+				StockException se=(StockException) e;	
+				bvos=(TbOutgeneralBVO[]) se.getBvos();				
+			}else{
+			  throw e;
+			}
 		}
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();

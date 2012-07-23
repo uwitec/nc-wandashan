@@ -89,7 +89,7 @@ public class PickTool implements Serializable{
 			 }   
 		   }	   
 		}
-		return list.toArray(new TransferBVO[0]);		
+		throw new StockException(list.toArray(new TransferBVO[0]));	
 	}
 	/**
 	 * 根据拣货单 重新构建出库单表体信息
@@ -120,7 +120,7 @@ public class PickTool implements Serializable{
 			 }   
 		   }	   
 		}
-		return list.toArray(new TbOutgeneralBVO[0]);		
+		throw new StockException(list.toArray(new TbOutgeneralBVO[0]));
 	}
 	 /**
      * 设置生产失效日期
@@ -220,8 +220,9 @@ public class PickTool implements Serializable{
 	 * @时间：2012-6-20上午10:25:33
 	 * @param stocks 现存量 
 	 * @param vo  出库单表体
+	 * @throws Exception 
 	 */
-	private void spiltNum(StockInvOnHandVO[] vos, TransferBVO vo,int index) {
+	private void spiltNum(StockInvOnHandVO[] vos, TransferBVO vo,int index) throws Exception {
 		
 	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
 	    UFDouble noutnum=PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());//获得实发数量
@@ -265,6 +266,7 @@ public class PickTool implements Serializable{
 			}		
 		}
 		mpick.put(index+"", list);
+		updateStock(list);
 	}
 	/**
 	 * 拣货分量  
@@ -273,8 +275,9 @@ public class PickTool implements Serializable{
 	 * @时间：2012-6-20上午10:25:33
 	 * @param stocks 现存量 
 	 * @param vo  出库单表体
+	 * @throws Exception 
 	 */
-	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo,int index) {
+	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo,int index) throws Exception {
 		
 	    UFDouble zbnum=PuPubVO.getUFDouble_NullAsZero(vo.getNshouldoutassistnum());//取得出库单应发辅数量
 	    UFDouble noutnum=PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());//获得实发数量
@@ -318,8 +321,29 @@ public class PickTool implements Serializable{
 			}		
 		}
 		mpick.put(index+"", list);
+		updateStock(list);
 	}
-	
+	/**
+	 * 更新现存量
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-23下午04:38:38
+	 * @param list
+	 * @throws Exception 
+	 */
+	private void updateStock(List<StockInvOnHandVO> lis) throws Exception {
+		List<StockInvOnHandVO> list =(List<StockInvOnHandVO>) ObjectUtils.serializableClone(lis);
+		if(list==null || list.size()==0)
+			return;
+		for(int i=0;i<list.size();i++){
+			StockInvOnHandVO vo=list.get(i);
+			if(vo==null)
+				return;
+			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getWhs_oanum());
+			vo.setWhs_stockpieces(new UFDouble(0).sub(uf1));
+		}
+		getStock().updateStock(list.toArray(new StockInvOnHandVO[0]));
+	}
 	/**
 	    * 拣货分量 
 	    * @作者：mlr

@@ -15,6 +15,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.transfer.MyBillVO;
 import nc.vo.wds.transfer.TransferBVO;
 import nc.vo.wds.transfer.TransferVO;
+import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -99,7 +100,12 @@ public class EventHandler extends OutPubEventHandler {
 				bvos = (TransferBVO[]) o;
 			}
 		} catch (Exception e) {
-			throw e;
+			if(e instanceof StockException){
+				StockException se=(StockException) e;	
+				bvos=(TransferBVO[]) se.getBvos();				
+			}else{
+			  throw e;
+			}
 		}
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
