@@ -53,8 +53,8 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String pk_defdoc4;
 
 	public String pk_defdoc5;
-	public String vuserdef2;
-	public String vuserdef5;
+	public String vuserdef2;//库存主数量
+	public String vuserdef5;//库存辅数量
 	public String vbatchcode;//批次
 	public UFDate dfirstbilldate;
 	public String pk_defdoc3;
