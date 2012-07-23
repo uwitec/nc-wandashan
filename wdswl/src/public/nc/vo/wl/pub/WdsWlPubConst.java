@@ -400,23 +400,5 @@ public class WdsWlPubConst {
 
 //    调拨入库单关闭 节点号
     public static String allo_in_close_node = "8004040225";
-   
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

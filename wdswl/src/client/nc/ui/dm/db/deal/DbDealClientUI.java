@@ -421,14 +421,12 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 				}
 			}
 		} else {// 表体编辑
-//			if ("nassnum".equalsIgnoreCase(key) || "nnum".equalsIgnoreCase(key)) {// 控制赠品不可以被拆分
-//				Object value = getPanel().getBodyBillModel().getValueAt(row,
-//						"blargessflag");
-//				if (PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE)
-//						.booleanValue()) {
-//					return false;
-//				}
-//			}
+			 if(e.getKey().equalsIgnoreCase("nassnum")){
+				UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getPanel().getBodyBillModel().getValueAt(e.getRow(), "nchangerate"));
+				if(hsl.equals(WdsWlPubConst.ufdouble_zero)){
+					return false;
+				}
+			}
 	}
 
 		return true;

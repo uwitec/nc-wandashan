@@ -17,6 +17,7 @@ import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
 import nc.vo.wl.pub.LoginInforVO;
@@ -309,6 +310,11 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			if("nassnum".equalsIgnoreCase(key) || "nnum".equalsIgnoreCase(key)){//控制赠品不可以被拆分
 				Object value = getPanel().getBodyBillModel().getValueAt(row, "blargessflag");
 				if(PuPubVO.getUFBoolean_NullAs(value, UFBoolean.FALSE).booleanValue()){
+					return false;
+				}
+			}else if(e.getKey().equalsIgnoreCase("nassnum")){
+				UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getPanel().getBodyBillModel().getValueAt(e.getRow(), "hsl"));
+				if(hsl.equals(WdsWlPubConst.ufdouble_zero)){
 					return false;
 				}
 			}

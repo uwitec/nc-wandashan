@@ -223,9 +223,23 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,Bill
 	public void bodyRowChange(BillEditEvent e) {
 		
 	}
+	
+	public  String getHslFieldName(){
+		return "hsl";
+	};//获取换算率字段名
+	public  String getAssNumFieldName(){
+		return "nassnum";
+	};//获取附属楼字段名
+	
 	public boolean beforeEdit(BillEditEvent e) {
+		if(PuPubVO.getString_TrimZeroLenAsNull(getHslFieldName()) != null && PuPubVO.getString_TrimZeroLenAsNull(getAssNumFieldName()) != null){
+			if(e.getKey().equalsIgnoreCase(getAssNumFieldName())){//辅助数量  换算率为0  辅数量不可编辑
+				UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getPanel().getBodyBillModel().getValueAt(e.getRow(), getHslFieldName()));
+				if(hsl.equals(WdsWlPubConst.ufdouble_zero)){
+					return false;
+				}
+			}
+		}
 		return true;
 	}
-
-
 }

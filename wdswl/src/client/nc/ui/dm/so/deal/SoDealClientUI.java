@@ -434,6 +434,11 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 						.booleanValue()) {
 					return false;
 				}
+			}else if(e.getKey().equalsIgnoreCase("nassnum")){
+				UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getPanel().getBodyBillModel().getValueAt(e.getRow(), "hsl"));
+				if(hsl.equals(WdsWlPubConst.ufdouble_zero)){
+					return false;
+				}
 			}
 		}
 
