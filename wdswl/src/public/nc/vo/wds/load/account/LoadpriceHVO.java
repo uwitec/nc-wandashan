@@ -45,7 +45,7 @@ public class LoadpriceHVO extends SuperVO {
 	public UFDate reserve11;
 	public UFDate reserve12;
 	public UFDate reserve13;	
-	public UFBoolean reserve14;
+	public UFBoolean reserve14;//是否冻结
 	public UFBoolean reserve15;
 	public UFBoolean reserve16;	
 	//自定义项

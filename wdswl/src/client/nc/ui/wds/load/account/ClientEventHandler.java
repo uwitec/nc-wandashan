@@ -3,13 +3,16 @@ package nc.ui.wds.load.account;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.load.account.ExaggLoadPricVO;
@@ -128,12 +131,55 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 					.setRefBillType(WdsWlPubConst.BILLTYPE_SALE_OUT);
 			onBillRef();
 			break;
-		case ButtonCommon.REFWDS9:
-			((ClientUI) getBillUI())
-					.setRefBillType(WdsWlPubConst.BILLTYPE_ALLO_IN);
-			onBillRef();
+		case ButtonCommon.UNLOCK:
+			onUnLock();
 			break;
+		case ButtonCommon.LOCK:
+			onLock();
+			break;	
 		}
+		
+	}
+	@Override
+	public void onBoAudit() throws Exception {
+		if(getBufferData().getCurrentVO() ==null){
+			getBillUI().showWarningMessage("请先选择一条数据");
+			return;
+		}
+		LoadpriceHVO head = (LoadpriceHVO)getBufferData().getCurrentVO().getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getReserve14(), UFBoolean.FALSE);
+		if(fisended == UFBoolean.FALSE ){
+			getBillUI().showWarningMessage("单据尚未确认");
+			return ;
+		}	
+		super.onBoAudit();
+	}
+	/**
+	 * 取消冻结
+	 * @throws Exception 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-23下午03:06:13
+	 */
+    private void onUnLock() throws Exception {
+		LoadpriceHVO head=(LoadpriceHVO) getBillCardPanelWrapper().getBillVOFromUI().getParentVO();
+		head.setReserve14(new UFBoolean(false));
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+	}
+
+	/**
+     * 冻结
+	 * @throws Exception 
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-7-23下午03:04:18
+     */
+	private void onLock() throws Exception {		
+		LoadpriceHVO head=(LoadpriceHVO) getBillCardPanelWrapper().getBillVOFromUI().getParentVO();
+		head.setReserve14(new UFBoolean(true));
+		HYPubBO_Client.update(head);
+		onBoRefresh();
 	}
 
 	@Override

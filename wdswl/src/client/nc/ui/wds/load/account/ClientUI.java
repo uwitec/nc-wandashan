@@ -133,6 +133,23 @@ public class ClientUI extends MutilChildUI {
 	protected void initPrivateButton() {
 		// TODO Auto-generated method stub
 		super.initPrivateButton();
+		ButtonVO lock = new ButtonVO();
+		lock.setBtnNo(ButtonCommon.LOCK);
+		lock.setBtnCode(null);
+		lock.setBtnName("确认");
+		lock.setBtnChinaName("确认");
+		lock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+		lock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		addPrivateButton(lock);
+		ButtonVO unlock = new ButtonVO();
+		unlock.setBtnNo(ButtonCommon.UNLOCK);
+		unlock.setBtnCode(null);
+		unlock.setBtnName("取消确认");
+		unlock.setBtnChinaName("取消确认");
+		unlock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+		unlock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		addPrivateButton(unlock);
+		
 		CommonButtonDef def = new CommonButtonDef();
 		ButtonVO  joinup = def.getJoinUPButton();
 		addPrivateButton(joinup);

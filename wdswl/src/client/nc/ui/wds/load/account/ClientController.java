@@ -26,7 +26,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Action,
 				ButtonCommon.joinup,
-				IBillButton.Print
+				IBillButton.Print,
+				ButtonCommon.LOCK,
+				ButtonCommon.UNLOCK
 				
 		  };
 		return buttonArray;
@@ -42,7 +44,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Action,
 				ButtonCommon.joinup,
-				IBillButton.Print
+				IBillButton.Print,
+				ButtonCommon.LOCK,
+				ButtonCommon.UNLOCK
 		};
 		return buttonArray;
 	}

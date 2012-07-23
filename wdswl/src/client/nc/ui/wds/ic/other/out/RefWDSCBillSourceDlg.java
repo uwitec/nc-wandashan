@@ -136,7 +136,7 @@ public class RefWDSCBillSourceDlg extends MBillSourceDLG {
 
 	@Override
 	protected boolean isBodyCanSelected() {
-		return false;
+		return true;
 	}
 
 	@Override

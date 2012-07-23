@@ -80,7 +80,7 @@ public class RefWDS3BillSourceDlg  extends MBillSourceDLG {
 	}
 	@Override
 	protected boolean isBodyCanSelected() {
-		return false;
+		return true;
 	}
 	
 	@Override
