@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
+import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
@@ -16,6 +17,7 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
+import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -219,11 +221,15 @@ public class ClientUI extends OutPubClientUI implements
 					return;
 				int rowcount = getBillCardPanel().getBillTable().getRowCount();
 				for (int i = 0; i < rowcount; i++) {
-					if (PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel()
-							.getBodyValueAt(i, "pk_cargdoc2")) == null) {
+					{
 						getBillCardPanel().setBodyValueAt(cargdoc, i,
 								"pk_cargdoc2");
 						getBillCardPanel().execBodyFormula(i, "pk_cargdoc2");
+						//ÉèÖÃvo×´Ì¬ÎªÐÞ¸ÄÌ¬
+						String pk_b=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(i, "general_pk"));
+						if(pk_b!=null)
+						getBillCardPanel().getBillModel().setRowState(i, BillModel.MODIFICATION);
+						
 					}
 				}
 			}
