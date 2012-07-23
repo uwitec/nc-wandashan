@@ -24,7 +24,7 @@ import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 发运计划安排 辅助类
  * 
- * @author Administrator
+ * @author mlr
  * 
  */
 public class SoDealBoUtils {
