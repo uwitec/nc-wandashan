@@ -24,6 +24,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -32,7 +33,13 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 	public OutPubClientUI ui = null;
 	private LoginInforHelper login=null;
-
+    private BillStockBO1 stock=null;
+    public BillStockBO1 getStock(){
+    	if(stock==null){
+    		stock=new BillStockBO1();
+    	}
+    	return stock;
+    }
 	
 	public OutPubEventHandler(OutPubClientUI billUI, IControllerBase control) {
 		super(billUI, control);
@@ -269,9 +276,27 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoSave() throws Exception {
 		if(!getUIController().getBillType().equals(WdsWlPubConst.HWTZ)){
 			valudate();
-		}		
+		}	
+		setStock();
 		super.onBoSave();
 	}
+	/**
+	 * 设置库存存量
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-23下午01:12:05
+	 */
+	private void setStock(){
+		
+		
+		
+		//getStock().queryStockCombinForClient(null);
+		
+		
+		
+	}
+
+
 	/**
 	 * 保存前进行数据校验
 	 * @throws Exception 
