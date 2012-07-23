@@ -3,6 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nc.ui.pub.ButtonObject;
+import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
@@ -17,6 +18,7 @@ import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.bd.invdoc.InvmandocVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -282,18 +284,54 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	}
 	/**
 	 * 设置库存存量
+	 * @throws Exception 
 	 * @作者：mlr
 	 * @说明：完达山物流项目 
 	 * @时间：2012-7-23下午01:12:05
 	 */
-	private void setStock(){
-		
-		
-		
-		//getStock().queryStockCombinForClient(null);
-		
-		
-		
+	private void setStock() throws Exception{	
+		//只设置新增单据现存量
+		String pk_h=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillVOFromUI().getParentVO().getPrimaryKey());
+		if(pk_h!=null)
+			return;
+		int rowcount=getBodyRowCount();	
+		//设置现存量查询维度
+	    StockInvOnHandVO[] vos=new StockInvOnHandVO[rowcount];	    
+		for(int i=0;i<rowcount;i++){
+			String pk_corp=PuPubVO.getString_TrimZeroLenAsNull(ClientEnvironment.getInstance().getCorporation().getPrimaryKey());
+			String pk_stordoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
+			String pk_cargdoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+			String pk_invmandoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "cinventoryid"));
+			String pk_invbasdoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "cinvbasid"));
+			String vbancode=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "vbatchcode"));
+			String pk_state=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "vuserdef9")); 
+			vos[i]=new StockInvOnHandVO();
+			vos[i].setPk_corp(pk_corp);
+			vos[i].setPk_customize1(pk_stordoc);
+			vos[i].setPk_cargdoc(pk_cargdoc);
+			vos[i].setPk_invmandoc(pk_invmandoc);
+			vos[i].setPk_invbasdoc(pk_invbasdoc);
+			vos[i].setWhs_batchcode(vbancode);
+			vos[i].setSs_pk(pk_state);
+		}
+	    //按设置好的维度 查询现存量
+	    StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getStock().queryStockCombinForClient(vos);
+			 
+		//设置现存量 到ui	 
+		if(nvos==null || nvos.length==0)
+				 return;
+		   for(int i=0;i<rowcount;i++){
+		    	StockInvOnHandVO vo=nvos[i];
+		    	if(vo==null)
+		    	    continue;
+				UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getWhs_stocktonnage());//库存主数量
+				UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getWhs_stockpieces());//库存辅数量
+				UFDouble uf3=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutnum"));//实出主数量
+				UFDouble uf4=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutassistnum"));//实出辅数量			
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf1.sub(uf3)).toString(), i, "vuserdef2");
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf2.sub(uf4)).toString(), i, "vuserdef5");					
+		}			 
+	
 	}
 
 
