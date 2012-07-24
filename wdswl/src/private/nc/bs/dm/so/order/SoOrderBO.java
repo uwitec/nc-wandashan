@@ -9,6 +9,7 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.dm.so.order.SoorderBVO;
 import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -50,7 +51,7 @@ public class SoOrderBO implements Serializable{
 	public void writeBack(AggregatedValueObject billvo , int iBdAction) throws Exception{
 		if(billvo==null || billvo.getParentVO()==null || billvo.getChildrenVO()==null || billvo.getChildrenVO().length==0)
 			return;
-		SoorderBVO[] bodys=(SoorderBVO[]) billvo.getChildrenVO();
+		SoorderBVO[] bodys=(SoorderBVO[]) ObjectUtils.serializableClone(billvo.getChildrenVO());
 		String csourcetype=PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype());
 		//自制单据不需要回写
 		if(csourcetype==null){

@@ -1,6 +1,7 @@
 package nc.bs.ic.pub;
 
 import nc.itf.scm.cenpur.service.TempTableUtil;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.pub.BusinessException;
@@ -36,11 +37,12 @@ public class IcInPubBO {
 	 */
 	public void writeBackForInBill(OtherInBillVO newBillVo, int iBdAction)
 			throws Exception {
+		
 		if (newBillVo == null || newBillVo.getParentVO() == null
 				|| newBillVo.getChildrenVO() == null
 				|| newBillVo.getChildrenVO().length == 0)
 			return;
-		TbGeneralBVO[] bodys = (TbGeneralBVO[]) newBillVo.getChildrenVO();
+		TbGeneralBVO[] bodys = (TbGeneralBVO[]) ObjectUtils.serializableClone(newBillVo.getChildrenVO());
 		String billtype = PuPubVO.getString_TrimZeroLenAsNull(newBillVo
 				.getHeaderVo().getGeh_billtype());
 		if (billtype == null) {

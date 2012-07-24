@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.transfer;
 
 import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -17,10 +18,11 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
-import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
@@ -365,6 +367,22 @@ public class ClientUI extends OutPubClientUI implements
 		addPrivateButton(customizeButton5.getButtonVO());
 		zdqhBtn customizeButton7 = new zdqhBtn();
 		addPrivateButton(customizeButton7.getButtonVO());
+		ButtonVO lock = new ButtonVO();
+		lock.setBtnNo(ButtonCommon.LOCK);
+		lock.setBtnCode(null);
+		lock.setBtnName("冻结");
+		lock.setBtnChinaName("冻结");
+		lock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+		lock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		addPrivateButton(lock);
+		ButtonVO unlock = new ButtonVO();
+		unlock.setBtnNo(ButtonCommon.UNLOCK);
+		unlock.setBtnCode(null);
+		unlock.setBtnName("解冻");
+		unlock.setBtnChinaName("解冻");
+		unlock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
+		unlock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		addPrivateButton(unlock);
 	}
 
 	// public void afterUpdate() {

@@ -31,7 +31,7 @@ public class ClientUICtrl extends AbstractManageController {
 				IBillButton.Cancel,
 				nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn,
 				IBillButton.Action, IBillButton.Return, IBillButton.Refresh,
-				ButtonCommon.joinup,
+				ButtonCommon.joinup,ButtonCommon.LOCK,ButtonCommon.UNLOCK
 
 		};
 
@@ -40,7 +40,8 @@ public class ClientUICtrl extends AbstractManageController {
 	public int[] getListButtonAry() {
 		return new int[] { IBillButton.Add, IBillButton.Edit,
 				IBillButton.Query, IBillButton.Del, IBillButton.Action,
-				IBillButton.Card, IBillButton.Refresh, ButtonCommon.joinup, };
+				IBillButton.Card, IBillButton.Refresh, ButtonCommon.joinup,
+				ButtonCommon.LOCK,ButtonCommon.UNLOCK };
 
 	}
 

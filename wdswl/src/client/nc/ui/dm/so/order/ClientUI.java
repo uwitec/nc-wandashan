@@ -2,6 +2,7 @@ package nc.ui.dm.so.order;
 
 import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
@@ -10,7 +11,6 @@ import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.AbstractManageController;
-import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
@@ -20,10 +20,9 @@ import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
-
 /**
  * 销售运单
- * @author Administrator
+ * @author mlr
  * 
  */
 public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListener {

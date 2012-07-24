@@ -2,22 +2,24 @@ package nc.ui.wds.ic.transfer;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds.transfer.MyBillVO;
 import nc.vo.wds.transfer.TransferBVO;
 import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wdsnew.pub.StockException;
-import nc.vo.wl.pub.BillRowNo;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 
@@ -38,6 +40,71 @@ public class EventHandler extends OutPubEventHandler {
 			onzdqh();
 			break;
 		}
+		if(intBtn == ButtonCommon.LOCK){
+			onBoLock();
+		}
+		if(intBtn == ButtonCommon.UNLOCK){
+			onBoUnlock();
+		}
+	}
+	@Override
+	public void onBoAudit() throws Exception {
+		if(getBufferData().getCurrentVO() ==null){
+			getBillUI().showWarningMessage("请先选择一条数据");
+			return;
+		}
+		TransferVO head = (TransferVO)getBufferData().getCurrentVO().getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
+		if(fisended == UFBoolean.FALSE ){
+			getBillUI().showWarningMessage("单据尚未冻结");
+			return ;
+		}
+	
+		super.onBoAudit();
+	}
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目  解冻
+	 * @时间：2011-6-10下午10:05:39
+	 * @throws Exception
+	 */
+	private void onBoUnlock() throws Exception{
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		TransferVO head = (TransferVO)billVo.getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
+		if(fisended == UFBoolean.FALSE ){
+			return ;
+		}
+		head.setFisended(UFBoolean.FALSE);
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+	}
+	
+	/**
+	 * 
+	 * @作者：lyf
+	 * @说明：完达山物流项目 冻结
+	 * @时间：2011-6-10下午10:05:26
+	 * @throws Exception
+	 */
+	private void onBoLock() throws Exception{
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+	//	BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
+		TransferVO head = (TransferVO)billVo.getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
+		if(fisended == UFBoolean.TRUE ){
+			return ;
+		}
+		head.setFisended(UFBoolean.TRUE);	
+		HYPubBO_Client.update(head);
+		onBoRefresh();		
 	}
 	/**
 	 * 

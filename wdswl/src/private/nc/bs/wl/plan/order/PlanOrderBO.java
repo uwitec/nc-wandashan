@@ -2,6 +2,7 @@ package nc.bs.wl.plan.order;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.ui.scm.util.ObjectUtils;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -69,7 +70,7 @@ public class PlanOrderBO {
 		if(obj == null ||obj.getChildrenVO()==null ||obj.getChildrenVO().length==0 ){
 			return ;
 		}
-		SendorderBVO[] bodys= (SendorderBVO[])obj.getChildrenVO();
+		SendorderBVO[] bodys= (SendorderBVO[])ObjectUtils.serializableClone(obj.getChildrenVO());
 		String csourcetype=PuPubVO.getString_TrimZeroLenAsNull(bodys[0].getCsourcetype());
 		//自制单据不需要回写
 		if(csourcetype==null){

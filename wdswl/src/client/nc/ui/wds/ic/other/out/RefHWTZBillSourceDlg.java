@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.other.out;
 
 import java.awt.Container;
-import java.util.Arrays;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.ClientEnvironment;
@@ -100,7 +99,8 @@ public class RefHWTZBillSourceDlg extends MBillSourceDLG {
 	public String getHeadCondition() {
 
 		return "  coalesce(wds_transfer_b.noutnum,0)-coalesce(wds_transfer_b.nacceptnum,0)>0 "// 安排数量-出库数量>0
-				+ " and wds_transfer.vbillstatus = 1 "
+			//	+ " and wds_transfer.vbillstatus = 1 "
+		        +" and coalesce(wds_transfer.fisended,'N')='Y' "//冻结后的货位调整单
 				+ " and wds_transfer.pk_billtype = '"
 				+ WdsWlPubConst.HWTZ
 				+ "' "
