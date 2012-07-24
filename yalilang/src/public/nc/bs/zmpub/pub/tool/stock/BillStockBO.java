@@ -107,7 +107,7 @@ public abstract class BillStockBO extends StockBO{
    */
   private AggregatedValueObject filterDel(AggregatedValueObject vos) throws Exception {
 	if(vos==null || vos.getParentVO()==null || vos.getChildrenVO()==null || vos.getChildrenVO().length==0)
-		throw new Exception("数据为空");
+		return vos;
 	AggregatedValueObject billvo=(AggregatedValueObject) ObjectUtils.serializableClone(vos);
 	SuperVO[] bvos=(SuperVO[]) billvo.getChildrenVO();
 	List<SuperVO>  list=new ArrayList<SuperVO>();
@@ -133,7 +133,7 @@ public abstract class BillStockBO extends StockBO{
 			  throw new Exception("单据表头为空");
 		  }
 		 if(vos.getChildrenVO()==null || vos.getChildrenVO().length==0)
-			 throw new Exception("单据表体为空");
+			 return;
 		 SuperVO[] bodys=(SuperVO[]) ObjectUtils.serializableClone(vos.getChildrenVO());
 		 //存放修改 删除的vo
 		 List<SuperVO>  list=new ArrayList<SuperVO>();
