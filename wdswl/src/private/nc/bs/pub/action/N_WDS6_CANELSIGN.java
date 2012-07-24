@@ -3,10 +3,13 @@ package nc.bs.pub.action;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import nc.bs.dao.BaseDAO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.ic.other.out.OtherOutBO_XN;
 import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.bs.wds2.set.OutInSetBO;
+import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -22,6 +25,14 @@ import nc.vo.uap.pf.PFBusinessException;
 public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 	private java.util.Hashtable m_methodReturnHas=new java.util.Hashtable();
 	private Hashtable m_keyHas=null;
+	BaseDAO dao = null;
+	
+	private BaseDAO getBaseDAO(){
+		if(dao==null){
+			dao = new BaseDAO();
+		}
+		return dao;
+	}
 
 	public N_WDS6_CANELSIGN() {
 		super();
@@ -44,6 +55,8 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 			setParameter("AggObj",vo.m_preValueVo);
 			setParameter("operate",operate);
 			setParameter("date", date);
+			
+			check(vo.m_preValueVo);
 			
 			TbOutgeneralHVO head = (TbOutgeneralHVO)vo.m_preValueVo.getParentVO();
 //			UFBoolean isxnap = PuPubVO.getUFBoolean_NullAs(head.getIsxnap(), UFBoolean.FALSE);
@@ -77,6 +90,36 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 			else
 				throw new PFBusinessException(ex.getMessage(), ex);
 		}
+	}
+	/**
+	 * 校验是否存在下游其他入库单
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-24下午02:39:21
+	 * @param valueVo
+	 */
+	private void check(AggregatedValueObject obj) throws BusinessException{
+
+		if(obj ==null){
+			return;
+		}
+		TbOutgeneralHVO parent =(TbOutgeneralHVO) obj.getParentVO();
+		String pk_sendorder = parent.getPrimaryKey();
+		StringBuffer sql = new StringBuffer();	
+		sql.append(" select count(*) ");
+		sql.append(" from tb_general_h ");
+		sql.append(" join tb_general_b ");
+		sql.append(" on tb_general_h.geh_pk= tb_general_b.geh_pk");
+		sql.append(" where isnull(tb_general_h.dr,0)=0 and isnull(tb_general_b.dr,0)=0 ");
+		sql.append(" and tb_general_b.csourcebillhid ='"+pk_sendorder+"'");
+		int i = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
+		if( i>0){
+			throw new BusinessException("已有下游其他入库单，请先删除其他入库单再做此操作");
+		}
+		
+	
+		
+		
 	}
 	/*
 	* 备注：平台编写原始脚本
