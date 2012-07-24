@@ -30,8 +30,6 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 	* 接口执行类
 	*/
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
-	try{
-		super.m_tmpVo=vo;
 		try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
@@ -72,9 +70,9 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 ////			zhf add  取消签字后  erp的调拨入库单被删除  将清空对erp来源调拨出的转出数量的回写  由于物流系统的调拨入仍存在转出数量不能清空
 //			IcInPubBO bo = new IcInPubBO();
 //			bo.writeBackForInBill(bill, IBDACTION.SAVE, true);		
-//			//删除下游装卸费核算单
-//			CanelDeleteWDF cw=new CanelDeleteWDF();
-//			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
+			//删除下游装卸费核算单
+			CanelDeleteWDF cw=new CanelDeleteWDF();
+			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
 			
 			return retObj;
 			} catch (Exception ex) {
@@ -83,12 +81,6 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 				else
 					throw new PFBusinessException(ex.getMessage(), ex);
 			}
-	} catch (Exception ex) {
-		if (ex instanceof BusinessException)
-			throw (BusinessException) ex;
-		else 
-	    throw new PFBusinessException(ex.getMessage(), ex);
-	}
 	}
 	/*
 	* 备注：平台编写原始脚本

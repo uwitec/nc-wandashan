@@ -2,11 +2,9 @@ package nc.bs.pub.action;
 
 import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.load.account.LoadAccountBS;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.uap.pf.PFBusinessException;
-import nc.vo.wds.load.account.ExaggLoadPricVO;
 /**
  *   装卸费结算
  * @author Administrator
@@ -24,8 +22,6 @@ public N_WDSF_WRITE() {
 * 接口执行类
 */
 public Object runComClass(PfParameterVO vo) throws BusinessException {
-try{
-	super.m_tmpVo=vo;
 	try {
 			super.m_tmpVo = vo;
 			Object retObj = null;
@@ -42,12 +38,6 @@ try{
 			else
 				throw new PFBusinessException(ex.getMessage(), ex);
 		}
-} catch (Exception ex) {
-	if (ex instanceof BusinessException)
-		throw (BusinessException) ex;
-	else 
-    throw new PFBusinessException(ex.getMessage(), ex);
-}
 }
 /*
 * 备注：平台编写原始脚本
