@@ -12,7 +12,7 @@ public class MyQueryDIG extends WdsQueryDlg{
 	
 	public MyQueryDIG(Container parent, UIPanel normalPnl, String pk_corp,
 			String moduleCode, String operator, String busiType) {
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"tb_general_h.geh_cwarehouseid",null);
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"tb_general_h.geh_cwarehouseid","tb_general_h.pk_cargdoc");
 		init();
 	}
 

@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.allocation.in;
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.scm.util.ObjectUtils;
@@ -23,7 +24,6 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.allo.in.AlloInBodyPrintVO;
 import nc.vo.wds.ic.allo.in.AlloInHeadPrintVO;
-import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -98,8 +98,8 @@ public class AlloInEventHandler extends InPubEventHandler {
 
 	@Override
 	protected UIDialog createQueryUI() {
-		return new QueryDIG(getBillUI(), null, _getCorp().getPk_corp(), getBillUI().getModuleCode(), getBillUI()._getOperator(), null		
-		);
+		return new QueryDIG(getBillUI(), null, _getCorp().getPk_corp(),
+				getBillUI().getModuleCode(), getBillUI()._getOperator(), null);
 	}
 	/**
 	 * 

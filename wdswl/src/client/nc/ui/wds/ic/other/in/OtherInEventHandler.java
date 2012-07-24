@@ -33,13 +33,13 @@ public class OtherInEventHandler extends InPubEventHandler {
 		return lt;
 	}
 
-	/**
-	 * 查询支持资源权限过滤
-	 * for add mlr
-	 */
-	protected void onBoQuery() throws Exception {
-		getETH().onBoQuery("geb_cinvbasid", "geb_cinventoryid");
-	}
+//	/**
+//	 * 查询支持资源权限过滤
+//	 * for add mlr
+//	 */
+//	protected void onBoQuery() throws Exception {
+//		getETH().onBoQuery("geb_cinvbasid", "geb_cinventoryid");
+//	}
 	protected void onBoElse(int intBtn) throws Exception {
 		super.onBoElse(intBtn);
 		switch (intBtn) {
@@ -178,8 +178,9 @@ public class OtherInEventHandler extends InPubEventHandler {
 
 	@Override
 	protected UIDialog createQueryUI() {
-		return new HgQueryDIG(getBillUI(), null, _getCorp().getPrimaryKey(),getBillUI()._getModuleCode(), _getOperator(), null,"pk_cargdoc","geh_cwarehouseid");
-	
+		return new MyQueryDIG(getBillUI(), null, _getCorp().getPrimaryKey(),
+				getBillUI()._getModuleCode(), _getOperator(), null);
+
 	}
 
 	protected void onBoEdit() throws Exception {
