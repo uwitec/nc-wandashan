@@ -2,6 +2,7 @@ package nc.bs.pub.action;
 import java.util.Hashtable;
 
 import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.bs.wl.plan.order.PlanOrderBO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.trade.pub.HYBillVO;
@@ -33,6 +34,9 @@ public class N_HWTZ_DELETE extends AbstractCompiler2 {
 			super.m_tmpVo = vo;
 			// ####本脚本必须含有返回值,返回DLG和PNL的组件不允许有返回值####
 			Object retObj = null;
+			//校验是否存在下游数据
+			PlanOrderBO bo=new PlanOrderBO();
+			bo.beforeUnDel(getVo());
 			// 方法说明:行业公共删除
 			
 			HYBillVO billVo = (HYBillVO)getVo();

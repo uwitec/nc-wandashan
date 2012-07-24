@@ -8,7 +8,6 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LongTimeTask;
-import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
@@ -55,7 +54,7 @@ public class EventHandler extends OutPubEventHandler {
 		}
 		TransferVO head = (TransferVO)getBufferData().getCurrentVO().getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
-		if(fisended == UFBoolean.FALSE ){
+		if(fisended .booleanValue()==false){
 			getBillUI().showWarningMessage("µ¥¾ÝÉÐÎ´¶³½á");
 			return ;
 		}
