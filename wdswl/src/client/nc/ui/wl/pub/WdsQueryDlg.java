@@ -43,6 +43,9 @@ public class WdsQueryDlg extends HYQueryDLG {
 			if(!WdsWlPubTool.isZc(cwhid)){
 				getComponent(cwh_fieldname).setEnabled(false);
 			}
+			if(PuPubVO.getString_TrimZeroLenAsNull(ccargdoc)!=null){
+				((UIRefPane)getComponent(ccarg_fieldname)).getRefModel().addWherePart(" and bd_cargdoc.pk_stordoc = '"+cwhid+"'");
+			}
 		}
 	}
 	 public void initData() {
