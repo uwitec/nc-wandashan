@@ -6,6 +6,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wdsnew.pub.MBillSourceDLG;
 import nc.ui.wdsnew.pub.PowerGetTool;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.trade.pub.IBillStatus;
 /**
  * @author mlr
  * 其他入库 参照 其他出库 界面
@@ -71,6 +72,7 @@ public class RefBillSourceDlgWDS7 extends MBillSourceDLG{
 			try {
 				sql= "  coalesce(tb_outgeneral_b.noutnum,0)-coalesce(tb_outgeneral_b.nacceptnum,0)>0 " +//实发数量-已入库数量>0
 				" and tb_outgeneral_b.cinventoryid in ("+getPowerSql()+")" +
+				" and tb_outgeneral_h.vbillstatus= "+IBillStatus.CHECKPASS +
 				" and tb_outgeneral_h.srl_pkr= '"+getLoginInforHelper().getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'"+//过滤入库仓库
 			    " and ( tb_outgeneral_b.pk_defdoc1 is null or " +
 			    " tb_outgeneral_b.pk_defdoc1 ='"+getLoginInforHelper().getSpaceByLogUserForStore(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"' )";//过滤出入库货位  不过滤空货位
