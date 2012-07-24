@@ -23,6 +23,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.ic.allo.in.AlloInBodyPrintVO;
 import nc.vo.wds.ic.allo.in.AlloInHeadPrintVO;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 

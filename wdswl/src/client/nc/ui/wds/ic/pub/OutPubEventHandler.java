@@ -29,6 +29,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -501,5 +502,12 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		
 //		设置默认收发类别
 		setOutType();	
+	}
+	
+	protected void onBoElse(int intBtn) throws Exception {
+		if(intBtn ==  ButtonCommon.joinup)
+			onJoinQuery();
+		else
+			super.onBoElse(intBtn);
 	}
 }

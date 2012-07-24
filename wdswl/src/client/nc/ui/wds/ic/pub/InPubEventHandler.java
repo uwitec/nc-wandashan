@@ -24,6 +24,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.BillRowNo;
+import nc.vo.wl.pub.ButtonCommon;
 
 public abstract class InPubEventHandler extends WdsPubEnventHandler {
 
@@ -614,6 +615,13 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 
 				"geb_customize9", false);
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("geh_cdispatcherid", outintype);	
+	}
+	
+	protected void onBoElse(int intBtn) throws Exception {
+		if(intBtn ==  ButtonCommon.joinup)
+			onJoinQuery();
+		else
+			super.onBoElse(intBtn);
 	}
 
 }
