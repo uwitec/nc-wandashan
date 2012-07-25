@@ -15,7 +15,9 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wds.load.account.LoadpirceTVO;
+import nc.vo.wds.load.account.LoadpriceB2VO;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 /**
  * 零工费用单
@@ -30,6 +32,10 @@ public class ClientUI extends BillManageUI {
 	 */
 	private static final long serialVersionUID = -558525831456996131L;
 
+	public String getTVOsTablecode(){
+		return "wds_loadprice_t";
+	}
+	
 	@Override
 	protected AbstractManageController createController() {
 		// TODO Auto-generated method stub
@@ -45,8 +51,31 @@ public class ClientUI extends BillManageUI {
 	@Override
 	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
-		// TODO Auto-generated method stub
+		refreshTVOs(vos);
+	}
 
+	public void refreshTVOs(CircularlyAccessibleValueObject[] vos) throws Exception {
+		LoadpriceB2VO[] bvo = (LoadpriceB2VO[]) vos;
+		if (bvo == null || bvo.length == 0) {
+			bvo = (LoadpriceB2VO[]) getVo().getChildrenVO();
+		}
+		if (bvo == null || bvo.length == 0) {
+			return;
+		}
+		int size = bvo.length;
+		String[] ids = new String[size];
+		for (int i = 0; i < size; i++) {
+			ids[i] = bvo[i].getPrimaryKey();
+		}
+		if (ids == null || ids.length == 0) {
+			return;
+		}
+		LoadpirceTVO[] tvos = (LoadpirceTVO[]) getTVOs(ids);
+		getBillListPanel().setBodyValueVO(getTVOsTablecode(), tvos);
+		getBillListPanel().getBodyBillModel(getTVOsTablecode())
+				.execLoadFormula();
+		getBillCardPanel().getBillModel(getTVOsTablecode()).setBodyDataVO(tvos);
+		getBillCardPanel().getBillModel(getTVOsTablecode()).execLoadFormula();
 	}
 
 	@Override
@@ -145,5 +174,26 @@ public class ClientUI extends BillManageUI {
 			return true;
 		}
 		return false;
+	}
+
+	private SuperVO[] getTVOs(String[] ids) {
+		try {
+			SuperVO[] tvos = HYPubBO_Client
+					.queryByCondition(
+							LoadpirceTVO.class,
+							" isnull(dr,0) = 0 "
+									+ "and exists(select pk_loadprice_b2 "
+									+ "from wds_loadprice_b2 where isnull(dr,0) = 0 "
+									+ "and wds_loadprice_b2.pk_loadprice_b2 = wds_loadprice_t.pk_loadprice_b2) "
+									+ "and pk_loadprice_b2 in "
+									+ WdsWlPubTool.getSubSql(ids) + " ");
+			if (tvos != null && tvos.length > 0) {
+				return tvos;
+			}
+		} catch (UifException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
 	}
 }

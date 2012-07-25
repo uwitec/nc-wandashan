@@ -51,8 +51,7 @@ public class ClientEventHandler extends ManageEventHandler {
 	/**
 	 * 
 	 * @作者：yf
-	 * @说明：完达山物流项目 
-	 * 编辑人员信息
+	 * @说明：完达山物流项目 编辑人员信息
 	 * @时间：2012-7-17下午05:17:30
 	 * @throws BusinessException
 	 */
@@ -109,5 +108,25 @@ public class ClientEventHandler extends ManageEventHandler {
 		if (null != error && error.length() > 0) {
 			throw new BusinessException(error);
 		}
+	}
+
+	@Override
+	protected void onBoLineDel() throws Exception {
+		if (getUI().getTVOsTablecode().equalsIgnoreCase(
+				getBillCardPanelWrapper().getBillCardPanel()
+						.getCurrentBodyTableCode())) {
+			return;
+		}
+		super.onBoLineDel();
+	}
+
+	@Override
+	protected void onBoLineAdd() throws Exception {
+		if (getUI().getTVOsTablecode().equalsIgnoreCase(
+				getBillCardPanelWrapper().getBillCardPanel()
+						.getCurrentBodyTableCode())) {
+			return;
+		}
+		super.onBoLineAdd();
 	}
 }

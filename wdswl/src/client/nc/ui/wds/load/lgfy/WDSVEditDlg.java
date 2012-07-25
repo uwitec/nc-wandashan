@@ -378,11 +378,16 @@ public class WDSVEditDlg extends nc.ui.pub.beans.UIDialog implements
 		}
 		beforeSaveCheck(datas);
 		save(datas);
+		afterSave();
 		// 自动返回
 		onCancle();
 		closeOK();
 		// 将datas放置列表界面
 
+	}
+
+	private void afterSave() throws Exception {
+		((ClientUI) this.parent).refreshTVOs(null);
 	}
 
 	private void beforeSaveCheck(LoadpirceTVO[] datas2)
