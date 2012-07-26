@@ -59,7 +59,7 @@ public class SendorderBVO extends SuperVO {
 	public String reserve3;
 	//子表主键
 	public String pk_sendorder_b;
-	public UFBoolean reserve14;
+	public UFBoolean reserve14;//zhf 是否自提  发运运单使用
 	public UFDouble reserve10;
 	public UFDate reserve13;
 	//发货站已发运数量

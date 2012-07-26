@@ -281,6 +281,15 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				showHintMessage("查询完成：没有满足条件的数据");
 				return;
 			}
+			
+			try {
+				setStock(billdatas);
+			} catch (Exception e) {
+				e.printStackTrace();
+				showErrorMessage("设置库存量异常");
+				return ;
+			}
+			
 			setData(billdatas);
 		}
 		showHintMessage("操作完成");
@@ -385,6 +394,9 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		 * 
 		 */
 //		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDeHeaderVo.class.getName(), SoDealVO.class.getName());
+		WdsWlPubTool.stopEditing(getDataPane());
+		WdsWlPubTool.stopEditing(getBodyDataPane());
+		
 		AggregatedValueObject[] newVos = getSelectVos();
 		if(newVos == null || newVos.length == 0){
 			showWarnMessage("未选中数据");

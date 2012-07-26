@@ -16,6 +16,7 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class SoDealBO {
@@ -57,13 +58,17 @@ public class SoDealBO {
 		sql.append(" where ");
 		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
 		
-//		------------------------------------------------zhf add
-		sql.append(" and coalesce(h.bisclose,'N') = ");
-		if(isclose.booleanValue())
-			sql.append(" 'Y' ");
-		else
-			sql.append(" 'N' ");
+//		------------------------------------------------zhf add 支持查询出虚拟已关闭的订单zhf
+		
+		if(isclose.booleanValue()){
+			sql.append(" and coalesce(h.bisclose,'N') = 'Y' ");
+		}
+		else{
+			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' and coalesce(h."+Wds2WlPubConst.so_virtual+",'N') = 'N' ");
+			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = 'Y' )");
+		}
 //		------------------------------------------------
+
 		
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);

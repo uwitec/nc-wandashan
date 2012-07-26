@@ -227,7 +227,7 @@ public class WdsWlPubConst {
 	
 	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};//"vbillno",
 
-	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid"};//"vbillno",
+	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid","bdericttrans"};//"vbillno",
 	
 	public static String[] DB_PLAN_DEAL_SPLIT_FIELDS = new String[]{"coutwhid","cincorpid","cincbid","cinwhid"};//"vbillno",
 	

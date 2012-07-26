@@ -6,6 +6,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -204,7 +205,8 @@ public class SoDealVO extends SuperVO{
 		"h.capproveid",
 		"h.dapprovedate",
 		"h.fstatus",
-		"h.vnote"
+		"h.vnote",
+		"h."+Wds2WlPubConst.so_virtual,//zhf add 是否虚拟
 	};
 	public transient static String[] m_bodyNames = new String[]{
 		"b.corder_bid",
@@ -890,6 +892,10 @@ public class SoDealVO extends SuperVO{
 		if(fisgift.booleanValue()){
 			if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue() !=0)
 				throw new ValidationException("赠品不允许拆分");
+		}
+		
+		if(PuPubVO.getString_TrimZeroLenAsNull(getVdef1()) == null){
+			throw new ValidationException("存货状态未指定");
 		}
 	}
 	public String getCrowno() {

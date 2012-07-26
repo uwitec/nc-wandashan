@@ -20,5 +20,6 @@ public class Wds2WlPubConst {
 	public final static  String  billtype_statusupdate_3 = "WS20_3";//处理状态变更单 删除   状态变化后 新增量
 
 
+	public final static String so_virtual = "vdef1";//是否虚拟
 	
 }

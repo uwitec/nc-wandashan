@@ -64,7 +64,7 @@ public class SendorderVO extends SuperVO {
 	//发货地区
 	public String pk_sendareal;
 	public String reserve1;
-	public UFBoolean reserve16;
+	public UFBoolean reserve16;//是否自提 zhf  发运运单使用
 	public UFBoolean reserve15;//是否虚拟欠发--xjx
 
 	// 开始时间
