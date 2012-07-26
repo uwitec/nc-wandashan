@@ -180,8 +180,10 @@ public class PlanDealEventHandler {
 			return ;
 		for(int i=0;i<billdatas.length;i++){
 			if(nvos[i]!=null){		
-				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
-				billdatas[i].setNdrqusefulnumout(uf1);
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//可用主数量
+				UFDouble uf2=nvos[i].getWhs_stockpieces();//可用辅数量
+				billdatas[i].setNdrqarrstorenumout(uf1);
+				billdatas[i].setNdrqstorenumout(uf2);
 			}
 		}
 	}
