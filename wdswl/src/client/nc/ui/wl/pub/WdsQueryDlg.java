@@ -18,12 +18,14 @@ public class WdsQueryDlg extends HYQueryDLG {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected String cwhid = null;//²Ö¿â
-	protected String ccargdoc = null;//»õÎ»
-	protected String cwh_fieldname;//²Ö¿â×Ö¶ÎÃû³Æ
-	protected String ccarg_fieldname;//»õÎ»×Ö¶ÎÃû³Æ
+	protected String cwhid = null;// ²Ö¿â
+	protected String ccargdoc = null;// »õÎ»
+	protected String cwh_fieldname;// ²Ö¿â×Ö¶ÎÃû³Æ
+	protected String ccarg_fieldname;// »õÎ»×Ö¶ÎÃû³Æ
+
 	public WdsQueryDlg(Container parent, UIPanel normalPnl, String pk_corp,
-			String moduleCode, String operator, String busiType,String whfield,String cargfield) {
+			String moduleCode, String operator, String busiType,
+			String whfield, String cargfield) {
 		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
 		cwh_fieldname = whfield;
 		ccarg_fieldname = cargfield;
@@ -38,60 +40,75 @@ public class WdsQueryDlg extends HYQueryDLG {
 			ccargdoc = null;
 		}
 	}
-	private void init(){
-		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null){
-			if(!WdsWlPubTool.isZc(cwhid)){
+
+	private void init() {
+		if (PuPubVO.getString_TrimZeroLenAsNull(cwhid) != null
+				&& PuPubVO.getString_TrimZeroLenAsNull(cwh_fieldname) != null) {
+			if (!WdsWlPubTool.isZc(cwhid)) {
 				getComponent(cwh_fieldname).setEnabled(false);
 			}
-			if(PuPubVO.getString_TrimZeroLenAsNull(ccargdoc)!=null){
-				((UIRefPane)getComponent(ccarg_fieldname)).getRefModel().addWherePart(" and bd_cargdoc.pk_stordoc = '"+cwhid+"'");
+			if (PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null
+					&& PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null) {
+				try {
+					((UIRefPane) getComponent(ccarg_fieldname)).getRefModel()
+							.addWherePart(
+									" and bd_cargdoc.pk_stordoc = '" + cwhid
+											+ "'");
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
-	 public void initData() {
-		if(PuPubVO.getString_TrimZeroLenAsNull(cwhid)!=null){
-			setDefaultValue(cwh_fieldname,cwhid,cwhid);
-			if(PuPubVO.getString_TrimZeroLenAsNull(ccargdoc)!=null){
-				setDefaultValue(ccarg_fieldname,ccargdoc,ccargdoc);
+
+	public void initData() {
+		if (PuPubVO.getString_TrimZeroLenAsNull(cwhid) != null
+				&& PuPubVO.getString_TrimZeroLenAsNull(cwh_fieldname) != null) {
+			setDefaultValue(cwh_fieldname, cwhid, cwhid);
+			if (PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null
+					&& PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null) {
+				setDefaultValue(ccarg_fieldname, ccargdoc, ccargdoc);
 			}
 		}
 		super.initData();
 		init();
 	}
-	
+
 	protected void afterEdit(TableCellEditor editor, int row, int col) {
 		super.afterEdit(editor, row, col);
 		String fieldcode = getFieldCodeByRow(row);
-		if(PuPubVO.getString_TrimZeroLenAsNull(fieldcode)==null)
+		if (PuPubVO.getString_TrimZeroLenAsNull(fieldcode) == null)
 			return;
-		if(fieldcode.equalsIgnoreCase(cwh_fieldname)){
+		if (fieldcode.equalsIgnoreCase(cwh_fieldname)) {
 			ConditionVO[] cons = getConditionVOsByFieldCode(fieldcode);
-			if(cons == null || cons.length == 0)
+			if (cons == null || cons.length == 0)
 				return;
-			String value = PuPubVO.getString_TrimZeroLenAsNull(cons[0].getRefResult().getRefPK());
-			if(PuPubVO.getString_TrimZeroLenAsNull(value)==null)
+			String value = PuPubVO.getString_TrimZeroLenAsNull(cons[0]
+					.getRefResult().getRefPK());
+			if (PuPubVO.getString_TrimZeroLenAsNull(value) == null)
 				return;
 			Object o = getValueRefObjectByFieldCode(ccarg_fieldname);
-			if(o == null)
+			if (o == null)
 				return;
-			if(o instanceof UIRefPane){
-				UIRefPane ref = (UIRefPane)o;
-				ref.getRefModel().addWherePart(" and bd_cargdoc.pk_stordoc = '"+value+"'");
+			if (o instanceof UIRefPane) {
+				UIRefPane ref = (UIRefPane) o;
+				ref.getRefModel().addWherePart(
+						" and bd_cargdoc.pk_stordoc = '" + value + "'");
 			}
 		}
 	}
-	
-	protected Component getComponent(String filedcode){
+
+	protected Component getComponent(String filedcode) {
 		Object o = getValueRefObjectByFieldCode(filedcode);
-		Component jb  = null;
-		if(o instanceof UIRefCellEditor){
-			jb = ((UIRefCellEditor)o).getComponent();//getUITabInput().getCellEditor(1, 4);
-		}else{
-			jb = (Component)o;
+		Component jb = null;
+		if (o instanceof UIRefCellEditor) {
+			jb = ((UIRefCellEditor) o).getComponent();// getUITabInput().getCellEditor(1,
+														// 4);
+		} else {
+			jb = (Component) o;
 		}
 
 		return jb;
 	}
-
 
 }

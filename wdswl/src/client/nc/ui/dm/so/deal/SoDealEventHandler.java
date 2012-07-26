@@ -28,6 +28,7 @@ import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.VOTool;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -321,6 +322,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			tmpHead.setVreceiptcode(vos[0].getVreceiptcode());
 			tmpHead.setCbodywarehouseid(ui.getWhid()==null?vos[0].getCbodywarehouseid():ui.getWhid());
 			tmpHead.setStatus(VOStatus.NEW);
+			tmpHead.setAttributeValue(Wds2WlPubConst.so_virtual, vos[0].getAttributeValue(Wds2WlPubConst.so_virtual));
 			tmpbill = new SoDealBillVO();
 			tmpbill.setParentVO(tmpHead);
 			tmpbill.setChildrenVO(vos);

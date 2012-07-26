@@ -1,21 +1,20 @@
 package nc.ui.dm.db.order;
 
 import java.awt.Container;
-
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.UIPanel;
-import nc.ui.trade.query.HYQueryDLG;
+import nc.ui.wl.pub.WdsQueryDlg;
 
 /**
  *  新版查询对话框
  * @author mlr
  *
  */
-public class ClientUIQueryDlg extends HYQueryDLG {
+public class ClientUIQueryDlg extends WdsQueryDlg {
 
 	public ClientUIQueryDlg(Container parent, UIPanel normalPnl,
 			String pk_corp, String moduleCode, String operator, String busiType) {
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType);
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_sendorder.pk_outwhouse",null);
 		init();
 	}
 	public void init(){
