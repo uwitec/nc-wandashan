@@ -5,11 +5,9 @@ import java.util.Hashtable;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.compiler.AbstractCompiler2;
-import nc.bs.wds.ic.other.out.OtherOutBO_XN;
 import nc.bs.wds.load.pub.CanelDeleteWDF;
 import nc.bs.wds2.set.OutInSetBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
-import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -114,7 +112,7 @@ public class N_WDS6_CANELSIGN extends AbstractCompiler2 {
 		sql.append(" and tb_general_b.csourcebillhid ='"+pk_sendorder+"'");
 		int i = PuPubVO.getInteger_NullAs(getBaseDAO().executeQuery(sql.toString(), WdsPubResulSetProcesser.COLUMNPROCESSOR), 0);
 		if( i>0){
-			throw new BusinessException("已有下游其他入库单，请先删除其他入库单再做此操作");
+			throw new BusinessException("已有下游其他入库单，请先删除其他库单再做此操作");
 		}
 		
 	
