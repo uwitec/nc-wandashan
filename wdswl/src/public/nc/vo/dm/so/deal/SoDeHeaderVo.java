@@ -22,6 +22,17 @@ public class SoDeHeaderVo extends SuperVO {
 	
 	private String vreceiptcode;  //订单号
 	
+	
+	private UFBoolean bdericttrans;//系统是否直运  用做 是否自提
+	
+	public UFBoolean getBdericttrans() {
+		return bdericttrans;
+	}
+
+	public void setBdericttrans(UFBoolean bdericttrans) {
+		this.bdericttrans = bdericttrans;
+	}
+
 	public String getVreceiptcode() {
 		return vreceiptcode;
 	}

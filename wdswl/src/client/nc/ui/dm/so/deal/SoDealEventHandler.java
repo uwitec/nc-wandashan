@@ -2,6 +2,7 @@ package nc.ui.dm.so.deal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
@@ -28,7 +29,6 @@ import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.VOTool;
-import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -322,7 +322,6 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			tmpHead.setVreceiptcode(vos[0].getVreceiptcode());
 			tmpHead.setCbodywarehouseid(ui.getWhid()==null?vos[0].getCbodywarehouseid():ui.getWhid());
 			tmpHead.setStatus(VOStatus.NEW);
-			tmpHead.setAttributeValue(Wds2WlPubConst.so_virtual, vos[0].getAttributeValue(Wds2WlPubConst.so_virtual));
 			tmpbill = new SoDealBillVO();
 			tmpbill.setParentVO(tmpHead);
 			tmpbill.setChildrenVO(vos);
@@ -408,9 +407,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		for(int i=0;i<newVos.length;i++){
 			Object cbodywarehouseid =newVos[i].getParentVO().getAttributeValue("cbodywarehouseid");
 			CircularlyAccessibleValueObject[] bodys = newVos[i].getChildrenVO();
+			UFBoolean biszt = PuPubVO.getUFBoolean_NullAs(newVos[i].getParentVO().getAttributeValue("bdericttrans"), UFBoolean.FALSE);
 			if(bodys != null){
 				for(CircularlyAccessibleValueObject body:bodys){
 					body.setAttributeValue("cbodywarehouseid", cbodywarehouseid);
+					body.setAttributeValue("bdericttrans", biszt);
 				}
 			}
 		}

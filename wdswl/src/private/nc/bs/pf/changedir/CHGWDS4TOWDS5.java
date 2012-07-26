@@ -70,7 +70,7 @@ public String[] getField() {
 			"B_bisdate->B_disdate",//是否大日期
 			"B_nassarrangnum->B_nassnum",//安排辅数量
 			"B_narrangnmu->B_nnum",//安排数量
-			"B_isxnap->H_vdef1",//是否虚拟安排 liuys add
+			"B_isxnap->B_isxnap",//是否虚拟安排 liuys add
 			
 			
 //			zhf  add

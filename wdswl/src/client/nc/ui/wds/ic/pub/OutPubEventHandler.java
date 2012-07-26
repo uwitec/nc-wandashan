@@ -1,4 +1,5 @@
 package nc.ui.wds.ic.pub;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,14 +50,14 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super(billUI, control);
 		ui = billUI;
 	}
-	//权限过滤查询处理类
-	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
-	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
-		if(lt==null){
-			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
-		}
-		return lt;
-	}
+//	//权限过滤查询处理类
+//	nc.ui.zmpub.pub.bill.FlowManageEventHandler lt=null;
+//	public nc.ui.zmpub.pub.bill.FlowManageEventHandler getETH(){
+//		if(lt==null){
+//			lt=new nc.ui.zmpub.pub.bill.FlowManageEventHandler(this.getBillManageUI(),this.getUIController());
+//		}
+//		return lt;
+//	}
 
 
 	private LoginInforHelper getLoginInfoHelper(){
@@ -173,11 +174,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	// 参照数据交换完毕后， 设置默认值
 	@Override
 	protected void setRefData(AggregatedValueObject[] vos) throws Exception {
-
-
 		WdsWlPubTool.setVOsRowNoByRule(vos, "crowno");
-
-
 		super.setRefData(vos);
 		getBillUI().setDefaultData();
 		setBodySpace();

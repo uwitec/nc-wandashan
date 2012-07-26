@@ -58,7 +58,7 @@ public class SoDealVO extends SuperVO{
 	private String cpackunitid;
 	private Integer frowstatus;
 	private String frownote;
-	private UFBoolean bdericttrans; // 是否直运
+	private UFBoolean bdericttrans; // 是否直运-----------------zhf 用于是否自提
 	private String cadvisecalbody; // 建议发货库存组织
 //	private String cbodywarehousename; // 仓库
 	private String cconsigncorpid; // 发货公司id
@@ -206,7 +206,7 @@ public class SoDealVO extends SuperVO{
 		"h.dapprovedate",
 		"h.fstatus",
 		"h.vnote",
-		"h."+Wds2WlPubConst.so_virtual,//zhf add 是否虚拟
+		"h."+Wds2WlPubConst.so_virtual+ " isxnap ",//zhf add 是否虚拟
 	};
 	public transient static String[] m_bodyNames = new String[]{
 		"b.corder_bid",

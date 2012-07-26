@@ -1,7 +1,7 @@
 package nc.ui.wds.ic.so.out;
+
 import javax.swing.JComponent;
 import javax.swing.ListSelectionModel;
-
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
@@ -17,9 +17,7 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
-import nc.ui.wds.w8004040204.ssButtun.ckmxBtn;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
-import nc.ui.wds.w8004040204.ssButtun.tpzdBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;

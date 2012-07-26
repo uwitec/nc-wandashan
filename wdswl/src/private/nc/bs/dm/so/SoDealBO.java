@@ -106,7 +106,7 @@ public class SoDealBO {
 		if (ldata == null || ldata.size() == 0)
 			return;
 		
-		//按  发货站    客户 分单
+		//按  发货站    客户  是否自提  分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata
 						.toArray(new SoDealVO[0])),
