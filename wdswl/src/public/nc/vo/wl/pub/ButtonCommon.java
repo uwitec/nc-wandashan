@@ -25,4 +25,8 @@ public class ButtonCommon {
 	
 	public static final int WDSVYGXX= 277;//零工费用单编辑员工信息
 	
+	//-----------------------------------yf add
+	public static final int btnclose = 300;
+	public static final int btnopen = 301;
+	
 }

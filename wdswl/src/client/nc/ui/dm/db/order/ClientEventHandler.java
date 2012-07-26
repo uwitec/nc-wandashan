@@ -118,8 +118,47 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if(intBtn == ButtonCommon.UNLOCK){
 			onBoUnlock();
 		}
+		if(intBtn == ButtonCommon.btnopen){
+			onBoOpen();
+		}
+		if(intBtn == ButtonCommon.btnclose){
+			onBoClose();
+		}
 		super.onBoElse(intBtn);
 	}
+	
+	public void onBoClose() throws Exception {
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		SuperVO head = (SuperVO) billVo.getParentVO();
+		UFBoolean fisclose = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue(WdsWlPubConst.sendorder_close), UFBoolean.FALSE);
+		if(fisclose == UFBoolean.TRUE ){
+			return ;
+		}
+		head.setAttributeValue(WdsWlPubConst.sendorder_close, UFBoolean.TRUE);	
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+		getBillUI().showHintMessage("订单已关闭");
+	}
+
+	public void onBoOpen() throws Exception  {
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		SuperVO head = (SuperVO) billVo.getParentVO();
+		UFBoolean fisclose = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue(WdsWlPubConst.sendorder_close), UFBoolean.FALSE);
+		if(fisclose == UFBoolean.FALSE ){
+			return ;
+		}
+		head.setAttributeValue(WdsWlPubConst.sendorder_close, UFBoolean.FALSE);	
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+		getBillUI().showHintMessage("订单已打开");
+	}
+	
 	@Override
 	public void onBoAudit() throws Exception {
 		if(getBufferData().getCurrentVO() ==null){
@@ -140,6 +179,14 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		if(getBufferData().getCurrentVO() ==null){
 			getBillUI().showWarningMessage("请先选择一条数据");
 			return;
+		}
+		//add by yf 201207-26 已关闭订单不能弃审
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		SuperVO head = (SuperVO) billVo.getParentVO();
+		UFBoolean fisclose = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue(WdsWlPubConst.sendorder_close), UFBoolean.FALSE);
+		if(fisclose.booleanValue() ){
+			getBillUI().showWarningMessage("单据已关闭，不能弃审");
+			return ;
 		}
 		super.onBoCancelAudit();
 	}

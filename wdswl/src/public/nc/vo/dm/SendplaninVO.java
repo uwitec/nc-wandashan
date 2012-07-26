@@ -83,7 +83,7 @@ import nc.vo.pub.lang.*;
              public UFDate dapprovedate;
              public String vdef8;
              public String reserve1;
-             public UFBoolean reserve16;
+             public UFBoolean reserve16;//-------------是否虚拟add by yf 2012-07-26手动选择，传下游单据
              public String reserve7;
              //
              public String vapproveid;

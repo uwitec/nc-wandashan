@@ -400,5 +400,24 @@ public class WdsWlPubConst {
 
 //    调拨入库单关闭 节点号
     public static String allo_in_close_node = "8004040225";
+	public static String sendorder_close = "reserve14";//add by yf 2012-07-26发运管理关闭字段，‘Y’关闭‘N’打开，null=‘N’(nc.vo.dm.order.SendorderVO)
+	public static String soorder_close = "reserve15";//add by yf 2012-07-26销售运单关闭字段，‘Y’关闭‘N’打开，null=‘N’(nc.vo.dm.so.order.SoorderVO;)
+
+	public static String dmplan_xn = "reserve16";//add by yf 2012-07-26发运计划虚拟字段，‘Y’虚拟计划‘N’非虚拟计划 null=‘N’(nc.vo.dm.SendplaninVO)
+	
+	public static String sendorder_xn = "reserve16";//add by yf 2012-07-26发运订单虚拟字段(nc.vo.dm.order.SendorderBVO)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

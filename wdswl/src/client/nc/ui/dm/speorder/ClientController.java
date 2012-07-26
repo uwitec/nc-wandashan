@@ -5,6 +5,7 @@ import nc.ui.trade.button.IBillButton;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.trade.pub.HYBillVO;
+import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
@@ -28,7 +29,9 @@ public class ClientController extends AbstractManageController {
 				ZmpubBtnConst.ASSPRINT,
 			//	ButtonCommon.TRAN_COL,
 			//	ButtonCommon.LOCK,
-			//	ButtonCommon.UNLOCK
+			//	ButtonCommon.UNLOCK,
+				ButtonCommon.btnopen,
+				ButtonCommon.btnclose,
 				};
 		return buttonArray;
 	}
@@ -49,7 +52,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Print,
 			//	ButtonCommon.TRAN_COL,
 			//	ButtonCommon.LOCK,
-			//	ButtonCommon.UNLOCK
+			//	ButtonCommon.UNLOCK,
+				ButtonCommon.btnopen,
+				ButtonCommon.btnclose,
 		}
 				;
 		return buttonArray;

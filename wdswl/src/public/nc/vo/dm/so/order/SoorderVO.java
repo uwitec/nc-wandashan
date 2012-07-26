@@ -114,7 +114,7 @@ public class SoorderVO extends SuperVO {
 	public UFDate reserve12;
 	public UFDate reserve13;
 	public UFBoolean reserve14;
-	public UFBoolean reserve15;
+	public UFBoolean reserve15;//是否关闭----use by yf for:针对审批后部分发货的订单，关闭后下游单据不参照该订单
 	public UFBoolean reserve16;
 	// 自定义项
 	public String vdef1;

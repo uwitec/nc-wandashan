@@ -51,7 +51,7 @@ public class SendorderVO extends SuperVO {
 	public String vemployeeid;
 	public UFDate reserve12;
 	public String reserve6;
-	public UFBoolean reserve14;
+	public UFBoolean reserve14;//是否关闭----add by yf 2012-07-26针对审批后部分发货的订单，关闭后下游单据不参照该订单
 	// 结束时间
 	public UFDate denddate;
 	public UFDouble reserve10;

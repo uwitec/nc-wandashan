@@ -8,41 +8,43 @@ import nc.vo.wl.pub.WdsWlPubConst;
 
 /**
  * 
- * @author Administrator
- *其他出库 参照 发运订单（WDS3）的查询对话框
+ * @author Administrator 其他出库 参照 发运订单（WDS3）的查询对话框
  */
-public class RefWDS3BillQueryDlg extends WdsBillQueryDlg{
+public class RefWDS3BillQueryDlg extends WdsBillQueryDlg {
 
-	
 	private static final long serialVersionUID = 1L;
-	
-	private static String pk_corp = ClientEnvironment.getInstance().getCorporation().getPrimaryKey();
-	
-	private static String userid = ClientEnvironment.getInstance().getUser().getPrimaryKey();
-	
+
+	private static String pk_corp = ClientEnvironment.getInstance()
+			.getCorporation().getPrimaryKey();
+
+	private static String userid = ClientEnvironment.getInstance().getUser()
+			.getPrimaryKey();
+
 	public RefWDS3BillQueryDlg(Container parent) {
-		super(parent,null,pk_corp,
-				WdsWlPubConst.OTHER_OUT_FUNCODE,userid,null,WdsWlPubConst.OTHER_OUT_REFWDS3_NODECODE);
+		super(parent, null, pk_corp, WdsWlPubConst.OTHER_OUT_FUNCODE, userid,
+				null, WdsWlPubConst.OTHER_OUT_REFWDS3_NODECODE);
 	}
+
 	@Override
 	public String getWhereSQL() {
 		String sql=super.getWhereSQL();		
+		String sqlplus = " isnull(wds_sendorder."+ WdsWlPubConst.sendorder_close + " ,'N')= 'N' ";
 		if(sql==null){
-	      return null;
+	      return sqlplus;
 		}
 		if(sql.contains("wds_sendorder.vbillstatus = 0")){
 		  return sql.replace("wds_sendorder.vbillstatus = 0", "wds_sendorder.vbillstatus = 8");
 		}
-		return sql;
+		return sql + " and " + sqlplus;
 	}
 
 	public void initData(String pkCorp, String operator, String funNode,
 			String businessType, String currentBillType, String sourceBilltype,
 			String nodeKey, Object userObj) throws Exception {
-		//增加默认值
-		String sDate = ClientEnvironment.getInstance().getBusinessDate().toString();
-		setDefaultValue("wds_sendorder.dmakedate", null, sDate);//单据日期
+		// 增加默认值
+		String sDate = ClientEnvironment.getInstance().getBusinessDate()
+				.toString();
+		setDefaultValue("wds_sendorder.dmakedate", null, sDate);// 单据日期
 	}
-
 
 }

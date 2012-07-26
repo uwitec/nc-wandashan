@@ -5,7 +5,10 @@ import java.util.Hashtable;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.uap.pf.PFBusinessException;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  *  发运计划录入
  * @author Administrator
@@ -31,13 +34,16 @@ try{
 			setParameter("currentVo", vo.m_preValueVo);
 			/**begin-------如果是月计划，则校验当前调入仓库在当前月是否已经有月计划---------begin */
 			Object iplantype =vo.m_preValueVo.getParentVO().getAttributeValue("iplantype");
+			UFBoolean fisxn = PuPubVO.getUFBoolean_NullAs(vo.m_preValueVo.getParentVO().getAttributeValue(WdsWlPubConst.dmplan_xn), UFBoolean.FALSE);//add by yf 2012-07-26 如果是虚拟计划不校验月计划唯一性
 			if(iplantype !=null && 0==(Integer)iplantype){
 				setParameter("InWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_inwhouse"));
 				setParameter("OutWhouse", vo.m_preValueVo.getParentVO().getAttributeValue("pk_outwhouse"));
 				setParameter("Pk", vo.m_preValueVo.getParentVO().getAttributeValue("pk_sendplanin"));
 				setParameter("Date", vo.m_currentDate);//SPF ADD
 				setParameter("Reser", vo.m_preValueVo.getParentVO().getAttributeValue("reserve15"));
-				runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&OutWhouse:String,&InWhouse:String,&Pk:String,&Date:String,&Reser:UFBoolean", vo, m_keyHas,	m_methodReturnHas);
+				if(!fisxn.booleanValue()){
+					runClass("nc.bs.wl.plan.PlanCheckinBO", "beforeCheck","&OutWhouse:String,&InWhouse:String,&Pk:String,&Date:String,&Reser:UFBoolean", vo, m_keyHas,	m_methodReturnHas);
+				}
 			}
 			//保存前的校验 追加计划保存时,如果没有月计划,追加计划不允许保存  追加计划没有存量不允许保存 
 			if(iplantype!=null && 1==(Integer)iplantype){

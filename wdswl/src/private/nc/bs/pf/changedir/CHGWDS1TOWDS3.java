@@ -56,7 +56,7 @@ public String[] getField() {
 			"H_reserve13->H_reserve13",
 			"H_reserve14->H_reserve14",
 			"H_reserve15->H_reserve15", //是否欠发
-			"H_reserve16->H_reserve16",
+//			"H_reserve16->H_reserve16",
 			//自定义项
 			"H_vdef4->H_vdef4",
 			"H_vdef3->H_vdef3",
@@ -114,7 +114,7 @@ public String[] getField() {
 			"B_reserve13->B_reserve13",
 			"B_reserve14->B_reserve14",
 			"B_reserve15->B_reserve15",//是否欠发
-			"B_reserve16->B_reserve16",
+			"B_reserve16->H_reserve16",//----add by yf 2012-07-26发运订单表体传入发运计划是否虚拟
 			
 		
 			//自定义项

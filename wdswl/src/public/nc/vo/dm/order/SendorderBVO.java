@@ -76,7 +76,7 @@ public class SendorderBVO extends SuperVO {
 	public String reserve1;
 	//发货站待发运数量
 	public UFDouble noutkeepnum;
-	public UFBoolean reserve16;
+	public UFBoolean reserve16;//是否虚拟----add by yf 2012-07-26发运订单是否来自虚拟计划
 	public UFDouble reserve7;
 	public UFBoolean reserve15;
 	//存货管理档案

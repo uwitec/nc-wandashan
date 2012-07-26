@@ -105,6 +105,7 @@ public class PlanDealBO {
 		sql.append(" wds_sendplanin_b.hsl hsl, ");
 		sql.append(" wds_sendplanin_b.ts, ");
 		sql.append(" wds_sendplanin_b.bisdate, ");  //是否大日期
+		sql.append(" wds_sendplanin.reserve16, ");  //是否虚拟add by yf 2012-07-26 运单安排增加是否虚拟标志
 		sql.append(" wds_sendplanin.reserve15 ");  //是否欠发
 		sql.append(" from wds_sendplanin ");
 		sql.append(" join wds_sendplanin_b ");
