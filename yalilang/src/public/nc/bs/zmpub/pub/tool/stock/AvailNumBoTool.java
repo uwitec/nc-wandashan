@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.naming.NamingException;
+
 import nc.bs.logging.Logger;
 import nc.bs.pub.SystemException;
 import nc.bs.zmpub.pub.report.ReportDMO;
@@ -73,7 +75,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		if (nvos == null || nvos.length == 0)
 			return null;
 		//得到订单占用量
-		SuperVO[] dvos = getAvailNumForClient1(vos);
+		ReportBaseVO[] dvos = getAvailNumForClient1(vos);
 		if(dvos==null || dvos.length==0)
 			return nvos;
 		//得到可用量
@@ -81,13 +83,13 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		return zvos;
 	}
 
-	private SuperVO[] getAvailNumForClient1(SuperVO[] vos) throws Exception {
+	private ReportBaseVO[] getAvailNumForClient1(SuperVO[] vos) throws Exception {
 		//得到订单查询的过滤条件
 		Map<String, List<String>> whereSqls=getWhereSqls(vos);
 		//得到添加过滤条件后的订单查询sql
 		Map<String, List<String>> sqls=getSqls(whereSqls);
 		//得到订单占用量
-		SuperVO[] dvos=getOrderNumsForClient(vos,sqls);
+		ReportBaseVO[] dvos=getOrderNumsForClient(vos,sqls);
 		return dvos;
 	}
 
@@ -99,7 +101,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
      * @时间：2012-7-26下午01:08:07
      *
      */
-	private SuperVO[] getNums(SuperVO[] nvos, SuperVO[] dvos) throws Exception {
+	private SuperVO[] getNums(SuperVO[] nvos, ReportBaseVO[] dvos) throws Exception {
 		if(nvos==null || nvos.length==0)
 			return null;
 		if(dvos==null || dvos.length==0)
@@ -108,7 +110,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 			return nvos;
 		for(int i=0;i<nvos.length;i++){
 			SuperVO nvo=nvos[i];
-			SuperVO dvo=dvos[i];
+			ReportBaseVO dvo=dvos[i];
 			if(nvo==null )
 				continue;
 			if(dvo==null )
@@ -137,21 +139,21 @@ public abstract class AvailNumBoTool extends BillStockBO {
 	 * @时间：2012-7-26上午10:20:59
 	 * 
 	 */
-	public SuperVO[] getAvailNum(SuperVO[] vos) throws Exception {
+	public ReportBaseVO[] getAvailNum(SuperVO[] vos) throws Exception {
 		//得到订单查询的过滤条件
 		Map<String,List<String>> whereSqls=getWhereSqls(vos);
 		//得到添加过滤条件后的订单查询sql
 		Map<String,List<String>> sqls=getSqls(whereSqls);
 		//得到订单占用量
-		SuperVO[] dvos=getOrderNums(vos,sqls);
+		ReportBaseVO[] dvos=getOrderNums(vos,sqls);
 		return dvos;
 	}
 	
 	
-	public SuperVO[] getOrderNumsForClient(SuperVO[] vos,
+	public ReportBaseVO[] getOrderNumsForClient(SuperVO[] vos,
 			Map<String, List<String>> sqls) throws Exception {
 
-		 SuperVO[] nvos=null;
+		ReportBaseVO[] nvos=null;
 	    	try {
 				Class[] ParameterTypes = new Class[] { SuperVO[].class ,Map.class};
 			
@@ -161,7 +163,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 						getThisClassName(), null, "getOrderNums",
 						ParameterTypes, ParameterValues);
 				if (o != null) {
-					nvos = (SuperVO[]) o;
+					nvos = (ReportBaseVO[]) o;
 				}
 			} catch (Exception e) {
 				Logger.error(e);
@@ -179,11 +181,11 @@ public abstract class AvailNumBoTool extends BillStockBO {
 	 * @时间：2012-7-26上午10:29:40
 	 *
 	 */
-   private SuperVO[] getOrderNums(SuperVO[] vos, Map<String, List<String>> sqls) throws Exception {
+   public ReportBaseVO[] getOrderNums(SuperVO[] vos, Map<String, List<String>> sqls) throws Exception {
 	   //查询订单的可用量
 	   ReportBaseVO[] nvos=querySqls(sqls);
 	   //得到按 查询维度合并后 的可用量
-	   SuperVO[] zvos=getCombinVos(vos,nvos);	   
+	   ReportBaseVO[] zvos=getCombinVos(vos,nvos);	   
 		return zvos;
 	}
 
@@ -195,8 +197,8 @@ public abstract class AvailNumBoTool extends BillStockBO {
  * @时间：2012-7-26下午12:07:40
  *
  */
-private SuperVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos) throws Exception {
-	ArrayList<SuperVO> nlist = new ArrayList<SuperVO>();	
+private ReportBaseVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos) throws Exception {
+	ArrayList<ReportBaseVO> nlist = new ArrayList<ReportBaseVO>();	
 	if (vos == null || vos.length == 0)
 		return null;
 	if (nvos == null || nvos.length == 0)
@@ -209,8 +211,8 @@ private SuperVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos) throws Except
 			} else {
 				//获得该维度下的订单可用量
 				ReportBaseVO[] vos1=getVos(conds,nvos);				
-				SuperVO[] coms = (SuperVO[]) CombinVO.combinData(vos1,
-						conds1, getChangeNums(), vos[0].getClass());
+				ReportBaseVO[] coms = (ReportBaseVO[]) CombinVO.combinData(vos1,
+						conds1, getChangeNums(), ReportBaseVO.class);
 				if (coms == null || coms.length == 0) {
 					nlist.add(null);
 				} else {
@@ -223,8 +225,8 @@ private SuperVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos) throws Except
 	}
 	if(nlist==null || nlist.size()==0)
 		return null;
-	return nlist.toArray((SuperVO[]) java.lang.reflect.Array.newInstance(
-			vos[0].getClass(), 0));
+	return nlist.toArray((ReportBaseVO[]) java.lang.reflect.Array.newInstance(
+			ReportBaseVO.class, 0));
 	}
 /**
  * 获得数据合并维度
@@ -299,7 +301,7 @@ private ReportBaseVO[] getVos(Map<String, String> conds, ReportBaseVO[] nvos) {
  *
  */
 private ReportBaseVO[] querySqls(Map<String, List<String>> sqls) throws SystemException, SQLException, NamingException {
-	  List<String> list=null;
+	  List<String> list=new ArrayList<String>();
 	  
 	  if(sqls==null || sqls.size()==0)
 		  return null;
@@ -312,7 +314,16 @@ private ReportBaseVO[] querySqls(Map<String, List<String>> sqls) throws SystemEx
 	  List<ReportBaseVO[]> vos=getDMO().queryVOBySql(list.toArray(new String[0]));
 	  if(vos==null || vos.size()==0)
 		  return null;
-		return vos.toArray(new ReportBaseVO[0]);
+	  List<ReportBaseVO>  listvo=new ArrayList<ReportBaseVO>();
+	  for(int i=0;i<vos.size();i++){
+		  ReportBaseVO[] rvos=vos.get(i);
+		  if(rvos==null || rvos.length==0)
+			  continue;
+		  for(int j=0;j<rvos.length;j++){
+			  listvo.add(rvos[j]);
+		  }
+	  }	  
+		return listvo.toArray(new ReportBaseVO[0]);
 	}
 
 /**
@@ -350,6 +361,7 @@ private ReportBaseVO[] querySqls(Map<String, List<String>> sqls) throws SystemEx
 		}	
 		return map;
 	}
+	
     /**
      * 得到订单查询的过滤条件
      * @throws Exception 
@@ -387,9 +399,9 @@ private ReportBaseVO[] querySqls(Map<String, List<String>> sqls) throws SystemEx
 				   if(fields[j]==null || fields[j].length()==0)
 					   continue;
 					if (whereSql == null) {
-						whereSql=whereSql+fields[j]+" = '"+vo.getAttributeValue(acfs[j])+"'";	
+						whereSql=fields[j]+" = '"+vo.getAttributeValue(acfs[j])+"'";	
 					} else {
-						whereSql = whereSql + " and " + fields[i] + " = '" +vo.getAttributeValue(acfs[j])+ "'";
+						whereSql = whereSql + " and " + fields[j] + " = '" +vo.getAttributeValue(acfs[j])+ "'";
 					}				  				   
 			   }
 			   list.add(whereSql);		   
