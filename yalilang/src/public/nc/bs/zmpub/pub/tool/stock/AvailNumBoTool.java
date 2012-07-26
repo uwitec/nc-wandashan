@@ -381,9 +381,11 @@ private ReportBaseVO[] querySqls(Map<String, List<String>> sqls) throws SystemEx
 			   String  whereSql=null;
 			   SuperVO vo=vos[i];
 			   for(int j=0;j<acfs.length;j++){
-				   if(PuPubVO.getString_TrimZeroLenAsNull(acfs[j])==null){
+				   if(PuPubVO.getString_TrimZeroLenAsNull(vos[i].getAttributeValue(acfs[j]))==null){
 					   continue;
 				   }
+				   if(fields[j]==null || fields[j].length()==0)
+					   continue;
 					if (whereSql == null) {
 						whereSql=whereSql+fields[j]+" = '"+vo.getAttributeValue(acfs[j])+"'";	
 					} else {
