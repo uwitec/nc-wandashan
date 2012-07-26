@@ -13,6 +13,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -33,7 +34,14 @@ public class PlanDealEventHandler {
 //		getDataPane().addSortRelaObjectListener2(this);
 
 	}
-
+    private AvailNumBO  abo=null;
+    public AvailNumBO getAbo(){
+    	
+    	if(abo==null){
+    		abo=new AvailNumBO();
+    	}
+    	return abo;
+    }
 	private BillStockBO1 stock=null;
 	
 	public BillStockBO1 getStock(){
@@ -149,12 +157,33 @@ public class PlanDealEventHandler {
 		}
 		try {
 			setStock(billdatas);
+			setAvailNum(billdatas);
 		} catch (Exception e) {
 			e.printStackTrace();
 			showErrorMessage("设置库存量失败");
 			return;
 		}
 		setDataToUI(billdatas);
+	}
+	private void setAvailNum(PlanDealVO[] billdatas) throws Exception {		
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getAbo().getAvailNumForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
+				billdatas[i].setNdrqusefulnumout(uf1);
+			}
+		}
 	}
 	/**
 	 * 设置库存 量
