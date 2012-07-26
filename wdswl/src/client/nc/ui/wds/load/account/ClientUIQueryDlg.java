@@ -22,7 +22,8 @@ public class ClientUIQueryDlg extends WdsQueryDlg {
 	public ClientUIQueryDlg(Container parent, UIPanel normalPnl,
 			String pk_corp, String moduleCode, String operator,
 			String busiType, String nodeKey) {
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_loadprice_h.pk_stordoc",null);
+//		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_loadprice_h.pk_stordoc",null);
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_loadprice.cwarehouseid",null);
 		init();
 	}
 	public void init(){
