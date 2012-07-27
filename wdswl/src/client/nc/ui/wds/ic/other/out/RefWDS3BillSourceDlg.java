@@ -49,7 +49,8 @@ public class RefWDS3BillSourceDlg  extends MBillSourceDLG {
 	
 	public void init(){
 		try{
-	
+			setSpiltFields(new String[]{"pk_outwhouse","reserve16"});
+			setSpiltFields1(new String []{"reserve16"});
 		}catch(Exception e){
 			Logger.error(e);
 		}

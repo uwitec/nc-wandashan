@@ -199,7 +199,9 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super.onBoEdit();
 //	    getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 //		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-		getButtonManager().getButton(ISsButtun.fzgn).setEnabled(false);
+		if(PuPubVO.getString_TrimZeroLenAsNull(getBufferData().getCurrentVO().getParentVO().getPrimaryKey())!=null){
+		 getButtonManager().getButton(ISsButtun.fzgn).setEnabled(false);
+		}
 		boolean isself = PuPubVO.getString_TrimZeroLenAsNull(
 				getBufferData().getCurrentVO().getChildrenVO()[0].getAttributeValue("csourcetype"))
 				==null?true:false;
@@ -479,7 +481,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 	}
 	
-	private void setOutType() throws BusinessException{
+	public void setOutType() throws BusinessException{
 //		设置默认收发类别
 		String outintype = OutInSetHelper.getDefaultOutInTypeID(
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 

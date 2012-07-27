@@ -225,7 +225,7 @@ public class WdsWlPubConst {
 
 	public static String WDS_WL_ZC = "1021A91000000004YZ0P";//×Ü²ÖÊÇË«³Ç------------select * from BD_STORDOC aa where aa.PK_STORDOC ='1021A91000000004YZ0P' 
 	
-	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"vbillno","pk_outwhouse","pk_inwhouse"};//"vbillno",
+	public static String[] DM_PLAN_DEAL_SPLIT_FIELDS = new String[]{"pk_outwhouse","pk_inwhouse"};//"vbillno",
 
 	public static String[] SO_PLAN_DEAL_SPLIT_FIELDS = new String[]{"cbodywarehouseid","ccustomerid","bdericttrans"};//"vbillno",
 	

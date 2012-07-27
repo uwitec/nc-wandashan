@@ -114,7 +114,7 @@ public String[] getField() {
 			"B_reserve13->B_reserve13",
 			"B_reserve14->B_reserve14",
 			"B_reserve15->B_reserve15",//是否欠发
-			"B_reserve16->H_reserve16",//----add by yf 2012-07-26发运订单表体传入发运计划是否虚拟
+			"B_reserve16->B_reserve16",//----add by yf 2012-07-26发运订单表体传入发运计划是否虚拟
 			
 		
 			//自定义项

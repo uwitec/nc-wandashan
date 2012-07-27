@@ -20,6 +20,8 @@ import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
+import nc.vo.ic.other.out.MyBillVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
@@ -433,8 +435,8 @@ public class MyClientUI extends OutPubClientUI implements
 			if (row < 0) {
 				return;
 			}
-			Object o = getBufferData().getCurrentVO().getParentVO()
-					.getAttributeValue(getBillField().getField_BillStatus());
+			Object o =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO()
+					.getAttributeValue(getBillField().getField_BillStatus()), IBillStatus.FREE) ;
 			if (o.equals(IBillStatus.FREE)) {// 自由
 				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
 				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(true);
@@ -442,7 +444,30 @@ public class MyClientUI extends OutPubClientUI implements
 				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(false);
 				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(true);
 			}
+			updateSpecialButton();
 			updateButtons();
+		}
+	}
+	public void updateSpecialButton(){
+		MyBillVO agg = (MyBillVO)getBufferData().getCurrentVO();
+		TbOutgeneralHVO head  = (TbOutgeneralHVO)agg.getParentVO();
+		getButtonManager().getButton(IBillButton.Print).setEnabled(true);
+		if(head.getPrimaryKey() == null || "".equals(head.getPrimaryKey())){
+		    getButtonManager().getButton(IBillButton.Refbill).setEnabled(false);
+			getButtonManager().getButton(IBillButton.Query).setEnabled(false);//查询
+			getButtonManager().getButton(IBillButton.Del).setEnabled(false);//作废
+			getButtonManager().getButton(IBillButton.Refresh).setEnabled(false);//刷新
+			getButtonManager().getButton(IBillButton.Add).setEnabled(false);
+			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(true);
+			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr).setEnabled(false);
+			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz).setEnabled(false);
+			
+		}else{
+			getButtonManager().getButton(IBillButton.Add).setEnabled(true);
+			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(false);			
+			getButtonManager().getButton(IBillButton.Refbill).setEnabled(true);
+			getButtonManager().getButton(IBillButton.Query).setEnabled(true);
+			getButtonManager().getButton(IBillButton.Refresh).setEnabled(true);
 		}
 	}
 

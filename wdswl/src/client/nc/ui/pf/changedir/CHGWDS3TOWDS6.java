@@ -53,7 +53,7 @@ public String[] getField() {
 			"B_cfirstbillhid->B_cfirstbillhid",
 			"B_cfirstbillbid->B_cfirstbillbid",
 			"B_cfirsttype->B_cfirsttype",
-			
+			"H_isxnap->B_reserve16",//是否虚拟
 			"B_cinventoryid->B_pk_invmandoc",//
 			"B_cinvbasid->B_pk_invbasdoc",//
 			"B_unitid->B_unit",//主 计量单位
