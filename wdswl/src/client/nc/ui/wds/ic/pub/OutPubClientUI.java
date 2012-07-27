@@ -19,10 +19,13 @@ import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.wds.ic.other.out.BillField;
+import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.ui.wl.pub.MutiChildForOutInUI;
 import nc.uif.pub.exception.UifException;
 import nc.vo.bd.invdoc.InvmandocVO;
+import nc.vo.ic.other.out.MyBillVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
+import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFBoolean;
@@ -30,6 +33,7 @@ import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.field.IBillField;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wdsnew.pub.PickTool;
 
 public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListener{
@@ -71,7 +75,47 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 		}
 		return pick;
 	}
-	
+	public void afterUpdate() {
+		if (!getBufferData().isVOBufferEmpty()) {
+			int row = getBufferData().getCurrentRow();
+			if (row < 0) {
+				return;
+			}
+			Object o =PuPubVO.getInteger_NullAs(getBufferData().getCurrentVO().getParentVO()
+					.getAttributeValue(getBillField().getField_BillStatus()), IBillStatus.FREE) ;
+			if (o.equals(IBillStatus.FREE)) {// 自由
+				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
+				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(true);
+			} else {// 签字
+				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(false);
+				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(true);
+			}
+			updateSpecialButton();
+			updateButtons();
+		}
+	}
+	public void updateSpecialButton(){
+		MyBillVO agg = (MyBillVO)getBufferData().getCurrentVO();
+		TbOutgeneralHVO head  = (TbOutgeneralHVO)agg.getParentVO();
+		getButtonManager().getButton(IBillButton.Print).setEnabled(true);
+		if(head.getPrimaryKey() == null || "".equals(head.getPrimaryKey())){
+		    getButtonManager().getButton(IBillButton.Refbill).setEnabled(false);
+			getButtonManager().getButton(IBillButton.Query).setEnabled(false);//查询
+			getButtonManager().getButton(IBillButton.Del).setEnabled(false);//作废
+			getButtonManager().getButton(IBillButton.Refresh).setEnabled(false);//刷新
+			getButtonManager().getButton(IBillButton.Add).setEnabled(false);
+			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(true);
+			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr).setEnabled(false);
+			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz).setEnabled(false);
+			
+		}else{
+			getButtonManager().getButton(IBillButton.Add).setEnabled(true);
+			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(false);			
+			getButtonManager().getButton(IBillButton.Refbill).setEnabled(true);
+			getButtonManager().getButton(IBillButton.Query).setEnabled(true);
+			getButtonManager().getButton(IBillButton.Refresh).setEnabled(true);
+		}
+	}
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();		

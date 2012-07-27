@@ -7,6 +7,11 @@ import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.pf.PfUtilClient;
+import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.bill.IBillBusiListener;
+import nc.ui.trade.bill.RefBillTypeChangeEvent;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
@@ -27,6 +32,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
@@ -66,6 +72,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 		return login;
 	}
+	
 	/*
 	 * mlr
 	 * 自动取货(non-Javadoc)
@@ -263,7 +270,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	}
 	protected void onBoCancel() throws Exception {
 		super.onBoCancel();
-		onBoRefresh();
+	  ///	onBoRefresh();
 	}
 	/**zpm start **/
 	protected int geLineRowByCrowno(String crowno){
@@ -437,6 +444,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 		return rowcount;
 	}	
+	
 	/**
 	 * @author yf
 	 * 出入库 对当前用户进行权限校验
@@ -495,12 +503,58 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 //		设置默认收发类别
 		setOutType();
 	}
-	
+	private IBillBusiListener m_bbl = null;
 	public void onBillRef() throws Exception {
-		super.onBillRef();
-		
-//		设置默认收发类别
-		setOutType();	
+	    String pk_billtype=getBillUI().getRefBillType();
+		if(pk_billtype.equals(WdsWlPubConst.WDS3) || pk_billtype.equals(WdsWlPubConst.WDS5)){
+			ButtonObject bo = new ButtonObject(nc.ui.ml.NCLangRes.getInstance()
+					.getStrByID("uifactory", "UC001-0000010")/* @res "参照单据" */);
+			bo.setTag(getBillUI().getRefBillType() + ":");
+			
+
+			getBusiDelegator().childButtonClicked(bo, _getCorp().getPrimaryKey(),
+					getBillUI()._getModuleCode(), _getOperator(),
+					getUIController().getBillType(), getBillUI(),
+					getBillUI().getUserObject(), null);
+			if (nc.ui.pub.pf.PfUtilClient.makeFlag) {
+				// 设置单据状态
+				getBillUI().setCardUIState();
+				// 新增
+				getBillUI().setBillOperate(IBillOperate.OP_ADD);
+			} else {
+				if (PfUtilClient.isCloseOK()) {
+					if (m_bbl != null) {
+						String tmpString = bo.getTag();
+						int findIndex = tmpString.indexOf(":");
+						String newtype = tmpString.substring(0, findIndex);
+						RefBillTypeChangeEvent e = new RefBillTypeChangeEvent(this,
+								null, newtype);
+						m_bbl.refBillTypeChange(e);
+					}
+					if (isDataChange())
+						setRefData1(PfUtilClient.getRetVos());
+					else
+						setRefData1(PfUtilClient.getRetOldVos());
+				}
+			}	
+			setOutType() ;
+		}else{
+	    	super.onBillRef();
+	    	setOutType() ;
+		}
+	}
+	public void setRefData1(AggregatedValueObject[] retVos) throws Exception {
+		if (!getBillManageUI().isListPanelSelected())
+			getBillManageUI().setCurrentPanel(BillTemplateWrapper.LISTPANEL);
+		if(retVos==null || retVos.length==0)
+			return;
+		for(int i=0;i<retVos.length;i++){
+		  retVos[i].getParentVO().setAttributeValue("vbillstatus", IBillStatus.FREE);	
+		 
+		}
+		getBufferData().clear();
+		getBufferData().addVOsToBuffer(retVos);
+		updateBuffer();	
 	}
 	
 	protected void onBoElse(int intBtn) throws Exception {
