@@ -58,10 +58,14 @@ public class DbDealVO extends SuperVO{
     private UFDouble nquoteunitrate;//报价计量单位换算率
     private UFBoolean flargess;//是否赠品
     private String cvendorid;//供应商
+
     //--------------------------其他信息
     private String vdef1;//存货状态
     private UFDouble nstorenumout ;//库存主数量
     private UFDouble anstorenumout;//库存辅数量
+	private UFDouble ndrqstorenumout;//可用量辅数量 mlr
+	private UFDouble ndrqarrstorenumout;//可用量 mlr
+
 	/**
 	 * 
 	 * @作者：zhf
@@ -76,6 +80,19 @@ public class DbDealVO extends SuperVO{
 		}
 	}
 	
+	public UFDouble getNdrqstorenumout() {
+		return ndrqstorenumout;
+	}
+	public void setNdrqstorenumout(UFDouble ndrqstorenumout) {
+		this.ndrqstorenumout = ndrqstorenumout;
+	}
+	public UFDouble getNdrqarrstorenumout() {
+		return ndrqarrstorenumout;
+	}
+	public void setNdrqarrstorenumout(UFDouble ndrqarrstorenumout) {
+		this.ndrqarrstorenumout = ndrqarrstorenumout;
+	}
+
 	public transient static String[] m_headNames = new String[]{
 		"h.cincorpid",
 		"h.cincbid",

@@ -132,10 +132,11 @@ public class SoDealVO extends SuperVO{
 	private UFDouble narrstorenumout;//安排后库存主数量
 	private UFDouble nusefulnumout;//可用量
 	private UFDouble narrusefulnumout;//安排后库存可用量
-	private UFDouble ndrqstorenumout;//大日期库存主数量
-	private UFDouble ndrqarrstorenumout;//大日期安排后库存主数量
+
 	private UFDouble ndrqusefulnumout;//大日期库可用量
 	private UFDouble ndrqarrusefulnumout;//大日期安排后可用量
+	private UFDouble ndrqstorenumout;//可用量辅数量 mlr
+	private UFDouble ndrqarrstorenumout;//可用量 mlr
 	public UFDouble getNstorenumout() {
 		return nstorenumout;
 	}
