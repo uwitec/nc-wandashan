@@ -220,30 +220,16 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
-		clearData();
-		SoDealVO[] billdatas = null; 
-		try{
-			whereSql = getSQL();
-			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
+		whereSql = getSQL();
+
+		try{			
+			onRefresh();
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}		
-		if(billdatas == null||billdatas.length == 0){
-            clearData();
-			showHintMessage("查询完成：没有满足条件的数据");
-			return;
-		}
-		try {
-			setStock(billdatas);
-			setAvailNum(billdatas);
-		} catch (Exception e) {
-			e.printStackTrace();
-			showErrorMessage("设置库存量异常");
-			return ;
-		}
-		setData(billdatas);
+		
 	}
 	/**
 	 * 设置先存量信息
@@ -300,6 +286,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	private void onRefresh() throws Exception{
 		SoDealVO[] billdatas = null;
 		clearData();
+		boolean iserrorhint = false;
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
 			try{
@@ -310,22 +297,24 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 				return;
 			}		
 			if(billdatas == null||billdatas.length == 0){
-	            clearData();
-				showHintMessage("查询完成：没有满足条件的数据");
+//				clearData();
+				showHintMessage("操作完成：没有满足条件的数据");
 				return;
 			}
-			
+
 			try {
 				setStock(billdatas);
+				setAvailNum(billdatas);
 			} catch (Exception e) {
 				e.printStackTrace();
-				showErrorMessage("设置库存量异常");
-				return ;
+				ui.showHintMessage("设置库存量异常");
+				iserrorhint = true;
 			}
-			
+
 			setData(billdatas);
 		}
-		showHintMessage("操作完成");
+		if(!iserrorhint)
+			showHintMessage("操作完成");
 	}
 	
 	/**
@@ -379,7 +368,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 	 * @return
 	 * @throws Exception
 	 */
-	private String getSQL() throws Exception{
+	private String getSQL(){
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" h.pk_corp='"+ui.cl.getCorp());
 		whereSql.append("' and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0 ");

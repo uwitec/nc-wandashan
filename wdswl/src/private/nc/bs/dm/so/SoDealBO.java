@@ -42,7 +42,7 @@ public class SoDealBO {
 		SoDealVO[] datas = null;
 		// 实现查询销售订单的逻辑
 		StringBuffer sql = new StringBuffer();
-		sql.append("select  ");
+		sql.append("select  distinct ");
 		String[] names = SoDealVO.m_headNames;
 
 		for (String name : names) {
@@ -64,8 +64,8 @@ public class SoDealBO {
 			sql.append(" and coalesce(h.bisclose,'N') = 'Y' ");
 		}
 		else{
-			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' and coalesce(h."+Wds2WlPubConst.so_virtual+",'N') = 'N' ");
-			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = 'Y' )");
+			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' ");// 这两个or 连接 数据交叉 和 distinct 配套使用
+			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+WdsWlPubConst.WDS_IC_FLAG_wu+"' )");
 		}
 //		------------------------------------------------
 

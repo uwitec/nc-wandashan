@@ -219,7 +219,7 @@ public class SoDealEventHandler{
 	 * 查询动作相应方法
 	 * @时间：2011-3-25上午09:49:04
 	 */
-	public void onQuery() throws Exception{		
+	public void onQuery(){		
 		/**
 		 * 满足什么条件的计划呢？人员和仓库已经绑定了   登陆人只能查询他的权限仓库  总仓的人可以安排分仓的
 		 * 校验登录人是否为总仓库德人 如果是可以安排任何仓库的  转分仓  计划 
@@ -233,20 +233,46 @@ public class SoDealEventHandler{
 		getQryDlg().showModal();
 		if(!getQryDlg().isCloseOK())
 			return;
-		whereSql = getSQL();
-		m_billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
-		if(m_billdatas == null||m_billdatas.length == 0){
-			clearData();
-			showHintMessage("查询完成：没有满足条件的数据");
+		try{
+			whereSql = getSQL();
+		}catch(Exception e){
+			e.printStackTrace();
+			ui.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
-		//设置现存量
-		setStock(m_billdatas);
-		//设置可用量
-		setAvailNum(m_billdatas);
+		
+		onRefresh();		
+	}
+	
+	private void onRefresh(){
+		boolean iserrorhint = false;
+		clearData();
+		try{
+			m_billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
+		}catch(Exception e){
+			e.printStackTrace();
+			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
+			return;
+		}
+		if(m_billdatas == null||m_billdatas.length == 0){
+			//			clearData();
+			showHintMessage("操作完成：没有满足条件的数据");
+			return;
+		}
+
+		try{
+			//设置现存量
+			setStock(m_billdatas);
+			//设置可用量
+			setAvailNum(m_billdatas);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ui.showHintMessage("设置库存量异常");
+			iserrorhint = true;
+		}
 		//对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),m_billdatas);
-		clearData();
+//		clearData();
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
 		getDataPane().execLoadFormula();
@@ -254,31 +280,9 @@ public class SoDealEventHandler{
 		getBodyDataPane().execLoadFormula();
 		//		billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
 		setDataBuffer(billvos);		
-		showHintMessage("查询完成");
+		if(!iserrorhint)
+			showHintMessage("操作完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
-	}
-	
-	private void onRefresh() throws Exception{
-		SoDealVO[] billdatas = null;
-		clearData();
-		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
-
-			billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
-			if(billdatas == null||billdatas.length == 0){
-				return;
-			}
-			//对数据进行合并  按客户合并  订单日期取最小订单日期
-			SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),billdatas);
-			//处理查询出的计划  缓存  界面
-			getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
-			getDataPane().execLoadFormula();
-			getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
-			getBodyDataPane().execLoadFormula();
-			//			billdatas = (SoDealVO[])getDataPane().getBodyValueVOs(SoDealVO.class.getName());
-			setDataBuffer(billvos);	
-			ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
-		}
-		showHintMessage("操作完成");
 	}
 	
 	/**
@@ -366,6 +370,10 @@ public class SoDealEventHandler{
 		 * 考虑是否特殊安排  过滤最小发货量   考虑库存现存量是否满足   直接安排   手工安排界面
 		 * 安排日志
 		 */
+		
+		WdsWlPubTool.stopEditing(getDataPane());
+		WdsWlPubTool.stopEditing(getBodyDataPane());
+		
 		AggregatedValueObject[] selectVos = ui.getPanel().getMultiSelectedVOs(SoDealBillVO.class.getName(), SoDealHeaderVo.class.getName(), SoDealVO.class.getName());
 		AggregatedValueObject[] newVos = (AggregatedValueObject[])VOUtil.filter(selectVos, new FilterNullBody());
 		if(newVos == null || newVos.length == 0){
@@ -376,9 +384,11 @@ public class SoDealEventHandler{
 		for(int i=0;i<newVos.length;i++){
 			Object cbodywarehouseid =newVos[i].getParentVO().getAttributeValue("cbodywarehouseid");
 			CircularlyAccessibleValueObject[] bodys = newVos[i].getChildrenVO();
+			UFBoolean biszt = PuPubVO.getUFBoolean_NullAs(newVos[i].getParentVO().getAttributeValue("bdericttrans"), UFBoolean.FALSE);
 			if(bodys != null){
 				for(CircularlyAccessibleValueObject body:bodys){
 					body.setAttributeValue("cbodywarehouseid", cbodywarehouseid);
+					body.setAttributeValue("bdericttrans", biszt);
 				}
 			}
 		}

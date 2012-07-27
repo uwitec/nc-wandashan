@@ -32,8 +32,18 @@ public class SoDealHeaderVo extends SuperVO {
 //	private UFBoolean bisspecial= UFBoolean.FALSE;//是否特殊安排
 	private UFBoolean isonsell = UFBoolean.FALSE;//是否特殊安排
 	
+	private UFBoolean bdericttrans;//系统是否直运  用做 是否自提
+	
 	public static String[] split_fields = new String[]{"ccustomerid"};
 	
+	
+	public UFBoolean getBdericttrans() {
+		return bdericttrans;
+	}
+
+	public void setBdericttrans(UFBoolean bdericttrans) {
+		this.bdericttrans = bdericttrans;
+	}
 	
 	public UFDouble getNminnum() {
 		return nminnum;

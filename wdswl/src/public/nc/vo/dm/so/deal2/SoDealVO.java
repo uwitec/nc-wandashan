@@ -6,6 +6,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -57,7 +58,7 @@ public class SoDealVO extends SuperVO{
 	private String cpackunitid;
 	private Integer frowstatus;
 	private String frownote;
-	private UFBoolean bdericttrans; // 是否直运
+	private UFBoolean bdericttrans; // 是否直运   用于是否自提
 	private String cadvisecalbody; // 建议发货库存组织
 //	private String cbodywarehousename; // 仓库
 	private String cconsigncorpid; // 发货公司id
@@ -198,6 +199,11 @@ public class SoDealVO extends SuperVO{
 	public void setIsxnap(UFBoolean isxnap) {
 		this.isxnap = isxnap;
 	}
+	public void setSsxnap(String ssxnap) {
+		setIsxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(ssxnap)
+				.equalsIgnoreCase(WdsWlPubConst.WDS_IC_FLAG_wu) ? UFBoolean.TRUE
+				: UFBoolean.FALSE);
+	}
 	public UFBoolean getDisdate() {
 		return disdate;
 	}
@@ -237,7 +243,8 @@ public class SoDealVO extends SuperVO{
 		"h.capproveid",
 		"h.dapprovedate",
 		"h.fstatus",
-		"h.vnote"
+		"h.vnote",
+		"h."+Wds2WlPubConst.so_virtual+ " sxnap ",//zhf add 是否虚拟
 	};
 	public transient static String[] m_bodyNames = new String[]{
 		"b.corder_bid",
@@ -923,6 +930,10 @@ public class SoDealVO extends SuperVO{
 		if(fisgift.booleanValue()){
 			if(PuPubVO.getUFDouble_NullAsZero(getNnum()).sub(nchecknum).doubleValue() !=0)
 				throw new ValidationException("赠品不允许拆分");
+		}
+		
+		if(PuPubVO.getString_TrimZeroLenAsNull(getVdef1()) == null){
+			throw new ValidationException("存货状态未指定");
 		}
 	}
 	public String getCrowno() {

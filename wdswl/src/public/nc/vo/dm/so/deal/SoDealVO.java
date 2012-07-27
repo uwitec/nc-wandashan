@@ -167,6 +167,11 @@ public class SoDealVO extends SuperVO{
 	public void setIsxnap(UFBoolean isxnap) {
 		this.isxnap = isxnap;
 	}
+	public void setSsxnap(String ssxnap) {
+		setIsxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(ssxnap)
+				.equalsIgnoreCase(WdsWlPubConst.WDS_IC_FLAG_wu) ? UFBoolean.TRUE
+				: UFBoolean.FALSE);
+	}
 	public UFBoolean getDisdate() {
 		return disdate;
 	}
@@ -207,7 +212,7 @@ public class SoDealVO extends SuperVO{
 		"h.dapprovedate",
 		"h.fstatus",
 		"h.vnote",
-		"h."+Wds2WlPubConst.so_virtual+ " isxnap ",//zhf add  «∑Ò–Èƒ‚
+		"h."+Wds2WlPubConst.so_virtual+ " sxnap ",//zhf add  «∑Ò–Èƒ‚
 	};
 	public transient static String[] m_bodyNames = new String[]{
 		"b.corder_bid",

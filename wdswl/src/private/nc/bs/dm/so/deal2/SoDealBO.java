@@ -27,6 +27,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.trade.voutils.VOUtil;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -71,12 +72,17 @@ public class SoDealBO {
 		
 		
 //		------------------------------------------------zhf add
-		sql.append(" and coalesce(h.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
+//		sql.append(" and coalesce(h.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
 //		if(isclose.booleanValue())
 //			sql.append(" 'Y' ");
 //		else
 //			sql.append(" 'N' ");
 //		------------------------------------------------
+		
+//		zhf modify  支持  虚拟销售订单参与安排
+		sql.append(" and ( coalesce(h.bisclose,'N') = 'N' " +
+				"and coalesce(h."+Wds2WlPubConst.so_virtual+",'N') <> '"+WdsWlPubConst.WDS_IC_FLAG_wu+"' ");
+		sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+WdsWlPubConst.WDS_IC_FLAG_wu+"' )");
 		
 		
 		
@@ -99,52 +105,52 @@ public class SoDealBO {
 			datas = list.toArray(new SoDealVO[0]);
 		}
 		
-		/**
-		 * liuys add 
-		 * 虚拟流程查询, 根据销售订单查询ERP销售出库,如果有对应的销售出库单并且该单标识为虚拟安排,则在销售计划安排只能查询出虚拟流程的单据
-		 *  出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量
-		 * 
-		 */ 
-		String pk = null;
-		for (int i = 0; i < datas.length; i++) {
-			pk = PuPubVO.getString_TrimZeroLenAsNull(datas[i].getCorder_bid());
-			if(pk == null){
-				continue;
-			}
-			StringBuffer generalSql = new StringBuffer();
-			generalSql.append(" select sum(ic_general_b.noutnum) from ic_general_h ");
-			generalSql.append(" join ic_general_b on ");
-			generalSql.append(" ic_general_h.cgeneralhid = ic_general_b.cgeneralhid");
-			generalSql.append(" where isnull(ic_general_h.dr,0)=0 ");
-			generalSql.append(" and isnull(ic_general_b.dr,0)=0 ");
-			generalSql.append(" and ic_general_h.fbillflag='"+BillStatus.AUDIT+"' ");
-			generalSql.append(" and ic_general_h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
-			generalSql.append(" and ic_general_b.csourcebillbid='"+pk + "'");
-			UFDouble noutnum =PuPubVO.getUFDouble_NullAsZero( getDao().executeQuery(generalSql.toString(),
-					WdsPubResulSetProcesser.COLUMNPROCESSOR));
-			// 情况1 : 如果未查询到销售出库对应表体单据,则不是虚拟安排,按正常安排流程走
-			if (noutnum.doubleValue() ==0)
-				continue;
-			//订单已安排量
-			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero( datas[i].getNtaldcnum());
-			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNnumber());
-			UFDouble npacknum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNpacknumber());
-			UFDouble nhsl = new UFDouble(1);
-			if(npacknum.doubleValue() >0){
-				nhsl = nnum.div(npacknum);
-			}
-			//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
-			if(noutnum.sub(ntaldcnum).doubleValue()>0){
-				datas[i].setIsxnap(UFBoolean.TRUE);
-				UFDouble nlefnum = noutnum.sub(ntaldcnum);
-				datas[i].setNnumber(nlefnum);
-				if(npacknum.doubleValue() >0){
-					datas[i].setNpacknumber(nlefnum.div(nhsl));
-				}
-			}
-		}
-		SoDealBoUtils2 util = new SoDealBoUtils2();
-		util.arrangStornumout(SQLHelper.getCorpPk(), pk_storedoc, datas);
+//		/**
+//		 * liuys add 
+//		 * 虚拟流程查询, 根据销售订单查询ERP销售出库,如果有对应的销售出库单并且该单标识为虚拟安排,则在销售计划安排只能查询出虚拟流程的单据
+//		 *  出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量
+//		 * 
+//		 */ 
+//		String pk = null;
+//		for (int i = 0; i < datas.length; i++) {
+//			pk = PuPubVO.getString_TrimZeroLenAsNull(datas[i].getCorder_bid());
+//			if(pk == null){
+//				continue;
+//			}
+//			StringBuffer generalSql = new StringBuffer();
+//			generalSql.append(" select sum(ic_general_b.noutnum) from ic_general_h ");
+//			generalSql.append(" join ic_general_b on ");
+//			generalSql.append(" ic_general_h.cgeneralhid = ic_general_b.cgeneralhid");
+//			generalSql.append(" where isnull(ic_general_h.dr,0)=0 ");
+//			generalSql.append(" and isnull(ic_general_b.dr,0)=0 ");
+//			generalSql.append(" and ic_general_h.fbillflag='"+BillStatus.AUDIT+"' ");
+//			generalSql.append(" and ic_general_h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
+//			generalSql.append(" and ic_general_b.csourcebillbid='"+pk + "'");
+//			UFDouble noutnum =PuPubVO.getUFDouble_NullAsZero( getDao().executeQuery(generalSql.toString(),
+//					WdsPubResulSetProcesser.COLUMNPROCESSOR));
+//			// 情况1 : 如果未查询到销售出库对应表体单据,则不是虚拟安排,按正常安排流程走
+//			if (noutnum.doubleValue() ==0)
+//				continue;
+//			//订单已安排量
+//			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero( datas[i].getNtaldcnum());
+//			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNnumber());
+//			UFDouble npacknum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNpacknumber());
+//			UFDouble nhsl = new UFDouble(1);
+//			if(npacknum.doubleValue() >0){
+//				nhsl = nnum.div(npacknum);
+//			}
+//			//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
+//			if(noutnum.sub(ntaldcnum).doubleValue()>0){
+//				datas[i].setIsxnap(UFBoolean.TRUE);
+//				UFDouble nlefnum = noutnum.sub(ntaldcnum);
+//				datas[i].setNnumber(nlefnum);
+//				if(npacknum.doubleValue() >0){
+//					datas[i].setNpacknumber(nlefnum.div(nhsl));
+//				}
+//			}
+//		}
+//		SoDealBoUtils2 util = new SoDealBoUtils2();
+//		util.arrangStornumout(SQLHelper.getCorpPk(), pk_storedoc, datas);
 		return datas;
 	}
 
