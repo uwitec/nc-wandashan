@@ -207,15 +207,25 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 				vo.setPk_invbasdoc(pk_invbasdoc);
 				vo.setSs_pk(pk_ss);
 				StockInvOnHandVO[] vos = null;
+				StockInvOnHandVO[] vos1 = null;// 可用量
+
 				try {
 					vos = (StockInvOnHandVO[]) event.getStock()
 							.queryStockCombinForClient(
 									new StockInvOnHandVO[] { vo });
+					vos1 = (StockInvOnHandVO[]) event.getAbo()
+					.queryStockCombinForClient(
+							new StockInvOnHandVO[] { vo });
+
 				} catch (Exception e1) {
 					getPanel().getBodyBillModel().setValueAt(null, row,
 							"nstorenumout");// 库存主数量
 					getPanel().getBodyBillModel().setValueAt(null, row,
 							"anstorenumout");// 库存辅数量
+					getPanel().getBodyBillModel().setValueAt(null, row,
+					"ndrqstorenumout");// 可用主数量
+			getPanel().getBodyBillModel().setValueAt(null, row,
+					"ndrqarrstorenumout");// 可用辅数量
 					e1.printStackTrace();
 					showErrorMessage("获取现存量失败");
 				}
@@ -224,12 +234,29 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 							"nstorenumout");// 库存主数量
 					getPanel().getBodyBillModel().setValueAt(null, row,
 							"anstorenumout");// 库存辅数量
+					getPanel().getBodyBillModel().setValueAt(null, row,
+					"ndrqstorenumout");// 可用主数量
+			getPanel().getBodyBillModel().setValueAt(null, row,
+					"ndrqarrstorenumout");// 可用辅数量
 					return;
 				}
 				getPanel().getBodyBillModel().setValueAt(
 						vos[0].getWhs_stocktonnage(), row, "nstorenumout");// 库存主数量
 				getPanel().getBodyBillModel().setValueAt(
 						vos[0].getWhs_stocktonnage(), row, "anstorenumout");// 库存辅数量
+				if (vos1 == null || vos1.length == 0 || vos1[0] == null) {
+					getPanel().getBodyBillModel().setValueAt(null, row,
+							"ndrqstorenumout");// 可用主数量
+					getPanel().getBodyBillModel().setValueAt(null, row,
+							"ndrqarrstorenumout");// 可用辅数量
+					return;
+				} else {
+					getPanel().getBodyBillModel().setValueAt(
+							vos1[0].getWhs_stocktonnage(), row, "ndrqstorenumout");// 可用主数量
+					getPanel().getBodyBillModel()
+							.setValueAt(vos1[0].getWhs_stockpieces(), row,
+									"ndrqarrstorenumout");// 可用辅数量
+				}
 			}
 		}
 

@@ -13,6 +13,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -24,32 +25,36 @@ public class PlanDealEventHandler {
 
 	private PlanDealQryDlg m_qrypanel = null;
 	// 数据缓存
-//	private PlanDealVO[] m_billdatas = null;
-//	private List<PlanDealVO> lseldata = new ArrayList<PlanDealVO>();
-	private String  whereSql = null;
+	// private PlanDealVO[] m_billdatas = null;
+	// private List<PlanDealVO> lseldata = new ArrayList<PlanDealVO>();
+	private String whereSql = null;
 
 	public PlanDealEventHandler(PlanDealClientUI parent) {
 		super();
 		ui = parent;
-//		getDataPane().addSortRelaObjectListener2(this);
+		// getDataPane().addSortRelaObjectListener2(this);
 
 	}
-    private AvailNumBO  abo=null;
-    public AvailNumBO getAbo(){
-    	
-    	if(abo==null){
-    		abo=new AvailNumBO();
-    	}
-    	return abo;
-    }
-	private BillStockBO1 stock=null;
-	
-	public BillStockBO1 getStock(){
-		if(stock ==null){
-			stock =new BillStockBO1();
+
+	private AvailNumBO abo = null;
+
+	public AvailNumBO getAbo() {
+
+		if (abo == null) {
+			abo = new AvailNumBO();
 		}
-		return stock ;
+		return abo;
 	}
+
+	private BillStockBO1 stock = null;
+
+	public BillStockBO1 getStock() {
+		if (stock == null) {
+			stock = new BillStockBO1();
+		}
+		return stock;
+	}
+
 	private BillModel getDataPane() {
 		return ui.getPanel().getBodyBillModel();
 	}
@@ -72,42 +77,48 @@ public class PlanDealEventHandler {
 		}
 	}
 
-//	private PlanDealVO[] getDataBuffer() {
-//		return m_billdatas;
-//	}
+	// private PlanDealVO[] getDataBuffer() {
+	// return m_billdatas;
+	// }
 
 	public void onNoSel() {
 		int rowcount = getDataPane().getRowCount();
-	if(rowcount <= 0)
-		return;
-//	for (int i = 0; i < ui.getPanel().getChildListPanel().getTable().getRowCount(); i++) {
-//		ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.UNSTATE);
-//		ui.headRowChange(i);
-//		BillModel model = ui.getPanel().getBodyBillModel();
-//		IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
-//		model.removeRowStateChangeEventListener();
+		if (rowcount <= 0)
+			return;
+		// for (int i = 0; i <
+		// ui.getPanel().getChildListPanel().getTable().getRowCount(); i++) {
+		// ui.getPanel().getParentListPanel().getTableModel().setRowState(i,
+		// BillModel.UNSTATE);
+		// ui.headRowChange(i);
+		// BillModel model = ui.getPanel().getBodyBillModel();
+		// IBillModelRowStateChangeEventListener l =
+		// model.getRowStateChangeEventListener();
+		// model.removeRowStateChangeEventListener();
 		ui.getPanel().getChildListPanel().cancelSelectAllTableRow();
-//		model.addRowStateChangeEventListener(l);
+		// model.addRowStateChangeEventListener(l);
 		ui.getPanel().updateUI();
-//	}
+		// }
 	}
 
-//	private void clearCache() {
-//		lseldata.clear();
-//		// tsInfor.clear();
-//	}
+	// private void clearCache() {
+	// lseldata.clear();
+	// // tsInfor.clear();
+	// }
 
 	public void onAllSel() {
-//		for (int i = 0; i < ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
-//			ui.getPanel().getParentListPanel().getTableModel().setRowState(i, BillModel.SELECTED);
-//			ui.headRowChange(i);
-//			BillModel model = ui.getPanel().getBodyBillModel();
-//			IBillModelRowStateChangeEventListener l = model.getRowStateChangeEventListener();
-//			model.removeRowStateChangeEventListener();
-			ui.getPanel().getChildListPanel().selectAllTableRow();
-//			model.addRowStateChangeEventListener(l);
-			ui.getPanel().updateUI();
-//		}
+		// for (int i = 0; i <
+		// ui.getPanel().getParentListPanel().getTable().getRowCount(); i++) {
+		// ui.getPanel().getParentListPanel().getTableModel().setRowState(i,
+		// BillModel.SELECTED);
+		// ui.headRowChange(i);
+		// BillModel model = ui.getPanel().getBodyBillModel();
+		// IBillModelRowStateChangeEventListener l =
+		// model.getRowStateChangeEventListener();
+		// model.removeRowStateChangeEventListener();
+		ui.getPanel().getChildListPanel().selectAllTableRow();
+		// model.addRowStateChangeEventListener(l);
+		ui.getPanel().updateUI();
+		// }
 	}
 
 	private PlanDealQryDlg getQryDlg() {
@@ -124,8 +135,8 @@ public class PlanDealEventHandler {
 	}
 
 	private void clearData() {
-//		m_billdatas = null;
-//		lseldata.clear();
+		// m_billdatas = null;
+		// lseldata.clear();
 		getDataPane().clearBodyData();
 		tsInfor.clear();
 	}
@@ -165,60 +176,69 @@ public class PlanDealEventHandler {
 		}
 		setDataToUI(billdatas);
 	}
-	private void setAvailNum(PlanDealVO[] billdatas) throws Exception {		
-		if(billdatas==null || billdatas.length==0)
-			return ;
-		for(int i=0;i<billdatas.length;i++){
+
+	private void setAvailNum(PlanDealVO[] billdatas) throws Exception {
+		if (billdatas == null || billdatas.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
 		}
-		//构造现存量查询条件
-		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
-		if(vos==null || vos.length==0)
+		// 构造现存量查询条件
+		StockInvOnHandVO[] vos = (StockInvOnHandVO[]) SingleVOChangeDataUiTool
+				.runChangeVOAry(billdatas, StockInvOnHandVO.class,
+						"nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
+		if (vos == null || vos.length == 0)
 			return;
-		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getAbo().getAvailNumForClient(vos);
-		if(nvos==null || nvos.length==0)
-			return ;
-		for(int i=0;i<billdatas.length;i++){
-			if(nvos[i]!=null){		
-				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//可用主数量
-				UFDouble uf2=nvos[i].getWhs_stockpieces();//可用辅数量
+		StockInvOnHandVO[] nvos = (StockInvOnHandVO[]) getAbo()
+				.getAvailNumForClient(vos);
+		if (nvos == null || nvos.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
+			if (nvos[i] != null) {
+				UFDouble uf1 = nvos[i].getWhs_stocktonnage();// 可用主数量
+				UFDouble uf2 = nvos[i].getWhs_stockpieces();// 可用辅数量
 				billdatas[i].setNdrqarrstorenumout(uf1);
 				billdatas[i].setNdrqstorenumout(uf2);
 			}
 		}
 	}
+
 	/**
 	 * 设置库存 量
+	 * 
 	 * @作者：zhf
-	 * @说明：完达山物流项目 
+	 * @说明：完达山物流项目
 	 * @时间：2012-7-3上午10:36:27
 	 * @param billdatas
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void setStock(PlanDealVO[] billdatas) throws Exception {		
-		if(billdatas==null || billdatas.length==0)
-			return ;
-		for(int i=0;i<billdatas.length;i++){
+	private void setStock(PlanDealVO[] billdatas) throws Exception {
+		if (billdatas == null || billdatas.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
 		}
-		//构造现存量查询条件
-		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
-		if(vos==null || vos.length==0)
+		// 构造现存量查询条件
+		StockInvOnHandVO[] vos = (StockInvOnHandVO[]) SingleVOChangeDataUiTool
+				.runChangeVOAry(billdatas, StockInvOnHandVO.class,
+						"nc.ui.wds.self.changedir.CHGWDS2TOACCOUNTNUM");
+		if (vos == null || vos.length == 0)
 			return;
-		//获得现存量
-		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getStock().queryStockCombinForClient(vos);
-		if(nvos==null || nvos.length==0)
-			return ;
-		for(int i=0;i<billdatas.length;i++){
-			if(nvos[i]!=null){		
-				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
+		// 获得现存量
+		StockInvOnHandVO[] nvos = (StockInvOnHandVO[]) getStock()
+				.queryStockCombinForClient(vos);
+		if (nvos == null || nvos.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
+			if (nvos[i] != null) {
+				UFDouble uf1 = nvos[i].getWhs_stocktonnage();// 库存主数量
 				billdatas[i].setNstorenumout(uf1);
 			}
 		}
 	}
-	
+
 	Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
-	
+
 	/**
 	 * 
 	 * @作者：lyf
@@ -226,35 +246,36 @@ public class PlanDealEventHandler {
 	 * @时间：2011-11-14下午07:41:04
 	 * @param billdatas
 	 */
-	public void setDataToUI(PlanDealVO[] billdatas ){
+	public void setDataToUI(PlanDealVO[] billdatas) {
 		clearData();
 		if (billdatas == null || billdatas.length == 0) {
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
-		}	
-//		处理时间戳
-//		Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
-		for(PlanDealVO data:billdatas){
+		}
+		// 处理时间戳
+		// Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();
+		for (PlanDealVO data : billdatas) {
 			tsInfor.put(data.getPrimaryKey(), data.getTs());
-		}	
+		}
 		// 处理查询出的计划 缓存 界面
 		getDataPane().setBodyDataVO(billdatas);
 		getDataPane().execLoadFormula();
-//		billdatas = (PlanDealVO[]) getDataPane().getBodyValueVOs(
-//				PlanDealVO.class.getName());
-//		for(PlanDealVO data:billdatas){
-//			data.setTs(tsInfor.get(data.getPrimaryKey()));
-//		}
-//		setDataBuffer(billdatas);
+		// billdatas = (PlanDealVO[]) getDataPane().getBodyValueVOs(
+		// PlanDealVO.class.getName());
+		// for(PlanDealVO data:billdatas){
+		// data.setTs(tsInfor.get(data.getPrimaryKey()));
+		// }
+		// setDataBuffer(billdatas);
 		showHintMessage("查询完成");
 	}
+
 	/**
 	 * 
 	 * @作者：lyf
 	 * @说明：完达山物流项目 ：刷新
 	 * @时间：2011-11-14下午07:32:22
 	 */
-	public void onRefresh(){
+	public void onRefresh() {
 		clearData();
 		PlanDealVO[] billdatas = null;
 		try {
@@ -284,12 +305,15 @@ public class PlanDealEventHandler {
 		}
 		whereSql.append("  nvl(wds_sendplanin.dr,0)=0");
 		whereSql.append(" and nvl(wds_sendplanin_b.dr,0)=0 ");
-		whereSql.append(" and wds_sendplanin.pk_corp='" + ui.cl.getCorp() + "'");
+		whereSql
+				.append(" and wds_sendplanin.pk_corp='" + ui.cl.getCorp() + "'");
 		whereSql.append(" and wds_sendplanin.vbillstatus=1 ");
 		whereSql.append(" and wds_sendplanin.iplantype=0 ");
-		whereSql.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
-//		zhf 追加 支持过滤关闭 计划
-		whereSql.append(" and coalesce(wds_sendplanin_b.reserve14,'N')='N' and coalesce(wds_sendplanin.reserve14,'N') = 'N' ");
+		whereSql
+				.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
+		// zhf 追加 支持过滤关闭 计划
+		whereSql
+				.append(" and coalesce(wds_sendplanin_b.reserve14,'N')='N' and coalesce(wds_sendplanin.reserve14,'N') = 'N' ");
 		String cwhid = getLoginInforHelper().getLogInfor(
 				ui.m_ce.getUser().getPrimaryKey()).getWhid();
 		if (!WdsWlPubTool.isZc(cwhid)) {
@@ -308,9 +332,9 @@ public class PlanDealEventHandler {
 		return helper;
 	}
 
-//	private void setDataBuffer(PlanDealVO[] billdatas) {
-//		this.m_billdatas = billdatas;
-//	}
+	// private void setDataBuffer(PlanDealVO[] billdatas) {
+	// this.m_billdatas = billdatas;
+	// }
 
 	/**
 	 * 
@@ -319,14 +343,15 @@ public class PlanDealEventHandler {
 	 * @时间：2011-3-25下午02:59:20
 	 */
 	public void onXNDeal() {
-//		if (lseldata == null || lseldata.size() == 0) {
-//			showWarnMessage("请选中要处理的数据");
-//			return;
-//		}
-//		XnApDLG tdpDlg = new XnApDLG(WdsWlPubConst.XNAP, ui.getEviment().getUser()
-//				.getPrimaryKey(), ui.getEviment().getCorporation()
-//				.getPk_corp(), ui, lseldata);
-//		if(tdpDlg.showModal()== UIDialog.ID_OK){}
+		// if (lseldata == null || lseldata.size() == 0) {
+		// showWarnMessage("请选中要处理的数据");
+		// return;
+		// }
+		// XnApDLG tdpDlg = new XnApDLG(WdsWlPubConst.XNAP,
+		// ui.getEviment().getUser()
+		// .getPrimaryKey(), ui.getEviment().getCorporation()
+		// .getPk_corp(), ui, lseldata);
+		// if(tdpDlg.showModal()== UIDialog.ID_OK){}
 		// nc.ui.pub.print.IDataSource dataSource = new DealDataSource(
 		// ui.getBillListPanel(), WdsWlPubConst.DM_PLAN_DEAL_NODECODE);
 		// nc.ui.pub.print.PrintEntry print = new
@@ -339,9 +364,6 @@ public class PlanDealEventHandler {
 
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @作者：zhf
@@ -362,20 +384,22 @@ public class PlanDealEventHandler {
 			showWarnMessage("请选中要处理的数据");
 			return;
 		}
-		
+
 		int[] rows = ui.getPanel().getBodyTable().getSelectedRows();
-		if(rows == null || rows.length == 0) {
+		if (rows == null || rows.length == 0) {
 			showErrorMessage("请选中要处理的数据");
 			return;
-		}		
-		
-		PlanDealVO[] vos = (PlanDealVO[])getDataPane().getBodySelectedVOs(PlanDealVO.class.getName());
-		if(vos == null || vos.length == 0){
+		}
+
+		PlanDealVO[] vos = (PlanDealVO[]) getDataPane().getBodySelectedVOs(
+				PlanDealVO.class.getName());
+		if (vos == null || vos.length == 0) {
 			showErrorMessage("数据获取失败,请重新操作");
 			return;
 		}
-		
-		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(Arrays.asList(vos), "nnum");
+
+		List<SuperVO> ldata = WdsWlPubTool.filterVOsZeroNum(Arrays.asList(vos),
+				"nnum");
 		if (ldata == null || ldata.size() == 0) {
 			showErrorMessage("选中数据没有安排");
 			return;
@@ -383,9 +407,13 @@ public class PlanDealEventHandler {
 		try {
 			PlanDealVO tmp = null;
 			for (SuperVO vo : ldata) {
-				tmp = (PlanDealVO)vo;
+				tmp = (PlanDealVO) vo;
 				tmp.validataOnDeal();
 				tmp.setTs(tsInfor.get(tmp.getPrimaryKey()));
+			}
+			if(!valute(ldata)){
+				ui.showErrorMessage("可用量不够");
+				return;
 			}
 			PlanDealHealper.doDeal(ldata, ui);
 		} catch (Exception e) {
@@ -402,40 +430,69 @@ public class PlanDealEventHandler {
 		onRefresh();
 	}
 
-//	public void afterEdit(BillEditEvent e) {
-//		// TODO Auto-generated method stub
-//		int row = e.getRow();
-//		String key = e.getKey();
-//		if (row < 0)
-//			return;
-//		if (key.equalsIgnoreCase("bsel")) {
-//			UFBoolean bsel = PuPubVO.getUFBoolean_NullAs(getDataPane()
-//					.getValueAt(row, "bsel"), UFBoolean.FALSE);
-//			if (bsel.booleanValue()) {
-//				lseldata.add(getDataBuffer()[row]);
-//			} else {
-//				lseldata.remove(getDataBuffer()[row]);
-//			}
-//		} else if ("nnum".equalsIgnoreCase(key)) {
-//			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
-//					.getHsl());
-//			UFDouble num = e.getValue() == null ? new UFDouble(0)
-//					: new UFDouble(e.getValue().toString());
-//			if(hsl != null && hsl.doubleValue()>0){
-//				getDataBuffer()[row].setNassnum(num.div(hsl));
-//				ui.getPanel().getHeadBillModel().setValueAt(num.div(hsl), row, "nassnum");
-//			}
-//		} else if ("nassnum".equalsIgnoreCase(key)) {
-//			UFDouble assnum = e.getValue() == null ? new UFDouble(0)
-//			: new UFDouble(e.getValue().toString());
-//			UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
-//					.getHsl());	
-//			getDataBuffer()[row].setNnum(hsl.multiply(assnum));
-//			getDataBuffer()[row].setNassnum(assnum);
-//			ui.getPanel().getHeadBillModel().setValueAt(hsl.multiply(assnum), row, "nnum");
-//		}
-//
-//	}
+	/**
+	 * 校验可用量是否够用
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-27上午10:40:44
+	 * @param ldata
+	 */
+	private boolean valute(List<SuperVO> ldata) {
+		if(ldata==null || ldata.size()==0){
+			return true;
+		}
+		for(int i=0;i<ldata.size();i++){
+			SuperVO vo=ldata.get(i);
+			//安排量
+			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
+			//可用量
+			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
+			if((uf2.sub(uf1)).doubleValue()<0){
+				return false;
+			}else{
+				return true;
+			}
+		}
+		return true;
+	}
+
+	// public void afterEdit(BillEditEvent e) {
+	// // TODO Auto-generated method stub
+	// int row = e.getRow();
+	// String key = e.getKey();
+	// if (row < 0)
+	// return;
+	// if (key.equalsIgnoreCase("bsel")) {
+	// UFBoolean bsel = PuPubVO.getUFBoolean_NullAs(getDataPane()
+	// .getValueAt(row, "bsel"), UFBoolean.FALSE);
+	// if (bsel.booleanValue()) {
+	// lseldata.add(getDataBuffer()[row]);
+	// } else {
+	// lseldata.remove(getDataBuffer()[row]);
+	// }
+	// } else if ("nnum".equalsIgnoreCase(key)) {
+	// UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
+	// .getHsl());
+	// UFDouble num = e.getValue() == null ? new UFDouble(0)
+	// : new UFDouble(e.getValue().toString());
+	// if(hsl != null && hsl.doubleValue()>0){
+	// getDataBuffer()[row].setNassnum(num.div(hsl));
+	// ui.getPanel().getHeadBillModel().setValueAt(num.div(hsl), row,
+	// "nassnum");
+	// }
+	// } else if ("nassnum".equalsIgnoreCase(key)) {
+	// UFDouble assnum = e.getValue() == null ? new UFDouble(0)
+	// : new UFDouble(e.getValue().toString());
+	// UFDouble hsl = PuPubVO.getUFDouble_NullAsZero(getDataBuffer()[row]
+	// .getHsl());
+	// getDataBuffer()[row].setNnum(hsl.multiply(assnum));
+	// getDataBuffer()[row].setNassnum(assnum);
+	// ui.getPanel().getHeadBillModel().setValueAt(hsl.multiply(assnum), row,
+	// "nnum");
+	// }
+	//
+	// }
 
 	private void showErrorMessage(String msg) {
 		ui.showErrorMessage(msg);
@@ -449,14 +506,14 @@ public class PlanDealEventHandler {
 		ui.showHintMessage(msg);
 	}
 
-//	public Object[] getRelaSortObjectArray() {
-//		// TODO Auto-generated method stub
-//		return getDataBuffer();
-//	}
-//
-//	public void bodyRowChange(BillEditEvent e) {
-//		// TODO Auto-generated method stub
-//
-//	}
+	// public Object[] getRelaSortObjectArray() {
+	// // TODO Auto-generated method stub
+	// return getDataBuffer();
+	// }
+	//
+	// public void bodyRowChange(BillEditEvent e) {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 }

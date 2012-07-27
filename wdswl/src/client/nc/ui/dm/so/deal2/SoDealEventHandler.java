@@ -8,10 +8,12 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.wl.pub.FilterNullBody;
+import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -22,6 +24,8 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.IFilter;
 import nc.vo.trade.voutils.VOUtil;
+import nc.vo.wdsnew.pub.AvailNumBO;
+import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -32,11 +36,27 @@ public class SoDealEventHandler{
 	private SoDealBillVO[] m_buffer = null;
 	private SoDealVO[] m_billdatas = null;
 	
+	
 	public SoDealEventHandler(SoDealClientUI parent){
 		super();
 		ui = parent;		
 	}
-
+	private BillStockBO1 stock=null;
+	
+	public BillStockBO1 getStock(){
+		if(stock ==null){
+			stock =new BillStockBO1();
+		}
+		return stock ;
+	}
+	  private AvailNumBO  abo=null;
+	    public AvailNumBO getAbo(){
+	    	
+	    	if(abo==null){
+	    		abo=new AvailNumBO();
+	    	}
+	    	return abo;
+	    }
 	private BillModel getDataPane(){
 		return getHeadDataPane();
 	}
@@ -70,7 +90,58 @@ public class SoDealEventHandler{
 			ui.showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 		}
 	}
-	
+	/**
+	 * 设置先存量信息
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-2下午01:31:22
+	 * @param billdatas
+	 * @throws Exception 
+	 */
+	private void setStock(SoDealVO[] billdatas) throws Exception {
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		//获得现存量
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getStock().queryStockCombinForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//库存主数量
+				billdatas[i].setNstorenumout(uf1);
+			}
+		}
+	}
+	private void setAvailNum(SoDealVO[] billdatas) throws Exception {		
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getAbo().getAvailNumForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//可用主数量
+				UFDouble uf2=nvos[i].getWhs_stockpieces();//可用辅数量
+				billdatas[i].setNdrqarrstorenumout(uf1);
+				billdatas[i].setNdrqstorenumout(uf2);
+			}
+		}
+	}
+
 	public SoDealBillVO[] getDataBuffer(){
 		return m_buffer;
 	}
@@ -169,6 +240,10 @@ public class SoDealEventHandler{
 			showHintMessage("查询完成：没有满足条件的数据");
 			return;
 		}
+		//设置现存量
+		setStock(m_billdatas);
+		//设置可用量
+		setAvailNum(m_billdatas);
 		//对数据进行合并  按客户合并  订单日期取最小订单日期
 		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),m_billdatas);
 		clearData();
@@ -316,6 +391,10 @@ public class SoDealEventHandler{
 		// 1.null:所有客户的发货量都未达到最小发货量
 		// 2.Object[] { isauto, null, null ,reasons}:所有客户都待安排的存货中，都包含可用量不足的存货
 		// 3.Object[] { isauto, lcust, lnum,reasons}：有需要手动安排的客户
+		if(!valute(dealBills)){
+			ui.showErrorMessage("可用量不够");
+			return;
+		}
 		Object o = SoDealHealper.doDeal(dealBills, ui);
 		boolean flag = false;
 		UFBoolean isauto = UFBoolean.FALSE;
@@ -362,6 +441,35 @@ public class SoDealEventHandler{
 		onRefresh();
 		ui.showHintMessage("本次安排结束");
 	}
+	/**
+	 * 可用量校验
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-27上午10:52:07
+	 * @param dealBills
+	 * @return
+	 */
+	private boolean valute(SoDealBillVO[] dealBills) {
+		if(dealBills==null || dealBills.length==0)
+			return true;
+		for(int i =0;i<dealBills.length;i++){
+			SoDealBillVO bill=dealBills[i];
+			SoDealVO[] vos= bill.getBodyVos();
+			for(int j=0;j<vos.length;j++){
+				SoDealVO vo=vos[j];
+				//安排量
+				UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
+				//可用量
+				UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
+				if((uf2.sub(uf1)).doubleValue()<0){
+					return false;
+				}else{
+					return true;
+				}			
+			}
+		}	
+	    return true;
+   }
 	/**
 	 * 
 	 * @作者：校验，赠品单是否被拆分

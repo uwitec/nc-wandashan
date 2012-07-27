@@ -9,6 +9,7 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.wl.pub.FilterNullBody;
 import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
+import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.db.deal.DbDeHeaderVo;
 import nc.vo.dm.db.deal.DbDealBillVO;
 import nc.vo.dm.db.deal.DbDealVO;
@@ -25,6 +26,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.VOUtil;
+import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
@@ -49,6 +51,14 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 		}
 		return stock ;
 	}
+    private AvailNumBO  abo=null;
+    public AvailNumBO getAbo(){
+    	
+    	if(abo==null){
+    		abo=new AvailNumBO();
+    	}
+    	return abo;
+    }
 	
 	
 //	UFBoolean getOrderType(){
@@ -224,6 +234,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 		}
 		try {
 			setStock(billdatas);
+			setAvailNum(billdatas);
 		} catch (Exception e) {
 			e.printStackTrace();
 			showErrorMessage("设置库存量异常");
@@ -259,6 +270,28 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 				billdatas[i].setNstorenumout(uf1);
 				UFDouble  uf2=nvos[i].getWhs_stockpieces();//库存辅数量
 				billdatas[i].setAnstorenumout(uf2);
+			}
+		}
+	}
+	private void setAvailNum(DbDealVO[] billdatas) throws Exception {		
+		if(billdatas==null || billdatas.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		}
+		//构造现存量查询条件
+		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDSBTOACCOUNTNUM");
+		if(vos==null || vos.length==0)
+			return;
+		StockInvOnHandVO[] nvos=(StockInvOnHandVO[]) getAbo().getAvailNumForClient(vos);
+		if(nvos==null || nvos.length==0)
+			return ;
+		for(int i=0;i<billdatas.length;i++){
+			if(nvos[i]!=null){		
+				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//可用主数量
+				UFDouble uf2=nvos[i].getWhs_stockpieces();//可用辅数量
+				billdatas[i].setNdrqarrstorenumout(uf1);
+				billdatas[i].setNdrqstorenumout(uf2);
 			}
 		}
 	}
@@ -411,6 +444,10 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 			for(SuperVO vo:ldata){
 				//((DbDealVO)vo).validataOnDeal();
 			}
+			if(!valute(ldata)){
+				ui.showErrorMessage("可用量不够");
+				return;
+			}
 			DbDealHealper.doDeal(ldata, ui);
 			onRefresh();
 		}catch(Exception e){
@@ -422,6 +459,32 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
 			return;
 		}
+	}
+	/**
+	 * 校验可用量是否够用
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-27上午10:40:44
+	 * @param ldata
+	 */
+	private boolean valute(List<SuperVO> ldata) {
+		if(ldata==null || ldata.size()==0){
+			return true;
+		}
+		for(int i=0;i<ldata.size();i++){
+			SuperVO vo=ldata.get(i);
+			//安排量
+			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
+			//可用量
+			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
+			if((uf2.sub(uf1)).doubleValue()<0){
+				return false;
+			}else{
+				return true;
+			}
+		}
+		return true;
 	}
 	
 	/**
