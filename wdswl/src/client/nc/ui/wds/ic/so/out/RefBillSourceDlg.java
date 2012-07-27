@@ -4,6 +4,7 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wdsnew.pub.MBillSourceDLG;
 import nc.ui.wdsnew.pub.PowerGetTool;
+import nc.ui.wl.pub.LoginInforHelper;
 /**
  * 销售出库参照销售运单(WDS5)对话框
  * 按 操作员 绑定货位 过滤存货
@@ -14,6 +15,7 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 	private static final long serialVersionUID = 1L;
 	//获得权限过滤的sql
 	String sql=null;
+	private LoginInforHelper lo=new LoginInforHelper();
 	
 	private String getPowerSql(){
 		if (sql == null || sql.length() == 0)
@@ -32,6 +34,7 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 			Container parent) {
 		super(pkField, pkCorp, operator, funNode, queryWhere, billType, businessType,
 				templateId, currentBillType, parent);
+		init();
 	}
 	public RefBillSourceDlg(String pkField, String pkCorp, String operator,
 			String funNode, String queryWhere, String billType,
@@ -39,13 +42,23 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 			String nodeKey, Object userObj, Container parent) {
 		super(pkField, pkCorp, operator, funNode, queryWhere, billType, businessType,
 				templateId, currentBillType, nodeKey, userObj, parent);
+		init();
 	}
 
+	private void init() {
+		setSpiltFields(new String[]{"pk_outwhouse"});
+		setSpiltFields1(new String []{"isxnap"});
+	}
 	public String getHeadCondition() {
-			
-		return "  coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
-				" and wds_soorder_b.pk_invmandoc in ("+getPowerSql()+")";
-		
+		String sql=null;	
+		try {
+			sql= "  coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
+				   " and wds_soorder_b.pk_invmandoc in ("+getPowerSql()+")"+
+			       " and wds_soorder.pk_outwhouse ='"+lo.getCwhid(ClientEnvironment.getInstance().getUser().getPrimaryKey())+"'";//过滤当前操作员绑定的仓库
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sql;
 	}	
 	public String getBodyCondition(){
 		return " isnull(wds_soorder_b.dr,0)=0 and coalesce(wds_soorder_b.narrangnmu,0)-coalesce(wds_soorder_b.noutnum,0)>0"+//安排数量-出库数量>0
