@@ -100,6 +100,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				break;	
 			}
 	}
+	
 	/**
 	 * 拣货对应的页签
 	 * 必须在出库子表页签

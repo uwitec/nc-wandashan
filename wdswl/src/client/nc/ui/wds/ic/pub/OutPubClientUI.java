@@ -103,13 +103,11 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 			getButtonManager().getButton(IBillButton.Query).setEnabled(false);//²éÑ¯
 			getButtonManager().getButton(IBillButton.Del).setEnabled(false);//×÷·Ï
 			getButtonManager().getButton(IBillButton.Refresh).setEnabled(false);//Ë¢ÐÂ
-			getButtonManager().getButton(IBillButton.Add).setEnabled(false);
 			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(true);
 			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qzqr).setEnabled(false);
 			getButtonManager().getButton(nc.ui.wds.w80060206.buttun0206.ISsButtun.Qxqz).setEnabled(false);
 			
 		}else{
-			getButtonManager().getButton(IBillButton.Add).setEnabled(true);
 			getButtonManager().getButton(nc.ui.wds.w8004040204.ssButtun.ISsButtun.fzgn).setEnabled(false);			
 			getButtonManager().getButton(IBillButton.Refbill).setEnabled(true);
 			getButtonManager().getButton(IBillButton.Query).setEnabled(true);

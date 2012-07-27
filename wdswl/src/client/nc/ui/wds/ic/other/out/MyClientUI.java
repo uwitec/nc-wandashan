@@ -63,7 +63,18 @@ public class MyClientUI extends OutPubClientUI implements
 		return HYPubBO_Client.getBillNo(WdsWlPubConst.BILLTYPE_OTHER_OUT,
 				_getOperator(), null, null);
 	}
+	public void updateSpecialButton(){
+		MyBillVO agg = (MyBillVO)getBufferData().getCurrentVO();
+		TbOutgeneralHVO head  = (TbOutgeneralHVO)agg.getParentVO();
+		getButtonManager().getButton(IBillButton.Print).setEnabled(true);
+		if(head.getPrimaryKey() == null || "".equals(head.getPrimaryKey())){
+		    getButtonManager().getButton(IBillButton.Add).setEnabled(false);		
+		}else{
+			getButtonManager().getButton(IBillButton.Add).setEnabled(true);
 
+		}
+		super.updateSpecialButton();
+	}
 	/**
 	 * 保存和提交是否一起完成。 如果一起完成返回true 创建日期：(2004-2-27 11:32:56)
 	 * 
