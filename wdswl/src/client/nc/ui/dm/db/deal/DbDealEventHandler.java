@@ -477,7 +477,7 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 			//安排量
 			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
 			//可用量
-			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
+			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqstorenumout"));
 			if((uf2.sub(uf1)).doubleValue()<0){
 				return false;
 			}else{

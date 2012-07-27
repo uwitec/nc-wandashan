@@ -260,18 +260,18 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			}
 		}
 
-		public void bodyRowChange(BillEditEvent e) {
-			int row = e.getOldRow();
-			if(row <0){
-				return ;
-			}
-			int state = getPanel().getBodyBillModel().getRowState(row);
-			String csaleid = PuPubVO.getString_TrimZeroLenAsNull(getPanel().getBodyBillModel().getValueAt(row, "csaleid"));
-			if(isGift(csaleid)){
-				updateGiftState(csaleid,state);
-				updateUI();
-			}
-		}
+//		public void bodyRowChange(BillEditEvent e) {
+//			int row = e.getOldRow();
+//			if(row <0){
+//				return ;
+//			}
+//			int state = getPanel().getBodyBillModel().getRowState(row);
+//			String csaleid = PuPubVO.getString_TrimZeroLenAsNull(getPanel().getBodyBillModel().getValueAt(row, "csaleid"));
+//			if(isGift(csaleid)){
+//				updateGiftState(csaleid,state);
+//				updateUI();
+//			}
+//		}
 		/**
 		 * 
 		 * @作者：更改赠品单状态
@@ -320,7 +320,12 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 			return isGift;
 		}
 		public boolean beforeEdit(BillEditEvent e) {
-			return false;
+			return true;
+		}
+
+		public void bodyRowChange(BillEditEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	public void headRowChange(int iNewRow) {
