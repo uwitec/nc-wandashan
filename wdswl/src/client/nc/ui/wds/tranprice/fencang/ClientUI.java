@@ -13,6 +13,8 @@ import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.LoginInforVO;
 import nc.vo.wl.pub.WdsWlPubConst;
@@ -96,7 +98,16 @@ public class ClientUI extends BillManageUI  implements  BillCardBeforeEditListen
 //				"   and b.pk_wds_tanscorp_h='"+carriersid+"' and h.pk_corp='"+_getCorp().getPrimaryKey()+"') "			
 //				);
 //			}
-		}		
+		}	
+		
+		//add by yf 2012-07-27分仓运价表：如果表体最小吨数"nsmallnum" 为空或0  则 调整值 调整单位不能编辑   应用范围 必输
+		if("npriceadj".equalsIgnoreCase(key) || "iadjtype".equalsIgnoreCase(key)){
+			UFDouble nsmallnum = PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(e.getRow(), "nsmallnum"));
+			if(nsmallnum.toDouble() == 0){
+				return false;
+			}
+		}
+		//end add by yf
 		return true;
 	}
     
