@@ -32,7 +32,7 @@ public class SoorderVO extends SuperVO {
 	//发货地区
 	public String pk_sendareal;
 	// 是否大包粉
-	public UFBoolean fisbigflour;
+	public UFBoolean fisbigflour;//zhf  add 该字段在大包粉运费核算中起关键作用
 	// 打印次数
 	public Integer iprintcount;
 	// 主键
@@ -115,7 +115,7 @@ public class SoorderVO extends SuperVO {
 	public UFDate reserve13;
 	public UFBoolean reserve14;
 	public UFBoolean reserve15;//是否关闭----use by yf for:针对审批后部分发货的订单，关闭后下游单据不参照该订单
-	public UFBoolean reserve16;
+	public UFBoolean reserve16;//销售运单是否自提 字段
 	// 自定义项
 	public String vdef1;
 	public String vdef2;
