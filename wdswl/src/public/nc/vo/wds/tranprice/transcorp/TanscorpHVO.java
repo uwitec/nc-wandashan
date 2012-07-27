@@ -53,7 +53,7 @@
     		public UFDate reserve13;	
     		public UFBoolean reserve14;
     		public UFBoolean reserve15;
-    		public UFBoolean reserve16;	
+    		public UFBoolean reserve16;	//add by yf 2012-07-27承运商档案   启动布尔字段    是否自提 
     		//自定义项
     		public String vdef1;
     		public String vdef2;

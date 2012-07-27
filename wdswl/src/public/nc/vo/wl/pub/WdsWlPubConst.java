@@ -407,6 +407,8 @@ public class WdsWlPubConst {
 	
 	public static String sendorder_xn = "reserve16";//add by yf 2012-07-26发运订单虚拟字段(nc.vo.dm.order.SendorderBVO)
 	
+	public static String report_cldbfx_node = "80041001";///add by yf 2012-07-27存量对比分析节点
+	
 	
 	
 	

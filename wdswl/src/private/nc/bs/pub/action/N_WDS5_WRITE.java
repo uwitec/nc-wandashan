@@ -41,7 +41,7 @@ public class N_WDS5_WRITE extends AbstractCompiler2 {
 				// 进行数据回写
 				SoOrderBO bo = new SoOrderBO();
 				bo.writeBack(getVo(), IBDACTION.SAVE);
-
+				bo.chekcTranscorp(getVo());
 				// 进行单据保存操作
 				// 原先 保存呢类SoOrderBillSave
 				retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill",

@@ -50,8 +50,8 @@ public class ClientCHK extends BeforeActionCHK {
 	}
 
 	private void checkTranscorp(String pk_transcorp, boolean b) throws BusinessException {
-		Object o = HYPubBO_Client.findColValue("wds_transprice_h", "reserve16",
-				"pk_wds_transprice_h = '" + pk_transcorp + "'");
+		Object o = HYPubBO_Client.findColValue("wds_tanscorp_h", "reserve16",
+				"pk_wds_tanscorp_h = '" + pk_transcorp + "'");
 		if(PuPubVO.getUFBoolean_NullAs(o, UFBoolean.FALSE).booleanValue()){
 			throw new BusinessException("承运商不符合自提标准");
 		}
