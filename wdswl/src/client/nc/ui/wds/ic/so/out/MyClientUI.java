@@ -266,25 +266,7 @@ public class MyClientUI extends OutPubClientUI implements BillCardBeforeEditList
 		
 	}
 
-	public void afterUpdate() {
-		if (!getBufferData().isVOBufferEmpty()){
-			int row = getBufferData().getCurrentRow();
-			if(row < 0){
-				return;
-			}
-			BillItem[] body=	getBillCardPanel().getBillModel().getBodyItems();
-			
-			Object o = getBufferData().getCurrentVO().getParentVO().getAttributeValue(getBillField().getField_BillStatus());
-			if(o.equals(IBillStatus.FREE)){//×ÔÓÉ
-				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(false);
-				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(true);
-			}else{//Ç©×Ö
-				getButtonManager().getButton(ISsButtun.Qzqr).setEnabled(false);
-				getButtonManager().getButton(ISsButtun.Qxqz).setEnabled(true);
-			}
-			updateButtons();
-		}
-	}
+
 	@Override
 	public String getRefBillType() {
 		// TODO Auto-generated method stub
