@@ -27,7 +27,7 @@ public class RefBillQueryDlg extends WdsBillQueryDlg {
 	@Override
 	public String getWhereSQL() {
 		String sql=super.getWhereSQL();
-		String sqlplus = " isnull(wds_sendorder."+ WdsWlPubConst.soorder_close + " ,'N')= 'N' ";
+		String sqlplus = " isnull(wds_soorder."+ WdsWlPubConst.soorder_close + " ,'N')= 'N' ";
 		if(sql==null){
 			return sqlplus;
 		}
