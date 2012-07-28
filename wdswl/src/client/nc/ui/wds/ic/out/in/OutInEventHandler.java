@@ -12,6 +12,7 @@ import nc.ui.wds.ic.other.in.MyTpDateSource;
 import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
+import nc.ui.wds2.set.OutInSetHelper;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
@@ -73,11 +74,26 @@ public class OutInEventHandler extends InPubEventHandler {
 			onBillRef();
 //			zhf  参照新增时 不能增行
 			setBusidate();
+			setInType();
 			getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 			setInitWarehouse("geh_cwarehouseid");
 			break;	
 				
 		}
+	}
+	
+	public void setInType(){
+		try{
+			String outintype = OutInSetHelper
+			.getDefaultOutInTypeID(getBillCardPanelWrapper()
+					.getBillCardPanel().getBillModel(), "csourcetype",
+					false);
+			getBillCardPanelWrapper().getBillCardPanel().setHeadItem(
+					"geh_cdispatcherid", outintype);
+		}catch(BusinessException e){
+			e.printStackTrace();
+		}
+
 	}
 	
 	/**

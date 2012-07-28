@@ -1,7 +1,6 @@
 package nc.ui.wds.ic.other.in;
 
 import javax.swing.JComponent;
-
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITabbedPane;
@@ -19,10 +18,6 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
-import nc.ui.wds.w8004040214.buttun0214.CkmxBtn;
-import nc.ui.wds.w8004040214.buttun0214.FzgnBtn;
-import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
-import nc.ui.wds.w8004040214.buttun0214.ZdtpBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.trade.button.ButtonVO;
@@ -219,14 +214,14 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 	 */
 	protected void initPrivateButton() {
 		super.initPrivateButton();
-		FzgnBtn customizeButton1=new FzgnBtn();
-		addPrivateButton(customizeButton1.getButtonVO());
-		ZdtpBtn customizeButton2=new ZdtpBtn();
-		addPrivateButton(customizeButton2.getButtonVO());
-		CkmxBtn customizeButton3=new CkmxBtn();
-		addPrivateButton(customizeButton3.getButtonVO());
-		ZdrkBtn customizeButton4=new ZdrkBtn();
-		addPrivateButton(customizeButton4.getButtonVO());
+//		FzgnBtn customizeButton1=new FzgnBtn();
+//		addPrivateButton(customizeButton1.getButtonVO());
+//		ZdtpBtn customizeButton2=new ZdtpBtn();
+//		addPrivateButton(customizeButton2.getButtonVO());
+//		CkmxBtn customizeButton3=new CkmxBtn();
+//		addPrivateButton(customizeButton3.getButtonVO());
+//		ZdrkBtn customizeButton4=new ZdrkBtn();
+//		addPrivateButton(customizeButton4.getButtonVO());
 		QzqrBtn customizeButton9=new QzqrBtn();
 		addPrivateButton(customizeButton9.getButtonVO());
 		QxqzBtn customizeButton10=new QxqzBtn();

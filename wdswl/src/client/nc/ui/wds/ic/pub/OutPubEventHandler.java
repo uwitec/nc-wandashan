@@ -38,6 +38,7 @@ import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.LoginInforVO;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 public class OutPubEventHandler extends WdsPubEnventHandler {
@@ -489,12 +490,25 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 	}
 	
-	public void setOutType() throws BusinessException{
-//		设置默认收发类别
-		String outintype = OutInSetHelper.getDefaultOutInTypeID(
-				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), 
-				"csourcetype", true);
-		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("cdispatcherid", outintype);	
+	public void setOutType() throws BusinessException {
+		// 设置默认收发类别
+
+		// 优先考虑是否虚拟
+		UFBoolean isxn = PuPubVO.getUFBoolean_NullAs(getBillCardPanelWrapper()
+				.getBillCardPanel().getHeadItem("isxnap").getValueObject(),
+				UFBoolean.FALSE);
+		String outintype = null;
+		if (isxn.booleanValue()) {
+			outintype = OutInSetHelper.getDefaultOutInTypeID(
+					Wds2WlPubConst.virtual, true);
+		} else
+
+			outintype = OutInSetHelper
+					.getDefaultOutInTypeID(getBillCardPanelWrapper()
+							.getBillCardPanel().getBillModel(), "csourcetype",
+							true);
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem(
+				"cdispatcherid", outintype);
 	}
 	
 	public void onBoAdd(ButtonObject bo) throws Exception {

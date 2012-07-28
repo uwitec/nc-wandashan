@@ -10,8 +10,6 @@ import nc.vo.ic.pub.TbgeneralB2VO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
-
-
 public class OutInClientUICtrl extends AbstractManageController {
 
 	public String[] getCardBodyHideCol() {
@@ -33,7 +31,7 @@ public class OutInClientUICtrl extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Print,
 				ButtonCommon.joinup,
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
+//				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
 				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr,
 				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz
 				
@@ -55,7 +53,7 @@ public class OutInClientUICtrl extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Print,
 				ButtonCommon.joinup,
-				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
+//				nc.ui.wds.w8004040214.buttun0214.ISsButtun.Fzgn,
 				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qzqr,
 				nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz
 				

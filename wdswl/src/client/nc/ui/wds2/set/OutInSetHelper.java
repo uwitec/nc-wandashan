@@ -6,6 +6,7 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.vo.pub.BusinessException;
+import nc.vo.scm.constant.ScmConst;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wds2.set.OutInSetVO;
 import nc.vo.wl.pub.Wds2WlPubConst;
@@ -84,33 +85,36 @@ public class OutInSetHelper {
 		return getTypeInfor().get(key);
 	}
 
-	public static int tw = 0;//转分仓
-	public static int tc = 1;//转货位
-	public static int so = 2;//销售出
-	public static int to = 3;//调拨出
-	public static int ti = 4;//调拨入
-	public static int virtual = 5;//虚拟
-	public static int special = 6;//特殊
-	public static int other = 7;//其他
+	public final static int tw = 0;//转分仓
+	public final static int tc = 1;//转货位
+	public final static int so = 2;//销售出
+	public final static int to = 3;//调拨出
+	public final static int ti = 4;//调拨入
+	public final static int virtual = 5;//虚拟
+	public final static int special = 6;//特殊
+	public final static int other = 7;//其他
+	public final static int back = 8;//销售退货入库
 
 	private static String getKey(int ibiztype){
 		switch (ibiztype) {
-		case 0:
+		case tw:
 			return WdsWlPubConst.WDS3;
-		case 1:
+		case tc:
 			return WdsWlPubConst.HWTZ;
-		case 2:
+		case so:
 			return WdsWlPubConst.WDS5;
-		case 3:
+		case to:
 			return WdsWlPubConst.WDSH;
-		case 4:
+		case ti:
 			return Wds2WlPubConst.billtype_alloinsendorder;
-		case 5:
+		case virtual:
 			return Wds2WlPubConst.virtual;
-		case 6:
+		case special:
 			return WdsWlPubConst.WDSS;
-		case 7:
+		case other:
 			return Wds2WlPubConst.other;
+		case back:
+			return ScmConst.m_saleOut;
 		default:
 			return Wds2WlPubConst.other;
 		}

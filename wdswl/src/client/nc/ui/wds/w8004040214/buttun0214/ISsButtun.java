@@ -10,7 +10,7 @@ package nc.ui.wds.w8004040214.buttun0214;
     
   public interface  ISsButtun{
     
-	  	public final static int Fzgn=140;//辅助功能
+//	  	public final static int Fzgn=140;//辅助功能
 	  	public final static int Zdtp=141;//指定托盘
 	  	public final static int Zdrk=142;//自动入库
 	  	public final static int Ckmx=143;//查看明细

@@ -199,7 +199,7 @@ public class SoDealVO extends SuperVO{
 	public void setIsxnap(UFBoolean isxnap) {
 		this.isxnap = isxnap;
 	}
-	public void setSsxnap(String ssxnap) {
+	public void setSxnap(String ssxnap) {
 		setIsxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(ssxnap)
 				.equalsIgnoreCase(WdsWlPubConst.WDS_IC_FLAG_wu) ? UFBoolean.TRUE
 				: UFBoolean.FALSE);
@@ -941,6 +941,13 @@ public class SoDealVO extends SuperVO{
 	}
 	public void setCrowno(String crowno) {
 		this.crowno = crowno;
+	}
+	
+	public void setAttributeValue(String attributeName, Object value) {
+		if(attributeName.equalsIgnoreCase("sxnap"))
+			setSxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(value));
+		else 
+			super.setAttributeValue(attributeName, value);
 	}
 	
 }
