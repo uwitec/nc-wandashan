@@ -1,4 +1,5 @@
 package nc.vo.zmpub.pub.tool;
+
 import java.util.ArrayList;
 import java.util.List;
 import nc.jdbc.framework.processor.ArrayListProcessor;
@@ -6,8 +7,10 @@ import nc.ui.dbcache.DBCacheFacade;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
+
 /**
  *获取用户管理权限的工具类
+ * 
  * @author mlr
  */
 public class PowerGetTool {
@@ -24,54 +27,66 @@ public class PowerGetTool {
 	 */
 	public static String queryClassPowerSql(String tableName, String pk_corp,
 			String pk_user) {
-//		nc.ui.bd.ref.IRefUtilService refUtil = (nc.ui.bd.ref.IRefUtilService) NCLocator
-//				.getInstance().lookup("nc.ui.bd.ref.IRefUtilService");
+		// nc.ui.bd.ref.IRefUtilService refUtil = (nc.ui.bd.ref.IRefUtilService)
+		// NCLocator
+		// .getInstance().lookup("nc.ui.bd.ref.IRefUtilService");
 		return null;
 	}
-/**
- * 根据权限 过滤 某一组vo
- * @param tmpBodyVo  要过滤的vo数组
- * @param pk_name    要过滤的vo数组 在
- * @param tableName
- * @param pk_corp
- * @param pk_user
- * @return
- * @throws BusinessException
- */
-    public static CircularlyAccessibleValueObject[] spiltByPower(CircularlyAccessibleValueObject[] tmpBodyVo,String pk_name,String tableName, String pk_corp,
-			String pk_user) throws BusinessException {
-    	if(tmpBodyVo==null || tmpBodyVo.length==0)
-    		return null;
-        if(PowerGetTool.isStartPower(tableName,pk_corp,pk_user)==false)
-            return tmpBodyVo;       
-        ArrayList pks = PowerGetTool.getPowerByUser(tableName,pk_corp,pk_user); 
-        //存放过滤后的表体数据
-        List<CircularlyAccessibleValueObject> list=new ArrayList<CircularlyAccessibleValueObject>();
-        for(int i=0;i<tmpBodyVo.length;i++){
-            String pk=PuPubVO.getString_TrimZeroLenAsNull(
-        			tmpBodyVo[i].getAttributeValue(pk_name));
-            if(exist(pk,pks))            	
-        	        list.add(tmpBodyVo[i]);           	
-        }
-       return  list.toArray((CircularlyAccessibleValueObject[])java.lang.reflect.Array.newInstance(tmpBodyVo[0].getClass(), list.size()));
+
+	/**
+	 * 根据权限 过滤 某一组vo
+	 * 
+	 * @param tmpBodyVo
+	 *            要过滤的vo数组
+	 * @param pk_name
+	 *            要过滤的vo数组 在
+	 * @param tableName
+	 * @param pk_corp
+	 * @param pk_user
+	 * @return
+	 * @throws BusinessException
+	 */
+	public static CircularlyAccessibleValueObject[] spiltByPower(
+			CircularlyAccessibleValueObject[] tmpBodyVo, String pk_name,
+			String tableName, String pk_corp, String pk_user)
+			throws BusinessException {
+		if (tmpBodyVo == null || tmpBodyVo.length == 0)
+			return null;
+		if (PowerGetTool.isStartPower(tableName, pk_corp, pk_user) == false)
+			return tmpBodyVo;
+		ArrayList pks = PowerGetTool
+				.getPowerByUser(tableName, pk_corp, pk_user);
+		// 存放过滤后的表体数据
+		List<CircularlyAccessibleValueObject> list = new ArrayList<CircularlyAccessibleValueObject>();
+		for (int i = 0; i < tmpBodyVo.length; i++) {
+			String pk = PuPubVO.getString_TrimZeroLenAsNull(tmpBodyVo[i]
+					.getAttributeValue(pk_name));
+			if (exist(pk, pks))
+				list.add(tmpBodyVo[i]);
+		}
+		return list
+				.toArray((CircularlyAccessibleValueObject[]) java.lang.reflect.Array
+						.newInstance(tmpBodyVo[0].getClass(), list.size()));
 	}
-    /**
-     * 判断pk值是否在arrayList中存在
-     * @param pk
-     * @param arrayList2
-     * @return
-     */
+
+	/**
+	 * 判断pk值是否在arrayList中存在
+	 * 
+	 * @param pk
+	 * @param arrayList2
+	 * @return
+	 */
 	public static boolean exist(String pk, ArrayList arrayList) {
-		if(pk==null || pk.length()==0)
+		if (pk == null || pk.length() == 0)
 			return false;
-		boolean isf=false;
-		for(int i=0;i<arrayList.size();i++){
-			Object[] os=(Object[]) arrayList.get(i);
-			if(pk.equals(os[0])){
-				isf=true;
+		boolean isf = false;
+		for (int i = 0; i < arrayList.size(); i++) {
+			Object[] os = (Object[]) arrayList.get(i);
+			if (pk.equals(os[0])) {
+				isf = true;
 				return true;
 			}
-		}		
+		}
 		return false;
 	}
 
@@ -90,13 +105,14 @@ public class PowerGetTool {
 		ArrayList alGroup = (ArrayList) DBCacheFacade.runQuery(sql, bc);
 		return alGroup;
 	}
+
 	public static boolean isStartPower(String tableName, String pk_corp,
-			String pk_user){
-		String str=queryClassPowerSql(tableName, pk_corp,pk_user);
-	 if(PuPubVO.getString_TrimZeroLenAsNull(str)==null){
-		 return false;
-	 }
-	 return true;
+			String pk_user) {
+		String str = queryClassPowerSql(tableName, pk_corp, pk_user);
+		if (PuPubVO.getString_TrimZeroLenAsNull(str) == null) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

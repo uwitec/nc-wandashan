@@ -1,12 +1,15 @@
 package nc.vo.zmpub.pub.tool;
+
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.ArrayProcessor;
 import nc.jdbc.framework.processor.ColumnListProcessor;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.jdbc.framework.processor.MapListProcessor;
 import nc.jdbc.framework.processor.MapProcessor;
+
 /**
  * 常用结果集处理器定义
+ * 
  * @author zhf
  */
 public class ResultSetProcessorTool {
