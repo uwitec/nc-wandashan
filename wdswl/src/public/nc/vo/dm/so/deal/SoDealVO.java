@@ -182,12 +182,7 @@ public class SoDealVO extends SuperVO{
 		this.disdate = disdate;
 	}
 	
-	public String getPk_corp() {
-		return pk_corp;
-	}
-	public void setPk_corp(String pk_corp) {
-		this.pk_corp = pk_corp;
-	}
+
 	/**
 	 * 
 	 * @×÷Õß£ºzhf
@@ -959,6 +954,12 @@ public class SoDealVO extends SuperVO{
 			setSxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(value));
 		else 
 			super.setAttributeValue(attributeName, value);
+	}
+	public String getPk_corp() {
+		return pk_corp;
+	}
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
 	}
 	
 }

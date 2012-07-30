@@ -20,7 +20,6 @@ public class SoDealVO extends SuperVO{
 	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum",WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME};
 	
 	public static String[] sort_fields = new String[]{"dbilldate"};
-	
 	private UFDouble nnum = null;//本次安排数量
 	private UFDouble nassnum = null;
 	private UFBoolean isonsell;
@@ -146,6 +145,8 @@ public class SoDealVO extends SuperVO{
 	public static void setSort_fields(String[] sort_fields) {
 		SoDealVO.sort_fields = sort_fields;
 	}
+	
+
 	public UFDouble getNstorenumout() {
 		return nstorenumout;
 	}
