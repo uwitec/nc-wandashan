@@ -110,7 +110,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		return zvos;
 	}
 
-	private ReportBaseVO[] getAvailNum1(SuperVO[] vos) throws Exception {
+	protected ReportBaseVO[] getAvailNum1(SuperVO[] vos) throws Exception {
 		// 得到订单查询的过滤条件
 		Map<String, List<String>> whereSqls = getWhereSqls(vos);
 		// 得到添加过滤条件后的订单查询sql
@@ -120,7 +120,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		return dvos;
 	}
 
-	private ReportBaseVO[] getAvailNumForClient1(SuperVO[] vos)
+	protected ReportBaseVO[] getAvailNumForClient1(SuperVO[] vos)
 			throws Exception {
 		// 得到订单查询的过滤条件
 		Map<String, List<String>> whereSqls = getWhereSqls(vos);
@@ -140,7 +140,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 	 * @时间：2012-7-26下午01:08:07
 	 * 
 	 */
-	private SuperVO[] getNums(SuperVO[] nvos, ReportBaseVO[] dvos)
+	protected SuperVO[] getNums(SuperVO[] nvos, ReportBaseVO[] dvos)
 			throws Exception {
 		if (nvos == null || nvos.length == 0)
 			return null;
@@ -241,7 +241,7 @@ public abstract class AvailNumBoTool extends BillStockBO {
 	 * @时间：2012-7-26下午12:07:40
 	 * 
 	 */
-	private ReportBaseVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos)
+	protected ReportBaseVO[] getCombinVos(SuperVO[] vos, ReportBaseVO[] nvos)
 			throws Exception {
 		ArrayList<ReportBaseVO> nlist = new ArrayList<ReportBaseVO>();
 		if (vos == null || vos.length == 0)
