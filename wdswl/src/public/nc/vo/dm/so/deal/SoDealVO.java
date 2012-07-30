@@ -172,7 +172,7 @@ public class SoDealVO extends SuperVO{
 	}
 	public void setSxnap(String ssxnap) {
 		setIsxnap(WdsWlPubTool.getString_NullAsTrimZeroLen(ssxnap)
-				.equalsIgnoreCase(WdsWlPubConst.WDS_IC_FLAG_wu) ? UFBoolean.TRUE
+				.equalsIgnoreCase(Wds2WlPubConst.so_virtual_value_yes) ? UFBoolean.TRUE
 				: UFBoolean.FALSE);
 	}
 	public UFBoolean getDisdate() {

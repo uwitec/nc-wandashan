@@ -67,7 +67,7 @@ public class SoDealBO {
 		}
 		else{
 			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' " +
-					"and coalesce(h."+Wds2WlPubConst.so_virtual+",'"+Wds2WlPubConst.so_virtual_value_no+"') == '"+Wds2WlPubConst.so_virtual_value_no+"' ");
+					"and coalesce(h."+Wds2WlPubConst.so_virtual+",'"+Wds2WlPubConst.so_virtual_value_no+"') = '"+Wds2WlPubConst.so_virtual_value_no+"' ");
 			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+Wds2WlPubConst.so_virtual_value_yes+"' )");
 		}
 //		------------------------------------------------

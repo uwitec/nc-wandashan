@@ -1,10 +1,10 @@
 package nc.ui.wds.self.changedir;
-import nc.ui.pf.change.VOConversionUI;
+import nc.bs.pf.change.VOConversion;
 /**
  * 物流台账 销售计划安排2 后台安排时 用于数据转换
  * @author zhf
  */
-public class CHGHANDTOSTOCK extends VOConversionUI{
+public class CHGHANDTOSTOCK extends VOConversion{
 	/**
 	 * "pk_corp","pk_customize1","pk_cargdoc",
     		"pk_invmandoc","pk_invbasdoc","whs_batchcode",

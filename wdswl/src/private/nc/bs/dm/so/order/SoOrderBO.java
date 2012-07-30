@@ -174,15 +174,18 @@ public class SoOrderBO implements Serializable {
 		}
 		UFBoolean iszt = PuPubVO.getUFBoolean_NullAs(head
 				.getAttributeValue("reserve16"), UFBoolean.FALSE);
-		if (iszt.booleanValue()) {
+		if (iszt.booleanValue()&&PuPubVO.getString_TrimZeroLenAsNull(head.getPrimaryKey())!=null) {
 			String pk_transcorp = PuPubVO.getString_TrimZeroLenAsNull(head
 					.getAttributeValue("pk_transcorp"));
-			checkTranscorp(pk_transcorp, true);
+			checkTranscorp(pk_transcorp);
 		}
 	}
 
-	private void checkTranscorp(String pk_transcorp, boolean b)
+	private void checkTranscorp(String pk_transcorp)
 			throws BusinessException {
+		if(pk_transcorp == null){
+			throw new BusinessException("Ёпткилн╙©у");
+		}
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select ");
 		sql.append(" reserve16 ");

@@ -133,100 +133,100 @@ public class SoDealCol {
 	 * @param invNumInfor
 	 * @throws BusinessException
 	 */
-	private void initInvNumInfor(Map<String, StoreInvNumVO> invNumInfor)
-			throws BusinessException {
-		// invNumInfor <key,StoreInvNumVO> =
-		// <存货基本档案id，StoreInvNumVO（包含当前存货库存量，本次需要安排的数量,已经安排的运单占用量）>
-		Set<String> invs = new HashSet<String>();// 本次安排的所有存货id
-		SoDealHeaderVo head = null;
-		SoDealVO[] bodys = null;
-		StoreInvNumVO tmpNumVO = null;
-		// 1.获取库存量
-		UFDouble[] stocknums = null;
-		String pk_corp = SQLHelper.getCorpPk();
-		Logger.info("获取库存当前存量...");
-		String key = null;
-		for (SoDealBillVO bill : bills) {
-			head = bill.getHeader();
-			bodys = bill.getBodyVos();
-			if (bodys == null || bodys.length == 0)
-				continue;
-			for (SoDealVO body : bodys) {
-				key = WdsWlPubTool.getString_NullAsTrimZeroLen(body
-						.getCinvbasdocid())+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getVdef1());
-				invs.add(body.getCinvbasdocid());
-				if (invNumInfor.containsKey(key)) {
-					tmpNumVO = invNumInfor.get(key);
-				} else {
-					tmpNumVO = new StoreInvNumVO();
-					tmpNumVO.setPk_corp(pk_corp);
-					tmpNumVO.setCstoreid(head.getCbodywarehouseid());
-					tmpNumVO.setCinvbasid(body.getCinvbasdocid());
-					tmpNumVO.setCinvmanid(body.getCinventoryid());
-					//根据仓库+存货 获得 合格和待检状态的现存量
-//					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
-					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"')";
-					stocknums = getStockBO().getInvStockNum(pk_corp,
-							tmpNumVO.getCstoreid(), null,
-							tmpNumVO.getCinvbasid(), null, null,strWhere);
-					if (stocknums == null || stocknums.length == 0)
-						continue;
-					tmpNumVO.setNstocknum(stocknums[0]);
-					tmpNumVO.setNstockassnum(stocknums[1]);
-				}
-				tmpNumVO.setNplannum(PuPubVO.getUFDouble_NullAsZero(
-						tmpNumVO.getNplannum()).add(
-						PuPubVO.getUFDouble_NullAsZero(body.getNnum())));
-				tmpNumVO.setNplanassnum(PuPubVO.getUFDouble_NullAsZero(
-						tmpNumVO.getNplanassnum()).add(
-						PuPubVO.getUFDouble_NullAsZero(body.getNassnum())));
-				invNumInfor.put(key, tmpNumVO);
-			}
-		}
-		if (invNumInfor.size() == 0) {
-			Logger.info("本次待安排存货库存均为空，无法安排，退出");
-		}
-		// 2.获取运单占用量,根据存货现存量和待安排数量，将存货分为两类：够安排和不够安排
-		Logger.info("获取存货已安排未出库量...");
-		Map<String, UFDouble[]> invNumInfor2 = getStockBO().getNdealNumInfor(
-				pk_corp, head.getCbodywarehouseid(),
-				invs.toArray(new String[0]), new TempTableUtil());
-		if (invNumInfor2 == null || invNumInfor2.size() == 0) {
-			Logger.info("本次安排的存货不存在已安排未出库量");
-			if (invNumInfor2 == null)
-				invNumInfor2 = new HashMap<String, UFDouble[]>();
-		}
-		Logger.info("本次待安排存货库存状况：");
-		for (String key2 : invNumInfor.keySet()) {
-			tmpNumVO = invNumInfor.get(key2);
-			stocknums = invNumInfor2.get(key2);
-			if (tmpNumVO == null)
-				continue;
-			// 已安排运单占用量
-			tmpNumVO.setNdealnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-					: stocknums[0]);
-			tmpNumVO
-					.setNdealassnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
-							: stocknums[1]);
-			// 当前可用量=库存量-已经安排的运单占用量
-			tmpNumVO.setNnum(tmpNumVO.getNstocknum()
-					.sub(tmpNumVO.getNdealnum()));
-			tmpNumVO.setNassnum(tmpNumVO.getNstockassnum().sub(
-					tmpNumVO.getNdealassnum()));
-			// 如果可用量 > 本次安排量 ，标记为可安排
-			if (tmpNumVO.getNassnum().doubleValue() > tmpNumVO.getNplanassnum()
-					.doubleValue())
-				tmpNumVO.setBisok(UFBoolean.TRUE);
-			else
-				tmpNumVO.setBisok(UFBoolean.FALSE);
-			Logger.info(" 存货"
-					+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
-					+ " 当前存量：" + tmpNumVO.getNstockassnum() + " 已安排未出库量："
-					+ tmpNumVO.getNdealassnum() + " 本次可用量："
-					+ tmpNumVO.getNassnum() + " 本次待安排总量："
-					+ tmpNumVO.getNplanassnum());
-		}
-	}
+//	private void initInvNumInfor(Map<String, StoreInvNumVO> invNumInfor)
+//			throws BusinessException {
+//		// invNumInfor <key,StoreInvNumVO> =
+//		// <存货基本档案id，StoreInvNumVO（包含当前存货库存量，本次需要安排的数量,已经安排的运单占用量）>
+//		Set<String> invs = new HashSet<String>();// 本次安排的所有存货id
+//		SoDealHeaderVo head = null;
+//		SoDealVO[] bodys = null;
+//		StoreInvNumVO tmpNumVO = null;
+//		// 1.获取库存量
+//		UFDouble[] stocknums = null;
+//		String pk_corp = SQLHelper.getCorpPk();
+//		Logger.info("获取库存当前存量...");
+//		String key = null;
+//		for (SoDealBillVO bill : bills) {
+//			head = bill.getHeader();
+//			bodys = bill.getBodyVos();
+//			if (bodys == null || bodys.length == 0)
+//				continue;
+//			for (SoDealVO body : bodys) {
+//				key = WdsWlPubTool.getString_NullAsTrimZeroLen(body
+//						.getCinvbasdocid())+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getVdef1());
+//				invs.add(body.getCinvbasdocid());
+//				if (invNumInfor.containsKey(key)) {
+//					tmpNumVO = invNumInfor.get(key);
+//				} else {
+//					tmpNumVO = new StoreInvNumVO();
+//					tmpNumVO.setPk_corp(pk_corp);
+//					tmpNumVO.setCstoreid(head.getCbodywarehouseid());
+//					tmpNumVO.setCinvbasid(body.getCinvbasdocid());
+//					tmpNumVO.setCinvmanid(body.getCinventoryid());
+//					//根据仓库+存货 获得 合格和待检状态的现存量
+////					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"','"+WdsWlPubConst.WDS_STORSTATE_PK_dj+"')";
+//					String strWhere= " ss_pk in('"+WdsWlPubConst.WDS_STORSTATE_PK_hg+"')";
+//					stocknums = getStockBO().getInvStockNum(pk_corp,
+//							tmpNumVO.getCstoreid(), null,
+//							tmpNumVO.getCinvbasid(), null, null,strWhere);
+//					if (stocknums == null || stocknums.length == 0)
+//						continue;
+//					tmpNumVO.setNstocknum(stocknums[0]);
+//					tmpNumVO.setNstockassnum(stocknums[1]);
+//				}
+//				tmpNumVO.setNplannum(PuPubVO.getUFDouble_NullAsZero(
+//						tmpNumVO.getNplannum()).add(
+//						PuPubVO.getUFDouble_NullAsZero(body.getNnum())));
+//				tmpNumVO.setNplanassnum(PuPubVO.getUFDouble_NullAsZero(
+//						tmpNumVO.getNplanassnum()).add(
+//						PuPubVO.getUFDouble_NullAsZero(body.getNassnum())));
+//				invNumInfor.put(key, tmpNumVO);
+//			}
+//		}
+//		if (invNumInfor.size() == 0) {
+//			Logger.info("本次待安排存货库存均为空，无法安排，退出");
+//		}
+//		// 2.获取运单占用量,根据存货现存量和待安排数量，将存货分为两类：够安排和不够安排
+//		Logger.info("获取存货已安排未出库量...");
+//		Map<String, UFDouble[]> invNumInfor2 = getStockBO().getNdealNumInfor(
+//				pk_corp, head.getCbodywarehouseid(),
+//				invs.toArray(new String[0]), new TempTableUtil());
+//		if (invNumInfor2 == null || invNumInfor2.size() == 0) {
+//			Logger.info("本次安排的存货不存在已安排未出库量");
+//			if (invNumInfor2 == null)
+//				invNumInfor2 = new HashMap<String, UFDouble[]>();
+//		}
+//		Logger.info("本次待安排存货库存状况：");
+//		for (String key2 : invNumInfor.keySet()) {
+//			tmpNumVO = invNumInfor.get(key2);
+//			stocknums = invNumInfor2.get(key2);
+//			if (tmpNumVO == null)
+//				continue;
+//			// 已安排运单占用量
+//			tmpNumVO.setNdealnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
+//					: stocknums[0]);
+//			tmpNumVO
+//					.setNdealassnum(stocknums == null ? WdsWlPubTool.DOUBLE_ZERO
+//							: stocknums[1]);
+//			// 当前可用量=库存量-已经安排的运单占用量
+//			tmpNumVO.setNnum(tmpNumVO.getNstocknum()
+//					.sub(tmpNumVO.getNdealnum()));
+//			tmpNumVO.setNassnum(tmpNumVO.getNstockassnum().sub(
+//					tmpNumVO.getNdealassnum()));
+//			// 如果可用量 > 本次安排量 ，标记为可安排
+//			if (tmpNumVO.getNassnum().doubleValue() > tmpNumVO.getNplanassnum()
+//					.doubleValue())
+//				tmpNumVO.setBisok(UFBoolean.TRUE);
+//			else
+//				tmpNumVO.setBisok(UFBoolean.FALSE);
+//			Logger.info(" 存货"
+//					+ WdsWlPubTool.getInvCodeByInvid(tmpNumVO.getCinvbasid())
+//					+ " 当前存量：" + tmpNumVO.getNstockassnum() + " 已安排未出库量："
+//					+ tmpNumVO.getNdealassnum() + " 本次可用量："
+//					+ tmpNumVO.getNassnum() + " 本次待安排总量："
+//					+ tmpNumVO.getNplanassnum());
+//		}
+//	}
 	
 	private AvailNumBoTool numBO = null;
 	private AvailNumBoTool getNumBO(){
@@ -459,8 +459,8 @@ public class SoDealCol {
 			while (it.hasNext()) {
 				tmp = it.next();
 				for (SoDealVO deal : lnodeal) {
-					if (deal.getCinvbasdocid().equalsIgnoreCase(
-							tmp.getCinvbasid())) {
+					if ((deal.getCinvbasdocid()+deal.getVdef1()).equalsIgnoreCase(
+							(tmp.getCinvbasid()+tmp.getSs_pk()))) {
 						tmp.getLdeal().add(deal);
 					}
 				}
