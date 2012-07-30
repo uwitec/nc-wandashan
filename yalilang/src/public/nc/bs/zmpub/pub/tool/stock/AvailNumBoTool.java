@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import nc.bs.logging.Logger;
 import nc.bs.pub.SystemException;
 import nc.bs.zmpub.pub.report.ReportDMO;
+import nc.ui.scm.util.ObjectUtils;
 import nc.ui.zmpub.pub.tool.LongTimeTask;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
@@ -256,8 +257,11 @@ public abstract class AvailNumBoTool extends BillStockBO {
 			} else {
 				// 获得该维度下的订单可用量
 				ReportBaseVO[] vos1 = getVos(conds, nvos);
+				ReportBaseVO[] vos3=null;
+				if(vos1!=null && vos1.length!=0)
+					vos3=(ReportBaseVO[]) ObjectUtils.serializableClone(vos1);
 				ReportBaseVO[] coms = (ReportBaseVO[]) CombinVO.combinData(
-						vos1, conds1, getChangeNums(), ReportBaseVO.class);
+						vos3, conds1, getChangeNums(), ReportBaseVO.class);
 				if (coms == null || coms.length == 0) {
 					nlist.add(null);
 				} else {
