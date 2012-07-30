@@ -82,6 +82,38 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		SuperVO[] zvos=getNums(nvos,dvos);       
 		return zvos;
 	}
+	/**
+	 * 
+	 * 得到可用量 跟据用现存量vo封装的查询条件 此方法后台调用
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-26上午10:13:19
+	 * 
+	 */
+	public SuperVO[] getAvailNumDatas(SuperVO[] vos) throws Exception {
+		// 得到现存量
+		SuperVO[] nvos = super.queryStockCombin(vos);
+		if (nvos == null || nvos.length == 0)
+			return null;
+		//得到订单占用量
+		ReportBaseVO[] dvos = getAvailNum1(vos);
+		if(dvos==null || dvos.length==0)
+			return nvos;
+		//得到可用量
+		SuperVO[] zvos=getNums(nvos,dvos);       
+		return zvos;
+	}
+	
+	private ReportBaseVO[] getAvailNum1(SuperVO[] vos) throws Exception {
+		//得到订单查询的过滤条件
+		Map<String, List<String>> whereSqls=getWhereSqls(vos);
+		//得到添加过滤条件后的订单查询sql
+		Map<String, List<String>> sqls=getSqls(whereSqls);
+		//得到订单占用量
+		ReportBaseVO[] dvos=getOrderNums(vos, sqls);
+		return dvos;
+	}
 
 	private ReportBaseVO[] getAvailNumForClient1(SuperVO[] vos) throws Exception {
 		//得到订单查询的过滤条件
