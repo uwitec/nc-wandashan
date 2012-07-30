@@ -27,20 +27,17 @@ import nc.vo.pub.querymodel.RotateCrossVO;
 
 /**
  * 旋转交叉定义面板 创建日期：(2003-11-25 10:17:28)
- *
+ * 
  * @author：朱俊彬
  */
 public class RotateCrossPanel extends UIPanel {
-	
-	
+
 	private IReportDealListener deal = null;
-	
-	public void addReportDealListener(IReportDealListener lis){
+
+	public void addReportDealListener(IReportDealListener lis) {
 		deal = lis;
 	}
-	
-	
-	
+
 	// 交叉合计设置框
 	private CrossTotalDlg m_crossTotalDlg = null;
 
@@ -176,9 +173,6 @@ public class RotateCrossPanel extends UIPanel {
 		};
 	};
 
-	
-	
-	
 	public String[] getM_strGroupCols() {
 		return m_strGroupCols;
 	}
@@ -197,7 +191,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * RotateCrossPanel 构造子注解。
-	 *
+	 * 
 	 * @param p0
 	 *            boolean
 	 */
@@ -418,7 +412,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 合法性检查 创建日期：(2003-4-4 14:00:39)
-	 *
+	 * 
 	 * @return java.lang.String
 	 */
 	public String check(boolean bDef) {
@@ -464,7 +458,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 检查交叉设置 创建日期：(2003-12-13 14:04:17)
-	 *
+	 * 
 	 * @return int
 	 */
 	public String checkCrossinfo() {
@@ -491,7 +485,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC1: (BnAddRow.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnAddRow_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -514,7 +508,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC10: (BnUpRow.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnUpRow_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -536,8 +530,9 @@ public class RotateCrossPanel extends UIPanel {
 	/**
 	 * connEtoC11: (BnDelRow1.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
-	 * RotateCrossPanel.bnDelRow1_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * RotateCrossPanel.bnDelRow1_ActionPerformed(Ljava.awt.event.ActionEvent
+	 * ;)V)
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -559,8 +554,9 @@ public class RotateCrossPanel extends UIPanel {
 	/**
 	 * connEtoC12: (BnDownVal.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
-	 * RotateCrossPanel.bnDownVal_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * RotateCrossPanel.bnDownVal_ActionPerformed(Ljava.awt.event.ActionEvent
+	 * ;)V)
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -582,7 +578,7 @@ public class RotateCrossPanel extends UIPanel {
 	/**
 	 * connEtoC13: (LabelVal.mouse.mouseClicked(java.awt.event.MouseEvent) -->
 	 * RotateCrossPanel.labelVal_MouseClicked(Ljava.awt.event.MouseEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.MouseEvent
 	 */
@@ -604,7 +600,7 @@ public class RotateCrossPanel extends UIPanel {
 	/**
 	 * connEtoC14: (LabelRow.mouse.mouseClicked(java.awt.event.MouseEvent) -->
 	 * RotateCrossPanel.labelRow_MouseClicked(Ljava.awt.event.MouseEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.MouseEvent
 	 */
@@ -627,7 +623,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC2: (BnDelRow.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnDelRow_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -650,7 +646,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC3: (BnAddCol.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnAddCol_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -661,9 +657,9 @@ public class RotateCrossPanel extends UIPanel {
 			// user code end
 			this.bnAddCol_ActionPerformed(arg1);
 			Object[] objs = getListCol().getSelectedValues();
-			if(objs!=null && objs.length>0)
-			deal.deal(true,objs.length);
-			
+			if (objs != null && objs.length > 0)
+				deal.deal(true, objs.length);
+
 			// user code begin {2}
 			// user code end
 		} catch (java.lang.Throwable ivjExc) {
@@ -677,7 +673,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC4: (BnDelCol.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnDelCol_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -687,11 +683,10 @@ public class RotateCrossPanel extends UIPanel {
 			// user code begin {1}
 			// user code end
 			Object[] objs = getListCol().getSelectedValues();
-			if(objs!=null && objs.length>0)
-			deal.deal(false,objs.length);
+			if (objs != null && objs.length > 0)
+				deal.deal(false, objs.length);
 			this.bnDelCol_ActionPerformed(arg1);
-			
-			
+
 			// user code begin {2}
 			// user code end
 		} catch (java.lang.Throwable ivjExc) {
@@ -705,7 +700,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC5: (BnUpCol.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnUpCol_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -727,8 +722,9 @@ public class RotateCrossPanel extends UIPanel {
 	/**
 	 * connEtoC6: (BnDownCol.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
-	 * RotateCrossPanel.bnDownCol_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * RotateCrossPanel.bnDownCol_ActionPerformed(Ljava.awt.event.ActionEvent
+	 * ;)V)
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -751,7 +747,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC7: (BnAddVal.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnAddVal_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -774,7 +770,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC8: (BnDelVal.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnDelVal_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -797,7 +793,7 @@ public class RotateCrossPanel extends UIPanel {
 	 * connEtoC9: (BnUpVal.action.actionPerformed(java.awt.event.ActionEvent)
 	 * -->
 	 * RotateCrossPanel.bnUpVal_ActionPerformed(Ljava.awt.event.ActionEvent;)V)
-	 *
+	 * 
 	 * @param arg1
 	 *            java.awt.event.ActionEvent
 	 */
@@ -862,7 +858,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnAddCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -886,7 +882,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnAddRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -910,7 +906,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnAddVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -934,7 +930,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDelCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -957,7 +953,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDelRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -980,7 +976,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDelVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1003,7 +999,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDownCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1026,7 +1022,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDelRow1 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1049,7 +1045,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnDownVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1072,7 +1068,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnUpCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1096,7 +1092,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnUpRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1120,7 +1116,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 BnUpVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIButton
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1144,7 +1140,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 复合维度设置框 创建日期：(2003-12-10 10:30:06)
-	 *
+	 * 
 	 * @return nc.ui.iuforeport.businessquery.CrossTotalDlg
 	 */
 	public CrossFhSetDlg getCrossFhDlg() {
@@ -1155,7 +1151,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 交叉合计设置框 创建日期：(2003-12-10 10:30:06)
-	 *
+	 * 
 	 * @return nc.ui.iuforeport.businessquery.CrossTotalDlg
 	 */
 	public CrossTotalDlg getCrossTotalDlg() {
@@ -1166,7 +1162,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 获得别名-字段VO哈希表 创建日期：(2003-12-10 13:36:59)
-	 *
+	 * 
 	 * @return java.util.Hashtable
 	 */
 	private Hashtable getHashAliasFldvo(SelectFldVO[] sfs) {
@@ -1180,7 +1176,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 LabelCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UILabel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1194,9 +1190,9 @@ public class RotateCrossPanel extends UIPanel {
 								"10241201", "UPP10241201-000733")/* @res "列" */);
 				ivjLabelCol.setToolTipText(nc.ui.ml.NCLangRes.getInstance()
 						.getStrByID("10241201", "UPP10241201-000679")/*
-																		 * @res
-																		 * "设置复合维度"
-																		 */);
+																	 * @res
+																	 * "设置复合维度"
+																	 */);
 				ivjLabelCol.setForeground(java.awt.Color.black);
 				ivjLabelCol
 						.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1216,7 +1212,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 LabelRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UILabel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1230,9 +1226,9 @@ public class RotateCrossPanel extends UIPanel {
 								"10241201", "UPP10241201-000038")/* @res "行" */);
 				ivjLabelRow.setToolTipText(nc.ui.ml.NCLangRes.getInstance()
 						.getStrByID("10241201", "UPP10241201-000679")/*
-																		 * @res
-																		 * "设置复合维度"
-																		 */);
+																	 * @res
+																	 * "设置复合维度"
+																	 */);
 				ivjLabelRow.setForeground(java.awt.Color.black);
 				ivjLabelRow.setHorizontalAlignment(SwingConstants.CENTER);
 				ivjLabelRow
@@ -1252,7 +1248,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 LabelVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UILabel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1266,9 +1262,9 @@ public class RotateCrossPanel extends UIPanel {
 								"10241201", "UPP10241201-000268")/* @res "值" */);
 				ivjLabelVal.setToolTipText(nc.ui.ml.NCLangRes.getInstance()
 						.getStrByID("10241201", "UPP10241201-000269")/*
-																		 * @res
-																		 * "计算小计"
-																		 */);
+																	 * @res
+																	 * "计算小计"
+																	 */);
 				ivjLabelVal.setForeground(java.awt.Color.black);
 				ivjLabelVal
 						.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1289,7 +1285,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 ListAll 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIList
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1312,7 +1308,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 ListCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIList
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1335,7 +1331,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 ListRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIList
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1358,7 +1354,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 ListVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIList
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1381,7 +1377,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 创建日期：(2003-10-31 19:28:22)
-	 *
+	 * 
 	 * @return javax.swing.DefaultListModel
 	 */
 	private DefaultListModel getLMAll() {
@@ -1390,7 +1386,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 创建日期：(2003-10-31 19:28:22)
-	 *
+	 * 
 	 * @return javax.swing.DefaultListModel
 	 */
 	private DefaultListModel getLMCol() {
@@ -1399,7 +1395,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 创建日期：(2003-10-31 19:28:22)
-	 *
+	 * 
 	 * @return javax.swing.DefaultListModel
 	 */
 	private DefaultListModel getLMRow() {
@@ -1408,7 +1404,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 创建日期：(2003-10-31 19:28:22)
-	 *
+	 * 
 	 * @return javax.swing.DefaultListModel
 	 */
 	private DefaultListModel getLMVal() {
@@ -1417,7 +1413,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnCenter 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIPanel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1443,7 +1439,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnCenterGridLayout 特性值。
-	 *
+	 * 
 	 * @return java.awt.GridLayout
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1461,7 +1457,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnColBn 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIPanel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1505,7 +1501,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnEast 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIPanel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1532,7 +1528,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnEastGridLayout 特性值。
-	 *
+	 * 
 	 * @return java.awt.GridLayout
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1550,7 +1546,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnRowBn 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIPanel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1594,7 +1590,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 PnValBn 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIPanel
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1638,7 +1634,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 获得旋转交叉VO 创建日期：(2003-11-25 10:44:05)
-	 *
+	 * 
 	 * @param rcs
 	 *            nc.vo.pub.querymodel.RotateCrossVO[]
 	 */
@@ -1692,7 +1688,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 SclPnAll 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIScrollPane
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1716,7 +1712,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 SclPnCol 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIScrollPane
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1739,7 +1735,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 SclPnRow 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIScrollPane
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1762,7 +1758,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 返回 SclPnVal 特性值。
-	 *
+	 * 
 	 * @return nc.ui.pub.beans.UIScrollPane
 	 */
 	/* 警告：此方法将重新生成。 */
@@ -1785,7 +1781,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 获得交叉值数组（SELECTFLDVO） 创建日期：(2003-12-10 11:08:56)
-	 *
+	 * 
 	 * @return java.lang.String[]
 	 */
 	public SelectFldVO[] getSfVals() {
@@ -1799,7 +1795,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 获得交叉值数组 创建日期：(2003-12-10 11:08:56)
-	 *
+	 * 
 	 * @return java.lang.String[]
 	 */
 	public String[] getVals() {
@@ -1815,7 +1811,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 蒋磊-20050912-增加旋转交叉定义的值名称
-	 *
+	 * 
 	 * @return
 	 */
 	public String[] getvalsName() {
@@ -1830,7 +1826,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 每当部件抛出异常时被调用
-	 *
+	 * 
 	 * @param exception
 	 *            java.lang.Throwable
 	 */
@@ -1843,7 +1839,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 初始化连接
-	 *
+	 * 
 	 * @exception java.lang.Exception
 	 *                异常说明。
 	 */
@@ -1902,7 +1898,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 判断交叉砝码是否有效 创建日期：(2003-11-25 10:44:05)
-	 *
+	 * 
 	 * @param rcs
 	 *            nc.vo.pub.querymodel.RotateCrossVO[]
 	 */
@@ -1955,11 +1951,13 @@ public class RotateCrossPanel extends UIPanel {
 				MessageDialog.showHintDlg(this, nc.ui.ml.NCLangRes
 						.getInstance().getStrByID("10241201",
 								"UPP10241201-000099")/*
-														 * @res "查询引擎"
-														 */, nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201",
-						"UPP10241201-000861")/*
-												 * @res "只有选择了交叉值，才能够进行交叉合计设置"
-												 */);
+													 * @res "查询引擎"
+													 */, nc.ui.ml.NCLangRes
+						.getInstance().getStrByID("10241201",
+								"UPP10241201-000861")/*
+													 * @res
+													 * "只有选择了交叉值，才能够进行交叉合计设置"
+													 */);
 			else
 				defTotal();
 		}
@@ -1967,7 +1965,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 主入口点 - 当部件作为应用程序运行时，启动这个部件。
-	 *
+	 * 
 	 * @param args
 	 *            java.lang.String[]
 	 */
@@ -1997,7 +1995,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 设置按钮可用性 创建日期：(2003-11-8 16:30:08)
-	 *
+	 * 
 	 * @param bEnable
 	 *            boolean
 	 */
@@ -2012,7 +2010,7 @@ public class RotateCrossPanel extends UIPanel {
 
 	/**
 	 * 设置旋转交叉VO 创建日期：(2003-11-25 10:44:05)
-	 *
+	 * 
 	 * @param rcs
 	 *            nc.vo.pub.querymodel.RotateCrossVO[]
 	 */
@@ -2103,15 +2101,23 @@ public class RotateCrossPanel extends UIPanel {
 	 */
 	public void defComparator() {
 		// 设置列排序器
-		Object objClassName = MessageDialog.showInputDlg(this, nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201","UPP10241201-000099")/*@res "查询引擎"*/,
-				nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201","UPP10241201-001340")/*@res "交叉列排序器类名："*/, m_strColComparatorClass, 100);
+		Object objClassName = MessageDialog.showInputDlg(this,
+				nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201",
+						"UPP10241201-000099")/* @res "查询引擎" */,
+				nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201",
+						"UPP10241201-001340")/* @res "交叉列排序器类名：" */,
+				m_strColComparatorClass, 100);
 		if (objClassName != null && !objClassName.toString().trim().equals("")) {
 			try {
 				Class.forName(objClassName.toString());
 				m_strColComparatorClass = objClassName.toString();
 			} catch (Exception e) {
 				e.printStackTrace();
-				MessageDialog.showWarningDlg(this, nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201","UPP10241201-000099")/*@res "查询引擎"*/, nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201","UPP10241201-001341")/*@res "该类不存在"*/);
+				MessageDialog.showWarningDlg(this, nc.ui.ml.NCLangRes
+						.getInstance().getStrByID("10241201",
+								"UPP10241201-000099")/* @res "查询引擎" */,
+						nc.ui.ml.NCLangRes.getInstance().getStrByID("10241201",
+								"UPP10241201-001341")/* @res "该类不存在" */);
 			}
 		} else {
 			m_strColComparatorClass = null;

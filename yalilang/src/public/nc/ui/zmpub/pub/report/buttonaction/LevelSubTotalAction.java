@@ -25,7 +25,7 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 
 	// 小计合计汇总字段
 	private TableField[] SubTotalCurrentUsingTotalFields = new TableField[0];
-   // add  by  ycy  2009-09-07 可选择是否小计 是否合计 之前界面选择没有效果
+	// add by ycy 2009-09-07 可选择是否小计 是否合计 之前界面选择没有效果
 	private boolean issub = false;
 
 	private boolean issum = true;
@@ -57,9 +57,8 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 							nc.ui.ml.NCLangRes.getInstance().getStrByID(
 									"uifactory_report",
 									"UPPuifactory_report-000022")/*
-																	 * @res
-																	 * "小计合计成功"
-																	 */);
+																 * @res "小计合计成功"
+																 */);
 		}
 	}
 
@@ -81,9 +80,9 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 			throw new BusinessException(nc.ui.ml.NCLangRes.getInstance()
 					.getStrByID("uifactory_report",
 							"UPPuifactory_report-000019")/*
-															 * @res
-															 * "分组字段和合计字段至少需要各选一项才能进行小计合计操作。"
-															 */);
+														 * @res
+														 * "分组字段和合计字段至少需要各选一项才能进行小计合计操作。"
+														 */);
 
 		// 正常情况 下 开始小计合计
 		if (getSubTotalCurrentUsingGroupFields() != null
@@ -105,7 +104,7 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 
 		}
 	}
-   
+
 	public boolean isIssub() {
 		return issub;
 	}

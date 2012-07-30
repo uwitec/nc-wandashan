@@ -164,6 +164,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 			return true;
 		return false;
 	}
+
 	/*
 	 * 增加数据到BillUIBuffer 如果增加到缓存的数据需要处理，则覆盖该方法
 	 */
@@ -179,6 +180,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 			getBufferData().addVOToBuffer(aVo);
 		}
 	}
+
 	/**
 	 * 用指定的VO数组 <I>resultVOs </I>去更新BillUIBuffer.这个操作会先把Buffer中原有的数据清空。
 	 * 如果指定resultVOs为空Buffer将被情况，且CurrentRow被设置为-1 否则CurrentRow设置为第0行
@@ -204,7 +206,6 @@ public class FlowManageEventHandler extends ManageEventHandler {
 		}
 	}
 
-
 	/**
 	 * 支持按表体条件查询 for add mlr isPowerUser 是否权限过滤
 	 */
@@ -228,23 +229,25 @@ public class FlowManageEventHandler extends ManageEventHandler {
 
 		updateBuffer();
 	}
-    public UIDialog qui=null;	
+
+	public UIDialog qui = null;
 
 	@Override
 	public UIDialog createQueryUI() {
 		return getQueryUI1();
-	
+
 	}
+
 	private UIDialog getQueryUI1() {
-		if(qui==null){
+		if (qui == null) {
 			return super.createQueryUI();
 		}
 		return qui;
 	}
 
 	public UIDialog setQueryUI1(UIDialog ui) {
-		return qui=ui;
-	
+		return qui = ui;
+
 	}
 
 	protected boolean askForQueryCondition(StringBuffer sqlWhereBuf)
@@ -299,7 +302,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 
 		// 支持按表体条件查询
 		SuperVO[] queryVos = null;
-		
+
 		queryVos = queryHeadAndBodyVOs(strWhere.toString(), pk_invbasdocName,
 				pk_invmandocName);
 
@@ -309,6 +312,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 
 		updateBuffer();
 	}
+
 	/**
 	 * 支持按表体条件查询 for add mlr isPowerUser 是否权限过滤
 	 */
@@ -322,7 +326,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 
 		// 支持按表体条件查询
 		SuperVO[] queryVos = null;
-		
+
 		queryVos = queryHeadAndBodyVOs1(strWhere.toString(), pk_invbasdocName,
 				pk_invmandocName);
 
@@ -332,7 +336,6 @@ public class FlowManageEventHandler extends ManageEventHandler {
 
 		updateBuffer();
 	}
-
 
 	public SuperVO[] queryHeadAndBodyVOs(String strWhere) throws Exception {
 		String headVoName = getUIController().getBillVoName()[1];
@@ -351,7 +354,6 @@ public class FlowManageEventHandler extends ManageEventHandler {
 		}
 		return vos;
 	}
-	
 
 	public SuperVO[] queryHeadAndBodyVOs(String strWhere,
 			String pk_invbasdocName, String pk_invmandocName) throws Exception {
@@ -373,7 +375,6 @@ public class FlowManageEventHandler extends ManageEventHandler {
 		return vos;
 	}
 
-	
 	public SuperVO[] queryHeadAndBodyVOs1(String strWhere,
 			String pk_invbasdocName, String pk_invmandocName) throws Exception {
 		String headVoName = getUIController().getBillVoName()[1];
@@ -393,6 +394,7 @@ public class FlowManageEventHandler extends ManageEventHandler {
 		}
 		return vos;
 	}
+
 	/**
 	 * 获取支持表体查询的sql
 	 * 
@@ -403,8 +405,9 @@ public class FlowManageEventHandler extends ManageEventHandler {
 	 * @return
 	 */
 	private String getQuerySql(SuperVO headVo, SuperVO bodyVo, String strWhere) {
-		String sql = " select "+ headVo.getTableName()+".* from " + headVo.getTableName() + " join "
-				+ bodyVo.getTableName() + " on " + headVo.getTableName() + "."
+		String sql = " select " + headVo.getTableName() + ".* from "
+				+ headVo.getTableName() + " join " + bodyVo.getTableName()
+				+ " on " + headVo.getTableName() + "."
 				+ headVo.getPKFieldName() + " = " + bodyVo.getTableName() + "."
 				+ bodyVo.getParentPKFieldName() + " where " + " isnull("
 				+ headVo.getTableName() + ".dr,0)=0 and isnull("
@@ -425,8 +428,9 @@ public class FlowManageEventHandler extends ManageEventHandler {
 	 */
 	public String getQuerySql(SuperVO headVo, SuperVO bodyVo, String strWhere,
 			String pk_invbasdocName, String pk_invmandocName) {
-		String sql = " select "+ headVo.getTableName()+".* from " + headVo.getTableName() + " join "
-				+ bodyVo.getTableName() + " on " + headVo.getTableName() + "."
+		String sql = " select " + headVo.getTableName() + ".* from "
+				+ headVo.getTableName() + " join " + bodyVo.getTableName()
+				+ " on " + headVo.getTableName() + "."
 				+ headVo.getPKFieldName() + " = " + bodyVo.getTableName() + "."
 				+ bodyVo.getParentPKFieldName()
 				+ " join bd_invbasdoc inv on inv.pk_invbasdoc= "
@@ -437,12 +441,13 @@ public class FlowManageEventHandler extends ManageEventHandler {
 				+ " and isnull(inv.dr,0)=0" + " and isnull(cl.dr,0)=0 ";
 		if (strWhere != null && strWhere.length() != 0)
 			sql = sql + " and " + strWhere;
-		
+
 		// 用户角色存货分类权限过滤
 		String pk_corp = ClientEnvironment.getInstance().getCorporation()
 				.getPrimaryKey();
-		sql=sql+" and "+headVo.getTableName()+".pk_corp ='"+pk_corp+"'";
-		
+		sql = sql + " and " + headVo.getTableName() + ".pk_corp ='" + pk_corp
+				+ "'";
+
 		String cuserid = ClientEnvironment.getInstance().getUser()
 				.getPrimaryKey();
 		String powersql = PowerGetTool.queryClassPowerSql("bd_invcl", pk_corp,
@@ -652,30 +657,30 @@ public class FlowManageEventHandler extends ManageEventHandler {
 			return;
 		}
 
-		//getSourceDlg().showModal();
+		// getSourceDlg().showModal();
 	}
 
-//	/**
-//	 * 联查对话框
-//	 */
-//	public SourceBillFlowDlg getSourceDlg() throws BusinessException {
-////		try {
-////			soureDlg = new SourceBillFlowDlg(getBillManageUI(),
-////					getUIController().getBillType(),/* 当前单据类型 */
-////					getBufferData().getCurrentVO().getParentVO()
-////							.getPrimaryKey(), /* 当前单据ID */
-////					null, /* 当前业务类型 */
-////					_getOperator(), /* 当前用户ID */
-////					(String) getBufferData().getCurrentVO().getParentVO()
-////							.getAttributeValue("vbillno") /* 单据号 */);
-////			soureDlg
-////					.setBillFinderClassname("nc.bs.scm.sourcebill.SCMBillFinder");
-////		} catch (BusinessException e) {
-////			Logger.error(e);
-////			throw new BusinessException("获取联查对话框出错! ");
-////		}
-////		return soureDlg;
-//	}
+	// /**
+	// * 联查对话框
+	// */
+	// public SourceBillFlowDlg getSourceDlg() throws BusinessException {
+	// // try {
+	// // soureDlg = new SourceBillFlowDlg(getBillManageUI(),
+	// // getUIController().getBillType(),/* 当前单据类型 */
+	// // getBufferData().getCurrentVO().getParentVO()
+	// // .getPrimaryKey(), /* 当前单据ID */
+	// // null, /* 当前业务类型 */
+	// // _getOperator(), /* 当前用户ID */
+	// // (String) getBufferData().getCurrentVO().getParentVO()
+	// // .getAttributeValue("vbillno") /* 单据号 */);
+	// // soureDlg
+	// // .setBillFinderClassname("nc.bs.scm.sourcebill.SCMBillFinder");
+	// // } catch (BusinessException e) {
+	// // Logger.error(e);
+	// // throw new BusinessException("获取联查对话框出错! ");
+	// // }
+	// // return soureDlg;
+	// }
 
 	@Override
 	protected void onBoElse(int intBtn) throws Exception {

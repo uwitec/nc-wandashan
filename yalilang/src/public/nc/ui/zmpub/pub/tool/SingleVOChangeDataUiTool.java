@@ -1,4 +1,5 @@
 package nc.ui.zmpub.pub.tool;
+
 import nc.bs.logging.Logger;
 import nc.bs.pf.change.AbstractConversion;
 import nc.ui.pf.change.VOConversionUI;
@@ -8,8 +9,10 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
+
 /**
  * 单表数据交换 用于前台
+ * 
  * @author zhf
  */
 public class SingleVOChangeDataUiTool {
@@ -49,14 +52,13 @@ public class SingleVOChangeDataUiTool {
 	 *            vo交换类
 	 * @throws Exception
 	 */
-	public static void runChangeVO(
-			SuperVO souVo, SuperVO tarVo, String chanclassname)
-			throws Exception {
+	public static void runChangeVO(SuperVO souVo, SuperVO tarVo,
+			String chanclassname) throws Exception {
 		IchangeVO change = null;
 		try {
 			change = getChangeClass(chanclassname);
 		} catch (Exception e) {// 可能存在类型转换异常 此处要求
-								// changeClassName类需要继承VOConversion
+			// changeClassName类需要继承VOConversion
 			e.printStackTrace();
 			throw new BusinessException(e);
 		}
@@ -70,14 +72,13 @@ public class SingleVOChangeDataUiTool {
 		preBillVo.setParentVO(souVo);
 		tarBillVo.setParentVO(tarVo);
 		AbstractConversion achange = (AbstractConversion) change;
-//		achange.setSourceBilltype(souBilltype);
-//		achange.setDestBilltype(destBilltype);
+		// achange.setSourceBilltype(souBilltype);
+		// achange.setDestBilltype(destBilltype);
 		achange.retChangeBusiVO(preBillVo, tarBillVo);
 	}
-	
-	public static SuperVO[] runChangeVOAry(
-			SuperVO[] souVos, Class tarVoClass, String chanclassname)
-	throws Exception {
+
+	public static SuperVO[] runChangeVOAry(SuperVO[] souVos, Class tarVoClass,
+			String chanclassname) throws Exception {
 		IchangeVO change = null;
 		try {
 			change = getChangeClass(chanclassname);
@@ -90,29 +91,30 @@ public class SingleVOChangeDataUiTool {
 		if (!(change instanceof VOConversionUI)) {
 			throw new BusinessException("数据转换组件异常，" + change.toString());
 		}
-		
+
 		int len = souVos.length;
-		if(len<=0)
+		if (len <= 0)
 			return null;
-//		SuperVO[] tarVos = new SuperVO[len];
-		SuperVO[] tarVos = (SuperVO[])java.lang.reflect.Array.newInstance(tarVoClass, souVos.length);
+		// SuperVO[] tarVos = new SuperVO[len];
+		SuperVO[] tarVos = (SuperVO[]) java.lang.reflect.Array.newInstance(
+				tarVoClass, souVos.length);
 		SuperVO tmp = null;
-		for(int i = 0;i<len;i++){
-			tmp = (SuperVO)tarVoClass.newInstance();
+		for (int i = 0; i < len; i++) {
+			tmp = (SuperVO) tarVoClass.newInstance();
 			tarVos[i] = tmp;
 		}
-		
+
 		AggregatedValueObject preBillVo = getTmpBIllVo1();
 		AggregatedValueObject tarBillVo = getTmpBIllVo2();
 		int index = 0;
-		for(SuperVO souVo:souVos){
+		for (SuperVO souVo : souVos) {
 			preBillVo.setParentVO(souVo);
 			tarBillVo.setParentVO(tarVos[index]);
 			AbstractConversion achange = (AbstractConversion) change;
-//			achange.setSourceBilltype(souBilltype);
-//			achange.setDestBilltype(destBilltype);
+			// achange.setSourceBilltype(souBilltype);
+			// achange.setDestBilltype(destBilltype);
 			achange.retChangeBusiVO(preBillVo, tarBillVo);
-			index ++;
+			index++;
 		}
 
 		return tarVos;

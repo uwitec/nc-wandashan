@@ -5,9 +5,6 @@ package nc.ui.zmpub.pub.report;
 
 import nc.vo.zmpub.pub.report.IPeneExtendInfo;
 
-
-
-
 /**
  * <p>
  * 报表穿透业务单据信息接口
@@ -15,18 +12,13 @@ import nc.vo.zmpub.pub.report.IPeneExtendInfo;
  * @author xkf
  * @date 2007-6-21 下午06:58:13
  * @version V5.0
- * @主要的类使用：
- *          <ul>
- *          <li><b>如何使用该类：</b></li>
- *          <li><b>是否线程安全：</b></li>
- *          <li><b>并发性要求：</b></li>
- *          <li><b>使用约束：</b></li>
- *          <li><b>其他：</b></li>
+ * @主要的类使用： <ul>
+ *          <li><b>如何使用该类：</b></li> <li><b>是否线程安全：</b></li> <li><b>并发性要求：</b>
+ *          </li> <li><b>使用约束：</b></li> <li><b>其他：</b></li>
  *          </ul>
  *          </p>
  *          <p>
- * @已知的BUG：
- *          <ul>
+ * @已知的BUG： <ul>
  *          <li></li>
  *          </ul>
  *          </p>
@@ -41,7 +33,7 @@ public interface IPene2NodeInfo {
 	public String getPene2NodeInfo();
 
 	/**
-	 * 获得额外穿透信息 
+	 * 获得额外穿透信息
 	 * 
 	 * @return
 	 */

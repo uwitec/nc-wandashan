@@ -32,12 +32,12 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 
 	// 小计合计汇总字段
 	private TableField[] SubTotalCurrentUsingTotalFields = new TableField[0];
-   // add  by  ycy  2009-09-07 可选择是否小计 是否合计 之前界面选择没有效果
+	// add by ycy 2009-09-07 可选择是否小计 是否合计 之前界面选择没有效果
 	private boolean issub = false;
 
 	private boolean issum = true;
-	
-	private boolean isshow=true;
+
+	private boolean isshow = true;
 
 	public LevelSubTotalAction(ReportBaseUI reportBaseUI) {
 		super(reportBaseUI);
@@ -51,214 +51,216 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 	 * 产生小计合计窗口 点击[确定]调用executeSubTotal()
 	 */
 	public void execute() throws Exception {
-	    subTotalCurrentUsingGroupFields = new TableField[0];
-        SubTotalCurrentUsingTotalFields = new TableField[0];
-        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+		subTotalCurrentUsingGroupFields = new TableField[0];
+		SubTotalCurrentUsingTotalFields = new TableField[0];
+		ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
 		if (dlg.showModal() == nc.ui.pub.beans.UIDialog.ID_OK) {
 			issub = dlg.isSub();
 			issum = dlg.isSum();
-			isshow=dlg.isLevelCompute();
+			isshow = dlg.isLevelCompute();
 			setSubTotalCurrentUsingGroupFields(dlg.getGroupFields());
 			setSubTotalCurrentUsingTotalFields(dlg.getTotalFields());
 			getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
 
 			executeSubTotal();
-	      ZmReportBaseUI2 ui=(ZmReportBaseUI2)getReportBaseUI();
-	      ReportBuffer buff=ui.getBuff();
-	      buff.setIssub(new UFBoolean(issub));
-	      buff.setIssum(new UFBoolean(issum));
-	      TableField[] fls= dlg.getGroupFields();
-	      String[] tts=null;
-	      String[] ttsname=null;
-	      if(fls!=null && fls.length!=0){
-	    	  tts=new String[fls.length];
-	    	  ttsname=new String[fls.length];
-	    	  for(int i=0;i<fls.length;i++ ){
-	    		  tts[i]=fls[i].getFieldName();
-	    		  ttsname[i]=fls[i].getFieldShowName();
-	    	  }
-	      }
-	      buff.setTotfields(tts);
-	      buff.setTotfieldsNames(ttsname);
-	      
-	     // buff.seti
-	      
-			
-			
-            dealShow();
+			ZmReportBaseUI2 ui = (ZmReportBaseUI2) getReportBaseUI();
+			ReportBuffer buff = ui.getBuff();
+			buff.setIssub(new UFBoolean(issub));
+			buff.setIssum(new UFBoolean(issum));
+			TableField[] fls = dlg.getGroupFields();
+			String[] tts = null;
+			String[] ttsname = null;
+			if (fls != null && fls.length != 0) {
+				tts = new String[fls.length];
+				ttsname = new String[fls.length];
+				for (int i = 0; i < fls.length; i++) {
+					tts[i] = fls[i].getFieldName();
+					ttsname[i] = fls[i].getFieldShowName();
+				}
+			}
+			buff.setTotfields(tts);
+			buff.setTotfieldsNames(ttsname);
+
+			// buff.seti
+
+			dealShow();
 			getReportBaseUI()
 					.showHintMessage(
 							nc.ui.ml.NCLangRes.getInstance().getStrByID(
 									"uifactory_report",
 									"UPPuifactory_report-000022")/*
-																	 * @res
-																	 * "小计合计成功"
-																	 */);
+																 * @res "小计合计成功"
+																 */);
 		}
 	}
+
 	/**
 	 * 自动进行数据合计
 	 */
 	public void atuoexecute2() throws Exception {
-	    subTotalCurrentUsingGroupFields = new TableField[0];
-        SubTotalCurrentUsingTotalFields = new TableField[0];
-        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
-			issub = false;
-			issum = true;
-			isshow=dlg.isLevelCompute();
+		subTotalCurrentUsingGroupFields = new TableField[0];
+		SubTotalCurrentUsingTotalFields = new TableField[0];
+		ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+		issub = false;
+		issum = true;
+		isshow = dlg.isLevelCompute();
+		setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
+		setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
+		// getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+
+		executeSubTotal();
+		dealShow();
+		getReportBaseUI().showHintMessage(
+				nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report",
+						"UPPuifactory_report-000022")/*
+													 * @res "小计合计成功"
+													 */);
+	}
+
+	/**
+	 * 自动进行数据合计
+	 */
+	public void atuoexecute2(boolean issub, boolean issum, String[] totfields,
+			String[] totfieldsNames) throws Exception {
+		subTotalCurrentUsingGroupFields = new TableField[0];
+		SubTotalCurrentUsingTotalFields = new TableField[0];
+		ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+		this.issub = issub;
+		this.issum = issum;
+		isshow = dlg.isLevelCompute();
+		if (totfields == null || totfields.length == 0) {
 			setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
-			setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
-	//		getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+		} else {
+			setSubTotalCurrentUsingGroupFields(getTableFields(totfields,
+					totfieldsNames));
+		}
+		setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
+		// getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
 
-			executeSubTotal();
-            dealShow();
-			getReportBaseUI()
-					.showHintMessage(
-							nc.ui.ml.NCLangRes.getInstance().getStrByID(
-									"uifactory_report",
-									"UPPuifactory_report-000022")/*
-																	 * @res
-																	 * "小计合计成功"
-																	 */);
+		executeSubTotal();
+		dealShow();
+		getReportBaseUI().showHintMessage(
+				nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report",
+						"UPPuifactory_report-000022")/*
+													 * @res "小计合计成功"
+													 */);
 	}
+
 	/**
 	 * 自动进行数据合计
 	 */
-	public void atuoexecute2(boolean issub,boolean issum,String[] totfields,String[] totfieldsNames) throws Exception {
-	    subTotalCurrentUsingGroupFields = new TableField[0];
-        SubTotalCurrentUsingTotalFields = new TableField[0];
-        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
-			this.issub = issub;
-			this.issum = issum;
-			isshow=dlg.isLevelCompute();
-			if(totfields==null || totfields.length==0){
-			    setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
-			}
-			else{
-				setSubTotalCurrentUsingGroupFields(getTableFields(totfields,totfieldsNames));
-			}
+	public void atuoexecute3(boolean issub, boolean issum, String[] totfields,
+			String[] totfieldsNames, String[] sumfields, String[] sumfieldsNames)
+			throws Exception {
+		subTotalCurrentUsingGroupFields = new TableField[0];
+		SubTotalCurrentUsingTotalFields = new TableField[0];
+		ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
+		this.issub = issub;
+		this.issum = issum;
+		isshow = dlg.isLevelCompute();
+		if (totfields == null || totfields.length == 0) {
+			setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
+		} else {
+			setSubTotalCurrentUsingGroupFields(getTableFields(totfields,
+					totfieldsNames));
+		}
+		if (sumfields == null || sumfields.length == 0) {
 			setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
-	//		getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+			// getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
+		} else {
+			// dlg.getTotalFields2();
+			setSubTotalCurrentUsingTotalFields(getTableFields(sumfields,
+					sumfieldsNames));
+		}
+		executeSubTotal();
+		dealShow();
+		getReportBaseUI().showHintMessage(
+				nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report",
+						"UPPuifactory_report-000022")/*
+													 * @res "小计合计成功"
+													 */);
+	}
 
-			executeSubTotal();
-            dealShow();
-			getReportBaseUI()
-					.showHintMessage(
-							nc.ui.ml.NCLangRes.getInstance().getStrByID(
-									"uifactory_report",
-									"UPPuifactory_report-000022")/*
-																	 * @res
-																	 * "小计合计成功"
-																	 */);
-	}
-	/**
-	 * 自动进行数据合计
-	 */
-	public void atuoexecute3(boolean issub,boolean issum,String[] totfields,String[] totfieldsNames,String[] sumfields,String[] sumfieldsNames) throws Exception {
-	    subTotalCurrentUsingGroupFields = new TableField[0];
-        SubTotalCurrentUsingTotalFields = new TableField[0];
-        ZmSubTotalConfDLG dlg = new ZmSubTotalConfDLG(getReportBaseUI(), this);
-			this.issub = issub;
-			this.issum = issum;
-			isshow=dlg.isLevelCompute();
-			if(totfields==null || totfields.length==0){
-			    setSubTotalCurrentUsingGroupFields(dlg.getGroupFields2());
-			}
-			else{
-				setSubTotalCurrentUsingGroupFields(getTableFields(totfields,totfieldsNames));
-			}
-			if(sumfields==null || sumfields.length==0){
-			   setSubTotalCurrentUsingTotalFields(dlg.getTotalFields2());
-	           //		getReportBaseUI().setBodyDataForSub();// 将表体数据中的合计 小计行去掉
-			}else{
-				//dlg.getTotalFields2();
-			   setSubTotalCurrentUsingTotalFields(getTableFields(sumfields,sumfieldsNames));
-			}
-			executeSubTotal();
-            dealShow();
-			getReportBaseUI()
-					.showHintMessage(
-							nc.ui.ml.NCLangRes.getInstance().getStrByID(
-									"uifactory_report",
-									"UPPuifactory_report-000022")/*
-																	 * @res
-																	 * "小计合计成功"
-																	 */);
-	}
 	/**
 	 * 
 	 * @作者：mlr
-	 * @说明：完达山物流项目 
+	 * @说明：完达山物流项目
 	 * @时间：2011-12-29下午06:05:52
 	 * @param totfields
 	 * @param totfieldsNames
 	 * @return
 	 */
-	public TableField[] getTableFields(String[]totfields,String[] totfieldsNames){
-		if(totfields==null || totfields.length==0)
+	public TableField[] getTableFields(String[] totfields,
+			String[] totfieldsNames) {
+		if (totfields == null || totfields.length == 0)
 			return null;
-		if(totfieldsNames==null || totfieldsNames.length==0)
+		if (totfieldsNames == null || totfieldsNames.length == 0)
 			return null;
-		if(totfields.length!=totfieldsNames.length){
+		if (totfields.length != totfieldsNames.length) {
 			return null;
 		}
-		TableField[] tbs=new TableField[totfields.length];
-		for(int i=0;i<tbs.length;i++){
-			tbs[i]=new TableField(totfields[i].trim(),totfieldsNames[i].trim(),false);
+		TableField[] tbs = new TableField[totfields.length];
+		for (int i = 0; i < tbs.length; i++) {
+			tbs[i] = new TableField(totfields[i].trim(), totfieldsNames[i]
+					.trim(), false);
 		}
 		return tbs;
 	}
-    /**
-     * 处理是否只显示原始行
-     * @author mlr
-     * @说明：（鹤岗矿业）
-     * 2011-12-22上午09:49:06
-     */
-	private void dealShow() {	
-		Vector vecs=new Vector();
-		String name=subTotalCurrentUsingGroupFields[0].getFieldName();
-		
-		BillModel mb=getReportBaseUI().getReportBase().getBillModel();
-		int index=mb.getBodyColByKey(name);
-		if(isshow==false){
-			Vector vc=getReportBaseUI().getReportBase().getBillModel().getDataVector();
-			for(int i=0;i<vc.size();i++){
-				Vector v=(Vector) vc.get(i);
-				String va=(String) v.get(index);
-				if(va.equals("——小计——")){
-					Vector n=(Vector) vc.get(i-1);
-					String sf=create(subTotalCurrentUsingGroupFields,n);
+
+	/**
+	 * 处理是否只显示原始行
+	 * 
+	 * @author mlr
+	 * @说明：（鹤岗矿业） 2011-12-22上午09:49:06
+	 */
+	private void dealShow() {
+		Vector vecs = new Vector();
+		String name = subTotalCurrentUsingGroupFields[0].getFieldName();
+
+		BillModel mb = getReportBaseUI().getReportBase().getBillModel();
+		int index = mb.getBodyColByKey(name);
+		if (isshow == false) {
+			Vector vc = getReportBaseUI().getReportBase().getBillModel()
+					.getDataVector();
+			for (int i = 0; i < vc.size(); i++) {
+				Vector v = (Vector) vc.get(i);
+				String va = (String) v.get(index);
+				if (va.equals("——小计——")) {
+					Vector n = (Vector) vc.get(i - 1);
+					String sf = create(subTotalCurrentUsingGroupFields, n);
 					v.set(index, sf);
-					vecs.add( v);
+					vecs.add(v);
 				}
-					
+
 			}
-			getReportBaseUI().getReportBase().getBillModel().setDataVector(vecs);
+			getReportBaseUI().getReportBase().getBillModel()
+					.setDataVector(vecs);
 			getReportBaseUI().getReportBase().getBillModel().updateValue();
 
 		}
 	}
+
 	private String create(TableField[] subTotalCurrentUsingGroupFields2,
 			Vector n) {
-		String name="";
-		BillModel mb=getReportBaseUI().getReportBase().getBillModel();
-		for(int i=0;i<subTotalCurrentUsingGroupFields2.length;i++){
-			String fname=subTotalCurrentUsingGroupFields2[i].getFieldName();
-			if(fname==null || fname.length()==0)
+		String name = "";
+		BillModel mb = getReportBaseUI().getReportBase().getBillModel();
+		for (int i = 0; i < subTotalCurrentUsingGroupFields2.length; i++) {
+			String fname = subTotalCurrentUsingGroupFields2[i].getFieldName();
+			if (fname == null || fname.length() == 0)
 				continue;
-			if(".".equalsIgnoreCase(fname.substring(fname.length()-1))){
-				fname=fname.substring(0,fname.length()-1)+"_";
+			if (".".equalsIgnoreCase(fname.substring(fname.length() - 1))) {
+				fname = fname.substring(0, fname.length() - 1) + "_";
 			}
-			int index=mb.getBodyColByKey(fname);  
-			if(index<0 )
+			int index = mb.getBodyColByKey(fname);
+			if (index < 0)
 				continue;
-			name=name+"%"+n.get(index);
+			name = name + "%" + n.get(index);
 		}
 		return name;
 	}
 
 	public void getBodyValueVOs(CircularlyAccessibleValueObject[] bodyVOs) {
-		BillModel mb=getReportBaseUI().getReportBase().getBillModel();
+		BillModel mb = getReportBaseUI().getReportBase().getBillModel();
 		for (int i = 0; i < bodyVOs.length; i++) {
 			for (int j = 0; j < mb.getBodyItems().length; j++) {
 				BillItem item = mb.getBodyItems()[j];
@@ -287,9 +289,9 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 			throw new BusinessException(nc.ui.ml.NCLangRes.getInstance()
 					.getStrByID("uifactory_report",
 							"UPPuifactory_report-000019")/*
-															 * @res
-															 * "分组字段和合计字段至少需要各选一项才能进行小计合计操作。"
-															 */);
+														 * @res
+														 * "分组字段和合计字段至少需要各选一项才能进行小计合计操作。"
+														 */);
 
 		// 正常情况 下 开始小计合计
 		if (getSubTotalCurrentUsingGroupFields() != null
@@ -311,7 +313,7 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 
 		}
 	}
-   
+
 	public boolean isIssub() {
 		return issub;
 	}
@@ -462,8 +464,8 @@ public class LevelSubTotalAction extends AbstractActionHasDataAvailable
 				IReportModelDataTypes.FLOAT);
 		TableField[] i = getReportBaseUI().getVisibleFieldsByDataType(
 				IReportModelDataTypes.INTEGER);
-		TableField[] j=getReportBaseUI().getVisibleFields();
-		
+		TableField[] j = getReportBaseUI().getVisibleFields();
+
 		ArrayList<TableField> al = new ArrayList<TableField>();
 		al.addAll(Arrays.asList(f));
 		al.addAll(Arrays.asList(i));

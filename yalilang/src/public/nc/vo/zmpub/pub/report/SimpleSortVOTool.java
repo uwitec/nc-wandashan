@@ -2,21 +2,24 @@ package nc.vo.zmpub.pub.report;
 
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
+
 /**
- * 简单的对CirVOs排序的工具。
- * 创建日期：(2004-8-17 17:43:27)
- * @author：刘建波 
+ * 简单的对CirVOs排序的工具。 创建日期：(2004-8-17 17:43:27)
+ * 
+ * @author：刘建波
  */
 public class SimpleSortVOTool implements java.util.Comparator {
 	private String[] sortItems = null;
 	private boolean isDesc = true;
 	private CircularlyAccessibleValueObject[] vos = null;
-/**
- * SimpleSortVOTool 构造子注解。
- */
-public SimpleSortVOTool() {
-	super();
-}
+
+	/**
+	 * SimpleSortVOTool 构造子注解。
+	 */
+	public SimpleSortVOTool() {
+		super();
+	}
+
 	public int compare(java.lang.Object o1, java.lang.Object o2) {
 		CircularlyAccessibleValueObject vo1 = (CircularlyAccessibleValueObject) o1;
 		CircularlyAccessibleValueObject vo2 = (CircularlyAccessibleValueObject) o2;
@@ -34,7 +37,8 @@ public SimpleSortVOTool() {
 				UFDouble ufd2 = (UFDouble) oValue2;
 				if (ufd1.doubleValue() == ufd2.doubleValue())
 					continue;
-				return ufd1.doubleValue() > ufd2.doubleValue() && isDesc ? -1 : 1;
+				return ufd1.doubleValue() > ufd2.doubleValue() && isDesc ? -1
+						: 1;
 			} else {
 				if (oValue1.toString().compareTo(oValue2.toString()) == 0)
 					continue;
@@ -49,29 +53,33 @@ public SimpleSortVOTool() {
 		}
 		return 0;
 	}
-public void sortVO(CircularlyAccessibleValueObject[] vos, String[] sortitems, boolean isDesc) {
-	if (vos == null || vos.length < 2)
-		return;
-	if (sortitems == null || sortitems.length == 0)
-		return;
-	this.vos = vos;
-	this.isDesc = isDesc;
-	this.sortItems = sortitems;
-	java.util.Arrays.sort(vos, this);
-}
-public void sortVO(java.util.Vector v, String[] sortitems, boolean isDesc) {
-	if (v == null || v.size() < 2)
-		return;
-	if (sortitems == null || sortitems.length == 0)
-		return;
-	CircularlyAccessibleValueObject[] vos = new CircularlyAccessibleValueObject[v.size()];
-	v.copyInto(vos);
-	this.vos = vos;
-	this.isDesc = isDesc;
-	this.sortItems = sortitems;
-	java.util.Arrays.sort(vos, this);
-	v.removeAllElements();
-	for (int i = 0; i < vos.length; i++)
-		v.add(vos[i]);
-}
+
+	public void sortVO(CircularlyAccessibleValueObject[] vos,
+			String[] sortitems, boolean isDesc) {
+		if (vos == null || vos.length < 2)
+			return;
+		if (sortitems == null || sortitems.length == 0)
+			return;
+		this.vos = vos;
+		this.isDesc = isDesc;
+		this.sortItems = sortitems;
+		java.util.Arrays.sort(vos, this);
+	}
+
+	public void sortVO(java.util.Vector v, String[] sortitems, boolean isDesc) {
+		if (v == null || v.size() < 2)
+			return;
+		if (sortitems == null || sortitems.length == 0)
+			return;
+		CircularlyAccessibleValueObject[] vos = new CircularlyAccessibleValueObject[v
+				.size()];
+		v.copyInto(vos);
+		this.vos = vos;
+		this.isDesc = isDesc;
+		this.sortItems = sortitems;
+		java.util.Arrays.sort(vos, this);
+		v.removeAllElements();
+		for (int i = 0; i < vos.length; i++)
+			v.add(vos[i]);
+	}
 }

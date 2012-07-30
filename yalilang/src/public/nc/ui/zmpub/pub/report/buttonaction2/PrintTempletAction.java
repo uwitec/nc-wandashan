@@ -1,10 +1,12 @@
 package nc.ui.zmpub.pub.report.buttonaction2;
 
 import nc.vo.zmpub.pub.report2.ReportBaseUI;
+
 /**
  * Ä£°å´òÓ¡
+ * 
  * @author guanyj1
- *
+ * 
  */
 public class PrintTempletAction extends AbstractActionHasDataAvailable {
 

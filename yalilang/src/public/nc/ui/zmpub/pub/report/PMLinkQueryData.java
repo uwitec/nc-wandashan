@@ -7,25 +7,21 @@ import nc.ui.pub.linkoperate.ILinkQueryData;
 
 /**
  * <p>
+ * 
  * @author xkf
  * @date 2007-6-21 下午08:40:49
  * @version V5.0
- * @主要的类使用：
- *  <ul>
- * 		<li><b>如何使用该类：</b></li>
- *      <li><b>是否线程安全：</b></li>
- * 		<li><b>并发性要求：</b></li>
- * 		<li><b>使用约束：</b></li>
- * 		<li><b>其他：</b></li>
- * </ul>
- * </p>
- * <p>
- * @已知的BUG：
- * 	<ul>
- * 		<li></li>
- *  </ul>
- * </p>
- * <p>
+ * @主要的类使用： <ul>
+ *          <li><b>如何使用该类：</b></li> <li><b>是否线程安全：</b></li> <li><b>并发性要求：</b>
+ *          </li> <li><b>使用约束：</b></li> <li><b>其他：</b></li>
+ *          </ul>
+ *          </p>
+ *          <p>
+ * @已知的BUG： <ul>
+ *          <li></li>
+ *          </ul>
+ *          </p>
+ *          <p>
  * @修改历史：
  */
 public class PMLinkQueryData implements ILinkQueryData {
@@ -41,6 +37,7 @@ public class PMLinkQueryData implements ILinkQueryData {
 	private String billType = null;
 	private String pkOrg = null;
 	private Object userObject = null;
+
 	public String getBillID() {
 		// TODO 自动生成方法存根
 		return billID;

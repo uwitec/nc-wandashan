@@ -1,4 +1,3 @@
-
 package nc.vo.zmpub.pub.report2;
 
 import java.awt.BorderLayout;
@@ -18,11 +17,11 @@ import nc.ui.trade.component.ListToListPanel;
 import nc.ui.trade.report.sort.SortListItem;
 import nc.ui.trade.report.sort.SortListRenderer;
 import nc.vo.trade.report.TableField;
+
 /**
- * mlr  添加对 交叉后的数据的 排序功能
+ * mlr 添加对 交叉后的数据的 排序功能
  */
-public class ZmSortDLG extends StandardUIDialog
-{
+public class ZmSortDLG extends StandardUIDialog {
 	public ListToListPanel centerPane = null;
 
 	public SortListItem[] leftItems = null;
@@ -35,31 +34,24 @@ public class ZmSortDLG extends StandardUIDialog
 
 	public UIButton descBt = null;
 
-	class AllEventHandler implements ActionListener
-	{
+	class AllEventHandler implements ActionListener {
 
-		public void actionPerformed(ActionEvent e)
-		{
-			if (e.getSource() == ascBt)
-			{
-				UIList list = (UIList)getCenterPane().getRightList().getViewComponent();
-				if (list.getSelectedValues() != null)
-				{
-					for (int i = 0; i < list.getSelectedValues().length; i++)
-					{
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == ascBt) {
+				UIList list = (UIList) getCenterPane().getRightList()
+						.getViewComponent();
+				if (list.getSelectedValues() != null) {
+					for (int i = 0; i < list.getSelectedValues().length; i++) {
 						((SortListItem) list.getSelectedValues()[i])
 								.setAsc(true);
 					}
 					list.repaint();
 				}
-			}
-			else if (e.getSource() == descBt)
-			{
-				UIList list = (UIList)getCenterPane().getRightList().getViewComponent();
-				if (list.getSelectedValues() != null)
-				{
-					for (int i = 0; i < list.getSelectedValues().length; i++)
-					{
+			} else if (e.getSource() == descBt) {
+				UIList list = (UIList) getCenterPane().getRightList()
+						.getViewComponent();
+				if (list.getSelectedValues() != null) {
+					for (int i = 0; i < list.getSelectedValues().length; i++) {
 						((SortListItem) list.getSelectedValues()[i])
 								.setAsc(false);
 					}
@@ -70,14 +62,12 @@ public class ZmSortDLG extends StandardUIDialog
 
 	}
 
-
 	/**
 	 * @param parent
 	 * @param title
 	 */
 	public ZmSortDLG(Container parent, String title, TableField[] leftField,
-			TableField[] rightField)
-	{
+			TableField[] rightField) {
 		super(parent, title);
 		initData(leftField, rightField);
 		initLayout();
@@ -87,8 +77,7 @@ public class ZmSortDLG extends StandardUIDialog
 	/**
 	 *
 	 */
-	public void initListeners()
-	{
+	public void initListeners() {
 		getDescBt().addActionListener(eventHandler);
 		getAscBt().addActionListener(eventHandler);
 	}
@@ -96,23 +85,18 @@ public class ZmSortDLG extends StandardUIDialog
 	/**
 	 *
 	 */
-	public void initData(TableField[] leftField, TableField[] rightField)
-	{
-		if (leftField != null)
-		{
+	public void initData(TableField[] leftField, TableField[] rightField) {
+		if (leftField != null) {
 			leftItems = new SortListItem[leftField.length];
-			for (int i = 0; i < leftItems.length; i++)
-			{
+			for (int i = 0; i < leftItems.length; i++) {
 				leftItems[i] = new SortListItem();
 				leftItems[i].setTableField(leftField[i]);
 				leftItems[i].setAsc(true);
 			}
 		}
-		if (rightField != null)
-		{
+		if (rightField != null) {
 			rightItems = new SortListItem[rightField.length];
-			for (int i = 0; i < rightItems.length; i++)
-			{
+			for (int i = 0; i < rightItems.length; i++) {
 				rightItems[i] = new SortListItem();
 				rightItems[i].setTableField(rightField[i]);
 				rightItems[i].setAsc(true);
@@ -123,29 +107,47 @@ public class ZmSortDLG extends StandardUIDialog
 	/**
 	 *
 	 */
-	public void initLayout()
-	{
+	public void initLayout() {
 		this.setSize(620, 475);
 
-		this.themePanel.setTheme(nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000006")/*@res "排序设置"*/);
-		this.themePanel.setDetailTheme(nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000151")/*@res "从左侧列表中选择你要排序的字段,加入到右侧面板,并可调整顺序"*/);
-
+		this.themePanel
+				.setTheme(nc.ui.ml.NCLangRes.getInstance().getStrByID(
+						"uifactory_report", "UPPuifactory_report-000006")/*
+																		 * @res
+																		 * "排序设置"
+																		 */);
+		this.themePanel
+				.setDetailTheme(nc.ui.ml.NCLangRes.getInstance().getStrByID(
+						"uifactory_report", "UPPuifactory_report-000151")/*
+																		 * @res
+																		 * "从左侧列表中选择你要排序的字段,加入到右侧面板,并可调整顺序"
+																		 */);
 
 		Container contentPane = this.editorPanel;
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(getCenterPane(), BorderLayout.CENTER);
-		((JList)getCenterPane().getRightList().getViewComponent()).setCellRenderer(new SortListRenderer());
+		((JList) getCenterPane().getRightList().getViewComponent())
+				.setCellRenderer(new SortListRenderer());
 	}
-
 
 	/**
 	 * @return 返回 centerPane。
 	 */
-	public ListToListPanel getCenterPane()
-	{
-		if (centerPane == null)
-		{
-			centerPane = new ListToListPanel(nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000152")/*@res "未排序字段"*/, leftItems, nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000153")/*@res "待排序字段"*/, rightItems);
+	public ListToListPanel getCenterPane() {
+		if (centerPane == null) {
+			centerPane = new ListToListPanel(
+					nc.ui.ml.NCLangRes.getInstance().getStrByID(
+							"uifactory_report", "UPPuifactory_report-000152")/*
+																			 * @res
+																			 * "未排序字段"
+																			 */,
+					leftItems,
+					nc.ui.ml.NCLangRes.getInstance().getStrByID(
+							"uifactory_report", "UPPuifactory_report-000153")/*
+																			 * @res
+																			 * "待排序字段"
+																			 */,
+					rightItems);
 			UIPanel panel = new UIPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.add(getAscBt());
@@ -155,48 +157,52 @@ public class ZmSortDLG extends StandardUIDialog
 		}
 		return centerPane;
 	}
+
 	/**
 	 * 得到排序字段升序或降序
+	 * 
 	 * @return
 	 */
-	public int[] getAscOrDesc()
-	{
+	public int[] getAscOrDesc() {
 		Object[] items = getCenterPane().getRightData();
 		if (items.length == 0)
 			return null;
 		int[] asc = new int[items.length];
-		for (int i = 0; i < items.length; i++)
-		{
+		for (int i = 0; i < items.length; i++) {
 			asc[i] = ((SortListItem) items[i]).isAsc() ? 1 : -1;
 		}
 		return asc;
 	}
+
 	/**
 	 * 得到排序字段
+	 * 
 	 * @return
 	 */
-	public String[] getSortFields()
-	{
+	public String[] getSortFields() {
 		Object[] items = getCenterPane().getRightData();
 		if (items.length == 0)
 			return null;
 		String[] fields = new String[items.length];
-		for (int i = 0; i < items.length; i++)
-		{
+		for (int i = 0; i < items.length; i++) {
 			fields[i] = ((SortListItem) items[i]).getTableField()
 					.getFieldName();
 		}
 		return fields;
 	}
+
 	/**
 	 * @return 返回 ascBt。
 	 */
-	public UIButton getAscBt()
-	{
-		if (ascBt == null)
-		{
+	public UIButton getAscBt() {
+		if (ascBt == null) {
 			ascBt = new UIButton();
-			ascBt.setText(nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000100")/*@res "升序"*/);
+			ascBt
+					.setText(nc.ui.ml.NCLangRes.getInstance().getStrByID(
+							"uifactory_report", "UPPuifactory_report-000100")/*
+																			 * @res
+																			 * "升序"
+																			 */);
 		}
 		return ascBt;
 	}
@@ -204,12 +210,15 @@ public class ZmSortDLG extends StandardUIDialog
 	/**
 	 * @return 返回 descBt。
 	 */
-	public UIButton getDescBt()
-	{
-		if (descBt == null)
-		{
+	public UIButton getDescBt() {
+		if (descBt == null) {
 			descBt = new UIButton();
-			descBt.setText(nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory_report","UPPuifactory_report-000101")/*@res "降序"*/);
+			descBt
+					.setText(nc.ui.ml.NCLangRes.getInstance().getStrByID(
+							"uifactory_report", "UPPuifactory_report-000101")/*
+																			 * @res
+																			 * "降序"
+																			 */);
 		}
 		return descBt;
 	}

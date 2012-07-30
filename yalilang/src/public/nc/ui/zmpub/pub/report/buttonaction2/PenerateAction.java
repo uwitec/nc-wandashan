@@ -1,10 +1,12 @@
 package nc.ui.zmpub.pub.report.buttonaction2;
 
 import nc.vo.zmpub.pub.report2.ReportBaseUI;
+
 /**
  * ´©Í¸°´Å¥ÊÂ¼þ
+ * 
  * @author guanyj1
- *
+ * 
  */
 public class PenerateAction extends AbstractActionHasDataAvailable {
 

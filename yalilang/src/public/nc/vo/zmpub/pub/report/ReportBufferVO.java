@@ -1,55 +1,49 @@
 package nc.vo.zmpub.pub.report;
+
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDateTime;
+
 /**
  * 报表配置vo
+ * 
  * @author mlr
- * 
- * 
- * 
- *
  */
-public class ReportBufferVO extends SuperVO{
-	
-	
-//	create table zm_config(
-//		    pk_config char(20),
-//		    nodecode  char(50),
-//		    strRows   varchar(1000),
-//		    strCols   varchar(1000),
-//		    strVals    varchar(1000),
-//	        lel        varchar(1000),
-//          istotal    char(1),
-//	        issub      char(1),
-//	        issum      char(1),
-//	       totfields   varchar(1000),
-//	       totfieldsNames varchar(1000)		 
-//	 )
-    private String pk_config;//主键
-	
-	
+public class ReportBufferVO extends SuperVO {
+
+	// create table zm_config(
+	// pk_config char(20),
+	// nodecode char(50),
+	// strRows varchar(1000),
+	// strCols varchar(1000),
+	// strVals varchar(1000),
+	// lel varchar(1000),
+	// istotal char(1),
+	// issub char(1),
+	// issum char(1),
+	// totfields varchar(1000),
+	// totfieldsNames varchar(1000)
+	// )
+	private String pk_config;// 主键
+
 	private String nodecode = null;// 功能节点号
-	
+
 	// 交叉数据
-	private String strRows = null;// 交叉行   用&作为分隔符
+	private String strRows = null;// 交叉行 用&作为分隔符
 	private String strCols = null;// 交叉列 用&作为分隔符
 	private String strVals = null;// 交叉值 用&作为分隔符
-	private UFBoolean istotal=null;//
-	private Integer  lel=null;//汇总级次
-	
+	private UFBoolean istotal = null;//
+	private Integer lel = null;// 汇总级次
+
 	// 合计数据
-	private UFBoolean issub = null;// 是否小计 
+	private UFBoolean issub = null;// 是否小计
 	private UFBoolean issum = null;// 是否合计
-	private String totfields = null;// 合计纬度  用&作为分隔符
-	private String totfieldsNames = null;// 合计纬度名字  用&作为分隔符
-	
+	private String totfields = null;// 合计纬度 用&作为分隔符
+	private String totfieldsNames = null;// 合计纬度名字 用&作为分隔符
+
 	private UFDateTime ts;
 	private Integer dr;
 
-	
-	
-	
 	public UFBoolean getIstotal() {
 		return istotal;
 	}
@@ -156,26 +150,26 @@ public class ReportBufferVO extends SuperVO{
 
 	@Override
 	public String getPKFieldName() {
-		
+
 		return "pk_config";
 	}
 
 	@Override
 	public String getParentPKFieldName() {
-		
+
 		return null;
 	}
 
 	@Override
 	public String getTableName() {
-		
+
 		return "zm_config";
 	}
-	
+
 	@Override
 	public String getPrimaryKey() {
-		
+
 		return pk_config;
 	}
-	
+
 }

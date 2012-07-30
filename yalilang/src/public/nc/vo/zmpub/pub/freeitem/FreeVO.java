@@ -1,6 +1,5 @@
 package nc.vo.zmpub.pub.freeitem;
 
-
 import java.util.ArrayList;
 
 import nc.bs.logging.Logger;
@@ -205,8 +204,7 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 	 * 
 	 * 创建日期：(2001-6-20)
 	 * 
-	 * @param ??fieldNameForMethod??
-	 *            主键值
+	 * @param ??fieldNameForMethod?? 主键值
 	 */
 	public FreeVO(String newCinventoryid) {
 
@@ -234,28 +232,29 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 
 		return free;
 	}
-  
-  /**
-   * 
-   * 补充定义
-   * 创建日期：(2001-6-20)
-   */
-  public void setDefine(FreeVO afree) {
-    if(afree==null)
-      return;
-    if(m_cinventoryid!=null && !m_cinventoryid.equals(afree.getCinventoryid()))
-      return;
-    String vfreeid = "vfreeid",vfreeidkey=null;
-    String vfreename = "vfreename",vfreenamekey=null;
-    
-    for (int i = 1; i <= 10; i++) {
-      vfreeidkey = vfreeid+i;
-      vfreenamekey = vfreename+i;
-      setAttributeValue(vfreeidkey, afree.getAttributeValue(vfreeidkey));
-      setAttributeValue(vfreenamekey, afree.getAttributeValue(vfreenamekey));
-    }
 
-  }
+	/**
+	 * 
+	 * 补充定义 创建日期：(2001-6-20)
+	 */
+	public void setDefine(FreeVO afree) {
+		if (afree == null)
+			return;
+		if (m_cinventoryid != null
+				&& !m_cinventoryid.equals(afree.getCinventoryid()))
+			return;
+		String vfreeid = "vfreeid", vfreeidkey = null;
+		String vfreename = "vfreename", vfreenamekey = null;
+
+		for (int i = 1; i <= 10; i++) {
+			vfreeidkey = vfreeid + i;
+			vfreenamekey = vfreename + i;
+			setAttributeValue(vfreeidkey, afree.getAttributeValue(vfreeidkey));
+			setAttributeValue(vfreenamekey, afree
+					.getAttributeValue(vfreenamekey));
+		}
+
+	}
 
 	/*
 	 * （非 Javadoc）
@@ -2742,7 +2741,7 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 			else
 				iAppendix = 'a' + (i - 10);
 			sTempString = sTempString + "["
-			// + iAppendix
+					// + iAppendix
 					+ getAttributeValue("vfreename" + i) + ":"
 					+ getAttributeValue("vfree" + i) + "]";
 		}
@@ -2973,22 +2972,20 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 		int loop = 100000;
 
 		FreeVO vo = new FreeVO();
-		
+
 		long t1, t2;
 		// ------------------- NULL ------------------------
-		
+
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItemOld();
 		}
-		
-	
+
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItem();
 		}
-	
-		
+
 		vo.setVfree0(null);
 		String s1 = vo.getWholeFreeItemOld();// 正确性验证
 		vo.setVfree0(null);
@@ -3013,17 +3010,16 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 		vo.setVfree5("aaa5");
 		vo.setVfreename5("name5");
 
-		
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItemOld();
 		}
-		
+
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItem();
 		}
-		
+
 		vo.setVfree0(null);
 		s1 = vo.getWholeFreeItemOld();
 		vo.setVfree0(null);
@@ -3050,17 +3046,16 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 		vo.setVfree5(null);
 		vo.setVfreename5("name5");
 
-		
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItemOld();
 		}
-		
+
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItem();
 		}
-		
+
 		vo.setVfree0(null);
 		s1 = vo.getWholeFreeItemOld();
 		vo.setVfree0(null);
@@ -3087,17 +3082,16 @@ public class FreeVO extends CircularlyAccessibleValueObject {
 		vo.setVfree5("aaa5");
 		vo.setVfreename5(null);
 
-		
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItemOld();
 		}
-	
+
 		for (int i = 0; i < loop; i++) {
 			vo.setVfree0(null);
 			vo.getWholeFreeItem();
 		}
-		
+
 		vo.setVfree0(null);
 		s1 = vo.getWholeFreeItemOld();
 		vo.setVfree0(null);

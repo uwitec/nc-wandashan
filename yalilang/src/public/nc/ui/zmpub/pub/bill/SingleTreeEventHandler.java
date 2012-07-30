@@ -1,4 +1,5 @@
 package nc.ui.zmpub.pub.bill;
+
 import java.sql.SQLException;
 
 import nc.ui.pub.ButtonObject;
@@ -20,17 +21,20 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.trade.button.ButtonVO;
+
 /**
  * 树卡单表体基类
+ * 
  * @author mlr
  */
-public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
+public abstract class SingleTreeEventHandler extends TreeCardEventHandler {
 	private static final String staticACTION = "BOACTION";
 	private static final String staticASS = "BOASS";
 	private IBillBusiListener m_bbl = null;
-	public void onTreeSelected(VOTreeNode selectnode){
-		try{
-			if((getUITreeCardController() instanceof ISingleController)){
+
+	public void onTreeSelected(VOTreeNode selectnode) {
+		try {
+			if ((getUITreeCardController() instanceof ISingleController)) {
 				onQueryBodyData(selectnode);
 			}
 		} catch (BusinessException ex) {
@@ -41,11 +45,12 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * 按钮单击事件
 	 */
 	public void onButton(ButtonObject bo) {
-		if(getUITreeCardController().isTableTree()){
+		if (getUITreeCardController().isTableTree()) {
 			ButtonObject parentBtn = bo.getParent();
 			if (parentBtn != null) {
 				int intBtn = Integer.parseInt(parentBtn.getTag());
@@ -114,8 +119,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000067")/*
-													 * @res "开始进行编辑单据，请等待......"
-													 */);
+												 * @res "开始进行编辑单据，请等待......"
+												 */);
 			onBoEdit();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -125,8 +130,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000068")/*
-													 * @res "开始进行作废单据，请等待......"
-													 */);
+												 * @res "开始进行作废单据，请等待......"
+												 */);
 			onBoDel();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -140,8 +145,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000070")/*
-													 * @res "开始进行档案删除，请等待......"
-													 */);
+												 * @res "开始进行档案删除，请等待......"
+												 */);
 			onBoDelete();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -172,8 +177,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000072")/*
-													 * @res "开始进行单据保存，请等待......"
-													 */);
+												 * @res "开始进行单据保存，请等待......"
+												 */);
 			onBoSave();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -195,8 +200,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000074")/*
-													 * @res "开始进行打印单据，请等待......"
-													 */);
+												 * @res "开始进行打印单据，请等待......"
+												 */);
 			onBoPrint();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -210,8 +215,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000074")/*
-													 * @res "开始进行打印单据，请等待......"
-													 */);
+												 * @res "开始进行打印单据，请等待......"
+												 */);
 			onBoDirectPrint();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -238,8 +243,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000076")/*
-													 * @res "开始进行刷新单据，请等待......"
-													 */);
+												 * @res "开始进行刷新单据，请等待......"
+												 */);
 			onBoRefresh();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -254,8 +259,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000078")/*
-													 * @res "开始进行参照单据，请等待......"
-													 */);
+												 * @res "开始进行参照单据，请等待......"
+												 */);
 			onBillRef();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -269,8 +274,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000080")/*
-													 * @res "开始进行数据复制，请等待......"
-													 */);
+												 * @res "开始进行数据复制，请等待......"
+												 */);
 			onBoCopy();
 			// 动作执行后处理
 			buttonActionAfter(getBillUI(), intBtn);
@@ -419,6 +424,7 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 		}
 
 	}
+
 	/**
 	 * 按钮m_boBusiType点击时执行的动作,如有必要，请覆盖.
 	 */
@@ -438,8 +444,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 				getButtonManager().getButton(IBillButton.Action),
 				getUIController().getBillType(), staticACTION);
 
-//		getButtonManager().setActionButtonVO(
-//				getBillUI().isSaveAndCommitTogether());
+		// getButtonManager().setActionButtonVO(
+		// getBillUI().isSaveAndCommitTogether());
 
 		String oldtype = getBillUI().getBusinessType();
 		String newtype = vo.getPrimaryKey();
@@ -481,8 +487,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000060")/*
-													 * @res "开始选择业务类型，请等待......"
-													 */);
+												 * @res "开始选择业务类型，请等待......"
+												 */);
 			onBoBusiType(bo);
 			break;
 		}
@@ -490,8 +496,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000061")/*
-													 * @res "开始进行增加单据，请等待......"
-													 */);
+												 * @res "开始进行增加单据，请等待......"
+												 */);
 			onBoBusiTypeAdd(bo, null);
 			break;
 		}
@@ -503,9 +509,8 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			getBillUI().showHintMessage(
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("uifactory",
 							"UPPuifactory-000062")/*
-													 * @res
-													 * "开始对单据的辅助进行操作，请等待......"
-													 */);
+												 * @res "开始对单据的辅助进行操作，请等待......"
+												 */);
 			onBoAss(bo);
 			break;
 		}
@@ -530,7 +535,7 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			break;
 		}
 		default: {
-			if(bo.getData() != null && bo.getData() instanceof ButtonVO) {
+			if (bo.getData() != null && bo.getData() instanceof ButtonVO) {
 				ButtonVO btnVo = (ButtonVO) bo.getData();
 				onBoElse(btnVo.getBtnNo());
 			}
@@ -538,6 +543,7 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 		}
 		}
 	}
+
 	/**
 	 * 按钮m_boNodekey点击时执行的动作,如有必要，请覆盖.
 	 */
@@ -597,13 +603,18 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 										.indexFormat(getBufferData()
 												.getCurrentRow() + 1) })/*
 																		 * @res
-																		 * "转换第:" +
-																		 * getBufferData().getCurrentRow() +
+																		 * "转换第:"
+																		 * +
+																		 * getBufferData
+																		 * ().
+																		 * getCurrentRow
+																		 * () +
 																		 * "页完成)"
 																		 */
 		);
 
 	}
+
 	/**
 	 * 行操作处理。 创建日期：(2004-1-7 8:57:02)
 	 * 
@@ -611,20 +622,20 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 	 *                异常说明。
 	 */
 	private void onBoLine(ButtonObject bo) throws java.lang.Exception {
-		int intBtn = -1 ;//Integer.parseInt(bo.getTag());
+		int intBtn = -1;// Integer.parseInt(bo.getTag());
 
-		if(bo.getData() != null && bo.getData() instanceof ButtonVO) {
+		if (bo.getData() != null && bo.getData() instanceof ButtonVO) {
 			ButtonVO btnVo = (ButtonVO) bo.getData();
 			intBtn = btnVo.getBtnNo();
-		}else {
+		} else {
 			intBtn = Integer.parseInt(bo.getTag());
 		}
-		
+
 		// 动作执行前处理
 		buttonActionBefore(getBillUI(), intBtn);
 
 		getBillUI().showHintMessage(bo.getName());
-		
+
 		switch (intBtn) {
 		case IBillButton.AddLine: {
 			onBoLineAdd();
@@ -680,6 +691,7 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 		}
 		afterOnBoAss(bo);
 	}
+
 	/**
 	 * 按钮m_boAction点击时执行的动作,如有必要，请覆盖. 单据执行动作处理
 	 */
@@ -759,167 +771,176 @@ public abstract class SingleTreeEventHandler extends TreeCardEventHandler{
 			}
 		}
 	}
-/**
- * 获取树形数据的主键名字
- * @author mlr
- * @说明：（鹤岗矿业）
- * 2011-11-2下午03:11:17
- * @return
- */
-public abstract String getSelectTreeIdName();
-/**
- * 单据行操作	
- */
-@Override
+
+	/**
+	 * 获取树形数据的主键名字
+	 * 
+	 * @author mlr
+	 * @说明：（鹤岗矿业） 2011-11-2下午03:11:17
+	 * @return
+	 */
+	public abstract String getSelectTreeIdName();
+
+	/**
+	 * 单据行操作
+	 */
+	@Override
 	protected void onBoLineAdd() throws Exception {
-	if(getBillTreeCardUI().getBillTreeSelectNode()!=null){
-		if(getBillTreeCardUI().getBillTreeSelectNode().getChildCount()>0){
-			throw new Exception("请选中具体的树节点   不能选则树节点的父类");
+		if (getBillTreeCardUI().getBillTreeSelectNode() != null) {
+			if (getBillTreeCardUI().getBillTreeSelectNode().getChildCount() > 0) {
+				throw new Exception("请选中具体的树节点   不能选则树节点的父类");
+			}
+			super.onBoLineAdd();
+			String pk_father = getBillTreeCardUI().getBillTreeSelectNode()
+					.getData().getPrimaryKey();
+
+			int selectRow = getBillCardPanelWrapper().getBillCardPanel()
+					.getBillTable().getSelectedRow();
+			getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(
+					pk_father, selectRow, getSelectTreeIdName());// 赋值父类主键
+		} else {
+			throw new Exception("请选中树节点");
 		}
-		super.onBoLineAdd();
-		String pk_father=getBillTreeCardUI().getBillTreeSelectNode().getData().getPrimaryKey();
-		
-		
-		int selectRow = getBillCardPanelWrapper().getBillCardPanel().getBillTable().getSelectedRow();
-		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(pk_father, selectRow,getSelectTreeIdName());//赋值父类主键	
-	}else{
-		throw new Exception("请选中树节点");
 	}
-}
 
-/**
- * 	查询表体数据
- * @author mlr
- * @说明：（鹤岗矿业）
- * 2011-11-2下午01:38:28
- * @param selectnode
- * @throws Exception
- */
-public void onQueryBodyData(VOTreeNode selectnode) throws Exception{
-	Class voClass = Class.forName(getUIController().getBillVoName()[1]);
+	/**
+	 * 查询表体数据
+	 * 
+	 * @author mlr
+	 * @说明：（鹤岗矿业） 2011-11-2下午01:38:28
+	 * @param selectnode
+	 * @throws Exception
+	 */
+	public void onQueryBodyData(VOTreeNode selectnode) throws Exception {
+		Class voClass = Class.forName(getUIController().getBillVoName()[1]);
 
-	SuperVO vo = (SuperVO)voClass.newInstance();
+		SuperVO vo = (SuperVO) voClass.newInstance();
 
-	String strWhere = "(isnull(dr,0)=0)";
+		String strWhere = "(isnull(dr,0)=0)";
 
-	if(vo.getParentPKFieldName() != null)
-		strWhere = "(" + strWhere + ") and " + vo.getParentPKFieldName() + "='" + selectnode.getData().getPrimaryKey() + "'";
+		if (vo.getParentPKFieldName() != null)
+			strWhere = "(" + strWhere + ") and " + vo.getParentPKFieldName()
+					+ "='" + selectnode.getData().getPrimaryKey() + "'";
 
-	SuperVO[] queryVos =
-		getBusiDelegator().queryHeadAllData(
-			voClass,
-			getUIController().getBillType(),
-			strWhere);
+		SuperVO[] queryVos = getBusiDelegator().queryHeadAllData(voClass,
+				getUIController().getBillType(), strWhere);
 
-	if (queryVos != null && queryVos.length != 0)
-	{
-		AggregatedValueObject aVo =
-			(AggregatedValueObject) Class
-				.forName(getUIController().getBillVoName()[0])
-				.newInstance();
-		aVo.setParentVO(null);
-		aVo.setChildrenVO(queryVos);
-		getBufferData().addVOToBuffer(aVo);
+		if (queryVos != null && queryVos.length != 0) {
+			AggregatedValueObject aVo = (AggregatedValueObject) Class.forName(
+					getUIController().getBillVoName()[0]).newInstance();
+			aVo.setParentVO(null);
+			aVo.setChildrenVO(queryVos);
+			getBufferData().addVOToBuffer(aVo);
 
-	    int num = getBufferData().getVOBufferSize();
-	    if(num == -1)
-		     num = 0;
-	    else
-		     num = num - 1;
-	    getBillTreeCardUI().getTreeToBuffer().put(selectnode.getNodeID(),num+"");
+			int num = getBufferData().getVOBufferSize();
+			if (num == -1)
+				num = 0;
+			else
+				num = num - 1;
+			getBillTreeCardUI().getTreeToBuffer().put(selectnode.getNodeID(),
+					num + "");
 
-	    getBillUI().setBillOperate(IBillOperate.OP_NOTEDIT);
+			getBillUI().setBillOperate(IBillOperate.OP_NOTEDIT);
+		} else {
+			getBillUI().setBillOperate(IBillOperate.OP_INIT);
+		}
 	}
-	else
-	{
-		getBillUI().setBillOperate(IBillOperate.OP_INIT);
+
+	/**
+	 * CardButtonController 构造子注解。
+	 * 
+	 * @param billUI
+	 *            nc.ui.trade.pub.BillCardUI
+	 */
+	public SingleTreeEventHandler(BillTreeCardUI billUI, ICardController control) {
+		super(billUI, control);
 	}
-}
-/**
- * CardButtonController 构造子注解。
- * @param billUI nc.ui.trade.pub.BillCardUI
- */
-public SingleTreeEventHandler(BillTreeCardUI billUI,ICardController control) {
-	super(billUI,control);
-}
-/**
- * 单据模版包装类的方法重载
- * 创建日期：(2004-1-6 22:29:36)
- * @return nc.ui.pub.bill.BillCardPanel
- */
-protected BillCardPanelWrapper getBillCardPanelWrapper(){
-	return getBillTreeCardUI().getBillCardWrapper();
-}
-/**
- * 此处插入方法说明。
- * 创建日期：(2004-1-9 8:37:34)
- * @return nc.ui.trade.pub.BillCardUI
- */
-protected BillTreeCardUI getBillTreeCardUI() {
-	return (BillTreeCardUI)getBillUI();
-}
-/**
- * Bill对应的缓存数据,CARD,LIST必须重载此方法。
- * 创建日期：(2004-1-7 8:44:06)
- * @return nc.ui.trade.buffer.BillUIBuffer
- */
-protected nc.ui.trade.buffer.BillUIBuffer getBufferData() {
-	return getBillTreeCardUI().getBufferData();
-}
-/**
- * 获得卡片控制器。
- * 创建日期：(2004-1-7 11:42:27)
- * @return nc.ui.trade.controller.ICardController
- */
-protected ITreeCardController getUITreeCardController() {
-	return (ITreeCardController)getUIController();
-}
-/**
- * 是否可以新增节点。
- * 创建日期：(2004-02-06 13:12:42)
- * @return boolean
- */
-public boolean isAllowAddNode(nc.ui.trade.pub.TableTreeNode node) {
-	return true;
-}
-/**
- * 是否可以删除节点。
- * 创建日期：(2004-02-06 13:12:42)
- * @return boolean
- */
-public boolean isAllowDelNode(nc.ui.trade.pub.TableTreeNode node) {
-	return true;
-}
-/**
-* 单据增加的处理
-* 创建日期：(2002-12-23 12:43:15)
-*/
-public void onBoAdd(ButtonObject bo) throws Exception {
-	if(isAllowAddNode(getBillTreeCardUI().getBillTreeSelectNode()))
-		super.onBoAdd(bo);
-}
-/**
-按钮m_boRefresh点击时执行的动作,如有必要，请覆盖.
-*/
-protected void onBoRefresh() throws Exception {
 
-	getBillTreeCardUI().clearTreeSelect();
+	/**
+	 * 单据模版包装类的方法重载 创建日期：(2004-1-6 22:29:36)
+	 * 
+	 * @return nc.ui.pub.bill.BillCardPanel
+	 */
+	protected BillCardPanelWrapper getBillCardPanelWrapper() {
+		return getBillTreeCardUI().getBillCardWrapper();
+	}
 
-	getBillTreeCardUI().createBillTree(getBillTreeCardUI().getCreateTreeData());
+	/**
+	 * 此处插入方法说明。 创建日期：(2004-1-9 8:37:34)
+	 * 
+	 * @return nc.ui.trade.pub.BillCardUI
+	 */
+	protected BillTreeCardUI getBillTreeCardUI() {
+		return (BillTreeCardUI) getBillUI();
+	}
 
-	getBillTreeCardUI().afterInit();
+	/**
+	 * Bill对应的缓存数据,CARD,LIST必须重载此方法。 创建日期：(2004-1-7 8:44:06)
+	 * 
+	 * @return nc.ui.trade.buffer.BillUIBuffer
+	 */
+	protected nc.ui.trade.buffer.BillUIBuffer getBufferData() {
+		return getBillTreeCardUI().getBufferData();
+	}
 
-	getBillTreeCardUI().setBillOperate(nc.ui.trade.base.IBillOperate.OP_INIT);
-}
-/**
- * 此处插入方法说明。
- * 创建日期：(2004-1-9 8:37:34)
- * @return nc.ui.trade.pub.BillCardUI
- */
-protected void onBoSave() throws Exception {
-	super.onBoSave();
-}
+	/**
+	 * 获得卡片控制器。 创建日期：(2004-1-7 11:42:27)
+	 * 
+	 * @return nc.ui.trade.controller.ICardController
+	 */
+	protected ITreeCardController getUITreeCardController() {
+		return (ITreeCardController) getUIController();
+	}
 
+	/**
+	 * 是否可以新增节点。 创建日期：(2004-02-06 13:12:42)
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAllowAddNode(nc.ui.trade.pub.TableTreeNode node) {
+		return true;
+	}
 
+	/**
+	 * 是否可以删除节点。 创建日期：(2004-02-06 13:12:42)
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAllowDelNode(nc.ui.trade.pub.TableTreeNode node) {
+		return true;
+	}
+
+	/**
+	 * 单据增加的处理 创建日期：(2002-12-23 12:43:15)
+	 */
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		if (isAllowAddNode(getBillTreeCardUI().getBillTreeSelectNode()))
+			super.onBoAdd(bo);
+	}
+
+	/**
+	 * 按钮m_boRefresh点击时执行的动作,如有必要，请覆盖.
+	 */
+	protected void onBoRefresh() throws Exception {
+
+		getBillTreeCardUI().clearTreeSelect();
+
+		getBillTreeCardUI().createBillTree(
+				getBillTreeCardUI().getCreateTreeData());
+
+		getBillTreeCardUI().afterInit();
+
+		getBillTreeCardUI().setBillOperate(
+				nc.ui.trade.base.IBillOperate.OP_INIT);
+	}
+
+	/**
+	 * 此处插入方法说明。 创建日期：(2004-1-9 8:37:34)
+	 * 
+	 * @return nc.ui.trade.pub.BillCardUI
+	 */
+	protected void onBoSave() throws Exception {
+		super.onBoSave();
+	}
 
 }

@@ -1,24 +1,23 @@
 package nc.vo.zmpub.pub.freeitem;
 
-
 import nc.vo.pub.SuperVO;
 
 /**
  * 存货信息vo，自由项使用
+ * 
  * @author Administrator
  */
 public class VInvVO extends SuperVO {
-	
-	
+
 	public String cinventoryid;
-	public Integer isfreeitemmgt  = 1; //设置默认值 为 1
+	public Integer isfreeitemmgt = 1; // 设置默认值 为 1
 	public String cinventorycode;
 	public String invname;
 	public String invspec;
 	public String invtype;
 	public FreeVO freevo;
 
-	//自由项信息
+	// 自由项信息
 	public String vfree0;
 	public String vfree1;
 	public String vfree2;
@@ -30,7 +29,7 @@ public class VInvVO extends SuperVO {
 	public String vfree8;
 	public String vfree9;
 	public String vfree10;
-	
+
 	//
 	public String vfreevalue1;
 	public String vfreevalue2;
@@ -64,7 +63,6 @@ public class VInvVO extends SuperVO {
 	public String vfreename8;
 	public String vfreename9;
 	public String vfreename10;
-	
 
 	public String getVfree0() {
 		return vfree0;
@@ -441,13 +439,14 @@ public class VInvVO extends SuperVO {
 	public void setInvtype(String invtype) {
 		this.invtype = invtype;
 	}
-	//取得自由项信息
+
+	// 取得自由项信息
 	public FreeVO getFreevo() {
-		if(freevo == null){
+		if (freevo == null) {
 			freevo = new FreeVO();
 			String[] names = getAttributeNames();
-			if(names != null && names.length > 0 ){
-				for(String name : names){
+			if (names != null && names.length > 0) {
+				for (String name : names) {
 					freevo.setAttributeValue(name, getAttributeValue(name));
 				}
 			}

@@ -1,5 +1,5 @@
-
 package nc.ui.zmpub.pub.tool;
+
 import java.awt.Container;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -10,8 +10,10 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.scm.service.LocalCallService;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.scm.service.ServcallVO;
+
 /**
  * 远程调用工具类
+ * 
  * @author zhf
  */
 public class LongTimeTask {
@@ -103,11 +105,11 @@ public class LongTimeTask {
 				Object[] ParameterValues) {
 			this.modulename = modulename;
 			this.digui = digui;
-//			if (isCallEJBServer) {
-//				this.iCallPubServerType = 1;
-//			} else {
-//				this.iCallPubServerType = 2;
-//			}
+			// if (isCallEJBServer) {
+			// this.iCallPubServerType = 1;
+			// } else {
+			// this.iCallPubServerType = 2;
+			// }
 			this.iCallPubServerType = iCallPubServerType;
 
 			this.classname = classname;
@@ -116,8 +118,6 @@ public class LongTimeTask {
 			this.ParameterTypes = ParameterTypes;
 			this.ParameterValues = ParameterValues;
 		}
-		
-		
 
 		public void run() {
 			runstate = Run;
@@ -172,29 +172,41 @@ public class LongTimeTask {
 			runstate = istate;
 		}
 	}
+
 	/**
 	 * 单据动作批处理
 	 */
-	public static Object[] processBatch(Container parent, String actionName, String billType,
-			String currentDate, AggregatedValueObject[] voAry, Object[] userObjAry) throws Exception {
-		return (Object[])calllongTimeService("so",parent,null,-1,"nc.ui.pub.pf.PfUtilClient",null,
-				"processBatch",
-				new Class[]{Container.class,String.class,String.class,String.class,
-						AggregatedValueObject[].class,Object[].class},
-				new Object[]{parent,actionName,billType,currentDate,voAry,userObjAry});
+	public static Object[] processBatch(Container parent, String actionName,
+			String billType, String currentDate, AggregatedValueObject[] voAry,
+			Object[] userObjAry) throws Exception {
+		return (Object[]) calllongTimeService("so", parent, null, -1,
+				"nc.ui.pub.pf.PfUtilClient", null, "processBatch", new Class[] {
+						Container.class, String.class, String.class,
+						String.class, AggregatedValueObject[].class,
+						Object[].class }, new Object[] { parent, actionName,
+						billType, currentDate, voAry, userObjAry });
 	}
 
 	/**
 	 * 单据动作处理（非"APPROVE"/"UNAPPROVE"）
 	 */
-	public static Object processAction(Container parent, String actionName, String billType,
-			String currentDate, AggregatedValueObject vo, Object userObj) throws Exception {
-		return  calllongTimeService("so",parent,null,-1,"nc.ui.pub.pf.PfUtilClient",null,
+	public static Object processAction(Container parent, String actionName,
+			String billType, String currentDate, AggregatedValueObject vo,
+			Object userObj) throws Exception {
+		return calllongTimeService(
+				"so",
+				parent,
+				null,
+				-1,
+				"nc.ui.pub.pf.PfUtilClient",
+				null,
 				"processAction",
-				new Class[]{Container.class,String.class,String.class,String.class,
-						AggregatedValueObject.class,Object.class},
-				new Object[]{parent,actionName,billType,currentDate,vo,userObj});
+				new Class[] { Container.class, String.class, String.class,
+						String.class, AggregatedValueObject.class, Object.class },
+				new Object[] { parent, actionName, billType, currentDate, vo,
+						userObj });
 	}
+
 	// /*
 	// *
 	// */
@@ -230,8 +242,8 @@ public class LongTimeTask {
 			Class[] ParameterTypes, Object[] ParameterValues) throws Exception {
 
 		return calllongTimeService(modulename, containter, msg, 1000,
-				iCallPubServerType, classname, runobj, methodname, ParameterTypes,
-				ParameterValues);
+				iCallPubServerType, classname, runobj, methodname,
+				ParameterTypes, ParameterValues);
 	}
 
 	public static Object calllongTimeService(String modulename,
@@ -287,8 +299,8 @@ public class LongTimeTask {
 		return oret;
 	}
 
-	public static Object callRemoteService(String modulename,
-			String classname, String methodname, Class[] ParameterTypes,
+	public static Object callRemoteService(String modulename, String classname,
+			String methodname, Class[] ParameterTypes,
 			Object[] ParameterValues, int iCallPubServerType) throws Exception {
 		ServcallVO[] scd = new ServcallVO[1];
 		Object oret = null;

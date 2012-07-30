@@ -1,4 +1,5 @@
 package nc.vo.zmpub.pub.report2;
+
 import java.util.Vector;
 
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -6,6 +7,7 @@ import nc.vo.pub.lang.UFDouble;
 import nc.vo.zmpub.pub.report.IReportVO;
 import nc.vo.zmpub.pub.report.IUFTypes;
 import nc.vo.zmpub.pub.report.SubtotalVO;
+
 /**
  * 工具类：用于合并VO
  */
@@ -22,6 +24,7 @@ public class CombinVOTool {
 	private boolean isAddDetail = true;
 	// 分组列是否可为空。
 	private boolean m_isGroupFldCanNull = false;
+
 	/**
 	 * CombinVOTool 构造子注解。
 	 */
@@ -42,29 +45,39 @@ public class CombinVOTool {
 			Object tmpobj = vo1.getAttributeValue(m_valueFields[i]);
 			switch (m_iTypes[i]) {
 			case IUFTypes.INT:
-				int iresult = (resultobj == null ? 0 : ((Integer) resultobj).intValue());
+				int iresult = (resultobj == null ? 0 : ((Integer) resultobj)
+						.intValue());
 				int itmp = (tmpobj == null ? 0 : ((Integer) tmpobj).intValue());
-				voResult.setAttributeValue(m_valueFields[i], new Integer(iresult + itmp));
+				voResult.setAttributeValue(m_valueFields[i], new Integer(
+						iresult + itmp));
 				continue;
 			case IUFTypes.LONG:
 				long lgtmp = (tmpobj == null ? 0 : ((Long) tmpobj).longValue());
-				long lgresult = (resultobj == null ? 0 : ((Long) resultobj).longValue());
+				long lgresult = (resultobj == null ? 0 : ((Long) resultobj)
+						.longValue());
 				if (tmpobj != null)
-					voResult.setAttributeValue(m_valueFields[i], new Long(lgresult + lgtmp));
+					voResult.setAttributeValue(m_valueFields[i], new Long(
+							lgresult + lgtmp));
 				continue;
 			case IUFTypes.UFD:
-				UFDouble ufdtmp = (tmpobj == null ? new UFDouble("0"): (UFDouble) tmpobj);
-				UFDouble ufdResult = (resultobj == null ? new UFDouble("0"): (UFDouble) resultobj);
-				voResult.setAttributeValue(m_valueFields[i], ufdResult.add(ufdtmp));
+				UFDouble ufdtmp = (tmpobj == null ? new UFDouble("0")
+						: (UFDouble) tmpobj);
+				UFDouble ufdResult = (resultobj == null ? new UFDouble("0")
+						: (UFDouble) resultobj);
+				voResult.setAttributeValue(m_valueFields[i], ufdResult
+						.add(ufdtmp));
 				continue;
 			case IUFTypes.STR:
 				String strtmp = (tmpobj == null ? "" : tmpobj.toString());
-				String strresult = (resultobj == null ? "" : resultobj.toString());
-				voResult.setAttributeValue(m_valueFields[i], strtmp + strresult);
+				String strresult = (resultobj == null ? "" : resultobj
+						.toString());
+				voResult
+						.setAttributeValue(m_valueFields[i], strtmp + strresult);
 				continue;
 			}
 		}
 	}
+
 	public CircularlyAccessibleValueObject[] combinVO(
 			CircularlyAccessibleValueObject[] vosSource, SubtotalVO voSubtotal) {
 		if (vosSource == null || voSubtotal == null)
