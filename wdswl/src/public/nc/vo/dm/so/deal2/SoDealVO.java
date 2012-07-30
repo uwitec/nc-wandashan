@@ -17,7 +17,7 @@ public class SoDealVO extends SuperVO{
 	 */
 	private static final long serialVersionUID = -5056426465421488586L;
 
-	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum","ntaldcnum"};
+	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum",WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME};
 	
 	public static String[] sort_fields = new String[]{"dbilldate"};
 	
@@ -26,6 +26,7 @@ public class SoDealVO extends SuperVO{
 	private UFBoolean isonsell;
 	
 	///-----------------------------订单主表字段
+	private String pk_corp;
 	private String vreceiptcode;
 	private String cbiztype;
 	private UFDate dbilldate;
@@ -136,6 +137,9 @@ public class SoDealVO extends SuperVO{
 	private UFDouble ndrqarrstorenumout;//大日期安排后库存主数量
 	private UFDouble ndrqusefulnumout;//大日期库可用量
 	private UFDouble ndrqarrusefulnumout;//大日期安排后可用量
+	
+	
+	private UFDouble nwdsnum;//累计安排数量
 	public static String[] getSort_fields() {
 		return sort_fields;
 	}
@@ -225,6 +229,7 @@ public class SoDealVO extends SuperVO{
 	}
 	
 	public transient static String[] m_headNames = new String[]{
+		"h.pk_corp",
 		"h.vreceiptcode",
 		"h.cbiztype",
 		"h.dbilldate",
@@ -237,7 +242,7 @@ public class SoDealVO extends SuperVO{
 		"h.creceiptcustomerid",
 		"h.creceiptcorpid",
 		"h.cwarehouseid",
-		"bfreecustflag",
+		"h.bfreecustflag",
 		"h.cfreecustid",
 		"h.dmakedate",
 		"h.capproveid",
@@ -325,10 +330,17 @@ public class SoDealVO extends SuperVO{
 		"b.nsummny", // 本币价税合计
 		"b.ndiscountmny",
 		"b.ntaldcnum",
-		"b.crowno"
+		"b.crowno",
+		"b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
 	};
 	
 	
+	public UFDouble getNwdsnum() {
+		return nwdsnum;
+	}
+	public void setNwdsnum(UFDouble nwdsnum) {
+		this.nwdsnum = nwdsnum;
+	}
 	public UFBoolean getIsonsell() {
 		return isonsell;
 	}
@@ -352,6 +364,13 @@ public class SoDealVO extends SuperVO{
 	}
 	public void setNnum(UFDouble nnum) {
 		this.nnum = nnum;
+	}
+	
+	public String getPk_corp() {
+		return pk_corp;
+	}
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
 	}
 	@Override
 	public String getPKFieldName() {

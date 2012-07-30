@@ -17,7 +17,7 @@ public class SoDealVO extends SuperVO{
 	 */
 	private static final long serialVersionUID = -5056426465421488586L;
 
-	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum","ntaldcnum"};
+	public static String[] num_fields = new String[]{"nnumber","npacknumber","nnum","nassnum",WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME};
 	
 	public static String[] sort_fields = new String[]{"dbilldate"};
 	
@@ -26,6 +26,7 @@ public class SoDealVO extends SuperVO{
 	private UFBoolean isonsell;
 	
 	///-----------------------------订单主表字段
+	private String pk_corp;
 	private String vreceiptcode;
 	private String cbiztype;
 	private UFDate dbilldate;
@@ -46,8 +47,10 @@ public class SoDealVO extends SuperVO{
 	private Integer fstatus;
 	private String vnote;
 	
+	private UFDouble nwdsnum;//销售订单累积安排主数量
+	
 	//----------------------------------订单表体字段
-	private UFDouble ntaldcnum;//销售订单累积安排主数量
+	private UFDouble ntaldcnum;
 	private String corder_bid;
 	private String csaleid;
 	private String creceipttype;
@@ -178,6 +181,13 @@ public class SoDealVO extends SuperVO{
 	public void setDisdate(UFBoolean disdate) {
 		this.disdate = disdate;
 	}
+	
+	public String getPk_corp() {
+		return pk_corp;
+	}
+	public void setPk_corp(String pk_corp) {
+		this.pk_corp = pk_corp;
+	}
 	/**
 	 * 
 	 * @作者：zhf
@@ -193,6 +203,7 @@ public class SoDealVO extends SuperVO{
 	}
 	
 	public transient static String[] m_headNames = new String[]{
+		"h.pk_corp",
 		"h.vreceiptcode",
 		"h.cbiztype",
 		"h.dbilldate",
@@ -235,6 +246,7 @@ public class SoDealVO extends SuperVO{
 		"b.crecwareid", // 收货仓库id
 		// 建议库存组织
 		"b.cadvisecalbodyid",
+		
 
 		// 批次
 		"b.cbatchid",
@@ -293,10 +305,17 @@ public class SoDealVO extends SuperVO{
 		"b.nsummny", // 本币价税合计
 		"b.ndiscountmny",
 		"b.ntaldcnum",
-		"b.crowno"
+		"b.crowno",
+		"b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
 	};
 	
 	
+	public UFDouble getNwdsnum() {
+		return nwdsnum;
+	}
+	public void setNwdsnum(UFDouble nwdsnum) {
+		this.nwdsnum = nwdsnum;
+	}
 	public UFBoolean getIsonsell() {
 		return isonsell;
 	}

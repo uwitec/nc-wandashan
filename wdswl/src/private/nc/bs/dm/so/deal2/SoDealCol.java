@@ -11,18 +11,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import mx4j.tools.adaptor.http.GetAttributeCommandProcessor;
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
+import nc.bs.zmpub.pub.tool.SingleVOChangeDataBsTool;
+import nc.bs.zmpub.pub.tool.stock.AvailNumBoTool;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.SoDealVO;
 import nc.vo.dm.so.deal2.StoreInvNumVO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -31,6 +35,8 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
+import nc.vo.wdsnew.pub.AvailNumBO;
+import nc.vo.wdsnew.pub.AvailNumDea2BO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
@@ -147,7 +153,7 @@ public class SoDealCol {
 				continue;
 			for (SoDealVO body : bodys) {
 				key = WdsWlPubTool.getString_NullAsTrimZeroLen(body
-						.getCinvbasdocid());
+						.getCinvbasdocid())+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getVdef1());
 				invs.add(body.getCinvbasdocid());
 				if (invNumInfor.containsKey(key)) {
 					tmpNumVO = invNumInfor.get(key);
@@ -221,6 +227,83 @@ public class SoDealCol {
 					+ tmpNumVO.getNplanassnum());
 		}
 	}
+	
+	private AvailNumBoTool numBO = null;
+	private AvailNumBoTool getNumBO(){
+		if(numBO == null){
+			numBO = new AvailNumDea2BO();
+		}
+		return numBO;
+	}
+	
+	/**
+	 * 
+	 * @作者：zhf
+	 * @说明：查询 存货库存量
+	 * @时间：2011-11-8下午07:59:53
+	 * @param invNumInfor
+	 * @throws BusinessException
+	 */
+	private void initInvNumInfor2(Map<String, StoreInvNumVO> invNumInfor)
+			throws Exception {
+		// invNumInfor <key,StoreInvNumVO> =
+		// <存货基本档案id，StoreInvNumVO（包含当前存货库存量，本次需要安排的数量,已经安排的运单占用量）>
+
+		// 数据参数封装 查询可用量 可用量参数转换 校验可用量是否满足
+//		Set<String> invs = new HashSet<String>();// 本次安排的所有存货id
+
+		SoDealVO[] bodys = null;
+		Logger.info("获取库存当前存量...");
+		String key = null;
+
+		List<SoDealVO> lpara = new ArrayList<SoDealVO>();
+
+		for (SoDealBillVO bill : bills) {
+			bodys = bill.getBodyVos();
+			if (bodys == null || bodys.length == 0)
+				continue;
+			lpara.addAll(Arrays.asList(bodys));
+		}
+
+		StockInvOnHandVO[] paras = (StockInvOnHandVO[]) SingleVOChangeDataBsTool
+				.runChangeVOAry(lpara.toArray(new SoDealVO[0]),
+						StockInvOnHandVO.class,
+						"nc.ui.wds.self.changedir.CHGDEAL2TOACCOUNTNUM");
+
+		// 调用存量接口查询存量
+		StoreInvNumVO[] nums = (StoreInvNumVO[]) getNumBO().getAvailNumDatas(
+				paras);
+
+		if (nums == null || nums.length == 0)
+			Logger.info("本次安排货品可用量均为空，无法安排");
+
+		StoreInvNumVO tmp = null;
+		for (StoreInvNumVO num : nums) {
+			key = WdsWlPubTool.getString_NullAsTrimZeroLen(num.getCinvbasid())
+					+ WdsWlPubTool.getString_NullAsTrimZeroLen(num.getSs_pk());
+
+			if (invNumInfor.containsKey(key)) {
+				tmp = invNumInfor.get(key);
+				num.setNplannum(tmp.getNplannum().add(num.getNplannum()));
+				num.setNplanassnum(tmp.getNplanassnum().add(
+						num.getNplanassnum()));
+			}
+			invNumInfor.put(key, num);
+		}
+
+		for (StoreInvNumVO num : invNumInfor.values()) {
+			num.setBisok(UFBoolean.TRUE);
+			if (num.getNnum().sub(num.getNplannum()).doubleValue() <= 0.0) {
+				num.setBisok(UFBoolean.FALSE);
+			}
+
+			Logger.info(" 存货"
+					+ WdsWlPubTool.getInvCodeByInvid(num.getCinvbasid())
+					+ " 当前存量：" + num.getNstockassnum() + " 已安排未出库量："
+					+ num.getNdealassnum() + " 本次可用量：" + num.getNassnum()
+					+ " 本次待安排总量：" + num.getNplanassnum());
+		}
+	}
 
 	/**
 	 * 
@@ -239,9 +322,10 @@ public class SoDealCol {
 		if (bills == null || bills.length == 0)
 			return null;
 		// 1.获得库存量，可用量信息 
-		// invNumInfor里面封装<本次需要安排的存货基本id，StoreInvNumVO(存货当前库存量，已经安排的运单（销售运单+发运订单）占有量，可用量（=库存量-占有量）)>
+		// invNumInfor里面封装<本次需要安排的存货基本id+存货状态id，StoreInvNumVO(存货当前库存量，已经安排的运单（销售运单+发运订单）占有量，可用量（=库存量-占有量）)>
 		Map<String, StoreInvNumVO> invNumInfor = new HashMap<String, StoreInvNumVO>();
-		initInvNumInfor(invNumInfor);
+		String key = null;
+		initInvNumInfor2(invNumInfor);
 		if (invNumInfor.size() == 0)
 			throw new BusinessException("所有存货的当前库存量均为空,无法自动安排");
 		// 2.根据可用量过滤客户，将客户分为本次可以直接安排的客户，存量不足需要手工安排的客户
@@ -259,7 +343,8 @@ public class SoDealCol {
 			boolean isGift = false;//判断是否赠品单：赠品单不允许拆单。即赠品单存在两种情况：可用量都满足，直接安排;有可用量不满足，跳过;
 			boolean isdeal = true;//默认 该客户表体 货可用量都满足
 			for (SoDealVO body : bodys) {
-				StoreInvNumVO tmpNumVO = invNumInfor.get(body.getCinvbasdocid());
+				key = WdsWlPubTool.getString_NullAsTrimZeroLen(body.getCinvbasdocid())+WdsWlPubTool.getString_NullAsTrimZeroLen(body.getVdef1());
+				StoreInvNumVO tmpNumVO = invNumInfor.get(key);
 				boolean blargessflag = PuPubVO.getUFBoolean_NullAs(body.getBlargessflag(), UFBoolean.FALSE).booleanValue();
 				if(blargessflag){
 					isGift = true;
@@ -305,7 +390,7 @@ public class SoDealCol {
 				}
 				//2.4比较可用量与本次安排数量，判断是否可以直接安排(如果可用量 > 本次安排数量,bisok = true)
 				// 即使该客户表体存货有一个可用量不满足，也标记为不能直接安排
-				boolean bisok = PuPubVO.getUFBoolean_NullAs(invNumInfor.get(body.getCinvbasdocid()).getBisok(),UFBoolean.FALSE).booleanValue();
+				boolean bisok = PuPubVO.getUFBoolean_NullAs(invNumInfor.get(key).getBisok(),UFBoolean.FALSE).booleanValue();
 				if (!bisok) {
 					isdeal = false;
 					continue;
@@ -350,6 +435,17 @@ public class SoDealCol {
 			Logger.info("本次安排未存在可直接安排的客户");
 		} else {// 直接安排
 			doDeal(ldeal, lpara);
+			
+//			安排成功后   调整可用量
+			StoreInvNumVO tmpnum = null;
+			for(SoDealVO vo:ldeal){
+				key = WdsWlPubTool.getString_NullAsTrimZeroLen(vo.getCinvbasdocid())
+				+WdsWlPubTool.getString_NullAsTrimZeroLen(vo.getVdef1());
+				tmpnum = invNumInfor.get(key);
+			    tmpnum.setNnum(tmpnum.getNnum().sub(vo.getNnum()));
+			    tmpnum.setNassnum(tmpnum.getNassnum().sub(vo.getNassnum()));
+			}
+			
 			isauto = UFBoolean.TRUE;
 			Logger.info("系统直接安排成功");
 		}

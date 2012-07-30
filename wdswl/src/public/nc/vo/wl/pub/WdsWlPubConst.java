@@ -234,7 +234,7 @@ public class WdsWlPubConst {
 	public static String DM_PLAN_TO_ORDER_PUSHSAVE = "PUSHSAVE";
 	public static String DM_PLAN_TO_ORDER_SAVE="SAVE";
 	
-	public static String DM_SO_DEALNUM_FIELD_NAME = "ntaldcnum";//利用系统销售订单  已参与价保数量 作为  累计发运数量
+	public static String DM_SO_DEALNUM_FIELD_NAME = "nwdsnum";//利用系统销售订单  已参与价保数量 作为  累计发运数量
 	
 	public static String DM_DB_DEALNUM_FIELD_NAME = "ndealnum";//调拨订单累计安排数量
 

@@ -22,7 +22,8 @@ public class StoreInvNumVO extends SuperVO{
 	private String ccargdocid;//货位 //暂时不需要
 	private String cinvmanid;
 	private String cinvbasid;
-	
+	private String ss_pk;//存货状态
+	private String vbatchcode;//批次号
 	private UFDouble nnum;//可用量
 	private UFDouble nassnum;//可用量辅数量
 	
@@ -47,6 +48,22 @@ public class StoreInvNumVO extends SuperVO{
 
 	public void setLdeal(ArrayList<SoDealVO> ldeal) {
 		this.ldeal = ldeal;
+	}
+	
+	public String getSs_pk() {
+		return ss_pk;
+	}
+
+	public void setSs_pk(String h_ss_pk) {
+		ss_pk = h_ss_pk;
+	}
+
+	public String getVbatchcode() {
+		return vbatchcode;
+	}
+
+	public void setVbatchcode(String vbatchcode) {
+		this.vbatchcode = vbatchcode;
 	}
 
 	public UFBoolean getBisok() {
