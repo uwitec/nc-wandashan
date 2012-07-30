@@ -223,7 +223,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
 			getBillUI().updateButtons();
 		}
-		
+		setOutType();
 		
 //		getBillUI().updateButtons();
 	}
