@@ -33,9 +33,7 @@ import nc.vo.wl.pub.VOTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
-public class SoDealEventHandler implements BillEditListener,IBillRelaSortListener2{
-
-	
+public class SoDealEventHandler implements BillEditListener,IBillRelaSortListener2{	
 	private SoDealClientUI ui = null;
 	private SoDealQryDlg m_qrypanel = null;
 	
