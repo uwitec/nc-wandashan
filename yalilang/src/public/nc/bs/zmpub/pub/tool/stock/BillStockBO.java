@@ -274,37 +274,30 @@ public abstract class BillStockBO extends StockBO {
 	 * 
 	 */
 	public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
-		ArrayList<SuperVO> nlist = new ArrayList<SuperVO>();
 		ArrayList<SuperVO[]> list = queryStockDetail(vos);
 		if (vos == null || vos.length == 0)
 			return null;
 		if (list == null || list.size() == 0)
 			return null;
 		for (int i = 0; i < vos.length; i++) {
-			if (list.get(i) == null || list.get(i).length == 0) {
-				nlist.add(null);
+			SuperVO[] vss = list.get(i);
+			String[] conds = getConminFields(vos[i]);
+			if (conds == null || conds.length == 0) {
+				continue;
 			} else {
-				SuperVO[] vss = list.get(i);
-				String[] conds = getConminFields(vos[i]);
-				if (conds == null || conds.length == 0) {
-					nlist.add(null);
-				} else {
-					SuperVO[] coms = (SuperVO[]) CombinVO.combinData(vss,
-							conds, getChangeNums(), vos[0].getClass());
-					if (coms == null || coms.length == 0) {
-						nlist.add(null);
-					} else {
-						nlist.add(coms[0]);
-					}
-
+				SuperVO[] coms = (SuperVO[]) CombinVO.combinData(vss, conds,
+						getChangeNums(), vos[0].getClass());
+				String[] filelds = getChangeNums();
+				if (filelds == null || filelds.length == 0) {
+					continue;
 				}
-
+				for (int k = 0; k < filelds.length; k++) {
+					vos[i].setAttributeValue(filelds[k], coms[0]
+							.getAttributeValue(filelds[k]));
+				}
 			}
 		}
-		if (nlist == null || nlist.size() == 0)
-			return null;
-		return nlist.toArray((SuperVO[]) java.lang.reflect.Array.newInstance(
-				vos[0].getClass(), 0));
+		return vos;
 	}
 
 	/**
