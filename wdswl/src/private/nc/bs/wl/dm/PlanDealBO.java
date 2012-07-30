@@ -132,9 +132,9 @@ public class PlanDealBO {
 				 return code1.compareTo(code2);
 			}
 		});
-		PlanDealBOUtil util = new PlanDealBOUtil();
-		util.arrangStornumout(pk_corp,datas);
-		util.arrangStornumin(pk_corp,datas);
+//		PlanDealBOUtil util = new PlanDealBOUtil();
+//		util.arrangStornumout(pk_corp,datas);
+//		util.arrangStornumin(pk_corp,datas);
 		return datas;
 	}
 	
