@@ -403,19 +403,19 @@ public class SoDealEventHandler{
 		// 1.null:所有客户的发货量都未达到最小发货量
 		// 2.Object[] { isauto, null, null ,reasons}:所有客户都待安排的存货中，都包含可用量不足的存货
 		// 3.Object[] { isauto, lcust, lnum,reasons}：有需要手动安排的客户
-		if(!valute(dealBills)){
-			ui.showErrorMessage("可用量不够");
-			return;
-		}
+//		if(!valute(dealBills)){
+//			ui.showErrorMessage("可用量不够");
+//			return;
+//		}
 		Object o = SoDealHealper.doDeal(dealBills, ui);
-		boolean flag = false;
-		UFBoolean isauto = UFBoolean.FALSE;
+//		boolean flag = false;
+//		UFBoolean isauto = UFBoolean.FALSE;
 		if(o != null){
 			Object[] os = (Object[])o;
 			if(os == null || os.length == 0)
 				return;
 			//是否有一部分客户进行了自动安排
-			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
+//			isauto = PuPubVO.getUFBoolean_NullAs(os[0], UFBoolean.FALSE);
 			//未安排的客户信息
 			List<SoDealBillVO> lcust = (List<SoDealBillVO>)os[1];		
 			//存货库存量，可用量
@@ -425,7 +425,7 @@ public class SoDealEventHandler{
 			//本站直接安排的客户
 			List<String> reasons2 = (List<String>)os[4];
 			if(lcust!=null && lcust.size()>0){
-				flag = doHandDeal(lcust, lnum);
+				 doHandDeal(lcust, lnum);
 			}
 			StringBuffer bur = new StringBuffer();
 			if(reasons2 != null && reasons2.size() >0){
