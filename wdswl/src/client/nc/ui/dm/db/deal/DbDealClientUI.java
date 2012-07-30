@@ -214,7 +214,7 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 							.queryStockCombinForClient(
 									new StockInvOnHandVO[] { vo });
 					vos1 = (StockInvOnHandVO[]) event.getAbo()
-					.queryStockCombinForClient(
+					.getAvailNumForClient(
 							new StockInvOnHandVO[] { vo });
 
 				} catch (Exception e1) {
@@ -243,7 +243,7 @@ public class DbDealClientUI extends ToftPanel implements BillEditListener,
 				getPanel().getBodyBillModel().setValueAt(
 						vos[0].getWhs_stocktonnage(), row, "nstorenumout");// 库存主数量
 				getPanel().getBodyBillModel().setValueAt(
-						vos[0].getWhs_stocktonnage(), row, "anstorenumout");// 库存辅数量
+						vos[0].getWhs_stockpieces(), row, "anstorenumout");// 库存辅数量
 				if (vos1 == null || vos1.length == 0 || vos1[0] == null) {
 					getPanel().getBodyBillModel().setValueAt(null, row,
 							"ndrqstorenumout");// 可用主数量

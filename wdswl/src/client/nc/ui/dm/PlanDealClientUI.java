@@ -218,7 +218,7 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 						.queryStockCombinForClient(
 								new StockInvOnHandVO[] { vo });
 				vos1 = (StockInvOnHandVO[]) m_handler.getAbo()
-						.queryStockCombinForClient(
+						.getAvailNumForClient(
 								new StockInvOnHandVO[] { vo });
 			} catch (Exception e1) {
 				getPanel().getBodyBillModel().setValueAt(null, row,

@@ -9,7 +9,6 @@ import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.wl.pub.FilterNullBody;
 import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
-import nc.vo.dm.PlanDealVO;
 import nc.vo.dm.db.deal.DbDeHeaderVo;
 import nc.vo.dm.db.deal.DbDealBillVO;
 import nc.vo.dm.db.deal.DbDealVO;
