@@ -22,4 +22,7 @@ public class Wds2WlPubConst {
 
 	public final static String so_virtual = "pk_defdoc11";//是否虚拟   好像应该是pk_defdoc11 对应值为 String nc.vo.wl.pub.WdsWlPubConst.WDS_IC_FLAG_wu
 	
+	public final static String so_virtual_value_yes = "0001S3100000000OK5HM";
+	public final static String so_virtual_value_no = "0001S3100000000OK5HN";
+	
 }

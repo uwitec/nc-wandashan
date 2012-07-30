@@ -66,11 +66,16 @@ public class SoDealBO {
 			sql.append(" and coalesce(h.bisclose,'N') = 'Y' ");
 		}
 		else{
-			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' ");// 这两个or 连接 数据交叉 和 distinct 配套使用
-			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+WdsWlPubConst.WDS_IC_FLAG_wu+"' )");
+			sql.append(" and ( coalesce(h.bisclose,'N') = 'N' " +
+					"and coalesce(h."+Wds2WlPubConst.so_virtual+",'"+Wds2WlPubConst.so_virtual_value_no+"') == '"+Wds2WlPubConst.so_virtual_value_no+"' ");
+			sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+Wds2WlPubConst.so_virtual_value_yes+"' )");
 		}
 //		------------------------------------------------
 
+		
+		
+		
+		
 		
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);

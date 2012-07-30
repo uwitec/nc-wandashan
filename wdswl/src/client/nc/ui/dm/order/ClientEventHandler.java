@@ -12,7 +12,6 @@ import nc.ui.trade.pub.CardPanelPRTS;
 import nc.ui.trade.pub.ListPanelPRTS;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
-import nc.uif.pub.exception.UifException;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
