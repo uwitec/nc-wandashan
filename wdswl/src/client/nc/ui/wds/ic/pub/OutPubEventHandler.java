@@ -222,8 +222,22 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 
 			getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
 			getBillUI().updateButtons();
+		};
+		//如果主键为空 就是分担新增的单据  要设置默认数据
+		if(PuPubVO.getString_TrimZeroLenAsNull(getBufferData().getCurrentVO().getParentVO().getPrimaryKey())==null){			
+			    setOutType();
+			    AggregatedValueObject vos=getBufferData().getCurrentVO();
+				WdsWlPubTool.setVOsRowNoByRule(new AggregatedValueObject[]{vos}, "crowno");
+				getBillUI().setDefaultData();
+				setBodySpace();
+				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
+				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
+				getBillUI().updateButtons();
+			
 		}
-		setOutType();
+		
+		
+		
 		
 //		getBillUI().updateButtons();
 	}
