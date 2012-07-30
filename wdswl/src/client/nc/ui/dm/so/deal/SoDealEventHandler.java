@@ -242,6 +242,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			return ;
 		for(int i=0;i<billdatas.length;i++){
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			billdatas[i].setCbodywarehouseid(ui.getWhid());
+			billdatas[i].setPk_corp(ui.getCl().getCorp());
 		}
 		//构造现存量查询条件
 		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDS4TOACCOUNTNUM");
