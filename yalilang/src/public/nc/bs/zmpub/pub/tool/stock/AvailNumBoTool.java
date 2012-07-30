@@ -110,8 +110,15 @@ public abstract class AvailNumBoTool extends BillStockBO {
 		SuperVO[] zvos = getNums(nvos, dvos);
 		return zvos;
 	}
-
-	protected ReportBaseVO[] getAvailNum1(SuperVO[] vos) throws Exception {
+    /**
+     * 订单占用量
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-7-30下午11:24:51
+     *
+     */
+	protected ReportBaseVO[] getAvailNum1(SuperVO[] voss) throws Exception {
+		SuperVO[] vos=(SuperVO[]) ObjectUtils.serializableClone(voss);
 		// 得到订单查询的过滤条件
 		Map<String, List<String>> whereSqls = getWhereSqls(vos);
 		// 得到添加过滤条件后的订单查询sql
