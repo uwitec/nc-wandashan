@@ -12,8 +12,6 @@ import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.jdbc.framework.processor.BeanListProcessor;
-import nc.jdbc.framework.util.SQLHelper;
-import nc.ui.pub.bill.BillStatus;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.SoDealVO;
