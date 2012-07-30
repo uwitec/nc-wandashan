@@ -83,6 +83,7 @@ public class AvailNumBO extends AvailNumBoTool {
 									+ " wds_sendorder h join  wds_sendorder_b b  on h.pk_sendorder=b.pk_sendorder "
 									+ " where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and coalesce(h.reserve14,'N')='N'"
 									+ " and h.pk_billtype='"
+									+ " and h.icoltype=0 "// 出入库类型为 出库
 									+ WdsWlPubConst.WDSS + "'");
 			typetosql
 					.put(
@@ -94,7 +95,7 @@ public class AvailNumBO extends AvailNumBoTool {
 									+ " and h.pk_billtype='"
 									+ WdsWlPubConst.WDS5
 									+ "'"
-									+ " and h.icoltype=0 "// 出入库类型为 出库
+									
 					);
 		}
 		return typetosql;
