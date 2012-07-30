@@ -426,10 +426,12 @@ public abstract class AvailNumBoTool extends BillStockBO {
 	 * @时间：2012-7-26上午10:25:32
 	 * 
 	 */
-	public Map<String, List<String>> getWhereSqls(SuperVO[] vos)
+	public Map<String, List<String>> getWhereSqls(SuperVO[] vos1)
 			throws Exception {
-		if (vos == null || vos.length == 0)
+	
+		if (vos1 == null || vos1.length == 0)
 			return null;
+		SuperVO[] vos=(SuperVO[]) CombinVO.combinData(vos1, getDef_Fields(),getChangeNums() , vos1[0].getClass());
 		// 单据类型 --->现存量 对应字段
 		Map<String, String[]> map = getTypetoAccountFields();
 		// 单据类型 --->过滤sql
