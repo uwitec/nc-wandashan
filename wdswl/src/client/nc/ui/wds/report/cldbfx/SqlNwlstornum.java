@@ -1,32 +1,27 @@
 package nc.ui.wds.report.cldbfx;
 
-import nc.bs.ic.pub.bill.GeneralSqlString;
 import nc.ui.trade.report.query.QueryDLG;
 
 /**
- * erp库存数量
+ * 物流库存数量
  * 
  * @author Administrator
  * 
  */
 /*
- * 
- * select h.nonhandnum, h.pk_onhandnum, b.nnum, b.cspaceid, b.pk_corp,
- * b.cwarehouseidb, b.cinventoryidb, b.cinvbasid, invcl.invclasscode from
- * ic_onhandnum h join ic_onhandnum_b b on h.pk_onhandnum = b.pk_onhandnum join
- * bd_invbasdoc bas on h.cinvbasid = bas.pk_invbasdoc join bd_invcl invcl on
- * bas.pk_invcl = invcl.pk_invcl where invcl.invclasscode like '301010202' and
- * h.pk_corp = '1021' -- and h.cwarehouseid = '1021A91000000004UX5N' and
- * bas.invcode = '3010002'
+ * select h.pk_corp, h.pk_customize1, h.pk_cargdoc, h.pk_invmandoc,
+ * sum(coalesce(h.whs_stocktonnage, 0.0)) from tb_warehousestock h group by
+ * h.pk_corp, h.pk_customize1, h.pk_cargdoc, h.pk_invmandoc having
+ * sum(coalesce(h.whs_stocktonnage, 0.0)) > 0
  */
-public class SqlNerpstornum extends SqlQueryConditionVO {
+public class SqlNwlstornum extends SqlQueryConditionVO {
 
-	public SqlNerpstornum(QueryDLG queryDlg) {
+	public SqlNwlstornum(QueryDLG queryDlg) {
 		this.queryDlg = queryDlg;
 	}
 
 	public String getCargFieldName() {
-		return "b.cspaceid";
+		return "b.pk_cargdoc";
 	}
 
 	public String getCorpFieldName() {
@@ -38,11 +33,9 @@ public class SqlNerpstornum extends SqlQueryConditionVO {
 	}
 
 	public String getInvmandocFieldName() {
-		return "b.cinventoryidb";
+		return "b.pk_invmandoc";
 	}
 
-	// SELECT SUM(COALESCE(v1.nonhandnum,0.0)) from
-	// "+GeneralSqlString.V_IC_ONHANDNUM+" v1 where v1.cinventoryid=?
 	public String getSql() throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select ");
@@ -52,11 +45,11 @@ public class SqlNerpstornum extends SqlQueryConditionVO {
 		sql.append(getInvclFieldName() + " " + pk_invcl + ", ");
 		sql.append(getInvmandocFieldName() + " " + pk_invmandoc + ", ");
 		sql.append(getInvbasdocFieldName() + " " + pk_invbasdoc + ", ");
-		sql.append(getNnum() + " " + nerpstornum + " ");
+		sql.append(getNnum() + " " + nwlstornum + " ");
 		sql.append(" from ");
-		sql.append(GeneralSqlString.V_IC_ONHANDNUM_B + " b ");
+		sql.append(" tb_warehousestock b ");
 		sql
-				.append(" join bd_invbasdoc bas on b.cinvbasid = bas.pk_invbasdoc and isnull(bas.dr,0) = 0 ");
+				.append(" join bd_invbasdoc bas on b.pk_invbasdoc = bas.pk_invbasdoc and isnull(bas.dr,0) = 0 ");
 		sql
 				.append(" join bd_invcl invcl on bas.pk_invcl = invcl.pk_invcl and isnull(invcl.dr,0) = 0 ");
 		sql.append(" where ");
@@ -76,16 +69,15 @@ public class SqlNerpstornum extends SqlQueryConditionVO {
 	}
 
 	public String getNnum() {
-		return "SUM(COALESCE(b.nnum,0.0))";
+		return "sum(coalesce(b.whs_stocktonnage, 0.0))";
 	}
 
 	public String getStorFieldName() {
-		return "b.cwarehouseidb";
+		return "b.pk_customize1";
 	}
 
 	public String getInvbasdocFieldName() {
-		// TODO Auto-generated method stub
-		return "b.cinvbasid";
+		return "b.pk_invbasdoc";
 	}
 
 }

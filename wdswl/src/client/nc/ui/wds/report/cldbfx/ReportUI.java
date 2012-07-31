@@ -5,11 +5,8 @@ import java.util.List;
 
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.scm.util.ObjectUtils;
+import nc.ui.zmpub.pub.report.buttonaction2.IReportButton;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
-import nc.vo.pub.lang.UFDouble;
-import nc.vo.scm.pu.PuPubVO;
-import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 import nc.vo.zmpub.pub.report2.CombinVO;
@@ -35,7 +32,9 @@ public class ReportUI extends ZmReportBaseUI2 {
 	 */
 	private static final long serialVersionUID = 8238947662610154941L;
 
-	private String[] voCombinConds = new String[] { "pk_corp" };// 合并条件,拆单维度
+	private String[] voCombinConds = new String[] { "pk_corp", "pk_stordoc",
+	// "pk_cargdoc",
+			"pk_invcl", "pk_invmandoc" };// 合并条件,拆单维度
 	private String[] combinFields = new String[] { "nerpstornum", "nwlstornum",
 			"nwlxnddnum", "nwlxnydnum", "nerpcgrknum" };// erp库存
 	// nerpstornum、物流库存nwlstornum、虚拟订单剩余量nwlxnddnum、虚拟运单剩余量nwlxnydnum
@@ -64,14 +63,12 @@ public class ReportUI extends ZmReportBaseUI2 {
 					setBodyVO(vos);
 					// setTolal1();
 				}
-
 			} catch (BusinessException e) {
 				e.printStackTrace();
 				this.showErrorMessage(e.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.showErrorMessage(e.getMessage());
-
 			}
 		}
 
@@ -93,76 +90,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 	}
 
 	protected ReportBaseVO[] getCustomVOs(ReportBaseVO[] vos) {
-		ReportBaseVO[] newvos = setVoByContion(vos, voCombinConds);
+		ReportBaseVO[] newvos = (ReportBaseVO[]) CombinVO.combinData(vos,
+				voCombinConds, combinFields, ReportBaseVO.class);
 		return newvos;
 	}
 
-	/**
-	 * 将同一维度 拥有相同特性 的 数组 合并为一条数据 按特性不同 增加相应列
-	 * 
-	 * @param vos
-	 * @param fields
-	 *            分组条件：确定维度, 合并条件
-	 * @return
-	 */
-	private ReportBaseVO[] setVoByContion(ReportBaseVO[] vos, String[] fields) {
-		if (vos == null || vos.length == 0) {
-			return vos;
-		}
-		// 根据 分组字段，对原vo进行分组
-		CircularlyAccessibleValueObject[][] voss = SplitBillVOs.getSplitVOs(
-				vos, fields);
-		if (voss == null || voss.length == 0) {
-			return vos;
-		}
-		// new 开头的vo为重新组装放入界面的vo
-		ReportBaseVO[] newVos = new ReportBaseVO[voss.length];
-		int size = voss.length;
-		for (int i = 0; i < size; i++) {
-			ReportBaseVO newVo = null;
-			int size1 = voss[i].length;
-			for (int j = 0; j < size1; j++) {
-				ReportBaseVO oldVo = (ReportBaseVO) voss[i][j];
-				if (newVo == null) {
-					newVo = (ReportBaseVO) oldVo.clone();
-				}
-				// 根据单据类型重组： 将分组后的字段 重新按 字段 进行横向分裂合并
-				setVOByBillType(newVo, oldVo);
-			}
-			newVos[i] = newVo;
-		}
-		return newVos;
-	}
-
-	/**
-	 * 根据单据类型 对vo进行横向分裂：同一存货 （不同单据类型 的 数量 金额） 合并为一条数据
-	 * 
-	 * @param newVo
-	 * @param oldVo
-	 */
-	private void setVOByBillType(ReportBaseVO newVo, ReportBaseVO oldVo) {
-		String id = PuPubVO.getString_TrimZeroLenAsNull(oldVo
-				.getAttributeValue(splitBillField));
-		String newid = PuPubVO.getString_TrimZeroLenAsNull(newVo
-				.getAttributeValue(splitBillField));
-		if (id == null || !id.equalsIgnoreCase(newid)) {
-			return;
-		}
-
-		int size = combinFields.length;
-		UFDouble value = null;
-		UFDouble value2 = null;
-		for (int i = 0; i < size; i++) {
-			value = PuPubVO.getUFDouble_NullAsZero(oldVo
-					.getAttributeValue(combinFields[i]));
-			value2 = PuPubVO.getUFDouble_NullAsZero(newVo
-					.getAttributeValue(combinFields[i]));//
-			newVo.setAttributeValue(combinFields[i], value.add(value2));
-		}
-	}
-
 	protected void setDefaultQueryData() {
-
+		getQueryDlg().setDefaultValue("pk_corp", getCorpPrimaryKey(), "");
 	}
 
 	public SqlFactory getSqlFactory() {
@@ -175,21 +109,22 @@ public class ReportUI extends ZmReportBaseUI2 {
 	@Override
 	public String[] getSqls() throws Exception {
 		getSqlFactory().setQueryDlg(getQueryDlg());
-		return new String[] { getSql1() };
+		return new String[] { getSql1(), getSql2(), getSql4() };
 	}
 
 	/*
 	 * erp库存 nerpstornum
 	 */
 	public String getSql1() throws Exception {
-		return getSqlFactory().getSqlFunction(SqlFactory.nerpstornum).getSql();
+		return getSqlFactory().getSqlFunction(SqlFactory.N_nerpstornum)
+				.getSql();
 	}
 
 	/*
 	 * 物流库存nwlstornum
 	 */
-	public String getSql2() {
-		return null;
+	public String getSql2() throws Exception {
+		return getSqlFactory().getSqlFunction(SqlFactory.N_nwlstornum).getSql();
 
 	}
 
@@ -204,9 +139,8 @@ public class ReportUI extends ZmReportBaseUI2 {
 	/*
 	 * 虚拟运单剩余量nwlxnydnum
 	 */
-	public String getSql4() {
-		return null;
-
+	public String getSql4() throws Exception {
+		return getSqlFactory().getSqlFunction(SqlFactory.N_nwlxnydnum).getSql();
 	}
 
 	/*
@@ -222,4 +156,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 		return WdsWlPubConst.report_cldbfx_node;
 	}
 
+	public int[] getReportButtonAry() {
+		m_buttonArray = new int[] { IReportButton.QueryBtn,
+				IReportButton.LevelSubTotalBtn, IReportButton.PrintBtn, };
+		return m_buttonArray;
+	}
+
+	@Override
+	protected void setDecimalDigits() {
+	}
 }
