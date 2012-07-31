@@ -186,6 +186,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		super.setRefData(vos);
 		getBillUI().setDefaultData();
 		setBodySpace();
+		 getButtonManager().getButton(ISsButtun.fzgn).setEnabled(true);
 		getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 		getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
 		getBillUI().updateButtons();

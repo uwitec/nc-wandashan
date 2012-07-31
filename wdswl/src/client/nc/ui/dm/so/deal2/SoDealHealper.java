@@ -125,10 +125,14 @@ public class SoDealHealper {
 			vos = (SoDealVO[])voss[i];
 			tmpHead = new SoDealHeaderVo();
 			tmpHead.setCcustomerid(vos[0].getCcustomerid());
-			tmpHead.setDbilldate((UFDate)VOTool.min(vos, "dbilldate"));//应取 最小订单日期
+			tmpHead.setDbilldate((UFDate)VOTool.max(vos, "dbilldate"));//应取 最小订单日期
 			tmpHead.setIsonsell(UFBoolean.FALSE);
 			tmpHead.setCsalecorpid(vos[0].getCsalecorpid());
-			tmpHead.setCbodywarehouseid(cwhid==null?vos[0].getCbodywarehouseid():cwhid);
+			String pk_stordoc=vos[0].getCbodywarehouseid();
+			if(pk_stordoc==null || pk_stordoc.length()==0)
+				pk_stordoc=cwhid;
+			tmpHead.setCbodywarehouseid(pk_stordoc);
+
 			tmpHead.setStatus(VOStatus.NEW);
 			tmpbill = new SoDealBillVO();
 			tmpbill.setParentVO(tmpHead);

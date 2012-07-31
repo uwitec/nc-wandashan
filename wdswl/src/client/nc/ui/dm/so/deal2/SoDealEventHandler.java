@@ -103,7 +103,9 @@ public class SoDealEventHandler{
 			return ;
 		for(int i=0;i<billdatas.length;i++){
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			if(billdatas[i].getCbodywarehouseid()==null ||billdatas[i].getCbodywarehouseid().length()==0){
 			billdatas[i].setCbodywarehouseid(ui.getWhid());
+			}
 			billdatas[i].setPk_corp(ui.getCl().getCorp());
 		}
 		//构造现存量查询条件
@@ -273,10 +275,12 @@ public class SoDealEventHandler{
 			iserrorhint = true;
 		}
 		//对数据进行合并  按客户合并  订单日期取最小订单日期
-		SoDealBillVO[] billvos = SoDealHealper.combinDatas(ui.getWhid(),m_billdatas);
+		SoDealBillVO[] billvos1 = SoDealHealper.combinDatas(ui.getWhid(),m_billdatas);
+		SoDealBillVO[] billvos= sort(billvos1,m_billdatas);
 //		clearData();
 		//处理查询出的计划  缓存  界面
-		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class));
+		SoDealHeaderVo[]  hvos=(SoDealHeaderVo[]) WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class);
+		getDataPane().setBodyDataVO(hvos);
 		getDataPane().execLoadFormula();
 		getBodyDataPane().setBodyDataVO(billvos[0].getChildrenVO());
 		getBodyDataPane().execLoadFormula();
@@ -286,7 +290,43 @@ public class SoDealEventHandler{
 			showHintMessage("操作完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 	}
-	
+    /**
+	 * 按订单日期由小到大排序
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-31下午01:51:19
+	 * @param billvos
+	 * @param m_billdatas
+	 */
+	private SoDealBillVO[] sort(SoDealBillVO[] billvos, SoDealVO[] m_billdatas) {
+		
+		SoDealHeaderVo[]  hvos=(SoDealHeaderVo[]) WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDealHeaderVo.class);
+		if(hvos==null|| hvos.length==0)
+			return null;
+		VOUtil.ascSort(hvos, new String[]{"dbilldate"});
+		SoDealBillVO[]  bills=new SoDealBillVO[billvos.length];
+		for(int i=0;i<bills.length;i++){
+			SoDealHeaderVo hvo=hvos[i];
+			List<SoDealVO> bodys=new ArrayList<SoDealVO>();
+			for(int k=0;k<m_billdatas.length;k++){
+				boolean isq=true;
+			   for(int j=0;j<SoDealHeaderVo.split_fields.length;j++){
+			      if(!hvo.getAttributeValue(SoDealHeaderVo.split_fields[j]).equals(m_billdatas[k].getAttributeValue(SoDealHeaderVo.split_fields[j]))){
+			    	  isq=false;
+			    	  break;
+			      }
+			   }
+			   if(isq){
+				   bodys.add(m_billdatas[k]);
+			   }
+			}
+			bills[i]=new SoDealBillVO();
+			bills[i].setParentVO(hvos[i]);
+			bills[i].setChildrenVO(bodys.toArray(new SoDealVO[0]));
+		}		
+		return bills;
+	}
 	/**
 	 * 
 	 * @作者：lyf

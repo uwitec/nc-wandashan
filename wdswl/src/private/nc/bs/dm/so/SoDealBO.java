@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.itf.scm.cenpur.service.TempTableUtil;
 import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.dm.so.deal.SoDeHeaderVo;
 import nc.vo.dm.so.deal.SoDealBillVO;
 import nc.vo.dm.so.deal.SoDealVO;
@@ -17,9 +19,11 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class SoDealBO {
 	
@@ -85,9 +89,11 @@ public class SoDealBO {
 		sql.append(" from wds_storecust_h ");
 		sql.append(" join tb_storcubasdoc ");
 		sql.append(" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h ");
-		sql.append(" where wds_storecust_h.pk_stordoc ='"+pk_storedoc+"'");
-		sql.append("  and isnull(wds_storecust_h.dr,0)=0");
+		sql.append("  where isnull(wds_storecust_h.dr,0)=0");
 		sql.append("  and isnull(tb_storcubasdoc.dr,0)=0");
+		if(!WdsWlPubTool.isZc(pk_storedoc)){
+		sql.append("  and wds_storecust_h.pk_stordoc ='"+pk_storedoc+"'");
+		}
 		sql.append(" )");
 		Object o = getDao().executeQuery(sql.toString(),
 				new BeanListProcessor(SoDealVO.class));
@@ -95,15 +101,48 @@ public class SoDealBO {
 			return null;
 		ArrayList<SoDealVO> list = (ArrayList<SoDealVO>) o;
 		datas = list.toArray(new SoDealVO[0]);
+		setStock(datas);
 		return datas;
 	}
-	
+	String sql=
+	" select  tb_storcubasdoc.pk_stordoc "+
+	" from wds_storecust_h "+
+	" join tb_storcubasdoc "+
+	" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h "+
+	"  where isnull(wds_storecust_h.dr,0)=0"+
+	"  and isnull(tb_storcubasdoc.dr,0)=0";
+	/**
+	 * 设置发货仓库
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-7-31下午12:35:56
+	 * @param datas
+	 * @throws DAOException 
+	 */
+	private void setStock(SoDealVO[] datas)  {
+		if(datas==null || datas.length==0)
+			return ;
+		for(int i=0;i<datas.length;i++){
+			//'0001B11000000000W46O'
+			String pk_cub=datas[i].getCreceiptcustomerid();
+			String sql1="";
+			sql1=sql+" and tb_storcubasdoc.pk_cumandoc = '"+pk_cub+"'";
+			String pk_storc=null;
+			try {
+				pk_storc = PuPubVO.getString_TrimZeroLenAsNull(getDao().executeQuery(sql1,new ColumnProcessor()));
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+			datas[i].setCbodywarehouseid(pk_storc);
+		}		
+	}
+
 	/**
 	 * 
 	 * @作者：lyf
 	 * @说明：完达山物流项目
 	 * @时间：2011-3-25下午03:58:14
-	 * @param ldata
+	 * @param ldataoon
 	 * @param infor
 	 *            :登录人，登录公司，登录日期
 	 * @throws Exception

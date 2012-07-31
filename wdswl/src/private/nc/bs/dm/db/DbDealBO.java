@@ -18,6 +18,7 @@ import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 public class DbDealBO {
 	
@@ -68,7 +69,10 @@ public class DbDealBO {
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
-		sql.append(" and b.coutwhid ='"+pk_storedoc+"'");
+		if(!WdsWlPubTool.isZc(pk_storedoc)){
+		   sql.append(" and b.coutwhid ='"+pk_storedoc+"'");
+		}
+		sql.append("  and b.coutwhid  is not null");
 		Object o = getDao().executeQuery(sql.toString(),
 				new BeanListProcessor(DbDealVO.class));
 		if (o == null)

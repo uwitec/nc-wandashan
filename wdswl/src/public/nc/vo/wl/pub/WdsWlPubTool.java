@@ -486,7 +486,7 @@ private static Map<String,String> custNameInfor = new HashMap<String, String>();
 		}
 		if(tempVoList.size() == 0)
 			return null;
-		return tempVoList.toArray(new CircularlyAccessibleValueObject[0]);
+		return tempVoList.toArray((CircularlyAccessibleValueObject[])java.lang.reflect.Array.newInstance(parentClass, 0));
 	}
 	
 	/**

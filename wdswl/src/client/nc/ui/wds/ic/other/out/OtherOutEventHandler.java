@@ -7,6 +7,7 @@ import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.wds.ic.pub.OutPubClientUI;
@@ -240,8 +241,8 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	
 	@Override
 	public void onBoAdd(ButtonObject bo) throws Exception {
-		// TODO Auto-generated method stub
 		super.onBoAdd(bo);
+		getButtonManager().getButton(ISsButtun.fzgn).setEnabled(true);
 		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 	}
 

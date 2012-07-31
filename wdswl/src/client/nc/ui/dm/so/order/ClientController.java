@@ -83,7 +83,7 @@ public class ClientController extends AbstractManageController {
 	}
 
 	public String getPkField() {
-		return "";
+		return "pk_soorder";
 	}
 
 	public Boolean isEditInGoing() throws Exception {

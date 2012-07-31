@@ -18,6 +18,7 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
+import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
@@ -70,6 +71,9 @@ public class ClientUI extends OutPubClientUI implements
 		}
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 
+	}
+	public void afterUpdate() {
+		
 	}
 
 	@Override

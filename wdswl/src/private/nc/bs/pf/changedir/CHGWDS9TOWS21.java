@@ -71,7 +71,7 @@ public class CHGWDS9TOWS21 extends nc.bs.pf.change.VOConversion {
 						"B_csourcebillbid->B_geb_pk",//   [保存  物流 调拨入库单字段]
 //						"B_vfirstbillcode->B_vfirstbillcode",//[保存  物流 调拨入库单字段]
 						"B_csourcetype->H_geh_billtype",//[保存  物流 调拨入库单字段]
-						
+						"B_vsourcebillcode->H_geh_billcode",
 						"B_vdef1->B_cdt_pk",//存货状态
 						
 //						"B_dbizdate->B_geb_dbizdate",//入库日期--业务日期

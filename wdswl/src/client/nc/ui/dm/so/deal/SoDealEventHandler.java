@@ -242,7 +242,9 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			return ;
 		for(int i=0;i<billdatas.length;i++){
 			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			if(billdatas[i].getCbodywarehouseid()==null ||billdatas[i].getCbodywarehouseid().length()==0){
 			billdatas[i].setCbodywarehouseid(ui.getWhid());
+			}
 			billdatas[i].setPk_corp(ui.getCl().getCorp());
 		}
 		//构造现存量查询条件
@@ -329,7 +331,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(voss == null || voss.length ==0)
 			return ;
 		int len = voss.length;
-		SoDealBillVO[] billvos = new SoDealBillVO[len];
+		SoDealBillVO[] billvos1 = new SoDealBillVO[len];
 		SoDealBillVO tmpbill = null;
 		SoDeHeaderVo tmpHead = null;
 		SoDealVO[] vos = null;
@@ -337,17 +339,21 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			vos = (SoDealVO[])voss[i];
 			tmpHead = new SoDeHeaderVo();
 			tmpHead.setCcustomerid(vos[0].getCcustomerid());
-			tmpHead.setDbilldate((UFDate)VOTool.min(vos, "dbilldate"));//应取 最小订单日期
+			tmpHead.setDbilldate((UFDate)VOTool.max(vos, "dbilldate"));//应取 最小订单日期
 			tmpHead.setBisspecial(UFBoolean.FALSE);
 			tmpHead.setCsalecorpid(vos[0].getCsalecorpid());
 			tmpHead.setVreceiptcode(vos[0].getVreceiptcode());
-			tmpHead.setCbodywarehouseid(ui.getWhid()==null?vos[0].getCbodywarehouseid():ui.getWhid());
+			String pk_stordoc=vos[0].getCbodywarehouseid();
+			if(pk_stordoc==null || pk_stordoc.length()==0)
+				pk_stordoc=ui.getWhid();
+			tmpHead.setCbodywarehouseid(pk_stordoc);
 			tmpHead.setStatus(VOStatus.NEW);
 			tmpbill = new SoDealBillVO();
 			tmpbill.setParentVO(tmpHead);
 			tmpbill.setChildrenVO(vos);
-			billvos[i] = tmpbill;
+			billvos1[i] = tmpbill;
 		}
+		SoDealBillVO[] billvos  =sort(billvos1, billdatas);
 		//处理查询出的计划  缓存  界面
 		getDataPane().setBodyDataVO(WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDeHeaderVo.class));
 		getDataPane().execLoadFormula();
@@ -540,6 +546,43 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			}
 		}
 
+	}
+	 /**
+	 * 按订单日期由小到大排序
+	 * 
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-31下午01:51:19
+	 * @param billvos
+	 * @param m_billdatas
+	 */
+	private SoDealBillVO[] sort(SoDealBillVO[] billvos, SoDealVO[] m_billdatas) {
+		
+		SoDeHeaderVo[]  hvos=(SoDeHeaderVo[]) WdsWlPubTool.getParentVOFromAggBillVo(billvos, SoDeHeaderVo.class);
+		if(hvos==null|| hvos.length==0)
+			return null;
+		VOUtil.ascSort(hvos, new String[]{"dbilldate"});
+		SoDealBillVO[]  bills=new SoDealBillVO[billvos.length];
+		for(int i=0;i<bills.length;i++){
+			SoDeHeaderVo hvo=hvos[i];
+			List<SoDealVO> bodys=new ArrayList<SoDealVO>();
+			for(int k=0;k<m_billdatas.length;k++){
+				boolean isq=true;
+			   for(int j=0;j< SoDeHeaderVo.split_fields.length;j++){
+			      if(!hvo.getAttributeValue(SoDeHeaderVo.split_fields[j]).equals(m_billdatas[k].getAttributeValue(SoDeHeaderVo.split_fields[j]))){
+			    	  isq=false;
+			    	  break;
+			      }
+			   }
+			   if(isq){
+				   bodys.add(m_billdatas[k]);
+			   }
+			}
+			bills[i]=new SoDealBillVO();
+			bills[i].setParentVO(hvos[i]);
+			bills[i].setChildrenVO(bodys.toArray(new SoDealVO[0]));
+		}		
+		return bills;
 	}
 	public void bodyRowChange(BillEditEvent e) {		
 	}

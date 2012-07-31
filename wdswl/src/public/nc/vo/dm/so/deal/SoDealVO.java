@@ -201,7 +201,7 @@ public class SoDealVO extends SuperVO{
 		"h.pk_corp",
 		"h.vreceiptcode",
 		"h.cbiztype",
-		"h.dbilldate",
+		"h.dapprovedate dbilldate",
 		"h.ccustomerid",
 		"h.cdeptid",
 		"h.cemployeeid",

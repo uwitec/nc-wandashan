@@ -80,6 +80,13 @@ public class OtherOutBO {
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });
 			}
+			if (sourcetype.equalsIgnoreCase(WdsWlPubConst.WDSC)) {
+				WriteBackTool.writeBack(bodys, "wds_cgqy_b",
+						"pk_cgqy_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });
+			}
 		} else if (iBdAction == IBDACTION.DELETE) {
 			for (int i = 0; i < bodys.length; i++) {
 				bodys[i].setStatus(VOStatus.DELETED);
@@ -119,7 +126,14 @@ public class OtherOutBO {
 								"noutassistnum" }, new String[] { "noutnum",
 								"nassoutnum" }, new String[] { "noutnum",
 								"nassoutnum" });
-			}		
+			}
+			if (sourcetype.equalsIgnoreCase(WdsWlPubConst.WDSC)) {
+				WriteBackTool.writeBack(bodys, "wds_cgqy_b",
+						"pk_cgqy_b", new String[] { "noutnum",
+								"noutassistnum" }, new String[] { "noutnum",
+								"nassoutnum" }, new String[] { "noutnum",
+								"nassoutnum" });
+			}
 		}
 	}
 }
