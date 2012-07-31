@@ -291,6 +291,8 @@ public abstract class BillStockBO extends StockBO {
 				if (filelds == null || filelds.length == 0) {
 					continue;
 				}
+				if(coms==null || coms.length==0)
+					continue;
 				for (int k = 0; k < filelds.length; k++) {
 					vos[i].setAttributeValue(filelds[k], coms[0]
 							.getAttributeValue(filelds[k]));
