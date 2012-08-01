@@ -6,18 +6,14 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import nc.ui.pu.pub.PuTool;
-import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIFileChooser;
 import nc.ui.pub.beans.UITextField;
 import nc.ui.trade.base.AbstractBillUI;
-import nc.ui.zmpub.pub.tool.LongTimeTask;
 import nc.vo.pfxx.pub.Filter;
-import nc.vo.pp.ask.UpLoadFileVO;
-import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
+import nc.vo.zmpub.excel.UpLoadFileVO;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 
 /**
@@ -69,49 +65,49 @@ public class UpLoadCtrlTool {
 			fname = f.toString().substring(pos + 1);
 
 		sFilePath = f.toString();
-		s = getBillCode(sFilePath);
+//		s = getBillCode(sFilePath);
 		vo.setSequence((new Integer(iSeq)).toString()); // 序列号
 		vo.setSelect(new nc.vo.pub.lang.UFBoolean(false)); // 是否选中，默认为不选
 		vo.setFileName(fname); // 文件名称
-		vo.setBillCode(s[0]); // 单据号，读文件第一条记录
+//		vo.setBillCode(s[0]); // 单据号，读文件第一条记录
 		vo
-				.setFileDate((new nc.vo.pub.lang.UFDate(f.lastModified()))
-						.toString());// 文件日期
+		.setFileDate((new nc.vo.pub.lang.UFDate(f.lastModified()))
+				.toString());// 文件日期
 		vo.setFileStatus(s[1]); // 文件状态
 		return vo;
 	}
 
-	/**
-	 * 子类实现该方法，返回业务界面的标题。
-	 * 
-	 * @version (2010-12-23 20:53:13)
-	 * 
-	 * @return java.lang.String
-	 */
-	public String[] getBillCode(String sFilePath) {
-		// 读文件第一条记录的单据号
-		String sBillCode = null;
-		// 读文件状态
-		String sStatus = null;
-		// 返回
-		String[] sReturn = new String[2];
-
-		try {
-			ExcelReadCtrl excelReadCtrl = getCa(sFilePath, true);
-			if (excelReadCtrl == null) {
-				throw new Exception("没有注册ExcelReadCtrl实现类");
-			}
-			nc.vo.pp.ask.ExcelFileVO vo = excelReadCtrl.getVOAtLine(1);
-			sBillCode = vo.getBillCode();
-			sStatus = excelReadCtrl.getExcelFileFlag();
-			sReturn[0] = sBillCode;
-			sReturn[1] = sStatus;
-		} catch (Exception e) {
-			SCMEnv.out(e.getMessage());
-			PuTool.outException(e);
-		}
-		return sReturn;
-	}
+//	/**
+//	 * 子类实现该方法，返回业务界面的标题。
+//	 * 
+//	 * @version (2010-12-23 20:53:13)
+//	 * 
+//	 * @return java.lang.String
+//	 */
+//	public String[] getBillCode(String sFilePath) {
+//		// 读文件第一条记录的单据号
+//		String sBillCode = null;
+//		// 读文件状态
+//		String sStatus = null;
+//		// 返回
+//		String[] sReturn = new String[2];
+//
+//		try {
+//			ExcelReadCtrl excelReadCtrl = getCa(sFilePath, true);
+//			if (excelReadCtrl == null) {
+//				throw new Exception("没有注册ExcelReadCtrl实现类");
+//			}
+//			nc.vo.pp.ask.ExcelFileVO vo = excelReadCtrl.getVOAtLine(1);
+//			sBillCode = vo.getBillCode();
+//			sStatus = excelReadCtrl.getExcelFileFlag();
+//			sReturn[0] = sBillCode;
+//			sReturn[1] = sStatus;
+//		} catch (Exception e) {
+//			SCMEnv.out(e.getMessage());
+//			PuTool.outException(e);
+//		}
+//		return sReturn;
+//	}
 
 	/**
 	 * liuys 功能：导入文件（年度需求计划专用） 参数： 返回： 例外： 日期：(2010-12-23 20:53:13)
@@ -133,7 +129,7 @@ public class UpLoadCtrlTool {
 	 */
 	public ReportBaseVO[] UpLoadFiles(String pk_corp, String[] sFilePath,
 			String sDir, String user, String logDate)
-			throws java.lang.Exception {
+	throws java.lang.Exception {
 		return UpLoadFiles(pk_corp, sFilePath, sDir, false, user, logDate,
 				false);
 	}
@@ -182,7 +178,6 @@ public class UpLoadCtrlTool {
 				vos = erc.getAskVOsFromExcel();
 			} catch (Exception e) {
 				SCMEnv.out(e);
-				PuTool.outException(e);
 			}
 		}
 		return vos;
@@ -236,16 +231,16 @@ public class UpLoadCtrlTool {
 			if (sFileNames == null || sFileNames.length <= 0) {
 				ui.showWarningMessage(nc.ui.ml.NCLangRes.getInstance()
 						.getStrByID("40040701", "UPP40040701-000075")/*
-																	 * @res
-																	 * "请选择要上传的单据文件！"
-																	 */);
-//				if (!((BillManageUI) ui).isListPanelSelected()) {
-//					// // 显示数据、处理按钮状态
-//					// getBufferData().clear();
-//					// getBufferData().updateView();
-//					// }
-//					// return;
-//				}
+						 * @res
+						 * "请选择要上传的单据文件！"
+						 */);
+				//				if (!((BillManageUI) ui).isListPanelSelected()) {
+				//					// // 显示数据、处理按钮状态
+				//					// getBufferData().clear();
+				//					// getBufferData().updateView();
+				//					// }
+				//					// return;
+				//				}
 			}
 
 			try {
@@ -258,8 +253,8 @@ public class UpLoadCtrlTool {
 				String isSuccess = "success";
 
 				isUpLoadFileSuccessNew(isSuccess, ui);
-				
-//				对数据进行处理
+
+				//				对数据进行处理
 				getCa(sPath, true).dealData(rvos);
 
 				return rvos;
@@ -267,10 +262,10 @@ public class UpLoadCtrlTool {
 			} catch (Exception e) {
 				MessageDialog.showErrorDlg(ui, nc.ui.ml.NCLangRes.getInstance()
 						.getStrByID("SCMCOMMON", "UPPSCMCommon-000132")/*
-																		 * @res
-																		 * "警告"
-																		 */, e
-						.getMessage());
+						 * @res
+						 * "警告"
+						 */, e
+						 .getMessage());
 
 			}
 		}
@@ -296,20 +291,20 @@ public class UpLoadCtrlTool {
 		if (isSuccess != null && isSuccess.length() > 0
 				&& "success".equals(isSuccess)) {
 			MessageDialog
-					.showWarningDlg(ui, "提示", nc.ui.ml.NCLangRes.getInstance()
-							.getStrByID("40040701", "UPP40040701-000070")/*
-																		 * @res
-																		 * "所有文件上传成功！"
-																		 */);
+			.showWarningDlg(ui, "提示", nc.ui.ml.NCLangRes.getInstance()
+					.getStrByID("40040701", "UPP40040701-000070")/*
+					 * @res
+					 * "所有文件上传成功！"
+					 */);
 
 		} else if ((isSuccess != null && isSuccess.length() > 0 && "false"
 				.equals(isSuccess))
 				|| isSuccess == null) {
 			MessageDialog.showErrorDlg(ui,
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("SCMCOMMON",
-							"UPPSCMCommon-000132")/* @res "警告" */,
+					"UPPSCMCommon-000132")/* @res "警告" */,
 					nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-							"UPP40040701-000073")/* @res "所有文件上传失败!" */);
+					"UPP40040701-000073")/* @res "所有文件上传失败!" */);
 		}
 	}
 
@@ -349,7 +344,7 @@ public class UpLoadCtrlTool {
 		String corpid = null;
 		if (corpid == null || "".equals(corpid.trim())) {
 			corpid = nc.ui.pub.ClientEnvironment.getInstance().getCorporation()
-					.getPrimaryKey();
+			.getPrimaryKey();
 		}
 		return corpid;
 	}
@@ -362,19 +357,19 @@ public class UpLoadCtrlTool {
 		return logDate.toString();
 	}
 
-	/**
-	 * @功能：获取ClientEnvironment
-	 */
-	private ClientEnvironment getcl() {
-		return ClientEnvironment.getInstance();
-	}
+//	/**
+//	 * @功能：获取ClientEnvironment
+//	 */
+//	private ClientEnvironment getcl() {
+//		return ClientEnvironment.getInstance();
+//	}
 
 	/**
 	 * @功能：获取登陆人ID
 	 */
 	public String getUserId() {
 		String userid = nc.ui.pub.ClientEnvironment.getInstance().getUser()
-				.getPrimaryKey();
+		.getPrimaryKey();
 		return userid;
 	}
 
@@ -522,7 +517,7 @@ public class UpLoadCtrlTool {
 			m_filechooser.addChoosableFileFilter(new ExcelFileFilter("xls"));// Excel文件
 			// 表示可选取的包括文件和目录
 			m_filechooser
-					.setFileSelectionMode(m_filechooser.FILES_AND_DIRECTORIES);
+			.setFileSelectionMode(m_filechooser.FILES_AND_DIRECTORIES);
 		}
 		return m_filechooser;
 	}
@@ -559,73 +554,4 @@ public class UpLoadCtrlTool {
 			return "";
 		}
 	}
-
-	/**
-	 * 执行数据交换
-	 * 
-	 * @author mlr
-	 * @说明：（鹤岗矿业） 2011-11-5上午10:09:45
-	 * @return
-	 * @throws Exception
-	 */
-	public SuperVO[] exeChange(ReportBaseVO[] vos, String pk_corp,
-			String m_user, String logDate) throws Exception {
-		String cls = getExcelReadCtrlClass();
-		if (cls == null || cls.length() == 0)
-			throw new Exception("没有注册ExcelReadCtrl实现类");
-		ExcelReadCtrl re = (ExcelReadCtrl) Class.forName(cls).newInstance();
-		String[] fieldsNames = re.getFieldNames();
-		String[] queryIds = re.getQueryIds();
-		String[] queryTables = re.getQueryTables();
-		String[] querySelectIDs = re.getQuerySelectIDs();
-		String[] queryCodeNames = re.getQueryCodeNames();
-		String[] setValueIds = re.getSetValueIds();
-		boolean[] isQueCorps = re.getIsQueCorps();
-		boolean[] isMutiTables = re.getIsMutitables();
-		String returnClass = re.getReturnVO();
-		if (fieldsNames == null || fieldsNames.length == 0)
-			throw new Exception("没有注册fieldsNames");
-		if (queryIds == null || queryIds.length == 0)
-			throw new Exception("没有注册queryIds");
-		if (queryTables == null || queryTables.length == 0)
-			throw new Exception("没有注册queryTables");
-		if (querySelectIDs == null || querySelectIDs.length == 0)
-			throw new Exception("没有注册querySelectIDs");
-		if (queryCodeNames == null || queryCodeNames.length == 0)
-			throw new Exception("没有注册queryCodeNames");
-		if (isQueCorps == null || isQueCorps.length == 0)
-			throw new Exception("没有注册isQueCorps");
-		if (returnClass == null || returnClass.length() == 0)
-			throw new Exception("没有注册getReturnVO");
-		if (isMutiTables == null || isMutiTables.length == 0)
-			throw new Exception("没有注册getIsMutitables");
-		if (setValueIds == null || setValueIds.length == 0)
-			throw new Exception("没有注册setValueIds");
-		SuperVO[] newvos = vchangevo(returnClass, vos, fieldsNames, queryIds,
-				queryTables, querySelectIDs, queryCodeNames, isQueCorps,
-				isMutiTables, setValueIds, pk_corp, m_user, logDate);
-		return newvos;
-	}
-
-	private String bo = "nc.bs.bill.pub.ExcetBO";
-
-	public SuperVO[] vchangevo(String returnClass, ReportBaseVO[] vos,
-			String fieldsNames[], String queryIds[], String queryTables[],
-			String querySelectIDs[], String[] queryCodeNames,
-			boolean[] isQueCorps, boolean[] isMutiTables, String[] setValueIds,
-			String pk_corp, String m_user, String logDate) throws Exception {
-		Class[] ParameterTypes = new Class[] { String.class,
-				ReportBaseVO[].class, String[].class, String[].class,
-				String[].class, String[].class, String[].class,
-				boolean[].class, boolean[].class, String[].class, String.class,
-				String.class, String.class };
-		Object[] ParameterValues = new Object[] { returnClass, vos,
-				fieldsNames, queryIds, queryTables, querySelectIDs,
-				queryCodeNames, isQueCorps, isMutiTables, setValueIds, pk_corp,
-				m_user, logDate };
-		SuperVO[] voss = (SuperVO[]) LongTimeTask.callRemoteService("ic", bo,
-				"excelChangeToVO", ParameterTypes, ParameterValues, 2);
-		return voss;
-	}
-
 }

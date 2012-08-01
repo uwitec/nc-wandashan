@@ -11,7 +11,6 @@ import nc.ui.pp.pub.IExcelFileFlag;
 import nc.ui.pu.pub.PuTool;
 import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
-import nc.vo.pp.ask.ExcelFileVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
@@ -70,11 +69,11 @@ public abstract class ExcelReadCtrl {
 		int sheetSize = wb.getNumberOfSheets();
 		if (sheetSize == 0) {
 			JOptionPane
-					.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
-							.getStrByID("40040701", "UPP40040701-000193")/*
-																		 * @res
-																		 * "Excel文件为空！"
-																		 */);
+			.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
+					.getStrByID("40040701", "UPP40040701-000193")/*
+					 * @res
+					 * "Excel文件为空！"
+					 */);
 			return;
 		}
 		sheet = new HSSFSheet[sheetSize];
@@ -86,21 +85,20 @@ public abstract class ExcelReadCtrl {
 		fs.close();
 	}
 
-	/**
-	 * ?user> 功能：从第一个sheet指定的Excel行取出VO 参数： 返回： 例外： 日期：(2004-8-25 12:18:30)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @return nc.vo.ic.pub.barcodeoffline.ExcelFileVO
-	 * @param line
-	 *            int
-	 */
-	public ExcelFileVO getVOAtLine(int indexRow) {
-		ExcelFileVO vo = new nc.vo.pp.ask.ExcelFileVO();
-		HSSFRow row = sheet[0].getRow(indexRow);
-		setRowToVO(row, vo);
-		return vo;
-
-	}
+//	/**
+//	 * ?user> 功能：从第一个sheet指定的Excel行取出VO 参数： 返回： 例外： 日期：(2004-8-25 12:18:30)
+//	 * 修改日期，修改人，修改原因，注释标志：
+//	 * 
+//	 * @return nc.vo.ic.pub.barcodeoffline.ExcelFileVO
+//	 * @param line
+//	 *            int
+//	 */
+//	public ExcelFileVO getVOAtLine(int indexRow) {
+//		ExcelFileVO vo = new nc.vo.pp.ask.ExcelFileVO();
+//		HSSFRow row = sheet[0].getRow(indexRow);
+//		setRowToVO(row, vo);
+//		return vo;
+//	}
 
 	/**
 	 * 周晓 功能： 参数： 返回： 例外： 日期：(2004-10-15 9:22:40) 修改日期，修改人，修改原因，注释标志：
@@ -161,122 +159,6 @@ public abstract class ExcelReadCtrl {
 	}
 
 	/**
-	 * 周晓 功能：创建EXCEL文件列标题（询价单用） 参数： 返回： 例外： 日期：(2004-10-15 9:21:32)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param sheet
-	 *            org.apache.poi.hssf.usermodel.HSSFSheet
-	 */
-	private void createExcelCaption(HSSFSheet sheet) {
-		if (sheet == null)
-			return;
-		HSSFRow row = null;
-		HSSFCell cell = null;
-		HSSFCellStyle cellStyle = wb.createCellStyle();
-		cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		// Create a new font and alter it.
-		HSSFFont font = wb.createFont();
-		font.setFontHeightInPoints((short) 24);
-		font.setFontName("Courier New");
-		// font.setItalic(true);
-		// font.setStrikeout(true);
-		cellStyle.setFont(font);
-
-		short creLineForTitle = 6;
-		row = sheet.getRow(0);
-		if (row == null)
-			row = sheet.createRow(0);
-		cell = row.getCell(creLineForTitle);
-		if (cell == null)
-			cell = row.createCell(creLineForTitle);
-		cell.setCellStyle(cellStyle);
-		sheet.addMergedRegion(new Region(0, (short) 6, 0, (short) 9));
-		cell.setCellValue("询价单");
-
-		int j = 0;
-		short creLine = 0;
-		for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saAskCaptionForHead.length; i++) {
-
-			if (i < 3) {
-				row = sheet.getRow(2);
-				if (row == null)
-					row = sheet.createRow(2);
-			} else {
-				row = sheet.getRow(3);
-				if (row == null)
-					row = sheet.createRow(3);
-			}
-			if (i == 0 || i == 3) {
-				j = 0;
-			}
-			if (i == 1 || i == 4) {
-				j = 7;
-			}
-			if (i == 2 || i == 5) {
-				j = 13;
-			}
-			creLine = new Integer(j).shortValue();
-			cell = row.getCell(creLine);
-
-			if (cell == null)
-				cell = row.createCell(creLine);
-			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-			cell
-					.setCellValue(nc.ui.pp.pub.ExcelColumnInfo.saAskCaptionForHead[i]);
-
-		}
-
-		// Style the cell with borders all around.
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setBorderBottom(HSSFCellStyle.BORDER_DASHED);
-		style.setBottomBorderColor(HSSFColor.BLACK.index);
-		style.setBorderLeft(HSSFCellStyle.BORDER_DASHED);
-		style.setLeftBorderColor(HSSFColor.GREEN.index);
-		style.setBorderRight(HSSFCellStyle.BORDER_DASHED);
-		style.setRightBorderColor(HSSFColor.BLUE.index);
-		style.setBorderTop(HSSFCellStyle.BORDER_MEDIUM_DASHED);
-		style.setTopBorderColor(HSSFColor.BLACK.index);
-
-		if (sheet == null)
-			return;
-		HSSFRow rowItem = sheet.getRow(5);
-		if (rowItem == null)
-			rowItem = sheet.createRow(5);
-		for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saAskCaption.length; i++) {
-			cell = rowItem.getCell(i);
-			if (cell == null)
-				cell = rowItem.createCell(i);
-			cell.setCellStyle(style);
-			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-			cell.setCellValue(nc.ui.pp.pub.ExcelColumnInfo.saAskCaption[i]);
-		}
-
-	}
-
-	/**
-	 * Author：周晓 功能：创建EXCEL文件列标题（报价单用） 参数： 返回： 例外： 日期：(2004-10-16 13:02:19)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param sheet
-	 *            org.apache.poi.hssf.usermodel.HSSFSheet
-	 */
-	private void createVendorExcelCaption(HSSFSheet sheet) {
-		if (sheet == null)
-			return;
-		HSSFRow row = sheet.getRow(0);
-		if (row == null)
-			row = sheet.createRow(0);
-		for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saVendorCaption.length; i++) {
-			HSSFCell cell = row.getCell(i);
-			if (cell == null)
-				cell = row.createCell(i);
-			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-			cell.setCellValue(nc.ui.pp.pub.ExcelColumnInfo.saVendorCaption[i]);
-
-		}
-	}
-
-	/**
 	 * Author mlr 功能：获得导入的转换为ReporBaseVO[]格式的EXCEL文件（询价单用） 参数： 返回： 例外：
 	 * 日期：(2004-10-15 14:43:44) 修改日期，修改人，修改原因，注释标志：
 	 * 
@@ -284,8 +166,7 @@ public abstract class ExcelReadCtrl {
 	 * @throws Exception
 	 */
 	public ReportBaseVO[] getAskVOsFromExcel() throws Exception {
-		ReportBaseVO[] voaReturn;
-
+		ReportBaseVO[] voaReturn = null;
 		Vector vcSheet = getDataRowVector(0);
 
 		if (vcSheet == null)
@@ -295,11 +176,10 @@ public abstract class ExcelReadCtrl {
 
 		int len = vcSheet.size();
 		voaReturn = new ReportBaseVO[len];
-		
+
 		ReportBaseVO voTemp = null;
 		HSSFRow rowTemp = null;
 		for (int i = 0; i < len; i++) {
-
 			voTemp = new ReportBaseVO();
 			rowTemp = (HSSFRow) vcSheet.get(i);
 			setRowToVO(rowTemp, voTemp);
@@ -319,7 +199,7 @@ public abstract class ExcelReadCtrl {
 	 * 修改日期，修改人，修改原因，注释标志：
 	 * 
 	 * @return java.util.Vector
-	 * @param sheetID
+	 * @param sheetID   excel的页码
 	 *            int
 	 */
 	private java.util.Vector getDataRowVector(int sheetID) {
@@ -347,13 +227,13 @@ public abstract class ExcelReadCtrl {
 		HSSFRow row = sheet[0].getRow(0);
 		if (row == null) {
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000194")/* @res "文件格式不对" */;
+			"UPP40040701-000194")/* @res "文件格式不对" */;
 		}
 		int iColumn = ExcelColumnInfo.saAskCaption.length;
 		HSSFCell cell = row.getCell((short) iColumn);
 		if (cell == null || cell.getCellType() != HSSFCell.CELL_TYPE_STRING) {
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000195")/* @res "空白状态位" */;
+			"UPP40040701-000195")/* @res "空白状态位" */;
 		}
 		String value = cell.getStringCellValue().trim();
 		if (!value.equals(IExcelFileFlag.F_EDITED)
@@ -362,7 +242,7 @@ public abstract class ExcelReadCtrl {
 				&& !value.equals(IExcelFileFlag.F_UPLOAD)
 				&& !value.equals(IExcelFileFlag.F_UPLOADFAILED))
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000196")/* @res "状态位不对" */;
+			"UPP40040701-000196")/* @res "状态位不对" */;
 
 		return value;
 
@@ -403,13 +283,13 @@ public abstract class ExcelReadCtrl {
 		HSSFRow row = sheet[0].getRow(0);
 		if (row == null) {
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000194")/* @res "文件格式不对" */;
+			"UPP40040701-000194")/* @res "文件格式不对" */;
 		}
 		int iColumn = ExcelColumnInfo.saVendorCaption.length;
 		HSSFCell cell = row.getCell((short) iColumn);
 		if (cell == null || cell.getCellType() != HSSFCell.CELL_TYPE_STRING) {
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000195")/* @res "空白状态位" */;
+			"UPP40040701-000195")/* @res "空白状态位" */;
 		}
 		String value = cell.getStringCellValue().trim();
 		if (!value.equals(IExcelFileFlag.F_EDITED)
@@ -418,7 +298,7 @@ public abstract class ExcelReadCtrl {
 				&& !value.equals(IExcelFileFlag.F_UPLOAD)
 				&& !value.equals(IExcelFileFlag.F_UPLOADFAILED))
 			return nc.ui.ml.NCLangRes.getInstance().getStrByID("40040701",
-					"UPP40040701-000196")/* @res "状态位不对" */;
+			"UPP40040701-000196")/* @res "状态位不对" */;
 
 		return value;
 
@@ -448,40 +328,7 @@ public abstract class ExcelReadCtrl {
 		return value.trim();
 	}
 
-	/**
-	 * Author：周晓 功能：获得导入的转换为ExcelFileVO格式的EXCEL文件（报价单用） 参数： 返回： 例外：
-	 * 日期：(2004-10-16 16:48:47) 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @return nc.vo.pp.ask.ExcelFileVO[]
-	 */
-	public ExcelFileVO[] getVendorVOsFromExcel() {
-		nc.vo.pp.ask.ExcelFileVO[] voaReturn;
-
-		Vector vcSheet = getDataRowVector(0);
-
-		if (vcSheet == null)
-			return null;
-		if (vcSheet.size() <= 1)
-			return null;
-
-		int len = vcSheet.size() - 1;
-		voaReturn = new nc.vo.pp.ask.ExcelFileVO[len];
-
-		for (int i = 1; i <= len; i++) {
-
-			nc.vo.pp.ask.ExcelFileVO voTemp = new nc.vo.pp.ask.ExcelFileVO();
-			HSSFRow rowTemp = (HSSFRow) vcSheet.get(i);
-			setVendorRowToVO(rowTemp, voTemp);
-			// //设置Excel文件的标志位
-			// voTemp.setExcelFlag(fileFlag);
-			voaReturn[i - 1] = voTemp;
-		}
-		if (voaReturn.length > 0) {
-			return voaReturn;
-		}
-		return null;
-
-	}
+	
 
 	/**
 	 * 周晓 功能：设置EXCEL文件状态标志（询价单用） 参数： 返回： 例外： 日期：(2004-10-15 9:16:51)
@@ -524,16 +371,57 @@ public abstract class ExcelReadCtrl {
 			SCMEnv.out(e.getMessage());
 			PuTool.outException(e);
 			JOptionPane
-					.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
-							.getStrByID("40040701", "UPP40040701-000211")/*
-																		 * @res
-																		 * "读写文件异常！"
-																		 */);
+			.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
+					.getStrByID("40040701", "UPP40040701-000211")/*
+					 * @res
+					 * "读写文件异常！"
+					 */);
 		}
 		return "setValue success";
 	}
 
-	public abstract String[] getFieldNames();
+	/**
+	 * 	注册对应Excel文件的字段列表   单体模式  ishead  传入为  false
+	 * @return
+	 */
+	public  String[] getFieldNames(boolean ishead){
+		if(ishead)
+			return getHeadFieldNames();
+		else
+			return getBodyFieldNames();
+	}
+	
+	/**
+	 * 返回表头字段名称
+	 * @return
+	 */
+	public abstract String[] getHeadFieldNames();
+	/**
+	 * 返回表体字段名称
+	 * @return
+	 */
+	public abstract String[] getBodyFieldNames();
+	
+	/**
+	 * 是否表头
+	 * @param headFlagCell
+	 * @return
+	 */
+	protected boolean isHead(HSSFCell headFlagCell){
+		if(isSingle())//如果是单体的直接返回false
+			return false;
+		if(headFlagCell == null)
+			return false;
+		int type = headFlagCell.getCellType();
+		if(type != HSSFCell.CELL_TYPE_STRING)
+			return false;
+		String value = PuPubVO.getString_TrimZeroLenAsNull(headFlagCell.getStringCellValue());
+		if(value == null)
+			return false;
+		if(value.equalsIgnoreCase("Y") || value.equalsIgnoreCase("TRUE"))
+			return true;
+		return false;
+	}
 
 	/**
 	 * author mlr 功能：设置上传单据每行的值（询价单用） 日期：(2004-10-15 9:17:14)
@@ -546,7 +434,7 @@ public abstract class ExcelReadCtrl {
 			return;
 		SimpleDateFormat formatter = null;
 		String dateToString = null;
-		String[] fieldNames = getFieldNames();
+		String[] fieldNames = getFieldNames(isHead(row.getCell((short)0)));
 		if (fieldNames == null || fieldNames.length == 0)
 			throw new Exception("没有注册对应Excel文件的字段列表");
 		for (short i = 0; i < fieldNames.length; i++) {
@@ -571,7 +459,7 @@ public abstract class ExcelReadCtrl {
 				double db = cellTemp.getNumericCellValue();
 				// 解决精度问题 2008.1.15 modify by donggq
 				String strFormat = // java.text.NumberFormat.getNumberInstance(java.util.Locale.CHINA).format(db);
-				new UFDouble(db).toString();
+					new UFDouble(db).toString();
 				java.util.StringTokenizer strToken = new java.util.StringTokenizer(
 						strFormat, ",");
 				StringBuffer sbBuffer = new StringBuffer();
@@ -595,98 +483,7 @@ public abstract class ExcelReadCtrl {
 		}
 	}
 
-	/**
-	 * 周晓 功能：设置上传单据每行的值（询价单用） 参数： 返回： 例外： 日期：(2004-10-15 9:17:14)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param row
-	 *            org.apache.poi.hssf.usermodel.HSSFRow
-	 * @param vo
-	 *            nc.vo.pp.ask.ExcelFileVO
-	 */
-	private void setRowToVO(HSSFRow row, nc.vo.pp.ask.ExcelFileVO vo) {
-		if (row == null || vo == null)
-			return;
-		SimpleDateFormat formatter = null;
-		String dateToString = null;
-		for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saAskVOName.length; i++) {
-			HSSFCell cellTemp = row.getCell(i);
-			String strValue = null;
-			// 中间不能有空行
-			if (cellTemp == null) {
-				continue;
 
-			}
-			if ((i == 11 || i == 13 || i == 14)) {// &&
-				// (cellTemp.getDateCellValue()
-				// != null &&
-				// cellTemp.getDateCellValue().toString().trim().length()
-				// > 0 )
-				UFDate date = null;
-				if (cellTemp.getCellType() == HSSFCell.CELL_TYPE_STRING
-						&& PuPubVO.getString_TrimZeroLenAsNull(cellTemp
-								.getStringCellValue()) != null) {
-					date = new UFDate(cellTemp.getStringCellValue());
-				} else if (cellTemp.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
-					date = new UFDate(cellTemp.getDateCellValue());
-				}
-				if (date != null) {
-					formatter = new SimpleDateFormat("yyyy-MM-dd");
-					dateToString = formatter.format(date.toDate());
-				}
-			}
-			switch (cellTemp.getCellType()) {
-			case HSSFCell.CELL_TYPE_STRING:
-				String strCell = cellTemp.getStringCellValue();
-				if (strCell == null)
-					continue;
-				if (strCell.trim().equals(""))
-					continue;
-				if ((i == 11 || i == 13 || i == 14)
-						&& (dateToString != null && dateToString.toString()
-								.trim().length() > 0)) {
-					strValue = dateToString;
-				} else {
-					strValue = strCell;
-				}
-				break;
-			case HSSFCell.CELL_TYPE_NUMERIC:
-
-				if ((i == 11 || i == 13 || i == 14)
-						&& (dateToString != null && dateToString.toString()
-								.trim().length() > 0)) {
-					strValue = dateToString;
-				} else {
-					double db = cellTemp.getNumericCellValue();
-					// 解决精度问题 2008.1.15 modify by donggq
-					String strFormat = // java.text.NumberFormat.getNumberInstance(java.util.Locale.CHINA).format(db);
-					new UFDouble(db).toString();
-					java.util.StringTokenizer strToken = new java.util.StringTokenizer(
-							strFormat, ",");
-					StringBuffer sbBuffer = new StringBuffer();
-					while (strToken.hasMoreTokens()) {
-						String strT = strToken.nextToken();
-						sbBuffer.append(strT);
-
-					}
-					if (sbBuffer.toString().trim().length() > 0) {
-						strValue = sbBuffer.toString().trim();
-					}
-				}
-				break;
-			case HSSFCell.CELL_TYPE_BOOLEAN:
-			case HSSFCell.CELL_TYPE_BLANK:
-			case HSSFCell.CELL_TYPE_ERROR:
-			case HSSFCell.CELL_TYPE_FORMULA:
-			default:
-				break;
-
-			}
-
-			vo.setAttributeValue(ExcelColumnInfo.saAskVOName[i], strValue);
-		}
-
-	}
 
 	/**
 	 * Author：周晓 功能：设置EXCEL文件状态标志（报价单用） 参数： 返回： 例外： 日期：(2004-10-16 13:05:44)
@@ -729,170 +526,15 @@ public abstract class ExcelReadCtrl {
 			SCMEnv.out(e.getMessage());
 			PuTool.outException(e);
 			JOptionPane
-					.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
-							.getStrByID("40040701", "UPP40040701-000198")/*
-																		 * @res
-																		 * "setExcelFileFlag读写文件异常！"
-																		 */);
+			.showMessageDialog(null, nc.ui.ml.NCLangRes.getInstance()
+					.getStrByID("40040701", "UPP40040701-000198")/*
+					 * @res
+					 * "setExcelFileFlag读写文件异常！"
+					 */);
 		}
 		return "setValue success";
 	}
 
-	/**
-	 * Author：周晓 功能：设置上传单据每行的值（报价单用） 参数： 返回： 例外： 日期：(2004-10-16 16:47:17)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param row
-	 *            org.apache.poi.hssf.usermodel.HSSFRow
-	 * @param vo
-	 *            nc.vo.pp.ask.ExcelFileVO
-	 */
-	private void setVendorRowToVO(HSSFRow row, ExcelFileVO vo) {
-		if (row == null || vo == null)
-			return;
-		for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saVendorVOName.length; i++) {
-			HSSFCell cellTemp = row.getCell(i);
-			String strValue = null;
-			// 中间不能有空行
-			if (cellTemp == null) {
-				continue;
-
-			}
-
-			switch (cellTemp.getCellType()) {
-			case HSSFCell.CELL_TYPE_STRING:
-				String strCell = cellTemp.getStringCellValue();
-				if (strCell == null)
-					continue;
-				if (strCell.trim().equals(""))
-					continue;
-				strValue = strCell;
-				break;
-			case HSSFCell.CELL_TYPE_NUMERIC:
-
-				double db = cellTemp.getNumericCellValue();
-
-				String strFormat = java.text.NumberFormat.getInstance(
-						java.util.Locale.CHINA).format(db);
-				java.util.StringTokenizer strToken = new java.util.StringTokenizer(
-						strFormat, ",");
-				StringBuffer sbBuffer = new StringBuffer();
-				while (strToken.hasMoreTokens()) {
-					String strT = strToken.nextToken();
-					sbBuffer.append(strT);
-
-				}
-				if (sbBuffer.toString().trim().length() > 0) {
-					strValue = sbBuffer.toString().trim();
-				}
-				break;
-			case HSSFCell.CELL_TYPE_BOOLEAN:
-			case HSSFCell.CELL_TYPE_BLANK:
-			case HSSFCell.CELL_TYPE_ERROR:
-			case HSSFCell.CELL_TYPE_FORMULA:
-			default:
-				break;
-
-			}
-
-			vo.setAttributeValue(ExcelColumnInfo.saVendorVOName[i], strValue);
-		}
-
-	}
-
-	/**
-	 * Author：周晓 功能：把单据行设置到EXCEL文件相应的行中（报价单用） 参数： 返回： 例外： 日期：(2004-10-16
-	 * 13:06:38) 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param voFile
-	 *            nc.vo.pp.ask.ExcelFileVO
-	 * @param line
-	 *            int
-	 */
-	public void setVendorVOAtLine(ExcelFileVO voFile, int line) {
-		try {
-			if (line <= 0)
-				return;
-			if (voFile == null)
-				return;
-
-			HSSFRow row = sheet[0].getRow(line);
-			if (row == null)
-				row = sheet[0].createRow((short) line);
-
-			for (short i = 0; i < nc.ui.pp.pub.ExcelColumnInfo.saVendorVOName.length; i++) {
-				HSSFCell cell = row.getCell(i);
-				if (cell == null)
-					cell = row.createCell(i);
-				// 如果之前文件为数字，下面的语句会抛异常，所以需要屏蔽
-				// cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-
-				String strCellValue = (String) voFile
-						.getAttributeValue(nc.ui.pp.pub.ExcelColumnInfo.saVendorVOName[i]);
-				if (strCellValue == null)
-					cell.setCellValue("");
-				else
-					cell.setCellValue(strCellValue);
-
-			}
-		} catch (Exception e) {
-			SCMEnv.out(e.getMessage());
-			SCMEnv.out("filetoExcel err :" + e.getMessage());
-			PuTool.outException(e);
-		}
-	}
-
-	/**
-	 * Author：周晓 功能：把单据设置到EXCEL文件中（报价单用） 参数： 返回： 例外： 日期：(2004-10-16 13:07:52)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param voaFile
-	 *            nc.vo.pp.ask.ExcelFileVO[]
-	 * @param fileName
-	 *            java.lang.String
-	 * @exception java.io.IOException
-	 *                异常说明。
-	 */
-	public void setVendorVOToExcel(ExcelFileVO[] voaFile, String fileName)
-			throws java.io.IOException {
-		try {
-			java.io.File f = new java.io.File(fileName);
-			if (!f.exists()) {
-				f.createNewFile();
-			}
-			FileOutputStream fileOut = new FileOutputStream(fileName, false);
-
-			if (wb == null) {
-				wb = new HSSFWorkbook();
-				sheet = new HSSFSheet[1];
-				sheet[0] = wb.createSheet("BillInfo");
-
-			}
-			createVendorExcelCaption(sheet[0]);
-
-			if (voaFile == null || voaFile.length <= 0 || voaFile[0] == null) {
-				clearVendorRestLines(1, 1000);
-			}
-
-			if (voaFile.length != 0) {
-				int len = voaFile.length;
-				for (int i = 0; i < len; i++) {
-					if (voaFile[i].getAttributeValue("vaskbillcode") == null) {
-						continue;
-					}
-					setVendorVOAtLine(voaFile[i], i + 1);
-				}
-			}
-
-			// Write the output to a file
-			wb.write(fileOut);
-			fileOut.close();
-		} catch (Exception e) {
-			SCMEnv.out(e.getMessage());
-			SCMEnv.out("filetoExcel err :" + e.getMessage());
-			PuTool.outException(e);
-		}
-	}
 
 	/**
 	 * 周晓 功能：把单据行设置到EXCEL文件相应的行中（询价单用） 参数： 返回： 例外： 日期：(2004-10-15 9:17:30)
@@ -937,7 +579,7 @@ public abstract class ExcelReadCtrl {
 				// cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 
 				String strCellValue = (String) voFile
-						.getAttributeValue(nc.ui.pp.pub.ExcelColumnInfo.saAskVOName[i]);
+				.getAttributeValue(nc.ui.pp.pub.ExcelColumnInfo.saAskVOName[i]);
 				if ((i == 7 || i == 8 || i == 9 || i == 10 || i == 12)
 						&& (strCellValue != null && strCellValue.toString()
 								.trim().length() > 0)) {
@@ -1036,7 +678,7 @@ public abstract class ExcelReadCtrl {
 				// cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 
 				String strCellValue = (String) voFile
-						.getAttributeValue(nc.ui.pp.pub.ExcelColumnInfo.saAskVONameForHead[i]);
+				.getAttributeValue(nc.ui.pp.pub.ExcelColumnInfo.saAskVONameForHead[i]);
 				if (strCellValue == null)
 					cell.setCellValue("");
 				else
@@ -1052,54 +694,7 @@ public abstract class ExcelReadCtrl {
 		}
 	}
 
-	/**
-	 * 周晓 功能：把单据设置到EXCEL文件中（询价单用） 参数： 返回： 例外： 日期：(2004-10-15 9:18:19)
-	 * 修改日期，修改人，修改原因，注释标志：
-	 * 
-	 * @param voaFile
-	 *            nc.vo.pp.ask.ExcelFileVO[]
-	 * @param fileName
-	 *            java.lang.String
-	 * @exception java.io.IOException
-	 *                异常说明。
-	 */
-	public void setVOToExcel(nc.vo.pp.ask.ExcelFileVO[] voaFile, String fileName)
-			throws IOException {
-		try {
-			java.io.File f = new java.io.File(fileName);
-			if (!f.exists()) {
-				f.createNewFile();
-			}
-			FileOutputStream fileOut = new FileOutputStream(fileName, false);
 
-			if (wb == null) {
-				wb = new HSSFWorkbook();
-				sheet = new HSSFSheet[1];
-				sheet[0] = wb.createSheet("BillInfo");
-
-			}
-			createExcelCaption(sheet[0]);
-
-			if (voaFile == null || voaFile.length <= 0 || voaFile[0] == null) {
-				clearRestLines(1, 1000);
-			}
-			setVOAtLineForHead(voaFile[0], 2);
-			if (voaFile.length != 0) {
-				int len = voaFile.length;
-				for (int i = 1; i < len; i++) {
-
-					setVOAtLine(voaFile[i], i + 5);
-				}
-			}
-
-			// Write the output to a file
-			wb.write(fileOut);
-			fileOut.close();
-		} catch (Exception e) {
-			SCMEnv.out("filetoExcel err :" + e.getMessage());
-			PuTool.outException(e);
-		}
-	}
 
 	/**
 	 * 返回要根据编码查询id的字段
@@ -1172,19 +767,19 @@ public abstract class ExcelReadCtrl {
 	 * @return
 	 */
 	public abstract String[] getSetValueIds();
-	
+
 	/**
 	 * 是否单体  还是 表头表体结构  true：单体  false：单据模式
 	 * @return
 	 */
 	public  abstract boolean isSingle();
-	
+
 	/**
 	 * 单据类型
 	 * @return
 	 */
 	public  abstract String getBillType();
-	
+
 	/**
 	 * excel 虚拟单据类型
 	 * @return
@@ -1192,13 +787,13 @@ public abstract class ExcelReadCtrl {
 	public String getTmpBillType(){
 		return "EXCEL";
 	}
-	
+
 	/**
 	 * 单体数据转换时需要提供单vo全路径
 	 * @return
 	 */
 	protected abstract Class getSingleVOClass();
-	
+
 	/**
 	 * 获得单体 数据交换类   有reportbasevo 转换成 业务数据
 	 * @return
@@ -1209,7 +804,7 @@ public abstract class ExcelReadCtrl {
 	 * @return
 	 */
 	protected abstract String getDealBOClassName();
-	
+
 	/**
 	 * 调用后台插件处理数据
 	 */
@@ -1219,8 +814,8 @@ public abstract class ExcelReadCtrl {
 		// 转换成数据vo
 		if (isSingle()) {// 单体数据处理
 			CircularlyAccessibleValueObject[] vos = SingleVOChangeDataUiTool
-					.runChangeVOAry(rvos, getSingleVOClass(),
-							getSingleChangeClassName());
+			.runChangeVOAry(rvos, getSingleVOClass(),
+					getSingleChangeClassName());
 			// 转后台处理
 			Class[] ParameterTypes = new Class[] { CircularlyAccessibleValueObject[].class };
 			Object[] ParameterValues = new Object[] { vos };
@@ -1228,7 +823,7 @@ public abstract class ExcelReadCtrl {
 					getDealBOClassName(), "dealSingleImportDatas",
 					ParameterTypes, ParameterValues, 2);
 		} else {// 单据数据处理 或 具有表头表体 的档案 需要注册单据类型 vo对照
-		// 直接转后台处理
+			// 直接转后台处理
 			Class[] ParameterTypes = new Class[] { ReportBaseVO[].class,
 					String.class, String.class };
 			Object[] ParameterValues = new Object[] { rvos, getBillType(),
