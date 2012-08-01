@@ -3,6 +3,7 @@ package nc.ui.wds.ic.transfer;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.trade.business.HYPubBO_Client;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
@@ -20,6 +21,7 @@ import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 
 
 /**
@@ -60,6 +62,13 @@ public class EventHandler extends OutPubEventHandler {
 		}
 	
 		super.onBoAudit();
+	}
+	@Override
+	protected void onBoEdit() throws Exception {
+		super.onBoEdit();
+	    getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+	    getBillCardPanelWrapper().getBillCardPanel().getBillModel().setEnabledAllItems(false);
+	    getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc2").setEnabled(false);
 	}
 	/**
 	 * 
