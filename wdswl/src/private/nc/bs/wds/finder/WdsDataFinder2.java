@@ -1,4 +1,5 @@
 package nc.bs.wds.finder;
+import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * DataFinder
@@ -39,6 +40,8 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 			sql = " select distinct h1.cgeneralhid,h1.vbillcode from ic_general_h h1,ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1."+WdsWlPubConst.csourcehid_wds+" = ?  ";
 		}else if(WdsWlPubConst.GYL4A.equals(billType)){//供应链其他入库
 			sql = " select distinct h1.cgeneralhid,h1.vbillcode from ic_general_h h1,ic_general_b b1 where h1.cgeneralhid = b1.cgeneralhid and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1."+WdsWlPubConst.csourcehid_wds+" = ?  ";
+		}else if(Wds2WlPubConst.billtype_alloinsendorder.equals(billType)){//调入运单
+			sql = " select distinct h1.pk_sendorder,h1.vbillno from wds_sendorder h1,wds_sendorder_b b1 where h1.pk_sendorder = b1.pk_sendorder and nvl(h1.dr,0) = 0 and nvl(b1.dr,0) = 0 and b1.csourcebillhid = ?  ";
 		}
 		else{
 			super.createSQL1(billType);
@@ -82,6 +85,8 @@ public class WdsDataFinder2 extends DefaultDataFinder2{
 			sql = " select distinct zz.csourcetype, zz.csourcebillhid, zz.vsourcebillcode from ic_general_b zz where zz.cgeneralhid = ? and nvl(zz.dr, 0) = 0 ";
 		}else if(WdsWlPubConst.GYL4A.equals(billType)){//供应链其他入库
 			sql = " select distinct zz.csourcetypecode, zz.csourceid, zz.vsourcecode from to_bill_b zz where zz.cbillid = ? and nvl(zz.dr, 0) = 0 ";
+		}else if(Wds2WlPubConst.billtype_alloinsendorder.equals(billType)){//调入运单
+			sql = " select distinct zz.vsourcebillcode, zz.csourcebillhid, zz.vsourcecode from wds_sendorder_b zz where zz.pk_sendorder = ? and nvl(zz.dr, 0) = 0 ";
 		}
 		else{
 			super.createSQL(billType);
