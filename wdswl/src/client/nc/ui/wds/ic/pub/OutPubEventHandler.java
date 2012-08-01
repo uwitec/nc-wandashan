@@ -1,5 +1,7 @@
 package nc.ui.wds.ic.pub;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -284,7 +286,14 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		
 		tdpDlg.showModal();
 	}
+
 	protected void onBoCancel() throws Exception {
+		if (!getBufferData().isVOBufferEmpty()) {
+			if(PuPubVO.getString_TrimZeroLenAsNull(getBufferData().getCurrentVO().getParentVO().getPrimaryKey())==null){
+				getBufferData().removeCurrentRow();
+				updateBuffer();
+			}	
+		} 		
 		super.onBoCancel();
 	  ///	onBoRefresh();
 	}
@@ -583,9 +592,12 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		}
 		getBufferData().clear();
 		getBufferData().addVOsToBuffer(retVos);
+	
 		updateBuffer();	
 	}
 	
+
+
 	protected void onBoElse(int intBtn) throws Exception {
 		if(intBtn ==  ButtonCommon.joinup)
 			onJoinQuery();
