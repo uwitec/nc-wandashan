@@ -4,17 +4,14 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-
 import nc.ui.pu.pub.PuTool;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIFileChooser;
 import nc.ui.pub.beans.UITextField;
 import nc.ui.trade.base.AbstractBillUI;
-import nc.ui.trade.manage.BillManageUI;
 import nc.ui.zmpub.pub.tool.LongTimeTask;
 import nc.vo.pfxx.pub.Filter;
 import nc.vo.pp.ask.UpLoadFileVO;
@@ -242,13 +239,13 @@ public class UpLoadCtrlTool {
 																	 * @res
 																	 * "请选择要上传的单据文件！"
 																	 */);
-				if (!((BillManageUI) ui).isListPanelSelected()) {
-					// // 显示数据、处理按钮状态
-					// getBufferData().clear();
-					// getBufferData().updateView();
-					// }
-					// return;
-				}
+//				if (!((BillManageUI) ui).isListPanelSelected()) {
+//					// // 显示数据、处理按钮状态
+//					// getBufferData().clear();
+//					// getBufferData().updateView();
+//					// }
+//					// return;
+//				}
 			}
 
 			try {
@@ -261,6 +258,9 @@ public class UpLoadCtrlTool {
 				String isSuccess = "success";
 
 				isUpLoadFileSuccessNew(isSuccess, ui);
+				
+//				对数据进行处理
+				getCa(sPath, true).dealData(rvos);
 
 				return rvos;
 

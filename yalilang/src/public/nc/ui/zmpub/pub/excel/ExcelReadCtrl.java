@@ -5,19 +5,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
-
 import javax.swing.JOptionPane;
-
 import nc.ui.pp.pub.ExcelColumnInfo;
 import nc.ui.pp.pub.IExcelFileFlag;
 import nc.ui.pu.pub.PuTool;
+import nc.ui.wl.pub.LongTimeTask;
+import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
 import nc.vo.pp.ask.ExcelFileVO;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.SCMEnv;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -294,11 +295,13 @@ public abstract class ExcelReadCtrl {
 
 		int len = vcSheet.size();
 		voaReturn = new ReportBaseVO[len];
-
+		
+		ReportBaseVO voTemp = null;
+		HSSFRow rowTemp = null;
 		for (int i = 0; i < len; i++) {
 
-			ReportBaseVO voTemp = new ReportBaseVO();
-			HSSFRow rowTemp = (HSSFRow) vcSheet.get(i);
+			voTemp = new ReportBaseVO();
+			rowTemp = (HSSFRow) vcSheet.get(i);
 			setRowToVO(rowTemp, voTemp);
 			// //设置Excel文件的标志位
 			// voTemp.setExcelFlag(fileFlag);
@@ -1169,5 +1172,71 @@ public abstract class ExcelReadCtrl {
 	 * @return
 	 */
 	public abstract String[] getSetValueIds();
+	
+	/**
+	 * 是否单体  还是 表头表体结构  true：单体  false：单据模式
+	 * @return
+	 */
+	public  abstract boolean isSingle();
+	
+	/**
+	 * 单据类型
+	 * @return
+	 */
+	public  abstract String getBillType();
+	
+	/**
+	 * excel 虚拟单据类型
+	 * @return
+	 */
+	public String getTmpBillType(){
+		return "EXCEL";
+	}
+	
+	/**
+	 * 单体数据转换时需要提供单vo全路径
+	 * @return
+	 */
+	protected abstract Class getSingleVOClass();
+	
+	/**
+	 * 获得单体 数据交换类   有reportbasevo 转换成 业务数据
+	 * @return
+	 */
+	protected abstract String getSingleChangeClassName();
+	/**
+	 * 后台插件处理类  必须继承 nc.bs.zmpub.pub.excel.AbstractExcetBO
+	 * @return
+	 */
+	protected abstract String getDealBOClassName();
+	
+	/**
+	 * 调用后台插件处理数据
+	 */
+	public void dealData(ReportBaseVO[] rvos) throws Exception {
+		if (rvos == null || rvos.length == 0)
+			return;
+		// 转换成数据vo
+		if (isSingle()) {// 单体数据处理
+			CircularlyAccessibleValueObject[] vos = SingleVOChangeDataUiTool
+					.runChangeVOAry(rvos, getSingleVOClass(),
+							getSingleChangeClassName());
+			// 转后台处理
+			Class[] ParameterTypes = new Class[] { CircularlyAccessibleValueObject[].class };
+			Object[] ParameterValues = new Object[] { vos };
+			LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
+					getDealBOClassName(), "dealSingleImportDatas",
+					ParameterTypes, ParameterValues, 2);
+		} else {// 单据数据处理 或 具有表头表体 的档案 需要注册单据类型 vo对照
+		// 直接转后台处理
+			Class[] ParameterTypes = new Class[] { ReportBaseVO[].class,
+					String.class, String.class };
+			Object[] ParameterValues = new Object[] { rvos, getBillType(),
+					getTmpBillType() };
+			LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
+					getDealBOClassName(), "dealBillImportDatas",
+					ParameterTypes, ParameterValues, 2);
+		}
+	}
 
 }
