@@ -1,6 +1,8 @@
 package nc.bs.zmpub.pub.excel;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import nc.bs.dao.BaseDAO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -38,13 +40,23 @@ public class TransCodeToIDBO {
 		codeIdMap.clear();
 	}
 	
+	private Map<String, IDefTran> defTranBoMap = null;
+	
+	Map<String, IDefTran> getDefTranBoMap(){//保证  自定义转换类 是单例
+		if(defTranBoMap == null)
+			defTranBoMap = new HashMap<String, IDefTran>();
+		return defTranBoMap;
+	}
 	private IDefTran getDefTranTool(CodeToIDInfor infor) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(infor.getDefTranClassName())==null)
 			throw new BusinessException("编码["+infor.getCodename()+"]自定义转换类未注册");
 		
 		String className = infor.getDefTranClassName().trim();
+		if(getDefTranBoMap().containsKey(className))
+			return getDefTranBoMap().get(className);
 		try {
 			IDefTran tool = (IDefTran)Class.forName(className).newInstance();
+			getDefTranBoMap().put(className, tool);
 			return tool;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
