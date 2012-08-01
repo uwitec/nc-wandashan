@@ -25,4 +25,6 @@ public class Wds2WlPubConst {
 	public final static String so_virtual_value_yes = "0001S3100000000OK5HM";
 	public final static String so_virtual_value_no = "0001S3100000000OK5HN";
 	
+	
+	
 }
