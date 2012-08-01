@@ -52,7 +52,7 @@ public class SqlNwlxnydnum extends SqlQueryConditionVO {
 		sql.append(getInvclFieldName() + " " + pk_invcl + ", ");
 		sql.append(getInvmandocFieldName() + " " + pk_invmandoc + ", ");
 		sql.append(getInvbasdocFieldName() + " " + pk_invbasdoc + ", ");
-		sql.append(getNnum() + " " + nerpstornum + " ");
+		sql.append(getNnum() + " " + nwlxnydnum + " ");
 		sql.append(" from ");
 		sql
 				.append(" wds_sendplanin h join wds_sendplanin_b b on h.pk_sendplanin =  b.pk_sendplanin and isnull(b.dr,0) = 0 ");
@@ -71,7 +71,7 @@ public class SqlNwlxnydnum extends SqlQueryConditionVO {
 		sql.append(" group by ");
 		sql.append(getCorpFieldName() + ", ");
 		sql.append(getStorFieldName() + ", ");
-		sql.append(getCargFieldName() + ", ");
+//		sql.append(getCargFieldName() + ", ");
 		sql.append(getInvclFieldName() + ", ");
 		sql.append(getInvmandocFieldName() + ", ");
 		sql.append(getInvbasdocFieldName() + " ");

@@ -60,7 +60,7 @@ public class SqlNwlstornum extends SqlQueryConditionVO {
 		sql.append(" group by ");
 		sql.append(getCorpFieldName() + ", ");
 		sql.append(getStorFieldName() + ", ");
-		sql.append(getCargFieldName() + ", ");
+//		sql.append(getCargFieldName() + ", ");
 		sql.append(getInvclFieldName() + ", ");
 		sql.append(getInvmandocFieldName() + ", ");
 		sql.append(getInvbasdocFieldName() + " ");
