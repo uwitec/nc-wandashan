@@ -7,6 +7,7 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.WdsWlPubTool;
 import nc.vo.zmpub.excel.CodeToIDInfor;
+import nc.vo.zmpub.excel.IDefTran;
 import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
 
 public class TransCodeToIDBO {
@@ -37,6 +38,33 @@ public class TransCodeToIDBO {
 		codeIdMap.clear();
 	}
 	
+	private IDefTran getDefTranTool(CodeToIDInfor infor) throws BusinessException{
+		if(PuPubVO.getString_TrimZeroLenAsNull(infor.getDefTranClassName())==null)
+			throw new BusinessException("编码["+infor.getCodename()+"]自定义转换类未注册");
+		
+		String className = infor.getDefTranClassName().trim();
+		try {
+			IDefTran tool = (IDefTran)Class.forName(className).newInstance();
+			return tool;
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	protected  String defTran(CodeToIDInfor infor) throws BusinessException{
+		String value =  null;
+		IDefTran tranTool =  getDefTranTool(infor);
+		value = tranTool.transCodeToID(infor);
+		return value;
+	}
+	
 	
 	/**
 	 * 获取ID值
@@ -59,7 +87,9 @@ public class TransCodeToIDBO {
 			return codeIdMap.get(key);
 
 		String value = null;
-		if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
+		if(infor.isDefTran.booleanValue()){
+			
+		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
 			value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
 					.execFomular(fou, new String[] { infor.getCodename() },

@@ -19,6 +19,18 @@ public class CodeToIDInfor extends ValueObject {
 	private UFBoolean isBasic = UFBoolean.FALSE;//是否产品基础档案  //常量
 	private UFBoolean isCorp = UFBoolean.FALSE;//档案是否公司级  //常量
 	public UFBoolean isCorpField = UFBoolean.FALSE;//公司字段  公司编码转换为公司ID  必须优先转换   //常量
+	public UFBoolean isDefTran = UFBoolean.FALSE;//是否自定义  转换
+	private String defTranClassName = null;//自定义编码转换类  继承 ideftran 接口
+	
+	
+
+	public String getDefTranClassName() {
+		return defTranClassName;
+	}
+
+	public void setDefTranClassName(String defTranClassName) {
+		this.defTranClassName = defTranClassName;
+	}
 
 	public String getSelectSql(){
 		if(PuPubVO.getString_TrimZeroLenAsNull(codevalue)==null)
