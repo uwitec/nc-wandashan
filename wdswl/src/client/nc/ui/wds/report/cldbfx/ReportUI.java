@@ -106,10 +106,13 @@ public class ReportUI extends ZmReportBaseUI2 {
 		return sf;
 	}
 
+	/*
+	 * 待查询sql数组
+	 */
 	@Override
 	public String[] getSqls() throws Exception {
 		getSqlFactory().setQueryDlg(getQueryDlg());
-		return new String[] { getSql1(), getSql2(), getSql4() };
+		return new String[] { getSql1(), getSql2(), getSql4(), getSql5() };
 	}
 
 	/*
@@ -146,8 +149,9 @@ public class ReportUI extends ZmReportBaseUI2 {
 	/*
 	 * erp采购入库量nerpcgrknum
 	 */
-	public String getSql5() {
-		return null;
+	public String getSql5() throws Exception {
+		return getSqlFactory().getSqlFunction(SqlFactory.N_nerpcgrknum)
+				.getSql();
 
 	}
 
