@@ -25,6 +25,6 @@ public class Wds2WlPubConst {
 	public final static String so_virtual_value_yes = "0001S3100000000OK5HM";
 	public final static String so_virtual_value_no = "0001S3100000000OK5HN";
 	
-	
+	public final static String store_cus_billtype = "WS90";//分仓客商绑定 单据类型 用于 数据导入  本身不是单据
 	
 }
