@@ -1,5 +1,6 @@
 package nc.vo.zmpub.excel;
 
+import nc.bs.dao.BaseDAO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 
@@ -10,5 +11,5 @@ import nc.vo.pub.CircularlyAccessibleValueObject;
  */
 public interface IDefTran {
 
-	public String transCodeToID(CircularlyAccessibleValueObject vo,CodeToIDInfor infor) throws BusinessException;
+	public String transCodeToID(BaseDAO dao,CircularlyAccessibleValueObject vo,CodeToIDInfor infor) throws BusinessException;
 }

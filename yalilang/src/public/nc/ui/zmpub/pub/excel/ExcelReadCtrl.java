@@ -155,6 +155,8 @@ public abstract class ExcelReadCtrl {
 		}
 
 	}
+	
+	protected int beginrow = 1;//默认开始行
 
 	/**
 	 * Author mlr 功能：获得导入的转换为ReporBaseVO[]格式的EXCEL文件（询价单用） 参数： 返回： 例外：
@@ -177,7 +179,7 @@ public abstract class ExcelReadCtrl {
 
 		ReportBaseVO voTemp = null;
 		HSSFRow rowTemp = null;
-		for (int i = 0; i < len; i++) {
+		for (int i = beginrow; i < len; i++) {
 			voTemp = new ReportBaseVO();
 			rowTemp = (HSSFRow) vcSheet.get(i);
 			setRowToVO(rowTemp, voTemp);
@@ -206,7 +208,7 @@ public abstract class ExcelReadCtrl {
 
 		while (iter.hasNext()) {
 			HSSFRow row = (HSSFRow) iter.next();
-			if (row == null || row.getCell((short) 16) == null) {
+			if (row == null || row.getCell((short) 1) == null) {
 				continue;
 			}
 			vcRow.add(row);
@@ -802,34 +804,5 @@ public abstract class ExcelReadCtrl {
 	 * @return
 	 */
 	protected abstract String getDealBOClassName();
-
-	/**
-	 * 调用后台插件处理数据
-	 */
-	public void dealData(ReportBaseVO[] rvos) throws Exception {
-		if (rvos == null || rvos.length == 0)
-			return;
-		// 转换成数据vo
-		if (isSingle()) {// 单体数据处理
-			CircularlyAccessibleValueObject[] vos = SingleVOChangeDataUiTool
-			.runChangeVOAry(rvos, getSingleVOClass(),
-					getSingleChangeClassName());
-			// 转后台处理
-			Class[] ParameterTypes = new Class[] { CircularlyAccessibleValueObject[].class };
-			Object[] ParameterValues = new Object[] { vos };
-			LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
-					getDealBOClassName(), "dealSingleImportDatas",
-					ParameterTypes, ParameterValues, 2);
-		} else {// 单据数据处理 或 具有表头表体 的档案 需要注册单据类型 vo对照
-			// 直接转后台处理
-			Class[] ParameterTypes = new Class[] { ReportBaseVO[].class,
-					String.class, String.class };
-			Object[] ParameterValues = new Object[] { rvos, getBillType(),
-					getTmpBillType() };
-			LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
-					getDealBOClassName(), "dealBillImportDatas",
-					ParameterTypes, ParameterValues, 2);
-		}
-	}
 
 }

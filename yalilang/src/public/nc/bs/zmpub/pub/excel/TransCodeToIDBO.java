@@ -73,7 +73,7 @@ public class TransCodeToIDBO {
 	protected  String defTran(CircularlyAccessibleValueObject vo,CodeToIDInfor infor) throws BusinessException{
 		String value =  null;
 		IDefTran tranTool =  getDefTranTool(infor);
-		value = tranTool.transCodeToID(vo,infor);
+		value = tranTool.transCodeToID(getDAO(),vo,infor);
 		return value;
 	}
 	
@@ -85,22 +85,22 @@ public class TransCodeToIDBO {
 	 * @throws BusinessException
 	 */
 	private String getInforValue(CircularlyAccessibleValueObject vo,CodeToIDInfor infor)
-			throws BusinessException {
-		
+	throws BusinessException {
+
 		String key = null;
 		if(infor.getIsCorp().booleanValue()){
-//			编码+公司ID  作为key
+			//			编码+公司ID  作为key
 			key = infor.getCodevalue()+infor.getCorpvalue();
 		}else{
 			key = infor.getCodevalue();
 		}
-		
+
 		if (codeIdMap.containsKey(key))
 			return codeIdMap.get(key);
 
 		String value = null;
 		if(infor.isDefTran.booleanValue()){
-			defTran(vo, infor);
+			value = defTran(vo, infor);
 		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
 			value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
@@ -113,7 +113,8 @@ public class TransCodeToIDBO {
 					.executeQuery(sql, ResultSetProcessorTool.COLUMNPROCESSOR));
 		}
 
-		codeIdMap.put(key, value);
+		if(infor.isCache.booleanValue())
+			codeIdMap.put(key, value);
 		return value;
 	}
 

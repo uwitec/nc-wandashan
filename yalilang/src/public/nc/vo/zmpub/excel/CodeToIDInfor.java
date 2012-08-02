@@ -20,6 +20,7 @@ public class CodeToIDInfor extends ValueObject {
 	public UFBoolean isCorp = UFBoolean.FALSE;//档案是否公司级  //常量
 	public UFBoolean isCorpField = UFBoolean.FALSE;//公司字段  公司编码转换为公司ID  必须优先转换   //常量
 	public UFBoolean isDefTran = UFBoolean.FALSE;//是否自定义  转换
+	public UFBoolean isCache = UFBoolean.TRUE;//是否缓存  数据
 	private String defTranClassName = null;//自定义编码转换类  继承 ideftran 接口
 	
 	

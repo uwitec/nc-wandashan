@@ -10,9 +10,13 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIFileChooser;
 import nc.ui.pub.beans.UITextField;
 import nc.ui.trade.base.AbstractBillUI;
+import nc.ui.zmpub.pub.tool.LongTimeTask;
+import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
 import nc.vo.pfxx.pub.Filter;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.excel.UpLoadFileVO;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 
@@ -73,7 +77,7 @@ public class UpLoadCtrlTool {
 		vo
 		.setFileDate((new nc.vo.pub.lang.UFDate(f.lastModified()))
 				.toString());// 文件日期
-		vo.setFileStatus(s[1]); // 文件状态
+//		vo.setFileStatus(s[1]); // 文件状态
 		return vo;
 	}
 
@@ -183,6 +187,7 @@ public class UpLoadCtrlTool {
 		return vos;
 	}
 
+	
 	private ExcelReadCtrl ca = null;
 
 	public ExcelReadCtrl getCa(String spath, boolean flag) throws Exception {
@@ -250,14 +255,16 @@ public class UpLoadCtrlTool {
 				// 批量上传
 				rvos = this.UpLoadFiles(getCorpId(), sFileNames, sPath,
 						getUserId(), getLogDate());
-				String isSuccess = "success";
-
-				isUpLoadFileSuccessNew(isSuccess, ui);
+				String isSuccess = "success";				
 
 				//				对数据进行处理
-				getCa(sPath, true).dealData(rvos);
+				dealData(rvos);
+				
+				isUpLoadFileSuccessNew(isSuccess, ui);
 
 				return rvos;
+				
+				
 
 			} catch (Exception e) {
 				MessageDialog.showErrorDlg(ui, nc.ui.ml.NCLangRes.getInstance()
@@ -552,6 +559,42 @@ public class UpLoadCtrlTool {
 				return "Excel类型（*.xls)";
 			}
 			return "";
+		}
+	}
+	
+	/**
+	 * 调用后台插件处理数据
+	 */
+	public void dealData(ReportBaseVO[] rvos) throws Exception {
+		if (rvos == null || rvos.length == 0)
+			return;
+
+		ExcelReadCtrl ctrl = getCa(null, true);
+		// 转换成数据vo
+		if (ctrl.isSingle()){// 单体数据处理
+			CircularlyAccessibleValueObject[] vos = SingleVOChangeDataUiTool
+			.runChangeVOAry(rvos, ctrl.getSingleVOClass(),
+					ctrl.getSingleChangeClassName());
+			// 转后台处理
+			Class[] ParameterTypes = new Class[] { CircularlyAccessibleValueObject[].class };
+			Object[] ParameterValues = new Object[] { vos };
+
+			LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, billUI,
+					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealSingleImportDatas", ParameterTypes,
+					ParameterValues);
+		} else {// 单据数据处理 或 具有表头表体 的档案 需要注册单据类型 vo对照
+			// 直接转后台处理
+			Class[] ParameterTypes = new Class[] { ReportBaseVO[].class,
+					String.class, String.class };
+			Object[] ParameterValues = new Object[] { rvos, ctrl.getBillType(),
+					ctrl.getTmpBillType() };
+			//			LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME,
+			//					getDealBOClassName(), "dealBillImportDatas",
+			//					ParameterTypes, ParameterValues, 2);
+
+			LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, billUI,
+					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealSingleImportDatas", ParameterTypes,
+					ParameterValues);
 		}
 	}
 }
