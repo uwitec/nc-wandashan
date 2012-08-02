@@ -593,7 +593,7 @@ public class UpLoadCtrlTool {
 			//					ParameterTypes, ParameterValues, 2);
 
 			LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, billUI,
-					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealSingleImportDatas", ParameterTypes,
+					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealBillImportDatas", ParameterTypes,
 					ParameterValues);
 		}
 	}
