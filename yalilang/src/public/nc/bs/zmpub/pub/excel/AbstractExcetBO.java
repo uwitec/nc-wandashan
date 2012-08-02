@@ -33,7 +33,7 @@ public abstract class AbstractExcetBO {
 			return;
 		check(vos);
 		TransCodeToIDBO.getInstance().transCodeToID(vos, getBodyTransFieldInfor());
-		doSave(vos);		
+		doSingleSave(vos);		
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public abstract class AbstractExcetBO {
 	 * @param vos
 	 * @throws BusinessException
 	 */
-	protected abstract void doSave(CircularlyAccessibleValueObject[] vos) throws BusinessException;
+	protected abstract void doSingleSave(CircularlyAccessibleValueObject[] vos) throws BusinessException;
 	
 	public void dealBillImportDatas(ReportBaseVO[] rvos,String billtype,String tmpSourBilltype) throws Exception{
 		if(rvos == null || rvos.length == 0)
@@ -74,7 +74,7 @@ public abstract class AbstractExcetBO {
 //		数据补充
 		appData(newBills);
 //		推事保存
-		pushSave(newBills,billtype);
+		pushBillSave(newBills,billtype);
 //		保存后处理
 		afterSave(newBills);
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractExcetBO {
 	 * @param billtype
 	 * @throws Exception
 	 */
-	protected void pushSave(AggregatedValueObject[] newBills,String billtype) throws Exception{
+	protected void pushBillSave(AggregatedValueObject[] newBills,String billtype) throws Exception{
 		PfUtilBO pfbo = new PfUtilBO();
 		if (isPushSaveBatch()) {
 			pfbo.processBatch(getPushSaveActionName(), billtype, new UFDate(
@@ -142,7 +142,7 @@ public abstract class AbstractExcetBO {
     protected abstract void afterTransData(ReportBaseVO[] rvos,AggregatedValueObject[] bills);//支持子类扩展功能		
     
     protected String getHeadFlag(){
-    	return "HEAD";
+    	return "head";
     }
 	
     /**

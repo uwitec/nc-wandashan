@@ -16,8 +16,8 @@ public class CodeToIDInfor extends ValueObject {
 	
 	private String corpname;//常量	
 	private String corpvalue;//------------运行期赋值
-	private UFBoolean isBasic = UFBoolean.FALSE;//是否产品基础档案  //常量
-	private UFBoolean isCorp = UFBoolean.FALSE;//档案是否公司级  //常量
+	public UFBoolean isBasic = UFBoolean.FALSE;//是否产品基础档案  //常量
+	public UFBoolean isCorp = UFBoolean.FALSE;//档案是否公司级  //常量
 	public UFBoolean isCorpField = UFBoolean.FALSE;//公司字段  公司编码转换为公司ID  必须优先转换   //常量
 	public UFBoolean isDefTran = UFBoolean.FALSE;//是否自定义  转换
 	private String defTranClassName = null;//自定义编码转换类  继承 ideftran 接口

@@ -701,7 +701,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-4下午05:59:23
 	 * @return
 	 */
-	public abstract String[] getQueryIds();
+//	public abstract String[] getQueryIds();
 
 	/**
 	 * 返回要根据编码查询id的字段 库表名字 必须与 getQueryIds()一一对应
@@ -710,7 +710,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-4下午05:59:23
 	 * @return
 	 */
-	public abstract String[] getQueryTables();
+//	public abstract String[] getQueryTables();
 
 	/**
 	 * 返回要查询的库表 对应的id 必须与 getQueryTables()一一对应
@@ -719,7 +719,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-4下午05:59:23
 	 * @return
 	 */
-	public abstract String[] getQuerySelectIDs();
+//	public abstract String[] getQuerySelectIDs();
 
 	/**
 	 * 返回要查询的库表 对应的编码的名字 必须与 getQueryTables()一一对应
@@ -728,7 +728,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-4下午05:59:23
 	 * @return
 	 */
-	public abstract String[] getQueryCodeNames();
+//	public abstract String[] getQueryCodeNames();
 
 	/**
 	 * 是否查询公司 必须与 getQueryTables()一一对应
@@ -737,7 +737,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-4下午05:59:23
 	 * @return
 	 */
-	public abstract boolean[] getIsQueCorps();
+//	public abstract boolean[] getIsQueCorps();
 
 	/**
 	 * 返回数据交换后构建的类
@@ -746,7 +746,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-5上午10:06:33
 	 * @return
 	 */
-	public abstract String getReturnVO();
+//	public abstract String getReturnVO();
 
 	/**
 	 * 是否多表关联 必须月getQueryTables 一一对应
@@ -755,7 +755,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-5下午01:42:59
 	 * @return
 	 */
-	public abstract boolean[] getIsMutitables();
+//	public abstract boolean[] getIsMutitables();
 
 	/**
 	 * 获取赋值的数组列表
@@ -764,7 +764,7 @@ public abstract class ExcelReadCtrl {
 	 * @说明：（鹤岗矿业） 2011-11-5下午02:15:47
 	 * @return
 	 */
-	public abstract String[] getSetValueIds();
+//	public abstract String[] getSetValueIds();
 
 	/**
 	 * 是否单体  还是 表头表体结构  true：单体  false：单据模式

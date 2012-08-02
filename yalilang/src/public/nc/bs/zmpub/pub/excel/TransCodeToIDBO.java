@@ -70,10 +70,10 @@ public class TransCodeToIDBO {
 		}
 	}
 	
-	protected  String defTran(CodeToIDInfor infor) throws BusinessException{
+	protected  String defTran(CircularlyAccessibleValueObject vo,CodeToIDInfor infor) throws BusinessException{
 		String value =  null;
 		IDefTran tranTool =  getDefTranTool(infor);
-		value = tranTool.transCodeToID(infor);
+		value = tranTool.transCodeToID(vo,infor);
 		return value;
 	}
 	
@@ -84,7 +84,7 @@ public class TransCodeToIDBO {
 	 * @return
 	 * @throws BusinessException
 	 */
-	private String getInforValue(CodeToIDInfor infor)
+	private String getInforValue(CircularlyAccessibleValueObject vo,CodeToIDInfor infor)
 			throws BusinessException {
 		
 		String key = null;
@@ -100,7 +100,7 @@ public class TransCodeToIDBO {
 
 		String value = null;
 		if(infor.isDefTran.booleanValue()){
-			
+			defTran(vo, infor);
 		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
 			value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
@@ -144,7 +144,7 @@ public class TransCodeToIDBO {
 							.getString_NullAsTrimZeroLen(vo
 									.getAttributeValue(infor.getCodename())));
 					
-					tmpValue = getInforValue(infor);//获取公司ID值
+					tmpValue = getInforValue(vo,infor);//获取公司ID值
 
 //					缓存公司信息
 					corpInfor.setCorpname(infor.getCodename());
@@ -165,7 +165,7 @@ public class TransCodeToIDBO {
 				if(PuPubVO.getString_TrimZeroLenAsNull(infor.getCorpname())==null)
 					infor.setCorpname(corpInfor.getCorpname());
 				
-				tmpValue = getInforValue(infor);
+				tmpValue = getInforValue(vo,infor);
 				
 				vo.setAttributeValue(infor.getCodename(), tmpValue);// 为公司字段附上ID
 			}
