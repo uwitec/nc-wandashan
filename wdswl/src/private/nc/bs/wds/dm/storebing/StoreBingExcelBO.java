@@ -1,6 +1,5 @@
 package nc.bs.wds.dm.storebing;
 
-import nc.bs.trade.business.HYPubBO;
 import nc.bs.zmpub.pub.excel.AbstractExcetBO;
 import nc.bs.zmpub.pub.excel.TransCodeToIDBO;
 import nc.vo.pub.AggregatedValueObject;
@@ -85,22 +84,25 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 				
 		};
 //		公司
-		headInfor[0].setCodename("pk_corp");
+		headInfor[0].setCodename("unitcode");
 		headInfor[0].setIdname("pk_corp");
 		headInfor[0].setTablename("bd_corp");
+		headInfor[0].setThiscodename("pk_corp");
 		headInfor[0].isCorpField = UFBoolean.TRUE;
 		headInfor[0].isBasic = UFBoolean.TRUE;
 //		发货仓库
-		headInfor[1].setCodename("pk_stordoc");
+		headInfor[1].setCodename("storcode");
 		headInfor[1].setIdname("pk_stordoc");
 		headInfor[1].setTablename("bd_stordoc");
+		headInfor[1].setThiscodename("pk_stordoc");
 		headInfor[1].isCorp = UFBoolean.TRUE;
 		headInfor[1].isBasic = UFBoolean.TRUE;
 		headInfor[1].setCorpname("pk_corp");
 //		发货地区
-		headInfor[2].setCodename("pk_sendareacl");
+		headInfor[2].setCodename("areaclcode");
 		headInfor[2].setIdname("pk_areacl");
 		headInfor[2].setTablename("bd_areacl");
+		headInfor[2].setThiscodename("pk_sendareacl");
 		headInfor[2].isCorp = UFBoolean.TRUE;
 		headInfor[2].isBasic = UFBoolean.TRUE;
 		headInfor[2].setCorpname("pk_corp");
@@ -116,22 +118,26 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 		
 		
 //		公司
-		bodyInfor[0].setCodename("pk_corp");
+		bodyInfor[0].setCodename("unitcode");//表体没有公司字段 用无用字段 临时存放公司信息
 		bodyInfor[0].setIdname("pk_corp");
 		bodyInfor[0].setTablename("bd_corp");
+		bodyInfor[0].setThiscodename("pk_custom1");
 		bodyInfor[0].isCorpField = UFBoolean.TRUE;
 		bodyInfor[0].isBasic = UFBoolean.TRUE;
+		bodyInfor[0].isSave = UFBoolean.FALSE;//该字段不保存
 //		发货仓库
-		bodyInfor[1].setCodename("pk_stordoc");
+		bodyInfor[1].setCodename("storcode");
 		bodyInfor[1].setIdname("pk_stordoc");
 		bodyInfor[1].setTablename("bd_stordoc");
+		bodyInfor[1].setThiscodename("pk_stordoc");
 		bodyInfor[1].isCorp = UFBoolean.TRUE;
 		bodyInfor[1].isBasic = UFBoolean.TRUE;
 		bodyInfor[1].setCorpname("pk_corp");
 //		客商编码----自定义处理
-		bodyInfor[2].setCodename("pk_cumandoc");
+		bodyInfor[2].setCodename("custcode");
 		bodyInfor[2].setIdname("pk_cumandoc");
 		bodyInfor[2].setTablename("bd_cumandoc");
+		bodyInfor[2].setThiscodename("pk_cumandoc");
 		bodyInfor[2].isCorp = UFBoolean.TRUE;
 		bodyInfor[2].isBasic = UFBoolean.TRUE;
 		bodyInfor[2].isDefTran = UFBoolean.TRUE;
@@ -139,16 +145,18 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 		bodyInfor[2].setDefTranClassName("nc.bs.wds.dm.storebing.StoreBingCustTranBO");
 		bodyInfor[2].setCorpname("pk_corp");
 //		分仓编码
-		bodyInfor[3].setCodename("pk_stordoc1");
+		bodyInfor[3].setCodename("storcode");
 		bodyInfor[3].setIdname("pk_stordoc");
 		bodyInfor[3].setTablename("bd_stordoc");
+		bodyInfor[3].setThiscodename("pk_stordoc1");
 		bodyInfor[3].isCorp = UFBoolean.TRUE;
 		bodyInfor[3].isBasic = UFBoolean.TRUE;
 		bodyInfor[3].setCorpname("pk_corp");
 //		所在地区
-		bodyInfor[4].setCodename("custareaid");
+		bodyInfor[4].setCodename("areaclcode");
 		bodyInfor[4].setIdname("pk_areacl");
 		bodyInfor[4].setTablename("bd_areacl");
+		bodyInfor[4].setThiscodename("custareaid");
 		bodyInfor[4].isCorp = UFBoolean.TRUE;
 		bodyInfor[4].isBasic = UFBoolean.TRUE;
 		bodyInfor[4].setCorpname("pk_corp");		
@@ -184,10 +192,10 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 //		表头如果相同维度的存在  改为  更新   对数据校验
 		
 		
-		if(newBills == null || newBills.length == 0)
-			return;
-		HYPubBO bo = new HYPubBO();
-		bo.saveBDs(newBills, null);
+//		if(newBills == null || newBills.length == 0)
+//			return;
+//		HYPubBO bo = new HYPubBO();
+//		bo.saveBDs(newBills, null);
 	}
 
 	@Override
