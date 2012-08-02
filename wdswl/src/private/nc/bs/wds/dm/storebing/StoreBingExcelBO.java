@@ -2,6 +2,7 @@ package nc.bs.wds.dm.storebing;
 
 import nc.bs.trade.business.HYPubBO;
 import nc.bs.zmpub.pub.excel.AbstractExcetBO;
+import nc.bs.zmpub.pub.excel.TransCodeToIDBO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -15,6 +16,14 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 	public StoreBingExcelBO(){
 		super();
 		initInfor();
+	}
+	/**
+	 * 对单体excel导入的数据进行后台处理
+	 * @param vos
+	 * @throws BusinessException
+	 */
+	public void dealSingleImportDatas(CircularlyAccessibleValueObject[] vos) throws BusinessException{
+        super.dealSingleImportDatas(vos);
 	}
 
 	@Override
