@@ -9,21 +9,31 @@ public class CodeToIDInfor extends ValueObject {
 	
 //	不知管理档案类型   如存货管理档案的信息 该数据结构无法封装  用户自定义实现吧
 	
-	private String idname;//常量
-	private String tablename;//常量
-	private String codename;//常量
+	private String idname;//常量   待转换编码在其表内的ID字段名称
+	private String tablename;//常量  待转换编码涉及的档案表
+	private String codename;//常量   表内编码字段名称
+	private String thiscodename;//当前表内编码字段名称    常量
 	private String codevalue;//------------运行期赋值
 	
-	private String corpname;//常量	
-	private String corpvalue;//------------运行期赋值
+	private String corpname;//常量	 公司字段名称   涉及的基本档案内的公司字段的名称
+	private String corpvalue;//------------运行期赋值   公司值
 	public UFBoolean isBasic = UFBoolean.FALSE;//是否产品基础档案  //常量
 	public UFBoolean isCorp = UFBoolean.FALSE;//档案是否公司级  //常量
 	public UFBoolean isCorpField = UFBoolean.FALSE;//公司字段  公司编码转换为公司ID  必须优先转换   //常量
 	public UFBoolean isDefTran = UFBoolean.FALSE;//是否自定义  转换
 	public UFBoolean isCache = UFBoolean.TRUE;//是否缓存  数据
+	public UFBoolean isSave = UFBoolean.TRUE;//是否保存该字段的值  如不保存则 不赋值给vo
 	private String defTranClassName = null;//自定义编码转换类  继承 ideftran 接口
 	
 	
+
+	public String getThiscodename() {
+		return thiscodename;
+	}
+
+	public void setThiscodename(String thiscodename) {
+		this.thiscodename = thiscodename;
+	}
 
 	public String getDefTranClassName() {
 		return defTranClassName;
@@ -64,13 +74,30 @@ public class CodeToIDInfor extends ValueObject {
 	public String getFomular(){
 		StringBuffer str = new StringBuffer();
 		str.append(idname);
+		if(isCorp.booleanValue()){
+			str.append("->getcolvalue2(");
+			str.append(tablename);
+			str.append(","+idname);
+			str.append(",");
+			str.append(codename);
+			str.append(",");
+			str.append(thiscodename);
+			
+			str.append(",");
+			str.append(corpname);
+			str.append(",");
+			str.append(corpname);
+			
+			str.append(")");
+			return str.toString();
+		}
 		str.append("->getColValue(");
 		str.append(tablename);
 		str.append(","+idname);
 		str.append(",");
 		str.append(codename);
 		str.append(",");
-		str.append(codevalue);
+		str.append(thiscodename);
 		str.append(")");
 		return str.toString();
 	}

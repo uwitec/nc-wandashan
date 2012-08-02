@@ -115,11 +115,15 @@ public abstract class AbstractExcetBO {
 			bodys = newBill.getChildrenVO();
 			if(bodys == null || bodys.length == 0)
 				continue;
+			for(CircularlyAccessibleValueObject body:bodys){
+				body.setAttributeValue("pk_custom1", heads[index].getAttributeValue("pk_corp"));
+			}
 			TransCodeToIDBO.getInstance().transCodeToID(bodys, getBodyTransFieldInfor());
 			index++;
 		}
 		
-		TransCodeToIDBO.getInstance().transCodeToID(heads, getBodyTransFieldInfor());
+		TransCodeToIDBO.getInstance().transCodeToID(heads, getHeadTransFieldInfor());
+		TransCodeToIDBO.getInstance().clearCathe();
 	}
 	
 	/**
@@ -129,6 +133,8 @@ public abstract class AbstractExcetBO {
 	protected abstract CodeToIDInfor[] getHeadTransFieldInfor();
 	/**
 	 * 获取表体需要进行编码转换ID的字段  如果未单体时  为单体需要进行编码转换ID的字段
+	 * 表体若存在  公司级 档案 必须提供  公司编码的 转换  若表体vo不含有 公司  可以启用临时字段 用于公司
+	 * 否则无法完成公司级表体编码向ID的转换
 	 * @return
 	 */
 	protected abstract CodeToIDInfor[] getBodyTransFieldInfor();
@@ -160,14 +166,14 @@ public abstract class AbstractExcetBO {
 			throw new BusinessException("vo信息未注册");
 		}
 		
-		if(PuPubVO.getUFBoolean_NullAs(rvos[0].getAttributeValue(getHeadFlag()), UFBoolean.FALSE).booleanValue()){
+		if(!PuPubVO.getUFBoolean_NullAs(rvos[0].getAttributeValue(getHeadFlag()), UFBoolean.FALSE).booleanValue()){
 			throw new BusinessException("表头信息为空");
 		}
 		
 		List<MyBillVO> lbill = new ArrayList<MyBillVO>();
 		MyBillVO bill = null;
 		for(ReportBaseVO rvo:rvos){			
-			if(PuPubVO.getUFBoolean_NullAs(getHeadFlag(), UFBoolean.FALSE).booleanValue()){
+			if(PuPubVO.getUFBoolean_NullAs(rvo.getAttributeValue(getHeadFlag()), UFBoolean.FALSE).booleanValue()){
 				bill = new MyBillVO();
 				bill.setParentVO(rvo);
 				lbill.add(bill);

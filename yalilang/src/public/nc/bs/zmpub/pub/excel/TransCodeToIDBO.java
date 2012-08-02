@@ -49,7 +49,7 @@ public class TransCodeToIDBO {
 	}
 	private IDefTran getDefTranTool(CodeToIDInfor infor) throws BusinessException{
 		if(PuPubVO.getString_TrimZeroLenAsNull(infor.getDefTranClassName())==null)
-			throw new BusinessException("编码["+infor.getCodename()+"]自定义转换类未注册");
+			throw new BusinessException("编码["+infor.getThiscodename()+"]自定义转换类未注册");
 		
 		String className = infor.getDefTranClassName().trim();
 		if(getDefTranBoMap().containsKey(className))
@@ -103,9 +103,15 @@ public class TransCodeToIDBO {
 			value = defTran(vo, infor);
 		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
+			if(infor.isCorp.booleanValue()){
+				value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
+						.execFomular(fou, new String[] { infor.getThiscodename(),infor.getCorpname() },
+								new String[] { infor.getCodevalue() ,infor.getCorpvalue()}));
+			}else{
 			value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
-					.execFomular(fou, new String[] { infor.getCodename() },
+					.execFomular(fou, new String[] { infor.getThiscodename() },
 							new String[] { infor.getCodevalue() }));
+			}
 
 		} else {
 			String sql = infor.getSelectSql();
@@ -140,18 +146,20 @@ public class TransCodeToIDBO {
 			// 优先转换公司 如果是 单据表体数据 没有实际公司字段的 也应提供虚拟公司字段 在此处临时使用
 			for (CodeToIDInfor infor : infors) {
 				if (infor.isCorpField.booleanValue()) {
+					if(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(infor.getThiscodename()))==null)
+						throw new BusinessException("公司编码为空");
 					corpInfor = infor;
 					infor.setCodevalue(WdsWlPubTool//获取公司编码值
 							.getString_NullAsTrimZeroLen(vo
-									.getAttributeValue(infor.getCodename())));
-					
+									.getAttributeValue(infor.getThiscodename())));
+
 					tmpValue = getInforValue(vo,infor);//获取公司ID值
 
-//					缓存公司信息
-					corpInfor.setCorpname(infor.getCodename());
+					//					缓存公司信息
+					corpInfor.setCorpname(infor.getThiscodename());
 					corpInfor.setCorpvalue(tmpValue);
-					
-					vo.setAttributeValue(infor.getCodename(), tmpValue);// 为公司字段附上ID
+					if(infor.isSave.booleanValue())
+						vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
 					break;
 				}
 			}
@@ -160,16 +168,22 @@ public class TransCodeToIDBO {
 				if (infor.isCorpField.booleanValue())
 					continue;
 				
+				if(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(infor.getThiscodename()))==null)
+					continue;
+
 				infor.setCorpvalue(corpInfor.getCorpvalue());//公司ID值
-//				当前编码值
-				infor.setCodevalue(WdsWlPubTool.getString_NullAsTrimZeroLen(infor.getCodename()));
+				//				当前编码值
+				infor.setCodevalue(WdsWlPubTool.getString_NullAsTrimZeroLen(vo.getAttributeValue(infor.getThiscodename())));
 				if(PuPubVO.getString_TrimZeroLenAsNull(infor.getCorpname())==null)
 					infor.setCorpname(corpInfor.getCorpname());
-				
+
 				tmpValue = getInforValue(vo,infor);
-				
-				vo.setAttributeValue(infor.getCodename(), tmpValue);// 为公司字段附上ID
+				if(infor.isSave.booleanValue())
+					vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
 			}
+			
+			
+			
 		}
 	}
 

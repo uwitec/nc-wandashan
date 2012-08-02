@@ -175,7 +175,7 @@ public abstract class ExcelReadCtrl {
 			return null;
 
 		int len = vcSheet.size();
-		voaReturn = new ReportBaseVO[len];
+		voaReturn = new ReportBaseVO[len-1];//不包括表体头
 
 		ReportBaseVO voTemp = null;
 		HSSFRow rowTemp = null;
@@ -185,7 +185,7 @@ public abstract class ExcelReadCtrl {
 			setRowToVO(rowTemp, voTemp);
 			// //设置Excel文件的标志位
 			// voTemp.setExcelFlag(fileFlag);
-			voaReturn[i] = voTemp;
+			voaReturn[i-beginrow] = voTemp;
 		}
 		if (voaReturn.length > 0) {
 			return voaReturn;
