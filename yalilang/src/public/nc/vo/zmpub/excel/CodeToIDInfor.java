@@ -22,7 +22,7 @@ public class CodeToIDInfor extends ValueObject {
 	public UFBoolean isCorpField = UFBoolean.FALSE;//公司字段  公司编码转换为公司ID  必须优先转换   //常量
 	public UFBoolean isDefTran = UFBoolean.FALSE;//是否自定义  转换
 	public UFBoolean isCache = UFBoolean.TRUE;//是否缓存  数据
-	public UFBoolean isSave = UFBoolean.TRUE;//是否保存该字段的值  如不保存则 不赋值给vo
+	public UFBoolean isSave = UFBoolean.TRUE;//是否保存该字段的值  如不保存则 不赋值给vo  一般用于公司 其他情况没意义
 	private String defTranClassName = null;//自定义编码转换类  继承 ideftran 接口
 	
 	
