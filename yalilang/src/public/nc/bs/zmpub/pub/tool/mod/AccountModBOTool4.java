@@ -153,7 +153,7 @@ public abstract class AccountModBOTool4 extends AccountModBOTool2 {
 	 * @author mlr
 	 * @说明：（鹤岗矿业）从月结表获取指定月的月结数据 2011-10-22下午04:00:12
 	 * @param cmonthid
-	 *            appWhereSql条件范围
+	 *  appWhereSql条件范围
 	 * @return
 	 * @throws Exception
 	 */
