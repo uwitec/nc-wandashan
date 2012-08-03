@@ -180,11 +180,7 @@ public class TransCodeToIDBO {
 				tmpValue = getInforValue(vo,infor);
 				if(infor.isSave.booleanValue())
 					vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
-			}
-			
-			
-			
+			}			
 		}
 	}
-
 }
