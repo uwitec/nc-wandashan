@@ -2,6 +2,7 @@ package nc.ui.wds.dm.storebing;
 
 import nc.ui.zmpub.pub.excel.ExcelReadCtrl;
 import nc.vo.wl.pub.Wds2WlPubConst;
+import nc.vo.zmpub.excel.ExcelToBillConst;
 
 public class StoreBingERCtrl extends ExcelReadCtrl {
 	
@@ -9,8 +10,8 @@ public class StoreBingERCtrl extends ExcelReadCtrl {
 		super(sFileName,flag);
 	}
 
-	private String[] headFieldNames = new String[]{"head","corp","outwh","outarea"};
-	private String[] bodyFieldNames = new String[]{"head","corp","cust","inwh","gls","area","saleareaname","outnum","memo"};
+	private String[] headFieldNames = new String[]{ExcelToBillConst.excel_head_flag_field,"corp","outwh","outarea"};
+	private String[] bodyFieldNames = new String[]{ExcelToBillConst.excel_head_flag_field,"corp","cust","inwh","gls","area","saleareaname","outnum","memo"};
 	
 	@Override
 	public String getBillType() {

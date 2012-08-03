@@ -1,7 +1,6 @@
 package nc.bs.wds.dm.storebing;
 
 import nc.bs.zmpub.pub.excel.AbstractExcetBO;
-import nc.bs.zmpub.pub.excel.TransCodeToIDBO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -204,7 +203,9 @@ public class StoreBingExcelBO extends AbstractExcetBO {
 		// TODO Auto-generated method stub
 		super.dealBillImportDatas(rvos, billtype, tmpSourBilltype);
 	}
-	
-	
-
+	@Override
+	protected String getBillBodyCorpFieldName() {
+		// TODO Auto-generated method stub
+		return "pk_custom1";
+	}
 }
