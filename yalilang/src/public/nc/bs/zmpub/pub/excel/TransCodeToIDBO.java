@@ -160,6 +160,8 @@ public class TransCodeToIDBO {
 					corpInfor.setCorpvalue(tmpValue);
 					if(infor.isSave.booleanValue())
 						vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
+					else 
+						vo.setAttributeValue(infor.getThiscodename(), null);
 					break;
 				}
 			}
@@ -167,6 +169,11 @@ public class TransCodeToIDBO {
 			for (CodeToIDInfor infor : infors) {
 				if (infor.isCorpField.booleanValue())
 					continue;
+				
+				if(!infor.isSave.booleanValue()){
+					vo.setAttributeValue(infor.getThiscodename(), null);//清空字段值
+					continue;
+				}
 				
 				if(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(infor.getThiscodename()))==null)
 					continue;
