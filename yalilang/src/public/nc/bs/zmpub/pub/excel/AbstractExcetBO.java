@@ -13,6 +13,7 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.zmpub.excel.CodeToIDInfor;
+import nc.vo.zmpub.excel.ExcelToBillConst;
 import nc.vo.zmpub.pub.bill.MyBillVO;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 
@@ -100,6 +101,20 @@ public abstract class AbstractExcetBO {
 		}
 	}
 	
+	/**
+	 * 获取表体公司字段名称 如果表体没有公司实体字段 且 如果表体存在公司级编码转换 需提供临时公司字段
+	 * @return
+	 */
+	protected abstract String getBillBodyCorpFieldName();
+	
+	/**
+	 * 获取表头公司字段  子类可重写
+	 * @return
+	 */
+	protected  String getBillHeadCorpFieldName(){
+		return "pk_corp";
+	}
+	
 	
 	/**
 	 * 单据结构导入数据  编码转换
@@ -116,7 +131,7 @@ public abstract class AbstractExcetBO {
 			if(bodys == null || bodys.length == 0)
 				continue;
 			for(CircularlyAccessibleValueObject body:bodys){
-				body.setAttributeValue("pk_custom1", heads[index].getAttributeValue("pk_corp"));
+				body.setAttributeValue(getBillBodyCorpFieldName(), heads[index].getAttributeValue(getBillHeadCorpFieldName()));
 			}
 			TransCodeToIDBO.getInstance().transCodeToID(bodys, getBodyTransFieldInfor());
 			index++;
@@ -148,7 +163,7 @@ public abstract class AbstractExcetBO {
     protected abstract void afterTransData(ReportBaseVO[] rvos,AggregatedValueObject[] bills);//支持子类扩展功能		
     
     protected String getHeadFlag(){
-    	return "head";
+    	return ExcelToBillConst.excel_head_flag_field;
     }
 	
     /**
