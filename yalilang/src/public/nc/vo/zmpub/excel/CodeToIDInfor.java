@@ -11,7 +11,7 @@ public class CodeToIDInfor extends ValueObject {
 	
 	private String idname;//常量   待转换编码在其表内的ID字段名称
 	private String tablename;//常量  待转换编码涉及的档案表
-	private String codename;//常量   表内编码字段名称
+	private String codename;//常量   档案表内编码字段名称
 	private String thiscodename;//当前表内编码字段名称    常量
 	private String codevalue;//------------运行期赋值
 	
