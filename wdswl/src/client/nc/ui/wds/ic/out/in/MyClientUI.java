@@ -18,6 +18,7 @@ import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -80,7 +81,28 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos)
 			throws Exception {
 	}
+	public boolean beforeEdit(BillEditEvent e) {
 
+		int row  = e.getRow();
+		String key=e.getKey();
+		
+		//对入库货位过滤，过滤只属于对应的入库仓库下面的货位
+		if("cargdocname".equalsIgnoreCase(key)){
+			String pk_store=(String) getBillCardPanel().getHeadItem("geh_cwarehouseid").getValueObject();
+			if(null==pk_store || "".equalsIgnoreCase(pk_store)){
+				showWarningMessage("请选择入库仓库");
+				return false;
+			}			
+			JComponent c =getBillCardPanel().getBodyItem("cargdocname").getComponent();
+			if( c instanceof UIRefPane){
+				UIRefPane ref = (UIRefPane)c;
+				ref.getRefModel().addWherePart("  and bd_cargdoc.pk_stordoc='"+pk_store+"' and isnull(bd_cargdoc.dr,0) = 0");
+			}
+			return true;			
+		}
+
+		return super.beforeEdit(e);
+	}
 	
 	@Override
 	protected void initEventListener() {
@@ -293,6 +315,8 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 		}
 		return true;
 	}
+	
+	
 	@Override
 	public Object getUserObject() {
 		return new GetCheck();

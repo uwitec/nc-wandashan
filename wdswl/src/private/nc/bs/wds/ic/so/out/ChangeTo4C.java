@@ -150,6 +150,7 @@ public class ChangeTo4C {
 			items.addAll(Arrays.asList(vo.getItemVOs()));
 		}
 		bill.setParentVO(head);
+		items=filter(items,hvo);
 		bill.setChildrenVO(items.toArray(new GeneralBillItemVO[0]));
 		
 		WdsWlIcPubDealTool.appFieldValueForIcNewBill(bill, l_map, corp,coperator, date, fisvbatchcontorl,getBaseDAO());
@@ -159,7 +160,28 @@ public class ChangeTo4C {
 		}
 		return bill;
 	}
-	
+	/**
+	 * 过滤销售订单的订单号
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-8-6下午03:40:11
+	 * @param items
+	 * @param hvo 
+	 */
+	private List<GeneralBillItemVO> filter(List<GeneralBillItemVO> items, Writeback4cHVO hvo) {
+		List<GeneralBillItemVO> list=new ArrayList<GeneralBillItemVO>();
+		if(items==null || items.size()>0)
+			return list;
+		if(hvo==null){
+			return list;
+		}
+		for(int i=0;i<items.size();i++){
+			if(hvo.getVbillno().equals(items.get(i).getVsourcebillcode())){
+				list.add(items.get(i));
+			}		
+		}	
+		return list;
+	}
 	/**
 	 * @功能：取消签字动作
 	 */
