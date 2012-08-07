@@ -18,7 +18,6 @@ import nc.ui.trade.manage.ManageEventHandler;
 import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.w8004040204.ssButtun.fzgnBtn;
 import nc.ui.wds.w8004040204.ssButtun.zdqhBtn;
-import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
@@ -72,8 +71,9 @@ public class ClientUI extends OutPubClientUI implements
 		getBillCardPanel().setBillBeforeEditListenerHeadTail(this);
 
 	}
+
 	public void afterUpdate() {
-		
+
 	}
 
 	@Override
@@ -100,8 +100,12 @@ public class ClientUI extends OutPubClientUI implements
 	}
 
 	private boolean beforeEditByInvCode(int row) {
-		String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
-				"pk_cargdoc").getValueObject();
+		//
+		// String pk_cargdoc = (String) getBillCardPanel().getHeadItem(
+		// "pk_cargdoc").getValueObject();
+		String pk_cargdoc = PuPubVO
+				.getString_TrimZeroLenAsNull(getBillCardPanel().getBodyValueAt(
+						row, "pk_defdoc2"));// 表体调出货位
 		if (null == pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)) {
 			showWarningMessage("前选择调出货位");
 			return false;
@@ -121,7 +125,10 @@ public class ClientUI extends OutPubClientUI implements
 	public boolean beforeEdit(BillEditEvent e) {
 		String key = e.getKey();
 		int row = e.getRow();
-
+		//修改状态 不能编辑表体
+		if (getBillOperate() == IBillOperate.OP_EDIT) {
+			return false;
+		}
 		// 如果是参照过来的存货不可以编辑 ，如果是自制单据可以编辑
 		if ("ccunhuobianma".equalsIgnoreCase(key)) {
 			return beforeEditByInvCode(row);
@@ -131,7 +138,7 @@ public class ClientUI extends OutPubClientUI implements
 			if (nnum.doubleValue() == 0.0)
 				return false;
 		}// add by yf 2012-07-16 根据仓库过滤表头入库货位
-		else if ("cargdocname2".equals(key)) {// 出库货位
+		else if ("cargdocname2".equals(key)) {// 入库货位
 			// 仓库id
 			Object a = getBillCardPanel().getHeadItem("srl_pk")
 					.getValueObject();
@@ -146,10 +153,57 @@ public class ClientUI extends OutPubClientUI implements
 				panel.getRefModel().addWherePart(
 						" and bd_stordoc.pk_stordoc = '" + a + "' ");
 			}
+		} else if ("outcargdocname".equals(key)) {// 出库货位
+			// 仓库id
+			Object a = getBillCardPanel().getHeadItem("srl_pk")
+					.getValueObject();
+			if (a == null) {
+				showWarningMessage("请选择仓库");
+				return false;
+			}
+			UIRefPane panel = (UIRefPane) this.getBillCardPanel().getBodyItem(
+					"outcargdocname").getComponent();
+			if (null != a && !"".equals(a)) {
+				// 修改参照 条件 增加条件 指定仓库id
+				panel.getRefModel().addWherePart(
+						" and bd_stordoc.pk_stordoc = '" + a + "' ");
+			}
 		}
 		// end
+		// 按表体出库货位筛选批次
+		if (e.getPos() == BillItem.BODY) {
+			if ("vbatchcode".equalsIgnoreCase(key)) {
+				nc.ui.pub.bill.BillItem biCol = getBillCardPanel().getBodyItem(
+						key);
+				getLotNumbRefPane().setMaxLength(biCol.getLength());
+				getBillCardPanel().getBodyPanel().getTable().getColumn(
+						biCol.getName()).setCellEditor(
+						new nc.ui.pub.bill.BillCellEditor(getLotNumbRefPane()));
+				String m_strCorpID = getClientEnvironment().getInstance()
+						.getCorporation().getPrimaryKey();
+				String m_strWareHouseID = PuPubVO
+						.getString_TrimZeroLenAsNull(getBillCardPanel()
+								.getHeadItem("srl_pk").getValueObject());
+				// String
+				// m_spaceId=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
+				String m_spaceId = PuPubVO
+						.getString_TrimZeroLenAsNull(getBillCardPanel()
+								.getBodyValueAt(row, "pk_defdoc2"));// 表体调出货位
+				String m_strInventoryID = PuPubVO
+						.getString_TrimZeroLenAsNull(getBillCardPanel()
+								.getBodyValueAt(row, "cinventoryid"));
+				String pk_sspk = PuPubVO
+						.getString_TrimZeroLenAsNull(getBillCardPanel()
+								.getBodyValueAt(row, "vuserdef9"));
+				String[] datas = { m_strCorpID, m_strWareHouseID, m_spaceId,
+						m_strInventoryID, pk_sspk };
+				getLotNumbRefPane().setDatas(datas);
+				return true;
 
+			}
+		}
 		return super.beforeEdit(e);
+
 	}
 
 	public void setDefaultData() throws Exception {
@@ -231,11 +285,15 @@ public class ClientUI extends OutPubClientUI implements
 						getBillCardPanel().setBodyValueAt(cargdoc, i,
 								"pk_cargdoc2");
 						getBillCardPanel().execBodyFormula(i, "pk_cargdoc2");
-						//设置vo状态为修改态
-						String pk_b=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanel().getBillModel().getValueAt(i, "general_pk"));
-						if(pk_b!=null)
-						getBillCardPanel().getBillModel().setRowState(i, BillModel.MODIFICATION);
-						
+						// 设置vo状态为修改态
+						String pk_b = PuPubVO
+								.getString_TrimZeroLenAsNull(getBillCardPanel()
+										.getBillModel().getValueAt(i,
+												"general_pk"));
+						if (pk_b != null)
+							getBillCardPanel().getBillModel().setRowState(i,
+									BillModel.MODIFICATION);
+
 					}
 				}
 			}
@@ -376,16 +434,16 @@ public class ClientUI extends OutPubClientUI implements
 		lock.setBtnCode(null);
 		lock.setBtnName("冻结");
 		lock.setBtnChinaName("冻结");
-		lock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
-		lock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		lock.setOperateStatus(new int[] { IBillOperate.OP_NO_ADDANDEDIT });
+		lock.setBusinessStatus(new int[] { IBillStatus.FREE });
 		addPrivateButton(lock);
 		ButtonVO unlock = new ButtonVO();
 		unlock.setBtnNo(ButtonCommon.UNLOCK);
 		unlock.setBtnCode(null);
 		unlock.setBtnName("解冻");
 		unlock.setBtnChinaName("解冻");
-		unlock.setOperateStatus(new int[]{IBillOperate.OP_NO_ADDANDEDIT});
-		unlock.setBusinessStatus(new int[]{IBillStatus.FREE});
+		unlock.setOperateStatus(new int[] { IBillOperate.OP_NO_ADDANDEDIT });
+		unlock.setBusinessStatus(new int[] { IBillStatus.FREE });
 		addPrivateButton(unlock);
 	}
 
@@ -393,8 +451,8 @@ public class ClientUI extends OutPubClientUI implements
 	//
 	// }
 
-	 protected BusinessDelegator createBusinessDelegator() {
-	 return new Delegator();
-	 }
+	protected BusinessDelegator createBusinessDelegator() {
+		return new Delegator();
+	}
 
 }

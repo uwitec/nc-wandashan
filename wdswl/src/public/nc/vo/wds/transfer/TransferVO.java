@@ -1659,12 +1659,12 @@ public class TransferVO extends SuperVO {
 	}
 	
 	public void validate() throws ValidationException {
-		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)==null)
-			throw new ValidationException("调出货位为空");
-		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc2)==null)
-			throw new ValidationException("调入货位为空");
-		if(pk_cargdoc == pk_cargdoc2)
-			throw new ValidationException("调出货位和调入货位不能相同");
+//		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc)==null)
+//			throw new ValidationException("调出货位为空");
+//		if(PuPubVO.getString_TrimZeroLenAsNull(pk_cargdoc2)==null)
+//			throw new ValidationException("调入货位为空");
+//		if(pk_cargdoc == pk_cargdoc2)
+//			throw new ValidationException("调出货位和调入货位不能相同");
 	}
 
 }

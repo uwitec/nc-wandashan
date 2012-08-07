@@ -99,20 +99,25 @@ public class RefHWTZBillSourceDlg extends MBillSourceDLG {
 	public String getHeadCondition() {
 
 		return "  coalesce(wds_transfer_b.noutnum,0)-coalesce(wds_transfer_b.nacceptnum,0)>0 "// 安排数量-出库数量>0
-			//	+ " and wds_transfer.vbillstatus = 1 "
-		        +" and coalesce(wds_transfer.fisended,'N')='Y' "//冻结后的货位调整单
+		// + " and wds_transfer.vbillstatus = 1 "
+				+ " and coalesce(wds_transfer.fisended,'N')='Y' "// 冻结后的货位调整单
 				+ " and wds_transfer.pk_billtype = '"
 				+ WdsWlPubConst.HWTZ
 				+ "' "
-				+ " and wds_transfer.pk_cargdoc in "
-				+ WdsWlPubTool.getSubSql(pk_cargdoc)// 调出货位
+				// + " and wds_transfer.pk_cargdoc in "
+				// + WdsWlPubTool.getSubSql(pk_cargdoc)// 调出货位
+				+ " and wds_transfer_b.pk_defdoc2 in "
+				+ WdsWlPubTool.getSubSql(pk_cargdoc)// 表体调出货位
 				+ " and wds_transfer_b.cinventoryid in (" + getPowerSql() + ")";
 
 	}
 
-	public String getBodyContinos() {
+	@Override
+	public String getBodyCondition() {
 		return " isnull(wds_transfer_b.dr,0)=0 and coalesce(wds_transfer_b.noutnum,0)-coalesce(wds_transfer_b.nacceptnum,0)>0"
 				// 安排数量-出库数量>0
+				+ " and wds_transfer_b.pk_defdoc2 in "
+				+ WdsWlPubTool.getSubSql(pk_cargdoc)// 表体调出货位
 				+ " and cinventoryid in (" + getPowerSql() + ")";
 	}
 

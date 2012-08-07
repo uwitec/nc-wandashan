@@ -21,11 +21,10 @@ import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
-import nc.vo.wl.pub.WdsWlPubTool;
-
 
 /**
  * 转货位
+ * 
  * @author yf
  */
 public class EventHandler extends OutPubEventHandler {
@@ -41,57 +40,65 @@ public class EventHandler extends OutPubEventHandler {
 			onzdqh();
 			break;
 		}
-		if(intBtn == ButtonCommon.LOCK){
+		if (intBtn == ButtonCommon.LOCK) {
 			onBoLock();
 		}
-		if(intBtn == ButtonCommon.UNLOCK){
+		if (intBtn == ButtonCommon.UNLOCK) {
 			onBoUnlock();
 		}
 	}
+
 	@Override
 	public void onBoAudit() throws Exception {
-		if(getBufferData().getCurrentVO() ==null){
+		if (getBufferData().getCurrentVO() == null) {
 			getBillUI().showWarningMessage("请先选择一条数据");
 			return;
 		}
-		TransferVO head = (TransferVO)getBufferData().getCurrentVO().getParentVO();
-		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
-		if(fisended .booleanValue()==false){
+		TransferVO head = (TransferVO) getBufferData().getCurrentVO()
+				.getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(),
+				UFBoolean.FALSE);
+		if (fisended.booleanValue() == false) {
 			getBillUI().showWarningMessage("单据尚未冻结");
-			return ;
+			return;
 		}
-	
+
 		super.onBoAudit();
 	}
+
 	@Override
 	protected void onBoEdit() throws Exception {
 		super.onBoEdit();
-	    getButtonManager().getButton(IBillButton.Line).setEnabled(false);
-	    getBillCardPanelWrapper().getBillCardPanel().getBillModel().setEnabledAllItems(false);
-	    getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc2").setEnabled(false);
+		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+//				.setEnabledAllItems(false);
+//		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc2")
+//				.setEnabled(false);
 	}
+	
 	/**
 	 * 
 	 * @作者：lyf
-	 * @说明：完达山物流项目  解冻
+	 * @说明：完达山物流项目 解冻
 	 * @时间：2011-6-10下午10:05:39
 	 * @throws Exception
 	 */
-	private void onBoUnlock() throws Exception{
+	private void onBoUnlock() throws Exception {
 		AggregatedValueObject billVo = getBufferData().getCurrentVO();
-		if(billVo == null){
+		if (billVo == null) {
 			getBillUI().showWarningMessage("请选择要操作的数据");
 		}
-		TransferVO head = (TransferVO)billVo.getParentVO();
-		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
-		if(fisended == UFBoolean.FALSE ){
-			return ;
+		TransferVO head = (TransferVO) billVo.getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(),
+				UFBoolean.FALSE);
+		if (fisended == UFBoolean.FALSE) {
+			return;
 		}
 		head.setFisended(UFBoolean.FALSE);
 		HYPubBO_Client.update(head);
 		onBoRefresh();
 	}
-	
+
 	/**
 	 * 
 	 * @作者：lyf
@@ -99,21 +106,23 @@ public class EventHandler extends OutPubEventHandler {
 	 * @时间：2011-6-10下午10:05:26
 	 * @throws Exception
 	 */
-	private void onBoLock() throws Exception{
+	private void onBoLock() throws Exception {
 		AggregatedValueObject billVo = getBufferData().getCurrentVO();
-		if(billVo == null){
+		if (billVo == null) {
 			getBillUI().showWarningMessage("请选择要操作的数据");
 		}
-	//	BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
-		TransferVO head = (TransferVO)billVo.getParentVO();
-		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(), UFBoolean.FALSE);
-		if(fisended == UFBoolean.TRUE ){
-			return ;
+		// BeforeSaveValudate.checkNotAllNull(billVo,"noutnum","实发数量");
+		TransferVO head = (TransferVO) billVo.getParentVO();
+		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getFisended(),
+				UFBoolean.FALSE);
+		if (fisended == UFBoolean.TRUE) {
+			return;
 		}
-		head.setFisended(UFBoolean.TRUE);	
+		head.setFisended(UFBoolean.TRUE);
 		HYPubBO_Client.update(head);
-		onBoRefresh();		
+		onBoRefresh();
 	}
+
 	/**
 	 * 
 	 * @作者：zhf
@@ -123,28 +132,28 @@ public class EventHandler extends OutPubEventHandler {
 	 * @param bodys
 	 * @throws ValidationException
 	 */
-	public static void validationOnPickAction(BillCardPanel card,TransferBVO[] bodys) throws ValidationException{
+	public static void validationOnPickAction(BillCardPanel card,
+			TransferBVO[] bodys) throws ValidationException {
 		if (null == bodys || bodys.length == 0) {
 			throw new ValidationException("表体无货品数据");
 		}
-		Object pk_stordoc = card.getHeadItem("srl_pk")
-		.getValueObject();
+		Object pk_stordoc = card.getHeadItem("srl_pk").getValueObject();
 		if (null == pk_stordoc || "".equals(pk_stordoc)) {
 			throw new ValidationException("出库仓库不能为空");
 		}
-		
-		String pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(card.getHeadItem("pk_cargdoc").getValueObject());
-		if(pk_cargdoc == null){
+
+		String pk_cargdoc = PuPubVO.getString_TrimZeroLenAsNull(card
+				.getHeadItem("pk_cargdoc").getValueObject());
+		if (pk_cargdoc == null) {
 			throw new ValidationException("出库货位不能为空");
 		}
-		for(TransferBVO body:bodys){
+		for (TransferBVO body : bodys) {
 			body.validationOnZdck();
 		}
 	}
 
 	/*
-	 * mlr
-	 * 自动取货(non-Javadoc)
+	 * mlr 自动取货(non-Javadoc)
 	 */
 	@SuppressWarnings("unchecked")
 	protected void onzdqh() throws Exception {
@@ -152,40 +161,53 @@ public class EventHandler extends OutPubEventHandler {
 		if (results != 1) {
 			return;
 		}
-		if (getBillUI().getVOFromUI() == null|| getBillUI().getVOFromUI().getChildrenVO() == null|| getBillUI().getVOFromUI().getChildrenVO().length == 0) {ui.showErrorMessage("获取当前界面数据出错.");
+		if (getBillUI().getVOFromUI() == null
+				|| getBillUI().getVOFromUI().getChildrenVO() == null
+				|| getBillUI().getVOFromUI().getChildrenVO().length == 0) {
+			ui.showErrorMessage("获取当前界面数据出错.");
 			return;
 		}
 		AggregatedValueObject billvo = getBillUI().getVOFromUI();
 		TransferBVO[] generalbVOs = (TransferBVO[]) billvo.getChildrenVO();
 		// 数据校验 begin
-	   validationOnPickAction(getBillCardPanelWrapper().getBillCardPanel(), generalbVOs);
+		validationOnPickAction(getBillCardPanelWrapper().getBillCardPanel(),
+				generalbVOs);
 		// 数据校验end
-		String pk_stordoc = PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("srl_pk").getValueObject());
-		
-		String pk_cargdoc=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject());
-		TransferBVO[] bvos=null;
+		String pk_stordoc = PuPubVO
+				.getString_TrimZeroLenAsNull(getBillCardPanelWrapper()
+						.getBillCardPanel().getHeadItem("srl_pk")
+						.getValueObject());
+
+		String pk_cargdoc = PuPubVO
+				.getString_TrimZeroLenAsNull(getBillCardPanelWrapper()
+						.getBillCardPanel().getHeadItem("pk_cargdoc")
+						.getValueObject());
+		TransferBVO[] bvos = null;
 		try {
-			Class[] ParameterTypes = new Class[] { String.class,String.class,TransferBVO[].class };
-			Object[] ParameterValues = new Object[] {pk_stordoc,
-					pk_cargdoc, generalbVOs };
+			Class[] ParameterTypes = new Class[] { String.class, String.class,
+					TransferBVO[].class };
+			Object[] ParameterValues = new Object[] { pk_stordoc, pk_cargdoc,
+					generalbVOs };
 			Object o = LongTimeTask.callRemoteService(
 					WdsWlPubConst.WDS_WL_MODULENAME,
-					"nc.vo.wdsnew.pub.PickTool", "autoPick1",
-					ParameterTypes, ParameterValues, 2);
+					"nc.vo.wdsnew.pub.PickTool", "autoPick1", ParameterTypes,
+					ParameterValues, 2);
 			if (o != null) {
 				bvos = (TransferBVO[]) o;
 			}
 		} catch (Exception e) {
-			
-			if(e instanceof StockException){
-				StockException se=(StockException) e;	
-				bvos=(TransferBVO[]) se.getBvos();				
-			}else{
-			  throw e;
+
+			if (e instanceof StockException) {
+				StockException se = (StockException) e;
+				bvos = (TransferBVO[]) se.getBvos();
+			} else {
+				throw e;
 			}
 		}
-        getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
-        getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+				.setBodyDataVO(bvos);
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+				.execLoadFormula();
 	}
 
 	@Override
@@ -193,51 +215,61 @@ public class EventHandler extends OutPubEventHandler {
 		valudate();
 		super.onBoSave();
 	}
+
 	/**
 	 * 保存前进行数据校验
-	 * @throws Exception 
-	 * @throws BusinessException 
+	 * 
+	 * @throws Exception
+	 * @throws BusinessException
 	 * @作者：mlr
-	 * @说明：完达山物流项目 
+	 * @说明：完达山物流项目
 	 * @时间：2012-7-13下午07:33:33
 	 */
 	private void valudate() throws Exception {
-		
+
 		getBillCardPanelWrapper().getBillCardPanel().stopEditing();
 
-		MyBillVO bill=(MyBillVO) getBillUI().getVOFromUI();
-		
-		if(bill == null)
+		MyBillVO bill = (MyBillVO) getBillUI().getVOFromUI();
+
+		if (bill == null)
 			throw new BusinessException("数据异常");
-		
-		TransferVO head = (TransferVO)bill.getParentVO();
-		
-		if(head == null)
+
+		TransferVO head = (TransferVO) bill.getParentVO();
+
+		if (head == null)
 			throw new BusinessException("数据异常");
 		head.validate();
-		
-		TransferBVO[] tbs = (TransferBVO[])bill.getChildrenVO();
 
-		if(tbs == null || tbs.length == 0)
+		TransferBVO[] tbs = (TransferBVO[]) bill.getChildrenVO();
+
+		if (tbs == null || tbs.length == 0)
 			throw new BusinessException("表体数据为空");
 
-
-		for(TransferBVO tb:tbs){	
-			//校验应发数量 不能小于实出数量
-			UFDouble u3=PuPubVO.getUFDouble_NullAsZero(tb.getNshouldoutnum());//应发数量
-			UFDouble u4=PuPubVO.getUFDouble_NullAsZero(tb.getNoutnum());//实出数量
-			if(u3.sub(u4).doubleValue()<0){
+		for (TransferBVO tb : tbs) {
+			// 校验应发数量 不能小于实出数量
+			UFDouble u3 = PuPubVO.getUFDouble_NullAsZero(tb.getNshouldoutnum());// 应发数量
+			UFDouble u4 = PuPubVO.getUFDouble_NullAsZero(tb.getNoutnum());// 实出数量
+			if (u3.sub(u4).doubleValue() < 0) {
 				throw new BusinessException("应发数量   不能小于  实出数量");
 			}
-			//校验生成日期不能为空 
-			String  date=PuPubVO.getString_TrimZeroLenAsNull(tb.getVuserdef7());
-			if(date==null){
+			// 校验生成日期不能为空
+			String date = PuPubVO
+					.getString_TrimZeroLenAsNull(tb.getVuserdef7());
+			if (date == null) {
 				throw new Exception("生成日期不能为空");
 			}
-		}			
-
+			// add by yf 2012-08-03 调入调出货位调整到表体维护
+			if (PuPubVO.getString_TrimZeroLenAsNull(tb.getPk_defdoc2()) == null)
+				throw new ValidationException("调出货位为空");
+			if (PuPubVO.getString_TrimZeroLenAsNull(tb.getPk_cargdoc2()) == null)
+				throw new ValidationException("调入货位为空");
+			if (tb.getPk_defdoc2() == tb.getPk_cargdoc2())
+				throw new ValidationException("调出货位和调入货位不能相同");
+			// end add
+		}
 
 	}
+
 	@Override
 	protected UIDialog createQueryUI() {
 		return new MyQueryDIG(getBillUI(), null, _getCorp().getPk_corp(),
@@ -253,9 +285,24 @@ public class EventHandler extends OutPubEventHandler {
 
 	protected void onBoLineAdd() throws Exception {
 		super.onBoLineAdd();
-//		BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
-//				getUIController().getBillType(), "crowno");
+		setOutCargdoc();// add by yf 2012-08-03设置表体出库货位默认值
+		// BillRowNo.addLineRowNo(getBillCardPanelWrapper().getBillCardPanel(),
+		// getUIController().getBillType(), "crowno");
 
+	}
+
+	private void setOutCargdoc() throws Exception {
+		String outcargdoc = ((ClientUI) getBillUI()).getLoginInforHelper()
+				.getSpaceByLogUserForStore(_getOperator());
+		if (PuPubVO.getString_TrimZeroLenAsNull(outcargdoc) == null) {
+			return;
+		}
+		int row = getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+				.getRowCount() - 1;
+		getBillCardPanelWrapper().getBillCardPanel().setBodyValueAt(outcargdoc,
+				row, "pk_defdoc2");
+		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
+				.execLoadFormulaByKey("pk_defdoc2");
 	}
 
 }

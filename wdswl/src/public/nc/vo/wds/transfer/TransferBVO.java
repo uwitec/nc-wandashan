@@ -72,7 +72,7 @@ public class TransferBVO extends SuperVO {
 	public String pk_defdoc8;
 	public String vuserdef10;
 	public UFDouble nshouldoutnum;//应发数量
-	public String pk_defdoc2;
+	public String pk_defdoc2;//表体调出货位-默认登录人绑定货位
 	public String pk_defdoc7;
 	public String vuserdef7;//生产日期
 	public UFDouble nshouldoutassistnum;//应发辅数量
@@ -1521,6 +1521,7 @@ public class TransferBVO extends SuperVO {
 	}
 	
 	/***************货位调整单TransferBVO*****************/
+	//public String pk_defdoc2;//表体调出货位-默认登录人绑定货位
 	private String pk_cargdoc2;//调入货位
 	private String vlastbilltype;// 上层单据类型
 	private String vlastbillid;// 上层单据ID

@@ -175,7 +175,7 @@ public class PickTool implements Serializable {
 			int i) throws Exception {
 		// 构建查询条件
 		String whereSql = " pk_customize1 = '" + pk_stordoc + "' "
-				+ " and  pk_cargdoc = '" + pk_cargdoc + "' "
+				+ " and  pk_cargdoc = '" + vo.getPk_defdoc2() + "' "
 				+ " and pk_invmandoc='" + vo.getCinventoryid() + "'"
 				+ " and isnull(dr,0)=0 " + " and pk_corp='"
 				+ SQLHelper.getCorpPk() + "'" + " and whs_stockpieces >0 ";// 库存主数量大于0

@@ -27,4 +27,7 @@ public class Wds2WlPubConst {
 	
 	public final static String store_cus_billtype = "WS90";//分仓客商绑定 单据类型 用于 数据导入  本身不是单据
 	
+	public final static String wdsz_dispatchercode = "0205";//add by yf 2012-08-07退货入库，入库类别默认为“销售退货入库”
+
+	
 }
