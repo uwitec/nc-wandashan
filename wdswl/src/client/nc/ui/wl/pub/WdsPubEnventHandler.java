@@ -8,13 +8,18 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListPanel;
+import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
+import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.ValidationException;
+import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
@@ -31,12 +36,15 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 	public WdsPubEnventHandler(BillManageUI billUI, IControllerBase control) {
 		super(billUI, control);
 	}
+
 	protected BillListPanelWrapper getBillListPanelWrapper() {
 		return getBillManageUI().getBillListWrapper();
-	} 
-	protected BillListPanel getBillListPanel(){
+	}
+
+	protected BillListPanel getBillListPanel() {
 		return getBillListPanelWrapper().getBillListPanel();
-	}	
+	}
+
 	@Override
 	protected void onBoSave() throws Exception {
 		getBillCardPanelWrapper().getBillCardPanel().stopEditing();
@@ -278,5 +286,32 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 			return;
 		}
 		getSourceDlg().showModal();
+	}
+
+	/**
+	 * 按钮m_boAudit点击时执行的动作,如有必要，请覆盖.
+	 */
+	public void onBoAudit() throws Exception {
+		int[] rows = getBillListPanel().getHeadTable().getSelectedRows();
+		if (rows != null && rows.length == 1) {
+			super.onBoAudit();
+		} else if (rows != null && rows.length > 1) {
+			onBoBatchAudit();
+		}
+	}
+	
+	/**
+	 * 
+	 * @作者：yf
+	 * @说明：完达山物流项目,回传单批审
+	 * @时间：2012-8-8下午01:34:19
+	 * @throws Exception
+	 */
+	public void onBoBatchAudit() throws Exception{
+		int[] rows = getBillListPanel().getHeadTable().getSelectedRows();
+		for (int i = 0; i < rows.length; i++) {
+			getBufferData().setCurrentRow(rows[i]);
+			super.onBoAudit();
+		}
 	}
 }

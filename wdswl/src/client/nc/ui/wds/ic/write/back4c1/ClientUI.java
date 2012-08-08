@@ -1,4 +1,6 @@
 package nc.ui.wds.ic.write.back4c1;
+import javax.swing.ListSelectionModel;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillItemEvent;
@@ -22,8 +24,13 @@ public class ClientUI extends MutilChildUI implements BillCardBeforeEditListener
 
 	public ClientUI() {
 		super();
+		init();
 	}
-
+	
+	private void init() {
+		getBillListPanel().getHeadTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	}
+	
 	public ClientUI(Boolean useBillSource) {
 		super(useBillSource);
 	}
