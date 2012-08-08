@@ -170,7 +170,7 @@ public class ChangeTo4C {
 	 */
 	private List<GeneralBillItemVO> filter(List<GeneralBillItemVO> items, Writeback4cHVO hvo) {
 		List<GeneralBillItemVO> list=new ArrayList<GeneralBillItemVO>();
-		if(items==null || items.size()>0)
+		if(items==null || items.size()==0)
 			return list;
 		if(hvo==null){
 			return list;
