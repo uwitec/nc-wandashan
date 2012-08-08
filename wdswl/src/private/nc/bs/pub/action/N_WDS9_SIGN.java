@@ -10,6 +10,8 @@ import nc.bs.wds.load.pub.PushSaveWDSF;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.uap.pf.PFBusinessException;
 
 /**
@@ -46,9 +48,13 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 				setParameter("hvo", headvo);
 				runClass("nc.bs.wds.ic.allocation.in.AllocationInBO", "updateHVO",
 						"&hvo:nc.vo.ic.pub.TbGeneralHVO", vo, m_keyHas,m_methodReturnHas);
-				//生成装卸费核算单
-				PushSaveWDSF pu=new PushSaveWDSF();
-				pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
+				// modify by yf 2012-08-08 调拨入库——从双分公司调拨物流的   不计算装卸费  默认计算
+				if(PuPubVO.getUFBoolean_NullAs(headvo.getFisload(), UFBoolean.FALSE).booleanValue()){
+					//生成装卸费核算单
+					PushSaveWDSF pu=new PushSaveWDSF();
+					pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
+				}
+				// end modify
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)
