@@ -379,6 +379,11 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		whereSql.append(" h.pk_corp='"+ui.cl.getCorp());
 		whereSql.append("' and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0 ");
 		String where = getQryDlg().getWhereSQL();
+		
+//		getQryDlg().getConditionVO();
+//		
+//		getQryDlg().getWhereSQL(conditions);
+		
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);
 		}
