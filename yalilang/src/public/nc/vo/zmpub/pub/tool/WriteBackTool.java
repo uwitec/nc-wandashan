@@ -345,7 +345,7 @@ public class WriteBackTool {
 	}
 
 	/**
-	 * 回写后的数据校验
+	 * 回写后的数据校验 zhf
 	 * 
 	 * @throws Exception
 	 * @param checkfieldnames
