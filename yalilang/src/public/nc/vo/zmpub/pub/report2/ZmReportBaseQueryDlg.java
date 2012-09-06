@@ -18,11 +18,14 @@ public class ZmReportBaseQueryDlg extends nc.ui.trade.report.query.QueryDLG
 	public ZmReportBaseQueryDlg(java.awt.Container parent,String nodecode) {
 		super(parent);
 		this.nodecode=nodecode;
+		
+	}
+	@Override
+	public void initData(){
+		super.initData();
 		init();
 	}
-	
-	
-	private void init() {
+	public void init() {
 		try {
 			((UIRefPane) getComponent("szreportconfig")).getRefModel()
 					.addWherePart(" and nodecode = '" + nodecode + "' and isnull(dr,0)=0 ");

@@ -26,6 +26,10 @@ public class ZmReportBaseUI3 extends ZmReportBaseUI2{
 		
 		if (buff == null || buff.get(getConfigPk())==null) {		
 			ReportBuffer buf= queryBuffer(getConfigPk());
+			if(buf==null){
+				buf=new ReportBuffer();
+				buf.setNodecode(_getModelCode());
+			}
 			buff=new HashMap<String, ReportBuffer>();
 			buff.put(getConfigPk(), buf);
 		}	

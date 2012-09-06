@@ -12,19 +12,22 @@ import nc.vo.pub.lang.UFDateTime;
 public class ReportBufferVO extends SuperVO {
 
 //	 create table zm_config(
-//	 pk_config char(20),
-//	 nodecode char(50),
-//	 strRows varchar(1000),
-//	 strCols varchar(1000),
-//	 strVals varchar(1000),
-//	 lel varchar(1000),
-//	 istotal char(1),
-//	 issub char(1),
-//	 issum char(1),
-//	 totfields varchar(1000),
-//	 totfieldsNames varchar(1000)£¬
-//	detatil varchar(1000)
-//	 )
+//			   pk_config char(20),
+//			   nodecode char(50),
+//			   strRows varchar(1000),
+//			   strCols varchar(1000),
+//			   strVals varchar(1000),
+//			   lel varchar(1000),
+//			   istotal char(1),
+//			   issub char(1),
+//			   issum char(1),
+//			   totfields varchar(1000),
+//			   totfieldsNames varchar(1000),
+//			  detatil varchar(1000),
+//			    ts                  CHAR(19) default to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),
+//			    dr                  NUMBER(10) default 0
+//
+//			   )
 	private String detatil=null;//ÃèÊöÐÅÏ¢
 	
 	private String pk_config;// Ö÷¼ü

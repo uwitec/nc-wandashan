@@ -5,9 +5,9 @@ import nc.ui.bd.ref.AbstractRefModel;
  * @author mlr
  */
 public class ConfigRefModel extends AbstractRefModel {
-	private int m_DefaultFieldCount= 2;
-	private String[] m_aryFieldCode= {  "nodecode","detatil" };
-	private String[] m_aryFieldName= { "功能节点号","配置文件描述信息"  };
+	private int m_DefaultFieldCount= 4;
+	private String[] m_aryFieldCode= { "detatil","nodecode", };
+	private String[] m_aryFieldName= { "配置文件描述信息","功能节点"  };
 	private String m_sPkFieldCode= "pk_config";
 	private String m_sRefTitle= "报表配置文件选择参照框";
 	private String m_sTableName= "zm_config";
@@ -73,5 +73,8 @@ public class ConfigRefModel extends AbstractRefModel {
 	}
 	public String getWherePart() {
 		return sqlWherePart;
+	}
+	public boolean isCacheEnabled() {
+		return false;
 	}
 }

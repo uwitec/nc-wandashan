@@ -85,7 +85,7 @@ public class ConfigDlg extends nc.ui.pub.beans.UIDialog implements  ActionListen
 
 
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==but){
+		if(e.getActionCommand().equals("È·¶¨")){
 			onOk();
 		}else{
 			onCal();
@@ -95,12 +95,13 @@ public class ConfigDlg extends nc.ui.pub.beans.UIDialog implements  ActionListen
 
 
 	private void onCal() {
-		this.closeOK();
+		this.closeCancel();
 	}
 
 
 	private void onOk() {
-		this.closeCancel();
+	
+	   this.closeOK();
 	}
 	
 	public boolean getIsNew(){
