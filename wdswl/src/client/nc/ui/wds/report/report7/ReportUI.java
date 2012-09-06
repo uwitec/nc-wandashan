@@ -54,11 +54,11 @@ public class ReportUI extends JxReportBaseUI {
 	 * @throws Exception 
 	 */
 	public void dealQueryAfter() throws Exception{		
-		ReportRowColCrossTool.onCross(this, new String[]{"cubcode","cubname","billcode","isxuni",
-				"reordedate","storname","xsadress","bauorder",},
-                new String[]{"invtypename","chinvcl","invcode","invname","invspec"}, 
-                new String[]{"num"});
-		setTolal1();//设置合计
+//		ReportRowColCrossTool.onCross(this, new String[]{"cubcode","cubname","billcode","isxuni",
+//				"reordedate","storname","xsadress","bauorder",},
+//                new String[]{"invtypename","chinvcl","invcode","invname","invspec"}, 
+//                new String[]{"num"});
+//		setTolal1();//设置合计
 		//setTolal12();
 	}
 	private void setTolal12() throws Exception {

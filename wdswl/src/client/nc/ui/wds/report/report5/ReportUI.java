@@ -114,15 +114,15 @@ public class ReportUI extends JxReportBaseUI {
 	 * @throws Exception 
 	 */
 	public void dealQueryAfter() throws Exception{		
-		ReportRowColCrossTool.onCross(this, new String[]{"storname","custcode","custname","ordercode","vbillno","isxuni"
-				,"carcode","vdrivername","vdrivercorp","sorderdate","cartime","forderdate",
-				"djrfh","xsadress","jxstel","zcyxtime","daodz",
-				"yfprice","yfgls","yfhj",
-				"zxfzxxe","zxfzx1xe","zxftqxe","zxfcmxe"
-				},
-                new String[]{"invtypename","chinvcl","invcode","invname","invspec"}, 
-                new String[]{"num"});
-		setTolal1();//设置合计
+//		ReportRowColCrossTool.onCross(this, new String[]{"storname","custcode","custname","ordercode","vbillno","isxuni"
+//				,"carcode","vdrivername","vdrivercorp","sorderdate","cartime","forderdate",
+//				"djrfh","xsadress","jxstel","zcyxtime","daodz",
+//				"yfprice","yfgls","yfhj",
+//				"zxfzxxe","zxfzx1xe","zxftqxe","zxfcmxe"
+//				},
+//                new String[]{"invtypename","chinvcl","invcode","invname","invspec"}, 
+//                new String[]{"num"});
+//		setTolal1();//设置合计
 	}
 	/**
      * 合计
