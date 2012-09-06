@@ -41,6 +41,23 @@ public class BufferDMO {
 		ReportBufferVO vo = cl.get(0);
 		return createBuffer(vo);
 	}
+	/**
+	 * 根据主键 查询配置缓存
+	 * 
+	 * @param nodeid
+	 * @return
+	 * @throws DAOException
+	 */
+	public ReportBuffer queryById(String id) throws DAOException {
+		List<ReportBufferVO> cl = (List<ReportBufferVO>) getDao()
+				.retrieveByClause(ReportBufferVO.class,
+						"  pk_config = '" + id + "' and isnull(dr,0)=0 ");
+		if (cl == null || cl.size() == 0) {
+			return null;
+		}
+		ReportBufferVO vo = cl.get(0);
+		return createBuffer(vo);
+	}
 
 	/**
 	 * 创建报表配置缓存
@@ -124,6 +141,7 @@ public class BufferDMO {
 		buffer.setIstotal(istotal);
 		buffer.setTotfields(getStr(totfields));
 		buffer.setTotfieldsNames(getStr(totfieldsNames));
+		buffer.setDetatil(vo.getDetatil());
 		if (pk_config == null || pk_config.length() == 0) {
 			getDao().insertVO(buffer);
 		} else {
