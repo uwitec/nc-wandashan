@@ -83,7 +83,7 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
 	        	this.sql=sql;
 	            Class[] ParameterTypes = new Class[]{String.class};
 	            Object[] ParameterValues = new Object[]{sql};
-	            Object o = LongTimeTask.calllongTimeService("zm", this, 
+	            Object o = LongTimeTask.calllongTimeService("zmpub", this, 
 	                    "ÕýÔÚ²éÑ¯...", 1, "nc.bs.wds.pub.report.ReportDMO", null, 
 	                    "queryVOBySql", ParameterTypes, ParameterValues);
 	            if(o != null){
@@ -392,7 +392,7 @@ abstract public class JxReportBaseUI extends ReportBaseUI{
 	   if(vos==null || vos.length==0)
 		   return null;
 	   for(int i=0;i<vos.length;i++){		   
-	      if(vos[i].getFieldCode().startsWith("is")){
+	      if(vos[i].getFieldCode().startsWith("is") || vos[i].getFieldCode().startsWith("sz")){
 	    	  continue;
 	      }
 	      list.add(vos[i]);

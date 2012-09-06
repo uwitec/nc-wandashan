@@ -10,6 +10,7 @@ import nc.vo.pub.lang.UFBoolean;
 public class ReportBuffer implements Serializable{
 	private static final long serialVersionUID = 144801743456602307L;
 	private String pk_config=null;//主键
+	private String detatil=null;//描述信息
 	private String nodecode = null;// 功能节点号
 	// 交叉数据
 	private String[] strRows = null;// 交叉行
@@ -18,6 +19,14 @@ public class ReportBuffer implements Serializable{
 	private UFBoolean istotal=null;//
 	public UFBoolean getIstotal() {
 		return istotal;
+	}
+
+	public String getDetatil() {
+		return detatil;
+	}
+
+	public void setDetatil(String detatil) {
+		this.detatil = detatil;
 	}
 
 	public void setIstotal(UFBoolean istotal) {

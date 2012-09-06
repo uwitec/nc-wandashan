@@ -28,6 +28,7 @@ import nc.vo.zmpub.pub.report.ReportBaseVO;
 public class ZmReportBaseUI2 extends JxReportBaseUI {
 	// for add mlr 增加报表配置保存按钮
 	private ReportBuffer buff = null;// 报表配置缓存
+	
 
 	public ReportBuffer getBuff() {
 		if (buff == null) {
@@ -89,6 +90,7 @@ public class ZmReportBaseUI2 extends JxReportBaseUI {
 			if (o != null) {
 				buffer = (ReportBuffer) o;
 			}
+			this.showHintMessage("配置保存成功");
 		} catch (Exception e) {
 			Logger.error(e);
 			MessageDialog.showErrorDlg(this, "警告", e.getMessage());
@@ -119,7 +121,7 @@ public class ZmReportBaseUI2 extends JxReportBaseUI {
 
 	@Override
 	public String getQuerySQL() throws Exception {
-		return null;
+		return super.getQueryConditon();
 	}
 
 	protected void initPrivateButton() {
@@ -144,7 +146,7 @@ public class ZmReportBaseUI2 extends JxReportBaseUI {
 	/**
 	 * 报表保存设置按钮
 	 */
-	private void onBoSave() {
+	public void onBoSave() {
 		if (getBuff() == null) {
 			return;
 		} else {

@@ -11,19 +11,22 @@ import nc.vo.pub.lang.UFDateTime;
  */
 public class ReportBufferVO extends SuperVO {
 
-	// create table zm_config(
-	// pk_config char(20),
-	// nodecode char(50),
-	// strRows varchar(1000),
-	// strCols varchar(1000),
-	// strVals varchar(1000),
-	// lel varchar(1000),
-	// istotal char(1),
-	// issub char(1),
-	// issum char(1),
-	// totfields varchar(1000),
-	// totfieldsNames varchar(1000)
-	// )
+//	 create table zm_config(
+//	 pk_config char(20),
+//	 nodecode char(50),
+//	 strRows varchar(1000),
+//	 strCols varchar(1000),
+//	 strVals varchar(1000),
+//	 lel varchar(1000),
+//	 istotal char(1),
+//	 issub char(1),
+//	 issum char(1),
+//	 totfields varchar(1000),
+//	 totfieldsNames varchar(1000)，
+//	detatil varchar(1000)
+//	 )
+	private String detatil=null;//描述信息
+	
 	private String pk_config;// 主键
 
 	private String nodecode = null;// 功能节点号
@@ -170,6 +173,14 @@ public class ReportBufferVO extends SuperVO {
 	public String getPrimaryKey() {
 
 		return pk_config;
+	}
+
+	public String getDetatil() {
+		return detatil;
+	}
+
+	public void setDetatil(String detatil) {
+		this.detatil = detatil;
 	}
 
 }

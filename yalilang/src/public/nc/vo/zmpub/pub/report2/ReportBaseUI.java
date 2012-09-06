@@ -432,6 +432,7 @@ abstract public class ReportBaseUI extends ToftPanel implements ISender,
 		}
 		return m_qryDlg;
 	}
+	
 
 	public ReportBaseClass getReportBase() {
 		if (m_report == null) {
