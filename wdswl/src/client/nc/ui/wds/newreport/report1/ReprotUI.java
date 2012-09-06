@@ -1,9 +1,9 @@
 package nc.ui.wds.newreport.report1;
 import java.util.List;
+
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.trade.report.query.QueryDLG;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
-import nc.vo.zmpub.pub.report2.ZmReportBaseUI2;
 import nc.vo.zmpub.pub.report2.ZmReportBaseUI3;
 /**
  * 完达山库存现存量报表
