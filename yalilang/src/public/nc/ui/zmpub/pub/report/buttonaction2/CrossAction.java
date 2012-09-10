@@ -41,6 +41,14 @@ public class CrossAction extends AbstractActionHasDataAvailable {
 		super(reportBaseUI);
 	}
 
+	public ReportBaseUI getUi() {
+		return ui;
+	}
+
+	public void setUi(ReportBaseUI ui) {
+		this.ui = ui;
+	}
+
 	public void execute() throws Exception {
 		CrossDLG dlg = new CrossDLG(getReportBaseUI());
 		if (fls == null) {

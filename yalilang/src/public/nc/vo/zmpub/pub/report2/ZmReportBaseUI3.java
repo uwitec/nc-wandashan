@@ -153,6 +153,7 @@ public class ZmReportBaseUI3 extends ZmReportBaseUI2{
 			nc.ui.pub.ButtonObject bo = (ButtonObject) getButton_action_map()
 					.getButtonMap().get(IReportButton.CrossBtn);
 			CrossAction action = (CrossAction) getButton_action_map().get(bo);
+			action.setUi(null);
 			if (istotal == null)
 				istotal = UFBoolean.FALSE;
 			action.execute2(rows, cols, vals, istotal, lel);
