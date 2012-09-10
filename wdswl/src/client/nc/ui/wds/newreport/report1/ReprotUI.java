@@ -50,7 +50,7 @@ public class ReprotUI extends ZmReportBaseUI3{
       sql.append(" isnull(tb_warehousestock.dr,0) = 0   and whs_stocktonnage > 0 ");
       sql.append(" and isnull(wds_invbasdoc.dr,0)=0  and coalesce(wds_invbasdoc.uisso,'N')='Y' ");
       sql.append(" and tb_warehousestock.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");     
-      if(getQuerySQL()!=null || getQuerySQL().length()!=0)
+      if(getQuerySQL()!=null && getQuerySQL().length()!=0)
       sql.append(" and "+getQuerySQL());		
 	  return sql.toString();
 	}
@@ -73,7 +73,7 @@ public class ReprotUI extends ZmReportBaseUI3{
       sql.append(" isnull(wds_invbasdoc.dr,0) = 0 and coalesce(uisso,'N')='Y' ");
       sql.append(" and wds_invbasdoc.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");     
       String wsql=getwheresql();//只获取关于存货的查询条件     
-      if(wsql!=null || wsql.length()!=0)
+      if(wsql!=null && wsql.length()!=0)
       sql.append(" and "+wsql);		
 	  return sql.toString();
 	}
