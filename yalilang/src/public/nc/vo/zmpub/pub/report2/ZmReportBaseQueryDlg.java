@@ -32,6 +32,7 @@ public class ZmReportBaseQueryDlg extends nc.ui.trade.report.query.QueryDLG
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		
 
 	}
 
