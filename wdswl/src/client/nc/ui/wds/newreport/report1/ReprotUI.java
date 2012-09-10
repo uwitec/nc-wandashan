@@ -70,10 +70,11 @@ public class ReprotUI extends ZmReportBaseUI3{
 	public QueryDLG getQueryDlg() {
 		if (m_qryDlg == null) {
 			m_qryDlg = new ClientQueryDlg(					
-					this, _getModelCode(), "pk_stordoc","pk_cargdoc");
+					this, _getModelCode(), "pk_customize1","pk_cargdoc");
 			m_qryDlg.setTempletID(_getCorpID(), _getModelCode(), _getUserID(),
 					null);
 		}
+		m_qryDlg.setNormalShow(false);
 		return m_qryDlg;
 	}
 	/**
