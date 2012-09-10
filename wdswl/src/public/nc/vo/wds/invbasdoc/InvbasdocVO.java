@@ -49,7 +49,7 @@ public class InvbasdocVO extends SuperVO {
 	public UFDouble volume; // 体积
 	public Integer drqbzts;// 大日期标准天数 -----liuys add 2012-05-23
 
-	public UFBoolean uisso;// 是否可销售安排,默认false--add by yf 2012-06-26
+	public UFBoolean uisso;// 是否可销售安排,默认false--add by yf 2012-06-26    -----是否参与报表统计
 	public UFBoolean uisdm;// 是否可发运安排,默认false--add by yf 2012-06-26
 
 	// public static final String PK_INVBASDOC="pk_invbasdoc";
