@@ -146,7 +146,7 @@ public abstract class StockBO implements Serializable {
 
 	}
 
-	private String getWhereSql(SuperVO superVO) throws Exception {
+	public String getWhereSql(SuperVO superVO) throws Exception {
 		String whereSql = "";
 		String[] fields = getDef_Fields();
 		if (fields == null || fields.length == 0)
