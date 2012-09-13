@@ -120,6 +120,13 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 		int row = e.getRow();
 		if (e.getPos() == BillItem.BODY) {
 			if("vbatchcode".equalsIgnoreCase(key)){
+				//手动拣货前应出数量必须大于零
+				UFDouble bnum=PuPubVO.getUFDouble_NullAsZero(getBillCardPanel().getBodyValueAt(row, "nshouldoutassistnum"));//获得应出数量
+				if(bnum.doubleValue()<=0){
+				   this.showErrorMessage("请输入应出数量");
+				   return false;
+				}
+				
 				nc.ui.pub.bill.BillItem biCol = getBillCardPanel().getBodyItem(key);
 						getLotNumbRefPane().setMaxLength(biCol.getLength());
 						getBillCardPanel().getBodyPanel().getTable().getColumn(
@@ -397,6 +404,7 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 			bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 			setDate(vos.get(0).getWhs_batchcode(),row);
 			bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
+			bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vuserdef9");//设置货架id
 			bm.setValueAt(vos.get(0).getWhs_oanum(), row, "noutassistnum");//设置实发辅数量  
 		}else{
 			//最后一行
@@ -405,7 +413,7 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 				setDate(vos.get(0).getWhs_batchcode(),row);
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
-
+				bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vuserdef9");//设置货架id
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
@@ -414,7 +422,7 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
 				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "vuserdef9");
-
+					bm.setValueAt(vos.get(i).getPplpt_pk(), row+i, "vuserdef9");//设置货架id
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					
 				}
@@ -423,6 +431,7 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 				setDate(vos.get(0).getWhs_batchcode(),row);
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "vuserdef9");
+				bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vuserdef9");//设置货架id
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "noutassistnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
@@ -430,6 +439,7 @@ public  class OutPubClientUI extends MutiChildForOutInUI implements ChangeListen
 				   bm.setBodyRowVO(bm.getBodyValueRowVO(row, TbOutgeneralBVO.class.getName()), row+i);
 				   bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
 				   bm.setValueAt(vos.get(i).getSs_pk(), row+i, "vuserdef9");
+				   bm.setValueAt(vos.get(i).getPplpt_pk(), row+i, "vuserdef9");//设置货架id
 				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 				   bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "noutassistnum");//设置实发辅数量					

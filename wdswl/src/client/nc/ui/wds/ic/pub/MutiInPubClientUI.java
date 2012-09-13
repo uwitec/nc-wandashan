@@ -350,6 +350,26 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 				return true;
 			}
 		}
+		if ("trayname".equalsIgnoreCase(key)) {//货架编码
+			String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
+			if(null==pk_cargdoc || "".equalsIgnoreCase(pk_cargdoc)){
+				showWarningMessage("前选择入库货位");
+				return false;
+			}	
+			String pk_invmandoc=(String) getBillCardPanel().getBillModel().getValueAt(row, "geb_cinventoryid");
+			if(null==pk_invmandoc || "".equalsIgnoreCase(pk_invmandoc)){
+				showWarningMessage("前选择存货");
+				return false;
+			}	
+			
+			JComponent c =getBillCardPanel().getBodyItem("trayname").getComponent();
+			if( c instanceof UIRefPane){
+				UIRefPane ref = (UIRefPane)c;
+				ref.getRefModel().addWherePart("  and bd_cargdoc_tray.cdt_invmandoc='"+pk_invmandoc+"' and  bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"' ");
+			}
+			return true;
+		
+		}
 		if("geb_snum".equalsIgnoreCase(key)){
 			if(getBillOperate() == IBillOperate.OP_EDIT)//zhf add 20110624  修改时 应收数量
 				return false;

@@ -43,7 +43,7 @@ public class TbGeneralBVO extends SuperVO {
 
 	
 	public UFBoolean geb_flargess;//是否赠品
-	public String geb_pk;//ID
+	public String geb_pk;//ID 
 	public String geb_cinvbasid;//存货基本id
 
 	public String cdt_pk;//存货状态
@@ -116,7 +116,7 @@ public class TbGeneralBVO extends SuperVO {
 	public String pk_customize6;
 	public String geb_customize9;//zhf 20120716启用  用作 存储来源运单的单据类型
 	public String pk_customize4;
-	public String geb_customize4;
+	public String geb_customize4;//货架id
 	public String geb_customize7;
 	public String pk_customize7;
 	public String geb_customize8;
@@ -1381,31 +1381,9 @@ public class TbGeneralBVO extends SuperVO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(getGeb_vbatchcode())==null){
 			throw new ValidationException("批次号不能为空");
 		}
-		if(isact&&PuPubVO.getUFDouble_NullAsZero(getGeb_anum()).equals(WdsWlPubTool.DOUBLE_ZERO))
-			throw new ValidationException("实收数量不能为空");
-//		// 验证批次号是否正确
-//		if (getGeb_vbatchcode().trim().length() < 8) {
-//			throw new ValidationException("批次号不能小于8位!");
-//
-//		}
-//
-//		Pattern p = Pattern
-//		.compile(
-//				"^((((1[6-9]|[2-9]\\d)\\d{2})(0?[13578]|1[02])(0?[1-9]|[12]\\d|3[01]))|"
-//				+ "(((1[6-9]|[2-9]\\d)\\d{2})(0?[13456789]|1[012])(0?[1-9]|[12]\\d|30))|"
-//				+ "(((1[6-9]|[2-9]\\d)\\d{2})0?2(0?[1-9]|1\\d|2[0-8]))|"
-//				+ "(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0?229))$",
-//				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-//		Matcher m = p.matcher(getGeb_vbatchcode().trim().substring(0, 8));
-//		if (!m.find()) {
-//			throw new ValidationException(
-//			"批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-//
-//		}
 	}
 
 	public void validateOnSave() throws ValidationException{
-	//	validateOnZdrk(false);
 		validateBodySave();		
 	}
 	

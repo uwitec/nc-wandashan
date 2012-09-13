@@ -58,7 +58,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public String vbatchcode;//Åú´Î
 	public UFDate dfirstbilldate;
 	public String pk_defdoc3;
-	public String vuserdef8;
+	public String vuserdef8;//»õ¼Üid
 	public String general_pk;
 	public String vuserdef4;
 	public UFDouble nprice;

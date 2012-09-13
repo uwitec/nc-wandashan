@@ -3,9 +3,14 @@ package nc.vo.wdsnew.pub;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import nc.bs.zmpub.pub.tool.stock.BillStockBO;
+import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
+import nc.vo.wds.ic.cargtray.BdCargdocTrayVO;
 import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -15,6 +20,14 @@ import nc.vo.wl.pub.WdsWlPubConst;
  * @author mlr
  */
 public class BillStockBO1 extends BillStockBO {
+	private PickTool tool=null;
+	public PickTool getTool(){
+		if(tool==null){
+			tool=new PickTool();
+		}
+		return tool;
+	}
+	
 	/**
 	 * 
 	 */
@@ -40,7 +53,7 @@ public class BillStockBO1 extends BillStockBO {
 	 * 先存量定义的最小维度 维度为： 公司 仓库 货位 存货 批次 存货状态 入库日期
 	 */
 	private String[] def_fields = new String[] { "pk_corp", "pk_customize1",
-			"pk_cargdoc", "pk_invmandoc", "pk_invbasdoc", "whs_batchcode",
+			"pk_cargdoc", "pplpt_pk","pk_invmandoc", "pk_invbasdoc", "whs_batchcode",
 			"ss_pk", "creadate" };
 
 	@Override
@@ -195,5 +208,58 @@ public class BillStockBO1 extends BillStockBO {
 	public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
 		return super.queryStockCombin(vos);
 	}
+	/**
+	 * @author mlr
+	 * 现存量更新后 校验 是否超货架容量
+	 * @param whereSql
+	 * @return
+	 * @throws Exception
+	 */
+	public void check(SuperVO[] vos1) throws Exception {
+		super.check(vos1);
+		StockInvOnHandVO[]  vos=(StockInvOnHandVO[]) vos1;
+		if (vos == null || vos.length == 0)
+			return;
+		for (int i = 0; i < vos.length; i++) {
+	
+			//查询  货架现存来那个已存数量
+			String pk_cargdoc = vos[i].getPk_cargdoc();
+			String cdtpk = vos[i].getPplpt_pk();
+			String pk_invmandoc = vos[i].getPk_invmandoc();
+			String wheresql = " pk_cargdoc = '" + pk_cargdoc
+					+ "' and pplpt_pk='" + cdtpk + "' and pk_invmandoc ='"
+					+ pk_invmandoc
+					+ "' and isnull(dr,0)=0 and  whs_stockpieces > 0 ";
+			StockInvOnHandVO vo = new StockInvOnHandVO();
+			vo.setPk_cargdoc(pk_cargdoc);
+			vo.setPplpt_pk(cdtpk);
+			vo.setPk_invmandoc(pk_invmandoc);
+			StockInvOnHandVO[] ols = (StockInvOnHandVO[]) queryStockCombin(new StockInvOnHandVO[] { vo });
+			
+			
+			if (ols == null || ols.length == 0)
+				return;
+			for (int j = 0; j < ols.length; j++) {
+				StockInvOnHandVO stock=ols[j];
+				//计算是否超货架容量
+				BdCargdocTrayVO[] bvos=getTool().queryCat(stock.getPk_customize1(), stock.getPk_cargdoc(), stock.getPk_invmandoc(), stock.getPplpt_pk());
+				//由于货架   货位+货架 是惟一的 所以只取第一个
+				if(bvos==null || bvos.length==0)
+					continue;
+				BdCargdocTrayVO bvo=bvos[0];
+				//获得存货 在一托盘上的 存放箱数
+				UFDouble boxnum=PuPubVO.getUFDouble_NullAsZero(getTool().getInvVolume(stock.getPk_invmandoc()));
+				//计算出 货架的总容量
+				UFDouble znum=boxnum.multiply(PuPubVO.getUFDouble_NullAsZero(bvo.getNsize()));
+				//从现存量得到 目前现存量
+				UFDouble  xcnum=PuPubVO.getUFDouble_NullAsZero(stock.getWhs_stockpieces());
+				if(xcnum.doubleValue()>znum.doubleValue()){
+					String cdtcode=bvo.getCdt_traycode();
+					throw new Exception("货架编码为 ："+cdtcode+" 的货架  存货超量");
+				}
+			}
+		}
+	}
+
 
 }

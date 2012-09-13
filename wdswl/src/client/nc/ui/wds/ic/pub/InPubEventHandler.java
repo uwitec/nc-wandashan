@@ -12,9 +12,12 @@ import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wds2.set.OutInSetHelper;
+import nc.ui.wl.pub.LongTimeTask;
 import nc.ui.wl.pub.MutiChildForInUI;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -24,9 +27,11 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wdsnew.pub.StockException;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.Wds2WlPubConst;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public abstract class InPubEventHandler extends WdsPubEnventHandler {
 
@@ -376,84 +381,49 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 	/**
 	 * 自动入库
 	 */
-//	protected void onZdrk() throws Exception {
-//		if(! validateBachCode()){
-//			throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
-//		}
-//		String cwid = getCwhid();//仓库
-//		if(cwid == null || "".equals(cwid))
-//			throw new BusinessException("请指定仓库信息");
-//		String pk_cargdoc =  getPk_cargDoc();//货位
-//		if(pk_cargdoc == null || "".equals(pk_cargdoc))
-//			throw new BusinessException("请指定货位信息");
-//		TbGeneralBVO[] tbGeneralBVOs = (TbGeneralBVO[])getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyValueVOs(TbGeneralBVO.class.getName());
-//		if(tbGeneralBVOs == null||tbGeneralBVOs.length ==0){
-//			throw new BusinessException("表体数据为空");
-//		}
-//		// 验证货品主键
-//		for (TbGeneralBVO body:tbGeneralBVOs) {
-//			body.validateOnZdrk(false);
-//		}
-//		//		for(TbGeneralBVO body:tbGeneralBVOs){
-//		//			String key = body.getGeb_crowno();
-//		//			if(ui.getTrayInfor().containsKey(key)){
-//		//				body.setTrayInfor(ui.getTrayInfor().get(key));
-//		//			}
-//		//		}
-//		ui.showProgressBar(true);
-//		Object o = null;
-//		try{
-//			o = WdsIcPubHelper.autoInStore(tbGeneralBVOs,cwid, pk_cargdoc);
-//		}catch(Exception e){
-//			throw e;
-//		}finally{
-//			ui.showProgressBar(false);
-//		}	
-//
-//		if(o == null){
-//			ui.showErrorMessage("数据处理异常，请重新操作");
-//			return;
-//		}
-//
-//		//		解析返回值
-//		Object[] os = (Object[])o;
-//		if(os == null || os.length==0){
-//			ui.showErrorMessage("数据处理异常，请重新操作");
-//			return;
-//		}
-//		//		if(os[0]==null)
-//		//			return;
-//		if(os[1]!=null&&((Map)os[1]).size()>0){
-//			StringBuffer msg =new StringBuffer("自动入库操作失败:\n");
-//			Map<String,Integer> om = (Map<String,Integer>)os[1];
-//			for(String key:om.keySet()){
-//				if(om.get(key)==0){
-//					msg.append(key+"行，货位存放该存货的托盘托盘均已占用;\n");
-//				}else if(om.get(key)==1){
-//					msg.append(key+"行，超出货位当前可容纳量;\n");
-//				}
-//			}
-//			ui.showErrorMessage(msg.toString());
-//			return;
-//		}
-//		// 获取当前表体行的应发辅数量和实发辅数量进行比较，根据比较结果进行颜色显示
-//		// 红色：没有实发数量-1；灰色：有实发数量但是数量不够1；白色：实发数量与应发数量相等0
-//		Map<String,List<TbGeneralBBVO>> trayInfor = (Map<String,List<TbGeneralBBVO>>) os[0];
-//		if(trayInfor!=null&&trayInfor.size()==0)
-//			trayInfor = null;
-//		Map<String, Integer> retInfor = (Map<String, Integer>)os[1];
-//		Map<String,List<TbGeneralBBVO>> oldInfor = ui.getTrayInfor();
-//		ui.setTrayInfor(trayInfor);
-//		int ret = onZdtp();
-//		if(ret != UIDialog.ID_OK){
-//			ui.setTrayInfor(oldInfor);
-//			return;
-//		}		
-//
-////		changeColor(tbGeneralBVOs, retInfor);
-//		setBackGround();
-//		setBodyModelState();
-//	}
+	protected void onZdrk() throws Exception {
+		if(! validateBachCode()){
+			throw new  BusinessException("批次号输入的不正确,请您输入正确的日期!如：20100101XXXXXX");
+		}
+		String cwid = getCwhid();//仓库
+		if(cwid == null || "".equals(cwid))
+			throw new BusinessException("请指定仓库信息");
+		String pk_cargdoc =  getPk_cargDoc();//货位
+		if(pk_cargdoc == null || "".equals(pk_cargdoc))
+			throw new BusinessException("请指定货位信息");
+		TbGeneralBVO[] tbGeneralBVOs = (TbGeneralBVO[])getBillCardPanelWrapper().getBillCardPanel().getBillModel().getBodyValueVOs(TbGeneralBVO.class.getName());
+		if(tbGeneralBVOs == null||tbGeneralBVOs.length ==0){
+			throw new BusinessException("表体数据为空");
+		}
+		// 数据校验
+		for (TbGeneralBVO body:tbGeneralBVOs) {
+			body.validateOnZdrk(false);
+		}
+		ui.showProgressBar(true);
+		TbGeneralBVO[] bvos=null;
+		try {
+			Class[] ParameterTypes = new Class[] { String.class,String.class,TbGeneralBVO[].class };
+			Object[] ParameterValues = new Object[] {cwid,
+					pk_cargdoc, tbGeneralBVOs };
+			Object o = LongTimeTask.callRemoteService(
+					WdsWlPubConst.WDS_WL_MODULENAME,
+					"nc.vo.wdsnew.pub.PickTool", "autoPick2",
+					ParameterTypes, ParameterValues, 2);
+			if (o != null) {
+				bvos = (TbGeneralBVO[]) o;
+			}
+		} catch (Exception e) {
+			
+			if(e instanceof StockException){
+				StockException se=(StockException) e;	
+				bvos=(TbGeneralBVO[]) se.getBvos();				
+			}else{
+			  throw e;
+			}
+		}
+        getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
+        getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
+	}
 	
 	
 	public void chaneColor() throws Exception {
@@ -586,6 +556,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		super.onBoEdit();
 		//		zhf add
 		setHeadPartEdit(false);
+		//修改封掉自动拣货按钮
+		getButtonManager().getButton(ISsButtun.Zdrk).setEnabled(false);
+		
 		boolean isself = PuPubVO.getString_TrimZeroLenAsNull(
 				getBufferData().getCurrentVO().getChildrenVO()[0].getAttributeValue("csourcetype"))
 				==null?true:false;

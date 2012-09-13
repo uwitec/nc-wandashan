@@ -43,6 +43,7 @@ public class BdCargdocTrayVO extends SuperVO {
 	public String pk_customize1;
 	public UFTime ts;
 	public String cdt_customize9;
+	public Integer nsize;//货架容量
 	public String cdt_customize6;
 	public Integer sealflag;//封存标志
 	public Integer cdt_inpriority;//入库优先级
@@ -59,6 +60,16 @@ public class BdCargdocTrayVO extends SuperVO {
 	public String cdt_customize2;
 	public Integer cdt_outpriority;//出库优先级
 	public String pk_customize5;
+   
+
+
+	public Integer getNsize() {
+		return nsize;
+	}
+
+	public void setNsize(Integer nsize) {
+		this.nsize = nsize;
+	}
 
 	/**
 	 * 属性pk_customize4的Getter方法.

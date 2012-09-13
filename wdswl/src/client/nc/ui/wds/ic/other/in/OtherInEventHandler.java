@@ -58,12 +58,7 @@ public class OtherInEventHandler extends InPubEventHandler {
 			break;
 		case ISsButtun.Zdrk://自动拣货
 			valudateWhereYeqian();
-			//拣货 存货唯一校验
-			BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-					getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-					new String[]{"invcode","geb_vbatchcode"},
-					new String[]{"存货编码","批次号"});
-		//	onZdrk();
+	    	onZdrk();
 			break;
 		case ISsButtun.Zzdj:
 			onZzdj();

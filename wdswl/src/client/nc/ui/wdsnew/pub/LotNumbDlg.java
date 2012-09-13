@@ -19,9 +19,12 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillMouseEnent;
 import nc.ui.zmpub.pub.tool.LongTimeTask;
 import nc.vo.ic.pub.StockInvOnHandVO;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.session.ClientLink;
+import nc.vo.trade.voutils.VOUtil;
+import nc.vo.zmpub.pub.tool.ZmPubTool;
 /**
  * 批次号参照对话框 mlr
  */
@@ -530,14 +533,34 @@ public class LotNumbDlg extends UIDialog implements java.awt.event.ActionListene
 					ParameterTypes, ParameterValues);
 			if (o != null) {
 				vos = (StockInvOnHandVO[]) o;
+				sortout(vos);//进行先进先出排序
 			}
 		} catch (Exception e) {
 			Logger.error(e);
 			MessageDialog.showErrorDlg(this, "警告", e.getMessage());
-		}
+		}		
 		getBillCardPanel().getBillModel().setBodyDataVO(vos);
 		getBillCardPanel().getBillModel().execLoadFormula();
 		getBillCardPanel().updateValue();
+	}
+	   /**
+     * 出库按 批次由小到大  按货架编码由小到大排序
+     * @作者：mlr
+     * @说明：完达山物流项目 
+     * @时间：2012-9-13上午11:18:39
+     * @param stocks
+     * @throws BusinessException 
+     */
+	private void sortout(StockInvOnHandVO[] stocks) throws BusinessException {
+       if(stocks==null || stocks.length==0)
+    	   return ;
+       //设置货架编码
+       for(int i=0;i<stocks.length;i++){
+    	   String cdtpk=stocks[i].getPplpt_pk();
+    	   String cdtcode=(String) ZmPubTool.execFomularClient("code->getColValue(bd_cargdoc_tray,cdt_traycode,cdt_pk,cdt_pk)", new String[]{"cdt_pk"}, new String[]{cdtpk});
+    	   stocks[i].setWhs_customize3(cdtcode);
+       }
+       VOUtil.ascSort(stocks,new String[]{"whs_batchcode","whs_customize3"});//按批次号  和货架编码排序	
 	}
 
 	/**

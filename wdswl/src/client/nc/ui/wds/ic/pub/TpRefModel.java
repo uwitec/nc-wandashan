@@ -1,23 +1,22 @@
 package nc.ui.wds.ic.pub;
-
 import nc.ui.bd.ref.AbstractRefModel;
-
+import nc.ui.pub.ClientEnvironment;
 /**
  * »Îø‚Õ–≈Ã≤Œ’’
  */
 public class TpRefModel  extends AbstractRefModel {
 	
-	private int m_DefaultFieldCount = 2;
+	private int m_DefaultFieldCount = 1;
 	
-	private String[] m_aryFieldCode = { "cdt_traycode", "cdt_traystatus" };
+	private String[] m_aryFieldCode = { "cdt_traycode" };
 	
-	private String[] m_aryFieldName = { "Õ–≈Ã±‡¬Î", "Õ–≈Ã◊¥Ã¨" };
+	private String[] m_aryFieldName = { "ªıº‹±‡¬Î" };
 	
 	private String m_sPkFieldCode = "cdt_pk";
 	
-	private String m_sRefTitle = "Õ–≈Ã≤Œ’’";
+	private String m_sRefTitle = "ªıº‹≤Œ’’";
 	
-	private String m_sTableName = "bd_cargdoc_tray";
+	private String m_sTableName = " bd_cargdoc_tray join wds_cargdoc on  bd_cargdoc_tray.pk_wds_cargdoc=wds_cargdoc.pk_wds_cargdoc ";
 
 	/**
 	 * TpRefModel ππ‘Ï◊”◊¢Ω‚°£
@@ -60,18 +59,13 @@ public class TpRefModel  extends AbstractRefModel {
 	 @Override
 	    public String getWherePart() {
 	    	StringBuffer strWhere = new StringBuffer();
-	    	strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 ");
-
+	    	strWhere.append(" isnull(bd_cargdoc_tray.dr,0)=0 and  isnull(wds_cargdoc.dr,0)=0 and wds_cargdoc.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'");
 	    	return strWhere.toString();
 	    }
-	//@Override
-	protected String[][] getFormulas() {
-		String[][] str = {{"cdt_traystatus","cdt_traystatus->iif(cdt_traystatus == \"0\" ,\"Œ¥’º”√\",\"’º”√\")"}};
-		return str;
-	}
+	 
     public java.lang.String getOrderPart(){
     	StringBuffer strWhere = new StringBuffer();
-        strWhere.append("  cdt_traycode,substr(cdt_traycode,length(cdt_traycode),1),substr(cdt_traycode,length(cdt_traycode)-1,1) desc");
+        strWhere.append("  cdt_traycode desc");
         return strWhere.toString();
     }
 	@Override

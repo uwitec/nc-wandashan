@@ -23,7 +23,8 @@ public class StockInvOnHandVO extends SuperVO {
 	public String pk_corp; //公司
 	public String pk_customize1;//----------------------仓库ID  zhf add
 	public String pk_cargdoc;//货位
-	public String pplpt_pk;//托盘id
+	public String pplpt_pk;//货架id
+	
 	public String pk_invmandoc; //存货管理ID
 	public String pk_invbasdoc; //存货基本ID
 
@@ -35,7 +36,7 @@ public class StockInvOnHandVO extends SuperVO {
 	public String whs_munit;//主单位
 	public String whs_aunit;//辅单位
 	public UFDouble whs_omnum;// 用于出库自动拣货 或 手动拣货  设置应发辅数量的 临时载体 mlr
-	public UFDouble whs_stocktonnage;//库存主数量
+	public UFDouble whs_stocktonnage;//库存主数量   
 	public UFDouble whs_stockpieces;//库存辅数量
 	public UFDouble whs_oanum;// 用于出库自动拣货 或 手动拣货  设置实发发辅数量的 临时载体 mlr
 	public Integer whs_type;// 类型
@@ -59,7 +60,7 @@ public class StockInvOnHandVO extends SuperVO {
 	public UFTime ts;
 	public String nvote;
 
-	public String whs_customize3;
+	public String whs_customize3;//托盘编码 临时
 	public String whs_pk;
 
 	public String whs_customize9;
