@@ -51,6 +51,7 @@ public String[] getField() {
 			"B_pk_defdoc1->B_pk_cargdoc2",//调入货位，下传其他入库单用
 			"B_vuserdef9->B_vuserdef9",//存货状态
 			"B_vuserdef7->B_vuserdef7",//生成日期
+			"B_vuserdef8->B_vuserdef8",//货架id
 			
 			"B_csourcebillhid->B_general_pk",
 			"B_csourcebillbid->B_general_b_pk",

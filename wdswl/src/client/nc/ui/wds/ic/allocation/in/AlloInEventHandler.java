@@ -52,16 +52,16 @@ public class AlloInEventHandler extends InPubEventHandler {
 				break;
 			case ISsButtun.Zdrk:
 
-				//拣货 存货唯一校验
-				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
-						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
-						new String[]{"invcode","geb_vbatchcode"},
-						new String[]{"存货编码","批次号"});
+//				//拣货 存货唯一校验
+//				BeforeSaveValudate.beforeSaveBodyUnique(getBillCardPanelWrapper().getBillCardPanel().getBillTable(),
+//						getBillCardPanelWrapper().getBillCardPanel().getBillModel(),
+//						new String[]{"invcode","geb_vbatchcode"},
+//						new String[]{"存货编码","批次号"});
 
 				valuteRowNum();
 			//	setTrayCatNUll();
 
-				//onZdrk();
+				onZdrk();
 				break;
 			case nc.ui.wds.w80020206.buttun0206.ISsButtun.Qxqz:
 				onQxqz();
