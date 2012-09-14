@@ -54,7 +54,7 @@ public class StatusUpdateBodyVO extends SuperVO {
 	public String vdef2;
 	public String vdef3;
 	public String vdef4;
-	public String vdef5;
+	public String vdef5;//»õ¼Üid
 	public String vdef6;
 	public String vdef7;
 	public String vdef8;
