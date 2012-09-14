@@ -230,6 +230,7 @@ public class StatusUpdateUI extends WdsBillManagUI {
 			bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 			//			setDate(vos.get(0).getWhs_batchcode(),row);
 			bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
+			bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vdef5");//设置货架id
 			bm.setValueAt(vos.get(0).getWhs_oanum(), row, "nassnum");//设置实发辅数量  
 			bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量
 		}else{
@@ -240,6 +241,7 @@ public class StatusUpdateUI extends WdsBillManagUI {
 				//				setDate(vos.get(0).getWhs_batchcode(),row);
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
 				bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量
+				bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vdef5");//设置货架id
 				//				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "nassnum");//设置实发辅数量
 				for(int i=1;i<vos.size();i++){
@@ -249,6 +251,7 @@ public class StatusUpdateUI extends WdsBillManagUI {
 					//				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "cinvstatusid");
 					bm.setValueAt(vos.get(i).getCreadate().toString(), row+i, "vdef1");//设置实发辅数量
+					bm.setValueAt(vos.get(i).getPplpt_pk(), row+i, "vdef5");//设置货架id
 					//				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 					bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "nassnum");//设置实发辅数量					
 				}
@@ -257,6 +260,7 @@ public class StatusUpdateUI extends WdsBillManagUI {
 				bm.setValueAt(vos.get(0).getWhs_batchcode(), row, "vbatchcode");//批次
 				//				setDate(vos.get(0).getWhs_batchcode(),row);
 				bm.setValueAt(vos.get(0).getCreadate().toString(), row, "vdef1");//设置实发辅数量+
+				bm.setValueAt(vos.get(0).getPplpt_pk(), row, "vdef5");//设置货架id
 				bm.setValueAt(vos.get(0).getSs_pk(), row, "cinvstatusid");
 				//				bm.setValueAt(vos.get(0).getAttributeValue("whs_omnum"), row, "nshouldoutassistnum");//设置应发辅数量
 				bm.setValueAt(vos.get(0).getAttributeValue("whs_oanum"), row, "nassnum");//设置实发辅数量
@@ -266,6 +270,7 @@ public class StatusUpdateUI extends WdsBillManagUI {
 					bm.setValueAt(vos.get(i).getWhs_batchcode(), row+i, "vbatchcode");//批次
 					bm.setValueAt(vos.get(i).getSs_pk(), row+i, "cinvstatusid");
 					bm.setValueAt(vos.get(i).getCreadate().toString(), row+i, "vdef1");//设置实发辅数量
+					bm.setValueAt(vos.get(i).getPplpt_pk(), row+i, "vdef5");//设置货架id
 					//				   setDate(vos.get(i).getWhs_batchcode(),row+i);
 					//				   bm.setValueAt(vos.get(i).getAttributeValue("whs_omnum"), row+i, "nshouldoutassistnum");//设置应发辅数量
 					bm.setValueAt(vos.get(i).getAttributeValue("whs_oanum"), row+i, "nassnum");//设置实发辅数量					
