@@ -21,7 +21,8 @@ public class CHGWDSZTOACCOUNTNUM extends VOConversion{
 				,"B_ss_pk->B_cdt_pk"
 				,"B_creadate->B_geb_proddate"
 				,"B_whs_stocktonnage->B_geb_anum"//主数量
-				,"B_whs_stockpieces->B_geb_banum"//辅数量				
+				,"B_whs_stockpieces->B_geb_banum"//辅数量
+				,"B_pplpt_pk->B_geb_customize4"//货架信息
 		};
 	}
 	public String[] getFormulas() {

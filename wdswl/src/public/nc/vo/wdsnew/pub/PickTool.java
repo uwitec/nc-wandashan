@@ -77,7 +77,13 @@ public class PickTool implements Serializable {
 		if (bvos == null || bvos.length == 0)
 			return null;
 		for (int i = 0; i < bvos.length; i++) {
+			//表头是 默认货位  真正拣货时  应该 按表体实际货位拣货
+			String pk_car=PuPubVO.getString_TrimZeroLenAsNull(bvos[i].getGeb_space());
+			if(pk_car!=null){
+				pk_cargdoc=pk_car;
+			}
 			pick(pk_stordoc, pk_cargdoc, bvos[i], i);
+			
 		}
 		return createBill(bvos);
 	}
@@ -958,6 +964,11 @@ public class PickTool implements Serializable {
 		if (bvos == null || bvos.length == 0)
 			return null;
 		for (int i = 0; i < bvos.length; i++) {
+			//表头是 默认货位  真正拣货时  应该 按表体实际货位拣货
+			String pk_car=PuPubVO.getString_TrimZeroLenAsNull(bvos[i].getPk_defdoc2());
+			if(pk_car!=null){
+				pk_cargdoc=pk_car;
+			}
 			pick(pk_stordoc, pk_cargdoc, bvos[i], i);
 		}
 		return createBill(bvos);

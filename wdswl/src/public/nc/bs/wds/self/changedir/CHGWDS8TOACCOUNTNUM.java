@@ -19,6 +19,7 @@ public class CHGWDS8TOACCOUNTNUM extends VOConversion{
 				 "B_pk_invbasdoc->B_cinvbasid",
 				 "B_whs_batchcode->B_vbatchcode"
 				,"B_ss_pk->B_vuserdef9"//存货状态
+				,"B_pplpt_pk->B_vuserdef8"//货架信息
 				,"B_creadate->B_vuserdef7"//生产日期
 				,"B_whs_stocktonnage->B_noutnum"//主数量
 				,"B_whs_stockpieces->B_noutassistnum"//辅数量				
