@@ -92,8 +92,10 @@ public abstract class BillStockBO extends StockBO {
 	 *            更新现存量单据类型
 	 * @throws Exception
 	 */
-	public void updateStockByBill(AggregatedValueObject vos, String pk_billtype)
+	public void updateStockByBill(AggregatedValueObject vos1, String pk_billtype)
 			throws Exception {
+		AggregatedValueObject vos=(AggregatedValueObject) ObjectUtils.serializableClone(vos1);
+		
 		Map<String, String> map = getTypetoChangeClass();
 		if (map == null || map.size() == 0)
 			throw new Exception("没有注册单据类型->现存量的数据交换类");
