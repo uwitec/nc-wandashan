@@ -87,7 +87,7 @@ public class StatusUpdateBodyVO extends SuperVO {
 	public Integer dr;
 	public static String[] split_keys = new String[]{"cinvmanid","vbatchcode","cinvstatusid","cinvstatusid2"};
 	
-
+   
 	public String getVdef1() {
 		return vdef1;
 	}

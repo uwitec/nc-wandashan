@@ -20,7 +20,7 @@ public class CHGWS20TOACCOUNTNUM extends VOConversion{
 				 "B_whs_batchcode->B_vbatchcode"
 				,"B_ss_pk->B_cinvstatusid"//变化前状态
 				,"B_creadate->B_vdef1"
-				,"B_pplpt_pk->B_vdef5 "//货架id
+				,"B_pplpt_pk->B_vdef5"//货架id
 				,"B_whs_stocktonnage->B_nnum"//主数量
 				,"B_whs_stockpieces->B_nassnum"//辅数量				
 		};
