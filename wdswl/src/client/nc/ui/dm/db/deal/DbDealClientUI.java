@@ -1,6 +1,5 @@
 package nc.ui.dm.db.deal;
 import javax.swing.JComponent;
-
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;

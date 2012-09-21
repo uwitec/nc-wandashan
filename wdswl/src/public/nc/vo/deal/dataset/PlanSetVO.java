@@ -1,6 +1,7 @@
 package nc.vo.deal.dataset;
 
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFTime;
 
 /**
  * 发运计划安排合格状态查询 期间段设置
@@ -25,10 +26,29 @@ public class PlanSetVO extends SuperVO{
 	private Integer start2;//开始天数
 	
 	private Integer ends2;//结束天数
+	
+	private UFTime ts;
+	private Integer dr;
 
 	
 	
 	
+	public UFTime getTs() {
+		return ts;
+	}
+
+	public void setTs(UFTime ts) {
+		this.ts = ts;
+	}
+
+	public Integer getDr() {
+		return dr;
+	}
+
+	public void setDr(Integer dr) {
+		this.dr = dr;
+	}
+
 	public String getPk_corp() {
 		return pk_corp;
 	}
