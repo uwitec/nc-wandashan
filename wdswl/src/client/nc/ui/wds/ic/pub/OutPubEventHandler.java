@@ -17,6 +17,7 @@ import nc.ui.trade.bill.RefBillTypeChangeEvent;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wds.ic.so.out.MyClientUI;
 import nc.ui.wds.ic.so.out.TrayDisposeDlg;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wds2.set.OutInSetHelper;
@@ -110,10 +111,21 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				bvos = (TbOutgeneralBVO[]) o;
 			}
 		} catch (Exception e) {
-			
+			StringBuffer pickMsg=new StringBuffer();//拣货信息
 			if(e instanceof StockException){
 				StockException se=(StockException) e;	
-				bvos=(TbOutgeneralBVO[]) se.getBvos();				
+				bvos=(TbOutgeneralBVO[]) se.getBvos();		
+				if(bvos!=null || bvos.length>0){
+				    for(int i=0;i<bvos.length;i++){
+				    	String msg=bvos[i].getVuserdef14();
+				    	if(msg!=null && msg.length()>0){
+				    		pickMsg.append(" 表体行第 "+(i+1)+" 行  " +msg+" \n\n");
+				    	}
+				    }
+				}
+				if(pickMsg.toString()!=null && pickMsg.toString().length()>0){
+					ui.showErrorMessage(pickMsg.toString());
+				}
 			}else{
 			  throw e;
 			}
@@ -232,7 +244,10 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 			    AggregatedValueObject vos=getBufferData().getCurrentVO();
 				WdsWlPubTool.setVOsRowNoByRule(new AggregatedValueObject[]{vos}, "crowno");
 				getBillUI().setDefaultData();
+				setHeadCardoc();//设置表头货位
 				setBodySpace();
+				setBusiDate();//赋值表体的业务日期
+				getBillUI().updateUI();
 				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
 				getBillUI().updateButtons();
@@ -244,6 +259,20 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		
 //		getBillUI().updateButtons();
 	}
+	private void setBusiDate() {
+		//给表体业务日期赋值
+		MyClientUI ui = (MyClientUI) getBillUI();
+		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
+		for(int i=0;i<rowCounts;i++){			
+			getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(_getDate(), i, "dbizdate");
+		}		
+	}
+
+	private void setHeadCardoc() throws Exception {
+		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("pk_cargdoc", getLoginInfoHelper().getLogInfor(_getOperator()).getSpaceid());
+		
+	}
+
 	// 表体赋货位
 	protected void setBodySpace() throws BusinessException {
 		String pk_cargdoc = getPk_cargDoc();

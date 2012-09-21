@@ -40,7 +40,7 @@ public class TbOutgeneralBVO extends SuperVO {
 	public UFDouble nacceptnum;//已入库数量
 	public UFDouble nassacceptnum;//已入库辅数量
 	public String vsourcebillcode;
-	public String vuserdef14;
+	public String vuserdef14;//拣货提示信息
 	public String pk_defdoc9;
 	public String vuserdef1;
 	public String general_b_pk;

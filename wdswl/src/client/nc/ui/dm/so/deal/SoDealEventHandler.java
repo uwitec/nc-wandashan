@@ -24,6 +24,7 @@ import nc.vo.pub.ValidationException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.pub.query.ConditionVO;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
 import nc.vo.trade.voutils.VOUtil;
@@ -222,6 +223,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 
 		try{			
 			onRefresh();
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -292,7 +294,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(PuPubVO.getString_TrimZeroLenAsNull(whereSql)!=null){
 
 			try{
-				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),getOrderType());
+				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),querStorepk,getOrderType());
+			    querStorepk=null;
 			}catch(Exception e){
 				e.printStackTrace();
 				showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
@@ -363,6 +366,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		showHintMessage("查询完成");
 		ui.updateButtonStatus(WdsWlPubConst.DM_PLANDEAL_BTNTAG_DEAL,true);
 	}
+	private  String querStorepk=null;
 	/**
 	 * 
 	 * @作者：lyf
@@ -378,11 +382,24 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" h.pk_corp='"+ui.cl.getCorp());
 		whereSql.append("' and (coalesce(b.nnumber,0) -  coalesce(b."+WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME+",0)) > 0 ");
-		String where = getQryDlg().getWhereSQL();
+		String where = null;
+	
+		ConditionVO[] vos= getQryDlg().getConditionVO();
 		
-//		getQryDlg().getConditionVO();
-//		
-//		getQryDlg().getWhereSQL(conditions);
+		if(vos==null || vos.length==0){
+			where=getQryDlg().getWhereSQL();
+		}else{
+			List<ConditionVO> list=new ArrayList<ConditionVO>();
+			//过滤掉出发货站查询条件
+			for(int i=0;i<vos.length;i++){
+				if(vos[i].getFieldCode().equals("pk_out")){
+					querStorepk=vos[i].getValue();
+				}else{
+					list.add(vos[i]);
+				}
+			}		
+			where=getQryDlg().getWhereSQL(list.toArray(new ConditionVO[0]));
+		}
 		
 		if(PuPubVO.getString_TrimZeroLenAsNull(where)!=null){
 			whereSql.append(" and "+where);

@@ -399,7 +399,7 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		for (TbGeneralBVO body:tbGeneralBVOs) {
 			body.validateOnZdrk(false);
 		}
-		ui.showProgressBar(true);
+	//	ui.showProgressBar(true);
 		TbGeneralBVO[] bvos=null;
 		try {
 			Class[] ParameterTypes = new Class[] { String.class,String.class,TbGeneralBVO[].class };
@@ -413,10 +413,22 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 				bvos = (TbGeneralBVO[]) o;
 			}
 		} catch (Exception e) {
-			
+			StringBuffer pickMsg=new StringBuffer();//拣货信息
 			if(e instanceof StockException){
 				StockException se=(StockException) e;	
-				bvos=(TbGeneralBVO[]) se.getBvos();				
+				bvos=(TbGeneralBVO[]) se.getBvos();		
+				if(bvos!=null || bvos.length>0){
+				    for(int i=0;i<bvos.length;i++){
+				    	String msg=bvos[i].getVnote();
+				    	if(msg!=null && msg.length()>0){
+				    		pickMsg.append(" 表体行第 "+(i+1)+" 行  " +msg+" \n\n");
+				    	}
+				    }
+				}
+				if(pickMsg.toString()!=null && pickMsg.toString().length()>0){
+					ui.showErrorMessage(pickMsg.toString());
+				}
+				
 			}else{
 			  throw e;
 			}

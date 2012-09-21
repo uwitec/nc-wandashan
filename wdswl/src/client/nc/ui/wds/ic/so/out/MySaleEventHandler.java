@@ -157,6 +157,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 		getBillCardPanelWrapper().getBillCardPanel().getHeadItem("cwhsmanagerid").setValue(_getOperator());	
 		//给表体业务日期赋值
 		MyClientUI ui = (MyClientUI) getBillUI();
+	//	int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
 		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
 		for(int i=0;i<rowCounts;i++){			
 			getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(_getDate(), i, "dbizdate");

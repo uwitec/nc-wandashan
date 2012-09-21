@@ -44,7 +44,7 @@ public class SoDealBO {
 	 * @return
 	 * @throws Exception
 	 */
-	public SoDealVO[] doQuery(String whereSql,String pk_storedoc,UFBoolean isclose) throws Exception {
+	public SoDealVO[] doQuery(String whereSql,String pk_storedoc,String queryStore,UFBoolean isclose) throws Exception {
 		SoDealVO[] datas = null;
 		// 实现查询销售订单的逻辑
 		StringBuffer sql = new StringBuffer();
@@ -93,6 +93,9 @@ public class SoDealBO {
 		sql.append("  and isnull(tb_storcubasdoc.dr,0)=0");
 		if(!WdsWlPubTool.isZc(pk_storedoc)){
 		sql.append("  and wds_storecust_h.pk_stordoc ='"+pk_storedoc+"'");
+		}
+		if(queryStore!=null && queryStore.length()>0){
+		sql.append("  and wds_storecust_h.pk_stordoc ='"+queryStore+"'");	
 		}
 		sql.append(" )");
 		Object o = getDao().executeQuery(sql.toString(),

@@ -229,17 +229,22 @@ public class PickTool implements Serializable {
 
 		UFDouble zbnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_bsnum());// 取得入库单应收辅数量
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_banum());// 获得实收数量
-		vo.setVnote(error.toString());
+		
 		if (vos == null || vos.length == 0) {
 			mpick.put("" + index, null);// 如果现存量为空 则该行拣货单设置为空
+			vo.setVnote(error.toString());
 			return;
 		}
 		if (zbnum.doubleValue() == 0) {
 			mpick.put("" + index, null);// 如果入库单应收辅数量为0 则该行拣货单设置为空
+			error.append(" 应收数量不能为空 && ");
+			vo.setVnote(error.toString());
 			return;
 		}
 		if (noutnum.doubleValue() > 0) {
 			mpick.put("" + index, null);// 如果入库单实收数量有值 不再参与 自动拣货 则该行拣货单设置为空
+			error.append(" 存在实收数量的不能参与自动拣货 && ");
+			vo.setVnote(error.toString());
 			return;
 		}
 		// 进行分量
@@ -271,6 +276,7 @@ public class PickTool implements Serializable {
 			}
 		}
 		mpick.put(index + "", list);
+		vo.setVnote(error.toString());
 		updateStock1(list);
 	}
 	/**
@@ -792,20 +798,26 @@ public class PickTool implements Serializable {
 	 */
 	private void spiltNum(StockInvOnHandVO[] vos, TbOutgeneralBVO vo, int index)
 			throws Exception {
-
+        StringBuffer error=new StringBuffer();//存货拣货错误 或者提示信息
 		UFDouble zbnum = PuPubVO.getUFDouble_NullAsZero(vo
 				.getNshouldoutassistnum());// 取得出库单应发辅数量
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());// 获得实发数量
 		if (vos == null || vos.length == 0) {
 			mpick.put("" + index, null);// 如果现存量为空 则该行拣货单设置为空
+			error.append(" 没有现存量 &&");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		if (zbnum.doubleValue() == 0) {
 			mpick.put("" + index, null);// 如果出库单应发辅数量为0 则该行拣货单设置为空
+			error.append(" 应发数量不能为空 &&");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		if (noutnum.doubleValue() > 0) {
 			mpick.put("" + index, null);// 如果出库单实发数量有值 不再参与 自动拣货 则该行拣货单设置为空
+			error.append("存在实发数量不能参与自动拣货 ");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		// 进行分量

@@ -306,7 +306,10 @@ public class WdsWlPubConst {
 	/**存货明细*/
 	public static String BILLTYPE_IE_STOR_DETAIL="80021010";
 	/**存货档案*/
-	public static String BILLTYPE_IC_INV_DOC="8004061008";		
+	public static String BILLTYPE_IC_INV_DOC="8004061008";	
+	
+	/**发运运计划安排 合格状态期间设置*/
+	public static String BILLTYPE_PlAN_DATESET="80060805";	
 	/**存货状态*/
 	public static String BILLTYPE_IC_INV_STATUS="8004040602";
 	/**采购取样 */
