@@ -101,7 +101,7 @@ public class MyClientController extends AbstractManageController implements ISin
 		return new int[]{
 			IBillButton.Add,
 			IBillButton.Delete,
-			IBillButton.Query,
+		//	IBillButton.Query,
 			IBillButton.Edit,
 		 
 			IBillButton.Save,
@@ -129,7 +129,7 @@ public class MyClientController extends AbstractManageController implements ISin
 		return new int[]{
 				IBillButton.Add,
 				IBillButton.Delete,
-				IBillButton.Query,
+	//			IBillButton.Query,
 				IBillButton.Edit,
 			
 				IBillButton.Save,

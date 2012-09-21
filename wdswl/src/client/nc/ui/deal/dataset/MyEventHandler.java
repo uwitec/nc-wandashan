@@ -1,13 +1,20 @@
 package nc.ui.deal.dataset;
 
+import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.uif.pub.exception.UifException;
+import nc.vo.deal.dataset.PlanSetVO;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.NullFieldException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 
 public class MyEventHandler extends ManageEventHandler {
@@ -17,11 +24,42 @@ public class MyEventHandler extends ManageEventHandler {
 		super(billUI, control);
 		// TODO Auto-generated constructor stub
 	}
+	public void addDataToBuffer(SuperVO[] queryVos) throws Exception {
+		if (queryVos == null) {
+			getBufferData().clear();
+			return;
+		}
+		for (int i = 0; i < queryVos.length; i++) {
+			AggregatedValueObject aVo = (AggregatedValueObject) Class.forName(
+					getUIController().getBillVoName()[0]).newInstance();
+			aVo.setParentVO(queryVos[i]);
+			getBufferData().addVOToBuffer(aVo);
+		}
+	}
 	@Override
 	protected UIDialog createQueryUI() {
 		
 		return new MyQueryDIG(getBillUI(), null,_getCorp().getPrimaryKey(),getBillUI()._getModuleCode(),getBillUI()._getOperator(), null);
 	}	
+	/**
+	 * 单据增加的处理 创建日期：(2002-12-23 12:43:15)
+	 */
+	public void onBoAdd(ButtonObject bo) throws Exception {
+		SuperVO[] vos = null;
+		try {
+			vos = HYPubBO_Client.queryByCondition(PlanSetVO.class, 
+					" pk_corp = '"+_getCorp().getPrimaryKey()+"'and isnull(dr,0)=0 ");
+		} catch (UifException e) {
+			e.printStackTrace();
+		}
+		if(vos!=null && vos.length>=1){
+			getBillUI().showErrorMessage("已存在设置，不能新增");
+			return;
+		}
+		
+		
+	  super.onBoAdd(bo);	
+	}
 	@Override
 	protected void onBoSave() throws Exception {
 		try {
