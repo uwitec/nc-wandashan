@@ -12,7 +12,6 @@ import nc.ui.wds.ic.pub.InPubEventHandler;
 import nc.ui.wds.ic.pub.MutiInPubClientUI;
 import nc.ui.wds.w8004040214.buttun0214.ISsButtun;
 import nc.ui.wl.pub.BeforeSaveValudate;
-import nc.ui.wl.pub.HgQueryDIG;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
 import nc.vo.pub.SuperVO;
