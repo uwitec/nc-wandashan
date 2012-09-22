@@ -1,6 +1,7 @@
 package nc.ui.wds.ic.other.out;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
@@ -14,6 +15,7 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.uif.pub.exception.UifException;
+import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
@@ -276,7 +278,18 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			getBillUI().showHintMessage("用于调整的出库单不能修改");
 			return;
 		}
+        valuteOrder();
+			
 		super.onBoEdit();
+		
+		
+		
+		
+		
+		
+		
+		
+		
 //		zhf add
 	//	setHeadPartEdit(false);
 //		getButtonManager().getButton(IBillButton.Line).setEnabled(false);
@@ -284,6 +297,25 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 		
 	}
+
+	private void valuteOrder() throws Exception {
+		AggregatedValueObject  vo=getBufferData().getCurrentVO();
+		SuperVO[] vos=(SuperVO[]) vo.getChildrenVO();
+		if(vos==null || vos.length==0)
+			return;
+		  SuperVO bvo=(SuperVO) vos[0];
+		  String csid=PuPubVO.getString_TrimZeroLenAsNull(bvo.getAttributeValue("csourcebillhid"));
+		  //查询发运订单看是否已经冻结
+			 SuperVO[] ovs=  HYPubBO_Client.queryByCondition(SendorderVO.class, " isnull(dr,0)=0 and pk_sendorder='"+csid+"'");
+			 if(ovs==null || ovs.length==0)
+				 return;
+			 SendorderVO head=(SendorderVO) ovs[0];
+			 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs("fisended", new UFBoolean(false));
+			 if(isdj.booleanValue()==true){
+				 throw new Exception("上游运单已经冻结 ,不能作废");
+			 }
+	
+}
 
 	@Override  //xjx  add   打印
 	protected void onBoPrint() throws Exception {

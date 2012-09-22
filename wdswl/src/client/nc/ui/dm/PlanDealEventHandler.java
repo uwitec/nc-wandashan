@@ -1,16 +1,21 @@
 package nc.ui.dm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.zmpub.pub.tool.SingleVOChangeDataUiTool;
+import nc.uif.pub.exception.UifException;
+import nc.vo.deal.dataset.PlanSetVO;
 import nc.vo.dm.PlanDealVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
+import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDateTime;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -235,6 +240,82 @@ public class PlanDealEventHandler {
 				billdatas[i].setNstorenumout(uf1);
 			}
 		}
+		//设置合格状态的     指定期间段内的  库存量
+		setDateStock(billdatas,vos);
+		
+	}
+   /**
+    * 设置合格状态的     指定期间段内的  库存量
+ * @param billdatas 
+    * @作者：mlr
+    * @说明：完达山物流项目 
+    * @时间：2012-9-21下午05:22:47
+    * @param nvos
+ * @throws Exception 
+    */
+	private void setDateStock(PlanDealVO[] billdatas, StockInvOnHandVO[] vos1) throws Exception {
+		
+		PlanSetVO[] vos = null;
+		try {
+			vos = (PlanSetVO[]) HYPubBO_Client.queryByCondition(PlanSetVO.class, 
+					" pk_corp = '"+ui.getEviment().getCorporation().getPrimaryKey()+"'and isnull(dr,0)=0 ");
+		} catch (UifException e) {
+			e.printStackTrace();
+		}
+		if(vos==null || vos.length==0)
+			ui.showErrorMessage("发运运计划安排 合格状态期间设置 节点 中 没有设置 查询期间");
+		
+		//设置第一个期间段
+		
+	    UFDate  logdate=   ui.getEviment().getDate();//得到当前登录的业务日期		
+		Integer start1=vos[0].getStart1();
+		UFDate st1=logdate.getDateBefore(start1);		
+		Integer ends1=vos[0].getEnds1();
+		UFDate ed1=logdate.getDateBefore(ends1);
+	    //构造查询现存量的whereSql条件
+		String whereSql=" creadate >= '"+ed1.toString()+"' and creadate <='"+st1.toString()+"'";
+		// 获得现存量
+		StockInvOnHandVO[] nvos = (StockInvOnHandVO[]) getStock()
+				.queryStockCombinForClient(vos1,whereSql);
+		if (nvos == null || nvos.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
+			if (nvos[i] != null) {
+				UFDouble uf1 = nvos[i].getWhs_stocktonnage();// 库存主数量
+			    billdatas[i].setNum1(uf1);
+			    UFDouble  uf2=nvos[i].getWhs_stockpieces();//库存辅数量
+			    billdatas[i].setBnum1(uf2);
+			}
+		}
+		
+		//设置第二个期间段
+		
+		
+		
+		Integer start2=vos[0].getStart2();
+		UFDate st2=logdate.getDateBefore(start2);		
+
+		Integer ends2=vos[0].getEnds2();
+		UFDate ed2=logdate.getDateBefore(ends2);
+   
+	    //构造查询现存量的whereSql条件
+		String whereSql1=" creadate >= '"+ed1.toString()+"' and creadate <='"+st1.toString()+"'";
+		// 获得现存量
+		StockInvOnHandVO[] nvos1 = (StockInvOnHandVO[]) getStock()
+				.queryStockCombinForClient(vos1,whereSql1);
+		if (nvos1 == null || nvos1.length == 0)
+			return;
+		for (int i = 0; i < billdatas.length; i++) {
+			if (nvos[i] != null) {
+				UFDouble uf1 = nvos[i].getWhs_stocktonnage();// 库存主数量
+			    billdatas[i].setNum2(uf1);
+			    UFDouble  uf2=nvos[i].getWhs_stockpieces();//库存辅数量
+			    billdatas[i].setBnum2(uf2);
+			}
+		}
+		
+		
+		
 	}
 
 	Map<String, UFDateTime> tsInfor = new HashMap<String, UFDateTime>();

@@ -24,7 +24,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				ZmpubBtnConst.LINKQUERY,				
+				ZmpubBtnConst.LINKQUERY,
+				ButtonCommon.btnopen,
+				ButtonCommon.btnclose,
 //				ButtonCommon.FZGN,
 		IBillButton.Print		
 		};
@@ -41,7 +43,9 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Refresh,
 				IBillButton.Action,
 				ZmpubBtnConst.LINKQUERY,
-				IBillButton.Print
+				IBillButton.Print,
+				ButtonCommon.btnopen,
+				ButtonCommon.btnclose,
 		};
 		return buttonArray;
 	}

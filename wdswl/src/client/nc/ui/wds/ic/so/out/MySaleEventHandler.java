@@ -14,6 +14,8 @@ import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.uif.pub.exception.UifException;
+import nc.vo.dm.order.SendorderVO;
+import nc.vo.dm.so.order.SoorderVO;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.other.out.TbOutgeneralHVO;
 import nc.vo.ic.pub.ScaleKey;
@@ -22,6 +24,7 @@ import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
@@ -269,6 +272,7 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //		HYPubBO_Client.update((SuperVO)getBufferData().getCurrentVO().getParentVO());
 //	}
 	protected void onBoEdit() throws Exception {
+		 valuteOrder();
 		super.onBoEdit();
 //		zhf add
 	//	setHeadPartEdit(false);
@@ -276,6 +280,24 @@ public class MySaleEventHandler extends OutPubEventHandler {
 //		getBillUI().updateButtons();
 //		setInitByWhid(new String[]{"srl_pk","pk_cargdoc"});
 	}
+	private void valuteOrder() throws Exception {
+		AggregatedValueObject  vo=getBufferData().getCurrentVO();
+		SuperVO[] vos=(SuperVO[]) vo.getChildrenVO();
+		if(vos==null || vos.length==0)
+			return;
+		  SuperVO bvo=(SuperVO) vos[0];
+		  String csid=PuPubVO.getString_TrimZeroLenAsNull(bvo.getAttributeValue("csourcebillhid"));
+		  //查询运单单看是否已经冻结
+			 SuperVO[] ovs=  HYPubBO_Client.queryByCondition(SoorderVO.class, " isnull(dr,0)=0 and pk_soorder='"+csid+"'");
+			 if(ovs==null || ovs.length==0)
+				 return;
+			 SoorderVO head=(SoorderVO) ovs[0];
+			 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs("fisended", new UFBoolean(false));
+			 if(isdj.booleanValue()==true){
+				 throw new Exception("上游运单已经冻结 ,不能作废");
+			 }
+	
+}
 	
 	@Override//  add   xjx
 	protected void onBoPrint() throws Exception {

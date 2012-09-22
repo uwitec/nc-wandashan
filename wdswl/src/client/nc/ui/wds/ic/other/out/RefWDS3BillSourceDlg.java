@@ -11,12 +11,8 @@ import nc.ui.wl.pub.LoginInforHelper;
  *其他出库 参照 发运订单（WDS3）
  */
 public class RefWDS3BillSourceDlg  extends MBillSourceDLG {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private LoginInforHelper lo=new LoginInforHelper();
-
 	//获得权限过滤的sql
 	String sql=null;
 	

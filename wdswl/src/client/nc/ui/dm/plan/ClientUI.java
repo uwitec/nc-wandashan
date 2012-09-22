@@ -13,6 +13,8 @@ import nc.ui.trade.bsdelegate.BusinessDelegator;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.wds.w8004040204.ssButtun.WdsCloseButtonVO;
+import nc.ui.wds.w8004040204.ssButtun.WdsOpenButtonVO;
 import nc.ui.wl.pub.WdsBillManagUI;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDouble;
@@ -381,6 +383,13 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 		btnvo2.setOperateStatus(new int[] { IBillOperate.OP_NOTEDIT });
 //		btnvo2.setBusinessStatus( new int[]{IBillStatus.CHECKPASS});
 		addPrivateButton(btnvo2);		
+		
+		//add by yf 2012-07-25
+		WdsCloseButtonVO btnclose = new WdsCloseButtonVO();
+		addPrivateButton(btnclose.getButton());
+		WdsOpenButtonVO btnopen = new WdsOpenButtonVO();
+		addPrivateButton(btnopen.getButton());
+	
 		super.initPrivateButton();		
 	}
 

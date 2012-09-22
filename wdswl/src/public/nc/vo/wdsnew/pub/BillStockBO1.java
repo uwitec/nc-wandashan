@@ -205,6 +205,18 @@ public class BillStockBO1 extends BillStockBO {
 	 * @时间：2012-7-2下午12:27:29
 	 * 
 	 */
+	public SuperVO[] queryStockCombin1(SuperVO[] vos,String whereSql) throws Exception {
+		return super.queryStockCombin1(vos,whereSql);
+	}
+	/**
+	 * 根据传入的现存量vo 取出维度 查询现存量 SuperVO[] 存放每个查询维度查询出来的现存量(按查询维度合并后)
+	 * 
+	 * @throws Exception
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-2下午12:27:29
+	 * 
+	 */
 	public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
 		return super.queryStockCombin(vos);
 	}

@@ -23,6 +23,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.wds.dm.sendinvdoc.SendinvdocVO;
 import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -177,10 +178,44 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			closeBill();
 		}else if(intBtn == ButtonCommon.ROWCLOSE){
 			closeRow();
-		}else
+		}else	if(intBtn == ButtonCommon.btnopen){
+			onBoOpen();
+		} else if(intBtn == ButtonCommon.btnclose){
+			onBoClose();
+		}
 		super.onBoElse(intBtn);
 	}
-	
+	public void onBoClose() throws Exception {
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		SuperVO head = (SuperVO) billVo.getParentVO();
+		UFBoolean fisclose = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue(WdsWlPubConst.sendorder_close), UFBoolean.FALSE);
+		if(fisclose == UFBoolean.TRUE ){
+			return ;
+		}
+		head.setAttributeValue(WdsWlPubConst.sendorder_close, UFBoolean.TRUE);	
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+		getBillUI().showHintMessage("订单已关闭");
+	}
+
+	public void onBoOpen() throws Exception  {
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		SuperVO head = (SuperVO) billVo.getParentVO();
+		UFBoolean fisclose = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue(WdsWlPubConst.sendorder_close), UFBoolean.FALSE);
+		if(fisclose == UFBoolean.FALSE ){
+			return ;
+		}
+		head.setAttributeValue(WdsWlPubConst.sendorder_close, UFBoolean.FALSE);	
+		HYPubBO_Client.update(head);
+		onBoRefresh();
+		getBillUI().showHintMessage("订单已打开");
+	}
 /**
  * 
  * @作者：zhf

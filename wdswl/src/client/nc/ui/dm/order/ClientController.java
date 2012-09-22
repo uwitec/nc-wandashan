@@ -28,7 +28,9 @@ public class ClientController extends AbstractManageController {
 				ButtonCommon.LOCK,
 				ButtonCommon.UNLOCK,
 				ButtonCommon.btnopen,
-				ButtonCommon.btnclose,};
+				ButtonCommon.btnclose,
+				
+		};
 		return buttonArray;
 	}
 

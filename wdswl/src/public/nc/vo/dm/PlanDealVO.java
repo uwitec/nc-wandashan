@@ -48,9 +48,41 @@ public class PlanDealVO extends SendplaninBVO {
     public UFDouble ndrqstorenumin;//收货站库存数量
     public UFDouble ndrqarrstorenumin;//收货站安排后库存数量  
     public UFBoolean bisdate;   //是否大日期
+    //for add mlr
+    public UFDouble num1;//期间段1主数量
+    public UFDouble bnum1;//期间段1辅数量
+    
+    public UFDouble num2;//期间段2主数量
+    public UFDouble bnum2;//期间段2辅数量
+    //for add mlr
+    
    
 	public UFDouble getNdrqstorenumin() {
 		return ndrqstorenumin;
+	}
+	public UFDouble getNum1() {
+		return num1;
+	}
+	public void setNum1(UFDouble num1) {
+		this.num1 = num1;
+	}
+	public UFDouble getBnum1() {
+		return bnum1;
+	}
+	public void setBnum1(UFDouble bnum1) {
+		this.bnum1 = bnum1;
+	}
+	public UFDouble getNum2() {
+		return num2;
+	}
+	public void setNum2(UFDouble num2) {
+		this.num2 = num2;
+	}
+	public UFDouble getBnum2() {
+		return bnum2;
+	}
+	public void setBnum2(UFDouble bnum2) {
+		this.bnum2 = bnum2;
 	}
 	public void setNdrqstorenumin(UFDouble ndrqstorenumin) {
 		this.ndrqstorenumin = ndrqstorenumin;
@@ -127,7 +159,15 @@ public class PlanDealVO extends SendplaninBVO {
     		return this.getVapproveid();
     	}else if("bisdate".equalsIgnoreCase(arg)){
     		return this.getBisdate();
-    	}
+    	}else if("num1".equalsIgnoreCase(arg)){
+    		return this.getNum1();
+    	}else if("bnum1".equalsIgnoreCase(arg)){
+    		return this.getBnum2();
+    	}	else if("num2".equalsIgnoreCase(arg)){
+    		return this.getNum2();
+    	}	else if("bnum2".equalsIgnoreCase(arg)){
+    		return this.getBnum2();
+    	}		
     	return super.getAttributeValue(arg);
     }
   public void setAttributeValue(String arg, Object value)  {
@@ -196,7 +236,19 @@ public class PlanDealVO extends SendplaninBVO {
     		setVapproveid((String)value);
     	}else if("bisdate".equalsIgnoreCase(arg)){
     		setBisdate((UFBoolean)value);
+    	}else if("num1".equalsIgnoreCase(arg)){
+    		setNum1((UFDouble) value);
     	}
+    	else if("num2".equalsIgnoreCase(arg)){
+    		setNum2((UFDouble) value);
+    	}
+    	else if("bnum1".equalsIgnoreCase(arg)){
+    		setBnum1((UFDouble) value);
+    	}
+    	else if("bnum2".equalsIgnoreCase(arg)){
+    		setBnum2((UFDouble) value);
+    	}
+    	
     	 super.setAttributeValue(arg, value);
     }
     
