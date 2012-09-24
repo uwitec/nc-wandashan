@@ -238,6 +238,34 @@ public abstract class BillStockBO extends StockBO {
 		}
 		return list;
 	}
+	/**
+	 * 根据传入的现存量vo 取出维度 查询现存量 ArrayList<SuperVO[]> 存放每个查询维度查询出来的现存量
+	 * 
+	 * @throws Exception
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-2下午12:25:52
+	 * 
+	 */
+	public ArrayList<SuperVO[]> queryStockDetail1(SuperVO[] vos,String whereSql1)
+			throws Exception {
+		ArrayList<SuperVO[]> list = new ArrayList<SuperVO[]>();
+		if (vos == null || vos.length == 0)
+			return null;
+
+		for (int i = 0; i < vos.length; i++) {
+			String whereSql = getWheresql(vos[i]);		
+			if (whereSql == null || whereSql.length() == 0) {
+				list.add(null);
+			} else {
+				if(whereSql!=null && whereSql.length()>0 ){
+					whereSql=whereSql+" and "+whereSql1;
+				}
+				list.add(queryStock(whereSql));
+			}
+		}
+		return list;
+	}
 
 	public String getWheresql(SuperVO vos) throws Exception {
 		if (vos == null)
@@ -277,6 +305,44 @@ public abstract class BillStockBO extends StockBO {
 	 */
 	public SuperVO[] queryStockCombin(SuperVO[] vos) throws Exception {
 		ArrayList<SuperVO[]> list = queryStockDetail(vos);
+		if (vos == null || vos.length == 0)
+			return null;
+		if (list == null || list.size() == 0)
+			return null;
+		for (int i = 0; i < vos.length; i++) {
+			SuperVO[] vss = list.get(i);
+			String[] conds = getConminFields(vos[i]);
+			if (conds == null || conds.length == 0) {
+				continue;
+			} else {
+				SuperVO[] coms = (SuperVO[]) CombinVO.combinData(vss, conds,
+						getChangeNums(), vos[0].getClass());
+				String[] filelds = getChangeNums();
+				if (filelds == null || filelds.length == 0) {
+					continue;
+				}
+				if(coms==null || coms.length==0)
+					continue;
+				for (int k = 0; k < filelds.length; k++) {
+					vos[i].setAttributeValue(filelds[k], coms[0]
+							.getAttributeValue(filelds[k]));
+				}
+			}
+		}
+		return vos;
+	}
+	
+	/**
+	 * 根据传入的现存量vo 取出维度 查询现存量 SuperVO[] 存放每个查询维度查询出来的现存量(按查询维度合并后)
+	 * 
+	 * @throws Exception
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-2下午12:27:29
+	 * 
+	 */
+	public SuperVO[] queryStockCombin1(SuperVO[] vos,String whereSql) throws Exception {
+		ArrayList<SuperVO[]> list = queryStockDetail1(vos,whereSql);
 		if (vos == null || vos.length == 0)
 			return null;
 		if (list == null || list.size() == 0)
@@ -427,6 +493,33 @@ public abstract class BillStockBO extends StockBO {
 			Object[] ParameterValues = new Object[] { vos };
 			Object o = LongTimeTask.calllongTimeService("zmpub", null,
 					"正在查询...", 1, getThisClassName(), null, "queryStockCombin",
+					ParameterTypes, ParameterValues);
+			if (o != null) {
+				nvos = (SuperVO[]) o;
+			}
+		} catch (Exception e) {
+			Logger.error(e);
+			throw new Exception(e.getMessage());
+
+		}
+		return nvos;
+	}
+	/**
+	 * 根据传入的现存量vo 取出维度 查询现存量 SuperVO[] 存放每个查询维度查询出来的现存量(按查询维度合并后)
+	 * 
+	 * @throws Exception
+	 * @作者：mlr
+	 * @说明：完达山物流项目
+	 * @时间：2012-7-2下午12:27:29
+	 * 
+	 */
+	public SuperVO[] queryStockCombinForClient(SuperVO[] vos,String whereSql) throws Exception {
+		SuperVO[] nvos = null;
+		try {
+			Class[] ParameterTypes = new Class[] { SuperVO[].class,String.class };
+			Object[] ParameterValues = new Object[] { vos,whereSql};
+			Object o = LongTimeTask.calllongTimeService("zmpub", null,
+					"正在查询...", 1, getThisClassName(), null, "queryStockCombin1",
 					ParameterTypes, ParameterValues);
 			if (o != null) {
 				nvos = (SuperVO[]) o;
