@@ -609,6 +609,52 @@ public class BsUniqueCheck {
 	    * 
 	    * @作者：mlr
 	    * @说明：完达山物流项目 
+	    *       判断一个vo中的字段 在数据库中  值有没有变
+	    * @时间：2011-7-5下午08:49:35
+	    * @param vo 校验vo
+	    * @param checkFields 校验字段数组的名字
+	    * @param errorMessage 返回错误提示信息
+	    * @param conditon  过滤条件
+	    * @throws Exception
+	    */
+		public static boolean valueFields(SuperVO vo, String[] checkFields,String conditon) throws Exception {
+			if(isEmpty(vo)){
+				return false;
+			}
+			if(isEmpty(checkFields)){
+				throw new BusinessException("检验唯一性的的字段名字不能为空");
+			}				
+			// 判断是修改后的保存还是新增后的保存
+			if (isEmpty(vo.getPrimaryKey())) {
+				//queryByCheckFields(vo, checkFields,conditon,null);
+			} else {
+	            List list=queryByPrimaryKey(vo);
+				// 判断修改后的记录，是否改变了值（即拿数据库中的记录和ui中的当前记录进行比较）
+				SuperVO vo1 = (SuperVO) list.get(0);
+				//判断是否修改了要校验字段的值
+				boolean ismodrec = false;			
+				//校验是否修改了要校验的字段的值
+				for (int i = 0; i < checkFields.length; i++) {				
+					if(isEmpty(vo.getAttributeValue(checkFields[i]))&& isEmpty(vo.getAttributeValue(checkFields[i]))){
+						continue;
+					}
+					if(isEmpty(vo.getAttributeValue(checkFields[i]))|| isEmpty(vo.getAttributeValue(checkFields[i]))){
+						ismodrec=true;
+						break;
+					}
+					if (!vo.getAttributeValue(checkFields[i]).equals(vo1.getAttributeValue(checkFields[i]))) {
+						ismodrec = true;
+						break;
+					}
+				}	
+			   return ismodrec;
+			}
+			return false;
+		}
+	/**
+	    * 
+	    * @作者：mlr
+	    * @说明：完达山物流项目 
 	    *       在某个提条件下
 	    *       校验组合字段的唯一性
 	    *       条件即：conditon

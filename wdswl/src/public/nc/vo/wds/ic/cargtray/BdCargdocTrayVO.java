@@ -21,10 +21,6 @@ import nc.vo.pub.lang.*;
  * @version Your Project 1.0
  */
 public class BdCargdocTrayVO extends SuperVO {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public String pk_wds_cargdoc;
 	public String pk_customize4;

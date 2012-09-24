@@ -3,6 +3,7 @@ package nc.ui.wds.invcl;
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.pub.IVOTreeData;
 import nc.ui.trade.treecard.BillTreeCardUI;
+import nc.ui.trade.treecard.TreeCardEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.wds.invcl.checkClassInterface;
 
@@ -77,5 +78,10 @@ public class InvClClientUI extends BillTreeCardUI {
 		// TODO Auto-generated method stub
 	
 	}
-
+	/**
+	 * 实例化界面编辑前后事件处理, 如果进行事件处理需要重载该方法 创建日期：(2004-1-3 18:13:36)
+	 */
+	protected nc.ui.trade.card.CardEventHandler createEventHandler() {
+		return new Event(this, getUIControl());
+	}
 }

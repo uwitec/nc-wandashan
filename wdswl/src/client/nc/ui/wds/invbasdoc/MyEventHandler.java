@@ -1,13 +1,20 @@
 package nc.ui.wds.invbasdoc;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.pf.PfUtilClient;
+import nc.ui.trade.base.IBillOperate;
+import nc.ui.trade.bill.ISingleController;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.zmpub.pub.tool.LongTimeTask;
+import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.NullFieldException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.ValidationException;
 
 public class MyEventHandler extends ManageEventHandler {
@@ -30,7 +37,63 @@ public class MyEventHandler extends ManageEventHandler {
 			MessageDialog.showErrorDlg(getBillUI(), "校验", e.getMessage());
 			return;
 		}
+	    valuteIndex();
 		super.onBoSave();
+	}
+	/**
+	 * 按钮m_boDel点击时执行的动作,如有必要，请覆盖. 档案的删除处理
+	 */
+	protected void onBoDelete() throws Exception {
+		// 界面没有数据或者有数据但是没有选中任何行
+		if (getBufferData().getCurrentVO() == null)
+			return;
+		valuteIndex1();
+		
+	    super.onBoDelete();
+	}
+
+	
+	/**
+	 * 删除时 校验存货档案是否被引用
+	 * @作者：zhf
+	 * @说明：完达山物流项目 
+	 * @时间：2012-9-22下午04:08:55
+	 * @throws Exception
+	 */
+	private void valuteIndex1() throws Exception {
+
+		AggregatedValueObject billVO = getBillUI().getChangedVOFromUI();
+	    if(billVO==null || billVO.getParentVO()==null){
+	    	return;
+	    }	
+			Class[] ParameterTypes = new Class[] { AggregatedValueObject.class };
+			Object[] ParameterValues = new Object[] { billVO };
+			Object o = LongTimeTask.calllongTimeService("wds", null,
+					"正在查询...", 1, "nc.vo.wdsnew.pub.BaseDocValuteTool", null, "valuteBaseDocDelete",
+					ParameterTypes, ParameterValues);
+		
+	
+	
+		
+	}
+	/**
+	 * 校验修改数据是否被引用
+	 * @throws Exception 
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-9-22下午03:50:56
+	 */
+	private void valuteIndex() throws Exception {
+		AggregatedValueObject billVO = getBillUI().getChangedVOFromUI();
+	    if(billVO==null || billVO.getParentVO()==null){
+	    	return;
+	    }	
+			Class[] ParameterTypes = new Class[] { AggregatedValueObject.class };
+			Object[] ParameterValues = new Object[] { billVO };
+			Object o = LongTimeTask.calllongTimeService("wds", null,
+					"正在查询...", 1, "nc.vo.wdsnew.pub.BaseDocValuteTool", null, "valuteBaseDocEdit",
+					ParameterTypes, ParameterValues);
+		
 	}
 	//必输项校验
 	protected void dataNotNullValidate() throws ValidationException {
