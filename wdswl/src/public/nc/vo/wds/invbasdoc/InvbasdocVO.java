@@ -42,7 +42,7 @@ public class InvbasdocVO extends SuperVO {
 	public Integer so_ywaring_days;// 销售预警天数
 	public Integer so_waring_days;// 销售警戒天数
 	public Integer db_waring_days1;// 调拨警戒天数1
-	public Integer db_waring_dyas2;// 调拨警戒天数2
+	public Integer db_waring_dyas2;// 存货属性    0-大包粉   , 1-箱粉（袋）,2-箱粉（听）
 	public Integer fuesed;// 下拉 ：常用，不常用
 	public String pk_wds_invbasdoc;
 	public UFDouble grossweight; // 毛重

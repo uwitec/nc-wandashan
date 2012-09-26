@@ -2,7 +2,6 @@ package nc.vo.wdsnew.pub;
 
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
-import nc.bs.wl.pub.BsUniqueCheck;
 import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.SuperVO;
@@ -289,7 +288,7 @@ public class BaseDocValuteTool {
 	public boolean isExistHwtz1(String pk_invmandoc) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql
-				.append(" select count(0) from wds_transfer_b  h where  h.cdt_invmandoc = '"
+				.append(" select count(0) from wds_transfer_b  h where  h.cinventoryid = '"
 						+ pk_invmandoc + "' and isnull(h.dr,0)=0 ");
 		Integer count = PuPubVO.getInteger_NullAs(dao.executeQuery(sql
 				.toString(), new ColumnProcessor()), 0);

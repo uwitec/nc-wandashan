@@ -6,7 +6,9 @@ import java.util.Hashtable;
 import nc.bs.ic.pub.IcInPubBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.pub.CanelDeleteWDF;
+import nc.bs.wds2.send.AlloInSendBO;
 import nc.vo.ic.other.in.OtherInBillVO;
+import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
@@ -73,6 +75,13 @@ public class N_WDS9_CANELSIGN extends AbstractCompiler2 {
 			//删除下游装卸费核算单
 			CanelDeleteWDF cw=new CanelDeleteWDF();
 			cw.canelDeleteWDF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate);
+			
+//			zhf add  调拨入库单是删除时 系统自动删除其对应的调入运单  
+			TbGeneralBVO[] bodys = (TbGeneralBVO[]) bill.getChildrenVO();
+			if (bodys == null || bodys.length == 0) {
+				throw new BusinessException("传入数据为空");
+			}
+			new AlloInSendBO().deleteAlloInSendBill(bodys[0].getGeh_pk());
 			
 			return retObj;
 			} catch (Exception ex) {

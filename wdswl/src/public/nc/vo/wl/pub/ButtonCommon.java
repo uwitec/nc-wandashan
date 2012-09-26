@@ -7,7 +7,7 @@ package nc.vo.wl.pub;
  */
 public class ButtonCommon {
 
-	public final static int joinup = 999;// 联查
+	public final static int joinup = 149;// 联查
 
 	public final static int REFWDS6 = 221;// 参照其他出库
 	public final static int REFWDS7 = 222;// 参照其他入库

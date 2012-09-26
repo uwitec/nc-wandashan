@@ -7,6 +7,7 @@ import java.util.List;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.bs.wds.load.account.LoadAccountBS;
 import nc.bs.wds.load.pub.PushSaveWDSF;
+import nc.bs.wds2.send.AlloInSendBO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
@@ -55,6 +56,9 @@ public class N_WDS9_SIGN extends AbstractCompiler2 {
 					pu.pushSaveWDSF(vo.m_preValueVo, vo.m_operator, vo.m_currentDate, LoadAccountBS.UNLOADFEE);
 				}
 				// end modify
+				//推式生成调入运单
+				String headid = PuPubVO.getString_TrimZeroLenAsNull(vo.m_preValueVo.getParentVO().getPrimaryKey());
+				new AlloInSendBO().createAlloInSendBill(headid, vo, true);				
 				return retObj;
 			} catch (Exception ex) {
 				if (ex instanceof BusinessException)

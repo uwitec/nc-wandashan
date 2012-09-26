@@ -10,6 +10,7 @@ import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
+import nc.ui.trade.base.AbstractBillUI;
 import nc.ui.trade.base.IBillOperate;
 import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.bill.IBillBusiListener;
@@ -250,22 +251,16 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				getBillUI().updateUI();
 				getButtonManager().getButton(IBillButton.AddLine).setEnabled(false);
 				getButtonManager().getButton(IBillButton.DelLine).setEnabled(true);
-				getBillUI().updateButtons();
-			
+				getBillUI().updateButtons();			
 		}
-		
-		
-		
-		
-//		getBillUI().updateButtons();
 	}
 	private void setBusiDate() {
-		//给表体业务日期赋值
-		MyClientUI ui = (MyClientUI) getBillUI();
-		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
-		for(int i=0;i<rowCounts;i++){			
-			getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(_getDate(), i, "dbizdate");
-		}		
+//		//给表体业务日期赋值
+//		OutPubClientUI ui=(OutPubClientUI) getBillUI();
+//		int rowCounts=getBillCardPanelWrapper().getBillCardPanel().getBillTable(ui.getTableCodes()[0]).getRowCount();
+//		for(int i=0;i<rowCounts;i++){			
+//			getBillCardPanelWrapper().getBillCardPanel().getBillModel(ui.getTableCodes()[0]).setValueAt(_getDate(), i, "dbizdate");
+//		}		
 	}
 
 	private void setHeadCardoc() throws Exception {

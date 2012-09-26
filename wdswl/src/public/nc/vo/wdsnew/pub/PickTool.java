@@ -229,6 +229,9 @@ public class PickTool implements Serializable {
 
 		UFDouble zbnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_bsnum());// 取得入库单应收辅数量
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_banum());// 获得实收数量
+	    if(noutnum.doubleValue()>zbnum.doubleValue()){
+	    	throw new Exception("表体行 第 "+(index+1)+"行 实收数量不能大于应收数量 ");
+	    }
 		
 		if (vos == null || vos.length == 0) {
 			mpick.put("" + index, null);// 如果现存量为空 则该行拣货单设置为空
@@ -242,10 +245,11 @@ public class PickTool implements Serializable {
 			return;
 		}
 		if (noutnum.doubleValue() > 0) {
-			mpick.put("" + index, null);// 如果入库单实收数量有值 不再参与 自动拣货 则该行拣货单设置为空
-			error.append(" 存在实收数量的不能参与自动拣货 && ");
+//			mpick.put("" + index, null);// 如果入库单实收数量有值 不再参与 自动拣货 则该行拣货单设置为空
+//			error.append(" 存在实收数量的不能参与自动拣货 && ");
+			zbnum=noutnum;
 			vo.setVnote(error.toString());
-			return;
+		//	return;
 		}
 		// 进行分量
 		// 按 批次号 由小到大 依次分量
@@ -421,7 +425,7 @@ public class PickTool implements Serializable {
 		InvbasdocVO vo = (InvbasdocVO) list.get(0);
 		
 
-		if (vo.getTray_volume().doubleValue() <= 0) {
+		if (PuPubVO.getUFDouble_NullAsZero(vo.getTray_volume()).doubleValue() <= 0) {
 			String invode = (String) ZmPubTool
 					.execFomular(
 							"invcode->getColValue(bd_invbasdoc,invcode,pk_invbasdoc,pk_invbasdoc)",
@@ -430,7 +434,7 @@ public class PickTool implements Serializable {
 
 			throw new Exception("存货编码：" + invode + " 没有维护托盘容量信息");
 		}
-		return vo.getTray_volume();
+		return PuPubVO.getUFDouble_NullAsZero(vo.getTray_volume());
 	}
 
 	/**

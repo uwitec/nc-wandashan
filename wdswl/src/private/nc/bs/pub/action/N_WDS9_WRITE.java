@@ -51,10 +51,7 @@ public class N_WDS9_WRITE extends AbstractCompiler2 {
 			
 			retObj = runClass("nc.bs.trade.comsave.BillSave", "saveBill","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			
-//			生成调入运单
-			ArrayList retAry = (ArrayList)retObj;
-			String headid = PuPubVO.getString_TrimZeroLenAsNull(retAry.get(0));
-			new AlloInSendBO().createAlloInSendBill(headid, vo, isnew);
+
 			
 			return retObj;
 		} catch (Exception ex) {

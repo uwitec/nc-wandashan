@@ -1,7 +1,9 @@
 package nc.ui.pf.changedir;
 
 import nc.ui.pf.change.VOConversionUI;
+import nc.ui.pub.ClientEnvironment;
 import nc.vo.pf.change.UserDefineFunction;
+import nc.vo.scm.pub.session.ClientLink;
 
 public class CHGWDS5TOWDS8 extends VOConversionUI{
 
@@ -59,8 +61,10 @@ public class CHGWDS5TOWDS8 extends VOConversionUI{
 	* 获得公式。
 	*/
 	public String[] getFormulas() {
+		ClientLink cl = new ClientLink(ClientEnvironment.getInstance());
 		return new String[] {
 				"B_isoper->\"Y\"", //是否进行操作
+				"B_dbizdate->\""+cl.getLogonDate()+"\"",
 //				"B_crowno->\"10\""//行号
 				"B_nshouldoutnum->B_narrangnmu-B_noutnum",// 应发数量
 				"B_nshouldoutassistnum->B_nassarrangnum-B_nassoutnum", // 应发辅数量
