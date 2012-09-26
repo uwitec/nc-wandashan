@@ -1,34 +1,35 @@
 package nc.bs.wds2.send;
-
+import java.util.List;
 import java.util.Map;
-
 import nc.bs.dao.BaseDAO;
 import nc.bs.pub.pf.PfUtilBO;
 import nc.bs.pub.pf.PfUtilTools;
 import nc.bs.trade.business.HYPubBO;
+import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.dm.order.SendorderBVO;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.ic.other.in.OtherInBillVO;
 import nc.vo.ic.pub.TbGeneralBVO;
 import nc.vo.ic.pub.TbGeneralHVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.HYBillVO;
 import nc.vo.trade.pub.IBillStatus;
+import nc.vo.wds.trans.TransVO;
 import nc.vo.wl.pub.Wds2WlPubConst;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
-
-public class AlloInSendBO {
-	
+import nc.vo.zmpub.pub.tool.ZmPubTool;
+public class AlloInSendBO {	
 	private BaseDAO dao = null;
 	private BaseDAO getDao(){
 		if(dao == null)
 			dao = new BaseDAO();
 		return dao;
 	}
-	
 	/**
 	 * 
 	 * @作者：zhf
@@ -63,11 +64,102 @@ public class AlloInSendBO {
 			throw new BusinessException("数据异常,未生成调入运单");
 
 		check(tarBill);
+		
+		//进行运费的计算
+		calTrans(tarBill);
+		
 
 		new PfUtilBO().processAction("WRITE", Wds2WlPubConst.billtype_alloinsendorder, 
 				para.m_currentDate, null, tarBill, null);
 	}
-	
+	/**
+	 * 计算运费
+	 * @作者：mlr
+	 * @说明：完达山物流项目 
+	 * @时间：2012-9-26上午11:06:29
+	 * @param tarBill
+	 * @throws Exception 
+	 */
+	public void calTrans(HYBillVO tarBill) throws Exception {
+		// 运费计算 流程
+		// 按 调出公司 调入仓库 查询运价表
+		// 逐行计算表体运费 根据存货属性 选取运价表 计算运费
+		// 运费合计
+		if (tarBill == null || tarBill.getParentVO() == null
+				|| tarBill.getChildrenVO() == null
+				|| tarBill.getChildrenVO().length == 0) {
+			return;
+		}
+		SuperVO headvo = (SuperVO) tarBill.getParentVO();
+		SuperVO[] bodyvos = (SuperVO[]) tarBill.getChildrenVO();
+		String outcorp = PuPubVO.getString_TrimZeroLenAsNull(headvo.getAttributeValue("vdef1"));// 调出公司
+		String instore = PuPubVO.getString_TrimZeroLenAsNull(headvo.getAttributeValue("pk_inwhouse"));// 调入仓库
+		if (outcorp == null) {
+			throw new Exception("调出公司为空");
+		}
+		if (instore == null) {
+			throw new Exception("调入仓库");
+		}
+		UFDouble total=new UFDouble(0);//存放运费
+		for (int i = 0; i < bodyvos.length; i++) {
+			SuperVO vo = bodyvos[i];
+			String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("pk_invmandoc"));// 得到存货管理主键
+			String pk_invbasdoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("pk_invbasdoc"));// 得到存货基本档案主键
+			UFDouble num=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("noutnum"));//得到存货吨数
+			// 得到存货属性
+			Integer type = PuPubVO.getInteger_NullAs(
+						ZmPubTool.execFomular(
+											"tray_volume_layers->getColValue(wds_invbasdoc,db_waring_dyas2,pk_invmandoc,pk_invmandoc)",
+											new String[] { "pk_invmandoc" },
+											new String[] { pk_invmandoc }), -3);
+
+			if (type <= 0) {
+				String invcode = PuPubVO.getString_TrimZeroLenAsNull(
+						ZmPubTool.execFomular(
+										" invcode ->getColValue(bd_invbasdoc,invcode,pk_invbasdoc,pk_invbasdoc)",
+										new String[] { "pk_invbasdoc" },
+										new String[] { pk_invbasdoc }));
+				throw new Exception(" 存货编码为 ：" + invcode + " 存货档案没有维护存货属性");
+			}
+
+			// 根据 调出公司 调入仓库 存货属性 查找运价表
+			List list = (List) getDao().retrieveByClause(
+					TransVO.class,
+					" isnull(dr,0)=0 and pk_corp='" + SQLHelper.getCorpPk()
+							+ "' and ss_custom2='" + outcorp + "'"
+							+ "  and  ss_custom6='" + instore
+							+ "' and ss_isout= " + type);
+           			
+			if (list == null || list.size() == 0) {
+				String corp = PuPubVO.getString_TrimZeroLenAsNull(
+						ZmPubTool.execFomular(
+										"corpname->getColValue(bd_corp,unitname,pk_corp,pk_corp)",
+										new String[] { "pk_corp" },
+										new String[] { outcorp }));
+				String store = PuPubVO.getString_TrimZeroLenAsNull(
+						ZmPubTool.execFomular(
+										"storname->getColValue(bd_stordoc,storname,pk_stordoc,pk_stordoc)",
+										new String[] { "pk_stordoc" },
+										new String[] { instore }));
+				String typeerror = null;
+				if (type == 0) {
+					typeerror=" 大包粉类型";
+				}else if(type==1){
+					typeerror=" 箱粉(袋)类型";
+				}else if(type==2){
+					typeerror=" 箱粉(听)类型";
+				}
+				throw new Exception(" 调出公司为：["+outcorp+ " ]调入仓库为：["+ store+ "] 存货类型为 : ["+typeerror+"] 没有找到运价表 ");
+			}
+			TransVO transvo=(TransVO) list.get(0);
+			UFDouble price=PuPubVO.getUFDouble_NullAsZero(transvo.getPrice());
+			UFDouble mail =PuPubVO.getUFDouble_NullAsZero(transvo.getMail());
+			UFDouble fee=(price.multiply(mail)).multiply(num);//运费
+			total=total.add(fee);		
+		}
+		headvo.setAttributeValue("ntransmny", total);
+	}
+
 	/**
 	 * 
 	 * @作者：zhf
@@ -99,7 +191,6 @@ public class AlloInSendBO {
 			 body.validate();
 		 }
 	}
-	
 	/**
 	 * 
 	 * @作者：zhf
