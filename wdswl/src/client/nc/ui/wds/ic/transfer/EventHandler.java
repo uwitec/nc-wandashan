@@ -9,6 +9,7 @@ import nc.ui.wds.ic.pub.OutPubClientUI;
 import nc.ui.wds.ic.pub.OutPubEventHandler;
 import nc.ui.wds.w8004040204.ssButtun.ISsButtun;
 import nc.ui.wl.pub.LongTimeTask;
+import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.ValidationException;
@@ -196,12 +197,23 @@ public class EventHandler extends OutPubEventHandler {
 				bvos = (TransferBVO[]) o;
 			}
 		} catch (Exception e) {
-
-			if (e instanceof StockException) {
-				StockException se = (StockException) e;
-				bvos = (TransferBVO[]) se.getBvos();
-			} else {
-				throw e;
+			StringBuffer pickMsg=new StringBuffer();//拣货信息
+			if(e instanceof StockException){
+				StockException se=(StockException) e;	
+				bvos=(TransferBVO[]) se.getBvos();		
+				if(bvos!=null || bvos.length>0){
+				    for(int i=0;i<bvos.length;i++){
+				    	String msg=bvos[i].getVuserdef14();
+				    	if(msg!=null && msg.length()>0){
+				    		pickMsg.append(" 表体行第 "+(i+1)+" 行  " +msg+" \n\n");
+				    	}
+				    }
+				}
+				if(pickMsg.toString()!=null && pickMsg.toString().length()>0){
+					ui.showErrorMessage(pickMsg.toString());				
+				}
+			}else{
+			  throw e;
 			}
 		}
 		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
