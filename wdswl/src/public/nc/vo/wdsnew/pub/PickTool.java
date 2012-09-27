@@ -229,6 +229,7 @@ public class PickTool implements Serializable {
 
 		UFDouble zbnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_bsnum());// 取得入库单应收辅数量
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(vo.getGeb_banum());// 获得实收数量
+		vo.setVnote(null);
 	    if(noutnum.doubleValue()>zbnum.doubleValue()){
 	    	throw new Exception("表体行 第 "+(index+1)+"行 实收数量不能大于应收数量 ");
 	    }
@@ -677,6 +678,8 @@ public class PickTool implements Serializable {
 	 */
 	private void pick(String pk_stordoc, String pk_cargdoc, TbOutgeneralBVO vo,
 			int i) throws Exception {
+		//将错误提示信息 清空
+		vo.setVuserdef14(null);
 		// 构建查询条件
 		String whereSql = " pk_customize1 = '" + pk_stordoc + "' "
 				+ " and  pk_cargdoc = '" + pk_cargdoc + "' "
