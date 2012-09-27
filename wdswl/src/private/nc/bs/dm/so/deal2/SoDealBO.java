@@ -295,7 +295,7 @@ public class SoDealBO {
 	 * @return
 	 * @throws Exception
 	 */
-	public Object doDeal(SoDealBillVO[] bills,List lpara) throws Exception{
+	public Object doDeal(SoDealBillVO[] bills,ArrayList lpara) throws Exception{
 		if(bills == null || bills.length == 0)
 			return null;		
 		Logger.init(WdsWlPubConst.wds_logger_name);

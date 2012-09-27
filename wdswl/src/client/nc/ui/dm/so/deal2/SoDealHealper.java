@@ -64,11 +64,11 @@ public class SoDealHealper {
 			return null;
 
 		SoDealClientUI ui = (SoDealClientUI)tp;
-		List<String> infor = new ArrayList<String>();
+		ArrayList<String> infor = new ArrayList<String>();
 		infor.add(ui.cl.getUser());
 		infor.add(ui.cl.getCorp());
 		infor.add(ui.cl.getLogonDate().toString());
-		Class[] ParameterTypes = new Class[] { SoDealBillVO[].class,List.class };
+		Class[] ParameterTypes = new Class[] {SoDealBillVO[].class,ArrayList.class };
 		Object[] ParameterValues = new Object[] { billvos,infor};
 		return LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, tp,
 				"正在处理...", 2, bo, null, "doDeal", ParameterTypes,
