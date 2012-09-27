@@ -126,6 +126,7 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 				}
 				if(pickMsg.toString()!=null && pickMsg.toString().length()>0){
 					ui.showErrorMessage(pickMsg.toString());
+				
 				}
 			}else{
 			  throw e;

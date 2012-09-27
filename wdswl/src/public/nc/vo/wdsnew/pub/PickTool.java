@@ -634,6 +634,8 @@ public class PickTool implements Serializable {
 	 */
 	private void pick(String pk_stordoc, String pk_cargdoc, TransferBVO vo,
 			int i) throws Exception {
+		//将错误提示信息 清空
+		vo.setVuserdef14(null);
 		// 构建查询条件
 		String whereSql = " pk_customize1 = '" + pk_stordoc + "' "
 				+ " and  pk_cargdoc = '" + vo.getPk_defdoc2() + "' "
@@ -743,20 +745,26 @@ public class PickTool implements Serializable {
 	 */
 	private void spiltNum(StockInvOnHandVO[] vos, TransferBVO vo, int index)
 			throws Exception {
-
+		StringBuffer error = new StringBuffer();// 存货拣货错误 或者提示信息
 		UFDouble zbnum = PuPubVO.getUFDouble_NullAsZero(vo
 				.getNshouldoutassistnum());// 取得出库单应发辅数量
 		UFDouble noutnum = PuPubVO.getUFDouble_NullAsZero(vo.getNoutnum());// 获得实发数量
 		if (vos == null || vos.length == 0) {
 			mpick.put("" + index, null);// 如果现存量为空 则该行拣货单设置为空
+			error.append(" 没有现存量 &&");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		if (zbnum.doubleValue() == 0) {
-			mpick.put("" + index, null);// 如果出库单实发辅数量为0 则该行拣货单设置为空
+			mpick.put("" + index, null);// 如果出库单应发辅数量为0 则该行拣货单设置为空
+			error.append(" 应发数量不能为空 &&");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		if (noutnum.doubleValue() > 0) {
 			mpick.put("" + index, null);// 如果出库单实发数量有值 不再参与 自动拣货 则该行拣货单设置为空
+			error.append("存在实发数量不能参与自动拣货 ");
+			vo.setVuserdef14(error.toString());
 			return;
 		}
 		// 进行分量
