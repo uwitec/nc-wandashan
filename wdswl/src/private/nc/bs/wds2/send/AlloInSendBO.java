@@ -105,7 +105,7 @@ public class AlloInSendBO {
 			SuperVO vo = bodyvos[i];
 			String pk_invmandoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("pk_invmandoc"));// 得到存货管理主键
 			String pk_invbasdoc = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("pk_invbasdoc"));// 得到存货基本档案主键
-			UFDouble num=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("noutnum"));//得到存货吨数
+			UFDouble num=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ninacceptnum"));//得到存货吨数
 			// 得到存货属性
 			Integer type = PuPubVO.getInteger_NullAs(
 						ZmPubTool.execFomular(
