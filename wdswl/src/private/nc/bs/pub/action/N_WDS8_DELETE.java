@@ -103,7 +103,7 @@ public class N_WDS8_DELETE extends AbstractCompiler2 {
 	 if(list==null || list.size()==0)
 		 return;
 	 SoorderVO head=(SoorderVO) list.get(0);
-	 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs("fisended", new UFBoolean(false));
+	 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs(head.getFisended(), new UFBoolean(false));
 	 if(isdj.booleanValue()==true){
 		 throw new Exception("上游运单已经冻结 ,不能作废");
 	 }	  
