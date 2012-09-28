@@ -1,5 +1,6 @@
 package nc.ui.wds.load.account;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.base.IBillOperate;
@@ -21,6 +22,7 @@ import nc.vo.wds.load.account.LoadpriceB2VO;
 import nc.vo.wds.load.account.LoadpriceHVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.zmpub.pub.report2.ReportBuffer;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -109,6 +111,36 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		}
 
 		super.onBoSave();
+	}
+	@Override
+	protected void onBoEdit() throws Exception {	
+		valuteEnd();
+		super.onBoEdit();
+	}
+   /**
+    * 检验 调拨入库回传单 是否已经审批 如果已经审批 则装卸费核算单 不允许编辑
+ * @throws Exception 
+    * @作者：zhf
+    * @说明：完达山物流项目 
+    * @时间：2012-9-28下午12:21:53
+    */
+	private void valuteEnd() throws Exception {
+     if (getBufferData().getCurrentVO() == null)
+			return;
+	 AggregatedValueObject billvo=getBufferData().getCurrentVO();
+	 
+	 if(billvo.getChildrenVO()==null || billvo.getChildrenVO().length==0)
+		 return ;
+	  String chid=PuPubVO.getString_TrimZeroLenAsNull(billvo.getChildrenVO()[0].getAttributeValue("csourcebillhid"));
+	 if(chid==null )
+		return ;
+
+		Class[] ParameterTypes = new Class[] { String.class };
+		Object[] ParameterValues = new Object[] { chid };
+	     LongTimeTask.calllongTimeService("wds", getBillUI(),
+				"数据校验...", 1, "nc.bs.pub.action.N_WDSF_DELETE", null,
+				"valuteEnd1", ParameterTypes, ParameterValues);	
+		
 	}
 
 	@Override
