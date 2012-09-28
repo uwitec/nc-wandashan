@@ -121,7 +121,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 		setInitWarehouse("srl_pk");
 		//…Ë÷√µ•æ›∫≈
 		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("vbillno", ((MyClientUI)getBillUI()).getBillNo());
-		getBillCardPanelWrapper().getBillCardPanel().setHeadItem("is_yundan", null);
+	 //	getBillCardPanelWrapper().getBillCardPanel().setHeadItem("is_yundan", null);
 	}
 	@Override
 	protected UIDialog createQueryUI() {
