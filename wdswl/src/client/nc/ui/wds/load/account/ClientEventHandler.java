@@ -13,6 +13,7 @@ import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.dm.order.SendorderVO;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
@@ -127,11 +128,12 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	private void valuteEnd() throws Exception {
      if (getBufferData().getCurrentVO() == null)
 			return;
-	 AggregatedValueObject billvo=getBufferData().getCurrentVO();
+     ExaggLoadPricVO billvo=(ExaggLoadPricVO) getBufferData().getCurrentVO();
 	 
-	 if(billvo.getChildrenVO()==null || billvo.getChildrenVO().length==0)
+	 if(billvo.getTableVO(billvo.getTableCodes()[0])==null ||billvo.getTableVO(billvo.getTableCodes()[0]).length==0)
 		 return ;
-	  String chid=PuPubVO.getString_TrimZeroLenAsNull(billvo.getChildrenVO()[0].getAttributeValue("csourcebillhid"));
+	 SuperVO bodyvo= (SuperVO) billvo.getTableVO(billvo.getTableCodes()[0])[0];
+	  String chid=PuPubVO.getString_TrimZeroLenAsNull(bodyvo.getAttributeValue("csourcebillhid"));
 	 if(chid==null )
 		return ;
 
