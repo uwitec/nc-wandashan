@@ -253,7 +253,7 @@ public class SoDealEventHandler{
 		boolean iserrorhint = false;
 		clearData();
 		try{
-			m_billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid());
+			m_billdatas = SoDealHealper.doQuery(whereSql,querStorepk,ui.getWhid());
 			querStorepk=null;
 		}catch(Exception e){
 			e.printStackTrace();

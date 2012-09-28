@@ -42,10 +42,10 @@ public class SoDealHealper {
 	 * @throws Exception
 	 */
 
-	public static SoDealVO[] doQuery(String wheresql,String pk_storedoc) throws Exception{
+	public static SoDealVO[] doQuery(String wheresql,String querStorepk,String pk_storedoc) throws Exception{
 		SoDealVO[] dealVos=null;
-		Class[] ParameterTypes = new Class[] { String.class,String.class };
-		Object[] ParameterValues = new Object[] { wheresql,pk_storedoc };
+		Class[] ParameterTypes = new Class[] { String.class,String.class,String.class };
+		Object[] ParameterValues = new Object[] { wheresql,querStorepk,pk_storedoc };
 		Object o = LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, bo, "doQuery", ParameterTypes, ParameterValues, 2);
 		if(o != null){
 			dealVos = (SoDealVO[])o;
