@@ -94,7 +94,7 @@ public class CHGWDSCTOWDS6 extends VOConversionUI {
 				"H_dbilldate->\""+cl.getLogonDate()+"\"",
 				"H_coperatorid->\""+cl.getUser()+"\"",
 				"H_vbilltype->\""+WdsWlPubConst.BILLTYPE_OTHER_OUT+"\"",
-				"H_is_yundan->\"Y\"",
+			//	"H_is_yundan->\"Y\"",
 				"H_pk_corp->\""+cl.getCorp()+"\"",
 				"H_pk_calbody->\""+WdsWlPubConst.DEFAULT_CALBODY+"\"",
 				"B_dbizdate->\""+cl.getLogonDate()+"\"",
