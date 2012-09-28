@@ -310,7 +310,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 			 if(ovs==null || ovs.length==0)
 				 return;
 			 SendorderVO head=(SendorderVO) ovs[0];
-			 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs("fisended", new UFBoolean(false));
+			 UFBoolean isdj=PuPubVO.getUFBoolean_NullAs(head.getFisended(), new UFBoolean(false));
 			 if(isdj.booleanValue()==true){
 				 throw new Exception("上游运单已经冻结 ,不能作废");
 			 }

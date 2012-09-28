@@ -20,6 +20,7 @@ import nc.vo.wds.transfer.MyBillVO;
 import nc.vo.wds.transfer.TransferBVO;
 import nc.vo.wds.transfer.TransferVO;
 import nc.vo.wdsnew.pub.StockException;
+import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 
@@ -220,6 +221,8 @@ public class EventHandler extends OutPubEventHandler {
 				.setBodyDataVO(bvos);
 		getBillCardPanelWrapper().getBillCardPanel().getBillModel()
 				.execLoadFormula();
+	      //…Ë÷√––∫≈
+        BillRowNo.addLineRowNos(getBillCardPanelWrapper().getBillCardPanel(), getUIController().getBillType(), "crowno", bvos.length-1);
 	}
 
 	@Override

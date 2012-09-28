@@ -435,6 +435,9 @@ public abstract class InPubEventHandler extends WdsPubEnventHandler {
 		}
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().setBodyDataVO(bvos);
         getBillCardPanelWrapper().getBillCardPanel().getBillModel().execLoadFormula();
+        //…Ë÷√––∫≈
+        BillRowNo.addLineRowNos(getBillCardPanelWrapper().getBillCardPanel(), getUIController().getBillType(), "crowno", bvos.length-1);
+
 	}
 	
 	
