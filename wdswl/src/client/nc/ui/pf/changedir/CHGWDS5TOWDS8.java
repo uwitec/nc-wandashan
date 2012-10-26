@@ -33,6 +33,10 @@ public class CHGWDS5TOWDS8 extends VOConversionUI{
 				"H_creceiptcustomerid->H_creceiptcustomerid",//收货单位
 				
 				
+				"H_pk_defdoc5->H_reserve5",//销售区域
+				"H_vuserdef7->H_vdef5",//销售地区
+				
+				
 //				"H_vsourcebillcode->H_vbillno",// 来源单据号
 //				"H_csourcebillhid->H_pk_soorder",// 来源单据表头主键
 				
