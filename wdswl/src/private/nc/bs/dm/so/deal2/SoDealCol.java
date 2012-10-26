@@ -1,17 +1,12 @@
 package nc.bs.dm.so.deal2;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
-import mx4j.tools.adaptor.http.GetAttributeCommandProcessor;
 import nc.bs.dao.BaseDAO;
 import nc.bs.logging.Logger;
 import nc.bs.pub.pf.PfUtilBO;
@@ -20,8 +15,6 @@ import nc.bs.wds.ic.stock.StockInvOnHandBO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.bs.zmpub.pub.tool.SingleVOChangeDataBsTool;
 import nc.bs.zmpub.pub.tool.stock.AvailNumBoTool;
-import nc.itf.scm.cenpur.service.TempTableUtil;
-import nc.jdbc.framework.util.SQLHelper;
 import nc.vo.dm.so.deal2.SoDealBillVO;
 import nc.vo.dm.so.deal2.SoDealHeaderVo;
 import nc.vo.dm.so.deal2.SoDealVO;
@@ -35,15 +28,11 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.scm.pu.PuPubVO;
 import nc.vo.scm.pub.vosplit.SplitBillVOs;
-import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.AvailNumDea2BO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
-
 /**
- * 
- * @author zhf 销售计划安排算法类
- * 
+ * @author zhf 销售计划安排算法类 
  * 输入 待安排的数据 进行安排处理 返回需要手工安排的数据
  * 
  */
@@ -496,26 +485,26 @@ public class SoDealCol {
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;
-		/**
-		 * 安排：生成发运单 发运计划安排生成发运订单
-		 * 
-		 * 计划单号 计划行号 不合并计划行 计划和订单为1对多关系 分单规则： 发货站 收货站不同 不考虑计划类型
-		 * */
-		// 回写计划累计安排数量
-		// 销售计划安排vo---》销售订单
-		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
-		for (int i = 0; i < ldata.size(); i++) {
-			String key = ldata.get(i).getCorder_bid();
-			UFDouble num = PuPubVO.getUFDouble_NullAsZero(ldata.get(i)
-					.getNnum());
-			if (map.containsKey(key)) {
-				UFDouble oldValue = PuPubVO
-						.getUFDouble_NullAsZero(map.get(key));
-				map.put(key, oldValue.add(num));
-			}
-			map.put(key, num);
-		}
-		reWriteDealNumForPlan(map);
+//		/**
+//		 * 安排：生成发运单 发运计划安排生成发运订单
+//		 * 
+//		 * 计划单号 计划行号 不合并计划行 计划和订单为1对多关系 分单规则： 发货站 收货站不同 不考虑计划类型
+//		 * */
+//		// 回写计划累计安排数量
+//		// 销售计划安排vo---》销售订单
+//		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
+//		for (int i = 0; i < ldata.size(); i++) {
+//			String key = ldata.get(i).getCorder_bid();
+//			UFDouble num = PuPubVO.getUFDouble_NullAsZero(ldata.get(i)
+//					.getNnum());
+//			if (map.containsKey(key)) {
+//				UFDouble oldValue = PuPubVO
+//						.getUFDouble_NullAsZero(map.get(key));
+//				map.put(key, oldValue.add(num));
+//			}
+//			map.put(key, num);
+//		}
+//		reWriteDealNumForPlan(map);
 		// 按 计划号 发货站 客户 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
 				(CircularlyAccessibleValueObject[]) (ldata

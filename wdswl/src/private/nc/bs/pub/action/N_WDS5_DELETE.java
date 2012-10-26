@@ -1,12 +1,12 @@
 package nc.bs.pub.action;
 
 import java.util.Hashtable;
+
 import nc.bs.dm.so.order.SoOrderBO;
 import nc.bs.pub.compiler.AbstractCompiler2;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.compiler.PfParameterVO;
 import nc.vo.trade.pub.IBDACTION;
-import nc.vo.uap.pf.PFBusinessException;
 /**
  *  销售运单
  * @author Administrator
@@ -25,25 +25,24 @@ public class N_WDS5_DELETE extends AbstractCompiler2 {
 	 * 备注：平台编写规则类 接口执行类
 	 */
 	public Object runComClass(PfParameterVO vo) throws BusinessException {
-		try {
 			super.m_tmpVo = vo;		
 			Object retObj = null;
 			//校验下游是否有数据
 			runClass("nc.bs.dm.so.order.SoOrderBO", "beforeUnApprove","nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,	m_methodReturnHas);
 			//进行数据回写
 			SoOrderBO bo=new SoOrderBO();
-			bo.writeBack(getVo(), IBDACTION.DELETE);
+			try {
+				bo.writeBack(getVo(), IBDACTION.DELETE);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				throw new BusinessException(e.getMessage());
+			}
 			//进行单据删除操作
 			retObj = runClass("nc.bs.trade.comdelete.BillDelete", "deleteBill",
 					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas,
 					m_methodReturnHas);
 			return retObj;
-		} catch (Exception ex) {
-			if (ex instanceof BusinessException)
-				throw (BusinessException) ex;
-			else
-				throw new PFBusinessException(ex.getMessage(), ex);
-		}
 	}
 
 	/*

@@ -50,6 +50,11 @@ public String[] getField() {
 			"H_ccalbodyid->B_cadvisecalbodyid",//库存组织(销售订单表体)(建议发货库存组织)
 			"H_creceiptcustomerid->B_creceiptcorpid",//收货单位(销售订单表体)
 			"H_vinaddress->B_vreceiveaddress",//收货地址(销售订单表体)
+			
+			"H_reserve5->H_pk_defdoc12",//销售区域
+			"H_vdef5->H_vdef12",//销售地区
+		
+			
 			"B_csourcebillhid->B_csaleid",
 			"B_csourcebillbid->B_corder_bid",
 			"B_vsourcebillcode->B_vreceiptcode",
@@ -70,7 +75,8 @@ public String[] getField() {
 			"B_bisdate->B_disdate",//是否大日期
 			"B_nassarrangnum->B_nassnum",//安排辅数量
 			"B_narrangnmu->B_nnum",//安排数量
-			"B_isxnap->B_isxnap",//是否虚拟安排 liuys add
+		//	"B_isxnap->B_isxnap",//是否虚拟安排 liuys add
+			"B_isxnap->B_pk_defdoc11",//是否虚拟安排 
 			
 			
 //			zhf  add

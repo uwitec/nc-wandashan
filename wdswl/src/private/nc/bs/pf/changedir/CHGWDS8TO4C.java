@@ -27,7 +27,13 @@ public class CHGWDS8TO4C  extends nc.bs.pf.change.VOConversion {
 //				"H_vbillcode",//单据号--------系统判断，如果不存在，则自动生成
 //				"B_crowno",//行号
 //				"coperatorid", //操作员
-//				"H_dbilldate->SYSDATE",//单据日期					
+//				"H_dbilldate->SYSDATE",//单据日期			
+				
+				
+				
+
+				"H_pk_defdoc12->H_pk_defdoc5",//销售区域
+				"H_vuserdef12->H_vuserdef7",//销售地区
 				"H_cwarehouseid->H_srl_pk",//仓库
 //				"H_pk_calbody->H_pk_calbody",//库存组织
 				"H_cbiztype->H_cbiztype",//业务类型

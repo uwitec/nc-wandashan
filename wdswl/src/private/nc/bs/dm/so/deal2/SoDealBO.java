@@ -68,24 +68,8 @@ public class SoDealBO {
 		sql.append(" from so_sale h  " );
 		sql.append(" inner join so_saleorder_b b on h.csaleid = b.csaleid");
 		sql.append(" where ");
-		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");
-		
-		
-//		------------------------------------------------zhf add
-//		sql.append(" and coalesce(h.bisclose,'N') = 'N' ");//查询到未 关闭的  订单行  zhf
-//		if(isclose.booleanValue())
-//			sql.append(" 'Y' ");
-//		else
-//			sql.append(" 'N' ");
-//		------------------------------------------------
-		
-//		zhf modify  支持  虚拟销售订单参与安排
-		sql.append(" and ( coalesce(h.bisclose,'N') = 'N' " +
-				"and coalesce(h."+Wds2WlPubConst.so_virtual+",'"+Wds2WlPubConst.so_virtual_value_no+"') = '"+Wds2WlPubConst.so_virtual_value_no+"' ");
-		sql.append(" or h."+Wds2WlPubConst.so_virtual+" = '"+Wds2WlPubConst.so_virtual_value_yes+"' )");
-		
-		
-		
+		sql.append("  isnull(h.dr,0)=0  and isnull(b.dr,0)=0  ");		
+		sql.append(" and  coalesce(h.bisclose,'N') = 'N' " );		
 		if (whereSql != null && whereSql.length() > 0) {
 			sql.append(" and " + whereSql);
 		}
@@ -109,54 +93,6 @@ public class SoDealBO {
 			ArrayList<SoDealVO> list = (ArrayList<SoDealVO>) o;
 			datas = list.toArray(new SoDealVO[0]);
 		}
-		
-		
-//		/**
-//		 * liuys add 
-//		 * 虚拟流程查询, 根据销售订单查询ERP销售出库,如果有对应的销售出库单并且该单标识为虚拟安排,则在销售计划安排只能查询出虚拟流程的单据
-//		 *  出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量
-//		 * 
-//		 */ 
-//		String pk = null;
-//		for (int i = 0; i < datas.length; i++) {
-//			pk = PuPubVO.getString_TrimZeroLenAsNull(datas[i].getCorder_bid());
-//			if(pk == null){
-//				continue;
-//			}
-//			StringBuffer generalSql = new StringBuffer();
-//			generalSql.append(" select sum(ic_general_b.noutnum) from ic_general_h ");
-//			generalSql.append(" join ic_general_b on ");
-//			generalSql.append(" ic_general_h.cgeneralhid = ic_general_b.cgeneralhid");
-//			generalSql.append(" where isnull(ic_general_h.dr,0)=0 ");
-//			generalSql.append(" and isnull(ic_general_b.dr,0)=0 ");
-//			generalSql.append(" and ic_general_h.fbillflag='"+BillStatus.AUDIT+"' ");
-//			generalSql.append(" and ic_general_h."+WdsWlPubConst.WDS_IC_ZG_DEF+"='"+WdsWlPubConst.WDS_IC_FLAG_wu+"'");//虚拟出库
-//			generalSql.append(" and ic_general_b.csourcebillbid='"+pk + "'");
-//			UFDouble noutnum =PuPubVO.getUFDouble_NullAsZero( getDao().executeQuery(generalSql.toString(),
-//					WdsPubResulSetProcesser.COLUMNPROCESSOR));
-//			// 情况1 : 如果未查询到销售出库对应表体单据,则不是虚拟安排,按正常安排流程走
-//			if (noutnum.doubleValue() ==0)
-//				continue;
-//			//订单已安排量
-//			UFDouble ntaldcnum = PuPubVO.getUFDouble_NullAsZero( datas[i].getNtaldcnum());
-//			UFDouble nnum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNnumber());
-//			UFDouble npacknum = PuPubVO.getUFDouble_NullAsZero(datas[i].getNpacknumber());
-//			UFDouble nhsl = new UFDouble(1);
-//			if(npacknum.doubleValue() >0){
-//				nhsl = nnum.div(npacknum);
-//			}
-//			//如果(出库实出量总和(多个对应出库实出相加) - 销售订单已安排量 > 将安排的数量,则加入list,可以查询出来
-//			if(noutnum.sub(ntaldcnum).doubleValue()>0){
-//				datas[i].setIsxnap(UFBoolean.TRUE);
-//				UFDouble nlefnum = noutnum.sub(ntaldcnum);
-//				datas[i].setNnumber(nlefnum);
-//				if(npacknum.doubleValue() >0){
-//					datas[i].setNpacknumber(nlefnum.div(nhsl));
-//				}
-//			}
-//		}
-//		SoDealBoUtils2 util = new SoDealBoUtils2();
-//		util.arrangStornumout(SQLHelper.getCorpPk(), pk_storedoc, datas);
 		setStock(datas);
 		return datas;
 	}
@@ -190,47 +126,15 @@ public class SoDealBO {
 					e.printStackTrace();
 				}
 				datas[i].setCbodywarehouseid(pk_storc);
+				String pk_isxn=datas[i].getPk_defdoc11();
+				if(pk_isxn==null || pk_isxn.equals(Wds2WlPubConst.so_virtual_value_no)){
+					datas[i].setIsxnap(new UFBoolean(false));
+				}else{
+					datas[i].setIsxnap(new UFBoolean(true));
+				}
 			}		
 		}
 
-	/**
-	 * 
-	 * @作者：lyf
-	 * @说明：完达山物流项目 将本次安排数量，回写到销售订单安排累计发运数量
-	 * @时间：2011-3-25下午04:44:08
-	 * @throws BusinessException
-	 */
-	public void reWriteDealNumForPlan(Map<String, UFDouble> map)
-			throws BusinessException {
-
-		if (map == null || map.size() == 0)
-			return;
-		for (Entry<String, UFDouble> entry : map.entrySet()) {
-			String sql = "update so_saleorder_b set "
-					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
-					+ " = coalesce("
-					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME
-					+ ",0)+"
-					+ PuPubVO.getUFDouble_NullAsZero(entry.getValue())
-							.doubleValue() + " where corder_bid='"
-					+ entry.getKey() + "'";
-			if (getDao().executeUpdate(sql) == 0) {
-				throw new BusinessException("数据异常：该销售订单可能已被删除，请重新查询数据");
-			}
-			;
-			// 将计划数量（nplannum）和累计安排数量(ndealnum)比较
-			// 如果累计安排数量大于计划数量将抛出异常
-			String sql1 = "select count(0) from so_saleorder_b where corder_bid='"
-					+ entry.getKey()
-					+ "'and (coalesce(nnumber,0)-coalesce("
-					+ WdsWlPubConst.DM_SO_DEALNUM_FIELD_NAME + ",0))>=0";
-			Object o = getDao().executeQuery(sql1,
-					WdsPubResulSetProcesser.COLUMNPROCESSOR);
-			if (o == null) {
-				throw new BusinessException("超计划量安排");
-			}
-		}
-	}
 	
 	class FielterMinNum implements IFilter{
 		private SoDealCol col = null;
@@ -326,24 +230,10 @@ public class SoDealBO {
 	 *            :登录人，登录公司，登录日期
 	 * @throws Exception
 	 */
-	public void doDeal(List<SoDealVO> ldata, List<String> infor)
+	public void doDeal1(List<SoDealVO> ldata, List<String> infor)
 			throws Exception {
 		if (ldata == null || ldata.size() == 0)
 			return;
-		//2.回写销售订单累计安排数量
-		Map<String, UFDouble> map = new HashMap<String, UFDouble>();
-		for (int i = 0; i < ldata.size(); i++) {
-			String key = ldata.get(i).getCorder_bid();
-			UFDouble num = PuPubVO.getUFDouble_NullAsZero(ldata.get(i)
-					.getNnum());
-			if (map.containsKey(key)) {
-				UFDouble oldValue = PuPubVO
-						.getUFDouble_NullAsZero(map.get(key));
-				map.put(key, oldValue.add(num));
-			}
-			map.put(key, num);
-		}
-		reWriteDealNumForPlan(map);
 		// 3.销售计划安排vo---》销售订单
 		// 3.1按  发货站 客户 分单
 		CircularlyAccessibleValueObject[][] datas = SplitBillVOs.getSplitVOs(
@@ -404,7 +294,7 @@ public class SoDealBO {
 //		数据校验
 		
 		SoDealBO dealbo = new SoDealBO();
-		dealbo.doDeal(ldata, infor);		
+		dealbo.doDeal1(ldata, infor);		
 	}
 	
 	/**
