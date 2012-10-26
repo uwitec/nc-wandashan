@@ -104,7 +104,7 @@ public class SoorderVO extends SuperVO {
 	public String reserve2;
 	public String reserve3;
 	public String reserve4;
-	public String reserve5;
+	public String reserve5;//销售地区
 	public String reserve6;
 	public String reserve7;
 	public UFDouble reserve8;
@@ -121,7 +121,7 @@ public class SoorderVO extends SuperVO {
 	public String vdef2;
 	public String vdef3;
 	public String vdef4;
-	public String vdef5;
+	public String vdef5;//销售地区
 	public String vdef6;
 	public String vdef7;
 	public String vdef8;

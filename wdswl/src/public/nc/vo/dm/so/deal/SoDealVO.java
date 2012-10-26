@@ -71,6 +71,8 @@ public class SoDealVO extends SuperVO{
 	private String crecwareid; // 收货仓库id
 	// 建议库存组织
 	private String cadvisecalbodyid;
+	private String pk_defdoc12;//销售区域
+	private String vdef12;//销售区域
 
 	// 批次
 	private String cbatchid;
@@ -91,7 +93,6 @@ public class SoDealVO extends SuperVO{
 	private String vdef9;
 	private String vdef10;
 	private String vdef11;
-	private String vdef12;
 	private String vdef13;
 	private String vdef14;
 	private String vdef15;
@@ -140,6 +141,24 @@ public class SoDealVO extends SuperVO{
 	private UFDouble ndrqarrusefulnumout;//大日期安排后可用量
 	private UFDouble ndrqstorenumout;//可用量辅数量 mlr
 	private UFDouble ndrqarrstorenumout;//可用量 mlr
+	
+	private UFBoolean pk_defdoc11;//是否虚拟
+	
+	
+	
+	
+	public UFBoolean getPk_defdoc11() {
+		return pk_defdoc11;
+	}
+	public void setPk_defdoc11(UFBoolean pk_defdoc11) {
+		this.pk_defdoc11 = pk_defdoc11;
+	}
+	public String getPk_defdoc12() {
+		return pk_defdoc12;
+	}
+	public void setPk_defdoc12(String pk_defdoc12) {
+		this.pk_defdoc12 = pk_defdoc12;
+	}
 	public UFDouble getNstorenumout() {
 		return nstorenumout;
 	}
@@ -203,6 +222,7 @@ public class SoDealVO extends SuperVO{
 		"h.cbiztype",
 		"h.dapprovedate dbilldate",
 		"h.ccustomerid",
+		"h.cbiztype",
 		"h.cdeptid",
 		"h.cemployeeid",
 		"h.coperatorid",
@@ -210,6 +230,8 @@ public class SoDealVO extends SuperVO{
 		"h.csalecorpid",
 		"h.creceiptcustomerid",
 		"h.creceiptcorpid",
+		"h.pk_defdoc12",//销售区域
+		"h.vdef12",//销售区域
 		"h.cwarehouseid",
 		"bfreecustflag",
 		"h.cfreecustid",

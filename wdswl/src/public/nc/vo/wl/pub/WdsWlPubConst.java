@@ -15,7 +15,7 @@ public class WdsWlPubConst {
 	/**
 	 *¿â´æ×´Ì¬±íºÏ¸ñ×´Ì¬Ö÷¼ü
 	 */
-	public static String WDS_STORSTATE_PK_hg="1021S31000000009FS98";
+	public static String WDS_STORSTATE_PK_hg="1021S3100000000B8LVE";
 	/**
 	 *¿â´æ×´Ì¬±í´ý¼ì×´Ì¬Ö÷¼ü
 	 */

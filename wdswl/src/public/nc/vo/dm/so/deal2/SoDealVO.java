@@ -34,6 +34,7 @@ public class SoDealVO extends SuperVO{
 	private String cemployeeid;
 	private String coperatorid;
 	private String ctermprotocolid;
+	
 	private String csalecorpid;
 	private String creceiptcustomerid;
 	private String creceiptcorpid;
@@ -45,7 +46,8 @@ public class SoDealVO extends SuperVO{
 	private UFDate dapprovedate;
 	private Integer fstatus;
 	private String vnote;
-	
+	private String pk_defdoc12;//销售区域
+	private String vdef12;//销售区域
 	//----------------------------------订单表体字段
 	private UFDouble ntaldcnum;//销售订单累积安排主数量
 	private String corder_bid;
@@ -88,7 +90,6 @@ public class SoDealVO extends SuperVO{
 	private String vdef9;
 	private String vdef10;
 	private String vdef11;
-	private String vdef12;
 	private String vdef13;
 	private String vdef14;
 	private String vdef15;
@@ -139,6 +140,18 @@ public class SoDealVO extends SuperVO{
 	
 	
 	private UFDouble nwdsnum;//累计安排数量
+	
+	private String  pk_defdoc11;//是否虚拟
+	
+	
+	
+
+	public String getPk_defdoc11() {
+		return pk_defdoc11;
+	}
+	public void setPk_defdoc11(String pk_defdoc11) {
+		this.pk_defdoc11 = pk_defdoc11;
+	}
 	public static String[] getSort_fields() {
 		return sort_fields;
 	}
@@ -147,6 +160,12 @@ public class SoDealVO extends SuperVO{
 	}
 	
 
+	public String getPk_defdoc12() {
+		return pk_defdoc12;
+	}
+	public void setPk_defdoc12(String pk_defdoc12) {
+		this.pk_defdoc12 = pk_defdoc12;
+	}
 	public UFDouble getNstorenumout() {
 		return nstorenumout;
 	}
@@ -235,6 +254,7 @@ public class SoDealVO extends SuperVO{
 		"h.cbiztype",
 		"h.dapprovedate dbilldate",
 		"h.ccustomerid",
+		"h.ccustomerid",
 		"h.cdeptid",
 		"h.cemployeeid",
 		"h.coperatorid",
@@ -244,6 +264,9 @@ public class SoDealVO extends SuperVO{
 		"h.creceiptcorpid",
 		"h.cwarehouseid",
 		"h.bfreecustflag",
+		"h.pk_defdoc12",//销售区域
+		"h.vdef12",//销售区域
+		"h.pk_defdoc11",//虚拟
 		"h.cfreecustid",
 		"h.dmakedate",
 		"h.capproveid",

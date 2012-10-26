@@ -26,7 +26,54 @@ public class SoDealHeaderVo extends SuperVO {
 	private String ccustomerid;
 	private String csalecorpid;
 	private String cbodywarehouseid; //发货仓库
+	private String cbiztype;
+	private String cemployeeid;
+	private String cdeptid;
+	private String pk_defdoc12;//销售区域
+	private String vdef12;//销售区域
 	
+	
+	
+	public String getPk_defdoc12() {
+		return pk_defdoc12;
+	}
+
+	public void setPk_defdoc12(String pk_defdoc12) {
+		this.pk_defdoc12 = pk_defdoc12;
+	}
+
+	public String getVdef12() {
+		return vdef12;
+	}
+
+	public void setVdef12(String vdef12) {
+		this.vdef12 = vdef12;
+	}
+
+	public String getCemployeeid() {
+		return cemployeeid;
+	}
+
+	public void setCemployeeid(String cemployeeid) {
+		this.cemployeeid = cemployeeid;
+	}
+
+	public String getCdeptid() {
+		return cdeptid;
+	}
+
+	public void setCdeptid(String cdeptid) {
+		this.cdeptid = cdeptid;
+	}
+
+	public String getCbiztype() {
+		return cbiztype;
+	}
+
+	public void setCbiztype(String cbiztype) {
+		this.cbiztype = cbiztype;
+	}
+
 	private UFDouble nminnum;//客户最低发货量
 	
 //	private UFBoolean bisspecial= UFBoolean.FALSE;//是否特殊安排
@@ -34,7 +81,7 @@ public class SoDealHeaderVo extends SuperVO {
 	
 	private UFBoolean bdericttrans;//系统是否直运  用做 是否自提
 	
-	public static String[] split_fields = new String[]{"ccustomerid"};
+	public static String[] split_fields = new String[]{"ccustomerid","cbiztype"};
 	
 	
 	public UFBoolean getBdericttrans() {
