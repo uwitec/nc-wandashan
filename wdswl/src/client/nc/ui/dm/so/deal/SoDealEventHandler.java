@@ -317,6 +317,13 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			}
 
 			setData(billdatas);
+			
+//			//设置默认第一行选中
+//			if(billdatas!=null&& billdatas.length>0){
+//	          ui.getPanel().getHeadBillModel().setRowState(0, BillModel.SELECTED);		
+//	          ui.getPanel().getChildListPanel().selectAllTableRow();
+//			}
+
 		}
 		if(!iserrorhint)
 			showHintMessage("操作完成");
@@ -346,6 +353,14 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			tmpHead.setBisspecial(UFBoolean.FALSE);
 			tmpHead.setCsalecorpid(vos[0].getCsalecorpid());
 			tmpHead.setVreceiptcode(vos[0].getVreceiptcode());
+			tmpHead.setCbiztype(vos[0].getCbiztype());
+			tmpHead.setCemployeeid(vos[0].getCemployeeid());
+			tmpHead.setCdeptid(vos[0].getCdeptid());
+			
+			tmpHead.setPk_defdoc12(vos[0].getPk_defdoc12());
+			tmpHead.setVdef12(vos[0].getVdef12());
+		
+
 			String pk_stordoc=vos[0].getCbodywarehouseid();
 			if(pk_stordoc==null || pk_stordoc.length()==0)
 				pk_stordoc=ui.getWhid();
@@ -514,7 +529,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			//安排量
 			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
 			//可用量
-			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqstorenumout"));
+			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
 			if((uf2.sub(uf1)).doubleValue()<0){
 				return false;
 			}else{

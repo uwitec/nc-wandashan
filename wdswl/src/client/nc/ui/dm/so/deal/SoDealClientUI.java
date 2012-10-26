@@ -264,6 +264,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 							vos1[0].getWhs_stockpieces(), row,
 							"ndrqarrstorenumout");// 可用辅数量
 				}
+				
+				
 			}
 		}
 
@@ -315,6 +317,8 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 			m_panel.getChildListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
 			m_panel.getHeadTable().removeSortListener();
+			m_panel.getBodyScrollPane(getPanel().getChildListPanel()
+					.getTableCode()).removeMouseListener();
 		}
 		return m_panel;
 	}

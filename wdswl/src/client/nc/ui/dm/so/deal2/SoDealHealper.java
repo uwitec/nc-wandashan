@@ -128,6 +128,12 @@ public class SoDealHealper {
 			tmpHead.setDbilldate((UFDate)VOTool.max(vos, "dbilldate"));//应取 最小订单日期
 			tmpHead.setIsonsell(UFBoolean.FALSE);
 			tmpHead.setCsalecorpid(vos[0].getCsalecorpid());
+			tmpHead.setCbiztype(vos[0].getCbiztype());
+			tmpHead.setCemployeeid(vos[0].getCemployeeid());
+			tmpHead.setCdeptid(vos[0].getCdeptid());
+			
+			tmpHead.setPk_defdoc12(vos[0].getPk_defdoc12());
+			tmpHead.setVdef12(vos[0].getVdef12());
 			String pk_stordoc=vos[0].getCbodywarehouseid();
 			if(pk_stordoc==null || pk_stordoc.length()==0)
 				pk_stordoc=cwhid;
