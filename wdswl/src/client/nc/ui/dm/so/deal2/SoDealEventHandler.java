@@ -1,8 +1,6 @@
 package nc.ui.dm.so.deal2;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.bill.BillStatus;
