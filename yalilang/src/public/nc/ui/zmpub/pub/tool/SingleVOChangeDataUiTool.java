@@ -123,6 +123,49 @@ public class SingleVOChangeDataUiTool {
 		return tarVos;
 	}
 	
+	public static CircularlyAccessibleValueObject[] runChangeVOAryForUI(CircularlyAccessibleValueObject[] souVos, Class tarVoClass,
+			String chanclassname) throws Exception {
+		IchangeVO change = null;
+		try {
+			change = getChangeClass(chanclassname);
+		} catch (Exception e) {// 可能存在类型转换异常 此处要求
+			// changeClassName类需要继承VOConversion
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+
+		if (!(change instanceof VOConversionUI)) {
+			throw new BusinessException("数据转换组件异常，" + change.toString());
+		}
+
+		int len = souVos.length;
+		if (len <= 0)
+			return null;
+		// SuperVO[] tarVos = new SuperVO[len];
+		CircularlyAccessibleValueObject[] tarVos = (CircularlyAccessibleValueObject[]) java.lang.reflect.Array.newInstance(
+				tarVoClass, souVos.length);
+		CircularlyAccessibleValueObject tmp = null;
+		for (int i = 0; i < len; i++) {
+			tmp = (SuperVO) tarVoClass.newInstance();
+			tarVos[i] = tmp;
+		}
+
+		AggregatedValueObject preBillVo = getTmpBIllVo1();
+		AggregatedValueObject tarBillVo = getTmpBIllVo2();
+		int index = 0;
+		for (CircularlyAccessibleValueObject souVo : souVos) {
+			preBillVo.setParentVO(souVo);
+			tarBillVo.setParentVO(tarVos[index]);
+			AbstractConversion achange = (AbstractConversion) change;
+			// achange.setSourceBilltype(souBilltype);
+			// achange.setDestBilltype(destBilltype);
+			achange.retChangeBusiVO(preBillVo, tarBillVo);
+			index++;
+		}
+
+		return tarVos;
+	}
+	
 	/**
 	 * 
 	 * @author mlr
