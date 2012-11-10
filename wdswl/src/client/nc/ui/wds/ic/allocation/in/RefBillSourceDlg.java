@@ -92,7 +92,7 @@ private boolean isStock = false; //是否是总仓 true=是 false=否
 				" and head.cbilltypecode = '4Y' ");//and head.fbillflag=3 //查询 供应链调拨出库 ----调入公司等于当前公司，单据类型为4Y
 		
 //		zhf   add  支持调拨出库 转 物流 关闭
-		hsql.append(" and coalesce(head.bisclose,'N') = 'N' ");
+	//	hsql.append(" and coalesce(head.bisclose,'N') = 'N' ");
 //		zhf end
 		
 		
