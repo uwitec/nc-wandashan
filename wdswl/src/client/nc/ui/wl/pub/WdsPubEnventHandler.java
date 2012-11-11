@@ -293,7 +293,10 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 	 */
 	public void onBoAudit() throws Exception {
 		int[] rows = getBillListPanel().getHeadTable().getSelectedRows();
-		if (rows != null && rows.length == 1) {
+		if(rows==null || rows.length==0){
+			super.onBoAudit();
+		}
+		if (rows != null && rows.length == 1 ) {
 			super.onBoAudit();
 		} else if (rows != null && rows.length > 1) {
 			onBoBatchAudit();
