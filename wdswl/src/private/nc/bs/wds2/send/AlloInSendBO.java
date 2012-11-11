@@ -215,7 +215,7 @@ public class AlloInSendBO {
 		if(PuPubVO.getString_TrimZeroLenAsNull(alloinheadid)==null)
 			return;
 		String sql = " select h.vbillstatus,h.pk_sendorder from wds_sendorder h inner join wds_sendorder_b b" +
-				" on h.pk_sendorder = b.pk_sendorder where b.csourcebillhid = '"+alloinheadid+"'";
+				" on h.pk_sendorder = b.pk_sendorder where b.csourcebillhid = '"+alloinheadid+"' and isnull(h.dr,0)=0 and isnull(b.dr,0)=0";
 		
 		Map o = (Map)getDao().executeQuery(sql, ResultSetProcessorTool.MAPPROCESSOR);
 		if(o == null || o.size() == 0)
@@ -224,10 +224,10 @@ public class AlloInSendBO {
 			throw new BusinessException("调入运单已经审批通过");
 //		删除运单
 		sql = "update wds_sendorder set dr = 1 where pk_sendorder = '"
-			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"'";
+			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"' and isnull(dr,0)=0 ";
 		getDao().executeUpdate(sql);
 		sql = "update wds_sendorder_b set dr = 1 where pk_sendorder = '"
-			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"'";
+			+PuPubVO.getString_TrimZeroLenAsNull(o.get("pk_sendorder"))+"' and isnull(dr,0)=0 ";
 		getDao().executeUpdate(sql);
 	}
 }
