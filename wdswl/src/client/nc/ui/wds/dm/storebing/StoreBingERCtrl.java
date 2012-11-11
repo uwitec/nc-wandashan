@@ -15,43 +15,36 @@ public class StoreBingERCtrl extends ExcelReadCtrl {
 	
 	@Override
 	public String getBillType() {
-		// TODO Auto-generated method stub
 		return Wds2WlPubConst.store_cus_billtype;
 	}
 
 	@Override
 	public String[] getBodyFieldNames() {
-		// TODO Auto-generated method stub
 		return bodyFieldNames;
 	}
 
 	@Override
 	protected String getDealBOClassName() {
-		// TODO Auto-generated method stub
 		return "nc.bs.wds.dm.storebing.StoreBingExcelBO";
 	}
 
 	@Override
 	public String[] getHeadFieldNames() {
-		// TODO Auto-generated method stub
 		return headFieldNames;
 	}
 
 	@Override
 	protected String getSingleChangeClassName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected Class getSingleVOClass() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isSingle() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
