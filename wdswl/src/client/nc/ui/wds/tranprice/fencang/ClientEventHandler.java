@@ -4,6 +4,7 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wl.pub.BeforeSaveValudate;
 import nc.ui.wl.pub.WdsPubEnventHandler;
+import nc.ui.zmpub.pub.excel.UpLoadCtrlTool;
 import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
@@ -38,8 +39,12 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	}
 	@Override
 	protected void onBoSave() throws Exception {
+//		UpLoadCtrlTool tool = new UpLoadCtrlTool();
+//		tool.setExcelReadCtrlClass("nc.ui.wds.tranprice.fencang.StoreCusERCtrl");
+//		tool.onExcelBill(getBillUI());
 		beforeSaveValidate();
 		super.onBoSave();
+
 	}
 	protected void beforeSaveValidate() throws Exception {
 		//表体不为空
