@@ -15,6 +15,8 @@ public class LoginInforHelper {
 	 */
 	public  LoginInforVO getLogInfor(String userid)
 			throws Exception {
+		m_loginInfor=null;
+		
 		if (m_loginInfor == null
 				|| PuPubVO.getString_TrimZeroLenAsNull(m_loginInfor
 						.getLoguser()) == null
