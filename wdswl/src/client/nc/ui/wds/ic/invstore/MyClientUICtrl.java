@@ -27,6 +27,7 @@ public class MyClientUICtrl extends AbstractManageController {
                         IBillButton.Line,
                         IBillButton.Return,
                         IBillButton.Refresh,
+                        IBillButton.Copy,
                         IBillButton.Print
                                                          };
   
