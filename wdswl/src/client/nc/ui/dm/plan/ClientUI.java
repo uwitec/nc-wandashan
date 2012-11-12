@@ -219,6 +219,11 @@ public class ClientUI extends WdsBillManagUI implements BillCardBeforeEditListen
 			// 设置辅信息 到界面
 			getBillCardPanel().getBillModel()
 					.setValueAt(convert, e.getRow(), "nplannum");
+			getBillCardPanel().getBillModel()
+			.setValueAt(convert, e.getRow(), "reserve8");
+			getBillCardPanel().getBillModel()
+			.setValueAt(nassplannum, e.getRow(), "reserve9");
+			
 		}
 		
 		/**
