@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import nc.bs.dao.BaseDAO;
+import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.util.SQLHelper;
 import nc.ui.scm.util.ObjectUtils;
 import nc.uif.pub.exception.UifException;
 import nc.vo.ic.other.out.TbOutgeneralBVO;
 import nc.vo.ic.pub.StockInvOnHandVO;
 import nc.vo.ic.pub.TbGeneralBVO;
+import nc.vo.ic.pub.monthsum.SqlHelper;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
@@ -453,15 +455,16 @@ public class PickTool implements Serializable {
 	 */
 	public  BdCargdocTrayVO[] queryCat(String pk_stordoc, String pk_cargdoc,
 			String geb_cinventoryid, String cdtpk) throws Exception {
-		String wheresql = " pk_cargdoc='" + pk_cargdoc
-				+ "' and  cdt_invmandoc ='" + geb_cinventoryid
-				+ "' and isnull(dr,0)=0 ";
+		String wheresql = " and wds_cargdoc.pk_cargdoc='" + pk_cargdoc
+				+ "' and  bd_cargdoc_tray.cdt_invmandoc ='" + geb_cinventoryid
+				+ "' and pk_corp='"+SQLHelper.getCorpPk()+"' ";
 		if(cdtpk!=null && cdtpk.length()>0){
 			wheresql =wheresql+" and cdt_pk ='"+cdtpk+"'";
 		}
-
-		List list = (List) getDao().retrieveByClause(BdCargdocTrayVO.class,
-				wheresql);
+		
+		String sql=" select bd_cargdoc_tray.* from bd_cargdoc_tray join wds_cargdoc on bd_cargdoc_tray.pk_wds_cargdoc=wds_cargdoc.pk_wds_cargdoc " +
+				   " where isnull(bd_cargdoc_tray.dr,0)=0 and isnull(wds_cargdoc.dr,0)=0  "+wheresql;
+		List list = (List) getDao().executeQuery(sql, new BeanListProcessor(BdCargdocTrayVO.class));
 		if (list == null || list.size() == 0)
 			return null;
 		return (BdCargdocTrayVO[]) list.toArray(new BdCargdocTrayVO[0]);
