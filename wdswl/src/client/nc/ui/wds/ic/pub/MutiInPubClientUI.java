@@ -365,7 +365,7 @@ public class MutiInPubClientUI extends MutiChildForInUI implements ChangeListene
 			JComponent c =getBillCardPanel().getBodyItem("trayname").getComponent();
 			if( c instanceof UIRefPane){
 				UIRefPane ref = (UIRefPane)c;
-				ref.getRefModel().addWherePart("  and bd_cargdoc_tray.cdt_invmandoc='"+pk_invmandoc+"' and  bd_cargdoc_tray.pk_cargdoc='"+pk_cargdoc+"' ");
+				ref.getRefModel().addWherePart("  and bd_cargdoc_tray.cdt_invmandoc='"+pk_invmandoc+"' and  wds_cargdoc.pk_cargdoc='"+pk_cargdoc+"' ");
 			}
 			return true;
 		
