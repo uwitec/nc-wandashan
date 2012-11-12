@@ -299,7 +299,7 @@ public class PlanDealEventHandler {
 		UFDate ed2=logdate.getDateBefore(ends2);
    
 	    //构造查询现存量的whereSql条件
-		String whereSql1=" creadate >= '"+ed1.toString()+"' and creadate <='"+st1.toString()+"'";
+		String whereSql1=" creadate >= '"+ed2.toString()+"' and creadate <='"+st2.toString()+"'";
 		// 获得现存量
 		StockInvOnHandVO[] nvos1 = (StockInvOnHandVO[]) getStock()
 				.queryStockCombinForClient(vos1,whereSql1);
@@ -307,9 +307,9 @@ public class PlanDealEventHandler {
 			return;
 		for (int i = 0; i < billdatas.length; i++) {
 			if (nvos[i] != null) {
-				UFDouble uf1 = nvos[i].getWhs_stocktonnage();// 库存主数量
+				UFDouble uf1 = nvos1[i].getWhs_stocktonnage();// 库存主数量
 			    billdatas[i].setNum2(uf1);
-			    UFDouble  uf2=nvos[i].getWhs_stockpieces();//库存辅数量
+			    UFDouble  uf2=nvos1[i].getWhs_stockpieces();//库存辅数量
 			    billdatas[i].setBnum2(uf2);
 			}
 		}
