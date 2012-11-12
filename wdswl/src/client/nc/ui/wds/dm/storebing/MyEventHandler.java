@@ -61,9 +61,9 @@ public class MyEventHandler extends WdsPubEnventHandler {
 				getBillCardPanelWrapper().getBillCardPanel().getBillModel(), new String[]{"pk_cumandoc","pk_stordoc1"}, new String[]{"©мил","╥ж╡ж"});
 
 		super.onBoSave();
-		UpLoadCtrlTool tool = new UpLoadCtrlTool();
-		tool.setExcelReadCtrlClass("nc.ui.wds.dm.storebing.StoreBingERCtrl");
-		tool.onExcelBill(getBillUI());
+//		UpLoadCtrlTool tool = new UpLoadCtrlTool();
+//		tool.setExcelReadCtrlClass("nc.ui.wds.dm.storebing.StoreBingERCtrl");
+//		tool.onExcelBill(getBillUI());
 	}
 	@Override
 	protected void onBoQuery() throws Exception {
