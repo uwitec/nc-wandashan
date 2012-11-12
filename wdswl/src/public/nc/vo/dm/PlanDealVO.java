@@ -52,6 +52,8 @@ public class PlanDealVO extends SendplaninBVO {
     public UFDouble num1;//期间段1主数量
     public UFDouble bnum1;//期间段1辅数量
     
+    	
+    
     public UFDouble num2;//期间段2主数量
     public UFDouble bnum2;//期间段2辅数量
     //for add mlr
