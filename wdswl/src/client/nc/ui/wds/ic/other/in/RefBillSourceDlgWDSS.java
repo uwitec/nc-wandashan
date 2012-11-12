@@ -27,7 +27,9 @@ public class RefBillSourceDlgWDSS  extends MBillSourceDLG {
 		return login;
 	}
 	
-	private String getPowerSql(){
+	private String getPowerSql(){		
+		//获得权限过滤的sql
+		String sql=null;
 		if (sql == null || sql.length() == 0)
 			try {
 				sql = PowerGetTool.queryClassPowerSql(ClientEnvironment
