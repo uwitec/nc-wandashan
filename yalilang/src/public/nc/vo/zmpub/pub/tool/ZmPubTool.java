@@ -10,7 +10,19 @@ import nc.vo.pub.BusinessException;
 public class ZmPubTool {
 	public static final Integer INTEGER_ZERO_VALUE = new Integer(0); // 整数零
 	private static nc.bs.pub.formulaparse.FormulaParse fp = new nc.bs.pub.formulaparse.FormulaParse();
-
+	/**
+	 * 
+	 * @author zhf
+	 * @说明：（鹤岗矿业）将为null的字符串处理为“”。 2010-11-22下午02:51:02
+	 * @param value
+	 * @return
+	 */
+	public static String getString_NullAsTrimZeroLen(Object value) {
+		if (value == null) {
+			return "";
+		}
+		return value.toString().trim();
+	}
 	/**
 	 * 用于后台
 	 * 
