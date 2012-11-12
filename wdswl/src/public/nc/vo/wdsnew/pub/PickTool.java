@@ -757,13 +757,13 @@ public class PickTool implements Serializable {
 		}
 		if (zbnum.doubleValue() == 0) {
 			mpick.put("" + index, null);// 如果出库单应发辅数量为0 则该行拣货单设置为空
-			error.append(" 应发数量不能为空 &&");
+			error.append(" 计划数量不能为空 &&");
 			vo.setVuserdef14(error.toString());
 			return;
 		}
 		if (noutnum.doubleValue() > 0) {
 			mpick.put("" + index, null);// 如果出库单实发数量有值 不再参与 自动拣货 则该行拣货单设置为空
-			error.append("存在实发数量不能参与自动拣货 ");
+			error.append("存在调整数量不能参与自动拣货 ");
 			vo.setVuserdef14(error.toString());
 			return;
 		}
