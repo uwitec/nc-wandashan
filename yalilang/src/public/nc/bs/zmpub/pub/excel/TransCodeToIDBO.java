@@ -7,10 +7,10 @@ import nc.bs.dao.BaseDAO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.scm.pu.PuPubVO;
-import nc.vo.wl.pub.WdsWlPubTool;
 import nc.vo.zmpub.excel.CodeToIDInfor;
 import nc.vo.zmpub.excel.IDefTran;
 import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
+import nc.vo.zmpub.pub.tool.ZmPubTool;
 
 public class TransCodeToIDBO {
 
@@ -104,18 +104,18 @@ public class TransCodeToIDBO {
 		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
 			if(infor.isCorp.booleanValue()){
-				value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
+				value = ZmPubTool.getString_NullAsTrimZeroLen(ZmPubTool
 						.execFomular(fou, new String[] { infor.getThiscodename(),infor.getCorpname() },
 								new String[] { infor.getCodevalue() ,infor.getCorpvalue()}));
 			}else{
-			value = WdsWlPubTool.getString_NullAsTrimZeroLen(WdsWlPubTool
+			value = ZmPubTool.getString_NullAsTrimZeroLen(ZmPubTool
 					.execFomular(fou, new String[] { infor.getThiscodename() },
 							new String[] { infor.getCodevalue() }));
 			}
 
 		} else {
 			String sql = infor.getSelectSql();
-			value = WdsWlPubTool.getString_NullAsTrimZeroLen(getDAO()
+			value = ZmPubTool.getString_NullAsTrimZeroLen(getDAO()
 					.executeQuery(sql, ResultSetProcessorTool.COLUMNPROCESSOR));
 		}
 
@@ -139,31 +139,25 @@ public class TransCodeToIDBO {
 
 //		转换开始
 		String tmpValue = null;
-		CodeToIDInfor corpInfor = null;
+		CodeToIDInfor corpInfor = new CodeToIDInfor();
 		for (CircularlyAccessibleValueObject vo : vos) {
 
 			// 需要确定当前vo数据所在的公司 数据是导入到那个公司的 导入到不同的公司 档案翻译应按不同公司翻译
 			// 优先转换公司 如果是 单据表体数据 没有实际公司字段的 也应提供虚拟公司字段 在此处临时使用
 			for (CodeToIDInfor infor : infors) {
 				if (infor.isCorpField.booleanValue()) {
-					if(PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue(infor.getThiscodename()))==null)
-						throw new BusinessException("公司编码为空");
-					corpInfor = infor;
-					infor.setCodevalue(WdsWlPubTool//获取公司编码值
-							.getString_NullAsTrimZeroLen(vo
-									.getAttributeValue(infor.getThiscodename())));
-
-					tmpValue = getInforValue(vo,infor);//获取公司ID值
-
 					//					缓存公司信息
-					corpInfor.setCorpname(infor.getThiscodename());
-					corpInfor.setCorpvalue(tmpValue);
-					if(infor.isSave.booleanValue())
-						vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
-					else 
-						vo.setAttributeValue(infor.getThiscodename(), null);
+					corpInfor.setCorpname("pk_corp");
+					corpInfor.setCorpvalue("1021");
+//					if(infor.isSave.booleanValue())
+//					//	vo.setAttributeValue(infor.getThiscodename(), tmpValue);// 为公司字段附上ID
+//					else 
+//						vo.setAttributeValue(infor.getThiscodename(), null);
 					break;
 				}
+			}
+			if(vo==null){
+				continue;
 			}
 
 			for (CodeToIDInfor infor : infors) {
@@ -180,9 +174,9 @@ public class TransCodeToIDBO {
 
 				infor.setCorpvalue(corpInfor.getCorpvalue());//公司ID值
 				//				当前编码值
-				infor.setCodevalue(WdsWlPubTool.getString_NullAsTrimZeroLen(vo.getAttributeValue(infor.getThiscodename())));
-				if(PuPubVO.getString_TrimZeroLenAsNull(infor.getCorpname())==null)
-					infor.setCorpname(corpInfor.getCorpname());
+				infor.setCodevalue(ZmPubTool.getString_NullAsTrimZeroLen(vo.getAttributeValue(infor.getThiscodename())));
+			//	if(PuPubVO.getString_TrimZeroLenAsNull(infor.getCorpname())==null)
+				//	infor.setCorpname(corpInfor.getCorpname());
 
 				tmpValue = getInforValue(vo,infor);
 				if(infor.isSave.booleanValue())
