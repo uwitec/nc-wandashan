@@ -389,7 +389,7 @@ public class PlanDealEventHandler {
 		whereSql
 				.append(" and wds_sendplanin.pk_corp='" + ui.cl.getCorp() + "'");
 		whereSql.append(" and wds_sendplanin.vbillstatus=1 ");
-	//	whereSql.append(" and wds_sendplanin.iplantype=0 ");
+		whereSql.append(" and wds_sendplanin.iplantype=0 ");
 		whereSql
 				.append(" and (coalesce(wds_sendplanin_b.nplannum,0) -  coalesce(wds_sendplanin_b.ndealnum,0)) > 0");
 		// zhf 追加 支持过滤关闭 计划
