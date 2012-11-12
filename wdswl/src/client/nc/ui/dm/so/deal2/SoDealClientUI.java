@@ -64,13 +64,20 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 	private SoDealEventHandler m_handler = null;
 	private String cwhid;//当前登录客户所属仓库
 	public String getWhid(){
-		return cwhid;
+		String cc=null;
+		try {
+			cc= new LoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey()).getWhid();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cc;
 	}
 	// 定义界面模板
 	private BillListPanel m_panel = null;
 	// 按钮事件处理
 	private LoginInforHelper helper = null;
 	public LoginInforHelper getLoginInforHelper() {
+		helper=null;
 		if (helper == null) {
 			helper = new LoginInforHelper();
 		}
@@ -107,7 +114,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		try {
 			cwhid  = new LoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey()).getWhid();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			cwhid = null;
 		}
