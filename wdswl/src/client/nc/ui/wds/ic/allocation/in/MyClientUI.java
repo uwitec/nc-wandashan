@@ -21,6 +21,8 @@ import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.lang.UFDouble;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -240,6 +242,19 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	
 	@Override
 	public void afterEdit(BillEditEvent e) {
+		String key = e.getKey();				
+		if (e.getPos() == BillItem.BODY) {	
+			if("geb_bsnum".equals(key)){
+				UFDouble old=PuPubVO.getUFDouble_NullAsZero(e.getOldValue());
+				UFDouble nv=PuPubVO.getUFDouble_NullAsZero(e.getValue());
+				if(nv.doubleValue()>old.doubleValue()){
+					this.showErrorMessage("应出数量  比原先  应出数量大");
+					getBillCardPanel().getBillModel().setValueAt(old, e.getRow(), key);
+					getBillCardPanel().getBillModel().execEditFormulaByKey(e.getRow(), key);
+				}			
+			}
+			
+		}
 		super.afterEdit(e);
 	}
 
