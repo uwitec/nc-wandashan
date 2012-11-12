@@ -17,6 +17,7 @@ public class RefWDS3BillSourceDlg  extends MBillSourceDLG {
 	String sql=null;
 	
 	private String getPowerSql(){
+		String sql=null;
 		if (sql == null || sql.length() == 0)
 			try {
 				sql = PowerGetTool.queryClassPowerSql(ClientEnvironment
