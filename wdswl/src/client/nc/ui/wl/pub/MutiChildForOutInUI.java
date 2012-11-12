@@ -67,8 +67,7 @@ public abstract class MutiChildForOutInUI extends MutilChildUI{
 					return false;
 				}
 			}
-		}
-		  
+		}		  
 		return true;
 	}
 }
