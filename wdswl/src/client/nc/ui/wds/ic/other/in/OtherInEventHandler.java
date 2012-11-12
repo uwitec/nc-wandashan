@@ -155,12 +155,12 @@ public class OtherInEventHandler extends InPubEventHandler {
 		try{
 			strWhere.append(" geh_billtype ='"+WdsWlPubConst.BILLTYPE_OTHER_IN+"' ");
 			strWhere.append(" and isnull(dr,0) = 0 and pk_corp = '"+_getCorp().getPrimaryKey()+"' ");
-			String pk_stordoc = lo.getCwhid(_getOperator());
-			strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
-			String cargdocid = lo.getSpaceByLogUserForStore(ui._getOperator());
-			if(cargdocid != null){//不是保管员登录 可以查看所有入库单
-				strWhere.append(" and pk_cargdoc = '"+cargdocid+"'");
-			}
+//			String pk_stordoc = lo.getCwhid(_getOperator());
+//			strWhere.append(" and geh_cwarehouseid='" + pk_stordoc + "' ");
+//			String cargdocid = lo.getSpaceByLogUserForStore(ui._getOperator());
+//			if(cargdocid != null){//不是保管员登录 可以查看所有入库单
+//				strWhere.append(" and pk_cargdoc = '"+cargdocid+"'");
+//			}
 			
 		} catch (Exception e) {
 			Logger.info(e);
