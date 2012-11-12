@@ -72,8 +72,14 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 
 	private String cwhid;// 当前登录客户所属仓库
 
-	public String getWhid() {
-		return cwhid;
+	public String getWhid(){
+		String cc=null;
+		try {
+			cc= new LoginInforHelper().getLogInfor(m_ce.getUser().getPrimaryKey()).getWhid();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cc;
 	}
 
 	public LoginInforHelper getLoginInforHelper() {

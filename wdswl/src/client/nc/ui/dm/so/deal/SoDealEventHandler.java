@@ -295,7 +295,7 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 
 			try{
 				billdatas = SoDealHealper.doQuery(whereSql,ui.getWhid(),querStorepk,getOrderType());
-			    querStorepk=null;
+			   // querStorepk=null;
 			}catch(Exception e){
 				e.printStackTrace();
 				showErrorMessage(WdsWlPubTool.getString_NullAsTrimZeroLen(e.getMessage()));
