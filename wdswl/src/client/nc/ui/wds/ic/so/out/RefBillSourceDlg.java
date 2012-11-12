@@ -18,6 +18,7 @@ public class RefBillSourceDlg extends MBillSourceDLG{
 	private LoginInforHelper lo=new LoginInforHelper();
 	
 	private String getPowerSql(){
+		String sql=null;
 		if (sql == null || sql.length() == 0)
 			try {
 				sql = PowerGetTool.queryClassPowerSql(ClientEnvironment
