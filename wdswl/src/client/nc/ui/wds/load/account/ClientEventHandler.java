@@ -182,7 +182,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		}
 		LoadpriceHVO head = (LoadpriceHVO)getBufferData().getCurrentVO().getParentVO();
 		UFBoolean fisended = PuPubVO.getUFBoolean_NullAs(head.getReserve14(), UFBoolean.FALSE);
-		if(fisended == UFBoolean.FALSE ){
+		if(fisended .booleanValue()== false){
 			getBillUI().showWarningMessage("单据尚未确认");
 			return ;
 		}	
@@ -196,7 +196,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	 * @时间：2012-7-23下午03:06:13
 	 */
     private void onUnLock() throws Exception {
-		LoadpriceHVO head=(LoadpriceHVO) getBillCardPanelWrapper().getBillVOFromUI().getParentVO();
+    	if(getBufferData().getCurrentVO() ==null){
+			getBillUI().showWarningMessage("请先选择一条数据");
+			return;
+		}
+		LoadpriceHVO head=(LoadpriceHVO) getBufferData().getCurrentVO().getParentVO();
 		head.setReserve14(new UFBoolean(false));
 		HYPubBO_Client.update(head);
 		onBoRefresh();
@@ -210,7 +214,11 @@ public class ClientEventHandler extends WdsPubEnventHandler {
      * @时间：2012-7-23下午03:04:18
      */
 	private void onLock() throws Exception {		
-		LoadpriceHVO head=(LoadpriceHVO) getBillCardPanelWrapper().getBillVOFromUI().getParentVO();
+	  	if(getBufferData().getCurrentVO() ==null){
+			getBillUI().showWarningMessage("请先选择一条数据");
+			return;
+		}
+		LoadpriceHVO head=(LoadpriceHVO) getBufferData().getCurrentVO().getParentVO();
 		head.setReserve14(new UFBoolean(true));
 		HYPubBO_Client.update(head);
 		onBoRefresh();
