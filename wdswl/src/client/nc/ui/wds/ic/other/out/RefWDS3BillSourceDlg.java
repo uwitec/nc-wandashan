@@ -6,6 +6,7 @@ import nc.ui.trade.controller.IControllerBase;
 import nc.ui.wdsnew.pub.MBillSourceDLG;
 import nc.ui.wdsnew.pub.PowerGetTool;
 import nc.ui.wl.pub.LoginInforHelper;
+import nc.vo.wl.pub.WdsWlPubConst;
 /**
  * @author mlr
  *其他出库 参照 发运订单（WDS3）
@@ -66,7 +67,8 @@ public class RefWDS3BillSourceDlg  extends MBillSourceDLG {
 		
 		return "  coalesce(wds_sendorder_b.ndealnum,0)-coalesce(wds_sendorder_b.noutnum,0)>0 " +//安排数量-出库数量>0
 		" and wds_sendorder_b.pk_invmandoc in ("+getPowerSql()+")"+
-		" and wds_sendorder.pk_outwhouse ='"+pk_store+"'";//过滤当前操作员绑定的仓库
+		" and wds_sendorder.pk_outwhouse ='"+pk_store+"'" +//过滤当前操作员绑定的仓库
+	    " and wds_sendorder.pk_billtype='"+WdsWlPubConst.WDS3+"'";
 	}
 	
 	
