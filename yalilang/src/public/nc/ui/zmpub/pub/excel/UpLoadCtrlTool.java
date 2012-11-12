@@ -4,8 +4,10 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIFileChooser;
 import nc.ui.pub.beans.UITextField;
@@ -16,7 +18,6 @@ import nc.vo.pfxx.pub.Filter;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.scm.pub.SCMEnv;
-import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.excel.UpLoadFileVO;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 
@@ -579,7 +580,7 @@ public class UpLoadCtrlTool {
 			Class[] ParameterTypes = new Class[] { CircularlyAccessibleValueObject[].class };
 			Object[] ParameterValues = new Object[] { vos };
 
-			LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, billUI,
+			LongTimeTask.calllongTimeService("zmpub", billUI,
 					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealSingleImportDatas", ParameterTypes,
 					ParameterValues);
 		} else {// 单据数据处理 或 具有表头表体 的档案 需要注册单据类型 vo对照
@@ -592,7 +593,7 @@ public class UpLoadCtrlTool {
 			//					getDealBOClassName(), "dealBillImportDatas",
 			//					ParameterTypes, ParameterValues, 2);
 
-			LongTimeTask.calllongTimeService(WdsWlPubConst.WDS_WL_MODULENAME, billUI,
+			LongTimeTask.calllongTimeService("zmpub", billUI,
 					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealBillImportDatas", ParameterTypes,
 					ParameterValues);
 		}
