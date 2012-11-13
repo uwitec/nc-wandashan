@@ -492,10 +492,10 @@ public class PlanDealEventHandler {
 				tmp.validataOnDeal();
 				tmp.setTs(tsInfor.get(tmp.getPrimaryKey()));
 			}
-//			if(!valute(ldata)){
-//				ui.showErrorMessage("可用量不够");
-//				return;
-//			}
+			if(!valute(ldata)){
+				ui.showErrorMessage("可用量不够");
+				return;
+			}
 			PlanDealHealper.doDeal(ldata, ui);
 		} catch (Exception e) {
 			e.printStackTrace();
