@@ -83,7 +83,8 @@ public class SoOutBO {
 						"CANCELSIGN", s_billtype, date, null, billvo[i], null,
 						null);
 				if (retList.get(0) != null && (Boolean) retList.get(0)) {// 取消签字成功
-					bsBusiAction.processAction("CANELDELETE", s_billtype, date,
+					//"CANELDELETE"
+					bsBusiAction.processAction("DELETE", s_billtype, date,
 							null, billvo[i], null, null);
 				}
 			}

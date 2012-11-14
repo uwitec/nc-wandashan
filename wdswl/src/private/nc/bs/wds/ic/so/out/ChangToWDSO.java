@@ -262,7 +262,7 @@ public class ChangToWDSO {
 		if (writeHvos != null && writeHvos.length > 0) {
 			for(Writeback4cHVO writeHead:writeHvos){
 				//查看销售出库回传单是否 已经审批
-				Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHvos[0].getVbillstatus(), IBillStatus.FREE);
+				Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHead.getVbillstatus(), IBillStatus.FREE);
 				if (vbillstatus == IBillStatus.CHECKPASS) {
 					throw new BusinessException("下游销售出库台账回写已经审批完成,不能再弃审");
 				}
@@ -293,7 +293,7 @@ public class ChangToWDSO {
 				if(count == b2vos.length)
 					isDel = true;
 				//设置 销售出库回传单 表头 表体
-				writeBillVO.setParentVO(writeHvos[0]);
+				writeBillVO.setParentVO(writeHead);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[0], b1vos);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[1], b2vos);
 				if(isDel){

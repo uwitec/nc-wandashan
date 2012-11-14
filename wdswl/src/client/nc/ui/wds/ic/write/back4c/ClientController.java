@@ -19,7 +19,8 @@ public class ClientController extends AbstractManageController {
 				IBillButton.Return,
 				IBillButton.Brow,
 				IBillButton.Refresh,
-				IBillButton.Action
+				IBillButton.Action,
+				IBillButton.Delete,
 		       		
 		};
 		return buttonArray;

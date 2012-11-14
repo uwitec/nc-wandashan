@@ -151,7 +151,7 @@ public class ChangToWDSP {
 				.queryByCondition(Writeback4yHVO.class, bur.toString());
 		if (writeHvos != null && writeHvos.length > 0) {
 			for (Writeback4yHVO writeHead : writeHvos) {
-				Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHvos[0]
+				Integer vbillstatus = PuPubVO.getInteger_NullAs(writeHead
 						.getVbillstatus(), IBillStatus.FREE);
 				if (vbillstatus == IBillStatus.CHECKPASS) {
 					throw new BusinessException("下游调拨入库台账回写已经审批完成,不能再弃审");
@@ -178,7 +178,7 @@ public class ChangToWDSP {
 				}
 				if (count == b2vos.length)
 					isDel = true;
-				writeBillVO.setParentVO(writeHvos[0]);
+				writeBillVO.setParentVO(writeHead);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[0], b1vos);
 				writeBillVO.setTableVO(writeBillVO.getTableCodes()[1], b2vos);
 				if (isDel) {

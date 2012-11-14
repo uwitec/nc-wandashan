@@ -68,7 +68,7 @@ public class N_WDS8_SIGN extends AbstractCompiler2 {
 	/*
 	* 备注：设置脚本变量的HAS
 	*/
-	private void setParameter(String key,Object val)	{
+	private void setParameter(String key,Object val){
 		if (m_keyHas==null){
 			m_keyHas=new Hashtable();
 		}
