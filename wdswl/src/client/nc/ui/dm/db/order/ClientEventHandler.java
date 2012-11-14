@@ -268,17 +268,16 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	public void onButton(ButtonObject bo){
-		AggregatedValueObject billVo = getBufferData().getCurrentVO();
-		if(billVo == null){
-			getBillUI().showWarningMessage("请选择要操作的数据");
-		}
-		SendorderVO head = (SendorderVO)billVo.getParentVO();
-	   // 冻结处理
-		UFBoolean uf = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue("fisended"), new UFBoolean(false));
+		UFBoolean uf =new UFBoolean(false);
 		ButtonObject parentBtn = bo.getParent();
 		if (parentBtn != null ) {
 			int intParentBtn = Integer.parseInt(parentBtn.getTag());
 			if(IBillButton.Action == intParentBtn){
+				AggregatedValueObject billVo = getBufferData().getCurrentVO();
+				if(billVo == null){
+					getBillUI().showWarningMessage("请选择要操作的数据");
+				}//liuys add 卡片列表判断
+					uf = PuPubVO.getUFBoolean_NullAs(billVo.getParentVO().getAttributeValue("fisended"), new UFBoolean(false));
 				if (uf.booleanValue()==false) {
 					getBillUI().showErrorMessage("冻结后才允许审批");
 					return;
