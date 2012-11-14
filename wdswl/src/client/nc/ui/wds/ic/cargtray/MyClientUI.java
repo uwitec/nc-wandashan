@@ -1,9 +1,12 @@
 package nc.ui.wds.ic.cargtray;
 
+import javax.swing.JComponent;
+
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.bill.BillCardBeforeEditListener;
 import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillItemEvent;
 import nc.ui.trade.bill.AbstractManageController;
 import nc.ui.trade.bsdelegate.BusinessDelegator;
@@ -87,9 +90,10 @@ public class MyClientUI extends WdsBillManagUI implements
 			String pk_cargdoc=(String) getBillCardPanel().getHeadItem("pk_cargdoc").getValueObject();
 			//得到参照
 			UIRefPane panel=(UIRefPane) getBillCardPanel().getBodyItem("invcode").getComponent();
-			panel.getRefModel().addWherePart(" and tb_spacegoods.pk_cargdoc ='"+pk_cargdoc+"'");
+			panel.getRefModel().addWherePart(" and wds_cargdoc1.pk_cargdoc ='"+pk_cargdoc+"'");
 						
 		}
+		
 		
 		return true;
 	}
@@ -148,8 +152,35 @@ public class MyClientUI extends WdsBillManagUI implements
 //				}
 //			}
 //		}else if(e.getItem().getPos() ==BillItem.BODY){}
-		
+
+		String key = e.getItem().getKey();
+		if (e.getItem().getPos() == BillItem.HEAD) {
+			// 仓库过滤，只属于物流系统的
+			if ("pk_stordoc".equalsIgnoreCase(key)) {
+				JComponent c = getBillCardPanel().getHeadItem("pk_stordoc")
+						.getComponent();
+				if (c instanceof UIRefPane) {
+					UIRefPane ref = (UIRefPane) c;
+					ref.getRefModel().addWherePart(
+							"  and def1 = '1' and isnull(dr,0) = 0");
+				}
+			}
+			if (e.getItem().getKey().equals("pk_cargdoc")) {
+				Object a = getBillCardPanel().getHeadItem("pk_stordoc")
+						.getValueObject();
+				UIRefPane panel = (UIRefPane) this.getBillCardPanel()
+						.getHeadItem("pk_cargdoc").getComponent();
+				if (null != a && !"".equals(a)) {
+					panel.getRefModel().addWherePart(
+							" and bd_cargdoc.pk_stordoc='" + a + "'");
+				} else {
+					showErrorMessage("请先选择仓库信息!");
+					return false;
+				}
+			}
+		}
 		return true;
+	
 	}
 
 	@Override

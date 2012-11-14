@@ -23,6 +23,7 @@ public class MyClientUICtrl extends AbstractManageController {
 				IBillButton.Edit, IBillButton.Line, IBillButton.Save,
 				IBillButton.Query, 
 				IBillButton.Delete,
+				IBillButton.Copy,
 				IBillButton.Cancel, IBillButton.Return,
 				IBillButton.Refresh,IBillButton.Print };
 

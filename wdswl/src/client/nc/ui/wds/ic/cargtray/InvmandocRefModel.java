@@ -10,7 +10,8 @@ public class InvmandocRefModel extends AbstractRefModel{
 	 private String tablename="tb_spacegoods join " +
 	 		"wds_invbasdoc on tb_spacegoods.pk_invmandoc=wds_invbasdoc.pk_invmandoc  join " +
 	 		"bd_invmandoc on tb_spacegoods.pk_invmandoc=bd_invmandoc.pk_invmandoc  join  " +
-	 		"bd_invbasdoc on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc ";
+	 		"bd_invbasdoc on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc "+
+	 		"join  wds_cargdoc1 on tb_spacegoods.pk_wds_cargdoc=wds_cargdoc1.pk_wds_cargdoc ";
 	
 	 private String[] fieldcode={"invcode","invname","invspec","invtype",
 			 "tb_spacegoods.pk_invbasdoc","tb_spacegoods.pk_invmandoc"};
@@ -81,7 +82,7 @@ public class InvmandocRefModel extends AbstractRefModel{
 	    public String getWherePart() {
 	    	StringBuffer strWhere = new StringBuffer();
 	    	strWhere.append(" isnull(tb_spacegoods.dr,0)=0 and isnull(wds_invbasdoc.dr,0) = 0 and isnull(bd_invbasdoc.dr,0) = 0" +
-	    			" and isnull(wds_invbasdoc.dr,0) = 0 ")   
+	    			" and isnull(wds_invbasdoc.dr,0) = 0 and isnull(wds_cargdoc1.dr,0) = 0")   
 	    	        .append(" and bd_invmandoc.pk_corp='"+getPk_corp()+"'");
 	    	return strWhere.toString();
 	    }
