@@ -2,7 +2,6 @@ package nc.ui.wds.tranprice.freight;
 
 import java.awt.Container;
 
-import nc.lm.ui.classinfor.ClientUI;
 import nc.ui.pub.pf.IUIBeforeProcAction;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
