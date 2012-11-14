@@ -20,7 +20,9 @@ import nc.ui.wds.w80020206.buttun0206.QxqzBtn;
 import nc.ui.wds.w80020206.buttun0206.QzqrBtn;
 import nc.ui.wds.w8004040214.buttun0214.ZdrkBtn;
 import nc.ui.wds.w80060206.buttun0206.ISsButtun;
+import nc.vo.ic.pub.PubVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.button.ButtonVO;
 import nc.vo.trade.field.IBillField;
 import nc.vo.trade.pub.IBillStatus;
@@ -329,6 +331,15 @@ public class MyClientUI extends MutiInPubClientUI  implements  BillCardBeforeEdi
 					//修改参照 条件 增加条件 指定仓库id
 					panel.getRefModel().addWherePart(" and wds_teamdoc_h.vdef1 = '"+a+"' ");
 				}
+			}
+			//liuys add 应收数量以及应收辅数量非自制状态不能编辑
+			if("geb_snum".equals(key)||"geb_bsnum".equals(key)){
+				Object obj = getBillCardPanel().getBillModel().getValueAt(e.getRow(), "csourcebillhid");
+				if(PuPubVO.getString_TrimZeroLenAsNull(obj)==null){
+					return true;
+				}else
+					return false;
+				//临时,前台调sql
 			}
 		}
 		super.beforeEdit(e);

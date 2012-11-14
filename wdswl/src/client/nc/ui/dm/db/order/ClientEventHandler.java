@@ -268,9 +268,13 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 
 	@Override
 	public void onButton(ButtonObject bo){
+		AggregatedValueObject billVo = getBufferData().getCurrentVO();
+		if(billVo == null){
+			getBillUI().showWarningMessage("请选择要操作的数据");
+		}
+		SendorderVO head = (SendorderVO)billVo.getParentVO();
 	   // 冻结处理
-		UFBoolean uf = PuPubVO.getUFBoolean_NullAs(getBillCardPanelWrapper().getBillCardPanel().getHeadItem(
-		"fisended").getValueObject(), new UFBoolean(false));
+		UFBoolean uf = PuPubVO.getUFBoolean_NullAs(head.getAttributeValue("fisended"), new UFBoolean(false));
 		ButtonObject parentBtn = bo.getParent();
 		if (parentBtn != null ) {
 			int intParentBtn = Integer.parseInt(parentBtn.getTag());
