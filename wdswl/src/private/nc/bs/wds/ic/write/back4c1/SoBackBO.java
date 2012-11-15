@@ -145,13 +145,13 @@ public class SoBackBO{
 				String orderbid = vo.getCsourcebillbid();// 取得调拨订单主键
 				for (int j = 0; j < bvos.length; j++) {
 					if (orderbid.equals(bvos[j].getCorder_bid())) {
-						// 设置应付数量
+						// 设置应发数量
 						vo.setNshouldoutnum(bvos[j].getNoutnum());
 						vo.setNshouldoutassistnum(bvos[j].getNpacknumber());
 						vo.setVbatchcode(getDefaultCode());
 						// 设置实发数量
 						vo.setNoutnum(bvos[j].getNoutnum());
-						vo.setNoutassistnum(bvos[j].getNpacknumber());
+						vo.setNoutassistnum(bvos[j].getNoutassistnum());
 						vo.setStatus(VOStatus.NEW);
 						vo.setAttributeValue(WdsWlPubConst.csourcehid_wds, pk);
 					}

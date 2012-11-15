@@ -1,10 +1,13 @@
 package nc.ui.wds.ic.write.back4c;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.controller.IControllerBase;
+import nc.ui.wl.pub.LoginInforHelper;
 import nc.ui.wl.pub.WdsPubEnventHandler;
 import nc.vo.pub.AggregatedValueObject;
+import nc.vo.wl.pub.WdsWlPubConst;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -22,6 +25,10 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 							.getNodeKey());
 		}
 		return queryDialog;
+	}
+	@Override
+	protected String getHeadCondition() {
+		return " pk_corp = '"+_getCorp().getPrimaryKey()+"' and isnull(dr,0) = 0 and pk_billtype = '"+WdsWlPubConst.WDSO+"' ";
 	}
 
 	@Override
