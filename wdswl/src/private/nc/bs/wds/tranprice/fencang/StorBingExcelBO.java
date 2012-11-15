@@ -4,7 +4,6 @@ import nc.bs.framework.common.InvocationInfoProxy;
 import nc.bs.trade.business.HYPubBO;
 import nc.bs.zmpub.pub.excel.AbstractExcetBO;
 import nc.jdbc.framework.util.SQLHelper;
-import nc.vo.ic.pub.monthsum.SqlHelper;
 import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.CircularlyAccessibleValueObject;
@@ -15,7 +14,6 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wds.load.account.LoadpriceB1VO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.excel.CodeToIDInfor;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
@@ -132,7 +130,20 @@ public class StorBingExcelBO extends AbstractExcetBO {
 		bodyInfor[1].setThiscodename("pk_replace");
 		bodyInfor[1].isCorp = UFBoolean.TRUE;
 		bodyInfor[1].isBasic = UFBoolean.TRUE;
-		bodyInfor[1].setCorpname("pk_corp");	
+		bodyInfor[1].isDefTran = UFBoolean.TRUE;
+		bodyInfor[1].setDefTranClassName("nc.bs.wds.dm.storebing.StoreBingCustTranBO");
+//		bodyInfor[1].setCorpname("pk_corp");	
+////		客商编码----自定义处理
+//		bodyInfor[2].setCodename("custcode");
+//		bodyInfor[2].setIdname("pk_cumandoc");
+//		bodyInfor[2].setTablename("bd_cumandoc");
+//		bodyInfor[2].setThiscodename("pk_cumandoc");
+//		bodyInfor[2].isCorp = UFBoolean.TRUE;
+//		bodyInfor[2].isBasic = UFBoolean.TRUE;
+//		bodyInfor[2].isDefTran = UFBoolean.TRUE;
+//		bodyInfor[2].isCache = UFBoolean.FALSE;
+//		bodyInfor[2].setDefTranClassName("nc.bs.wds.dm.storebing.StoreBingCustTranBO");
+//		bodyInfor[2].setCorpname("pk_corp");
 	}
 
 	@Override
