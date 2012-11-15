@@ -208,7 +208,7 @@ public class SoBackBO{
 					.getTableVO(billvo.getTableCodes()[0]);
 			Writeback4cB2VO[] bvos1 = (Writeback4cB2VO[]) billvo
 					.getTableVO(billvo.getTableCodes()[1]);
-			// 按订单id 和 货位id 合并数据 因为供应链 出入库单不允许 表体同一条记录 不允许重复货位
+			// 按订单id 和 货位id 合并数据 因为供应链 出入库单不  表体同一条记录 不允许重复货位
 			Writeback4cB2VO[] zbvos = (Writeback4cB2VO[]) CombinVO.combinData(
 					bvos1, new String[] { "cfirstbillbid", "vdef4" },
 					new String[] { "noutnum", "noutassistnum" },
