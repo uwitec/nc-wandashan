@@ -24,7 +24,7 @@ public class CHGWDSXTO4Y extends nc.bs.pf.change.VOConversion{
 		return null;
 	}
 	/**
-	* 获得字段对应。
+	* 获得字段对应。	noutassistnum
 	* @return java.lang.String[]
 	*/
 	public String[] getField() {
