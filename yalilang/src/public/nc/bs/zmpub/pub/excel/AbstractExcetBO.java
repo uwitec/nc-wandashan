@@ -138,6 +138,10 @@ public abstract class AbstractExcetBO {
 		}
 		
 		TransCodeToIDBO.getInstance().transCodeToID(heads, getHeadTransFieldInfor());
+		for(String key:TransCodeToIDBO.getInstance().map.keySet()){
+			System.out.println(key);
+		}
+		
 		TransCodeToIDBO.getInstance().clearCathe();
 	}
 	

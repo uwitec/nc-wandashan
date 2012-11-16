@@ -593,7 +593,7 @@ public class UpLoadCtrlTool {
 			//					getDealBOClassName(), "dealBillImportDatas",
 			//					ParameterTypes, ParameterValues, 2);
 
-			LongTimeTask.calllongTimeService("zmpub", billUI,
+			LongTimeTask.calllongTimeService("wds", billUI,
 					"正在处理...", 2, ctrl.getDealBOClassName(), null, "dealBillImportDatas", ParameterTypes,
 					ParameterValues);
 		}

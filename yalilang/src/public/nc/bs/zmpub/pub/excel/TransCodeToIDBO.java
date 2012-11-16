@@ -1,5 +1,6 @@
 package nc.bs.zmpub.pub.excel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +78,7 @@ public class TransCodeToIDBO {
 		return value;
 	}
 	
+   public static Map<String,String> map=new HashMap<String,String>();
 	
 	/**
 	 * 获取ID值
@@ -101,6 +103,9 @@ public class TransCodeToIDBO {
 		String value = null;
 		if(infor.isDefTran.booleanValue()){
 			value = defTran(vo, infor);
+			if(value==null || value.length()==0)
+				map.put(infor.getCodevalue(), "");
+			
 		}else if (infor.getIsBasic().booleanValue()) {//标准产品基本档案可通过公示获取值  效率较高
 			String fou = infor.getFomular();
 			if(infor.isCorp.booleanValue()){
