@@ -316,7 +316,7 @@ public class TranPriceAccount {
 					nmny =  PuPubVO.getUFDouble_NullAsZero(null);
 				}
 			}
-			head.setNtransmny(nmny.add(nadjmny, 8));
+			head.setNtransmny(nmny.add(PuPubVO.getUFDouble_NullAsZero(nadjmny), 8));
 		}
 
 	}
