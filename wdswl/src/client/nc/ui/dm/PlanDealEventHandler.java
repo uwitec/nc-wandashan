@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -23,6 +25,7 @@ import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
+import nc.vo.zmpub.pub.tool.ZmPubTool;
 
 public class PlanDealEventHandler {
 
@@ -185,8 +188,12 @@ public class PlanDealEventHandler {
 	private void setAvailNum(PlanDealVO[] billdatas) throws Exception {
 		if (billdatas == null || billdatas.length == 0)
 			return;
+		String pk_ssdate=(String) ZmPubTool.execFomularClient("pk_ssdate->getColValue2(tb_stockstate,ss_pk,ss_state,ss_state,pk_corp,pk_corp)", 
+				new String[]{"ss_state","pk_corp"},
+                new String[]{"合格",ClientEnvironment.getInstance().getCorporation().getPrimaryKey()});
+	
 		for (int i = 0; i < billdatas.length; i++) {
-			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			billdatas[i].setVdef1(pk_ssdate);
 		}
 		// 构造现存量查询条件
 		StockInvOnHandVO[] vos = (StockInvOnHandVO[]) SingleVOChangeDataUiTool
@@ -220,8 +227,12 @@ public class PlanDealEventHandler {
 	private void setStock(PlanDealVO[] billdatas) throws Exception {
 		if (billdatas == null || billdatas.length == 0)
 			return;
+		String pk_ssdate=(String) ZmPubTool.execFomularClient("pk_ssdate->getColValue2(tb_stockstate,ss_pk,ss_state,ss_state,pk_corp,pk_corp)", 
+				new String[]{"ss_state","pk_corp"},
+                new String[]{"合格",ClientEnvironment.getInstance().getCorporation().getPrimaryKey()});
+	
 		for (int i = 0; i < billdatas.length; i++) {
-			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			billdatas[i].setVdef1(pk_ssdate);
 		}
 		// 构造现存量查询条件
 		StockInvOnHandVO[] vos = (StockInvOnHandVO[]) SingleVOChangeDataUiTool

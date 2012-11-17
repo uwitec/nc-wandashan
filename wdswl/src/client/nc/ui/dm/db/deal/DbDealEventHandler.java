@@ -3,6 +3,7 @@ package nc.ui.dm.db.deal;
 import java.util.ArrayList;
 import java.util.List;
 
+import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillModel;
@@ -29,6 +30,7 @@ import nc.vo.wdsnew.pub.AvailNumBO;
 import nc.vo.wdsnew.pub.BillStockBO1;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
+import nc.vo.zmpub.pub.tool.ZmPubTool;
 
 public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBillRelaSortListener2
 {
@@ -252,8 +254,12 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	private void setStock(DbDealVO[] billdatas) throws Exception {
 		if(billdatas==null || billdatas.length==0)
 			return ;
+		String pk_ssdate=(String) ZmPubTool.execFomularClient("pk_ssdate->getColValue2(tb_stockstate,ss_pk,ss_state,ss_state,pk_corp,pk_corp)", 
+				new String[]{"ss_state","pk_corp"},
+                new String[]{"合格",ClientEnvironment.getInstance().getCorporation().getPrimaryKey()});
+	
 		for(int i=0;i<billdatas.length;i++){
-		    billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+		    billdatas[i].setVdef1(pk_ssdate);
 		}
 		//构造现存量查询条件
 		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDSBTOACCOUNTNUM");
@@ -275,8 +281,12 @@ public class DbDealEventHandler implements BillEditListener,nc.ui.pub.bill.IBill
 	private void setAvailNum(DbDealVO[] billdatas) throws Exception {		
 		if(billdatas==null || billdatas.length==0)
 			return ;
+		String pk_ssdate=(String) ZmPubTool.execFomularClient("pk_ssdate->getColValue2(tb_stockstate,ss_pk,ss_state,ss_state,pk_corp,pk_corp)", 
+				new String[]{"ss_state","pk_corp"},
+                new String[]{"合格",ClientEnvironment.getInstance().getCorporation().getPrimaryKey()});
+	
 		for(int i=0;i<billdatas.length;i++){
-			billdatas[i].setVdef1(WdsWlPubConst.WDS_STORSTATE_PK_hg);
+			billdatas[i].setVdef1(pk_ssdate);
 		}
 		//构造现存量查询条件
 		StockInvOnHandVO[] vos=(StockInvOnHandVO[]) SingleVOChangeDataUiTool.runChangeVOAry(billdatas, StockInvOnHandVO.class, "nc.ui.wds.self.changedir.CHGWDSBTOACCOUNTNUM");

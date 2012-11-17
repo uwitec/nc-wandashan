@@ -113,7 +113,7 @@ public class AlloInSendBO {
 											new String[] { "pk_invmandoc" },
 											new String[] { pk_invmandoc }), -3);
 
-			if (type <= 0) {
+			if (type < 0) {
 				String invcode = PuPubVO.getString_TrimZeroLenAsNull(
 						ZmPubTool.execFomular(
 										" invcode ->getColValue(bd_invbasdoc,invcode,pk_invbasdoc,pk_invbasdoc)",
