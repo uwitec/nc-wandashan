@@ -226,9 +226,9 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 				getPanel().getBodyBillModel().setValueAt(null, row,
 						"anstorenumout");// 库存辅数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqstorenumout");// 可用主数量
+						"ndrqarrstorenumout");// 可用主数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqarrstorenumout");// 可用辅数量
+						"ndrqstorenumout");// 可用辅数量
 				e1.printStackTrace();
 				showErrorMessage("获取现存量失败");
 			}
@@ -238,9 +238,9 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 				getPanel().getBodyBillModel().setValueAt(null, row,
 						"anstorenumout");// 库存辅数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqstorenumout");// 可用主数量
+						"ndrqarrstorenumout");// 可用主数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqarrstorenumout");// 可用辅数量
+						"ndrqstorenumout");// 可用辅数量
 				return;
 			}
 			getPanel().getBodyBillModel().setValueAt(
@@ -249,16 +249,18 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 					vos[0].getWhs_stockpieces(), row, "anstorenumout");// 库存辅数量
 			if (vos1 == null || vos1.length == 0 || vos1[0] == null) {
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqstorenumout");// 可用主数量
+						"ndrqarrstorenumout");// 可用主数量
 				getPanel().getBodyBillModel().setValueAt(null, row,
-						"ndrqarrstorenumout");// 可用辅数量
+						"ndrqstorenumout");// 可用辅数量
 				return;
 			} else {
+				//ndrqarrstorenumout
+				//ndrqstorenumout
 				getPanel().getBodyBillModel().setValueAt(
-						vos1[0].getWhs_stocktonnage(), row, "ndrqstorenumout");// 可用主数量
+						vos1[0].getWhs_stocktonnage(), row, "ndrqarrstorenumout");// 可用主数量
 				getPanel().getBodyBillModel()
 						.setValueAt(vos1[0].getWhs_stockpieces(), row,
-								"ndrqarrstorenumout");// 可用辅数量
+								"ndrqstorenumout");// 可用辅数量
 			}
 		}
 

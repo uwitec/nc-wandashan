@@ -292,8 +292,8 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 			if(nvos[i]!=null){		
 				UFDouble  uf1=nvos[i].getWhs_stocktonnage();//可用主数量
 				UFDouble uf2=nvos[i].getWhs_stockpieces();//可用辅数量
-				billdatas[i].setNdrqarrstorenumout(uf1);
-				billdatas[i].setNdrqstorenumout(uf2);
+				billdatas[i].setNdrqarrstorenumout(uf2);
+				billdatas[i].setNdrqstorenumout(uf1);
 			}
 		}
 	}
