@@ -117,7 +117,7 @@ public class TranPriceAccount {
 			List<TranspriceBVO> lprice = getBigPriceInfor(colType, head
 					.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 			if (lprice == null || lprice.size() == 0) {
-				throw new BusinessException("未查询到匹配的运价表");
+				throw new BusinessException("未查询到匹配的原料粉运价表(吨公里运价表,非总仓)");
 			}
 			curTranpriceBvo = lprice.get(0);
 		}else{
@@ -126,14 +126,14 @@ public class TranPriceAccount {
 					List<TranspriceBVO> lprice = getDsPriceInfor(colType, head
 							.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 					if (lprice == null || lprice.size() == 0) {
-						throw new BusinessException("未查询到匹配的运价表");
+						throw new BusinessException("未查询到匹配的吨公里运价表(总仓)");
 					}
 					curTranpriceBvo = lprice.get(0);
 				} else {
 					List<TranspriceBVO> lprice = getXsPriceInfor(colType, head
 							.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 					if (lprice == null || lprice.size() == 0) {
-						throw new BusinessException("未查询到匹配的运价表");
+						throw new BusinessException("未查询到匹配的箱数运价表(总仓)");
 					}
 					curTranpriceBvo = lprice.get(0);
 				}
@@ -141,7 +141,7 @@ public class TranPriceAccount {
 				List<TranspriceBVO> lprice = getFCPriceInfor(colType, head
 						.getPk_transcorp(), head.getPk_outwhouse(), reareaid, true);
 				if (lprice == null || lprice.size() == 0) {
-					throw new BusinessException("未查询到匹配的运价表");
+					throw new BusinessException("未查询到匹配的分仓运价表");
 				}
 				curTranpriceBvo = lprice.get(0);		
 			}
@@ -817,7 +817,7 @@ public class TranPriceAccount {
 			Object[] obj= (Object[])list.get(0);
 			String areaclname =PuPubVO.getString_TrimZeroLenAsNull(obj[1]);
 			if (areaclname != null) {
-				if (areaclname.contains("省")) {
+				if (areaclname.contains("东三省")) {
 					return null;
 				} else {
 					return PuPubVO.getString_TrimZeroLenAsNull(obj[0]);
