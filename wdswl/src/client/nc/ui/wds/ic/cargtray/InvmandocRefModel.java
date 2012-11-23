@@ -13,7 +13,7 @@ public class InvmandocRefModel extends AbstractRefModel{
 	 		"bd_invbasdoc on tb_spacegoods.pk_invbasdoc= bd_invbasdoc.pk_invbasdoc "+
 	 		"join  wds_cargdoc1 on tb_spacegoods.pk_wds_cargdoc=wds_cargdoc1.pk_wds_cargdoc ";
 	
-	 private String[] fieldcode={"invcode","invname","invspec","invtype",
+	 private String[] fieldcode={"distinct invcode","invname","invspec","invtype",
 			 "tb_spacegoods.pk_invbasdoc","tb_spacegoods.pk_invmandoc"};
 	 
 	 
@@ -86,6 +86,18 @@ public class InvmandocRefModel extends AbstractRefModel{
 	    	        .append(" and bd_invmandoc.pk_corp='"+getPk_corp()+"'");
 	    	return strWhere.toString();
 	    }
+		private String m_strOrderPart = null;
+		/**
+		 * Order子句。
+		 * 
+		 * @return java.lang.String
+		 */
+		public String getOrderPart() {
+			if (m_strOrderPart == null && getFieldCode() != null
+					&& getFieldCode().length > 0)
+				m_strOrderPart = "invcode";
+			return m_strOrderPart;
+		}
 	    /**
 	     * 参照数据库表或者视图名 创建日期：(01-4-4 0:57:23)
 	     * 

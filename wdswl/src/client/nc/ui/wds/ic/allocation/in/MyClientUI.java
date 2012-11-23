@@ -244,15 +244,15 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 	public void afterEdit(BillEditEvent e) {
 		String key = e.getKey();				
 		if (e.getPos() == BillItem.BODY) {	
-			if("geb_bsnum".equals(key)){
-				UFDouble old=PuPubVO.getUFDouble_NullAsZero(e.getOldValue());
-				UFDouble nv=PuPubVO.getUFDouble_NullAsZero(e.getValue());
-				if(nv.doubleValue()>old.doubleValue()){
-					this.showErrorMessage("应出数量  比原先  应出数量大");
-					getBillCardPanel().getBillModel().setValueAt(old, e.getRow(), key);
-					getBillCardPanel().getBillModel().execEditFormulaByKey(e.getRow(), key);
-				}			
-			}
+//			if("geb_bsnum".equals(key)){
+//				UFDouble old=PuPubVO.getUFDouble_NullAsZero(e.getOldValue());
+//				UFDouble nv=PuPubVO.getUFDouble_NullAsZero(e.getValue());
+//				if(nv.doubleValue()>old.doubleValue()){
+//				//	this.showErrorMessage("应出数量  比原先  应出数量大");
+//					getBillCardPanel().getBillModel().setValueAt(old, e.getRow(), key);
+//					getBillCardPanel().getBillModel().execEditFormulaByKey(e.getRow(), key);					
+//				}			
+//			}
 			
 		}
 		super.afterEdit(e);

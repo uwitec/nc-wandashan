@@ -39,9 +39,9 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 	}
 	@Override
 	protected void onBoSave() throws Exception {
-		UpLoadCtrlTool tool = new UpLoadCtrlTool();
-		tool.setExcelReadCtrlClass("nc.ui.wds.tranprice.fencang.StoreCusERCtrl");
-		tool.onExcelBill(getBillUI());
+//		UpLoadCtrlTool tool = new UpLoadCtrlTool();
+//		tool.setExcelReadCtrlClass("nc.ui.wds.tranprice.fencang.StoreCusERCtrl");
+//		tool.onExcelBill(getBillUI());
 		beforeSaveValidate();
 		super.onBoSave();
 

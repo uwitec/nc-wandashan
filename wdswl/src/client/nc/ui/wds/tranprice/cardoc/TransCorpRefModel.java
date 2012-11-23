@@ -1,6 +1,7 @@
 package nc.ui.wds.tranprice.cardoc;
 
 import nc.ui.bd.ref.AbstractRefModel;
+import nc.ui.pub.ClientEnvironment;
 
 public class TransCorpRefModel extends AbstractRefModel{
 	
@@ -18,7 +19,7 @@ public class TransCorpRefModel extends AbstractRefModel{
 	 private String pkFieldCode="pk_wds_tanscorp_h";
 	 
 	 
-	 private String sqlWherePart=" isnull(wds_tanscorp_h.dr,0)=0";
+	 private String sqlWherePart=" isnull(wds_tanscorp_h.dr,0)=0 and wds_tanscorp_h.pk_corp='"+ClientEnvironment.getInstance().getCorporation().getPrimaryKey()+"'";
 	 
 	 private int defaultFieldCount=2;
 	    /**

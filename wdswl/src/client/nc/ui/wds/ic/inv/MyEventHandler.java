@@ -35,7 +35,15 @@ public class MyEventHandler extends AbstractMyEventHandler {
 		myClientUI = (MyClientUI) billUI;
 	}
 
-
+	protected String getHeadCondition() {
+		// ¹«Ë¾
+		if (getBillCardPanelWrapper() != null)
+			if (getBillCardPanelWrapper().getBillCardPanel().getHeadTailItem(
+					getBillField().getField_Corp()) != null)
+				return getBillField().getField_Corp() + "='"
+						+ getBillUI()._getCorp().getPrimaryKey() + "' and whs_stocktonnage > 0";
+		return null;
+	}
 
 	@Override
 	protected UIDialog createQueryUI() {

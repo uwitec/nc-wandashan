@@ -108,7 +108,7 @@ public class SoDealBO {
 		return datas;
 	}
 	String sql=
-	" select  tb_storcubasdoc.pk_stordoc "+
+	" select  wds_storecust_h.pk_stordoc "+
 	" from wds_storecust_h "+
 	" join tb_storcubasdoc "+
 	" on wds_storecust_h.pk_wds_storecust_h = tb_storcubasdoc.pk_wds_storecust_h "+

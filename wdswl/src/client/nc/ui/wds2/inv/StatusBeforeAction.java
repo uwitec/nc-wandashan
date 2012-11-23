@@ -44,23 +44,23 @@ public class StatusBeforeAction implements IUIBeforeProcAction {
 			if(bodys.length == 1)
 				return;
 			
-			CircularlyAccessibleValueObject[][] datas=
-				SplitBillVOs.getSplitVOs(bodys, StatusUpdateBodyVO.split_keys);
-			
-			if(datas.length == bodys.length)
-				return;
-			
-			StringBuffer error = new StringBuffer();
-			
-			StatusUpdateBodyVO[] tmps = null;
-			for(int i = 0;i<datas.length;i++){
-				tmps = (StatusUpdateBodyVO[])datas[i];
-				for(StatusUpdateBodyVO tmp:tmps){
-					error.append(tmp.getCrowno()+"、");
-				}
-				error.append("行，重复;");
-			}
-			throw new BusinessException(error.toString());
+//			CircularlyAccessibleValueObject[][] datas=
+//				SplitBillVOs.getSplitVOs(bodys, StatusUpdateBodyVO.split_keys);
+//			
+//			if(datas.length == bodys.length)
+//				return;
+//			
+//			StringBuffer error = new StringBuffer();
+//			
+//			StatusUpdateBodyVO[] tmps = null;
+//			for(int i = 0;i<datas.length;i++){
+//				tmps = (StatusUpdateBodyVO[])datas[i];
+//				for(StatusUpdateBodyVO tmp:tmps){
+//					error.append(tmp.getCrowno()+"、存货 +批次 +调整前状态 + 调整后状态 ");
+//				}
+//				error.append("行，重复;");
+//			}
+			//throw new BusinessException(error.toString());
 		}
 	}
 

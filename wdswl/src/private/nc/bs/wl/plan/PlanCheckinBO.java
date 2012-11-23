@@ -58,7 +58,7 @@ public class PlanCheckinBO {
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"' ");
 		sql.append("  and pk_outwhouse='"+pk_outwhouse+"'");
-		sql.append("  and isnull(reserve15,'N')='"+reserve15+"'");//是否欠发
+	//	sql.append("  and isnull(reserve15,'N')='"+reserve15+"'");//是否欠发
 		sql.append(" and isnull(dr,0)=0");
 
 		
@@ -89,6 +89,7 @@ public class PlanCheckinBO {
 		}
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();
 		String pk_sendplanin = parent.getPk_sendplanin();
+		
 		StringBuffer sql = new StringBuffer();	
 		sql.append(" select count(0) ");
 		sql.append(" from wds_sendorder ");
@@ -101,6 +102,39 @@ public class PlanCheckinBO {
 			throw new BusinessException("已有下游发运订单，请先删除发运订单再做此操作");
 		}
 		
+		
+		//月计划审批 查看追加计划是否有审批的 如果有则 不允许弃审	
+		Object iplantype =parent.getAttributeValue("iplantype");
+		if(iplantype!=null && 0==(Integer)iplantype){
+			String pk_inwhouse=parent.getPk_inwhouse();	
+			if(pk_inwhouse  == null){
+				pk_inwhouse = "";
+			}
+			String pk_outwhouse = parent.getPk_outwhouse();
+			if(pk_outwhouse  == null){
+				pk_outwhouse = "";
+			}
+			AccountCalendar calendar = AccountCalendar.getInstance();
+			UFDate beginDate = calendar.getMonthVO().getBegindate();
+			UFDate endDate = calendar.getMonthVO().getEnddate();		
+			StringBuffer sql1=new StringBuffer();
+			sql1.append(" select pk_sendplanin  from");
+			sql1.append(" wds_sendplanin ");
+			sql1.append(" where vbillstatus=1 ");// 单据状态=审批通过
+			sql1.append(" and iplantype =1");// 追加月计划
+			sql1.append(" and isnull(dr,0)=0");
+			sql1.append(" and dmakedate between '");
+			sql1.append(beginDate+"' and '" + endDate);
+			sql1.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
+			sql1.append(" and pk_outwhouse ='"+pk_outwhouse+"'");
+			List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();		
+		    Object o=getBaseDAO().executeQuery(sql1.toString(), new ColumnProcessor());
+		    if(o == null || "".equalsIgnoreCase((String)o)){
+		    	
+		    }else{
+		    	throw new BusinessException("已经审批过的追加月计划");
+		    }
+		}			
 	}
 	// 追加计划校验
 	public void beforeCheck1(String  pk_inwhouse,String pk) throws BusinessException{
@@ -135,7 +169,7 @@ public class PlanCheckinBO {
 		}
 		SendplaninBVO[] childs=(SendplaninBVO[]) obj.getChildrenVO();
 		SendplaninVO hend=(SendplaninVO) obj.getParentVO();
-		UFBoolean reserve15= PuPubVO.getUFBoolean_NullAs(hend.getReserve15(), UFBoolean.FALSE);//表头是否欠发
+	//	UFBoolean reserve15= PuPubVO.getUFBoolean_NullAs(hend.getReserve15(), UFBoolean.FALSE);//表头是否欠发
 		AccountCalendar calendar = AccountCalendar.getInstance();
 		UFDate beginDate = calendar.getMonthVO().getBegindate();
 		UFDate endDate = calendar.getMonthVO().getEnddate();	
@@ -146,12 +180,11 @@ public class PlanCheckinBO {
 		sql.append(" where vbillstatus=1 ");// 单据状态=审批通过
 		sql.append(" and iplantype =0");// 月计划
 		sql.append(" and isnull(dr,0)=0");
-		if(reserve15.booleanValue()==false){
-			sql.append("  and isnull(reserve15,'N')='N'");//不是欠发
-		}else{
-			sql.append("  and isnull(reserve15,'N')='Y'");//是欠发
-		}
-		
+//		if(reserve15.booleanValue()==false){
+//			sql.append("  and isnull(reserve15,'N')='N'");//不是欠发
+//		}else{
+//			sql.append("  and isnull(reserve15,'N')='Y'");//是欠发
+//		}	
 		sql.append(" and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
@@ -160,7 +193,7 @@ public class PlanCheckinBO {
 		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();		
 	    Object o=getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
 	    if(o == null || "".equalsIgnoreCase((String)o)){
-	    	throw new BusinessException("未找到已经审批过的月计划或者欠发月计划");
+	    	throw new BusinessException("未找到已经审批过的月计划 ");
 	    }
 	    // 1.1查询月计划的表体明细
 	    String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";
@@ -321,7 +354,7 @@ public class PlanCheckinBO {
 		AggregatedValueObject obj=VOTool.aggregateVOClone(obj2);
 	   
 		SendplaninVO parent =(SendplaninVO) obj.getParentVO();	
-		UFBoolean reserve15= PuPubVO.getUFBoolean_NullAs(parent.getReserve15(), UFBoolean.FALSE);//表头是否欠发
+//		UFBoolean reserve15= PuPubVO.getUFBoolean_NullAs(parent.getReserve15(), UFBoolean.FALSE);//表头是否欠发
 
 		String pk_inwhouse=parent.getPk_inwhouse();	
 		if(pk_inwhouse  == null){
@@ -342,11 +375,11 @@ public class PlanCheckinBO {
 		sql.append(" where vbillstatus=1 ");// 单据状态=审批通过
 		sql.append(" and iplantype =0");// 月计划
 		sql.append(" and isnull(dr,0)=0");
-		if(reserve15.booleanValue()==false){
-			sql.append("  and isnull(reserve15,'N')='N'");//不是欠发
-		}else{
-			sql.append("  and isnull(reserve15,'N')='Y'");//是欠发
-		}
+//		if(reserve15.booleanValue()==false){
+//			sql.append("  and isnull(reserve15,'N')='N'");//不是欠发
+//		}else{
+//			sql.append("  and isnull(reserve15,'N')='Y'");//是欠发
+//		}
 		sql.append(" and dmakedate between '");
 		sql.append(beginDate+"' and '" + endDate);
 		sql.append("' and pk_inwhouse ='"+pk_inwhouse+"'");
@@ -354,7 +387,7 @@ public class PlanCheckinBO {
 		List<SendplaninBVO> mods=new ArrayList<SendplaninBVO>();		
 	    Object o=getBaseDAO().executeQuery(sql.toString(), new ColumnProcessor());
 	    if(o == null || "".equalsIgnoreCase((String)o)){
-	    	throw new BusinessException("未找到已经审批过的月计划或者欠发月计划");
+	    	throw new BusinessException("未找到已经审批过的月计划");
 	    }
 	    //2.查询月计划表体数据：子表1和记录来源明细记录的子表2
         String cond=" pk_sendplanin='"+o+"' and isnull(dr,0)=0";

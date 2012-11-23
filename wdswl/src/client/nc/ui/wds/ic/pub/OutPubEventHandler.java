@@ -344,9 +344,10 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	protected void onBoSave() throws Exception {
 		if(!getUIController().getBillType().equals(WdsWlPubConst.HWTZ)){
 			valudate();
-		}	
-		setStock();
+		}		
 		super.onBoSave();
+		setStock();
+		onBoRefresh();
 	}
 	/**
 	 * 设置库存存量
@@ -358,8 +359,6 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 	private void setStock() throws Exception{	
 		//只设置新增单据现存量
 		String pk_h=PuPubVO.getString_TrimZeroLenAsNull(getBillCardPanelWrapper().getBillVOFromUI().getParentVO().getPrimaryKey());
-		if(pk_h!=null)
-			return;
 		int rowcount=getBodyRowCount();	
 		//设置现存量查询维度
 	    StockInvOnHandVO[] vos=new StockInvOnHandVO[rowcount];	    
@@ -392,12 +391,13 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		    	    continue;
 				UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getWhs_stocktonnage());//库存主数量
 				UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getWhs_stockpieces());//库存辅数量
-				UFDouble uf3=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutnum"));//实出主数量
-				UFDouble uf4=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutassistnum"));//实出辅数量			
-				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf1.sub(uf3)).toString(), i, "vuserdef2");
-				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf2.sub(uf4)).toString(), i, "vuserdef5");					
-		}			 
-	
+//				UFDouble uf3=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutnum"));//实出主数量
+//				UFDouble uf4=PuPubVO.getUFDouble_NullAsZero(getBillCardPanelWrapper().getBillCardPanel().getBodyValueAt(i, "noutassistnum"));//实出辅数量			
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf1).toString(), i, "vuserdef2");
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setRowState(i, BillModel.MODIFICATION);
+				getBillCardPanelWrapper().getBillCardPanel().getBillModel().setValueAt((uf2).toString(), i, "vuserdef5");					
+		}	
+		super.onBoSave();
 	}
 
 

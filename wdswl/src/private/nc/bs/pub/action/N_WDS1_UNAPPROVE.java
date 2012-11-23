@@ -36,7 +36,7 @@ public class N_WDS1_UNAPPROVE extends AbstractCompiler2 {
 			Object retObj = runClass("nc.bs.wl.pub.HYBillUnApprove",
 					"unApproveHYBill", "nc.vo.pub.AggregatedValueObject:01",
 					vo, m_keyHas, m_methodReturnHas);
-			//弃审以后 价的追加计划，从月计划中拆分出来
+			//弃审以后  的追加计划，从月计划中拆分出来
 			if(iplantype!=null && 1==(Integer)iplantype){
 				runClass("nc.bs.wl.plan.PlanCheckinBO","unplanStats","nc.vo.pub.AggregatedValueObject:01",vo, m_keyHas,m_methodReturnHas);		
 			}		
