@@ -270,6 +270,14 @@ public class MyClientUI extends OutPubClientUI implements
 			   }
 			   getBillCardPanel().getHeadItem("pk_cargdoc").setEnabled(isEditable);
 			   getBillCardPanel().getHeadItem("pk_cargdoc").setValue(null);
+			// add by  zhw
+			   String[] tablecodes = new String[] {"tb_outgeneral_b", "tb_outgeneral_b2"};
+	              clearTable(tablecodes);
+			   
+			 }else if("pk_cargdoc".equalsIgnoreCase(key)){
+				// add by  zhw
+				 String[] tablecodes = new String[] {"tb_outgeneral_b", "tb_outgeneral_b2"};
+	              clearTable(tablecodes);
 			 }
 			if("cdptid".equalsIgnoreCase(key)){
 				getBillCardPanel().getHeadItem("cbizid").setValue(null);	
@@ -287,6 +295,27 @@ public class MyClientUI extends OutPubClientUI implements
 		}
 	}
 
+	 /**
+     * @说明 根据表体 tableCode,清空页签数据
+     * @时间 2010-9-14下午02:06:02
+     * @param tableCodes
+     */
+    protected void clearTable(String[] tableCodes) {
+        if (tableCodes != null && tableCodes.length > 0) {
+            for (int i = 0; i < tableCodes.length; i++) {
+                if(getBillCardPanel().getBillModel(tableCodes[i])==null)
+                    return;
+                int count = getBillCardPanel().getBillModel(tableCodes[i])
+                        .getRowCount();
+                int[] array = new int[count];
+                for (int j = 0; j < count; j++) {
+                    array[j] = j;
+                }
+                getBillCardPanel().getBillData().getBillModel(tableCodes[i])
+                        .delLine(array);
+            }
+        }
+    }
 	@Override
 	protected void initEventListener() {
 		
