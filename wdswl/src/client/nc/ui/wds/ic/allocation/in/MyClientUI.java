@@ -231,6 +231,8 @@ public class MyClientUI extends MutiInPubClientUI implements  BillCardBeforeEdit
 					//修改参照 条件 增加条件 指定仓库id
 					panel.getRefModel().addWherePart(" and wds_teamdoc_h.vdef1 = '"+a+"' ");
 				}
+			}else{//add by zhw 
+				return super.beforeEdit(e);
 			}
 		}
 		return true;
