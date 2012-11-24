@@ -1,9 +1,13 @@
 package nc.ui.dm.order;
 
 
+import nc.bs.framework.common.NCLocator;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.ResultSetProcessor;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.beans.UITable;
+import nc.ui.trade.bill.BillTemplateWrapper;
 import nc.ui.trade.business.HYPubBO_Client;
 import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
@@ -23,6 +27,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.wl.pub.ButtonCommon;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
+import nc.vo.zmpub.pub.tool.ResultSetProcessorTool;
 
 public class ClientEventHandler extends WdsPubEnventHandler {
 
@@ -357,6 +362,26 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 			return;
 		}
 		onBoRefresh();	
+	}
+	
+	/**
+	 * liuys add for 完达山物流
+	 * 
+	 * 修改时查询收货站并自动带出发运订单表头收货站
+	 * 
+	 * 
+	 */
+	protected void onBoEdit() throws Exception {
+		super.onBoEdit();
+		IUAPQueryBS queryService = (IUAPQueryBS)NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
+		Object pk_outwhouse=getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_outwhouse").getValueObject();//发货仓库
+		Object pk_inwhouse = getBillCardPanelWrapper().getBillCardPanel().getHeadItem("pk_inwhouse").getValueObject();//收货仓库
+		String sql = "select c.custareaid from tb_storcubasdoc c ,wds_storecust_h h where c.dr=0 and h.dr=0 and c.pk_wds_storecust_h = h.pk_wds_storecust_h and pk_stordoc1='"+pk_inwhouse+"' and h.pk_stordoc='"+pk_outwhouse+"'";
+		if(pk_outwhouse!=null&&pk_inwhouse!=null){
+			Object obj = queryService.executeQuery(sql,ResultSetProcessorTool.COLUMNPROCESSOR);
+			if(obj!=null&&obj.toString().length()>0)
+				getBillCardPanelWrapper().getBillCardPanel().setHeadItem("custareaid", obj);
+		}
 	}
 
 }

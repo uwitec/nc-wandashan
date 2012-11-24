@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
 import nc.ui.pub.pf.PfUtilClient;
@@ -345,7 +346,12 @@ public class OutPubEventHandler extends WdsPubEnventHandler {
 		if(!getUIController().getBillType().equals(WdsWlPubConst.HWTZ)){
 			valudate();
 		}		
-		super.onBoSave();
+		try{
+			super.onBoSave();
+		}catch (Exception ex){
+			MessageDialog.showErrorDlg(getBillUI(), "ะฃั้", ex.getMessage());
+			return;
+		}
 		setStock();
 		onBoRefresh();
 	}
