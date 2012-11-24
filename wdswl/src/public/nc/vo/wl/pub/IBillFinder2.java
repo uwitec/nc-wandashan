@@ -25,6 +25,6 @@ public interface IBillFinder2 {
 	 * @return nc.vo.trade.billsource.LightBillVO
 	 * @exception java.lang.Exception Òì³£ËµÃ÷¡£
 	 */
-	LightBillVO queryBillGraph(String id, String type) throws java.lang.Exception;
+	LightBillVO queryBillGraph(String id, String type,String code) throws java.lang.Exception;
 
 }

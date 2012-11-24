@@ -198,22 +198,22 @@ public class BaseDocValuteTool {
 		// 是否存在现存量
 		if (isExistInvHand(cdtpk)) {
 			throw new Exception(" 托盘编码为：" + cdtcode
-					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量");
+					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量,请查看是否存在现存量");
 		}
 		// 是否存在出库单
 		if (isExistOut(cdtpk)) {
 			throw new Exception(" 托盘编码为：" + cdtcode
-					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量");
+					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量,请查看是否存在出库单");
 		}
 		// 是否存在入库单
 		if (isExistIn(cdtpk)) {
 			throw new Exception(" 托盘编码为：" + cdtcode
-					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量");
+					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量,请查看是否存在入库单");
 		}
 		// 是否存在货位调整单
 		if (isExistHwtz(cdtpk)) {
 			throw new Exception(" 托盘编码为：" + cdtcode
-					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量");
+					+ " 的记录 已经存在业务数据 不能删除 或 修改 托盘绑定的存货信息  和 托盘容量,请查看是否存在货位调整单");
 		}
 	}
 
@@ -358,7 +358,7 @@ public class BaseDocValuteTool {
 		StringBuffer sql = new StringBuffer();
 		sql
 				.append(" select count(0) from tb_warehousestock  h where  h.pplpt_pk = '"
-						+ cdtpk + "' and isnull(h.dr,0)=0 ");
+						+ cdtpk + "' and isnull(h.dr,0)=0  and  nvl(h.whs_stockpieces,0)>0 and nvl(h.whs_stocktonnage,0)>0");
 		Integer count = PuPubVO.getInteger_NullAs(dao.executeQuery(sql
 				.toString(), new ColumnProcessor()), 0);
 		if (count > 0) {
