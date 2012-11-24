@@ -169,9 +169,12 @@ public abstract class BillStockBO extends StockBO {
 		// 存放修改 删除的vo
 		List<SuperVO> list = new ArrayList<SuperVO>();
 		for (int i = 0; i < bodys.length; i++) {
-			if (bodys[i].getStatus() == VOStatus.UPDATED
-					|| bodys[i].getStatus() == VOStatus.DELETED) {
-				list.add(bodys[i]);
+			//modify by zhw  如果主键为空  为新增状态
+			if(bodys[i].getPrimaryKey() != null){
+				if (bodys[i].getStatus() == VOStatus.UPDATED
+						|| bodys[i].getStatus() == VOStatus.DELETED) {
+					list.add(bodys[i]);
+				}
 			}
 		}
 		if (list == null || list.size() == 0)
