@@ -72,6 +72,8 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 			m_panel.setEnabled(true);
 			m_panel.getParentListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
+			//add  by zhw 增加合计行
+			m_panel.getChildListPanel().setTatolRowShow(true);
 			m_panel.getBodyTable().removeSortListener();
 		}
 		return m_panel;

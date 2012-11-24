@@ -95,7 +95,8 @@ public String[] getFormulas() {
 			"H_pk_calbody->\""+WdsWlPubConst.DEFAULT_CALBODY+"\"",
 			"B_dbizdate->\""+cl.getLogonDate()+"\"",
 			"B_nshouldoutnum->B_ndealnum-B_noutnum",
-			"B_nshouldoutassistnum->B_nassdealnum-B_nassoutnum" 
+			"B_nshouldoutassistnum->B_nassdealnum-B_nassoutnum",
+			"B_status->0"//add by  zhw  设置行为新增
 	};
 }
 /**
