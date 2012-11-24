@@ -8,19 +8,14 @@ import nc.ui.pub.beans.UIDialog;
 import nc.ui.pub.bill.BillData;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListPanel;
-import nc.ui.pub.pf.PfUtilClient;
 import nc.ui.trade.bill.BillListPanelWrapper;
-import nc.ui.trade.button.IBillButton;
 import nc.ui.trade.controller.IControllerBase;
 import nc.ui.trade.manage.BillManageUI;
 import nc.ui.trade.manage.ManageEventHandler;
-import nc.vo.pub.AggregatedValueObject;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.NullFieldException;
 import nc.vo.pub.ValidationException;
-import nc.vo.trade.pub.IBillStatus;
-import nc.vo.wl.pub.ButtonCommon;
+import nc.vo.scm.pu.PuPubVO;
 import nc.vo.zmpub.pub.consts.ZmpubBtnConst;
 
 /**
@@ -265,11 +260,14 @@ public class WdsPubEnventHandler extends ManageEventHandler {
 	 */
 	public SourceBillFlowDlg getSourceDlg() throws BusinessException {
 		try {
-
+//			String vbillno =null;
+			//add  by zhw 增加单据号
+			String code =PuPubVO.getString_TrimZeroLenAsNull(getBufferData().getCurrentVO()
+					.getParentVO().getAttributeValue(getBillField().getField_BillNo()));
 			soureDlg = new SourceBillFlowDlg(getBillUI(), getUIController()
 					.getBillType(), getBufferData().getCurrentVO()
 					.getParentVO().getPrimaryKey(), null, _getOperator(),
-					_getCorp().getPrimaryKey());
+					_getCorp().getPrimaryKey(),code);
 		} catch (BusinessException e) {
 			Logger.error(e);
 			throw new BusinessException("获取联查对话框出错! ");

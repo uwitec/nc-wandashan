@@ -33,6 +33,9 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 	
 	String bizType = null;
 	
+	//add  by zhw 增加单据号
+	String code = null;
+	
 	private BillFlowViewer m_panelBillFlowView = null;	
 	
 	private String billFinderClassname = "nc.bs.wds.finder.LinkQueryFinder";
@@ -59,18 +62,21 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 	}
 	
 	public SourceBillFlowDlg(Container parent, String billType, String billID,
-			String bizType, String userID, String pk_corp) {
+			String bizType, String userID, String pk_corp,String scode) {
 		super(parent);
 		this.billID = billID;
 		this.billType = billType;
 		this.bizType = bizType;
 		this.userID = userID;
 		this.pk_corp = pk_corp;
+		//add  by zhw 增加单据号
+		code =scode;
 		LightBillVO voBillInfo = new LightBillVO();
 		voBillInfo.setID(billID);
 		voBillInfo.setType(billType);
 		voBillInfo.setBizType(bizType);
 		voBillInfo.setUserID(userID);
+		voBillInfo.setCode(code);
 		voBillInfo.setPk_corp(pk_corp);
 		init(voBillInfo);
 	}
@@ -95,7 +101,7 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 		} else if (e.getSource() == sourceMenu) {
 			BillNodePanel node = m_panelBillFlowView.getSelectedNode();
 			if (node != null && node.getModel() != null) {
-				SourceBillFlowDlg f = new SourceBillFlowDlg(this, node.getModel().getType(), node.getModel().getID(),bizType, userID, pk_corp);				
+				SourceBillFlowDlg f = new SourceBillFlowDlg(this, node.getModel().getType(), node.getModel().getID(),bizType, userID, pk_corp,code);				
 				f.showModal();
 			}
 		}
@@ -146,11 +152,12 @@ public class SourceBillFlowDlg extends UIDialog implements ActionListener {
 	public LightBillVO querySourceBillVO(LightBillVO voBillInfo){
 		LightBillVO vo=null;
 		try
-		{
+		{//add  by zhw 增加单据号
 			String id = voBillInfo.getID();
 			String type = voBillInfo.getType();
-			Class[] ParameterTypes = new Class[]{String.class,String.class,String.class};
-			Object[] ParameterValues = new Object[]{getBillFinderClassname(), id, type};
+			String code =voBillInfo.getCode();
+			Class[] ParameterTypes = new Class[]{String.class,String.class,String.class,String.class};
+			Object[] ParameterValues = new Object[]{getBillFinderClassname(), id, type,code};
 			vo = (LightBillVO)LongTimeTask.callRemoteService(WdsWlPubConst.WDS_WL_MODULENAME, "nc.bs.wl.pub.LinkQueryDMO", "queryBillGraph", ParameterTypes, ParameterValues, 2);
    		}
 		catch (Exception e)
