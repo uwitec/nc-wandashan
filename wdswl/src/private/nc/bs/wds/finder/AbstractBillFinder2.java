@@ -84,13 +84,15 @@ public abstract class AbstractBillFinder2 implements IBillFinder2 {
 	 *                异常说明。
 	 */
 	public LightBillVO queryBillGraph(String id,
-			String type) throws Exception {
+			String type,String code) throws Exception {
 		LightBillVO vo = null;
 		try {
 			/** *************** */
 			vo = new LightBillVO();
 			vo.setID(id);
 			vo.setType(type);
+			//add  by zhw 增加单据号
+			vo.setCode(code);
 			findSourceBillsForBill(vo);
 			findForwardBillsForBill(vo);
 		} catch (Exception e) {

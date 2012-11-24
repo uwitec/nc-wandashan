@@ -19,13 +19,13 @@ public class LinkQueryDMO extends DataManageObject {
 	public LightBillVO queryBillGraph(
 			String billFinderClassName,
 			String id,
-			String type)
+			String type,String code)
 			throws UifException {
 			try
-			{
+			{//add  by zhw 增加单据号
 				IBillFinder2 billFinder =
 					(IBillFinder2) Class.forName(billFinderClassName).newInstance();
-				return billFinder.queryBillGraph(id, type);
+				return billFinder.queryBillGraph(id, type,code);
 			}
 			catch (BusinessException be)
 			{
