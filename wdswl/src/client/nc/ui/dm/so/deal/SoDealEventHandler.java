@@ -1,7 +1,9 @@
 package nc.ui.dm.so.deal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.bill.BillEditEvent;
@@ -535,16 +537,36 @@ public class SoDealEventHandler implements BillEditListener,IBillRelaSortListene
 		if(ldata==null || ldata.size()==0){
 			return true;
 		}
+		
+		//liuys add 循环遍历表体vo,将相同存货的表体安排数量相加,最终用于比对该存货的现存量
+		Map<String,UFDouble> map = new HashMap<String, UFDouble>();
+		for(int i=0;i<ldata.size();i++){
+			SuperVO vo=ldata.get(i);
+			if(vo == null)
+				continue;
+			String cinventoryid = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("cinventoryid"));
+			UFDouble nassnum = PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));//安排数量
+			if(map.containsKey(cinventoryid)){
+				UFDouble value = PuPubVO.getUFDouble_NullAsZero(map.get(cinventoryid));
+				map.put(cinventoryid, nassnum.add(value));
+			}else{
+				map.put(cinventoryid,nassnum);
+			}
+		}
+		
 		for(int i=0;i<ldata.size();i++){
 			SuperVO vo=ldata.get(i);
 			//安排量
-			UFDouble uf1=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("nassnum"));
+			if(vo == null)
+				continue;
+			String cinventoryid = PuPubVO.getString_TrimZeroLenAsNull(vo.getAttributeValue("cinventoryid"));
+			UFDouble uf1=map.get(cinventoryid);
 			//可用量
 			UFDouble uf2=PuPubVO.getUFDouble_NullAsZero(vo.getAttributeValue("ndrqarrstorenumout"));
 			if((uf2.sub(uf1)).doubleValue()<0){
 				return false;
 			}else{
-				return true;
+				continue;
 			}
 		}
 		return true;
