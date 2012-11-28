@@ -171,16 +171,16 @@ public boolean beforeEdit(BillItemEvent e) {
 			showWarningMessage("≤÷ø‚Œ¥ ∞Û∂®");
 			return false;
 		}			
-		JComponent jc = getBillCardPanel().getHeadItem("carriersid").getComponent();
-		if(jc instanceof UIRefPane){
-			UIRefPane ref =(UIRefPane)jc;
-			ref.getRefModel().addWherePart(
-			"and wds_tanscorp_h.pk_wds_tanscorp_h in (select b.pk_wds_tanscorp_h from bd_stordoc h join wds_stortranscorp_b b" +
-			"   on h.pk_stordoc=b.pk_stordoc where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 " +
-			"   and h.pk_stordoc='"+pk_stordoc+"' and b.pk_wds_tanscorp_h  is not null  " +
-			"   and h.pk_corp='"+_getCorp().getPrimaryKey()+"') "			
-			);
-		}
+//		JComponent jc = getBillCardPanel().getHeadItem("carriersid").getComponent();
+//		if(jc instanceof UIRefPane){
+//			UIRefPane ref =(UIRefPane)jc;
+//			ref.getRefModel().addWherePart(
+//			"and wds_tanscorp_h.pk_wds_tanscorp_h in (select b.pk_wds_tanscorp_h from bd_stordoc h join wds_stortranscorp_b b" +
+//			"   on h.pk_stordoc=b.pk_stordoc where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 " +
+//			"   and h.pk_stordoc='"+pk_stordoc+"' and b.pk_wds_tanscorp_h  is not null  " +
+//			"   and h.pk_corp='"+_getCorp().getPrimaryKey()+"') "			
+//			);
+//		}
 	}
 	return false;
 }
