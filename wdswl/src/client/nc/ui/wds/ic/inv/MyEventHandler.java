@@ -186,4 +186,13 @@ public class MyEventHandler extends AbstractMyEventHandler {
 			m_viewLockDlg = new ViewLockDLG(getBillUI(),getBillUI()._getOperator(),getBillUI()._getCorp().getPrimaryKey());
 		return m_viewLockDlg;
 	}
+	/**
+	 * liuys add  刷新按钮重新查询  
+	 * 
+	 * 按钮m_boRefresh点击时执行的动作,如有必要，请覆盖.
+	 */
+	protected void onBoRefresh() throws Exception {
+		doRefresh();
+		super.onBoRefresh();
+	}
 }
