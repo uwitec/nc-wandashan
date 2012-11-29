@@ -8,6 +8,7 @@ import nc.bd.accperiod.AccountCalendar;
 import nc.ui.zmpub.pub.report.buttonaction2.CaPuBtnConst;
 import nc.ui.zmpub.pub.report.buttonaction2.IReportButton;
 import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.query.ConditionVO;
 import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.zmpub.pub.report.ReportBaseVO;
 import nc.vo.zmpub.pub.report2.ZmReportBaseUI3;
@@ -155,29 +156,51 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	/**
 	 *查询本月ruku 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String  getSqlin(){
+	public String  getSqlin() throws Exception{
 		StringBuffer strb = new StringBuffer();
    		strb.append(" select b.geb_cinventoryid as pk_invmandoc,sum(b.geb_anum) as byrknum from tb_general_h  h join tb_general_b b on h.geh_pk=b.geh_pk  ");
    		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.geh_billtype in('WDS9','WDSZ','WDS7')  ");
-   		UFDate begindate =AccountCalendar.getInstance().getMonthVO().getBegindate();
-   		UFDate enddate =AccountCalendar.getInstance().getMonthVO().getEnddate();
-   		strb.append(" and h.geh_dbilldate >= '"+begindate.toString()+"' and h.geh_dbilldate <= '"+enddate.toString()+"' ");
-   		strb.append("  group by b.geb_cinventoryid ");
+     		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and h.geh_dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and h.geh_dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		}   		
+  		strb.append("  group by b.geb_cinventoryid ");
    		return strb.toString();
 	}
 	
 	/**
 	 *查询本月qitaruku
 	 * @return
+	 * @throws Exception 
 	 */
-	public String  getSqlotherin(){
+	public String  getSqlotherin() throws Exception{
 		StringBuffer strb = new StringBuffer();
    		strb.append(" select b.geb_cinventoryid as pk_invmandoc,sum(b.geb_anum) as qtrknum from tb_general_h  h join tb_general_b b on h.geh_pk=b.geh_pk  ");
    		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.geh_billtype in('WDS7') ");
-   		UFDate begindate =AccountCalendar.getInstance().getMonthVO().getBegindate();
-   		UFDate enddate =AccountCalendar.getInstance().getMonthVO().getEnddate();
-   		strb.append(" and h.geh_dbilldate >= '"+begindate.toString()+"' and h.geh_dbilldate <= '"+enddate.toString()+"' ");
+   		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and h.geh_dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and h.geh_dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		} 
    		strb.append("  group by b.geb_cinventoryid ");
    		return strb.toString();
 	}
@@ -186,16 +209,28 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	/**
 	 * 查天津分仓待发量
 	 * @return
+	 * @throws Exception 
 	 */
-	public String  getSqltj(){
+	public String  getSqltj() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as tjdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
 		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0  ");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and isnull(c.dr,0)= 0) ");
-		strb.append("  group by b.cinventoryid ");
-
-		
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and so_sale.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and so_sale.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		} 
+		strb.append("  group by b.cinventoryid ");	
 		return strb.toString();
 	}
 	
