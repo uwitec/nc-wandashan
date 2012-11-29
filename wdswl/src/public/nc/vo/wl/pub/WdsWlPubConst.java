@@ -395,7 +395,8 @@ public class WdsWlPubConst {
     public static String report7="80100255";//物流香粉待发运台账
     public static String report8="80100260";//物流香粉待发运台账(汇总)
     public static String report9="80100237";//
-
+    //liuys 账务核对表
+    public static String zwhdb = "80100209";//账务核对表
     
     
 //    物流调拨入库单回写erp调拨出库单累计转入物流数量  字段
