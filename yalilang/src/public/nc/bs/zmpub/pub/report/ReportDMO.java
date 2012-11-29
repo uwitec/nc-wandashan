@@ -48,6 +48,8 @@ public class ReportDMO extends DataManageObject {
 		}
 		int size = sqls.length;
 		for (int i = 0; i < size; i++) {
+			if(sqls[i]==null)
+				continue;
 			ReportBaseVO[] vos = queryVOBySql(sqls[i]);
 			list.add(vos);
 		}
