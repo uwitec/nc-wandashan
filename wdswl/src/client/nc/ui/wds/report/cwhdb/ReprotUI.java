@@ -44,7 +44,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 */
 	public String[] getSqls()throws Exception{
 		return new String[]{getSql(),getSqlerp(),getSqlout(),getSqlin(),getSqlotherin(),getSqltj(),getSqlsc(),getSqlwh()
-				,getSqlxa(),getSqlxa(),getSqlcd(),getSqlzz()};
+				,getSqlxa(),getSqlcd(),getSqlzz()};
 	}
 	/**
 	 * 设置到ui界面之前 处理分组查询后的数据
@@ -58,15 +58,14 @@ public class ReprotUI extends ZmReportBaseUI3 {
          
         //一般要重写该方法   进行数据的组合 过滤 汇总处理
 		
-		list.get(0);//的数据为 getSql()方法查询出来的数据
+//		list.get(0);//的数据为 getSql()方法查询出来的数据
 		
 //		list.get(1);//的数据为 getSql1()方法查询出来的数据  以此类推
 		
 		
 		//数据处理的方式主要用，这个类的方法
 		String[] num_condition_fields = new String[]{"pk_invmandoc"}; 
-		String[] combinFields = new String[]{"wlkc","erpkc","zczfcnum","qfxnnum","byqzgnum","byqzgycnum","byqzgwcnum","bycknum",
-				"byrknum","qtrknum"}; 
+		String[] combinFields = new String[]{"wlkc","erpkc","bycknum","byrknum","qtrknum","tjdfnum","scdfnum","whdfnum","xadfnum","cddfnum","zzdfnum"}; 
 		if(list == null || list.size()==0)
 			return null;
 		int size = list.size();
@@ -122,7 +121,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 */
 	public String  getSql(){
 		
-		return " select pk_invmandoc as pk_invmandoc,sum(whs_stockpieces) as wlkc from tb_warehousestock where isnull(dr,0)=0 group by pk_invmandoc  ";
+		return " select pk_invmandoc as pk_invmandoc,sum(whs_stockpieces) as wlkc from tb_warehousestock where nvl(dr,0)=0 group by pk_invmandoc  ";
 	}
 
 
@@ -145,7 +144,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	public String  getSqlout(){
 		StringBuffer strb = new StringBuffer();
    		strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.noutnum) as bycknum from tb_outgeneral_h  h join tb_outgeneral_b b on h.general_pk=b.general_pk  ");
-   		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.vbilltype in('WDSH','WDS6','WDS8') ");
+   		strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.vbilltype in('WDSH','WDS6','WDS8') ");
    		UFDate begindate =AccountCalendar.getInstance().getMonthVO().getBegindate();
    		UFDate enddate =AccountCalendar.getInstance().getMonthVO().getEnddate();
    		strb.append(" and h.dbilldate >= '"+begindate.toString()+"' and h.dbilldate <= '"+enddate.toString()+"' ");
@@ -161,7 +160,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	public String  getSqlin() throws Exception{
 		StringBuffer strb = new StringBuffer();
    		strb.append(" select b.geb_cinventoryid as pk_invmandoc,sum(b.geb_anum) as byrknum from tb_general_h  h join tb_general_b b on h.geh_pk=b.geh_pk  ");
-   		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.geh_billtype in('WDS9','WDSZ','WDS7')  ");
+   		strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.geh_billtype in('WDS9','WDSZ','WDS7')  ");
      		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -187,7 +186,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	public String  getSqlotherin() throws Exception{
 		StringBuffer strb = new StringBuffer();
    		strb.append(" select b.geb_cinventoryid as pk_invmandoc,sum(b.geb_anum) as qtrknum from tb_general_h  h join tb_general_b b on h.geh_pk=b.geh_pk  ");
-   		strb.append(" where isnull(h.dr,0)=0 and isnull(b.dr,0)=0 and h.geh_billtype in('WDS7') ");
+   		strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.geh_billtype in('WDS7') ");
    		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -198,9 +197,9 @@ public class ReprotUI extends ZmReportBaseUI3 {
    				if(vos[i].getFieldCode().equals("enddate")){
    					wsql=wsql+" and h.geh_dbilldate <= '"+vos[i].getValue()+"'";					
    				}
-   			}  
+   			}
    			strb.append(wsql);
-   		} 
+   		}
    		strb.append("  group by b.geb_cinventoryid ");
    		return strb.toString();
 	}
@@ -214,18 +213,18 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	public String  getSqltj() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as tjdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0  ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and isnull(c.dr,0)= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
    			for(int i=0;i<vos.length;i++){
    				if(vos[i].getFieldCode().equals("startdate")){
-   					wsql=wsql+" and so_sale.dbilldate >= '"+vos[i].getValue()+"'";
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
    				}
    				if(vos[i].getFieldCode().equals("enddate")){
-   					wsql=wsql+" and so_sale.dbilldate <= '"+vos[i].getValue()+"'";					
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
    				}
    			}  
    			strb.append(wsql);
@@ -238,12 +237,25 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 * 查天郑州分仓待发量
 	 * @return
 	 */
-	public String  getSqlzz(){
+	public String  getSqlzz() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as zzdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0 ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and isnull(c.dr,0)= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and nvl(c.dr,0)= 0)) ");
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		} 
 		strb.append("  group by b.cinventoryid ");
 
 		
@@ -254,12 +266,25 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 * 查武汉分仓待发量
 	 * @return
 	 */
-	public String  getSqlwh(){
+	public String  getSqlwh() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as whdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0  ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and isnull(c.dr,0)= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and nvl(c.dr,0)= 0)) ");
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		} 
 		strb.append("  group by b.cinventoryid ");
 
 		
@@ -270,12 +295,25 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 * 查成都分仓待发量
 	 * @return
 	 */
-	public String  getSqlcd(){
+	public String  getSqlcd() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as cddfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0  ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and isnull(c.dr,0)= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and nvl(c.dr,0)= 0)) ");
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}  
+   			strb.append(wsql);
+   		} 
 		strb.append("  group by b.cinventoryid ");
 
 		
@@ -286,12 +324,25 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 * 查西安分仓待发量
 	 * @return
 	 */
-	public String  getSqlxa(){
+	public String  getSqlxa() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as xadfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0  and isnull(e.dr,0)=0  ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and isnull(c.dr,0)= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and nvl(c.dr,0)= 0)) ");
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}
+   			strb.append(wsql);
+   		}
 		strb.append("  group by b.cinventoryid ");
 
 		
@@ -302,12 +353,25 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 * 查双城待发量
 	 * @return
 	 */
-	public String  getSqlsc(){
+	public String  getSqlsc() throws Exception{
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as scdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
-		strb.append(" where e.csaleid not in (select distinct ib.cfirstbillhid from ic_general_b ib where ib.cfirsttype = '30' and isnull(ib.dr,0)=0 ) ");
-		strb.append(" and isnull(b.dr,0)=0 ) and isnull(e.dr,0)=0 ) ");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and isnull(c.dr),= 0) ");
+		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and nvl(c.dr,0)= 0)) ");
+		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+   			String wsql="";
+   			ConditionVO[] vos=getQueryDlg().getConditionVO();
+   			for(int i=0;i<vos.length;i++){
+   				if(vos[i].getFieldCode().equals("startdate")){
+   					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+   				}
+   				if(vos[i].getFieldCode().equals("enddate")){
+   					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+   				}
+   			}
+   			strb.append(wsql);
+   		}
 		strb.append("  group by b.cinventoryid ");
 
 		
