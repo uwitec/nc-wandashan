@@ -42,18 +42,24 @@ public class WdsQueryDlg extends HYQueryDLG {
 	}
 
 	private void init() {
+		//  add by  zhw 第一次加载报空指针异常
 		if (PuPubVO.getString_TrimZeroLenAsNull(cwhid) != null
 				&& PuPubVO.getString_TrimZeroLenAsNull(cwh_fieldname) != null) {
 			if (!WdsWlPubTool.isZc(cwhid)) {
-				getComponent(cwh_fieldname).setEnabled(false);
+				setConditionEditable(cwh_fieldname, false);
+				//getComponent(cwh_fieldname).setEnabled(false);
 			}
 			if (PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null
 					&& PuPubVO.getString_TrimZeroLenAsNull(ccargdoc) != null) {
 				try {
-					((UIRefPane) getComponent(ccarg_fieldname)).getRefModel()
-							.addWherePart(
-									" and bd_cargdoc.pk_stordoc = '" + cwhid
+					Object o = getValueRefObjectByFieldCode(ccarg_fieldname);
+					if (o == null)
+						return;
+					if (o instanceof UIRefPane) {
+						UIRefPane ref = (UIRefPane) o;
+						ref.getRefModel().addWherePart(" and bd_cargdoc.pk_stordoc = '" + cwhid
 											+ "'");
+					}
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				}

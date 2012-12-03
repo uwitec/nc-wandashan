@@ -16,7 +16,8 @@ public class ClientUIQueryDlg extends WdsQueryDlg {
 	public ClientUIQueryDlg(Container parent, UIPanel normalPnl,
 			String pk_corp, String moduleCode, String operator,
 			String busiType, String nodeKey) {//wds_sendplanin.pk_outwhouse
-		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_loadprice.pk_outwhouse",null);
+		// add by  zhw  查询对话框查询字段错误
+		super(parent, normalPnl, pk_corp, moduleCode, operator, busiType,"wds_loadprice.cwarehouseid",null);
 		init();
 	}
 	public void init(){
