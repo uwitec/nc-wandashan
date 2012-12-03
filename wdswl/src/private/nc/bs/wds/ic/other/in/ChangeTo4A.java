@@ -64,6 +64,7 @@ public class ChangeTo4A {
 			for(int i = 0 ;i<alListData.size();i++){
 				GeneralBillVO gvo = (GeneralBillVO)alListData.get(i);
 				gvo.getHeaderVO().setCoperatoridnow(coperator);//增加当前操作员，业务员PK加锁
+//				gvo.getHeaderVO().setDaccountdate(PuPubVO.getUFDate(date));//add by zhw
 			}
 			billvo = (GeneralBillVO[])alListData.toArray(new GeneralBillVO[0]);
 		}
