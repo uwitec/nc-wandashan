@@ -64,7 +64,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		
 		//数据处理的方式主要用，这个类的方法
 		String[] num_condition_fields = new String[]{"pk_invmandoc"}; 
-		String[] combinFields = new String[]{"wlkc","erpkc","bycknum","byrknum","qtrknum","tjdfnum","scdfnum","whdfnum","xadfnum","cddfnum","zzdfnum"}; 
+		String[] combinFields = new String[]{"wlqtnum","ninnum","qtcknum","wlkc","erpkc","bycknum","byrknum","qtrknum","tjdfnum","scdfnum","whdfnum","xadfnum","cddfnum","zzdfnum","qfxnnum","byqzgnum","byyfxnnum","erpkcnum","zknum"}; 
 		if(list == null || list.size()==0)
 			return null;
 		int size = list.size();
