@@ -128,7 +128,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc = k.pk_invmandoc and nvl(invc.dr,0)=0 ");
 		strb.append(" where nvl(k.dr,0)=0 and invc.uisso = 'Y' ");
 		strb.append(" and k.pk_corp = '"+getCorpPrimaryKey()+"' ");
-		strb.append(" and k.pk_stordoc = '"+getCorpPrimaryKey()+"' ");
+//		strb.append(" and k.pk_stordoc in (select c.pk_stordoc from bd_stordoc c where c.storname like '%Ë«³Ç%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		
 		if(getQuerySQL() !=null && getQuerySQL().length()>0)
 			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
@@ -151,7 +151,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
    		strb.append(" from v_ic_onhandnum6 kp ");
    		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc = kp.cinventoryid and nvl(invc.dr,0)=0 ");
    		strb.append(" where kp.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-   		
+//   		strb.append(" and kp.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%Ë«³Ç%' and  def1='1' and nvl(c.dr,0)= 0)) ");
    		if(getQuerySQL() !=null && getQuerySQL().length()>0)
    			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
   			strb.append(" and kp.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
