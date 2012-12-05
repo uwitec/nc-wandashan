@@ -1,5 +1,7 @@
 package nc.ui.wds.report.cwhdb;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import nc.bd.accperiod.AccountCalendar;
@@ -43,7 +45,8 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 */
 	public String[] getSqls()throws Exception{
 		return new String[]{getSql(),getSqlerp(),getSqlout(),getSqlin(),getSqlotherin(),getSqltj(),getSqlsc(),getSqlwh()
-				,getSqlxa(),getSqlcd(),getSqlzz(),getSql2(),getSqlzk(),getSqlotherout(),getSql3(),getSql4(),getSqlxnout(),getSql5(),getSqlmon()};
+				,getSqlxa(),getSqlcd(),getSqlzz(),getSql2(),getSqlzk(),getSqlotherout(),getSql3(),getSql4(),getSqlxnout()
+				,getSql5(),getSqlmon(),getSqlbyzkxn()};
 	}
 	/**
 	 * 设置到ui界面之前 处理分组查询后的数据
@@ -125,6 +128,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc = k.pk_invmandoc and nvl(invc.dr,0)=0 ");
 		strb.append(" where nvl(k.dr,0)=0 and invc.uisso = 'Y' ");
 		strb.append(" and k.pk_corp = '"+getCorpPrimaryKey()+"' ");
+		strb.append(" and k.pk_stordoc = '"+getCorpPrimaryKey()+"' ");
 		
 		if(getQuerySQL() !=null && getQuerySQL().length()>0)
 			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
@@ -170,9 +174,12 @@ public class ReprotUI extends ZmReportBaseUI3 {
    		UFDate enddate =AccountCalendar.getInstance().getMonthVO().getEnddate();
    		strb.append(" and h.dbilldate >= '"+begindate.toString()+"' and h.dbilldate <= '"+enddate.toString()+"' ");
    		
-   		if(getQuerySQL() !=null && getQuerySQL().length()>0)
-   			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
-  			strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+   		if(getQuerySQL() !=null && getQuerySQL().length()>0){
+ 		   strb.append(" and h.dbilldate >='"+getDateValue("startdate")+"' " );
+ 		   strb.append(" and h.dbilldate <='"+getDateValue("enddate")+"' " );
+ 		   if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+ 		   strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+ 	   }
    		
    		strb.append("  group by b.cinventoryid ");
    		return strb.toString();
@@ -258,7 +265,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -288,7 +295,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -320,7 +327,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -352,7 +359,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -384,7 +391,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -417,7 +424,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
    			String wsql="";
    			ConditionVO[] vos=getQueryDlg().getConditionVO();
@@ -473,7 +480,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	}
     
     /**
-     * 查询所有erp虚拟转库单的量
+     * 查询所有erp虚拟转库单的量()前6个月
      * @return
      * @throws Exception 
      */
@@ -483,19 +490,29 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	   //取的应转数量
 	   strb.append(" select b.cinventoryid  as pk_invmandoc,sum(b.dshldtransnum) as zknum from ic_special_h h join ic_special_b b on h.cspecialhid = b.cspecialhid ");
 	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-	   strb.append(" where isnull(h.dr,0)=  0 and isnull(b.dr,0)=0 and h.vuserdef13='Y' and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
+	   strb.append(" where isnull(h.dr,0)=  0 and isnull(b.dr,0)=0 and h.pk_defdoc11 ='0001S3100000000OK5HM' and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 	   if(getQuerySQL() !=null && getQuerySQL().length()>0){
-		   strb.append(" and h.dbilldate >='"+getDateValue("startdate")+"' " );
-		   strb.append(" and h.dbilldate <='"+getDateValue("enddate")+"' " );
-		   if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
-		   strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+		  String startdate =getDateValue("startdate");
+	      String sdate = getDate(startdate,-6).toString();
+	      strb.append(" and h.dbilldate >='"+sdate+"' " );
+		  strb.append(" and h.dbilldate <='"+startdate+"' " );
+		  if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+			  strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
 	   }
 	   strb.append("  group by b.cinventoryid ");
 		return strb.toString();
 	}
    
+   private UFDate getDate( String startdate,int m) {
+	   Calendar c = Calendar.getInstance();//获得一个日历的实例
+       Date date =new UFDate(startdate).toDate();
+       c.setTime(date);//设置日历时间
+       c.add(Calendar.MONTH,m);//在日历的月份上增加m个月  
+       return new UFDate(c.getTimeInMillis());
+   }
+   
    /**
-    * 查询物流其他出库虚拟量
+    * 查询物流其他出库虚拟量 前6个月
     * @return
  * @throws Exception 
     */
@@ -503,13 +520,15 @@ public class ReprotUI extends ZmReportBaseUI3 {
   public String  getSqlotherout() throws Exception{
 	  StringBuffer strb = new StringBuffer();
  	  strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.noutnum)  as qtcknum from tb_outgeneral_h  h join tb_outgeneral_b b on h.general_pk=b.general_pk  ");
- 	 strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
- 	  strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.vbilltype in ('WDS6') and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
- 	 if(getQuerySQL() !=null && getQuerySQL().length()>0){
-		   strb.append(" and h.dbilldate >='"+getDateValue("startdate")+"' " );
-		   strb.append(" and h.dbilldate <='"+getDateValue("enddate")+"' " );
-		   if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
-		   strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+ 	  strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
+ 	  strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.vbilltype in ('WDS6') and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y' and h.isxnap ='Y' ");
+ 	  if(getQuerySQL() !=null && getQuerySQL().length()>0){
+ 		  String startdate =getDateValue("startdate");
+	      String sdate = getDate(startdate,-6).toString();
+		  strb.append(" and h.dbilldate >='"+sdate+"' " );
+		  strb.append(" and h.dbilldate <='"+startdate+"' " );
+		  if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+			  strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
 	   }
  	  strb.append("  group by b.cinventoryid ");
  	  return strb.toString();
@@ -527,8 +546,10 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cmangid and nvl(invc.dr,0)=0 ");
 	   strb.append(" where isnull(r.dr,0)=0 and isnull(b.dr,0)=0 and r.pk_defdoc11 ='0001S3100000000OK5HM' and r.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 	   if(getQuerySQL() !=null && getQuerySQL().length()>0){
-		   strb.append(" and r.dorderdate >= '"+getDateValue("startdate")+"' " );
-		   strb.append(" and r.dorderdate <= '"+getDateValue("enddate")+"' ");
+		   String startdate =getDateValue("startdate");
+		   String sdate = getDate(startdate,-6).toString();
+		   strb.append(" and r.dorderdate >='"+sdate+"' " );
+		   strb.append(" and r.dorderdate <='"+startdate+"' " );
 		   if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
 		   strb.append(" and b.cmangid = '"+getDateValue("pk_invbasdoc")+"' ");
 	   }
@@ -545,7 +566,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	   StringBuffer strb = new StringBuffer();
 	   strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.ninnum) as ninnum from ic_general_b b join ic_general_h h on h.cgeneralhid=b.cgeneralhid ");
 	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-	   strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.cbilltypecode='4A' and h.pk_corp ='"+getCorpPrimaryKey()+"'  and h.vuserdef13 ='Y' and invc.uisso = 'Y'");
+	   strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.cbilltypecode='4A' and h.pk_corp ='"+getCorpPrimaryKey()+"'  and h.pk_defdoc11 ='0001S3100000000OK5HM' and invc.uisso = 'Y'");
 	   if(getQuerySQL() !=null && getQuerySQL().length()>0){
 		   strb.append(" and h.dbilldate >= '"+getDateValue("startdate")+"' " );
 		   strb.append(" and h.dbilldate <= '"+getDateValue("enddate")+"' ");
@@ -590,26 +611,48 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		return strb.toString();
 	}
    
+   /**
+    * 查询所有erp虚拟转库单的量()本月
+    * @return
+    * @throws Exception 
+    */
+   
+  public String  getSqlbyzkxn() throws Exception{
+	   StringBuffer strb = new StringBuffer();
+	   //取的应转数量
+	   strb.append(" select b.cinventoryid  as pk_invmandoc,sum(b.dshldtransnum) as byzkxnnum from ic_special_h h join ic_special_b b on h.cspecialhid = b.cspecialhid ");
+	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
+	   strb.append(" where isnull(h.dr,0)=  0 and isnull(b.dr,0)=0 and h.pk_defdoc11 ='0001S3100000000OK5HM' and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
+	   if(getQuerySQL() !=null && getQuerySQL().length()>0){
+		  strb.append(" and h.dbilldate >= '" + getDateValue("startdate")+ "' ");
+			strb.append(" and h.dbilldate <= '" + getDateValue("enddate")+ "' ");
+		  if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+			  strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+	   }
+	   strb.append("  group by b.cinventoryid ");
+		return strb.toString();
+	}
+  
 	/**
 	 *查询物流其他出库虚拟量(本月)
 	 * @return
 	 * @throws Exception 
 	 */
-	public String  getSqlxnout() throws Exception{
+	public String getSqlxnout() throws Exception {
 		StringBuffer strb = new StringBuffer();
-  		strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.noutnum) as wlqtnum from tb_outgeneral_h  h join tb_outgeneral_b b on h.general_pk=b.general_pk  ");
-  		 strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0  ");
-  		strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.isxnap ='Y' and h.vbilltype in('WDS6') and h.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-  		UFDate begindate =AccountCalendar.getInstance().getMonthVO().getBegindate();
-  		UFDate enddate =AccountCalendar.getInstance().getMonthVO().getEnddate();
-  		strb.append(" and h.dbilldate >= '"+begindate.toString()+"' and h.dbilldate <= '"+enddate.toString()+"' ");
-  		
-  		if(getQuerySQL() !=null && getQuerySQL().length()>0)
-  			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
-  				strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
-  		
-  		strb.append("  group by b.cinventoryid ");
-  		return strb.toString();
+		strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.noutnum) as wlqtnum from tb_outgeneral_h  h join tb_outgeneral_b b on h.general_pk=b.general_pk  ");
+		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0  ");
+		strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.isxnap ='Y' and h.vbilltype in('WDS6') and h.pk_corp ='"+ getCorpPrimaryKey() + "' and invc.uisso = 'Y'");
+
+		if (getQuerySQL() != null && getQuerySQL().length() > 0) {
+			strb.append(" and h.dbilldate >= '" + getDateValue("startdate")+ "' ");
+			strb.append(" and h.dbilldate <= '" + getDateValue("enddate")+ "' ");
+			if (PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+				strb.append(" and b.cinventoryid = '"+ getDateValue("pk_invbasdoc") + "' ");
+		}
+
+		strb.append("  group by b.cinventoryid ");
+		return strb.toString();
 	}
    
 	/**
