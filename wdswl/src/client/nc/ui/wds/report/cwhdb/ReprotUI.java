@@ -124,11 +124,11 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 */
 	public String  getSql() throws Exception{
 		StringBuffer strb = new StringBuffer();
-		strb.append(" select k.pk_invmandoc as pk_invmandoc,sum(whs_stockpieces) as wlkc from tb_warehousestock k");
+		strb.append(" select k.pk_invmandoc as pk_invmandoc,sum(whs_stocktonnage) as wlkc from tb_warehousestock k");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc = k.pk_invmandoc and nvl(invc.dr,0)=0 ");
 		strb.append(" where nvl(k.dr,0)=0 and invc.uisso = 'Y' ");
 		strb.append(" and k.pk_corp = '"+getCorpPrimaryKey()+"' ");
-//		strb.append(" and k.pk_stordoc in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0)) ");
+		strb.append(" and k.pk_customize1 in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0) ");
 		
 		if(getQuerySQL() !=null && getQuerySQL().length()>0)
 			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
@@ -151,7 +151,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
    		strb.append(" from v_ic_onhandnum6 kp ");
    		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc = kp.cinventoryid and nvl(invc.dr,0)=0 ");
    		strb.append(" where kp.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
-//   		strb.append(" and kp.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0)) ");
+   		strb.append(" and kp.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0) ");
    		if(getQuerySQL() !=null && getQuerySQL().length()>0)
    			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
   			strb.append(" and kp.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
