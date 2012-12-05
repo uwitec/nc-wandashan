@@ -263,7 +263,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as tjdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -296,7 +296,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 		strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-		strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%天津%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -326,7 +326,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as zzdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -361,7 +361,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 		strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-		strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%郑州%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -391,7 +391,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as whdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -426,7 +426,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 		strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-		strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%武汉%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -456,7 +456,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as cddfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0 ");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -491,7 +491,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 		strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-		strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%成都%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -521,7 +521,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as xadfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -557,7 +557,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
 		strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 		strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-		strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%西安%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -587,7 +587,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as scdfnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk and h.vbillstatus = '1' and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0  and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and  def1='1' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -654,7 +654,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
     	StringBuffer strb = new StringBuffer();
 		strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber) as qfxnnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
 		strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
-		strb.append(" where e.csaleid not in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk  and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0) ");
+		strb.append(" where b.corder_bid not in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk  and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0) ");
 		strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 and e.pk_defdoc11 ='0001S3100000000OK5HM' and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 //		strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and nvl(c.dr,0)= 0)) ");
 		if(getQuerySQL() !=null && getQuerySQL().length()>0){
@@ -683,7 +683,7 @@ public String  getSql21() throws Exception{
 	
 	strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
 	strb.append(" on ww.cfirstbillbid = b.corder_bid ");
-	strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk  and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0) ");
+	strb.append(" where b.corder_bid in (select distinct gb.cfirstbillbid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk  and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0) ");
 	strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 and e.pk_defdoc11 ='0001S3100000000OK5HM' and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
 //	strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and nvl(c.dr,0)= 0)) ");
 	if(getQuerySQL() !=null && getQuerySQL().length()>0){
