@@ -45,7 +45,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 	 */
 	public String[] getSqls()throws Exception{
 		return new String[]{getSql(),getSqlerp(),getSqlout(),getSqlin(),getSqlotherin(),getSqltj(),getSqlsc(),getSqlwh()
-				,getSqlxa(),getSqlcd(),getSqlzz(),getSql2(),getSqlzk(),getSqlotherout(),getSql3(),getSql4(),getSqlxnout()
+				,getSqlxa(),getSqlcd(),getSqlzz(),getSql2(),getSql21(),getSqlzk(),getSqlotherout(),getSql3(),getSql4(),getSqlxnout()
 				,getSql5(),getSqlmon(),getSqlbyzkxn()};
 	}
 	/**
@@ -446,7 +446,7 @@ public class ReprotUI extends ZmReportBaseUI3 {
 		return strb.toString();
 	}
 	/**
-	 * 查询本月前欠发虚拟数
+	 * 查询本月前欠发虚拟数 没有生成出库单的
 	 * @return
 	 * @throws Exception 
 	 */
@@ -474,11 +474,45 @@ public class ReprotUI extends ZmReportBaseUI3 {
    			strb.append(wsql);
    		}
 		strb.append("  group by b.cinventoryid ");
-
-		
 		return strb.toString();
 	}
     
+
+/**
+ * 查询本月前欠发虚拟数 生成出库单 没有出库的剩余数
+ * @return
+ * @throws Exception 
+ */
+public String  getSql21() throws Exception{
+
+	StringBuffer strb = new StringBuffer();
+	strb.append(" select b.cinventoryid as pk_invmandoc ,sum(nnumber)-sum(ww.noutnum) as qfxnnum from so_sale e join so_saleorder_b b on e.csaleid=b.csaleid ");
+	strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
+	
+	strb.append(" join (select wb.cfirstbillbid,sum(wb.noutnum) noutnum from wds_soorder_b wb where nvl(wb.dr,0)=0 group by wb.cfirstbillbid) ww ");
+	strb.append(" on ww.cfirstbillbid = b.corder_bid ");
+	strb.append(" where e.csaleid in (select distinct gb.cfirstbillhid from tb_outgeneral_h h, tb_outgeneral_b gb where gb.general_pk = h.general_pk  and h.vbilltype = 'WDS8' and nvl(gb.dr, 0) = 0 and nvl(h.dr, 0) = 0) ");
+	strb.append(" and nvl(b.dr,0)=0  and nvl(e.dr,0)=0 and e.pk_defdoc11 ='0001S3100000000OK5HM' and e.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
+//	strb.append(" and e.cwarehouseid in (select c.pk_stordoc from bd_stordoc c where c.storname like '%双城%' and nvl(c.dr,0)= 0)) ");
+	if(getQuerySQL() !=null && getQuerySQL().length()>0){
+			String wsql="";
+			ConditionVO[] vos=getQueryDlg().getConditionVO();
+			for(int i=0;i<vos.length;i++){
+				if(vos[i].getFieldCode().equals("startdate")){
+					wsql=wsql+" and e.dbilldate >= '"+vos[i].getValue()+"'";
+				}
+				if(vos[i].getFieldCode().equals("enddate")){
+					wsql=wsql+" and e.dbilldate <= '"+vos[i].getValue()+"'";					
+				}
+			}
+			if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
+			strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
+			strb.append(wsql);
+		}
+	strb.append("  group by b.cinventoryid ");
+	return strb.toString();
+}
+
     /**
      * 查询所有erp虚拟转库单的量()前6个月
      * @return
@@ -539,22 +573,21 @@ public class ReprotUI extends ZmReportBaseUI3 {
      * @return
      * @throws Exception 
      */
-    
    public String  getSql3() throws Exception{
-	   StringBuffer strb = new StringBuffer();
-	   strb.append(" select b.cmangid as pk_invmandoc,sum(b.nordernum) as byqzgnum from po_order r join po_order_b b on r.corderid = b.corderid ");
-	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cmangid and nvl(invc.dr,0)=0 ");
-	   strb.append(" where isnull(r.dr,0)=0 and isnull(b.dr,0)=0 and r.pk_defdoc11 ='0001S3100000000OK5HM' and r.pk_corp ='"+getCorpPrimaryKey()+"' and invc.uisso = 'Y'");
+ 	 StringBuffer strb = new StringBuffer();
+	   strb.append(" select b.cinventoryid as pk_invmandoc,sum(b.ninnum) as byqzgnum from ic_general_b b join ic_general_h h on h.cgeneralhid=b.cgeneralhid ");
+	   strb.append(" join wds_invbasdoc invc on invc.pk_invmandoc =  b.cinventoryid and nvl(invc.dr,0)=0 ");
+	   strb.append(" where nvl(h.dr,0)=0 and nvl(b.dr,0)=0 and h.cbilltypecode='45' and h.pk_corp ='"+getCorpPrimaryKey()+"'  and h.pk_defdoc11 ='0001S3100000000OK5HM' and invc.uisso = 'Y'");
 	   if(getQuerySQL() !=null && getQuerySQL().length()>0){
 		   String startdate =getDateValue("startdate");
 		   String sdate = getDate(startdate,-6).toString();
-		   strb.append(" and r.dorderdate >='"+sdate+"' " );
-		   strb.append(" and r.dorderdate <='"+startdate+"' " );
+		   strb.append(" and h.dbilldate >='"+sdate+"' " );
+		   strb.append(" and h.dbilldate <='"+startdate+"' " );
 		   if(PuPubVO.getString_TrimZeroLenAsNull(getDateValue("pk_invbasdoc")) != null)
-		   strb.append(" and b.cmangid = '"+getDateValue("pk_invbasdoc")+"' ");
+		   strb.append(" and b.cinventoryid = '"+getDateValue("pk_invbasdoc")+"' ");
 	   }
- 	  strb.append("  group by b.cmangid ");
- 	  return strb.toString();
+	   strb.append("  group by b.cinventoryid ");
+	 	return strb.toString();
 	}
     
     /**
