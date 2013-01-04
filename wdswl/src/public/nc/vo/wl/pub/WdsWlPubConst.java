@@ -397,6 +397,8 @@ public class WdsWlPubConst {
     public static String report9="80100237";//
     //liuys 账务核对表
     public static String zwhdb = "80100209";//账务核对表
+    //liuys 分检仓对账表
+    public static String fjcdzb = "80100214";
     
     
 //    物流调拨入库单回写erp调拨出库单累计转入物流数量  字段
