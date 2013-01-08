@@ -115,7 +115,7 @@ public class ClientUI extends OutPubClientUI implements
 		if (c instanceof UIRefPane) {
 			UIRefPane ref = (UIRefPane) c;
 			ref.getRefModel().addWherePart(
-					"  and tb_spacegoods.pk_cargdoc='" + pk_cargdoc + "' ");
+					"  and wds_cargdoc1.pk_cargdoc='" + pk_cargdoc + "' ");
 		}
 		return true;
 
