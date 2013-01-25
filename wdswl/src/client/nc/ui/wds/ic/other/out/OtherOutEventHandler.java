@@ -27,6 +27,7 @@ import nc.vo.scm.pu.PuPubVO;
 import nc.vo.trade.pub.IBillStatus;
 import nc.vo.wl.pub.BillRowNo;
 import nc.vo.wl.pub.WdsWlPubConst;
+import nc.vo.wl.pub.WdsWlPubTool;
 /**
  * 其他出库
  * @author author
@@ -180,6 +181,18 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	protected void onBoSave() throws Exception {
 		//对贴签数量    小于    实入数量的校验
 		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
+			TbOutgeneralHVO head = (TbOutgeneralHVO) getBillUI().getVOFromUI().getParentVO();
+			String cdispatchid = WdsWlPubTool.getString_NullAsTrimZeroLen(head.getCdispatcherid()) ;
+			String srl_pkr = PuPubVO.getString_TrimZeroLenAsNull(head.getSrl_pkr());
+			if(WdsWlPubConst.cklb_zhwku.equalsIgnoreCase(cdispatchid)){
+				if(srl_pkr == null){
+					throw new BusinessException("转货位出库，入库仓库必填");
+				}
+			}else{
+				if(srl_pkr != null){
+					throw new BusinessException("转货位出库，入库仓库不能录入");
+				}
+			}
 			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
 			for(int i=0;i<tbs.length;i++){
 				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());
@@ -187,14 +200,8 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				if(u1.sub(u2).doubleValue()<0){
 					throw new BusinessException("贴签数量   不能大于 实入数量");
 				}
-				
-				
 			}			
 		}
-		
-		
-		
-		
 		super.onBoSave();
 	}
 

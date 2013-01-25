@@ -14,6 +14,7 @@ import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillListPanel;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.BillSortListener;
 import nc.ui.pub.bill.IBillModelRowStateChangeEventListener;
 import nc.ui.pub.bill.RowStateChangeEvent;
 import nc.ui.wl.pub.LoginInforHelper;
@@ -100,7 +101,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 //			m_panel.getParentListPanel().setTotalRowShow(true);
 			m_panel.getChildListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
-			m_panel.getHeadTable().removeSortListener();
+//			m_panel.getHeadTable().removeSortListener();
 		}
 		return m_panel;
 	}
@@ -483,5 +484,6 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,BillEd
 		headRowChange(e.getRow());
 		getPanel().getBodyBillModel().reCalcurateAll();	
 	}
+
 	
 }

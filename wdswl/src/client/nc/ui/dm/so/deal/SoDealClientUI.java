@@ -1,6 +1,7 @@
 package nc.ui.dm.so.deal;
 
 import javax.swing.JComponent;
+
 import nc.bs.logging.Logger;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
@@ -322,7 +323,7 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 			m_panel.setEnabled(true);
 			m_panel.getChildListPanel().setTotalRowShow(true);
 			m_panel.setMultiSelect(true);
-			m_panel.getHeadTable().removeSortListener();
+//			m_panel.getHeadTable().removeSortListener();
 			m_panel.getBodyScrollPane(getPanel().getChildListPanel()
 					.getTableCode()).removeMouseListener();
 		}
@@ -498,5 +499,10 @@ public class SoDealClientUI extends ToftPanel implements BillEditListener,
 
 	public void setCl(ClientLink cl) {
 		this.cl = cl;
+	}
+
+	public void afterSort(String key) {
+		// TODO Auto-generated method stub
+		
 	}
 }

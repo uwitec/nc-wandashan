@@ -156,25 +156,25 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 						e.getRow(), key);
 				return;
 			}
-			// 安排辅数量 编辑后 拆行 for add mlr
-			UFDouble oldvalue = e.getOldValue() == null ? new UFDouble(0)
-					: (UFDouble) e.getOldValue();
-			if (num == null || num.doubleValue() == 0
-					|| num.doubleValue() > oldvalue.doubleValue()) {
-				MessageDialog.showHintDlg(getPanel(), "错误",
-						"所输入的值错误,必须比之前的值要小!");
-				getPanel().getBodyBillModel().setValueAt(oldvalue, row,
-						"nassnum");
-				getPanel().getBodyBillModel().execEditFormulasByKey(row,
-						"nassnum");
-				return;
-			}
-			String tablecode = getPanel().getChildListPanel().getTableCode();
-			getPanel().getBodyScrollPane(tablecode).copyLine();
-			getPanel().getBodyScrollPane(tablecode).pasteLine();
-			getPanel().getBodyBillModel().setValueAt(oldvalue.sub(num), row,
-					"nassnum");
-			getPanel().getBodyBillModel().execEditFormulasByKey(row, "nassnum");
+//			// 安排辅数量 编辑后 拆行 for add mlr
+//			UFDouble oldvalue = e.getOldValue() == null ? new UFDouble(0)
+//					: (UFDouble) e.getOldValue();
+//			if (num == null || num.doubleValue() == 0
+//					|| num.doubleValue() > oldvalue.doubleValue()) {
+//				MessageDialog.showHintDlg(getPanel(), "错误",
+//						"所输入的值错误,必须比之前的值要小!");
+//				getPanel().getBodyBillModel().setValueAt(oldvalue, row,
+//						"nassnum");
+//				getPanel().getBodyBillModel().execEditFormulasByKey(row,
+//						"nassnum");
+//				return;
+//			}
+//			String tablecode = getPanel().getChildListPanel().getTableCode();
+//			getPanel().getBodyScrollPane(tablecode).copyLine();
+//			getPanel().getBodyScrollPane(tablecode).pasteLine();
+//			getPanel().getBodyBillModel().setValueAt(oldvalue.sub(num), row,
+//					"nassnum");
+//			getPanel().getBodyBillModel().execEditFormulasByKey(row, "nassnum");
 		}
 		if ("ss_state".equalsIgnoreCase(key)) {
 			if (value == null) {

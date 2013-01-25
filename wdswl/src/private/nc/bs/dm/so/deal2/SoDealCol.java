@@ -348,7 +348,7 @@ public class SoDealCol {
 					Logger.info(reason);
 					reasons.add(reason);
 					pass = true;
-					break;
+					continue;
 				}
 				double nnum = PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNnum()).doubleValue();//可用量主数量
 				double nassnum = PuPubVO.getUFDouble_NullAsZero(tmpNumVO.getNassnum()).doubleValue();//可用量辅数量
@@ -361,7 +361,7 @@ public class SoDealCol {
 					Logger.info(reason);
 					reasons.add(reason);
 					pass = true;
-					break;
+					continue;
 				}
 				// 2.3如果可用量 低于该客户的最小发货量 过滤 掉该客户 
 				double nminSendNum = getMinSendNumForCust(bill.getHeader().getCcustomerid(), bill.getHeader().getCbodywarehouseid()).doubleValue();	
@@ -375,7 +375,7 @@ public class SoDealCol {
 					Logger.info(reason);
 					reasons.add(reason);
 					pass = true;
-					break;
+					continue;
 				}
 				//2.4比较可用量与本次安排数量，判断是否可以直接安排(如果可用量 > 本次安排数量,bisok = true)
 				// 即使该客户表体存货有一个可用量不满足，也标记为不能直接安排

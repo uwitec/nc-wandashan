@@ -415,7 +415,8 @@ public class WdsWlPubConst {
 	
 	public static String report_cldbfx_node = "80041001";///add by yf 2012-07-27存量对比分析节点
 	
-	
+	public static String cklb_zhwku = "1021A2100000000FAI3F";//出库类别，转货物出库(当前只有1021公司)
+
 	
 	
 	

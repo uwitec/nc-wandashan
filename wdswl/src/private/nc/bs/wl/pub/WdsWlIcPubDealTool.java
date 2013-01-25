@@ -136,7 +136,7 @@ public class WdsWlIcPubDealTool {
 		if(bill == null)
 			return;
 //		//根据结账期设置，修改传ERP的单据单据日期，和表体出入库日期
-//		adjustBillData(bill, corp, sdate, coperator, dao);
+		adjustBillData(bill, corp, sdate, coperator, dao);
 		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
 		bill.getHeaderVO().setDbilldate(new UFDate(sdate));//单据日期
