@@ -190,7 +190,7 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 				}
 			}else{
 				if(srl_pkr != null){
-					throw new BusinessException("转货位出库，入库仓库不能录入");
+					throw new BusinessException("非转货位出库，入库仓库不能录入");
 				}
 			}
 			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
