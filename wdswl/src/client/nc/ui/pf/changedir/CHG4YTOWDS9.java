@@ -100,7 +100,7 @@ public class CHG4YTOWDS9 extends nc.ui.pf.change.VOConversionUI {
 				"B_geb_cinventoryid->getColValue2(bd_invmandoc,pk_invmandoc,pk_invbasdoc,B_cinvbasid,pk_corp,H_cothercorpid)",//根据基本ID，公司,获取管理ID			
 				
 				"B_geb_snum->B_noutnum-B_"+WdsWlPubConst.erp_allo_outnum_fieldname,//应发数量 
-				"B_geb_bsnum->(B_noutnum-B_"+WdsWlPubConst.erp_allo_outnum_fieldname+")/B_geb_hsl",//应发辅数量
+//				"B_geb_bsnum->(B_noutnum-B_"+WdsWlPubConst.erp_allo_outnum_fieldname+")/B_geb_hsl",//应发辅数量
 				
 //				zhf add 运单类型
 				"B_geb_customize9->\"WS21\""

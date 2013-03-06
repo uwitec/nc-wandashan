@@ -139,7 +139,7 @@ public class WdsWlIcPubDealTool {
 		adjustBillData(bill, corp, sdate, coperator, dao);
 		bill.setGetPlanPriceAtBs(false);//不需要查询计划价
 		bill.getHeaderVO().setCoperatoridnow(coperator);//当前操作人///业务加锁，锁定当前操作人员
-		bill.getHeaderVO().setDbilldate(new UFDate(sdate));//单据日期
+//		bill.getHeaderVO().setDbilldate(new UFDate(sdate));//单据日期
 		bill.getHeaderVO().setStatus(VOStatus.NEW);//单据新增状态
 		String returnBatchcode = getDefaultVbatchCode(corp);//物流传ERP默认的批次号
 		GeneralBillItemVO[] items = bill.getItemVOs();

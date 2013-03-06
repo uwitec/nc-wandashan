@@ -181,18 +181,6 @@ public class OtherOutEventHandler extends OutPubEventHandler {
 	protected void onBoSave() throws Exception {
 		//对贴签数量    小于    实入数量的校验
 		if( getBillUI().getVOFromUI().getChildrenVO()!=null){
-			TbOutgeneralHVO head = (TbOutgeneralHVO) getBillUI().getVOFromUI().getParentVO();
-			String cdispatchid = WdsWlPubTool.getString_NullAsTrimZeroLen(head.getCdispatcherid()) ;
-			String srl_pkr = PuPubVO.getString_TrimZeroLenAsNull(head.getSrl_pkr());
-			if(WdsWlPubConst.cklb_zhwku.equalsIgnoreCase(cdispatchid)){
-				if(srl_pkr == null){
-					throw new BusinessException("转货位出库，入库仓库必填");
-				}
-			}else{
-				if(srl_pkr != null){
-					throw new BusinessException("非转货位出库，入库仓库不能录入");
-				}
-			}
 			TbOutgeneralBVO[] tbs=(TbOutgeneralBVO[]) getBillUI().getVOFromUI().getChildrenVO();
 			for(int i=0;i<tbs.length;i++){
 				UFDouble u1=PuPubVO.getUFDouble_NullAsZero(tbs[i].getNoutassistnum());

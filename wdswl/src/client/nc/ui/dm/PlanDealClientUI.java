@@ -3,7 +3,6 @@ package nc.ui.dm;
 import nc.ui.pub.ButtonObject;
 import nc.ui.pub.ClientEnvironment;
 import nc.ui.pub.ToftPanel;
-import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
@@ -116,7 +115,6 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 
 		return null;
 	}
-
 	@Override
 	public void onButtonClicked(ButtonObject btn) {
 		m_handler.onButtonClicked(btn.getCode());
@@ -144,7 +142,6 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 	public void afterEdit(BillEditEvent e) {
 
 		String key = e.getKey();// 不允许输入负数
-
 		String value = PuPubVO.getString_TrimZeroLenAsNull(e.getValue());
 		int row = e.getRow();
 		if ("nassnum".equalsIgnoreCase(key)) {
@@ -155,6 +152,12 @@ public class PlanDealClientUI extends ToftPanel implements BillEditListener,
 				getPanel().getBodyBillModel().setValueAt(e.getOldValue(),
 						e.getRow(), key);
 				return;
+			}
+			if(num.doubleValue() >0){
+		        getPanel().getBodyTable().addRowSelectionInterval(row, row);
+			}else{
+		        getPanel().getBodyTable().removeRowSelectionInterval(row, row);
+
 			}
 //			// 安排辅数量 编辑后 拆行 for add mlr
 //			UFDouble oldvalue = e.getOldValue() == null ? new UFDouble(0)
