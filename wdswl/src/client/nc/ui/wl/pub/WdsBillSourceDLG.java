@@ -62,6 +62,7 @@ import nc.vo.wl.pub.VOTool;
  * 12、支持按表头原币币种设置表头、表体（多页签）币种精度及汇率精度
  * 
  */
+@SuppressWarnings("serial")
 public class WdsBillSourceDLG extends BillSourceDLG {
 
 	// 按钮

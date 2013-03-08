@@ -3,7 +3,6 @@ package nc.ui.wds.invcl;
 import nc.ui.trade.bill.ICardController;
 import nc.ui.trade.pub.IVOTreeData;
 import nc.ui.trade.treecard.BillTreeCardUI;
-import nc.ui.trade.treecard.TreeCardEventHandler;
 import nc.ui.wl.pub.LoginInforHelper;
 import nc.vo.wds.invcl.checkClassInterface;
 

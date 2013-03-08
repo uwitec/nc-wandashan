@@ -25,24 +25,7 @@ public class ClientEventHandler extends WdsPubEnventHandler {
 		return queryDialog;
 	}
 
-	@Override
-	protected void onBoQuery() throws Exception {
-		StringBuffer strWhere = new StringBuffer();
-
-		if (askForQueryCondition(strWhere) == false)
-			return;// 用户放弃了查询
-		AggregatedValueObject[] bodyVOs = HYPubBO_Client
-				.queryBillVOByCondition(getUIController().getBillVoName(),
-						strWhere.toString());
-		int count = 0;
-		getBufferData().clear();
-		if (bodyVOs != null) {
-			count = bodyVOs.length;
-			getBufferData().addVOsToBuffer(bodyVOs);
-			updateBuffer();
-		}
-		getBillUI().showHintMessage("查询完成：共查询到" + count + "条数据");
-	}
+	
 
 	@Override
 	protected String getHeadCondition() {

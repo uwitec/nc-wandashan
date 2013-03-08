@@ -19,7 +19,7 @@ public CHGWDSBTOWDSG() {
 * @return java.lang.String[]
 */
 public String getAfterClassName() {
-	return null;
+	return "nc.bs.wds2.conversion.AfterWDSBTOWDSG";
 }
 /**
 * 获得另一个后续类的全录径名称。

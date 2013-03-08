@@ -2,6 +2,7 @@ package nc.bs.wds.ic.allo.in.close;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.bs.dao.BaseDAO;
 import nc.bs.wl.pub.WdsPubResulSetProcesser;
 import nc.bs.wl.pub.WdsWlPubBO;
@@ -16,7 +17,6 @@ import nc.vo.wds.ic.allo.in.close.AlloCloseBVO;
 import nc.vo.wds.ic.allo.in.close.AlloCloseBillVO;
 import nc.vo.wds.ic.allo.in.close.AlloCloseHVO;
 import nc.vo.wds.ic.allo.in.close.AlloCloseVO;
-import nc.vo.wl.pub.WdsWlPubConst;
 import nc.vo.wl.pub.WdsWlPubTool;
 
 public class AlloCloseBO {

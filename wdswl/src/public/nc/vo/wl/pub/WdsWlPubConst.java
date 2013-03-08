@@ -403,6 +403,8 @@ public class WdsWlPubConst {
     
 //    物流调拨入库单回写erp调拨出库单累计转入物流数量  字段
     public static String erp_allo_outnum_fieldname = "nkdnum";
+    public static String erp_allo_outnumb_fieldname = "nkdnumb";
+
 
 //    调拨入库单关闭 节点号
     public static String allo_in_close_node = "8004040225";

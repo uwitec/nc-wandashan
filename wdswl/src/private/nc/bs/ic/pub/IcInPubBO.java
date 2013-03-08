@@ -61,13 +61,12 @@ public class IcInPubBO {
 			if (iBdAction == IBDACTION.SAVE) {
 				if (sourcetype.equals("4Y")) {
 					WriteBackTool
-							.writeBack(
-									bodys,
+							.writeBack(	bodys,
 									"ic_general_b",
 									"cgeneralbid",
-									new String[] { "geb_anum" },
-									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname },
-									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname });
+									new String[] { "geb_anum","geb_banum" },
+									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname, WdsWlPubConst.erp_allo_outnumb_fieldname},
+									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname, WdsWlPubConst.erp_allo_outnumb_fieldname});
 				}
 			} else if (iBdAction == IBDACTION.DELETE) {
 				for (int i = 0; i < bodys.length; i++) {
@@ -75,14 +74,13 @@ public class IcInPubBO {
 				}
 				if (sourcetype.equals("4Y")) {
 					WriteBackTool
-							.writeBack(
-									bodys,
-									"ic_general_b",
-									"cgeneralbid",
-									new String[] { "geb_anum" },
-									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname },
-									new String[] { WdsWlPubConst.erp_allo_outnum_fieldname });
-				}
+					.writeBack(	bodys,
+							"ic_general_b",
+							"cgeneralbid",
+							new String[] { "geb_anum","geb_banum" },
+							new String[] { WdsWlPubConst.erp_allo_outnum_fieldname, WdsWlPubConst.erp_allo_outnumb_fieldname},
+							new String[] { WdsWlPubConst.erp_allo_outnum_fieldname, WdsWlPubConst.erp_allo_outnumb_fieldname});
+		}
 			}
 
 		} else if (billtype.equalsIgnoreCase(WdsWlPubConst.BILLTYPE_OTHER_IN)) {
